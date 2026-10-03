@@ -14,7 +14,6 @@
             background-color: #f8fafc; 
         }
 
-        /* Animation cho dòng chữ chạy */
         @keyframes marquee {
             0% { transform: translateX(100%); }
             100% { transform: translateX(-100%); }
@@ -28,7 +27,6 @@
             animation-play-state: paused;
         }
 
-        /* Hover effect menu */
         .nav-item {
             position: relative;
         }
@@ -48,15 +46,13 @@
 </head>
 <body class="flex flex-col min-h-screen">
 
-<!-- HEADER: Hiển thị 1 dòng trên điện thoại -->
+<!-- HEADER -->
 <header class="bg-gradient-to-r from-[#16a34a] via-[#22c55e] to-[#4ade80] w-full py-2 md:py-3 px-2 md:px-6 shadow-lg relative overflow-hidden border-b-4 border-yellow-400">
     <div class="max-w-7xl mx-auto flex items-center justify-between h-auto md:h-36 flex-row gap-1 md:gap-0">
-        <!-- KHỐI LOGO BÊN TRÁI -->
         <div class="flex-shrink-0 z-10 transition-transform duration-300 hover:scale-105">
             <img src="logo.png" alt="Logo THPT Phan Đình Phùng" class="w-12 h-12 sm:w-16 sm:h-16 md:w-32 md:h-32 object-contain bg-white rounded-full p-0.5 md:p-1 shadow-lg border-2 border-yellow-400">
         </div>
 
-        <!-- KHỐI TIÊU ĐỀ Ở GIỮA -->
         <div class="flex-1 text-center px-1 md:px-4 z-10">
             <h2 class="text-red-800 font-bold text-[8px] sm:text-[10px] md:text-xl drop-shadow-[0_1px_1px_rgba(255,255,255,0.8)]">SỞ GIÁO DỤC VÀ ĐÀO TẠO QUẢNG TRỊ</h2>
             <h1 class="text-red-600 font-extrabold text-[10px] sm:text-xs md:text-4xl my-0.5 md:my-1 drop-shadow-[0_2px_2px_rgba(255,255,255,0.9)] tracking-wide">
@@ -65,16 +61,14 @@
             <p class="text-black font-semibold text-[7px] sm:text-[8px] md:text-sm drop-shadow-[0_1px_1px_rgba(255,255,255,0.8)]">Địa chỉ: Số 14 Xuân Diệu - Đông Hới - Quảng Trị</p>
         </div>
 
-        <!-- KHỐI ẢNH TRƯỜNG BÊN PHẢI -->
         <div class="flex-shrink-0 h-12 sm:h-16 md:h-full py-0 md:py-1 z-10 transition-transform duration-300 hover:scale-105">
             <img src="truong.jpg" alt="Toàn cảnh Trường THPT Phan Đình Phùng" class="h-full w-16 sm:w-24 md:w-[350px] object-cover rounded-md md:rounded-xl shadow-xl border md:border-2 border-white/40">
         </div>
     </div>
-    <!-- Pattern nền mờ -->
     <div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: radial-gradient(white 2px, transparent 2px); background-size: 30px 30px;"></div>
 </header>
 
-<!-- Thanh Menu Xanh Dương -->
+<!-- THANH MENU -->
 <nav class="bg-[#1e40af] w-full text-white sticky top-0 z-50 shadow-md border-b border-blue-800">
     <div class="max-w-[1300px] mx-auto px-2 md:px-4">
         <ul class="flex flex-wrap justify-center md:justify-start items-center text-xs md:text-sm font-bold uppercase relative py-1 md:py-0 gap-x-1">
@@ -89,8 +83,8 @@
             <li class="group relative">
                 <a href="javascript:void(0)" onclick="toggleMobileMenu(this)" class="nav-item block px-2 md:px-4 py-2 md:py-4">TIN HỌC 10</a>
                 <div class="dropdown-menu absolute left-1/2 -translate-x-1/2 md:translate-x-0 md:left-0 top-full hidden md:group-hover:flex flex-col bg-white shadow-2xl rounded-xl border border-gray-100 w-56 p-3 gap-2 z-[100] mt-1 md:mt-0">
-                    <button onclick="showGrid('Tài liệu Tin học 10', 20, 'Tài liệu bài')" class="w-full bg-[#f97316] text-white font-bold py-3 px-4 rounded-lg hover:brightness-110 shadow-sm transition-all text-sm text-left"><i class="fa-solid fa-folder-open mr-2"></i> TÀI LIỆU</button>
-                    <button onclick="showGrid('Bài kiểm tra Tin học 10', 20, 'Đề kiểm tra số')" class="w-full bg-[#22c55e] text-white font-bold py-3 px-4 rounded-lg hover:brightness-110 shadow-sm transition-all text-sm text-left"><i class="fa-solid fa-pen-to-square mr-2"></i> BÀI KIỂM TRA</button>
+                    <button onclick="showLessons('Tài liệu Tin học 10', duLieuTin10)" class="w-full bg-[#f97316] text-white font-bold py-3 px-4 rounded-lg hover:brightness-110 shadow-sm transition-all text-sm text-left"><i class="fa-solid fa-folder-open mr-2"></i> TÀI LIỆU</button>
+                    <button onclick="showLessons('Bài kiểm tra Tin học 10', kiemTraTin10)" class="w-full bg-[#22c55e] text-white font-bold py-3 px-4 rounded-lg hover:brightness-110 shadow-sm transition-all text-sm text-left"><i class="fa-solid fa-pen-to-square mr-2"></i> BÀI KIỂM TRA</button>
                 </div>
             </li>
 
@@ -98,8 +92,8 @@
             <li class="group relative">
                 <a href="javascript:void(0)" onclick="toggleMobileMenu(this)" class="nav-item block px-2 md:px-4 py-2 md:py-4">TIN HỌC 11</a>
                 <div class="dropdown-menu absolute left-1/2 -translate-x-1/2 md:translate-x-0 md:left-0 top-full hidden md:group-hover:flex flex-col bg-white shadow-2xl rounded-xl border border-gray-100 w-56 p-3 gap-2 z-[100] mt-1 md:mt-0">
-                    <button onclick="showGrid('Tài liệu Tin học 11', 20, 'Tài liệu bài')" class="w-full bg-[#8b5cf6] text-white font-bold py-3 px-4 rounded-lg hover:brightness-110 shadow-sm transition-all text-sm text-left"><i class="fa-solid fa-folder-open mr-2"></i> TÀI LIỆU</button>
-                    <button onclick="showGrid('Bài kiểm tra Tin học 11', 20, 'Đề kiểm tra số')" class="w-full bg-[#eab308] text-white font-bold py-3 px-4 rounded-lg hover:brightness-110 shadow-sm transition-all text-sm text-left"><i class="fa-solid fa-pen-to-square mr-2"></i> BÀI KIỂM TRA</button>
+                    <button onclick="showLessons('Tài liệu Tin học 11', duLieuTin11)" class="w-full bg-[#8b5cf6] text-white font-bold py-3 px-4 rounded-lg hover:brightness-110 shadow-sm transition-all text-sm text-left"><i class="fa-solid fa-folder-open mr-2"></i> TÀI LIỆU</button>
+                    <button onclick="showLessons('Bài kiểm tra Tin học 11', kiemTraTin11)" class="w-full bg-[#eab308] text-white font-bold py-3 px-4 rounded-lg hover:brightness-110 shadow-sm transition-all text-sm text-left"><i class="fa-solid fa-pen-to-square mr-2"></i> BÀI KIỂM TRA</button>
                 </div>
             </li>
 
@@ -107,8 +101,8 @@
             <li class="group relative">
                 <a href="javascript:void(0)" onclick="toggleMobileMenu(this)" class="nav-item block px-2 md:px-4 py-2 md:py-4">TIN HỌC 12</a>
                 <div class="dropdown-menu absolute left-1/2 -translate-x-1/2 md:translate-x-0 md:left-0 top-full hidden md:group-hover:flex flex-col bg-white shadow-2xl rounded-xl border border-gray-100 w-56 p-3 gap-2 z-[100] mt-1 md:mt-0">
-                    <button onclick="showGrid('Tài liệu Tin học 12', 20, 'Tài liệu bài')" class="w-full bg-[#0ea5e9] text-white font-bold py-3 px-4 rounded-lg hover:brightness-110 shadow-sm transition-all text-sm text-left"><i class="fa-solid fa-folder-open mr-2"></i> TÀI LIỆU</button>
-                    <button onclick="showGrid('Bài kiểm tra Tin học 12', 20, 'Đề kiểm tra số')" class="w-full bg-[#ef4444] text-white font-bold py-3 px-4 rounded-lg hover:brightness-110 shadow-sm transition-all text-sm text-left"><i class="fa-solid fa-pen-to-square mr-2"></i> BÀI KIỂM TRA</button>
+                    <button onclick="showLessons('Tài liệu Tin học 12', duLieuTin12)" class="w-full bg-[#0ea5e9] text-white font-bold py-3 px-4 rounded-lg hover:brightness-110 shadow-sm transition-all text-sm text-left"><i class="fa-solid fa-folder-open mr-2"></i> TÀI LIỆU</button>
+                    <button onclick="showLessons('Bài kiểm tra Tin học 12', kiemTraTin12)" class="w-full bg-[#ef4444] text-white font-bold py-3 px-4 rounded-lg hover:brightness-110 shadow-sm transition-all text-sm text-left"><i class="fa-solid fa-pen-to-square mr-2"></i> BÀI KIỂM TRA</button>
                 </div>
             </li>
 
@@ -116,26 +110,26 @@
             <li class="group relative">
                 <a href="javascript:void(0)" onclick="toggleMobileMenu(this)" class="nav-item block px-2 md:px-4 py-2 md:py-4">GIẢI TRÍ</a>
                 <div class="dropdown-menu absolute left-1/2 -translate-x-1/2 md:translate-x-0 md:left-0 top-full hidden md:group-hover:flex flex-col bg-white shadow-2xl rounded-xl border border-gray-100 w-56 p-3 gap-2 z-[100] mt-1 md:mt-0">
-                    <button onclick="showGrid('Âm nhạc học đường', 5, 'Playlist')" class="w-full bg-[#f97316] text-white font-bold py-2 px-4 rounded-lg hover:brightness-110 shadow-sm transition-all text-sm text-left">ÂM NHẠC</button>
-                    <button onclick="showGrid('Góc chia sẻ kỉ niệm', 5, 'Kỉ niệm')" class="w-full bg-[#22c55e] text-white font-bold py-2 px-4 rounded-lg hover:brightness-110 shadow-sm transition-all text-sm text-left">KỈ NIỆM</button>
-                    <button onclick="showGrid('Minigame Trí tuệ', 5, 'Game')" class="w-full bg-[#8b5cf6] text-white font-bold py-2 px-4 rounded-lg hover:brightness-110 shadow-sm transition-all text-sm text-left">MINIGAME</button>
-                    <button onclick="showGrid('Thư viện hình ảnh', 5, 'Album')" class="w-full bg-[#eab308] text-white font-bold py-2 px-4 rounded-lg hover:brightness-110 shadow-sm transition-all text-sm text-left">HÌNH ẢNH</button>
-                    <button onclick="showGrid('Tạp chí trường học', 5, 'Số báo')" class="w-full bg-[#3b82f6] text-white font-bold py-2 px-4 rounded-lg hover:brightness-110 shadow-sm transition-all text-sm text-left">TẠP CHÍ</button>
+                    <button onclick="showLessons('Âm nhạc học đường', giaiTriAmNhac)" class="w-full bg-[#f97316] text-white font-bold py-2 px-4 rounded-lg hover:brightness-110 shadow-sm transition-all text-sm text-left">ÂM NHẠC</button>
+                    <button onclick="showLessons('Góc chia sẻ kỉ niệm', giaiTriKiNiem)" class="w-full bg-[#22c55e] text-white font-bold py-2 px-4 rounded-lg hover:brightness-110 shadow-sm transition-all text-sm text-left">KỈ NIỆM</button>
+                    <button onclick="showLessons('Minigame Trí tuệ', giaiTriGame)" class="w-full bg-[#8b5cf6] text-white font-bold py-2 px-4 rounded-lg hover:brightness-110 shadow-sm transition-all text-sm text-left">MINIGAME</button>
+                    <button onclick="showLessons('Thư viện hình ảnh', giaiTriAnh)" class="w-full bg-[#eab308] text-white font-bold py-2 px-4 rounded-lg hover:brightness-110 shadow-sm transition-all text-sm text-left">HÌNH ẢNH</button>
+                    <button onclick="showLessons('Tạp chí trường học', giaiTriTapChi)" class="w-full bg-[#3b82f6] text-white font-bold py-2 px-4 rounded-lg hover:brightness-110 shadow-sm transition-all text-sm text-left">TẠP CHÍ</button>
                 </div>
             </li>
 
-            <!-- TRỢ LÝ AI (Sửa thành link bấm trực tiếp) -->
+            <!-- TRỢ LÝ AI (ĐÃ GẮN LINK COZE) -->
             <li>
-                <a href="javascript:void(0)" onclick="showGrid('Trợ lý AI', 1, 'Phòng Chat AI')" class="nav-item block px-2 md:px-4 py-2 md:py-4 cursor-pointer">TRỢ LÝ AI</a>
+                <a href="https://www.coze.com/store/agent/7692016613063049269?bot_id=true&bid=6lg3s729k4g1l" target="_blank" class="nav-item block px-2 md:px-4 py-2 md:py-4 cursor-pointer font-bold text-yellow-300">TRỢ LÝ AI</a>
             </li>
 
             <!-- LIÊN HỆ -->
             <li class="group relative">
                 <a href="javascript:void(0)" onclick="toggleMobileMenu(this)" class="nav-item block px-2 md:px-4 py-2 md:py-4">LIÊN HỆ</a>
                 <div class="dropdown-menu absolute right-1/2 translate-x-1/2 md:translate-x-0 md:right-0 top-full hidden md:group-hover:flex flex-col bg-white shadow-2xl rounded-xl border border-gray-100 w-56 p-3 gap-2 z-[100] mt-1 md:mt-0">
-                    <button onclick="showGrid('Hỗ trợ hệ thống', 5, 'Mục')" class="w-full bg-[#64748b] text-white font-bold py-2 px-4 rounded-lg hover:brightness-110 shadow-sm transition-all text-sm text-left">HỖ TRỢ TRỰC TUYẾN</button>
-                    <button onclick="showGrid('Thông tin liên hệ', 5, 'Mục')" class="w-full bg-[#0f766e] text-white font-bold py-2 px-4 rounded-lg hover:brightness-110 shadow-sm transition-all text-sm text-left">GỬI EMAIL</button>
-                    <button onclick="showGrid('Mạng xã hội', 5, 'Mục')" class="w-full bg-[#0284c7] text-white font-bold py-2 px-4 rounded-lg hover:brightness-110 shadow-sm transition-all text-sm text-left">FANPAGE</button>
+                    <button onclick="showLessons('Hỗ trợ hệ thống', lienHeHoTro)" class="w-full bg-[#64748b] text-white font-bold py-2 px-4 rounded-lg hover:brightness-110 shadow-sm transition-all text-sm text-left">HỖ TRỢ TRỰC TUYẾN</button>
+                    <button onclick="showLessons('Thông tin liên hệ', lienHeEmail)" class="w-full bg-[#0f766e] text-white font-bold py-2 px-4 rounded-lg hover:brightness-110 shadow-sm transition-all text-sm text-left">GỬI EMAIL</button>
+                    <button onclick="showLessons('Mạng xã hội', lienHeFanpage)" class="w-full bg-[#0284c7] text-white font-bold py-2 px-4 rounded-lg hover:brightness-110 shadow-sm transition-all text-sm text-left">FANPAGE</button>
                 </div>
             </li>
         </ul>
@@ -156,7 +150,7 @@
 <main class="flex-grow w-full max-w-[1300px] mx-auto px-4 py-6 md:py-8">
     <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
         
-        <!-- Cột trái: Sidebar Danh Mục Học Tập (Thêm ID 'sidebar') -->
+        <!-- CỘT TRÁI: DANH MỤC HỌC TẬP -->
         <aside id="sidebar" class="lg:col-span-1">
             <div class="bg-white rounded-xl shadow-md border border-gray-100 overflow-hidden h-full">
                 <div class="bg-[#0f766e] px-4 py-4">
@@ -167,43 +161,44 @@
                 
                 <ul class="flex flex-col text-sm text-gray-700 font-medium pb-2">
                     <li class="border-b border-gray-50">
-                        <button onclick="showGrid('Chuyên đề Tin học 10', 20, 'Bài giảng Tin 10 - Bài')" class="w-full flex items-center gap-3 px-4 py-3 hover:bg-teal-50 hover:text-[#0f766e] transition-colors border-l-4 border-transparent hover:border-[#0f766e] text-left">
+                        <button onclick="showLessons('Chuyên đề Tin học 10', duLieuTin10)" class="w-full flex items-center gap-3 px-4 py-3 hover:bg-teal-50 hover:text-[#0f766e] transition-colors border-l-4 border-transparent hover:border-[#0f766e] text-left">
                             <span class="text-lg w-6 text-center text-blue-500"><i class="fa-solid fa-book"></i></span>
                             <span>Chuyên đề Tin học 10</span>
                         </button>
                     </li>
                     <li class="border-b border-gray-50">
-                        <button onclick="showGrid('Chuyên đề Tin học 11', 20, 'Bài giảng Tin 11 - Bài')" class="w-full flex items-center gap-3 px-4 py-3 hover:bg-teal-50 hover:text-[#0f766e] transition-colors border-l-4 border-transparent hover:border-[#0f766e] text-left">
+                        <button onclick="showLessons('Chuyên đề Tin học 11', duLieuTin11)" class="w-full flex items-center gap-3 px-4 py-3 hover:bg-teal-50 hover:text-[#0f766e] transition-colors border-l-4 border-transparent hover:border-[#0f766e] text-left">
                             <span class="text-lg w-6 text-center text-green-500"><i class="fa-solid fa-book"></i></span>
                             <span>Chuyên đề Tin học 11</span>
                         </button>
                     </li>
                     <li class="border-b border-gray-50">
-                        <button onclick="showGrid('Chuyên đề Tin học 12', 20, 'Bài giảng Tin 12 - Bài')" class="w-full flex items-center gap-3 px-4 py-3 hover:bg-teal-50 hover:text-[#0f766e] transition-colors border-l-4 border-transparent hover:border-[#0f766e] text-left">
+                        <button onclick="showLessons('Chuyên đề Tin học 12', duLieuTin12)" class="w-full flex items-center gap-3 px-4 py-3 hover:bg-teal-50 hover:text-[#0f766e] transition-colors border-l-4 border-transparent hover:border-[#0f766e] text-left">
                             <span class="text-lg w-6 text-center text-orange-500"><i class="fa-solid fa-book"></i></span>
                             <span>Chuyên đề Tin học 12</span>
                         </button>
                     </li>
                     <li class="border-b border-gray-50">
-                        <button onclick="showGrid('Trò chơi Ô chữ ôn tập', 5, 'Màn chơi Ô chữ')" class="w-full flex items-center gap-3 px-4 py-3 hover:bg-teal-50 hover:text-[#0f766e] transition-colors border-l-4 border-transparent hover:border-[#0f766e] text-left">
+                        <button onclick="showLessons('Trò chơi Ô chữ ôn tập', troChoiOChu)" class="w-full flex items-center gap-3 px-4 py-3 hover:bg-teal-50 hover:text-[#0f766e] transition-colors border-l-4 border-transparent hover:border-[#0f766e] text-left">
                             <span class="text-lg w-6 text-center text-purple-600"><i class="fa-solid fa-gamepad"></i></span>
                             <span>Trò chơi Ô chữ ôn tập</span>
                         </button>
                     </li>
                     <li class="border-b border-gray-50">
-                        <button onclick="showGrid('Trắc nghiệm Mario', 5, 'Cửa ải Mario')" class="w-full flex items-center gap-3 px-4 py-3 hover:bg-teal-50 hover:text-[#0f766e] transition-colors border-l-4 border-transparent hover:border-[#0f766e] text-left">
+                        <button onclick="showLessons('Trắc nghiệm Mario', tracNghiemMario)" class="w-full flex items-center gap-3 px-4 py-3 hover:bg-teal-50 hover:text-[#0f766e] transition-colors border-l-4 border-transparent hover:border-[#0f766e] text-left">
                             <span class="text-lg w-6 text-center text-red-500"><i class="fa-solid fa-bullseye"></i></span>
                             <span>Trắc nghiệm Mario</span>
                         </button>
                     </li>
                     <li class="border-b border-gray-50">
-                        <button onclick="showGrid('Chat cùng AI giải mã code', 1, 'Phòng Chat')" class="w-full flex items-center gap-3 px-4 py-3 hover:bg-teal-50 hover:text-[#0f766e] transition-colors border-l-4 border-transparent hover:border-[#0f766e] text-left">
+                        <!-- LINK AI COZE Ở THANH BÊN TRÁI -->
+                        <a href="https://www.coze.com/store/agent/7692016613063049269?bot_id=true&bid=6lg3s729k4g1l" target="_blank" class="w-full flex items-center gap-3 px-4 py-3 hover:bg-teal-50 hover:text-[#0f766e] transition-colors border-l-4 border-transparent hover:border-[#0f766e] text-left">
                             <span class="text-lg w-6 text-center text-indigo-500"><i class="fa-solid fa-robot"></i></span>
                             <span>Chat cùng AI giải mã code</span>
-                        </button>
+                        </a>
                     </li>
                     <li>
-                        <button onclick="showGrid('Góc sáng tạo (GIMP/Canva)', 5, 'Dự án')" class="w-full flex items-center gap-3 px-4 py-3 hover:bg-teal-50 hover:text-[#0f766e] transition-colors border-l-4 border-transparent hover:border-[#0f766e] text-left">
+                        <button onclick="showLessons('Góc sáng tạo (GIMP/Canva)', gocSangTao)" class="w-full flex items-center gap-3 px-4 py-3 hover:bg-teal-50 hover:text-[#0f766e] transition-colors border-l-4 border-transparent hover:border-[#0f766e] text-left">
                             <span class="text-lg w-6 text-center text-pink-500"><i class="fa-solid fa-palette"></i></span>
                             <span>Góc sáng tạo (GIMP/Canva)</span>
                         </button>
@@ -212,10 +207,10 @@
             </div>
         </aside>
 
-        <!-- Cột Phải: Nơi chứa Banner Mặc định HOẶC Lưới thẻ màu -->
+        <!-- CỘT PHẢI: KHUNG TRANG CHỦ / KHUNG BÀI HỌC -->
         <div class="lg:col-span-3">
             
-            <!-- KHUNG 1: TRANG CHỦ MẶC ĐỊNH -->
+            <!-- KHUNG TRANG CHỦ MẶC ĐỊNH -->
             <div id="default-view" class="grid grid-cols-1 md:grid-cols-3 gap-6 h-full">
                 <div class="md:col-span-2 bg-gradient-to-br from-[#0f766e] to-[#042f2e] rounded-xl shadow-xl flex flex-col justify-center items-center text-center p-6 lg:p-12 min-h-[300px] md:min-h-[350px] transform hover:scale-[1.01] transition-transform duration-300 relative overflow-hidden group border border-[#14b8a6]/30">
                     <div class="text-white/80 text-5xl md:text-6xl mb-4 md:mb-6 transform group-hover:-translate-y-2 transition-transform duration-300">
@@ -234,19 +229,21 @@
                         <i class="fa-regular fa-circle-check text-4xl md:text-5xl text-blue-100 mb-3 md:mb-4"></i>
                         <span class="text-white font-extrabold text-lg md:text-xl lg:text-2xl drop-shadow-md leading-snug">Hệ thống<br>Trắc nghiệm<br>Tương tác</span>
                     </div>
-                    <div onclick="showGrid('Trợ lý AI', 1, 'Phòng Chat AI')" class="bg-gradient-to-br from-[#f59e0b] to-[#d97706] rounded-xl shadow-lg flex-1 flex flex-col justify-center items-center text-center p-4 md:p-6 cursor-pointer transform hover:scale-[1.03] transition-all duration-300 border border-yellow-400/30">
+                    
+                    <!-- LINK AI COZE Ở NÚT BẤM TRANG CHỦ -->
+                    <a href="https://www.coze.com/store/agent/7692016613063049269?bot_id=true&bid=6lg3s729k4g1l" target="_blank" class="bg-gradient-to-br from-[#f59e0b] to-[#d97706] rounded-xl shadow-lg flex-1 flex flex-col justify-center items-center text-center p-4 md:p-6 cursor-pointer transform hover:scale-[1.03] transition-all duration-300 border border-yellow-400/30">
                         <i class="fa-solid fa-robot text-4xl md:text-5xl text-yellow-100 mb-3 md:mb-4"></i>
                         <span class="text-white font-extrabold text-lg md:text-xl lg:text-2xl drop-shadow-md leading-tight">Trợ lý AI<br>Hỗ trợ giải đáp</span>
-                    </div>
+                    </a>
                 </div>
             </div>
 
-            <!-- KHUNG 2: LƯỚI KHỐI MÀU BÀI HỌC -->
+            <!-- KHUNG LƯỚI KHỐI MÀU BÀI HỌC (SẼ ẨN/HIỆN KHI BẤM MENU) -->
             <div id="grid-view" class="hidden bg-white rounded-xl shadow-md border border-gray-100 p-4 md:p-8 min-h-[400px]">
                 <h2 id="grid-title" class="text-center font-extrabold text-xl md:text-3xl uppercase mb-6 md:mb-8 text-gray-800 drop-shadow-sm">TIÊU ĐỀ MỤC</h2>
                 
                 <div id="grid-container" class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
-                    <!-- Các khối màu hiện ra ở đây -->
+                    <!-- Các thẻ bài học sẽ tự động được Javascript vẽ vào đây -->
                 </div>
                 
                 <div class="mt-12 flex justify-center border-t border-gray-200 pt-8">
@@ -274,60 +271,195 @@
                 </p>
             </div>
             
-            <!-- Cột 2: Khối Lớp -->
-                <div class="flex flex-col gap-4">
-                    <h3 class="font-bold text-lg border-b-2 border-teal-600 pb-2 inline-block w-max text-[#ccfbf1] uppercase tracking-wide">
-                        Khối Lớp
-                    </h3>
-                    <ul class="flex flex-col gap-3 text-white/80 text-sm mt-2">
-                        <li><a href="#" class="hover:text-[#fde047] hover:translate-x-2 inline-block transition-transform duration-200"><i class="fa-solid fa-chevron-right text-xs text-teal-400 mr-2"></i>Tài liệu Tin học 10</a></li>
-                        <li><a href="#" class="hover:text-[#fde047] hover:translate-x-2 inline-block transition-transform duration-200"><i class="fa-solid fa-chevron-right text-xs text-teal-400 mr-2"></i>Tài liệu Tin học 11</a></li>
-                        <li><a href="#" class="hover:text-[#fde047] hover:translate-x-2 inline-block transition-transform duration-200"><i class="fa-solid fa-chevron-right text-xs text-teal-400 mr-2"></i>Tài liệu Tin học 12</a></li>
-                        <li><a href="#" class="hover:text-[#fde047] hover:translate-x-2 inline-block transition-transform duration-200"><i class="fa-solid fa-chevron-right text-xs text-teal-400 mr-2"></i>Đề thi - Kiểm tra</a></li>
-                    </ul>
-                </div>
-
-                <!-- Cột 3: Tính năng nổi bật -->
-                <div class="flex flex-col gap-4">
-                    <h3 class="font-bold text-lg border-b-2 border-teal-600 pb-2 inline-block w-max text-[#ccfbf1] uppercase tracking-wide">
-                        Tính năng nổi bật
-                    </h3>
-                    <ul class="flex flex-col gap-3 text-white/80 text-sm mt-2">
-                        <li><a href="#" class="hover:text-[#fde047] hover:translate-x-2 inline-block transition-transform duration-200"><i class="fa-solid fa-chevron-right text-xs text-teal-400 mr-2"></i>Trợ lý học tập AI</a></li>
-                        <li><a href="#" class="hover:text-[#fde047] hover:translate-x-2 inline-block transition-transform duration-200"><i class="fa-solid fa-chevron-right text-xs text-teal-400 mr-2"></i>Minigame ôn tập</a></li>
-                    </ul>
-                </div>
-
-                <!-- Cột 4: Hỗ trợ học sinh -->
-                <div class="flex flex-col gap-4">
-                    <h3 class="font-bold text-lg border-b-2 border-teal-600 pb-2 inline-block w-max text-[#ccfbf1] uppercase tracking-wide">
-                        Hỗ trợ học sinh
-                    </h3>
-                    <ul class="flex flex-col gap-3 text-white/80 text-sm mt-2">
-                        <li><a href="#" class="hover:text-[#fde047] hover:translate-x-2 inline-block transition-transform duration-200"><i class="fa-solid fa-chevron-right text-xs text-teal-400 mr-2"></i>Gửi thắc mắc môn học</a></li>
-                        <li><a href="#" class="hover:text-[#fde047] hover:translate-x-2 inline-block transition-transform duration-200"><i class="fa-solid fa-chevron-right text-xs text-teal-400 mr-2"></i>Góc chia sẻ thanh xuân</a></li>
-                    </ul>
-                </div>
-
+            <div class="flex flex-col gap-4">
+                <h3 class="font-bold text-lg border-b-2 border-teal-600 pb-2 inline-block w-max text-[#ccfbf1] uppercase tracking-wide">Khối Lớp</h3>
+                <ul class="flex flex-col gap-3 text-white/80 text-sm mt-2">
+                    <li><a href="#" class="hover:text-[#fde047] hover:translate-x-2 inline-block transition-transform duration-200"><i class="fa-solid fa-chevron-right text-xs text-teal-400 mr-2"></i>Tài liệu Tin học 10</a></li>
+                    <li><a href="#" class="hover:text-[#fde047] hover:translate-x-2 inline-block transition-transform duration-200"><i class="fa-solid fa-chevron-right text-xs text-teal-400 mr-2"></i>Tài liệu Tin học 11</a></li>
+                    <li><a href="#" class="hover:text-[#fde047] hover:translate-x-2 inline-block transition-transform duration-200"><i class="fa-solid fa-chevron-right text-xs text-teal-400 mr-2"></i>Tài liệu Tin học 12</a></li>
+                </ul>
             </div>
 
-            <div class="flex flex-col gap-3 mt-2 text-white/90 text-sm bg-white/10 p-3 rounded-lg border border-white/20">
-                    <div class="flex items-start gap-3">
-                        <i class="fa-solid fa-school text-[#facc15] mt-1"></i>
-                        <span class="font-bold">&copy; 2026 Bản quyền thuộc về Trường THPT Phan Đình Phùng - Quảng Trị <br> Website học tập và giải trí của cô Lê Huyền Sinh.</span>
-                    </div>
-                </div>
+            <div class="flex flex-col gap-4">
+                <h3 class="font-bold text-lg border-b-2 border-teal-600 pb-2 inline-block w-max text-[#ccfbf1] uppercase tracking-wide">Tính năng nổi bật</h3>
+                <ul class="flex flex-col gap-3 text-white/80 text-sm mt-2">
+                    <li><a href="#" class="hover:text-[#fde047] hover:translate-x-2 inline-block transition-transform duration-200"><i class="fa-solid fa-chevron-right text-xs text-teal-400 mr-2"></i>Trợ lý học tập AI</a></li>
+                    <li><a href="#" class="hover:text-[#fde047] hover:translate-x-2 inline-block transition-transform duration-200"><i class="fa-solid fa-chevron-right text-xs text-teal-400 mr-2"></i>Minigame ôn tập</a></li>
+                </ul>
             </div>
-    </footer>
+
+            <div class="flex flex-col gap-4">
+                <h3 class="font-bold text-lg border-b-2 border-teal-600 pb-2 inline-block w-max text-[#ccfbf1] uppercase tracking-wide">Hỗ trợ học sinh</h3>
+                <ul class="flex flex-col gap-3 text-white/80 text-sm mt-2">
+                    <li><a href="#" class="hover:text-[#fde047] hover:translate-x-2 inline-block transition-transform duration-200"><i class="fa-solid fa-chevron-right text-xs text-teal-400 mr-2"></i>Gửi thắc mắc môn học</a></li>
+                    <li><a href="#" class="hover:text-[#fde047] hover:translate-x-2 inline-block transition-transform duration-200"><i class="fa-solid fa-chevron-right text-xs text-teal-400 mr-2"></i>Góc chia sẻ thanh xuân</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="flex flex-col gap-3 mt-2 text-white/90 text-sm bg-white/10 p-3 rounded-lg border border-white/20">
+            <div class="flex items-start gap-3">
+                <i class="fa-solid fa-school text-[#facc15] mt-1"></i>
+                <span class="font-bold">&copy; 2026 Bản quyền thuộc về Trường THPT Phan Đình Phùng - Quảng Trị <br> Website học tập và giải trí của cô Lê Huyền Sinh.</span>
+            </div>
+        </div>
+    </div>
+</footer>
 
 <script>
-    const colorClasses = [
-        'bg-[#dc2626]', 'bg-[#2563eb]', 'bg-[#16a34a]', 'bg-[#f97316]', 
-        'bg-[#9333ea]', 'bg-[#eab308]', 'bg-[#0d9488]', 'bg-[#1e293b]', 
-        'bg-[#be123c]', 'bg-[#0284c7]'
+    const colorClasses = ['bg-[#dc2626]', 'bg-[#2563eb]', 'bg-[#16a34a]', 'bg-[#f97316]', 'bg-[#9333ea]', 'bg-[#eab308]', 'bg-[#0d9488]', 'bg-[#1e293b]', 'bg-[#be123c]', 'bg-[#0284c7]'];
+
+    // =========================================================================
+    // KHU VỰC NHẬP DỮ LIỆU BÀI HỌC (Tất cả đều có 3 bài mẫu)
+    // =========================================================================
+
+    // TÀI LIỆU TIN HỌC
+    const duLieuTin10 = [
+        { title: "Bài 1. Thông tin và xử lý thông tin", link: "tin10/bai1.html", image: "https://placehold.co/600x300/0d9488/ffffff?text=Tin+10+Bai+1", icon: "fa-book" },
+        { title: "Bài 2. Sự ưu việt của máy tính", link: "tin10/bai2.html", image: "https://placehold.co/600x300/be123c/ffffff?text=Tin+10+Bai+2", icon: "fa-desktop" },
+        { title: "Bài 3. Thực hành sử dụng thiết bị số", link: "tin10/bai3.html", image: "https://placehold.co/600x300/eab308/ffffff?text=Tin+10+Bai+3", icon: "fa-mobile-screen" }
+    ];
+
+    const duLieuTin11 = [
+        { title: "Bài 1. Hệ điều hành", link: "lop11/tin11bai1.html", image: "https://placehold.co/600x300/16a34a/ffffff?text=Bai+1", icon: "fa-book" },
+        { title: "Bài 2. Thực hành: Hệ điều hành", link: "lop11/tin11bai2.html", image: "https://placehold.co/600x300/2563eb/ffffff?text=Bai+2", icon: "fa-laptop" },
+        { title: "Bài 3. Phần mềm nguồn mở", link: "lop11/tin11bai3.html", image: "https://placehold.co/600x300/f97316/ffffff?text=Bai+3", icon: "fa-globe" }
+    ];
+
+    const duLieuTin12 = [
+        { title: "Bài 1. Giới thiệu Tin học 12", link: "lop12/tin12bai1.html", image: "https://placehold.co/600x300/dc2626/ffffff?text=Tin+12+Bai+1", icon: "fa-book" },
+        { title: "Bài 2. Cơ sở dữ liệu quan hệ", link: "lop12/tin12bai2.html", image: "https://placehold.co/600x300/0284c7/ffffff?text=Tin+12+Bai+2", icon: "fa-database" },
+        { title: "Bài 3. Thực hành quản trị CSDL", link: "lop12/tin12bai3.html", image: "https://placehold.co/600x300/16a34a/ffffff?text=Tin+12+Bai+3", icon: "fa-server" }
+    ];
+
+    // BÀI KIỂM TRA
+    const kiemTraTin10 = [
+        { title: "Đề kiểm tra 15 phút số 1", link: "#", image: "https://placehold.co/600x300/f97316/ffffff?text=Kiem+Tra+1", icon: "fa-file-lines" },
+        { title: "Đề kiểm tra 15 phút số 2", link: "#", image: "https://placehold.co/600x300/22c55e/ffffff?text=Kiem+Tra+2", icon: "fa-file-lines" },
+        { title: "Đề kiểm tra Giữa kì", link: "#", image: "https://placehold.co/600x300/ef4444/ffffff?text=Giua+Ki", icon: "fa-star" }
     ];
     
-    const iconClasses = ['fa-book', 'fa-leaf', 'fa-sun', 'fa-pen', 'fa-star', 'fa-laptop-code', 'fa-flask', 'fa-lightbulb'];
+    const kiemTraTin11 = [
+        { title: "Đề kiểm tra 15 phút số 1", link: "#", image: "https://placehold.co/600x300/f97316/ffffff?text=Kiem+Tra+1", icon: "fa-file-lines" },
+        { title: "Đề kiểm tra 15 phút số 2", link: "#", image: "https://placehold.co/600x300/22c55e/ffffff?text=Kiem+Tra+2", icon: "fa-file-lines" },
+        { title: "Đề kiểm tra Giữa kì", link: "#", image: "https://placehold.co/600x300/ef4444/ffffff?text=Giua+Ki", icon: "fa-star" }
+    ];
+
+    const kiemTraTin12 = [
+        { title: "Đề kiểm tra 15 phút số 1", link: "#", image: "https://placehold.co/600x300/f97316/ffffff?text=Kiem+Tra+1", icon: "fa-file-lines" },
+        { title: "Đề kiểm tra 15 phút số 2", link: "#", image: "https://placehold.co/600x300/22c55e/ffffff?text=Kiem+Tra+2", icon: "fa-file-lines" },
+        { title: "Đề kiểm tra Giữa kì", link: "#", image: "https://placehold.co/600x300/ef4444/ffffff?text=Giua+Ki", icon: "fa-star" }
+    ];
+
+    // GIẢI TRÍ
+    const giaiTriAmNhac = [
+        { title: "Playlist Nắng Xuân Đến Trường", link: "#", image: "https://placehold.co/600x300/8b5cf6/ffffff?text=Am+Nhac+1", icon: "fa-music" },
+        { title: "Playlist Sau Này Gặp Lại Nhé", link: "#", image: "https://placehold.co/600x300/ec4899/ffffff?text=Am+Nhac+2", icon: "fa-headphones" },
+        { title: "Guitar Học Đường", link: "#", image: "https://placehold.co/600x300/0ea5e9/ffffff?text=Am+Nhac+3", icon: "fa-guitar" }
+    ];
+
+    const giaiTriKiNiem = [
+        { title: "Lễ Tốt Nghiệp Khóa 2023", link: "#", image: "https://placehold.co/600x300/eab308/ffffff?text=Ki+Niem+1", icon: "fa-heart" },
+        { title: "Hội Trại Xuân 2024", link: "#", image: "https://placehold.co/600x300/10b981/ffffff?text=Ki+Niem+2", icon: "fa-camera" },
+        { title: "Giải Bóng Đá Học Sinh", link: "#", image: "https://placehold.co/600x300/3b82f6/ffffff?text=Ki+Niem+3", icon: "fa-futbol" }
+    ];
+
+    const giaiTriGame = [
+        { title: "Giải mã mê cung", link: "#", image: "https://placehold.co/600x300/f43f5e/ffffff?text=Game+1", icon: "fa-puzzle-piece" },
+        { title: "Đuổi hình bắt chữ IT", link: "#", image: "https://placehold.co/600x300/8b5cf6/ffffff?text=Game+2", icon: "fa-brain" },
+        { title: "Vua gõ phím", link: "#", image: "https://placehold.co/600x300/14b8a6/ffffff?text=Game+3", icon: "fa-keyboard" }
+    ];
+
+    const giaiTriAnh = [
+        { title: "Album Hoạt động Đoàn", link: "#", image: "https://placehold.co/600x300/fb923c/ffffff?text=Album+1", icon: "fa-images" },
+        { title: "Album Cuộc thi Sáng tạo", link: "#", image: "https://placehold.co/600x300/38bdf8/ffffff?text=Album+2", icon: "fa-image" },
+        { title: "Album Vinh danh", link: "#", image: "https://placehold.co/600x300/fcd34d/ffffff?text=Album+3", icon: "fa-medal" }
+    ];
+
+    const giaiTriTapChi = [
+        { title: "Tạp chí Tháng 9/2026", link: "#", image: "https://placehold.co/600x300/94a3b8/ffffff?text=Tap+Chi+1", icon: "fa-book-open" },
+        { title: "Tạp chí Tháng 10/2026", link: "#", image: "https://placehold.co/600x300/64748b/ffffff?text=Tap+Chi+2", icon: "fa-book-open" },
+        { title: "Tạp chí Tháng 11/2026", link: "#", image: "https://placehold.co/600x300/475569/ffffff?text=Tap+Chi+3", icon: "fa-book-open" }
+    ];
+
+    // CÁC MỤC Ở THANH BÊN TRÁI
+    const troChoiOChu = [
+        { title: "Ô chữ số 1: Phần cứng", link: "#", image: "https://placehold.co/600x300/d946ef/ffffff?text=O+Chu+1", icon: "fa-border-all" },
+        { title: "Ô chữ số 2: Lập trình", link: "#", image: "https://placehold.co/600x300/8b5cf6/ffffff?text=O+Chu+2", icon: "fa-border-all" },
+        { title: "Ô chữ số 3: Mạng máy tính", link: "#", image: "https://placehold.co/600x300/6366f1/ffffff?text=O+Chu+3", icon: "fa-border-all" }
+    ];
+
+    const tracNghiemMario = [
+        { title: "Cửa ải 1: Khởi động", link: "#", image: "https://placehold.co/600x300/ef4444/ffffff?text=Mario+1", icon: "fa-gamepad" },
+        { title: "Cửa ải 2: Vượt chướng ngại", link: "#", image: "https://placehold.co/600x300/f97316/ffffff?text=Mario+2", icon: "fa-gamepad" },
+        { title: "Cửa ải 3: Đánh trùm", link: "#", image: "https://placehold.co/600x300/dc2626/ffffff?text=Mario+3", icon: "fa-trophy" }
+    ];
+
+    const gocSangTao = [
+        { title: "Dự án Thiết kế Poster (Canva)", link: "#", image: "https://placehold.co/600x300/06b6d4/ffffff?text=Du+An+1", icon: "fa-brush" },
+        { title: "Dự án Chỉnh sửa ảnh (GIMP)", link: "#", image: "https://placehold.co/600x300/8b5cf6/ffffff?text=Du+An+2", icon: "fa-crop-simple" },
+        { title: "Thư viện mẫu đồ họa", link: "#", image: "https://placehold.co/600x300/ec4899/ffffff?text=Du+An+3", icon: "fa-swatchbook" }
+    ];
+
+    // LIÊN HỆ
+    const lienHeHoTro = [
+        { title: "Hướng dẫn sử dụng Web", link: "#", image: "https://placehold.co/600x300/64748b/ffffff?text=Ho+Tro+1", icon: "fa-circle-question" },
+        { title: "Báo lỗi tài liệu", link: "#", image: "https://placehold.co/600x300/64748b/ffffff?text=Ho+Tro+2", icon: "fa-triangle-exclamation" },
+        { title: "Yêu cầu cấp lại mật khẩu", link: "#", image: "https://placehold.co/600x300/64748b/ffffff?text=Ho+Tro+3", icon: "fa-key" }
+    ];
+    const lienHeEmail = [
+        { title: "Email Giáo viên", link: "mailto:abc@example.com", image: "https://placehold.co/600x300/0f766e/ffffff?text=Email+GV", icon: "fa-envelope" },
+        { title: "Email Báo lỗi kỹ thuật", link: "mailto:abc@example.com", image: "https://placehold.co/600x300/0f766e/ffffff?text=Email+KT", icon: "fa-wrench" },
+        { title: "Email Đóng góp ý kiến", link: "mailto:abc@example.com", image: "https://placehold.co/600x300/0f766e/ffffff?text=Gop+Y", icon: "fa-lightbulb" }
+    ];
+    const lienHeFanpage = [
+        { title: "Fanpage Hành Trình Số", link: "#", image: "https://placehold.co/600x300/0284c7/ffffff?text=Fanpage", icon: "fa-facebook" },
+        { title: "Kênh YouTube Bài Giảng", link: "#", image: "https://placehold.co/600x300/ef4444/ffffff?text=YouTube", icon: "fa-youtube" },
+        { title: "Nhóm Zalo Hỗ trợ", link: "#", image: "https://placehold.co/600x300/3b82f6/ffffff?text=Zalo", icon: "fa-comments" }
+    ];
+
+    // =========================================================================
+    // HÀM XỬ LÝ
+    // =========================================================================
+    
+    function showLessons(title, lessonsArray) {
+        hideDropdowns();
+        
+        document.getElementById('default-view').style.display = 'none';
+        document.getElementById('grid-view').style.display = 'block';
+        document.getElementById('grid-title').innerText = title.toUpperCase();
+
+        if (window.innerWidth < 1024) {
+            document.getElementById('sidebar').style.display = 'none';
+        }
+
+        const container = document.getElementById('grid-container');
+        container.innerHTML = ''; 
+
+        lessonsArray.forEach((lesson, index) => {
+            const color = colorClasses[index % colorClasses.length];
+            const icon = lesson.icon || 'fa-book';
+            
+            const card = document.createElement('a');
+            card.href = lesson.link;
+            // Nếu muốn mở ở tab mới (như các web khác), bỏ comment dòng dưới
+            // card.target = "_blank";
+            card.className = `${color} text-white p-4 md:p-5 rounded-2xl shadow-md hover:-translate-y-1 hover:shadow-xl transition-all duration-300 flex flex-col items-start border border-black/10`;
+            
+            card.innerHTML = `
+                <div class="w-full h-40 md:h-48 bg-black/20 rounded-xl mb-4 overflow-hidden shadow-inner">
+                    <img src="${lesson.image}" alt="${lesson.title}" onerror="this.src='https://placehold.co/600x300/ffffff/555555?text=Hinh+Anh'" class="w-full h-full object-cover opacity-90 hover:opacity-100 hover:scale-110 transition-all duration-500">
+                </div>
+                <div class="flex items-center gap-3 w-full px-2">
+                    <i class="fa-solid ${icon} text-xl opacity-90 drop-shadow-sm"></i>
+                    <span class="font-bold text-base md:text-lg leading-tight drop-shadow-sm flex-1">${lesson.title}</span>
+                </div>
+            `;
+            container.appendChild(card);
+        });
+        
+        document.getElementById('grid-view').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
 
     function toggleMobileMenu(element) {
         const dropdown = element.nextElementSibling;
@@ -366,52 +498,10 @@
         });
     }
 
-    function showGrid(title, count, prefix) {
-        hideDropdowns();
-        
-        document.getElementById('default-view').style.display = 'none';
-        document.getElementById('grid-view').style.display = 'block';
-        document.getElementById('grid-title').innerText = title.toUpperCase();
-
-        // Ẩn Danh mục học tập trên thiết bị di động (kích thước màn hình nhỏ)
-        if (window.innerWidth < 1024) {
-            document.getElementById('sidebar').style.display = 'none';
-        }
-
-        const container = document.getElementById('grid-container');
-        container.innerHTML = '';
-
-        for (let i = 1; i <= count; i++) {
-            const color = colorClasses[(i - 1) % colorClasses.length];
-            const icon = iconClasses[(i - 1) % iconClasses.length];
-            
-            const card = document.createElement('a');
-            card.href = '#';
-            card.className = `${color} text-white p-4 md:p-5 rounded-2xl shadow-md hover:-translate-y-1 hover:shadow-xl transition-all duration-300 flex flex-col items-start border border-black/10`;
-            
-            card.innerHTML = `
-                <div class="w-full h-40 md:h-48 bg-black/20 rounded-xl mb-4 overflow-hidden shadow-inner">
-                    <img src="https://placehold.co/600x300/ffffff/555555?text=Hinh+Anh+Minh+Hoa" alt="Hình minh họa bài ${i}" class="w-full h-full object-cover opacity-90 hover:opacity-100 hover:scale-110 transition-all duration-500">
-                </div>
-                <div class="flex items-center gap-3 w-full px-2">
-                    <i class="fa-solid ${icon} text-xl opacity-90 drop-shadow-sm"></i>
-                    <span class="font-bold text-base md:text-lg leading-tight drop-shadow-sm flex-1">${prefix} số ${i}</span>
-                </div>
-            `;
-            
-            container.appendChild(card);
-        }
-        
-        document.getElementById('grid-view').scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-
     function showDefault() {
         document.getElementById('grid-view').style.display = 'none';
         document.getElementById('default-view').style.display = 'grid'; 
-        
-        // Hiện lại Danh mục học tập khi quay lại trang chủ
         document.getElementById('sidebar').style.display = 'block';
-        
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 </script>
