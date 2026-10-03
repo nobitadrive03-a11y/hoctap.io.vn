@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trường THPT Phan Đình Phùng | Hành Trình Số</title>
+    <title>Trường THPT Phan Đình Phùng | Hành Trình Số - Cỏ Dại</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -48,26 +48,26 @@
 </head>
 <body class="flex flex-col min-h-screen">
 
-<!-- HEADER: Đổ màu gradient dựa trên màu xanh gốc -->
-<header class="bg-gradient-to-r from-[#16a34a] via-[#22c55e] to-[#4ade80] w-full py-3 px-4 md:px-6 shadow-lg relative overflow-hidden border-b-4 border-yellow-400">
-    <div class="max-w-7xl mx-auto flex items-center justify-between h-auto md:h-36 flex-col md:flex-row gap-4 md:gap-0">
+<!-- HEADER: Hiển thị 1 dòng trên điện thoại -->
+<header class="bg-gradient-to-r from-[#16a34a] via-[#22c55e] to-[#4ade80] w-full py-2 md:py-3 px-2 md:px-6 shadow-lg relative overflow-hidden border-b-4 border-yellow-400">
+    <div class="max-w-7xl mx-auto flex items-center justify-between h-auto md:h-36 flex-row gap-1 md:gap-0">
         <!-- KHỐI LOGO BÊN TRÁI -->
         <div class="flex-shrink-0 z-10 transition-transform duration-300 hover:scale-105">
-            <img src="logo.png" alt="Logo THPT Phan Đình Phùng" class="w-24 h-24 md:w-32 md:h-32 object-contain bg-white rounded-full p-1 shadow-lg border-2 border-yellow-400">
+            <img src="logo.png" alt="Logo THPT Phan Đình Phùng" class="w-12 h-12 sm:w-16 sm:h-16 md:w-32 md:h-32 object-contain bg-white rounded-full p-0.5 md:p-1 shadow-lg border-2 border-yellow-400">
         </div>
 
         <!-- KHỐI TIÊU ĐỀ Ở GIỮA -->
-        <div class="flex-1 text-center px-2 md:px-4 z-10">
-            <h2 class="text-red-800 font-bold text-base md:text-xl drop-shadow-[0_1px_1px_rgba(255,255,255,0.8)]">SỞ GIÁO DỤC VÀ ĐÀO TẠO QUẢNG TRỊ</h2>
-            <h1 class="text-red-600 font-extrabold text-2xl md:text-4xl my-1 drop-shadow-[0_2px_2px_rgba(255,255,255,0.9)] tracking-wide">
+        <div class="flex-1 text-center px-1 md:px-4 z-10">
+            <h2 class="text-red-800 font-bold text-[8px] sm:text-[10px] md:text-xl drop-shadow-[0_1px_1px_rgba(255,255,255,0.8)]">SỞ GIÁO DỤC VÀ ĐÀO TẠO QUẢNG TRỊ</h2>
+            <h1 class="text-red-600 font-extrabold text-[10px] sm:text-xs md:text-4xl my-0.5 md:my-1 drop-shadow-[0_2px_2px_rgba(255,255,255,0.9)] tracking-wide">
                 TRƯỜNG THPT PHAN ĐÌNH PHÙNG
             </h1>
-            <p class="text-black font-semibold text-xs md:text-sm drop-shadow-[0_1px_1px_rgba(255,255,255,0.8)]">Địa chỉ: Số 14 Xuân Diệu - Đông Hới - Quảng Trị</p>
+            <p class="text-black font-semibold text-[7px] sm:text-[8px] md:text-sm drop-shadow-[0_1px_1px_rgba(255,255,255,0.8)]">Địa chỉ: Số 14 Xuân Diệu - Đông Hới - Quảng Trị</p>
         </div>
 
         <!-- KHỐI ẢNH TRƯỜNG BÊN PHẢI -->
-        <div class="hidden md:block flex-shrink-0 h-full py-1 z-10 transition-transform duration-300 hover:scale-105">
-            <img src="truong.jpg" alt="Toàn cảnh Trường THPT Phan Đình Phùng" class="h-full w-[280px] md:w-[350px] object-cover rounded-xl shadow-xl border-2 border-white/40">
+        <div class="flex-shrink-0 h-12 sm:h-16 md:h-full py-0 md:py-1 z-10 transition-transform duration-300 hover:scale-105">
+            <img src="truong.jpg" alt="Toàn cảnh Trường THPT Phan Đình Phùng" class="h-full w-16 sm:w-24 md:w-[350px] object-cover rounded-md md:rounded-xl shadow-xl border md:border-2 border-white/40">
         </div>
     </div>
     <!-- Pattern nền mờ -->
@@ -124,15 +124,9 @@
                 </div>
             </li>
 
-            <!-- TRỢ LÝ AI -->
-            <li class="group relative">
-                <a href="javascript:void(0)" onclick="toggleMobileMenu(this)" class="nav-item block px-2 md:px-4 py-2 md:py-4">TRỢ LÝ AI</a>
-                <div class="dropdown-menu absolute left-1/2 -translate-x-1/2 md:translate-x-0 md:left-0 top-full hidden md:group-hover:flex flex-col bg-white shadow-2xl rounded-xl border border-gray-100 w-56 p-3 gap-2 z-[100] mt-1 md:mt-0">
-                    <button onclick="showGrid('AI Giải Code', 5, 'Chức năng')" class="w-full bg-[#14b8a6] text-white font-bold py-2 px-4 rounded-lg hover:brightness-110 shadow-sm transition-all text-sm text-left">GIẢI MÃ CODE</button>
-                    <button onclick="showGrid('Sửa lỗi lập trình', 5, 'Chức năng')" class="w-full bg-[#f43f5e] text-white font-bold py-2 px-4 rounded-lg hover:brightness-110 shadow-sm transition-all text-sm text-left">SỬA LỖI</button>
-                    <button onclick="showGrid('Hỗ trợ tạo Prompt', 5, 'Chức năng')" class="w-full bg-[#6366f1] text-white font-bold py-2 px-4 rounded-lg hover:brightness-110 shadow-sm transition-all text-sm text-left">TẠO PROMPT</button>
-                    <button onclick="showGrid('Dịch thuật Tiếng Anh', 5, 'Chức năng')" class="w-full bg-[#84cc16] text-white font-bold py-2 px-4 rounded-lg hover:brightness-110 shadow-sm transition-all text-sm text-left">DỊCH THUẬT</button>
-                </div>
+            <!-- TRỢ LÝ AI (Sửa thành link bấm trực tiếp) -->
+            <li>
+                <a href="javascript:void(0)" onclick="showGrid('Trợ lý AI', 1, 'Phòng Chat AI')" class="nav-item block px-2 md:px-4 py-2 md:py-4 cursor-pointer">TRỢ LÝ AI</a>
             </li>
 
             <!-- LIÊN HỆ -->
@@ -162,8 +156,8 @@
 <main class="flex-grow w-full max-w-[1300px] mx-auto px-4 py-6 md:py-8">
     <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
         
-        <!-- Cột trái: Sidebar Danh Mục Học Tập -->
-        <aside class="lg:col-span-1">
+        <!-- Cột trái: Sidebar Danh Mục Học Tập (Thêm ID 'sidebar') -->
+        <aside id="sidebar" class="lg:col-span-1">
             <div class="bg-white rounded-xl shadow-md border border-gray-100 overflow-hidden h-full">
                 <div class="bg-[#0f766e] px-4 py-4">
                     <h2 class="text-white font-bold text-base uppercase tracking-wider flex items-center gap-2">
@@ -202,14 +196,8 @@
                             <span>Trắc nghiệm Mario</span>
                         </button>
                     </li>
-                    <!--<li class="border-b border-gray-50">
-                        <button onclick="showGrid('Bảng xếp hạng Lớp học', 5, 'BXH Lớp')" class="w-full flex items-center gap-3 px-4 py-3 hover:bg-teal-50 hover:text-[#0f766e] transition-colors border-l-4 border-transparent hover:border-[#0f766e] text-left">
-                            <span class="text-lg w-6 text-center text-yellow-500"><i class="fa-solid fa-trophy"></i></span>
-                            <span>Bảng xếp hạng Lớp học</span>
-                        </button>
-                    </li>-->
                     <li class="border-b border-gray-50">
-                        <button onclick="showGrid('Chat cùng AI giải mã code', 5, 'Phòng Chat')" class="w-full flex items-center gap-3 px-4 py-3 hover:bg-teal-50 hover:text-[#0f766e] transition-colors border-l-4 border-transparent hover:border-[#0f766e] text-left">
+                        <button onclick="showGrid('Chat cùng AI giải mã code', 1, 'Phòng Chat')" class="w-full flex items-center gap-3 px-4 py-3 hover:bg-teal-50 hover:text-[#0f766e] transition-colors border-l-4 border-transparent hover:border-[#0f766e] text-left">
                             <span class="text-lg w-6 text-center text-indigo-500"><i class="fa-solid fa-robot"></i></span>
                             <span>Chat cùng AI giải mã code</span>
                         </button>
@@ -246,7 +234,7 @@
                         <i class="fa-regular fa-circle-check text-4xl md:text-5xl text-blue-100 mb-3 md:mb-4"></i>
                         <span class="text-white font-extrabold text-lg md:text-xl lg:text-2xl drop-shadow-md leading-snug">Hệ thống<br>Trắc nghiệm<br>Tương tác</span>
                     </div>
-                    <div class="bg-gradient-to-br from-[#f59e0b] to-[#d97706] rounded-xl shadow-lg flex-1 flex flex-col justify-center items-center text-center p-4 md:p-6 cursor-pointer transform hover:scale-[1.03] transition-all duration-300 border border-yellow-400/30">
+                    <div onclick="showGrid('Trợ lý AI', 1, 'Phòng Chat AI')" class="bg-gradient-to-br from-[#f59e0b] to-[#d97706] rounded-xl shadow-lg flex-1 flex flex-col justify-center items-center text-center p-4 md:p-6 cursor-pointer transform hover:scale-[1.03] transition-all duration-300 border border-yellow-400/30">
                         <i class="fa-solid fa-robot text-4xl md:text-5xl text-yellow-100 mb-3 md:mb-4"></i>
                         <span class="text-white font-extrabold text-lg md:text-xl lg:text-2xl drop-shadow-md leading-tight">Trợ lý AI<br>Hỗ trợ giải đáp</span>
                     </div>
@@ -273,18 +261,17 @@
     </div>
 </main>
 
-<!-- FOOTER: Đã nâng cấp đổ màu gradient -->
+<!-- FOOTER -->
 <footer class="bg-gradient-to-br from-[#022c22] via-[#064e3b] to-[#0f766e] w-full mt-auto text-white">
     <div class="max-w-[1300px] mx-auto px-4 py-8 md:py-12 border-t-4 border-[#14b8a6]">
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-10 mb-4">
             <div class="flex flex-col gap-4">
                 <h3 class="text-[#facc15] font-black text-xl md:text-2xl uppercase tracking-wider drop-shadow-sm flex items-center gap-2">
-                    <i class="fa-solid fa-leaf"></i> HÀNH TRÌNH SỐ.
+                    <i class="fa-solid fa-leaf"></i> HÀNH TRÌNH SỐ 
                 </h3>
                 <p class="text-white/80 text-sm leading-relaxed text-justify mt-2">
                     Nền tảng cung cấp tài liệu học tập, bài giảng điện tử và hệ thống bài tập thực hành môn Tin học dành cho khối THPT, giúp nâng cao trải nghiệm học tập của học sinh.
                 </p>
-                
             </div>
             
             <!-- Cột 2: Khối Lớp -->
@@ -307,11 +294,7 @@
                     </h3>
                     <ul class="flex flex-col gap-3 text-white/80 text-sm mt-2">
                         <li><a href="#" class="hover:text-[#fde047] hover:translate-x-2 inline-block transition-transform duration-200"><i class="fa-solid fa-chevron-right text-xs text-teal-400 mr-2"></i>Trợ lý học tập AI</a></li>
-                        <!--<li><a href="#" class="hover:text-[#fde047] hover:translate-x-2 inline-block transition-transform duration-200"><i class="fa-solid fa-chevron-right text-xs text-teal-400 mr-2"></i>Leaderboard theo lớp</a></li>-->
                         <li><a href="#" class="hover:text-[#fde047] hover:translate-x-2 inline-block transition-transform duration-200"><i class="fa-solid fa-chevron-right text-xs text-teal-400 mr-2"></i>Minigame ôn tập</a></li>
-                        <!--<li><a href="#" class="hover:text-[#fde047] hover:translate-x-2 inline-block transition-transform duration-200"><i 
-
-                            class="fa-solid fa-chevron-right text-xs text-teal-400 mr-2"></i>Không gian Cỏ Dại</a></li>-->
                     </ul>
                 </div>
 
@@ -321,7 +304,6 @@
                         Hỗ trợ học sinh
                     </h3>
                     <ul class="flex flex-col gap-3 text-white/80 text-sm mt-2">
-                        <!--<li><a href="#" class="hover:text-[#fde047] hover:translate-x-2 inline-block transition-transform duration-200"><i class="fa-solid fa-chevron-right text-xs text-teal-400 mr-2"></i>Hướng dẫn nộp bài</a></li>-->
                         <li><a href="#" class="hover:text-[#fde047] hover:translate-x-2 inline-block transition-transform duration-200"><i class="fa-solid fa-chevron-right text-xs text-teal-400 mr-2"></i>Gửi thắc mắc môn học</a></li>
                         <li><a href="#" class="hover:text-[#fde047] hover:translate-x-2 inline-block transition-transform duration-200"><i class="fa-solid fa-chevron-right text-xs text-teal-400 mr-2"></i>Góc chia sẻ thanh xuân</a></li>
                     </ul>
@@ -329,28 +311,13 @@
 
             </div>
 
-
-
             <div class="flex flex-col gap-3 mt-2 text-white/90 text-sm bg-white/10 p-3 rounded-lg border border-white/20">
                     <div class="flex items-start gap-3">
                         <i class="fa-solid fa-school text-[#facc15] mt-1"></i>
-                        <span class="font-bold">&copy; 2026 Bản quyền thuộc về Trường THPT Phan Đình Phùng - Quảng Trị <br>    Website học tập và giải trí.</span>
+                        <span class="font-bold">&copy; 2026 Bản quyền thuộc về Trường THPT Phan Đình Phùng - Quảng Trị <br> Website học tập và giải trí của cô Lê Huyền Sinh.</span>
                     </div>
                 </div>
             </div>
-
-            <!-- Dòng bản quyền dưới cùng 
-            <div class="bg-yellow-50 py-4 px-4 w-full shadow-inner border-t-2 border-yellow-300">
-        <div class="max-w-[1300px] mx-auto flex flex-col md:flex-row justify-between items-center gap-3 text-center md:text-left">
-            <p class="text-red-600 font-bold text-sm">
-                &copy; 2026 Bản quyền thuộc về Trường THPT Phan Đình Phùng
-            </p>
-            <p class="text-red-600 font-bold text-sm">
-                Website học tập và giải trí.
-            </p>
-            </div>
-            
-        </div>-->
     </footer>
 
 <script>
@@ -406,6 +373,11 @@
         document.getElementById('grid-view').style.display = 'block';
         document.getElementById('grid-title').innerText = title.toUpperCase();
 
+        // Ẩn Danh mục học tập trên thiết bị di động (kích thước màn hình nhỏ)
+        if (window.innerWidth < 1024) {
+            document.getElementById('sidebar').style.display = 'none';
+        }
+
         const container = document.getElementById('grid-container');
         container.innerHTML = '';
 
@@ -436,6 +408,10 @@
     function showDefault() {
         document.getElementById('grid-view').style.display = 'none';
         document.getElementById('default-view').style.display = 'grid'; 
+        
+        // Hiện lại Danh mục học tập khi quay lại trang chủ
+        document.getElementById('sidebar').style.display = 'block';
+        
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 </script>
