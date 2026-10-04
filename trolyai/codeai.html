@@ -68,23 +68,25 @@
         <div class="spacer"></div>
     </header>
 
+    <!-- Nơi khung chat Coze sẽ hiển thị -->
     <main class="chat-container" id="coze-chat-root"></main>
 
+    <!-- Thư viện Coze SDK chuẩn -->
     <script src="https://sf-cdn.coze.com/obj/unpkg-va/flow-platform/chat-app-sdk/1.2.0-beta.6/libs/oversea/index.js"></script>
     <script>
       new CozeWebSDK.WebChatClient({
         config: {
-          bot_id: '7692016613063049269',
+          bot_id: '7692765017192038405',
         },
         componentProps: {
-          title: 'Trợ lý AI - Giải mã Code',
+          title: 'Trợ lý AI 1',
           layout: 'mobile'
         },
         auth: {
           type: 'token',
-          token: 'pat_EO2Fmv2GsB4HAiHJVlJF4DsVnqOzHMjiLxXgfLO1RUGf7u4zT6pqzLWOUpGUUiP0', 
+          token: 'pat_WloT8PaqwVfypsJUBdNmW98QqB4EUba4jvnBkDVi4xK0ySBIEcnzfORTxrwTNNwl', 
           onRefreshToken: function () {
-            return 'pat_EO2Fmv2GsB4HAiHJVlJF4DsVnqOzHMjiLxXgfLO1RUGf7u4zT6pqzLWOUpGUUiP0'
+            return 'pat_WloT8PaqwVfypsJUBdNmW98QqB4EUba4jvnBkDVi4xK0ySBIEcnzfORTxrwTNNwl'
           }
         },
         el: document.getElementById('coze-chat-root')
