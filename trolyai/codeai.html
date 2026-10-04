@@ -49,13 +49,7 @@
         .spacer { width: 100px; }
 
         .chat-container { flex: 1; width: 100%; background: #ffffff; position: relative; }
-        
-        /* Cấu hình bắt buộc để khung chat tràn đầy màn hình */
-        #coze-chat-root { 
-            width: 100%; 
-            height: 100%; 
-            display: block;
-        }
+        #coze-chat-root { width: 100%; height: 100%; display: block; }
     </style>
 </head>
 <body>
@@ -74,7 +68,6 @@
         <div class="spacer"></div>
     </header>
 
-    <!-- Khung hiển thị chat -->
     <main class="chat-container" id="coze-chat-root"></main>
 
     <script src="https://sf-cdn.coze.com/obj/unpkg-va/flow-platform/chat-app-sdk/1.2.0-beta.6/libs/oversea/index.js"></script>
@@ -85,13 +78,13 @@
         },
         componentProps: {
           title: 'Trợ lý AI - Giải mã Code',
-          layout: 'mobile' // Đổi sang mobile để hiển thị tràn viền, tối ưu cho học sinh trên điện thoại
+          layout: 'mobile'
         },
         auth: {
           type: 'token',
-          token: 'pat_KxtBItpgAKzNKhovoLtCYy4IOqfjqcPD20NGGJZAILme7lvknZ6LyIU5qOUvop4H', 
+          token: 'pat_EO2Fmv2GsB4HAiHJVlJF4DsVnqOzHMjiLxXgfLO1RUGf7u4zT6pqzLWOUpGUUiP0', 
           onRefreshToken: function () {
-            return 'pat_KxtBItpgAKzNKhovoLtCYy4IOqfjqcPD20NGGJZAILme7lvknZ6LyIU5qOUvop4H'
+            return 'pat_EO2Fmv2GsB4HAiHJVlJF4DsVnqOzHMjiLxXgfLO1RUGf7u4zT6pqzLWOUpGUUiP0'
           }
         },
         el: document.getElementById('coze-chat-root')
