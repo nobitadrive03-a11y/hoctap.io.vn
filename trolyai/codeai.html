@@ -3,125 +3,89 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tích hợp Trợ lý AI</title>
-
-     <script async src="https://www.googletagmanager.com/gtag/js?id=G-HE4GXY8B53"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-HE4GXY8B53');
-    </script>
-
-    
+    <title>Trợ lý AI - Hành Trình Số</title>
     <style>
-        /* Reset cơ bản và khóa cuộn toàn trang */
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body, html { height: 100%; font-family: Arial, sans-serif; overflow: hidden; }
-
-        /* Bố cục chính */
-        .layout-wrapper {
-            display: flex;
-            height: 100vh;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body, html {
             width: 100vw;
-            background-color: #f4f7f6;
-        }
-
-        /* Phần nội dung trang web (chỉ cuộn phần này) */
-        .main-content {
-            flex: 1;
             height: 100vh;
-            overflow-y: auto;
+            overflow: hidden; 
+            background-color: #f0f2f5; 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
         }
-
-        /* Container thanh bên chứa AI */
-        .ai-sidebar {
-            width: 0; 
-            background: #fff;
-            transition: width 0.3s ease;
+        
+        /* =========================================
+           NÚT TRANG CHỦ - THIẾT KẾ THEO MẪU CỦA BẠN
+           ========================================= */
+        .back-btn {
+            position: fixed;
+            top: 35px; /* Đẩy nút xuống dưới một chút */
+            right: 45px; /* Đẩy nút vào trong một chút */
+            padding: 8px 16px;
+            background-color: #f4f5f7; /* Màu nền xám nhạt */
+            color: #34495e; /* Màu chữ xám xanh đậm */
+            text-decoration: none;
+            font-weight: 700; /* In đậm chữ */
+            font-size: 16px;
+            border-radius: 12px; /* Bo góc mềm mại */
+            border: 1px solid #dcdfe6; /* Viền mờ */
+            z-index: 9999; 
             display: flex;
-            flex-direction: column;
-            height: 100vh; /* Cố định bằng chiều cao màn hình */
-            border-left: 1px solid #ddd;
+            align-items: center;
+            gap: 8px; /* Khoảng cách giữa icon và chữ */
+            transition: all 0.2s ease;
+        }
+        
+        .back-btn:hover {
+            background-color: #e4e7ed; /* Nền đậm lên một chút khi rê chuột */
+            border-color: #c0c4cc;
         }
 
-        /* Khi AI được kích hoạt */
-        .layout-wrapper.show-ai .ai-sidebar {
-            width: 420px; /* Mình chỉnh rộng ra 420px để dễ nhìn hơn */
-        }
-
-        /* Nút đóng: Chốt cứng chiều cao là 50px */
-        .close-ai-btn {
-            height: 50px; 
+        /* Lớp bọc ngoài giúp căn giữa và phóng to */
+        .chat-wrapper {
             width: 100%;
-            background: #e74c3c; 
-            color: #fff;
-            border: none;
-            font-weight: bold;
-            font-size: 15px;
-            cursor: pointer;
-            flex-shrink: 0; /* Ngăn không cho nút này bị bóp méo */
+            height: 100%;
+            display: flex;
+            justify-content: center; 
+            zoom: 1.25; 
         }
-        .close-ai-btn:hover { background: #c0392b; }
 
-        /* Vùng chứa chat: Chiều cao = Tổng màn hình TRỪ ĐI 50px của nút đóng */
-        #coze-chat-container {
-            height: calc(100vh - 50px); 
+        /* Vùng chứa khung chat */
+        #chat-container {
             width: 100%;
-            position: relative;
+            max-width: 1000px; 
+            height: 100%;
+            background-color: #fff;
+            box-shadow: 0 0 25px rgba(0,0,0,0.1); 
         }
 
-        /* Can thiệp sâu: Ép các thành phần của Coze không được tràn viền */
-        #coze-chat-container > div,
-        #coze-chat-container iframe {
+        /* Ép Coze hiển thị vừa vặn trong vùng chứa */
+        #chat-container iframe,
+        #chat-container > div {
             width: 100% !important;
             height: 100% !important;
+            max-width: 100% !important;
             max-height: 100% !important;
+            border: none !important;
             border-radius: 0 !important;
-            box-shadow: none !important;
-            bottom: 0 !important;
-            right: 0 !important;
-        }
-
-        /* Responsive cho điện thoại */
-        @media (max-width: 768px) {
-            .layout-wrapper.show-ai .ai-sidebar {
-                position: fixed;
-                top: 0;
-                right: 0;
-                width: 100%; 
-                z-index: 9999;
-            }
         }
     </style>
 </head>
 <body>
 
-     <div class="layout-wrapper" id="app-layout">
-        
-         <!-- PHẦN 1: NỘI DUNG WEB 
-        <div class="main-content">
-            <nav style="background: #003399; padding: 15px; display: flex; gap: 20px; align-items: center;">
-                <a href="#" style="color:white; text-decoration:none; font-weight:bold;">hoctap.io.vn</a>
-                <a href="#" style="color:white; text-decoration:none; font-size: 14px;">GIỚI THIỆU</a>
-                <a href="#" class="trigger-ai-btn" style="color:white; text-decoration:none; font-size: 14px; font-weight:bold;">TRỢ LÝ AI</a>
-            </nav>
+    <!-- Nút quay lại với icon và chữ giống mẫu -->
+    <!-- Nhớ sửa 'index.html' thành link trang chủ thực tế của bạn nhé -->
+    <a href="index.html" class="back-btn">
+        🏠 Trang chủ
+    </a>
 
-            <div style="padding: 40px 20px; text-align: center;">
-                <h1 style="color: #005577; margin-bottom: 20px;">MANG CÔNG NGHỆ VÀO MỌI CHUYẾN ĐI</h1>
-                
-                <button class="trigger-ai-btn" style="padding: 15px 30px; background-color: #f39c12; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 18px; font-weight: bold;">
-                    🤖 Trợ lý AI Hỗ trợ giải đáp
-                </button>
-            </div>
-        </div>-->
-
-        <!-- PHẦN 2: KHUNG CHAT AI -->
-        <div class="ai-sidebar">
-            <button class="close-ai-btn" id="close-ai">✖ Đóng Trợ lý AI</button>
-            <div id="coze-chat-container"></div>
-        </div>
-        
+    <!-- Lớp bọc ngoài giúp căn giữa và phóng to -->
+    <div class="chat-wrapper">
+        <div id="chat-container"></div>
     </div>
 
     <!-- Script nhúng Coze -->
@@ -146,11 +110,11 @@
             ui: {
                 base: {
                     icon: 'logo_bot.png',
-                    layout: 'pc', /* Trả về PC để khung chat tự động lấp đầy phần tử chứa nó */
+                    layout: 'pc', 
                     lang: 'en', 
                 },
                 header: {
-                    isShow: false,
+                    isShow: true, 
                     isNeedClose: false, 
                 },
                 asstBtn: {
@@ -160,30 +124,15 @@
                     isShow: false,
                 },
                 chatBot: {
-                    title: 'Trợ lý AI',
+                    title: '🤖 Trợ lý AI.',
                     uploadable: true,
-                    width: 420, /* Khớp với chiều rộng của thanh bên ai-sidebar */
-                    el: document.getElementById('coze-chat-container'),
+                    width: '100%', 
+                    el: document.getElementById('chat-container'),
                 },
             },
         });
 
         cozeClient.showChatBot();
-
-        const appLayout = document.getElementById('app-layout');
-        const triggerBtns = document.querySelectorAll('.trigger-ai-btn');
-        const closeBtn = document.getElementById('close-ai');
-
-        triggerBtns.forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                e.preventDefault(); 
-                appLayout.classList.toggle('show-ai'); 
-            });
-        });
-
-        closeBtn.addEventListener('click', () => {
-            appLayout.classList.remove('show-ai');
-        });
     </script>
 </body>
 </html>
