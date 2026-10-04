@@ -4,10 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Trợ lý AI Giải mã Code - Hành Trình Số</title>
-    <!-- Tích hợp Google Fonts cho giao diện hiện đại -->
     <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
     
- <script async src="https://www.googletagmanager.com/gtag/js?id=G-HE4GXY8B53"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-HE4GXY8B53"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
@@ -15,100 +14,54 @@
       gtag('config', 'G-HE4GXY8B53');
     </script>
 
-    
     <style>
-        * {
-            box-sizing: border-box;
-        }
+        * { box-sizing: border-box; }
         body {
             font-family: 'Be Vietnam Pro', sans-serif;
-            margin: 0;
-            padding: 0;
+            margin: 0; padding: 0;
             background-color: #f4f7f6;
-            display: flex;
-            flex-direction: column;
-            height: 100vh; 
-            overflow: hidden; 
+            display: flex; flex-direction: column;
+            height: 100vh; overflow: hidden; 
         }
         
-        /* Thanh header với hiệu ứng chuyển màu Gradient */
         .header {
             background: linear-gradient(135deg, #1a428a 0%, #2a65d6 100%);
-            color: white;
-            padding: 12px 30px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
-            z-index: 10;
+            color: white; padding: 12px 30px;
+            display: flex; align-items: center; justify-content: space-between;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15); z-index: 10;
         }
         
-        /* Nút quay lại phong cách hiện đại */
         .back-btn {
-            background: rgba(255, 255, 255, 0.15);
-            color: white;
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 14px;
-            padding: 8px 18px;
-            border-radius: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            transition: all 0.3s ease;
-            backdrop-filter: blur(5px);
-            display: flex;
-            align-items: center;
-            gap: 6px;
+            background: rgba(255, 255, 255, 0.15); color: white; text-decoration: none;
+            font-weight: 600; font-size: 14px; padding: 8px 18px;
+            border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease; backdrop-filter: blur(5px);
+            display: flex; align-items: center; gap: 6px;
         }
         .back-btn:hover {
-            background: rgba(255, 255, 255, 0.3);
-            transform: translateY(-1px);
+            background: rgba(255, 255, 255, 0.3); transform: translateY(-1px);
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
 
-        /* Khu vực tiêu đề giữa */
-        .header-title {
-            text-align: center;
-            flex-grow: 1;
-        }
-        .header-title h1 {
-            margin: 0;
-            font-size: 22px;
-            font-weight: 700;
-            letter-spacing: 0.5px;
-            text-transform: uppercase;
-        }
-        .header-title p {
-            margin: 4px 0 0;
-            font-size: 13px;
-            color: #ffeb3b;
-            font-style: italic;
-            font-weight: 400;
-        }
+        .header-title { text-align: center; flex-grow: 1; }
+        .header-title h1 { margin: 0; font-size: 22px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; }
+        .header-title p { margin: 4px 0 0; font-size: 13px; color: #ffeb3b; font-style: italic; font-weight: 400; }
+        .spacer { width: 100px; }
 
-        /* Phần tử trống để căn giữa tiêu đề hoàn hảo bằng Flexbox */
-        .spacer {
-            width: 100px; 
-        }
-
-        /* Container chứa AI */
-        .chat-container {
-            flex: 1;
-            width: 100%;
-            background: #ffffff;
-            position: relative;
-        }
+        .chat-container { flex: 1; width: 100%; background: #ffffff; position: relative; }
         
-        #coze-chat-root {
-            width: 100%;
-            height: 100%;
+        /* Cấu hình bắt buộc để khung chat tràn đầy màn hình */
+        #coze-chat-root { 
+            width: 100%; 
+            height: 100%; 
+            display: block;
         }
     </style>
 </head>
 <body>
 
     <header class="header">
-        <a href="index.html" class="back-btn">
-            <!-- Icon mũi tên SVG -->
+        <a href="../index.html" class="back-btn">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
             Về Trang Chủ
         </a>
@@ -121,25 +74,28 @@
         <div class="spacer"></div>
     </header>
 
+    <!-- Khung hiển thị chat -->
     <main class="chat-container" id="coze-chat-root"></main>
 
-    <!-- Nhúng SDK của Coze -->
-    <!-- Nhúng SDK của Coze (đã sửa lại đúng link thư viện) -->
-    <script src="https://sf-cdn.coze.com/obj/unpkg-va/flow-web-client/latest/coze-web-sdk.js"></script>
+    <script src="https://sf-cdn.coze.com/obj/unpkg-va/flow-platform/chat-app-sdk/1.2.0-beta.6/libs/oversea/index.js"></script>
     <script>
-        new CozeWebSDK.WebChatClient({
-          config: {
-            bot_id: '7692016613063049269',
-          },
-          componentProps: {
-            title: 'Hỗ trợ Tin học',
-            layout: 'pc'
-          },
-          auth: {
-            type: 'unauth' // Khai báo quyền truy cập công khai
-          },
-          el: document.getElementById('coze-chat-root') 
-        });
+      new CozeWebSDK.WebChatClient({
+        config: {
+          bot_id: '7692016613063049269',
+        },
+        componentProps: {
+          title: 'Trợ lý AI - Giải mã Code',
+          layout: 'mobile' // Đổi sang mobile để hiển thị tràn viền, tối ưu cho học sinh trên điện thoại
+        },
+        auth: {
+          type: 'token',
+          token: 'pat_KxtBItpgAKzNKhovoLtCYy4IOqfjqcPD20NGGJZAILme7lvknZ6LyIU5qOUvop4H', 
+          onRefreshToken: function () {
+            return 'pat_KxtBItpgAKzNKhovoLtCYy4IOqfjqcPD20NGGJZAILme7lvknZ6LyIU5qOUvop4H'
+          }
+        },
+        el: document.getElementById('coze-chat-root')
+      });
     </script>
 
 </body>
