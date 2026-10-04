@@ -3,10 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trợ lý AI Giải mã Code - Hành Trình Số</title>
-    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
-    
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-HE4GXY8B53"></script>
+    <title>Tích hợp Trợ lý AI</title>
+
+     <script async src="https://www.googletagmanager.com/gtag/js?id=G-HE4GXY8B53"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
@@ -14,82 +13,177 @@
       gtag('config', 'G-HE4GXY8B53');
     </script>
 
+    
     <style>
-        * { box-sizing: border-box; }
-        body {
-            font-family: 'Be Vietnam Pro', sans-serif;
-            margin: 0; padding: 0;
+        /* Reset cơ bản và khóa cuộn toàn trang */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body, html { height: 100%; font-family: Arial, sans-serif; overflow: hidden; }
+
+        /* Bố cục chính */
+        .layout-wrapper {
+            display: flex;
+            height: 100vh;
+            width: 100vw;
             background-color: #f4f7f6;
-            display: flex; flex-direction: column;
-            height: 100vh; overflow: hidden; 
-        }
-        
-        .header {
-            background: linear-gradient(135deg, #1a428a 0%, #2a65d6 100%);
-            color: white; padding: 12px 30px;
-            display: flex; align-items: center; justify-content: space-between;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15); z-index: 10;
-        }
-        
-        .back-btn {
-            background: rgba(255, 255, 255, 0.15); color: white; text-decoration: none;
-            font-weight: 600; font-size: 14px; padding: 8px 18px;
-            border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.2);
-            transition: all 0.3s ease; backdrop-filter: blur(5px);
-            display: flex; align-items: center; gap: 6px;
-        }
-        .back-btn:hover {
-            background: rgba(255, 255, 255, 0.3); transform: translateY(-1px);
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
 
-        .header-title { text-align: center; flex-grow: 1; }
-        .header-title h1 { margin: 0; font-size: 22px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; }
-        .header-title p { margin: 4px 0 0; font-size: 13px; color: #ffeb3b; font-style: italic; font-weight: 400; }
-        .spacer { width: 100px; }
+        /* Phần nội dung trang web (chỉ cuộn phần này) */
+        .main-content {
+            flex: 1;
+            height: 100vh;
+            overflow-y: auto;
+        }
 
-        .chat-container { flex: 1; width: 100%; background: #ffffff; position: relative; }
-        #coze-chat-root { width: 100%; height: 100%; display: block; }
+        /* Container thanh bên chứa AI */
+        .ai-sidebar {
+            width: 0; 
+            background: #fff;
+            transition: width 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            height: 100vh; /* Cố định bằng chiều cao màn hình */
+            border-left: 1px solid #ddd;
+        }
+
+        /* Khi AI được kích hoạt */
+        .layout-wrapper.show-ai .ai-sidebar {
+            width: 420px; /* Mình chỉnh rộng ra 420px để dễ nhìn hơn */
+        }
+
+        /* Nút đóng: Chốt cứng chiều cao là 50px */
+        .close-ai-btn {
+            height: 50px; 
+            width: 100%;
+            background: #e74c3c; 
+            color: #fff;
+            border: none;
+            font-weight: bold;
+            font-size: 15px;
+            cursor: pointer;
+            flex-shrink: 0; /* Ngăn không cho nút này bị bóp méo */
+        }
+        .close-ai-btn:hover { background: #c0392b; }
+
+        /* Vùng chứa chat: Chiều cao = Tổng màn hình TRỪ ĐI 50px của nút đóng */
+        #coze-chat-container {
+            height: calc(100vh - 50px); 
+            width: 100%;
+            position: relative;
+        }
+
+        /* Can thiệp sâu: Ép các thành phần của Coze không được tràn viền */
+        #coze-chat-container > div,
+        #coze-chat-container iframe {
+            width: 100% !important;
+            height: 100% !important;
+            max-height: 100% !important;
+            border-radius: 0 !important;
+            box-shadow: none !important;
+            bottom: 0 !important;
+            right: 0 !important;
+        }
+
+        /* Responsive cho điện thoại */
+        @media (max-width: 768px) {
+            .layout-wrapper.show-ai .ai-sidebar {
+                position: fixed;
+                top: 0;
+                right: 0;
+                width: 100%; 
+                z-index: 9999;
+            }
+        }
     </style>
 </head>
 <body>
 
-    <header class="header">
-        <a href="../index.html" class="back-btn">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-            Về Trang Chủ
-        </a>
+     <div class="layout-wrapper" id="app-layout">
         
-        <div class="header-title">
-            <h1>Trợ lý AI - Giải mã Code</h1>
-            <p>Mang công nghệ vào mọi chuyến đi</p>
+         <!-- PHẦN 1: NỘI DUNG WEB 
+        <div class="main-content">
+            <nav style="background: #003399; padding: 15px; display: flex; gap: 20px; align-items: center;">
+                <a href="#" style="color:white; text-decoration:none; font-weight:bold;">hoctap.io.vn</a>
+                <a href="#" style="color:white; text-decoration:none; font-size: 14px;">GIỚI THIỆU</a>
+                <a href="#" class="trigger-ai-btn" style="color:white; text-decoration:none; font-size: 14px; font-weight:bold;">TRỢ LÝ AI</a>
+            </nav>
+
+            <div style="padding: 40px 20px; text-align: center;">
+                <h1 style="color: #005577; margin-bottom: 20px;">MANG CÔNG NGHỆ VÀO MỌI CHUYẾN ĐI</h1>
+                
+                <button class="trigger-ai-btn" style="padding: 15px 30px; background-color: #f39c12; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 18px; font-weight: bold;">
+                    🤖 Trợ lý AI Hỗ trợ giải đáp
+                </button>
+            </div>
+        </div>-->
+
+        <!-- PHẦN 2: KHUNG CHAT AI -->
+        <div class="ai-sidebar">
+            <button class="close-ai-btn" id="close-ai">✖ Đóng Trợ lý AI</button>
+            <div id="coze-chat-container"></div>
         </div>
         
-        <div class="spacer"></div>
-    </header>
+    </div>
 
-    <main class="chat-container" id="coze-chat-root"></main>
-
+    <!-- Script nhúng Coze -->
     <script src="https://sf-cdn.coze.com/obj/unpkg-va/flow-platform/chat-app-sdk/1.2.0-beta.6/libs/oversea/index.js"></script>
     <script>
-      new CozeWebSDK.WebChatClient({
-        config: {
-          bot_id: '7692765017192038405',
-        },
-        componentProps: {
-          title: 'Trợ lý AI 1',
-          layout: 'mobile'
-        },
-        auth: {
-          type: 'token',
-          token: 'pat_WloT8PaqwVfypsJUBdNmW98QqB4EUba4jvnBkDVi4xK0ySBIEcnzfORTxrwTNNwl', 
-          onRefreshToken: function () {
-            return 'pat_WloT8PaqwVfypsJUBdNmW98QqB4EUba4jvnBkDVi4xK0ySBIEcnzfORTxrwTNNwl'
-          }
-        },
-        el: document.getElementById('coze-chat-root')
-      });
-    </script>
+        const cozeClient = new CozeWebSDK.WebChatClient({
+            config: {
+                type: 'bot',
+                bot_id: '7692747122802065413',
+                isIframe: false,
+            },
+            auth: {
+                type: 'token',
+                token: 'cztei_0MOwKTPJPmqnNn0MnDJB9oH90WqjQ6T9Hq8X4YqzbE5C2bhKaDVaw7HfnNI4IHHib',
+                onRefreshToken: async () => 'pat_iHd6HfMdqlG1ffXJqCm6FKIXBJniqoTLMBHOnVeQoePwaWDoClRUJzAqrfHX379R'
+            },
+            userInfo: {
+                id: 'user',
+                url: 'https://sf-coze-web-cdn.coze.com/obj/eden-sg/lm-lgvj/ljhwZthlaukjlkulzlp/coze/coze-logo.png',
+                nickname: 'Khách hàng',
+            },
+            ui: {
+                base: {
+                    icon: 'logo_bot.png',
+                    layout: 'pc', /* Trả về PC để khung chat tự động lấp đầy phần tử chứa nó */
+                    lang: 'en', 
+                },
+                header: {
+                    isShow: false,
+                    isNeedClose: false, 
+                },
+                asstBtn: {
+                    isNeed: false 
+                },
+                footer: {
+                    isShow: false,
+                },
+                chatBot: {
+                    title: 'Trợ lý AI',
+                    uploadable: true,
+                    width: 420, /* Khớp với chiều rộng của thanh bên ai-sidebar */
+                    el: document.getElementById('coze-chat-container'),
+                },
+            },
+        });
 
+        cozeClient.showChatBot();
+
+        const appLayout = document.getElementById('app-layout');
+        const triggerBtns = document.querySelectorAll('.trigger-ai-btn');
+        const closeBtn = document.getElementById('close-ai');
+
+        triggerBtns.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault(); 
+                appLayout.classList.toggle('show-ai'); 
+            });
+        });
+
+        closeBtn.addEventListener('click', () => {
+            appLayout.classList.remove('show-ai');
+        });
+    </script>
 </body>
 </html>
