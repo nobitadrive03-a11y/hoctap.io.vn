@@ -1,0 +1,8 @@
+title: "Hành Trình Số"
+author: "Lê Huyền Sinh"
+description: "Nền tảng học tập, rèn luyện tư duy lập trình và kiểm tra đánh giá trực tuyến môn Tin học - THPT Phan Đình Phùng"
+url: "https://hoctap.io.vn"
+enforce_ssl: true
+
+plugins:
+  - jekyll-sitemap
