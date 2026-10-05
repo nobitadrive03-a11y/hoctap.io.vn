@@ -21,12 +21,14 @@
         /* =========================================
            NÚT TRANG CHỦ - THIẾT KẾ THEO MẪU CỦA BẠN
            ========================================= */
-        .back-btn {
-            position: fixed;
-            top: 35px; /* Đẩy nút xuống dưới một chút */
-            right: 45px; /* Đẩy nút vào trong một chút */
-            padding: 8px 16px;
-            background-color: #f4f5f7; /* Màu nền xám nhạt */
+      
+            .back-btn {
+    position: fixed; /* Làm cho nút nổi cố định không bị trôi khi cuộn */
+    top: 12px;       /* Căn khoảng cách từ mép trên cùng của màn hình xuống */
+    right: 20px;     /* Ép nút nằm về phía bên phải, cách lề phải 15px */
+    padding: 8px 16px;
+    background-color: #007bff;
+            
             color: #34495e; /* Màu chữ xám xanh đậm */
             text-decoration: none;
             font-weight: 700; /* In đậm chữ */
@@ -94,18 +96,18 @@
         const cozeClient = new CozeWebSDK.WebChatClient({
             config: {
                 type: 'bot',
-                bot_id: '7692747122802065413',
+                bot_id: '7692765017192038405',
                 isIframe: false,
             },
             auth: {
                 type: 'token',
-                token: 'cztei_0MOwKTPJPmqnNn0MnDJB9oH90WqjQ6T9Hq8X4YqzbE5C2bhKaDVaw7HfnNI4IHHib',
-                onRefreshToken: async () => 'pat_iHd6HfMdqlG1ffXJqCm6FKIXBJniqoTLMBHOnVeQoePwaWDoClRUJzAqrfHX379R'
+                token: 'pat_tltY3Cicy7bD9Ud6Ma4CeSgb5q1XNvmIivgXcG1ra82vgGgDR3Qwc23TzbgzsT8y',
+                onRefreshToken: async () => 'pat_tltY3Cicy7bD9Ud6Ma4CeSgb5q1XNvmIivgXcG1ra82vgGgDR3Qwc23TzbgzsT8y'
             },
             userInfo: {
                 id: 'user',
                 url: 'https://sf-coze-web-cdn.coze.com/obj/eden-sg/lm-lgvj/ljhwZthlaukjlkulzlp/coze/coze-logo.png',
-                nickname: 'Khách hàng',
+                nickname: 'Bạn',
             },
             ui: {
                 base: {
@@ -124,7 +126,7 @@
                     isShow: false,
                 },
                 chatBot: {
-                    title: '🤖 Trợ lý AI.',
+                    title: '🤖 Trợ lý AI cô Huyền Sinh.',
                     uploadable: true,
                     width: '100%', 
                     el: document.getElementById('chat-container'),
