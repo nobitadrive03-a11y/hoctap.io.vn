@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trợ lý AI - Hành Trình Số</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body, html {
+            width: 100%;
+            height: 99%;
+            overflow: hidden; 
+            background-color: #f0f2f5; 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+        
+        /* =========================================
+           NÚT TRANG CHỦ - THIẾT KẾ THEO MẪU CỦA BẠN
+           ========================================= */
+      
+            .back-btn {
+    position: fixed; /* Làm cho nút nổi cố định không bị trôi khi cuộn */
+    top: 12px;       /* Căn khoảng cách từ mép trên cùng của màn hình xuống */
+    right: 20px;     /* Ép nút nằm về phía bên phải, cách lề phải 15px */
+    padding: 8px 16px;
+    background-color: #007bff;
+            
+            color: #34495e; /* Màu chữ xám xanh đậm */
+            text-decoration: none;
+            font-weight: 700; /* In đậm chữ */
+            font-size: 16px;
+            border-radius: 12px; /* Bo góc mềm mại */
+            border: 1px solid #dcdfe6; /* Viền mờ */
+            z-index: 9999; 
+            display: flex;
+            align-items: center;
+            gap: 8px; /* Khoảng cách giữa icon và chữ */
+            transition: all 0.2s ease;
+        }
+        
+        .back-btn:hover {
+            background-color: #e4e7ed; /* Nền đậm lên một chút khi rê chuột */
+            border-color: #c0c4cc;
+        }
+
+        /* Lớp bọc ngoài giúp căn giữa và phóng to */
+        .chat-wrapper {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center; 
+            zoom: 1.25; 
+        }
+
+        /* Vùng chứa khung chat */
+        #chat-container {
+            width: 100%;
+            max-width: 1000px; 
+            height: 100%;
+            background-color: #fff;
+            box-shadow: 0 0 25px rgba(0,0,0,0.1); 
+        }
+
+        /* Ép Coze hiển thị vừa vặn trong vùng chứa */
+        #chat-container iframe,
+        #chat-container > div {
+            width: 100% !important;
+            height: 100% !important;
+            max-width: 100% !important;
+            max-height: 100% !important;
+            border: none !important;
+            border-radius: 0 !important;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Nút quay lại với icon và chữ giống mẫu -->
+    <!-- Nhớ sửa 'index.html' thành link trang chủ thực tế của bạn nhé -->
+    <a href="https://hoctap.io.vn/" class="back-btn">
+        🏠
+    </a>
+
+    <!-- Lớp bọc ngoài giúp căn giữa và phóng to -->
+    <div class="chat-wrapper">
+        <div id="chat-container"></div>
+    </div>
+
+    <!-- Script nhúng Coze -->
+    <script src="https://sf-cdn.coze.com/obj/unpkg-va/flow-platform/chat-app-sdk/1.2.0-beta.6/libs/oversea/index.js"></script>
+    <script>
+        const cozeClient = new CozeWebSDK.WebChatClient({
+            config: {
+                type: 'bot',
+                bot_id: '7693458423115464757',
+                isIframe: false,
+            },
+            auth: {
+                type: 'token',
+                token: 'pat_SKumZQ5DUJbjJRcl5RkjLaI6e3gMFD1e48E23S73j064es4cmDdKr4O5YaNT1bCO',
+                onRefreshToken: async () => 'pat_SKumZQ5DUJbjJRcl5RkjLaI6e3gMFD1e48E23S73j064es4cmDdKr4O5YaNT1bCO'
+            },
+            userInfo: {
+                id: 'user',
+                url: 'https://sf-coze-web-cdn.coze.com/obj/eden-sg/lm-lgvj/ljhwZthlaukjlkulzlp/coze/coze-logo.png',
+                nickname: 'Bạn',
+            },
+            ui: {
+                base: {
+                    icon: 'logo_bot.png',
+                    layout: 'pc', 
+                    lang: 'en', 
+                },
+                header: {
+                    isShow: true, 
+                    isNeedClose: false, 
+                },
+                asstBtn: {
+                    isNeed: false 
+                },
+                footer: {
+                    isShow: false,
+                },
+                chatBot: {
+                    title: '🤖Cô Huyền Sinh.',
+                    uploadable: true,
+                    width: '100%', 
+                    el: document.getElementById('chat-container'),
+                },
+            },
+        });
+
+        cozeClient.showChatBot();
+    </script>
+</body>
+</html>
