@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Trường THPT Phan Đình Phùng | Hành Trình Số </title>
 
-<meta name="google-site-verification" content="Cw9RiI8exDEqFFkd9MNsxkjt-8HFgVPuS32BR8kD5Sc" />
+    <meta name="google-site-verification" content="Cw9RiI8exDEqFFkd9MNsxkjt-8HFgVPuS32BR8kD5Sc" />
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -114,15 +114,15 @@
                 <div class="dropdown-menu absolute left-1/2 -translate-x-1/2 md:translate-x-0 md:left-0 top-full hidden md:group-hover:flex flex-col bg-white shadow-2xl rounded-xl border border-gray-100 w-56 p-3 gap-2 z-[100] mt-1 md:mt-0">
                     <button onclick="showLessons('Âm nhạc học đường', giaiTriAmNhac)" class="w-full bg-[#f97316] text-white font-bold py-2 px-4 rounded-lg hover:brightness-110 shadow-sm transition-all text-sm text-left">ÂM NHẠC</button>
                     <button onclick="showLessons('Góc chia sẻ kỉ niệm', giaiTriKiNiem)" class="w-full bg-[#22c55e] text-white font-bold py-2 px-4 rounded-lg hover:brightness-110 shadow-sm transition-all text-sm text-left">KỈ NIỆM</button>
-                    <button onclick="showLessons('Minigame Trí tuệ', giaiTriGame)" class="w-full bg-[#8b5cf6] text-white font-bold py-2 px-4 rounded-lg hover:brightness-110 shadow-sm transition-all text-sm text-left">MINIGAME</button>
-                    <button onclick="showLessons('Thư viện hình ảnh', giaiTriAnh)" class="w-full bg-[#eab308] text-white font-bold py-2 px-4 rounded-lg hover:brightness-110 shadow-sm transition-all text-sm text-left">HÌNH ẢNH</button>
-                    <button onclick="showLessons('Tạp chí trường học', giaiTriTapChi)" class="w-full bg-[#3b82f6] text-white font-bold py-2 px-4 rounded-lg hover:brightness-110 shadow-sm transition-all text-sm text-left">TẠP CHÍ</button>
+                    <button onclick="showLessons('Minigame Trí tuệ', giaiTriGame)" class="w-full bg-[#8b5cf6] text-white font-bold py-2 px-4 rounded-lg hover:brightness-110 shadow-sm transition-all text-sm text-left">SÁCH LẬT</button>
+                   <!--  <button onclick="showLessons('Thư viện hình ảnh', giaiTriAnh)" class="w-full bg-[#eab308] text-white font-bold py-2 px-4 rounded-lg hover:brightness-110 shadow-sm transition-all text-sm text-left">HÌNH ẢNH</button>
+                    <button onclick="showLessons('Tạp chí trường học', giaiTriTapChi)" class="w-full bg-[#3b82f6] text-white font-bold py-2 px-4 rounded-lg hover:brightness-110 shadow-sm transition-all text-sm text-left">TẠP CHÍ</button>-->
                 </div>
             </li>
 
             <!-- TRỢ LÝ AI (ĐÃ GẮN LINK chat) -->
             <li>
-                <a href="trolyai/codeaihs.html">TRỢ LÝ AI</a>
+                <a href="trolyai/codeaihs.html" class="nav-item block px-2 md:px-4 py-2 md:py-4">TRỢ LÝ AI</a>
             </li>
 
             <!-- LIÊN HỆ -->
@@ -186,62 +186,44 @@
                             <span>Trò chơi Mario và Ô chữ ôn tập</span>
                         </button>
                     </li>
-                      <!--<li class="border-b border-gray-50">
-                        <button onclick="showLessons('Trắc nghiệm Mario', tracNghiemMario)" class="w-full flex items-center gap-3 px-4 py-3 hover:bg-teal-50 hover:text-[#0f766e] transition-colors border-l-4 border-transparent hover:border-[#0f766e] text-left">
-                            <span class="text-lg w-6 text-center text-red-500"><i class="fa-solid fa-bullseye"></i></span>
-                            <span>Trắc nghiệm Mario</span>
-                        </button>
-                    </li>  -->
                     <li class="border-b border-gray-50">
-                        <!-- LINK AI COZE Ở THANH BÊN TRÁI -->
                         <a href="trolyai/codeai.html" target="_blank" class="w-full flex items-center gap-3 px-4 py-3 hover:bg-teal-50 hover:text-[#0f766e] transition-colors border-l-4 border-transparent hover:border-[#0f766e] text-left">
                             <span class="text-lg w-6 text-center text-indigo-500"><i class="fa-solid fa-robot"></i></span>
                             <span>Chat cùng AI giải mã code</span>
                         </a>
                     </li>
-                      <!--<li>
-                        <button onclick="showLessons('Góc sáng tạo (GIMP/Canva)', gocSangTao)" class="w-full flex items-center gap-3 px-4 py-3 hover:bg-teal-50 hover:text-[#0f766e] transition-colors border-l-4 border-transparent hover:border-[#0f766e] text-left">
-                            <span class="text-lg w-6 text-center text-pink-500"><i class="fa-solid fa-palette"></i></span>
-                            <span>Góc sáng tạo (GIMP/Canva)</span>
-                        </button>
-                    </li>  -->
                 </ul>
             </div>
         </aside>
 
         <!-- CỘT PHẢI: KHUNG TRANG CHỦ / KHUNG BÀI HỌC -->
-        <div class="lg:col-span-3">
+        <div id="content-area" class="lg:col-span-3 transition-all duration-300">
             
             <!-- KHUNG TRANG CHỦ MẶC ĐỊNH -->
-           <div id="default-view" class="grid grid-cols-1 md:grid-cols-3 gap-6 h-full">
+            <div id="default-view" class="grid grid-cols-1 md:grid-cols-3 gap-6 h-full">
 
-    <div class="md:col-span-2 bg-gradient-to-br from-[#0f766e] to-[#042f2e] rounded-xl shadow-xl flex flex-col justify-center items-center text-center p-6 lg:p-12 min-h-[300px] md:min-h-[350px] transform hover:scale-[1.01] transition-transform duration-300 relative overflow-hidden group border border-[#14b8a6]/30">
-        
-        <!-- BẠN CHỈ CẦN THÊM DÒNG NÀY: Nó tạo ra một lớp link vô hình phủ kín toàn bộ thẻ div -->
-        <a href="LINK_TRANG_MOI_CUA_BAN.html" class="absolute inset-0 z-50 cursor-pointer"></a>
+                <div class="md:col-span-2 bg-gradient-to-br from-[#0f766e] to-[#042f2e] rounded-xl shadow-xl flex flex-col justify-center items-center text-center p-6 lg:p-12 min-h-[300px] md:min-h-[350px] transform hover:scale-[1.01] transition-transform duration-300 relative overflow-hidden group border border-[#14b8a6]/30">
+                    
+                    <a href="LINK_TRANG_MOI_CUA_BAN.html" class="absolute inset-0 z-50 cursor-pointer"></a>
 
-        <div class="text-white/80 text-5xl md:text-6xl mb-4 md:mb-6 transform group-hover:-translate-y-2 transition-transform duration-300">
-            <i class="fa-solid fa-laptop-code"></i>
-        </div>
+                    <div class="text-white/80 text-5xl md:text-6xl mb-4 md:mb-6 transform group-hover:-translate-y-2 transition-transform duration-300">
+                        <i class="fa-solid fa-laptop-code"></i>
+                    </div>
 
-        <h1 class="text-white text-2xl md:text-4xl lg:text-5xl font-black uppercase leading-tight mb-3 md:mb-4 tracking-tight drop-shadow-lg z-10">
-            MANG CÔNG NGHỆ<br>VÀO MỌI CHUYẾN ĐI
-        </h1>
-        <p class="text-teal-100 italic text-sm md:text-lg font-light max-w-md mx-auto z-10 border-t border-teal-600/50 pt-3 md:pt-4 mt-1 md:mt-2">
-            Nền tảng học tập, rèn luyện tư duy lập trình và kiểm tra đánh giá trực tuyến.
-        </p>
-    </div>
-
-
+                    <h1 class="text-white text-2xl md:text-4xl lg:text-5xl font-black uppercase leading-tight mb-3 md:mb-4 tracking-tight drop-shadow-lg z-10">
+                        MANG CÔNG NGHỆ<br>VÀO MỌI CHUYẾN ĐI
+                    </h1>
+                    <p class="text-teal-100 italic text-sm md:text-lg font-light max-w-md mx-auto z-10 border-t border-teal-600/50 pt-3 md:pt-4 mt-1 md:mt-2">
+                        Nền tảng học tập, rèn luyện tư duy lập trình và kiểm tra đánh giá trực tuyến.
+                    </p>
+                </div>
 
                 <div class="md:col-span-1 flex flex-col gap-4 md:gap-6">
-    <a href="https://lehuyensinh.io.vn/" target="_blank" class="bg-gradient-to-br from-blue-500 to-blue-700 rounded-xl shadow-lg flex-1 flex flex-col justify-center items-center text-center p-4 md:p-6 cursor-pointer transform hover:scale-[1.03] transition-all duration-300 border border-blue-400/30">
-        <i class="fa-solid fa-robot text-4xl md:text-5xl text-blue-100 mb-3 md:mb-4"></i>
-        <span class="text-white font-extrabold text-lg md:text-xl lg:text-2xl drop-shadow-md leading-tight">Hệ thống trắc nghiệm tương tác</span>
-    </a>
+                    <a href="https://lehuyensinh.io.vn/" target="_blank" class="bg-gradient-to-br from-blue-500 to-blue-700 rounded-xl shadow-lg flex-1 flex flex-col justify-center items-center text-center p-4 md:p-6 cursor-pointer transform hover:scale-[1.03] transition-all duration-300 border border-blue-400/30">
+                        <i class="fa-solid fa-robot text-4xl md:text-5xl text-blue-100 mb-3 md:mb-4"></i>
+                        <span class="text-white font-extrabold text-lg md:text-xl lg:text-2xl drop-shadow-md leading-tight">Hệ thống trắc nghiệm tương tác</span>
+                    </a>
 
-                    
-                    <!-- LINK AI chat Ở NÚT BẤM TRANG CHỦ -->
                     <a href="https://chatgpt.com/?utm_source=google&utm_medium=paid_search&c_id=22196290286&c_agid=176486813258&c_crid=792780730549&c_kwid=kwd-1927051708782&c_ims=&c_pms=9265971&c_nw=g&c_dvc=c&gad_source=1&gad_campaignid=22196290286&gbraid=0AAAAA-I0E5eiaP_bM5LFTf9MkojvpIJ1G&gclid=Cj0KCQjwz4LWBhCMARIsAFEG5MoqeYgpmTthJwzKSDbIkb8FNSLfjOLF04iys8K5hXsMRzxp_cDa9g4aAjXwEALw_wcB" target="_blank" class="bg-gradient-to-br from-[#f59e0b] to-[#d97706] rounded-xl shadow-lg flex-1 flex flex-col justify-center items-center text-center p-4 md:p-6 cursor-pointer transform hover:scale-[1.03] transition-all duration-300 border border-yellow-400/30">
                         <i class="fa-solid fa-robot text-4xl md:text-5xl text-yellow-100 mb-3 md:mb-4"></i>
                         <span class="text-white font-extrabold text-lg md:text-xl lg:text-2xl drop-shadow-md leading-tight">Trợ lý AI<br>Hỗ trợ giải đáp</span>
@@ -249,11 +231,13 @@
                 </div>
             </div>
 
-            <!-- KHUNG LƯỚI KHỐI MÀU BÀI HỌC (SẼ ẨN/HIỆN KHI BẤM MENU) -->
+            <!-- KHUNG LƯỚI KHỐI MÀU BÀI HỌC (SẼ ẨN SIDEBAR VÀ MỞ RỘNG TOÀN MÀN HÌNH KHI BẤM MENU) -->
+           <!-- KHUNG LƯỚI KHỐI MÀU BÀI HỌC -->
             <div id="grid-view" class="hidden bg-white rounded-xl shadow-md border border-gray-100 p-4 md:p-8 min-h-[400px]">
                 <h2 id="grid-title" class="text-center font-extrabold text-xl md:text-3xl uppercase mb-6 md:mb-8 text-gray-800 drop-shadow-sm">TIÊU ĐỀ MỤC</h2>
                 
-                <div id="grid-container" class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+                <!-- Chia cố định 2 cột đẹp mắt -->
+                <div id="grid-container" class="grid grid-cols-1 md:grid-cols-2 gap-12 max-w-5xl mx-auto">
                     <!-- Các thẻ bài học sẽ tự động được Javascript vẽ vào đây -->
                 </div>
                 
@@ -285,9 +269,9 @@
             <div class="flex flex-col gap-4">
                 <h3 class="font-bold text-lg border-b-2 border-teal-600 pb-2 inline-block w-max text-[#ccfbf1] uppercase tracking-wide">Khối Lớp</h3>
                 <ul class="flex flex-col gap-3 text-white/80 text-sm mt-2">
-                    <li><a href="#" class="hover:text-[#fde047] hover:translate-x-2 inline-block transition-transform duration-200"><i class="fa-solid fa-chevron-right text-xs text-teal-400 mr-2"></i>Tài liệu Tin học 10</a></li>
-                    <li><a href="#" class="hover:text-[#fde047] hover:translate-x-2 inline-block transition-transform duration-200"><i class="fa-solid fa-chevron-right text-xs text-teal-400 mr-2"></i>Tài liệu Tin học 11</a></li>
-                    <li><a href="#" class="hover:text-[#fde047] hover:translate-x-2 inline-block transition-transform duration-200"><i class="fa-solid fa-chevron-right text-xs text-teal-400 mr-2"></i>Tài liệu Tin học 12</a></li>
+                    <li><a href="javascript:void(0)" onclick="showLessons('Tài liệu Tin học 10', duLieuTin10)" class="hover:text-[#fde047] hover:translate-x-2 inline-block transition-transform duration-200"><i class="fa-solid fa-chevron-right text-xs text-teal-400 mr-2"></i>Tài liệu Tin học 10</a></li>
+                    <li><a href="javascript:void(0)" onclick="showLessons('Tài liệu Tin học 11', duLieuTin11)" class="hover:text-[#fde047] hover:translate-x-2 inline-block transition-transform duration-200"><i class="fa-solid fa-chevron-right text-xs text-teal-400 mr-2"></i>Tài liệu Tin học 11</a></li>
+                    <li><a href="javascript:void(0)" onclick="showLessons('Tài liệu Tin học 12', duLieuTin12)" class="hover:text-[#fde047] hover:translate-x-2 inline-block transition-transform duration-200"><i class="fa-solid fa-chevron-right text-xs text-teal-400 mr-2"></i>Tài liệu Tin học 12</a></li>
                 </ul>
             </div>
 
@@ -295,7 +279,7 @@
                 <h3 class="font-bold text-lg border-b-2 border-teal-600 pb-2 inline-block w-max text-[#ccfbf1] uppercase tracking-wide">Tính năng nổi bật</h3>
                 <ul class="flex flex-col gap-3 text-white/80 text-sm mt-2">
                    <li><a href="trolyai/codeai.html" class="hover:text-[#fde047] hover:translate-x-2 inline-block transition-transform duration-200"><i class="fa-solid fa-chevron-right text-xs text-teal-400 mr-2"></i>Trợ lý học tập AI</a></li>
-                    <li><a href="#" class="hover:text-[#fde047] hover:translate-x-2 inline-block transition-transform duration-200"><i class="fa-solid fa-chevron-right text-xs text-teal-400 mr-2"></i>Minigame ôn tập</a></li>
+                    <li><a href="javascript:void(0)" onclick="showLessons('Minigame Trí tuệ', giaiTriGame)" class="hover:text-[#fde047] hover:translate-x-2 inline-block transition-transform duration-200"><i class="fa-solid fa-chevron-right text-xs text-teal-400 mr-2"></i>Minigame ôn tập</a></li>
                 </ul>
             </div>
 
@@ -321,7 +305,7 @@
     const colorClasses = ['bg-[#dc2626]', 'bg-[#2563eb]', 'bg-[#16a34a]', 'bg-[#f97316]', 'bg-[#9333ea]', 'bg-[#eab308]', 'bg-[#0d9488]', 'bg-[#1e293b]', 'bg-[#be123c]', 'bg-[#0284c7]'];
 
     // =========================================================================
-    // KHU VỰC NHẬP DỮ LIỆU BÀI HỌC (Tất cả đều có 3 bài mẫu)
+    // KHU VỰC NHẬP DỮ LIỆU BÀI HỌC
     // =========================================================================
 
     // TÀI LIỆU TIN HỌC
@@ -364,19 +348,43 @@
 
     // GIẢI TRÍ
     const giaiTriAmNhac = [
-        { title: "Playlist Nắng Xuân Đến Trường", link: "#", image: "https://placehold.co/600x300/8b5cf6/ffffff?text=Am+Nhac+1", icon: "fa-music" },
-        { title: "Playlist Sau Này Gặp Lại Nhé", link: "#", image: "https://placehold.co/600x300/ec4899/ffffff?text=Am+Nhac+2", icon: "fa-headphones" },
-        { title: "Guitar Học Đường", link: "#", image: "https://placehold.co/600x300/0ea5e9/ffffff?text=Am+Nhac+3", icon: "fa-guitar" }
+        { 
+            title: "Mùa thu vẫn gọi những bước chân", 
+            link: "https://www.youtube.com/watch?v=i1jEP6P7Sqc", 
+            image: "https://img.youtube.com/vi/i1jEP6P7Sqc/hqdefault.jpg", 
+            icon: "fa-music" 
+        },
+        { 
+            title: "Vui đến trường", 
+            link: "https://www.youtube.com/watch?v=nBslIBnqOUM&list=RDnBslIBnqOUM&start_radio=1", 
+            image: "https://img.youtube.com/vi/nBslIBnqOUM/hqdefault.jpg", 
+            icon: "fa-headphones" 
+        },
+        { 
+           title: "Trang Web YouTube", 
+            link: "https://www.youtube.com/", 
+            image: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2MDAgMzAwIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZmZmZmZmIi8+PGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTQ1LCAxMDgpIHNjYWxlKDEuNCkiPjxwYXRoIGQ9Ik02MyAxNC44N2E3Ljg4IDcuODggMCAwIDAtNS41NS01LjU4QzUyLjU0IDggMzIuODUgOCAzMi44NSA4cy0xOS42OSAwLTI0LjYgMS4yOWE3Ljg4IDcuODggMCAwIDAtNS41NSA1LjU4QzEuNCAxOS44IDEuNCAzMCAxLjQgMzBzMCAxMC4yIDEuMyAxNS4xM2E3Ljg4IDcuODggMCAwIDAgNS41NSA1LjU4QzEzLjE2IDUyIDMyLjg1IDUyIDMyLjg1IDUyczE5LjY5IDAgMjQuNi0xLjI5YTcuODggNy44OCAwIDAgMCA1LjU1LTUuNThDNjQuMyA0MC4yIDY0LjMgMzAgNjQuMyAzMHMwLTEwLjItMS4zLTE1LjEzeiIgZmlsbD0iI0ZGMDAwMCIvPjxwb2x5Z29uIHBvaW50cz0iMjYuNCAzOS40IDQyLjggMzAgMjYuNCAyMC42IiBmaWxsPSIjRkZGRkZGIi8+PHRleHQgeD0iNzIiIHk9IjQyIiBmb250LWZhbWlseT0iQXJpYWwsIEhlbHZldGljYSwgc2Fucy1zZXJpZiIgZm9udC13ZWlnaHQ9IjkwMCIgZm9udC1zaXplPSIzNiIgbGV0dGVyLXNwYWNpbmc9Ii0xIiBmaWxsPSIjMjEyMTIxIj5Zb3VUdWJlPC90ZXh0PjwvZz48L3N2Zz4=", 
+            icon: "fa-circle-play"
+        }
     ];
 
     const giaiTriKiNiem = [
-        { title: "Lễ Tốt Nghiệp Khóa 2023", link: "#", image: "https://placehold.co/600x300/eab308/ffffff?text=Ki+Niem+1", icon: "fa-heart" },
-        { title: "Hội Trại Xuân 2024", link: "#", image: "https://placehold.co/600x300/10b981/ffffff?text=Ki+Niem+2", icon: "fa-camera" },
-        { title: "Giải Bóng Đá Học Sinh", link: "#", image: "https://placehold.co/600x300/3b82f6/ffffff?text=Ki+Niem+3", icon: "fa-futbol" }
+        { 
+            title: "Kho Lưu Trữ Những Hình Ảnh Đẹp", 
+            link: "https://padlet.com/nobitadrive03/kho-luu-tru-nhung-hinh-anh-ep-s024aa2fn0oly7vbqx90", 
+            image: "dentruong.png", 
+            icon: "fa-images" 
+        },
+        { 
+            title: "Góc Chia Sẻ Thanh Xuân", 
+            link: "https://padlet.com/nobitadrive03/goc-chia-se-thanh-xuan-s0245utfw1cxjovv2i6h", 
+            image: "santruong.png", 
+            icon: "fa-heart" 
+        }
     ];
 
     const giaiTriGame = [
-        { title: "Giải mã mê cung", link: "#", image: "https://placehold.co/600x300/f43f5e/ffffff?text=Game+1", icon: "fa-puzzle-piece" },
+        { title: "Nàng bạch tuyết", link: "sachlat/bachtuyet.html", image: "sachlat/bachtuyet.png", icon: "fa-puzzle-piece" },
         { title: "Đuổi hình bắt chữ IT", link: "#", image: "https://placehold.co/600x300/8b5cf6/ffffff?text=Game+2", icon: "fa-brain" },
         { title: "Vua gõ phím", link: "#", image: "https://placehold.co/600x300/14b8a6/ffffff?text=Game+3", icon: "fa-keyboard" }
     ];
@@ -436,13 +444,18 @@
     function showLessons(title, lessonsArray) {
         hideDropdowns();
         
+        // Ẩn khung trang chủ và hiển thị khung danh sách bài học
         document.getElementById('default-view').style.display = 'none';
         document.getElementById('grid-view').style.display = 'block';
         document.getElementById('grid-title').innerText = title.toUpperCase();
 
-        if (window.innerWidth < 1024) {
-            document.getElementById('sidebar').style.display = 'none';
-        }
+        // Ẩn hoàn toàn Danh mục học tập bên trái trên mọi màn hình
+        document.getElementById('sidebar').style.display = 'none';
+
+        // Mở rộng khung nội dung chiếm toàn bộ 4 cột (100% chiều ngang)
+        const contentArea = document.getElementById('content-area');
+        contentArea.classList.remove('lg:col-span-3');
+        contentArea.classList.add('lg:col-span-4');
 
         const container = document.getElementById('grid-container');
         container.innerHTML = ''; 
@@ -453,13 +466,11 @@
             
             const card = document.createElement('a');
             card.href = lesson.link;
-            // Nếu muốn mở ở tab mới (như các web khác), bỏ comment dòng dưới
-            // card.target = "_blank";
             card.className = `${color} text-white p-4 md:p-5 rounded-2xl shadow-md hover:-translate-y-1 hover:shadow-xl transition-all duration-300 flex flex-col items-start border border-black/10`;
             
-            card.innerHTML = `
-                <div class="w-full h-40 md:h-48 bg-black/20 rounded-xl mb-4 overflow-hidden shadow-inner">
-                    <img src="${lesson.image}" alt="${lesson.title}" onerror="this.src='https://placehold.co/600x300/ffffff/555555?text=Hinh+Anh'" class="w-full h-full object-cover opacity-90 hover:opacity-100 hover:scale-110 transition-all duration-500">
+           card.innerHTML = `
+                <div class="w-full h-44 md:h-52 bg-white rounded-xl mb-4 overflow-hidden shadow-inner">
+                    <img src="${lesson.image}" alt="${lesson.title}" onerror="this.src='https://placehold.co/600x300/ffffff/555555?text=Hinh+Anh'" class="w-full h-full object-cover hover:scale-110 transition-all duration-500">
                 </div>
                 <div class="flex items-center gap-3 w-full px-2">
                     <i class="fa-solid ${icon} text-xl opacity-90 drop-shadow-sm"></i>
@@ -512,7 +523,15 @@
     function showDefault() {
         document.getElementById('grid-view').style.display = 'none';
         document.getElementById('default-view').style.display = 'grid'; 
+        
+        // Hiện lại Danh mục học tập bên trái khi về trang chủ
         document.getElementById('sidebar').style.display = 'block';
+
+        // Thu khung nội dung về lại 3 cột để nhường 1 cột cho Danh mục học tập
+        const contentArea = document.getElementById('content-area');
+        contentArea.classList.remove('lg:col-span-4');
+        contentArea.classList.add('lg:col-span-3');
+
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 </script>
