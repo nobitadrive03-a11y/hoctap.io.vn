@@ -736,10 +736,10 @@
 
         <div class="stats-bar">
             <div class="stat-badge score-badge">
-                <i class="fa-solid fa-star"></i> Điểm số: <span id="score-display">0</span>/10
+                <i class="fa-solid fa-star"></i> Điểm số: <span id="score-display">0</span>/100
             </div>
             <div class="stat-badge">
-                <i class="fa-solid fa-puzzle-piece"></i> Đã lật mở: <span id="pieces-display">0</span>/10
+                <i class="fa-solid fa-puzzle-piece"></i> Đã lật mở: <span id="pieces-display">0</span>/100
             </div>
             <div class="stat-badge time-badge">
                 <i class="fa-solid fa-hourglass-half"></i> Thời gian còn: <span id="timer-display">10:00</span>
@@ -758,7 +758,7 @@
         <!-- ĐƯỜNG DẪN BỨC TRANH NỀN BÍ MẬT NẰM Ở NGAY DÒNG src="..." BÊN DƯỚI NÀY -->
         <!-- Bạn chỉ cần thay đường dẫn hoặc tên file ảnh vào trong dấu ngoặc kép  -->
         <!-- ===================================================================== -->
-        <img class="secret-image" id="secret-bg-image" src="trochoi/tin11_bai8/anhbai8_11.png" alt="Bức tranh bí mật">
+        <img class="secret-image" id="secret-bg-image" src="anhbai8_11.png" alt="Bức tranh bí mật">
         <!-- ===================================================================== -->
 
         <div class="puzzle-grid" id="puzzle-grid">
@@ -988,7 +988,7 @@
         ];
 
         // =========================================================================
-        // 3. LOGIC TRÒ CHƠI, CHẤM ĐIỂM (10 ĐIỂM) & ĐẾM NGƯỢC 10 PHÚT
+        // 3. LOGIC TRÒ CHƠI, CHẤM ĐIỂM (100 điểm) & ĐẾM NGƯỢC 10 PHÚT
         // =========================================================================
         const MAX_TIME_SECONDS = 600; // 10 phút = 600 giây
         let currentPieceIndex = -1;
@@ -1079,7 +1079,7 @@
                 pushScoreToFirebase(nameVal, classVal, "TIMEOUT");
             } else {
                 showCustomAlert(
-                    `⏰ ĐÃ HẾT THỜI GIAN 10 PHÚT!\nBài làm của em đã tự động khóa lại.\nĐiểm đạt được: ${currentScore}/10 điểm.`,
+                    `⏰ ĐÃ HẾT THỜI GIAN 10 PHÚT!\nBài làm của em đã tự động khóa lại.\nĐiểm đạt được: ${currentScore}/100 điểm.`,
                     "⏰"
                 );
             }
@@ -1136,7 +1136,7 @@
             document.getElementById("modal-overlay").style.display = "flex";
         }
 
-        // Chấm điểm: Đúng +1 điểm (tổng 10 điểm), Sai không trừ điểm & khóa mảnh ghép thành màu đen
+        // Chấm điểm: Đúng +1 điểm (tổng 100 điểm), Sai không trừ điểm & khóa mảnh ghép thành màu đen
         function checkAnswer(selectedIdx, clickedBtn) {
             const data = questionData[currentPieceIndex];
             const allBtns = document.querySelectorAll(".option-btn");
@@ -1149,9 +1149,9 @@
                 // TRẢ LỜI ĐÚNG
                 clickedBtn.classList.add("correct-choice");
                 feedback.style.color = "#16a34a";
-                feedback.innerText = "🎉 Chính xác! Bạn được cộng 1 điểm và mở khóa mảnh ghép này.";
+                feedback.innerText = "🎉 Chính xác! Bạn được cộng 10 điểm và mở khóa mảnh ghép này.";
 
-                currentScore += 1;
+                currentScore += 10;
                 pieceStatus[currentPieceIndex] = 1; // Đánh dấu đã lật mở
                 updateStatsUI();
 
@@ -1199,7 +1199,7 @@
                 const startBtn = document.getElementById("start-game-btn");
                 startBtn.innerHTML = `<i class="fa-solid fa-flag-checkered"></i> Đã hoàn thành`;
 
-                document.getElementById("intro-text").innerText = `🏁 BẠN ĐÃ HOÀN THÀNH CẢ 10 CÂU HỎI! Tổng điểm: ${currentScore}/10 điểm.`;
+                document.getElementById("intro-text").innerText = `🏁 BẠN ĐÃ HOÀN THÀNH CẢ 10 CÂU HỎI! Tổng điểm: ${currentScore}/100 điểm.`;
 
                 const nameVal = document.getElementById("student-name").value.trim();
                 const classVal = document.getElementById("student-class").value;
@@ -1253,7 +1253,7 @@
 
             if (!scoresRef) {
                 showCustomAlert(
-                    `Kết quả của ${nameVal} (${classVal}): ${currentScore}/10 điểm - Mở ${openedCount}/10 mảnh ghép.\n(Lưu ý: Chưa kết nối được Firebase để lưu Bảng xếp hạng)`,
+                    `Kết quả của ${nameVal} (${classVal}): ${currentScore}/100 điểm - Mở ${openedCount}/10 mảnh ghép.\n(Lưu ý: Chưa kết nối được Firebase để lưu Bảng xếp hạng)`,
                     "ℹ️"
                 );
                 return;
@@ -1281,17 +1281,17 @@
 
                     if (mode === "TIMEOUT") {
                         showCustomAlert(
-                            `⏰ ĐÃ HẾT 10 PHÚT LÀM BÀI!\nHệ thống đã tự động nộp bài của ${nameVal} (${classVal}).\nĐiểm số: ${currentScore}/10 điểm - Thời gian: 10:00.`,
+                            `⏰ ĐÃ HẾT 10 PHÚT LÀM BÀI!\nHệ thống đã tự động nộp bài của ${nameVal} (${classVal}).\nĐiểm số: ${currentScore}/100 điểm - Thời gian: 10:00.`,
                             "⏰"
                         );
                     } else if (mode === "COMPLETED") {
                         showCustomAlert(
-                            `🏆 CHÚC MỪNG ${nameVal.toUpperCase()} (${classVal}) ĐÃ HOÀN THÀNH!\nĐiểm số: ${currentScore}/10 điểm (Mở đúng ${openedCount}/10 mảnh ghép).\nThời gian làm bài: ${formatTime(timeSpent)}.\nKết quả đã được lưu lên Bảng xếp hạng!`,
+                            `🏆 CHÚC MỪNG ${nameVal.toUpperCase()} (${classVal}) ĐÃ HOÀN THÀNH!\nĐiểm số: ${currentScore}/100 điểm (Mở đúng ${openedCount}/10 mảnh ghép).\nThời gian làm bài: ${formatTime(timeSpent)}.\nKết quả đã được lưu lên Bảng xếp hạng!`,
                             "🎉"
                         );
                     } else {
                         showCustomAlert(
-                            `✅ Đã nộp bài và lưu điểm của ${nameVal} (${classVal}) thành công!\nĐiểm số: ${currentScore}/10 điểm - Thời gian: ${formatTime(timeSpent)}.`,
+                            `✅ Đã nộp bài và lưu điểm của ${nameVal} (${classVal}) thành công!\nĐiểm số: ${currentScore}/100 điểm - Thời gian: ${formatTime(timeSpent)}.`,
                             "🎉"
                         );
                     }
