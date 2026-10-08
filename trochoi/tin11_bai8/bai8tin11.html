@@ -1,1 +1,1376 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hành Trình Số - Lật Mảnh Ghép Tin Học 11 Bài 8</title>
 
+    <!-- Google tag (gtag.js) - Tích hợp 2 mã đo lường GA4 -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-NSJCVSL9RM"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-NSJCVSL9RM');
+        gtag('config', 'G-HE4GXY8B53');
+
+        setInterval(function() {
+            gtag('event', 'keep_alive', { 'event_category': 'engagement' });
+        }, 25000);
+    </script>
+
+    <!-- Thư viện Google Fonts & FontAwesome Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Thư viện Firebase SDK v8 -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+    <style>
+        :root {
+            --primary: #1e40af;
+            --primary-light: #3b82f6;
+            --accent: #f59e0b;
+            --danger: #dc2626;
+            --success: #16a34a;
+            --bg-gradient: linear-gradient(135deg, #e0f2fe 0%, #f0fdf4 50%, #fef3c7 100%);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Be Vietnam Pro', Arial, sans-serif;
+            margin: 0;
+            padding: 20px 10px 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: var(--bg-gradient);
+            min-height: 100vh;
+            color: #1e293b;
+        }
+
+        /* HEADER */
+        .header-card {
+            background: white;
+            width: 95%;
+            max-width: 960px;
+            border-radius: 20px;
+            padding: 18px 25px;
+            box-shadow: 0 10px 25px rgba(30, 64, 175, 0.12);
+            border: 2px solid #bfdbfe;
+            margin-bottom: 18px;
+            text-align: center;
+        }
+
+        .header-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .logo-hs {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 62px;
+            height: 62px;
+            border-radius: 50%;
+            border: 3px solid #facc15;
+            background: linear-gradient(135deg, #ef4444, #b91c1c);
+            box-shadow: 0 4px 10px rgba(220, 38, 38, 0.35);
+            flex-shrink: 0;
+        }
+
+        .logo-hs span {
+            color: white;
+            font-weight: 900;
+            font-size: 26px;
+            letter-spacing: -1px;
+        }
+
+        .title-group h1 {
+            color: #dc2626;
+            font-size: 26px;
+            font-weight: 900;
+            margin: 0;
+            text-transform: uppercase;
+            line-height: 1.3;
+        }
+
+        .title-group .lesson-sub {
+            color: var(--primary);
+            font-size: 18px;
+            font-weight: 700;
+            margin-top: 4px;
+        }
+
+        /* KHUNG NHẬP THÔNG TIN HỌC SINH, NÚT BẮT ĐẦU & THỐNG KÊ */
+        .control-panel {
+            background: white;
+            width: 95%;
+            max-width: 960px;
+            border-radius: 16px;
+            padding: 16px 20px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+            margin-bottom: 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            border: 2px solid #cbd5e1;
+        }
+
+        .top-row-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .student-inputs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+            flex: 1;
+            min-width: 280px;
+        }
+
+        .input-group {
+            display: flex;
+            align-items: center;
+            background: #f8fafc;
+            border: 2px solid #94a3b8;
+            border-radius: 10px;
+            padding: 8px 12px;
+            flex: 1;
+            min-width: 150px;
+            transition: border-color 0.2s;
+        }
+
+        .input-group:focus-within {
+            border-color: var(--primary-light);
+            background: #fff;
+        }
+
+        .input-group i {
+            color: var(--primary);
+            margin-right: 8px;
+            font-size: 16px;
+        }
+
+        .input-group input, .input-group select {
+            border: none;
+            background: transparent;
+            font-family: inherit;
+            font-size: 15px;
+            font-weight: 700;
+            color: #0f172a;
+            width: 100%;
+            outline: none;
+        }
+
+        /* Nút Bắt đầu làm bài */
+        .start-btn {
+            background: linear-gradient(135deg, #16a34a, #15803d);
+            color: white;
+            border: none;
+            padding: 10px 22px;
+            font-family: inherit;
+            font-size: 16px;
+            font-weight: 800;
+            border-radius: 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 12px rgba(22, 163, 74, 0.35);
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .start-btn:hover:not(:disabled) {
+            background: linear-gradient(135deg, #15803d, #14532d);
+            transform: translateY(-2px);
+        }
+
+        .start-btn:disabled {
+            background: #94a3b8;
+            box-shadow: none;
+            cursor: not-allowed;
+        }
+
+        .stats-bar {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            padding-top: 10px;
+            border-top: 1px dashed #cbd5e1;
+        }
+
+        .stat-badge {
+            background: #eff6ff;
+            border: 2px solid #bfdbfe;
+            color: var(--primary);
+            padding: 8px 16px;
+            border-radius: 10px;
+            font-weight: 800;
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .stat-badge.score-badge {
+            background: #fef3c7;
+            border-color: #fde68a;
+            color: #b45309;
+        }
+
+        .stat-badge.time-badge {
+            background: #fee2e2;
+            border-color: #fecaca;
+            color: #dc2626;
+        }
+
+        .subtext {
+            color: var(--primary);
+            font-size: 19px;
+            font-weight: 800;
+            text-align: center;
+            margin: 5px 0 15px;
+            padding: 0 10px;
+        }
+
+        /* KHU VỰC BỨC TRANH VÀ MẢNH GHÉP */
+        .game-area {
+            position: relative;
+            width: 95%;
+            max-width: 960px;
+            aspect-ratio: 16 / 10;
+            background-color: #fff;
+            border: 5px solid var(--primary);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 15px 30px rgba(30, 64, 175, 0.25);
+            margin-bottom: 20px;
+        }
+
+        /* Ảnh nền bí mật nằm dưới các mảnh ghép */
+        .secret-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: fill;
+            z-index: 1;
+            display: block;
+        }
+
+        .puzzle-grid {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            grid-template-rows: repeat(2, 1fr);
+            z-index: 2;
+        }
+
+        .puzzle-piece {
+            background: linear-gradient(135deg, #f59e0b 0%, #ea580c 100%);
+            border: 2px solid rgba(255, 255, 255, 0.9);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-size: 42px;
+            font-weight: 900;
+            color: white;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            -webkit-tap-highlight-color: transparent;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            position: relative;
+            user-select: none;
+        }
+
+        .puzzle-piece span.piece-sub {
+            font-size: 13px;
+            font-weight: 600;
+            opacity: 0.95;
+            margin-top: 4px;
+        }
+
+        .puzzle-piece:hover:not(.wrong-piece) {
+            background: linear-gradient(135deg, #fbbf24 0%, #d97706 100%);
+            box-shadow: inset 0 0 15px rgba(255,255,255,0.4);
+        }
+
+        /* Mảnh ghép trả lời ĐÚNG -> Lật mở ra */
+        .puzzle-piece.hidden {
+            opacity: 0;
+            pointer-events: none;
+            transform: scale(0.6);
+        }
+
+        /* Mảnh ghép trả lời SAI -> Chuyển sang MÀU ĐEN và không lật lên */
+        .puzzle-piece.wrong-piece {
+            background: linear-gradient(135deg, #1e293b 0%, #090d16 100%) !important;
+            color: #94a3b8 !important;
+            border-color: #475569 !important;
+            cursor: not-allowed;
+        }
+
+        /* NÚT ĐIỀU KHIỂN DƯỚI GAME */
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+
+        .btn-action {
+            border: none;
+            padding: 13px 28px;
+            font-family: inherit;
+            font-size: 17px;
+            font-weight: 800;
+            border-radius: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            transition: all 0.2s;
+        }
+
+        .reset-btn {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: white;
+        }
+
+        .reset-btn:hover {
+            background: linear-gradient(135deg, #dc2626, #b91c1c);
+            transform: translateY(-2px);
+        }
+
+        .save-score-btn {
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            color: white;
+        }
+
+        .save-score-btn:hover {
+            background: linear-gradient(135deg, #1d4ed8, #1e40af);
+            transform: translateY(-2px);
+        }
+
+        /* BẢNG XẾP HẠNG FIREBASE REALTIME */
+        .leaderboard-card {
+            background: white;
+            width: 95%;
+            max-width: 960px;
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+            border: 2px solid #bfdbfe;
+        }
+
+        .leaderboard-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 18px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #f1f5f9;
+        }
+
+        .leaderboard-title {
+            font-size: 22px;
+            font-weight: 900;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .leaderboard-title i {
+            color: #f59e0b;
+            font-size: 26px;
+        }
+
+        .filter-class {
+            padding: 8px 14px;
+            border-radius: 10px;
+            border: 2px solid #cbd5e1;
+            font-family: inherit;
+            font-weight: 700;
+            color: #1e293b;
+            outline: none;
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+        }
+
+        .leaderboard-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        .leaderboard-table th {
+            background: #eff6ff;
+            color: var(--primary);
+            font-weight: 800;
+            padding: 12px 15px;
+            font-size: 15px;
+            text-transform: uppercase;
+        }
+
+        .leaderboard-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #f1f5f9;
+            font-weight: 600;
+            font-size: 15px;
+        }
+
+        .leaderboard-table tr:hover {
+            background-color: #f8fafc;
+        }
+
+        .rank-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            font-weight: 900;
+            font-size: 14px;
+        }
+
+        .rank-1 { background: #fef08a; color: #854d0e; border: 2px solid #facc15; }
+        .rank-2 { background: #e2e8f0; color: #334155; border: 2px solid #94a3b8; }
+        .rank-3 { background: #fed7aa; color: #9a3412; border: 2px solid #fb923c; }
+
+        /* =================================================================
+           MODAL CÂU HỎI TRẮC NGHIỆM (RỘNG DÀI TRÊN PC, CHỮ ĐỎ, TRÀN MÀN HÌNH ĐT)
+           ================================================================= */
+        @keyframes popIn {
+            0% { transform: scale(0.9); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .modal-overlay, .alert-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(15, 23, 42, 0.82);
+            backdrop-filter: blur(5px);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .alert-overlay { z-index: 10000; }
+
+        .modal-content {
+            background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+            padding: 32px 38px;
+            border-radius: 24px;
+            max-width: 1150px; /* Trải dài trên máy tính */
+            width: 94%;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.45);
+            text-align: center;
+            border: 4px solid #1d4ed8;
+            max-height: 92vh;
+            overflow-y: auto;
+            animation: popIn 0.25s ease-out;
+        }
+
+        .question-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, #1e40af, #3b82f6);
+            color: #ffffff;
+            font-weight: 800;
+            font-size: 15px;
+            padding: 7px 20px;
+            border-radius: 30px;
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Câu hỏi màu đỏ đậm nổi bật */
+        #question-text {
+            color: #dc2626;
+            font-size: 25px;
+            font-weight: 800;
+            margin-bottom: 24px;
+            line-height: 1.5;
+            text-align: left;
+            background: #fff5f5;
+            padding: 20px 26px;
+            border-radius: 16px;
+            border: 2px solid #fecaca;
+            border-left: 8px solid #dc2626;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+        }
+
+        .option-btn {
+            background-color: #ffffff;
+            color: #1e3a8a;
+            border: 2px solid #93c5fd;
+            padding: 18px 22px;
+            font-family: inherit;
+            font-size: 20px;
+            font-weight: 700;
+            border-radius: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: left;
+            line-height: 1.45;
+            display: flex;
+            align-items: center;
+        }
+
+        .option-btn:hover:not(.locked) {
+            background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+            border-color: #1d4ed8;
+            color: #1e40af;
+            transform: translateY(-2px);
+        }
+
+        .option-btn.locked { pointer-events: none; }
+        .option-btn.locked:not(.correct-choice):not(.wrong-choice) { opacity: 0.45; }
+
+        .option-btn.correct-choice {
+            background: linear-gradient(135deg, #16a34a, #15803d) !important;
+            color: #ffffff !important;
+            border: 3px solid #14532d !important;
+            opacity: 1 !important;
+        }
+
+        .option-btn.wrong-choice {
+            background: linear-gradient(135deg, #ef4444, #dc2626) !important;
+            color: #ffffff !important;
+            border: 3px solid #7f1d1d !important;
+            opacity: 1 !important;
+        }
+
+        #feedback {
+            margin-top: 22px;
+            font-weight: 800;
+            font-size: 22px;
+            min-height: 32px;
+        }
+
+        .close-btn {
+            margin-top: 18px;
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            color: #fff;
+            font-family: inherit;
+            font-weight: 800;
+            border: none;
+            padding: 15px 40px;
+            font-size: 20px;
+            border-radius: 12px;
+            cursor: pointer;
+        }
+
+        /* ALERT TUỲ CHỈNH */
+        .alert-content {
+            background-color: white;
+            padding: 30px 25px;
+            border-radius: 20px;
+            max-width: 500px;
+            width: 92%;
+            text-align: center;
+            border: 4px solid #f59e0b;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.4);
+            animation: popIn 0.25s ease-out;
+        }
+
+        .alert-icon { font-size: 52px; margin-bottom: 12px; }
+
+        #alert-message {
+            color: #1e293b;
+            font-size: 20px;
+            font-weight: 800;
+            margin-bottom: 24px;
+            line-height: 1.45;
+            white-space: pre-line;
+        }
+
+        .alert-close-btn {
+            background: linear-gradient(135deg, #f59e0b, #ea580c);
+            color: #fff;
+            font-family: inherit;
+            font-weight: 800;
+            border: none;
+            padding: 12px 35px;
+            font-size: 18px;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+
+        /* GIAO DIỆN ĐIỆN THOẠI: BẢNG CÂU HỎI TRÀN HẾT 100% MÀN HÌNH */
+        @media (max-width: 768px) {
+            .title-group h1 { font-size: 20px; }
+            .title-group .lesson-sub { font-size: 15px; }
+            .subtext { font-size: 16px; }
+            .puzzle-piece { font-size: 26px; }
+            .puzzle-piece span.piece-sub { display: none; }
+            .top-row-controls { flex-direction: column; align-items: stretch; }
+            .start-btn { justify-content: center; padding: 12px; }
+
+            .modal-overlay {
+                padding: 0 !important;
+            }
+
+            .modal-content {
+                width: 100vw !important;
+                max-width: 100vw !important;
+                height: 100vh !important;
+                max-height: 100vh !important;
+                border-radius: 0 !important;
+                border: none !important;
+                padding: 25px 16px 35px !important;
+                display: flex;
+                flex-direction: column;
+                justify-content: flex-start;
+                overflow-y: auto;
+            }
+
+            #question-text {
+                font-size: 20px;
+                padding: 16px 18px;
+                margin-bottom: 18px;
+            }
+
+            .options-grid {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+
+            .option-btn {
+                font-size: 17px;
+                padding: 14px 16px;
+            }
+
+            .close-btn {
+                width: 100%;
+                padding: 15px;
+                font-size: 19px;
+                margin-top: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <div class="header-card">
+        <div class="header-wrapper">
+            <div class="logo-hs"><span>HS</span></div>
+            <div class="title-group">
+                <h1>TRÒ CHƠI LẬT MẢNH GHÉP - TIN HỌC 11 (KNTT)</h1>
+                <div class="lesson-sub">BÀI 8: THỰC HÀNH NÂNG CAO SỬ DỤNG THƯ ĐIỆN TỬ VÀ MẠNG XÃ HỘI</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Thanh nhập thông tin học sinh, Nút Bắt đầu & Thống kê -->
+    <div class="control-panel">
+        <div class="top-row-controls">
+            <div class="student-inputs">
+                <div class="input-group">
+                    <i class="fa-solid fa-user-graduate"></i>
+                    <input type="text" id="student-name" placeholder="Nhập Họ và tên học sinh...">
+                </div>
+                <div class="input-group" style="max-width: 180px;">
+                    <i class="fa-solid fa-users-rectangle"></i>
+                    <select id="student-class">
+                        <option value="">-- Chọn Lớp --</option>
+                        <option value="11A1">11A1</option>
+                        <option value="11A2">11A2</option>
+                        <option value="11A3">11A3</option>
+                        <option value="11A4">11A4</option>
+                        <option value="11A5">11A5</option>
+                        <option value="11A6">11A6</option>
+                        <option value="11A7">11A7</option>
+                        <option value="11A8">11A8</option>
+                        <option value="Khác">Lớp khác</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Nút Bắt Đầu Làm Bài -->
+            <button type="button" class="start-btn" id="start-game-btn" onclick="startGame()">
+                <i class="fa-solid fa-play"></i> Bắt đầu làm bài
+            </button>
+        </div>
+
+        <div class="stats-bar">
+            <div class="stat-badge score-badge">
+                <i class="fa-solid fa-star"></i> Điểm số: <span id="score-display">0</span>/10
+            </div>
+            <div class="stat-badge">
+                <i class="fa-solid fa-puzzle-piece"></i> Đã lật mở: <span id="pieces-display">0</span>/10
+            </div>
+            <div class="stat-badge time-badge">
+                <i class="fa-solid fa-hourglass-half"></i> Thời gian còn: <span id="timer-display">10:00</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="subtext" id="intro-text">
+        👉 Hãy nhập Họ tên, chọn Lớp và bấm nút "Bắt đầu làm bài" để mở khóa các mảnh ghép!
+    </div>
+
+    <!-- Khu vực Trò chơi -->
+    <div class="game-area">
+
+        <!-- ===================================================================== -->
+        <!-- ĐƯỜNG DẪN BỨC TRANH NỀN BÍ MẬT NẰM Ở NGAY DÒNG src="..." BÊN DƯỚI NÀY -->
+        <!-- Bạn chỉ cần thay đường dẫn hoặc tên file ảnh vào trong dấu ngoặc kép  -->
+        <!-- ===================================================================== -->
+        <img class="secret-image" id="secret-bg-image" src="trochoi/tin11_bai8/anhbai8_11.png" alt="Bức tranh bí mật">
+        <!-- ===================================================================== -->
+
+        <div class="puzzle-grid" id="puzzle-grid">
+            <!-- JavaScript tạo 10 mảnh ghép -->
+        </div>
+    </div>
+
+    <!-- Nút điều khiển -->
+    <div class="action-buttons">
+        <button type="button" class="btn-action save-score-btn" onclick="manualSubmitScore()">
+            <i class="fa-solid fa-cloud-arrow-up"></i> Nộp bài & Lưu điểm
+        </button>
+        <button type="button" class="btn-action reset-btn" onclick="resetGame()">
+            <i class="fa-solid fa-rotate-right"></i> Làm lại từ đầu
+        </button>
+    </div>
+
+    <!-- Bảng Xếp Hạng Trực Tuyến (Firebase) -->
+    <div class="leaderboard-card">
+        <div class="leaderboard-header">
+            <div class="leaderboard-title">
+                <i class="fa-solid fa-trophy"></i> BẢNG XẾP HẠNG THI ĐUA TRỰC TUYẾN
+            </div>
+            <select id="filter-class" class="filter-class" onchange="renderLeaderboard()">
+                <option value="ALL">Tất cả các lớp</option>
+                <option value="11A1">Lớp 11A1</option>
+                <option value="11A2">Lớp 11A2</option>
+                <option value="11A3">Lớp 11A3</option>
+                <option value="11A4">Lớp 11A4</option>
+                <option value="11A5">Lớp 11A5</option>
+                <option value="11A6">Lớp 11A6</option>
+                <option value="11A7">Lớp 11A7</option>
+                <option value="11A8">Lớp 11A8</option>
+            </select>
+        </div>
+        <div class="table-responsive">
+            <table class="leaderboard-table">
+                <thead>
+                    <tr>
+                        <th style="width: 70px;">Hạng</th>
+                        <th>Họ và tên</th>
+                        <th>Lớp</th>
+                        <th>Điểm số</th>
+                        <th>Mảnh mở</th>
+                        <th>Thời gian làm</th>
+                    </tr>
+                </thead>
+                <tbody id="leaderboard-body">
+                    <tr>
+                        <td colspan="6" style="text-align: center; color: #64748b;">Đang tải dữ liệu bảng xếp hạng...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Hộp Thông Báo (Alert) -->
+    <div class="alert-overlay" id="custom-alert-overlay">
+        <div class="alert-content">
+            <div class="alert-icon" id="alert-icon">⚠️</div>
+            <div id="alert-message">Nội dung thông báo</div>
+            <button type="button" class="alert-close-btn" onclick="closeCustomAlert()">Đã hiểu</button>
+        </div>
+    </div>
+
+    <!-- Modal Trắc nghiệm (Đã bỏ phần giải thích theo yêu cầu) -->
+    <div class="modal-overlay" id="modal-overlay">
+        <div class="modal-content">
+            <div class="question-badge" id="question-level">Mức độ: Nhận biết</div>
+            <div id="question-text"></div>
+            <div class="options-grid" id="options-container"></div>
+            <div id="feedback"></div>
+            <button type="button" class="close-btn" id="modal-close-btn" onclick="closeModal()">Tiếp tục</button>
+        </div>
+    </div>
+
+    <script>
+        // =========================================================================
+        // 1. CẤU HÌNH FIREBASE REALTIME DATABASE (DỰ ÁN: hoctap-91691)
+        // =========================================================================
+        const firebaseConfig = {
+            // Hãy dán mã apiKey của dự án hoctap-91691 vào dòng bên dưới:
+            apiKey: "AIzaSy_THAY_MA_API_KEY_CUA_BAN_VAO_DAY",
+            authDomain: "hoctap-91691.firebaseapp.com",
+            databaseURL: "https://hoctap-91691-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "hoctap-91691",
+            storageBucket: "hoctap-91691.firebasestorage.app",
+            messagingSenderId: "1004553425319",
+            appId: "1:1004553425319:web:45d15cbae393f614c56682"
+        };
+
+        let scoresRef = null;
+        let allScoresData = [];
+
+        try {
+            if (!firebase.apps.length) {
+                firebase.initializeApp(firebaseConfig);
+            }
+            const db = firebase.database();
+            scoresRef = db.ref('leaderboard_tin11_bai8');
+
+            scoresRef.on('value', (snapshot) => {
+                allScoresData = [];
+                snapshot.forEach((childSnapshot) => {
+                    allScoresData.push(childSnapshot.val());
+                });
+                renderLeaderboard();
+            });
+        } catch (err) {
+            console.warn("Chưa kết nối được Firebase:", err);
+        }
+
+        // =========================================================================
+        // 2. BỘ 10 CÂU HỎI ĐÃ CÂN BẰNG ĐỘ DÀI CÁC ĐÁP ÁN A, B, C, D ĐỀU NHAU
+        // =========================================================================
+        const questionData = [
+            {
+                level: "Câu 1 - Mức độ: Nhận biết",
+                q: "Câu 1: Trong Gmail, để tìm kiếm nhanh tất cả các thư điện tử đã được đánh dấu là quan trọng, ta nhập cú pháp nào sau đây vào ô tìm kiếm?",
+                options: [
+                    "A. Cú pháp tìm kiếm là: is:starred",
+                    "B. Cú pháp tìm kiếm là: is:important",
+                    "C. Cú pháp tìm kiếm là: label:important",
+                    "D. Cú pháp tìm kiếm là: in:important"
+                ],
+                ans: 1
+            },
+            {
+                level: "Câu 2 - Mức độ: Nhận biết",
+                q: "Câu 2: Biểu tượng dùng để đánh dấu thư quan trọng (Important markers) trong danh sách thư của Gmail có hình dạng gì?",
+                options: [
+                    "A. Hình ngôi sao năm cánh màu vàng nằm ở đầu dòng thư.",
+                    "B. Hình chiếc ghim kẹp giấy màu xám nằm ở cuối dòng thư.",
+                    "C. Hình mũi tên ngang (thẻ nhãn nhỏ) nằm cạnh tên người gửi.",
+                    "D. Hình dấu chấm than màu đỏ nằm ngay phía trước tiêu đề thư."
+                ],
+                ans: 2
+            },
+            {
+                level: "Câu 3 - Mức độ: Nhận biết",
+                q: "Câu 3: Trên mạng xã hội Facebook, chức năng nào cho phép tạo không gian công khai dành cho các tổ chức, doanh nghiệp hoặc dự án cộng đồng?",
+                options: [
+                    "A. Trang cá nhân riêng tư (Personal Profile).",
+                    "B. Trang đại diện công khai (Fanpage / Page).",
+                    "C. Nhóm trao đổi bí mật (Secret Group).",
+                    "D. Bản tin ngắn tự hủy trong ngày (Stories)."
+                ],
+                ans: 1
+            },
+            {
+                level: "Câu 4 - Mức độ: Thông hiểu",
+                q: "Câu 4: Điểm khác biệt cơ bản nhất giữa việc phân loại thư bằng Nhãn (Label) trong Gmail so với lưu trữ trong Thư mục (Folder) truyền thống là gì?",
+                options: [
+                    "A. Mỗi bức thư chỉ được gắn một nhãn duy nhất và tự động xóa bản gốc.",
+                    "B. Một bức thư có thể gắn nhiều nhãn cùng lúc mà không tạo ra nhiều bản sao.",
+                    "C. Khi gỡ bỏ một nhãn khỏi bức thư thì bức thư đó sẽ bị chuyển vào Thùng rác.",
+                    "D. Nhãn chỉ có thể gắn cho các thư mới nhận và không thể gắn cho thư đã gửi."
+                ],
+                ans: 1
+            },
+            {
+                level: "Câu 5 - Mức độ: Thông hiểu",
+                q: "Câu 5: Gmail tự động xác định và đánh dấu một bức thư mới đến là 'Quan trọng' (Important) dựa trên cơ sở nào sau đây?",
+                options: [
+                    "A. Dựa vào dung lượng tệp đính kèm và độ dài văn bản có trong bức thư đó.",
+                    "B. Dựa vào khung giờ gửi thư trong ngày và tốc độ đường truyền mạng Internet.",
+                    "C. Dựa vào tần suất liên lạc, thói quen mở đọc thư và các từ khóa trong thư.",
+                    "D. Dựa vào việc tiêu đề bức thư được người gửi viết bằng chữ in hoa hay thường."
+                ],
+                ans: 2
+            },
+            {
+                level: "Câu 6 - Mức độ: Thông hiểu",
+                q: "Câu 6: Nhận định nào sau đây là ĐÚNG khi so sánh giữa Dấu sao (Star) và Dấu quan trọng (Important marker) trong Gmail?",
+                options: [
+                    "A. Dấu sao do người dùng tự gắn, còn Dấu quan trọng do Gmail tự động nhận diện.",
+                    "B. Dấu quan trọng có nhiều màu sắc khác nhau, còn Dấu sao chỉ có một màu vàng.",
+                    "C. Cả hai công cụ này đều hoạt động giống hệt nhau về bộ lọc và cú pháp tìm kiếm.",
+                    "D. Bức thư nào đã được gắn Dấu quan trọng thì hệ thống sẽ khóa chức năng Dấu sao."
+                ],
+                ans: 0
+            },
+            {
+                level: "Câu 7 - Mức độ: Thông hiểu",
+                q: "Câu 7: Khi thiết lập quyền riêng tư cho một bài viết trên Facebook ở chế độ 'Bạn bè ngoại trừ...' (Friends except...), điều gì sẽ xảy ra?",
+                options: [
+                    "A. Mọi người trên mạng đều xem được bài viết trừ danh sách bạn bè của bạn.",
+                    "B. Chỉ những người bạn được đánh dấu trong danh sách mới nhìn thấy bài viết.",
+                    "C. Tất cả bạn bè đều xem được bài viết, trừ những người bạn đã chọn loại trừ.",
+                    "D. Bài viết hiển thị công khai với tất cả bạn bè và tự động ẩn đi sau 24 giờ."
+                ],
+                ans: 2
+            },
+            {
+                level: "Câu 8 - Mức độ: Vận dụng",
+                q: "Câu 8: Một bức thư trong Gmail được gắn đồng thời cả hai nhãn là 'Học tập' và 'Dự án'. Nếu bạn mở nhãn 'Học tập', tích chọn bức thư đó rồi nhấn nút 'Xóa' (Thùng rác 🗑️), thì điều gì sẽ xảy ra?",
+                options: [
+                    "A. Bức thư chỉ bị gỡ nhãn 'Học tập' và vẫn còn nguyên trong nhãn 'Dự án'.",
+                    "B. Bức thư bị chuyển vào Thùng rác và biến mất khỏi cả hai nhãn trên.",
+                    "C. Toàn bộ nhãn 'Học tập' sẽ bị xóa vĩnh viễn khỏi tài khoản Gmail của bạn.",
+                    "D. Hệ thống Gmail sẽ cảnh báo lỗi vì không cho phép xóa thư có hai nhãn."
+                ],
+                ans: 1
+            },
+            {
+                level: "Câu 9 - Mức độ: Vận dụng",
+                q: "Câu 9: Hộp thư Gmail của bạn thường tự động đánh dấu 'Quan trọng' cho các thư quảng cáo. Cách xử lý nào sau đây giúp Gmail không tự động đánh dấu quan trọng cho các thư tương tự nữa?",
+                options: [
+                    "A. Nháy vào dấu quan trọng màu vàng trên thư đó để tắt đi giúp Gmail học lại.",
+                    "B. Không mở đọc bức thư đó để hệ thống tự động chặn địa chỉ người gửi thư.",
+                    "C. Thay đổi mật khẩu đăng nhập tài khoản Gmail để đặt lại bộ lọc mặc định.",
+                    "D. Gắn thêm biểu tượng dấu sao màu đỏ vào các bức thư quảng cáo để phân biệt."
+                ],
+                ans: 0
+            },
+            {
+                level: "Câu 10 - Mức độ: Vận dụng",
+                q: "Câu 10: Trang Facebook cá nhân của bạn liên tục xuất hiện các bài quảng cáo rác do người lạ gắn thẻ (Tag) tên bạn vào. Bạn cần bật cấu hình nào để kiểm duyệt trước khi chúng hiện lên trang cá nhân?",
+                options: [
+                    "A. Vào mục Trang cá nhân và gắn thẻ -> Bật tính năng 'Xem lại bài viết có gắn thẻ bạn'.",
+                    "B. Vào mục Bài viết công khai -> Chuyển toàn bộ các bài đăng cũ sang 'Chỉ mình tôi'.",
+                    "C. Vào mục Cài đặt tài khoản -> Tạo một Fanpage mới để thay thế trang cá nhân.",
+                    "D. Vào mục Thông báo đẩy -> Tắt toàn bộ thông báo từ ứng dụng Facebook trên máy."
+                ],
+                ans: 0
+            }
+        ];
+
+        // =========================================================================
+        // 3. LOGIC TRÒ CHƠI, CHẤM ĐIỂM (10 ĐIỂM) & ĐẾM NGƯỢC 10 PHÚT
+        // =========================================================================
+        const MAX_TIME_SECONDS = 600; // 10 phút = 600 giây
+        let currentPieceIndex = -1;
+        // pieceStatus: 0 = chưa chọn, 1 = trả lời ĐÚNG (đã lật mở), -1 = trả lời SAI (màu đen, khóa)
+        let pieceStatus = new Array(10).fill(0);
+        let currentScore = 0; // Thang điểm 10 (mỗi câu đúng +1 điểm, sai +0 điểm)
+        let remainingSeconds = MAX_TIME_SECONDS;
+        let timerInterval = null;
+        let isGameStarted = false;
+        let isGameOver = false;
+        let hasSubmittedScore = false;
+
+        function formatTime(sec) {
+            const m = Math.floor(sec / 60).toString().padStart(2, '0');
+            const s = (sec % 60).toString().padStart(2, '0');
+            return `${m}:${s}`;
+        }
+
+        function updateStatsUI() {
+            const openedCount = pieceStatus.filter(st => st === 1).length;
+            document.getElementById("score-display").innerText = currentScore;
+            document.getElementById("pieces-display").innerText = openedCount;
+            document.getElementById("timer-display").innerText = formatTime(remainingSeconds);
+        }
+
+        // Khởi tạo 10 mảnh ghép
+        function initPuzzle() {
+            const grid = document.getElementById("puzzle-grid");
+            grid.innerHTML = "";
+            for (let i = 0; i < 10; i++) {
+                const piece = document.createElement("div");
+                piece.className = "puzzle-piece";
+                piece.id = `piece-${i}`;
+                piece.innerHTML = `<span>${i + 1}</span><span class="piece-sub">Mảnh ghép</span>`;
+                piece.onclick = () => handlePieceClick(i);
+                grid.appendChild(piece);
+            }
+            updateStatsUI();
+        }
+
+        // Bấm nút "Bắt đầu làm bài"
+        function startGame() {
+            const nameVal = document.getElementById("student-name").value.trim();
+            const classVal = document.getElementById("student-class").value;
+
+            if (!nameVal) {
+                showCustomAlert("Em hãy nhập Họ và tên của mình trước khi bấm Bắt đầu làm bài nhé!", "⚠️");
+                return;
+            }
+            if (!classVal) {
+                showCustomAlert("Em hãy chọn Lớp của mình trước khi bấm Bắt đầu làm bài nhé!", "⚠️");
+                return;
+            }
+
+            isGameStarted = true;
+            isGameOver = false;
+            document.getElementById("student-name").disabled = true;
+            document.getElementById("student-class").disabled = true;
+
+            const startBtn = document.getElementById("start-game-btn");
+            startBtn.disabled = true;
+            startBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Đang làm bài...`;
+
+            document.getElementById("intro-text").innerText = `🚀 Bắt đầu! Chúc ${nameVal} (${classVal}) hoàn thành xuất sắc 10 mảnh ghép trong 10 phút!`;
+
+            // Khởi động đồng hồ đếm ngược 10 phút
+            if (timerInterval) clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                remainingSeconds--;
+                updateStatsUI();
+
+                if (remainingSeconds <= 0) {
+                    clearInterval(timerInterval);
+                    handleTimeOut();
+                }
+            }, 1000);
+        }
+
+        // Xử lý khi hết 10 phút mà học sinh chưa làm xong hoặc quên thoát
+        function handleTimeOut() {
+            isGameOver = true;
+            document.getElementById("modal-overlay").style.display = "none";
+            document.getElementById("intro-text").innerText = "⏰ ĐÃ HẾT THỜI GIAN LÀM BÀI (10 PHÚT)!";
+
+            const nameVal = document.getElementById("student-name").value.trim();
+            const classVal = document.getElementById("student-class").value;
+            if (nameVal && classVal && !hasSubmittedScore) {
+                pushScoreToFirebase(nameVal, classVal, "TIMEOUT");
+            } else {
+                showCustomAlert(
+                    `⏰ ĐÃ HẾT THỜI GIAN 10 PHÚT!\nBài làm của em đã tự động khóa lại.\nĐiểm đạt được: ${currentScore}/10 điểm.`,
+                    "⏰"
+                );
+            }
+        }
+
+        // Khi học sinh bấm vào 1 mảnh ghép
+        function handlePieceClick(index) {
+            if (!isGameStarted) {
+                showCustomAlert("Em hãy nhập Họ tên, chọn Lớp và bấm nút 'Bắt đầu làm bài' màu xanh lá ở phía trên trước nhé!", "👉");
+                return;
+            }
+
+            if (isGameOver) {
+                showCustomAlert("Lượt làm bài này đã kết thúc! Em hãy bấm 'Làm lại từ đầu' nếu muốn chơi lượt mới nhé.", "ℹ️");
+                return;
+            }
+
+            // Nếu mảnh ghép đã trả lời SAI trước đó (màu đen) -> Báo không được làm lại
+            if (pieceStatus[index] === -1) {
+                showCustomAlert(`Mảnh ghép số ${index + 1} bạn đã chọn rồi và trả lời chưa chính xác nên không được làm lại câu hỏi này!`, "🔒");
+                return;
+            }
+
+            // Nếu mảnh ghép đã lật mở
+            if (pieceStatus[index] === 1) {
+                return;
+            }
+
+            openQuestion(index);
+        }
+
+        function openQuestion(index) {
+            currentPieceIndex = index;
+            const data = questionData[index];
+
+            document.getElementById("question-level").innerHTML = `<i class="fa-solid fa-layer-group"></i> ${data.level}`;
+            document.getElementById("question-text").innerText = data.q;
+            document.getElementById("feedback").innerText = "";
+            document.getElementById("modal-close-btn").style.display = "none";
+
+            const optsContainer = document.getElementById("options-container");
+            optsContainer.innerHTML = "";
+
+            data.options.forEach((optText, i) => {
+                const btn = document.createElement("button");
+                btn.type = "button";
+                btn.className = "option-btn";
+                btn.id = `opt-${i}`;
+                btn.innerText = optText;
+                btn.onclick = () => checkAnswer(i, btn);
+                optsContainer.appendChild(btn);
+            });
+
+            document.getElementById("modal-overlay").style.display = "flex";
+        }
+
+        // Chấm điểm: Đúng +1 điểm (tổng 10 điểm), Sai không trừ điểm & khóa mảnh ghép thành màu đen
+        function checkAnswer(selectedIdx, clickedBtn) {
+            const data = questionData[currentPieceIndex];
+            const allBtns = document.querySelectorAll(".option-btn");
+            const feedback = document.getElementById("feedback");
+            const closeBtn = document.getElementById("modal-close-btn");
+
+            allBtns.forEach(b => b.classList.add("locked"));
+
+            if (selectedIdx === data.ans) {
+                // TRẢ LỜI ĐÚNG
+                clickedBtn.classList.add("correct-choice");
+                feedback.style.color = "#16a34a";
+                feedback.innerText = "🎉 Chính xác! Bạn được cộng 1 điểm và mở khóa mảnh ghép này.";
+
+                currentScore += 1;
+                pieceStatus[currentPieceIndex] = 1; // Đánh dấu đã lật mở
+                updateStatsUI();
+
+                closeBtn.innerText = "🔓 Lật mở mảnh ghép";
+                closeBtn.style.display = "inline-block";
+                closeBtn.style.background = "linear-gradient(135deg, #16a34a, #15803d)";
+            } else {
+                // TRẢ LỜI SAI -> Không lật, không trừ điểm, chuyển mảnh ghép sang màu đen
+                clickedBtn.classList.add("wrong-choice");
+                feedback.style.color = "#dc2626";
+                feedback.innerText = "❌ Chưa chính xác! Mảnh ghép này sẽ bị khóa lại và không được lật mở.";
+
+                pieceStatus[currentPieceIndex] = -1; // Đánh dấu sai (màu đen)
+                updateStatsUI();
+
+                closeBtn.innerText = "Đóng câu hỏi";
+                closeBtn.style.display = "inline-block";
+                closeBtn.style.background = "linear-gradient(135deg, #334155, #0f172a)";
+            }
+        }
+
+        function closeModal() {
+            document.getElementById("modal-overlay").style.display = "none";
+            const piece = document.getElementById(`piece-${currentPieceIndex}`);
+
+            if (pieceStatus[currentPieceIndex] === 1) {
+                // Lật mở mảnh ghép
+                piece.classList.add("hidden");
+            } else if (pieceStatus[currentPieceIndex] === -1) {
+                // Chuyển mảnh ghép sang màu đen và khóa lại
+                piece.classList.add("wrong-piece");
+                piece.innerHTML = `<span>${currentPieceIndex + 1}</span><span class="piece-sub"><i class="fa-solid fa-lock"></i> Đã khóa</span>`;
+            }
+
+            checkAllAttempted();
+        }
+
+        // Kiểm tra xem đã làm hết cả 10 mảnh ghép chưa (dù đúng hay sai)
+        function checkAllAttempted() {
+            const isAllDone = pieceStatus.every(st => st !== 0);
+            if (isAllDone) {
+                isGameOver = true;
+                if (timerInterval) clearInterval(timerInterval);
+
+                const startBtn = document.getElementById("start-game-btn");
+                startBtn.innerHTML = `<i class="fa-solid fa-flag-checkered"></i> Đã hoàn thành`;
+
+                document.getElementById("intro-text").innerText = `🏁 BẠN ĐÃ HOÀN THÀNH CẢ 10 CÂU HỎI! Tổng điểm: ${currentScore}/10 điểm.`;
+
+                const nameVal = document.getElementById("student-name").value.trim();
+                const classVal = document.getElementById("student-class").value;
+                if (nameVal && classVal && !hasSubmittedScore) {
+                    pushScoreToFirebase(nameVal, classVal, "COMPLETED");
+                }
+            }
+        }
+
+        function showCustomAlert(msg, icon = "⚠️") {
+            document.getElementById("alert-icon").innerText = icon;
+            document.getElementById("alert-message").innerText = msg;
+            document.getElementById("custom-alert-overlay").style.display = "flex";
+        }
+
+        function closeCustomAlert() {
+            document.getElementById("custom-alert-overlay").style.display = "none";
+        }
+
+        // =========================================================================
+        // 4. LƯU ĐIỂM VÀ HIỂN THỊ BẢNG XẾP HẠNG FIREBASE
+        // =========================================================================
+        function manualSubmitScore() {
+            if (!isGameStarted) {
+                showCustomAlert("Em hãy bấm 'Bắt đầu làm bài' và trả lời câu hỏi trước khi lưu điểm nhé!", "⚠️");
+                return;
+            }
+
+            const attemptedCount = pieceStatus.filter(st => st !== 0).length;
+            if (attemptedCount === 0) {
+                showCustomAlert("Em hãy trả lời ít nhất 1 mảnh ghép trước khi nộp bài nhé!", "⚠️");
+                return;
+            }
+
+            if (hasSubmittedScore) {
+                showCustomAlert("Điểm lượt làm bài này của em đã được lưu lên Bảng xếp hạng rồi!", "ℹ️");
+                return;
+            }
+
+            isGameOver = true;
+            if (timerInterval) clearInterval(timerInterval);
+
+            const nameVal = document.getElementById("student-name").value.trim();
+            const classVal = document.getElementById("student-class").value;
+            pushScoreToFirebase(nameVal, classVal, "MANUAL");
+        }
+
+        function pushScoreToFirebase(nameVal, classVal, mode) {
+            const timeSpent = MAX_TIME_SECONDS - remainingSeconds;
+            const openedCount = pieceStatus.filter(st => st === 1).length;
+
+            if (!scoresRef) {
+                showCustomAlert(
+                    `Kết quả của ${nameVal} (${classVal}): ${currentScore}/10 điểm - Mở ${openedCount}/10 mảnh ghép.\n(Lưu ý: Chưa kết nối được Firebase để lưu Bảng xếp hạng)`,
+                    "ℹ️"
+                );
+                return;
+            }
+
+            const record = {
+                name: nameVal,
+                className: classVal,
+                score: currentScore,
+                pieces: openedCount,
+                time: timeSpent,
+                timestamp: firebase.database.ServerValue.TIMESTAMP
+            };
+
+            scoresRef.push(record)
+                .then(() => {
+                    hasSubmittedScore = true;
+                    if (typeof gtag === 'function') {
+                        gtag('event', 'submit_score_bai8_tin11', {
+                            'student_class': classVal,
+                            'score': currentScore,
+                            'time_seconds': timeSpent
+                        });
+                    }
+
+                    if (mode === "TIMEOUT") {
+                        showCustomAlert(
+                            `⏰ ĐÃ HẾT 10 PHÚT LÀM BÀI!\nHệ thống đã tự động nộp bài của ${nameVal} (${classVal}).\nĐiểm số: ${currentScore}/10 điểm - Thời gian: 10:00.`,
+                            "⏰"
+                        );
+                    } else if (mode === "COMPLETED") {
+                        showCustomAlert(
+                            `🏆 CHÚC MỪNG ${nameVal.toUpperCase()} (${classVal}) ĐÃ HOÀN THÀNH!\nĐiểm số: ${currentScore}/10 điểm (Mở đúng ${openedCount}/10 mảnh ghép).\nThời gian làm bài: ${formatTime(timeSpent)}.\nKết quả đã được lưu lên Bảng xếp hạng!`,
+                            "🎉"
+                        );
+                    } else {
+                        showCustomAlert(
+                            `✅ Đã nộp bài và lưu điểm của ${nameVal} (${classVal}) thành công!\nĐiểm số: ${currentScore}/10 điểm - Thời gian: ${formatTime(timeSpent)}.`,
+                            "🎉"
+                        );
+                    }
+                })
+                .catch((error) => {
+                    showCustomAlert("Lỗi khi lưu điểm: " + error.message, "⚠️");
+                });
+        }
+
+        function renderLeaderboard() {
+            const tbody = document.getElementById("leaderboard-body");
+            const filterClass = document.getElementById("filter-class").value;
+
+            let filtered = allScoresData;
+            if (filterClass !== "ALL") {
+                filtered = allScoresData.filter(item => item.className === filterClass);
+            }
+
+            // Sắp xếp: Điểm cao xếp trước -> Số mảnh mở nhiều hơn -> Thời gian làm nhanh hơn
+            filtered.sort((a, b) => {
+                if ((b.score || 0) !== (a.score || 0)) return (b.score || 0) - (a.score || 0);
+                if ((b.pieces || 0) !== (a.pieces || 0)) return (b.pieces || 0) - (a.pieces || 0);
+                return (a.time || 9999) - (b.time || 9999);
+            });
+
+            const topList = filtered.slice(0, 20);
+
+            if (topList.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:#64748b;">Chưa có học sinh nào ghi danh. Hãy là người đầu tiên nhé!</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = topList.map((item, idx) => {
+                let rankHTML = idx + 1;
+                if (idx === 0) rankHTML = `<span class="rank-badge rank-1">1</span>`;
+                else if (idx === 1) rankHTML = `<span class="rank-badge rank-2">2</span>`;
+                else if (idx === 2) rankHTML = `<span class="rank-badge rank-3">3</span>`;
+
+                return `
+                    <tr>
+                        <td>${rankHTML}</td>
+                        <td style="color:#0f172a; font-weight:700;">${escapeHTML(item.name || "Học sinh")}</td>
+                        <td><span style="background:#e0f2fe; color:#0369a1; padding:4px 10px; border-radius:8px; font-size:13px;">${escapeHTML(item.className || "")}</span></td>
+                        <td style="color:#d97706; font-weight:800;">${item.score || 0} đ</td>
+                        <td>${item.pieces || 0}/10</td>
+                        <td style="color:#15803d;">${formatTime(item.time || 0)}</td>
+                    </tr>
+                `;
+            }).join("");
+        }
+
+        function escapeHTML(str) {
+            return String(str).replace(/[&<>"']/g, function(m) {
+                return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[m];
+            });
+        }
+
+        function resetGame() {
+            if (timerInterval) clearInterval(timerInterval);
+            pieceStatus = new Array(10).fill(0);
+            currentScore = 0;
+            remainingSeconds = MAX_TIME_SECONDS;
+            isGameStarted = false;
+            isGameOver = false;
+            hasSubmittedScore = false;
+
+            document.getElementById("student-name").disabled = false;
+            document.getElementById("student-class").disabled = false;
+
+            const startBtn = document.getElementById("start-game-btn");
+            startBtn.disabled = false;
+            startBtn.innerHTML = `<i class="fa-solid fa-play"></i> Bắt đầu làm bài`;
+
+            document.getElementById("intro-text").innerText = "👉 Hãy nhập Họ tên, chọn Lớp và bấm nút 'Bắt đầu làm bài' để mở khóa các mảnh ghép!";
+            initPuzzle();
+            closeCustomAlert();
+        }
+
+        window.onload = initPuzzle;
+    </script>
+</body>
+</html>
