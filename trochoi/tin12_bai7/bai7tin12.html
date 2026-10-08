@@ -1,1 +1,1423 @@
+<!doctype html>
+<html lang="vi" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>HỆ MẶT TRỜI - BÀI 7: HTML VÀ CẤU TRÚC TRANG WEB</title>
 
+  <!-- 1. MÃ GA4 GỐC (Kết nối với Google Analytics) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-NSJCVSL9RM"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-NSJCVSL9RM'); 
+  </script>
+
+  <!-- 2. MÃ NHỊP TIM 30 GIÂY -->
+  <script>
+    setInterval(function() {
+      if (!document.hidden) { 
+        gtag('event', 'keep_alive', {
+          'event_category': 'Engagement',
+          'event_label': 'Học sinh đang làm Bài 7 HTML Hệ Mặt Trời',
+          'non_interaction': false
+        });
+      }
+    }, 30000); 
+  </script>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@500;600;700;800&display=swap" rel="stylesheet">
+  
+  <style>
+    /* === CẤU HÌNH CƠ BẢN CHUẨN FONT TIẾNG VIỆT === */
+    * {
+        box-sizing: border-box;
+        font-family: 'Be Vietnam Pro', sans-serif;
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    html, body {
+        width: 100%; height: 100%; margin: 0; padding: 0;
+        background-color: #000;
+        overflow: hidden; 
+        user-select: none;
+        -webkit-text-size-adjust: 100%;
+    }
+
+    #game-container {
+        width: 100vw; height: 100vh; 
+        overflow: auto;
+        position: relative;
+        background: radial-gradient(ellipse at center, #090d16 0%, #000000 100%);
+        -webkit-overflow-scrolling: touch; 
+        cursor: grab;
+    }
+    #game-container:active { cursor: grabbing; }
+    
+    /* === SAO NỀN === */
+    .star {
+      position: absolute; background: white; border-radius: 50%;
+      opacity: 0.75; z-index: 0; pointer-events: none;
+    }
+
+    .orbit-ring {
+      border: 1px dashed rgba(255, 255, 255, 0.14);
+      border-radius: 50%;
+      position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+      pointer-events: none; z-index: 1;
+    }
+    
+    /* === HÀNH TINH === */
+    .planet-container {
+      position: absolute; 
+      display: flex; justify-content: center; align-items: center;
+      z-index: 50; cursor: pointer; 
+      will-change: transform;
+      touch-action: manipulation;
+      min-width: 74px; min-height: 74px; 
+    }
+
+    .planet-shape {
+      border-radius: 50%; 
+      box-shadow: inset -3px -3px 8px rgba(0,0,0,0.8);
+      transition: filter 0.3s ease, box-shadow 0.3s ease; 
+      filter: brightness(0.92);
+      position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    }
+    
+    .planet-active { z-index: 100 !important; }
+    .planet-active .planet-shape {
+      filter: brightness(1.3);
+      box-shadow: 0 0 25px #facc15, 0 0 40px #f59e0b;
+    }
+    .planet-active::before {
+      content: '▼ BẤM VÀO ĐÂY'; 
+      position: absolute; top: -32px; left: 50%; transform: translateX(-50%);
+      background: #f59e0b; color: #000; padding: 2px 8px; border-radius: 20px;
+      animation: bounce 0.8s infinite; font-weight: 800; font-size: 11px;
+      white-space: nowrap; box-shadow: 0 2px 6px rgba(0,0,0,0.6);
+      pointer-events: none; z-index: 101;
+    }
+
+    .planet-connected .planet-shape {
+      filter: brightness(1.25); box-shadow: 0 0 28px #22c55e; 
+    }
+    .planet-wrong .planet-shape { filter: grayscale(1.0) brightness(0.35); }
+
+    /* === MẶT TRỜI === */
+    .sun-shape {
+      border-radius: 50%;
+      background: radial-gradient(circle at center, #fffbeb, #fbbf24, #d97706);
+      box-shadow: 0 0 40px #d97706; 
+      filter: brightness(1.0); 
+      transition: all 0.8s ease;
+      position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    }
+    
+    .sun-shape.sun-victory {
+        filter: brightness(1.35) !important;
+        box-shadow: 0 0 90px 35px #f59e0b, 0 0 140px 60px rgba(251, 191, 36, 0.5) !important;
+        z-index: 999;
+        animation: sunBreathing 2.5s infinite alternate ease-in-out !important;
+    }
+
+    @keyframes sunBreathing {
+        from { transform: translate(-50%, -50%) scale(1.0); }
+        to { transform: translate(-50%, -50%) scale(1.12); }
+    }
+
+    /* MÀU SẮC HÀNH TINH */
+    .mercury-bg { background: radial-gradient(circle at 30% 30%, #a3a3a3, #525252); }
+    .venus-bg { background: radial-gradient(circle at 30% 30%, #fde047, #d97706); }
+    .earth-bg { background: radial-gradient(circle at 40% 40%, #22d3ee 0%, #1d4ed8 50%, #1e1b4b 100%); }
+    .mars-bg { background: radial-gradient(circle at 30% 30%, #fdba74, #9a3412); }
+    .jupiter-bg { background: radial-gradient(circle at 30% 30%, #ffedd5, #b45309, #78350f); }
+    .saturn-bg { background: radial-gradient(circle at 30% 30%, #fef08a, #ca8a04); }
+    .uranus-bg { background: radial-gradient(circle at 30% 30%, #cffafe, #06b6d4); }
+    .neptune-bg { background: radial-gradient(circle at 30% 30%, #60a5fa, #1e3a8a); }
+    .moon-bg { background: radial-gradient(circle at 30% 30%, #e5e7eb, #6b7280); }
+
+    .planet-label {
+      position: absolute; bottom: -14px; left: 50%; transform: translateX(-50%);
+      font-size: 13px; color: #ffffff; white-space: nowrap; font-weight: 700;
+      text-shadow: 0 2px 4px black; pointer-events: none; z-index: 60;
+      background: rgba(0,0,0,0.55); padding: 1px 6px; border-radius: 6px;
+    }
+
+    @keyframes bounce { 
+        0%, 100% { transform: translate(-50%, 0); } 
+        50% { transform: translate(-50%, -8px); } 
+    }
+
+    /* === UI & LOGIN SCREEN === */
+    .ui-layer { position: fixed; top: 0; left: 0; width: 100%; z-index: 900; pointer-events: none; }
+    .pointer-events-auto { pointer-events: auto; }
+
+    #login-screen {
+        position: fixed; inset: 0; z-index: 9999;
+        background: radial-gradient(circle at center, #1e3a8a 0%, #090d16 70%, #000000 100%);
+        display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 15px;
+        overflow-y: auto;
+    }
+    .login-card {
+        background: #ffffff; color: #1e293b;
+        padding: 28px 24px; border-radius: 24px;
+        width: 100%; max-width: 440px; text-align: center;
+        border: 4px solid #3b82f6;
+        box-shadow: 0 0 50px rgba(59, 130, 246, 0.5);
+    }
+    .input-group { margin-bottom: 14px; text-align: left; }
+    .input-label { display: block; font-weight: 700; color: #1e293b; margin-bottom: 6px; font-size: 14.5px; }
+    .input-field {
+        width: 100%; padding: 12px 14px; border: 2px solid #cbd5e1;
+        border-radius: 12px; font-size: 16px; outline: none;
+        background: #f8fafc; color: #0f172a; font-weight: 600;
+        transition: border-color 0.2s;
+    }
+    .input-field:focus { border-color: #2563eb; background: #ffffff; }
+
+    .glass-panel {
+      background: rgba(15, 23, 42, 0.88); border: 1px solid rgba(59, 130, 246, 0.5);
+      backdrop-filter: blur(8px);
+    }
+    
+    /* === QUIZ MODAL (MỞ RỘNG TRÊN PC & TRÀN KHUNG TRÊN ĐIỆN THOẠI) === */
+    #quiz-modal {
+        position: fixed !important; inset: 0;
+        width: 100vw; height: 100vh;
+        background-color: rgba(0, 0, 0, 0.82); z-index: 10000; 
+        backdrop-filter: blur(5px);
+        padding: 12px;
+    }
+
+    .quiz-modern-panel {
+      background: #1e293b; border: 3px solid #f59e0b;
+      border-radius: 20px; padding: 20px;
+      position: relative;
+      width: 96%; max-width: 1150px; 
+      max-height: 94vh; overflow-y: auto; 
+      box-shadow: 0 20px 50px rgba(0,0,0,0.7);
+    }
+
+    /* Hộp câu hỏi nền trắng, chữ màu đỏ nổi bật */
+    .question-box {
+        background: #ffffff; border: 3px solid #ef4444; border-radius: 14px;
+        padding: 16px 20px; margin-bottom: 16px; 
+        box-shadow: 0 4px 15px rgba(0,0,0,0.3); text-align: center;
+    }
+
+    .question-text { 
+        color: #d90429; /* MÀU ĐỎ NỔI BẬT */
+        font-weight: 800; font-size: 1.25rem; line-height: 1.45;
+        word-break: break-word;
+        white-space: pre-wrap;
+    }
+
+    /* Hộp hiển thị code mẫu trong câu hỏi (nếu có) */
+    .code-snippet-box {
+        display: inline-block;
+        text-align: left;
+        background: #f1f5f9;
+        color: #0f172a;
+        border: 2px solid #cbd5e1;
+        border-left: 5px solid #2563eb;
+        border-radius: 8px;
+        padding: 10px 16px;
+        margin-top: 10px;
+        font-family: Consolas, 'Courier New', monospace;
+        font-size: 1.05rem;
+        font-weight: 700;
+        line-height: 1.45;
+        white-space: pre-wrap;
+        max-width: 100%;
+    }
+
+    .quiz-options-grid {
+        display: grid; grid-template-columns: 1fr 1fr; gap: 14px;
+        width: 100%;
+    }
+
+    /* Các ô đáp án nền trắng tinh (#ffffff) dễ nhìn */
+    .answer-btn-modern {
+      width: 100%; text-align: left; padding: 15px 18px;
+      background: #ffffff; color: #0f172a; 
+      border: 2px solid #cbd5e1; border-radius: 12px; box-shadow: 0 4px 0 #94a3b8;
+      font-weight: 700; font-size: 1.02rem; cursor: pointer;
+      transition: transform 0.08s, background-color 0.15s; 
+      position: relative; touch-action: manipulation;
+      line-height: 1.45; word-break: break-word;
+      white-space: pre-wrap;
+    }
+    .answer-btn-modern.code-option {
+      font-family: Consolas, 'Courier New', monospace;
+      font-size: 0.96rem;
+      line-height: 1.4;
+      padding: 12px 16px;
+      background: #ffffff;
+    }
+
+    .answer-btn-modern:hover:not(:disabled) { background: #f8fafc; border-color: #3b82f6; }
+    .answer-btn-modern:active:not(:disabled) { transform: translateY(3px) !important; box-shadow: 0 1px 0 #94a3b8 !important; }
+    
+    .answer-btn-modern.correct { 
+        background: #22c55e !important; border-color: #16a34a !important; 
+        box-shadow: 0 4px 0 #14532d !important; color: white !important; 
+    }
+    .answer-btn-modern.wrong { 
+        background: #ef4444 !important; border-color: #dc2626 !important; 
+        box-shadow: 0 4px 0 #991b1b !important; color: white !important; 
+    }
+
+    .next-btn-modern {
+        width: 100%; margin-top: 16px; padding: 14px;
+        background: #f59e0b; color: #ffffff; font-weight: 800; text-transform: uppercase;
+        border: none; border-radius: 12px; box-shadow: 0 4px 0 #b45309;
+        font-size: 1.1rem; cursor: pointer; touch-action: manipulation;
+    }
+    .next-btn-modern:active { transform: translateY(3px); box-shadow: none; }
+
+    .center-btn {
+        position: fixed; bottom: 18px; right: 18px; z-index: 900;
+        background: rgba(37, 99, 235, 0.95); color: white;
+        padding: 0 16px; height: 44px; border-radius: 25px;
+        display: flex; align-items: center; justify-content: center; gap: 6px;
+        border: 2px solid white; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+        font-size: 13px; font-weight: 700; cursor: pointer; pointer-events: auto;
+    }
+
+    #universe-wrapper { position: relative; min-width: 100vw; min-height: 100vh; overflow: hidden; }
+    #stars-in-universe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
+
+    /* ========================================================= */
+    /* --- BẢNG XẾP HẠNG THỜI GIAN THỰC (8 CỘT KHÔNG GIỚI HẠN) --- */
+    /* ========================================================= */
+    #end-screen {
+        display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background: #f1f5f9; z-index: 14000; color: #1e293b;
+        flex-direction: column; align-items: center; padding: 18px 10px; overflow-y: auto;
+        font-size: 15px;
+    }
+    .lb-container {
+        width: 100%; max-width: 1240px; background: #ffffff;
+        border-radius: 16px; padding: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+    .lb-top-bar {
+        display: flex; justify-content: space-between; align-items: center;
+        padding-bottom: 14px; margin-bottom: 14px; border-bottom: 2px solid #f1f5f9;
+        flex-wrap: wrap; gap: 10px;
+    }
+    .top-left-btns { display: flex; gap: 8px; flex-wrap: wrap; }
+    .btn-home {
+        display: inline-flex; align-items: center; gap: 6px;
+        background: #f1f5f9; color: #334155; border: 1px solid #cbd5e1;
+        padding: 9px 15px; border-radius: 10px; font-weight: 700;
+        font-size: 14px; cursor: pointer;
+    }
+    .btn-home:hover { background: #e2e8f0; }
+    .lb-header-right {
+        display: flex; align-items: center; gap: 8px;
+        font-size: 24px; font-weight: 800; color: #ea580c;
+        text-transform: uppercase;
+    }
+    
+    .my-result-banner {
+        display: flex; justify-content: space-between; align-items: center;
+        background: #fffbeb; border: 2px solid #f59e0b; border-radius: 12px;
+        padding: 12px 16px; margin-bottom: 14px; flex-wrap: wrap; gap: 8px;
+    }
+    .my-result-info { font-weight: 700; color: #92400e; font-size: 15px; }
+    .my-result-score { font-size: 19px; font-weight: 800; color: #d90429; }
+
+    .lb-toolbar {
+        display: flex; justify-content: space-between; align-items: center;
+        gap: 8px; margin-bottom: 12px; flex-wrap: wrap;
+    }
+    .search-box {
+        flex: 1; min-width: 200px; padding: 10px 14px;
+        border: 2px solid #cbd5e1; border-radius: 10px; font-size: 15px;
+        outline: none; background: #f8fafc; color: #1e293b;
+    }
+    .search-box:focus { border-color: #ff6b00; background: #ffffff; }
+    .toolbar-actions { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+    .btn-find-me {
+        background: #10b981; color: white; border: none; padding: 10px 15px;
+        border-radius: 10px; font-weight: 700; font-size: 14px; cursor: pointer;
+    }
+    .total-counter {
+        background: #fff1f2; color: #e11d48; border: 1px solid #fecdd3;
+        padding: 9px 14px; border-radius: 10px; font-weight: 700; font-size: 14px;
+    }
+
+    .table-responsive {
+        width: 100%; overflow-x: auto; border-radius: 10px;
+        border: 1px solid #e2e8f0; max-height: 55vh; overflow-y: auto;
+    }
+    .lb-table {
+        width: 100%; border-collapse: collapse; min-width: 720px;
+        text-align: center; font-size: 14.5px;
+    }
+    .lb-table thead tr {
+        background: linear-gradient(90deg, #ff6b00 0%, #e63946 100%);
+        color: #ffffff; font-weight: 700; position: sticky; top: 0; z-index: 10;
+    }
+    .lb-table th { padding: 13px 8px; white-space: nowrap; }
+    .lb-table td {
+        padding: 11px 8px; border-bottom: 1px solid #f1f5f9;
+        color: #334155; font-weight: 600;
+    }
+    .lb-table tbody tr.me-row {
+        background: #dcfce7 !important; font-weight: 700;
+        border-left: 4px solid #16a34a;
+    }
+    .badge-class {
+        background: #e0f2fe; color: #0369a1; padding: 4px 9px;
+        border-radius: 6px; font-weight: 700; font-size: 13px;
+    }
+    .badge-score {
+        background: #fef2f2; color: #dc2626; padding: 4px 12px;
+        border-radius: 20px; font-weight: 800; border: 1px solid #fecaca;
+    }
+    .btn-detail {
+        background: #3b82f6; color: white; border: none;
+        padding: 5px 12px; border-radius: 6px; cursor: pointer;
+        font-weight: 700; font-size: 13px;
+    }
+
+    .pagination-bar {
+        display: flex; justify-content: space-between; align-items: center;
+        margin-top: 12px; padding-top: 10px; border-top: 1px solid #e2e8f0;
+        flex-wrap: wrap; gap: 8px; font-size: 13.5px; color: #475569;
+    }
+    .page-controls { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+    .page-btn {
+        background: #f1f5f9; color: #334155; border: 1px solid #cbd5e1;
+        padding: 5px 10px; border-radius: 6px; font-weight: 700; cursor: pointer;
+    }
+    .page-btn:disabled { opacity: 0.4; }
+    .page-size-select {
+        padding: 5px 8px; border-radius: 6px; border: 1px solid #cbd5e1;
+        font-weight: 700; background: white;
+    }
+
+    /* Modal Xem Chi Tiết Bài Làm */
+    #detail-modal {
+        display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(0,0,0,0.7); z-index: 20000; color: #1e293b;
+        justify-content: center; align-items: center; padding: 12px;
+    }
+    .detail-card {
+        background: white; width: 100%; max-width: 720px; max-height: 85vh;
+        border-radius: 16px; display: flex; flex-direction: column; overflow: hidden;
+    }
+    .detail-header {
+        background: linear-gradient(90deg, #ff6b00, #e63946); color: white;
+        padding: 14px 18px; display: flex; justify-content: space-between; align-items: center;
+        font-weight: 700; font-size: 16px;
+    }
+    .detail-body { padding: 15px; overflow-y: auto; flex: 1; font-size: 14.5px; }
+    .detail-item {
+        padding: 10px; border-radius: 8px; margin-bottom: 8px;
+        border: 1px solid #e2e8f0; background: #f8fafc;
+        white-space: pre-wrap;
+    }
+    .detail-item.correct { border-left: 4px solid #22c55e; background: #f0fdf4; }
+    .detail-item.wrong { border-left: 4px solid #ef4444; background: #fef2f2; }
+
+    /* === TỐI ƯU HIỂN THỊ TRÀN KHUNG TRÊN ĐIỆN THOẠI === */
+    @media (max-width: 768px) {
+        #quiz-modal { padding: 4px; }
+        .quiz-modern-panel { 
+            width: 100% !important; max-width: 100% !important; 
+            padding: 12px 8px; border-radius: 14px; 
+        }
+        .question-box { padding: 10px 10px; margin-bottom: 10px; width: 100%; }
+        .question-text { font-size: 0.96rem !important; } 
+        .code-snippet-box { font-size: 0.85rem; padding: 8px 10px; width: 100%; }
+        .quiz-options-grid { grid-template-columns: 1fr; gap: 8px; width: 100%; }
+        .answer-btn-modern { padding: 10px 12px; font-size: 0.9rem; width: 100%; }
+        .answer-btn-modern.code-option { font-size: 0.82rem; padding: 10px 10px; }
+        .next-btn-modern { font-size: 0.95rem; padding: 12px; }
+        .planet-label { font-size: 11px !important; }
+        
+        #end-screen { padding: 6px; }
+        .lb-container { padding: 12px; width: 100% !important; }
+        .lb-header-right { font-size: 18px; }
+        .search-box { width: 100%; }
+    }
+  </style>
+ </head>
+ <body class="text-white">
+
+  <!-- MÀN HÌNH ĐĂNG NHẬP CÓ HỌ TÊN & LỚP -->
+  <div id="login-screen">
+      <div class="text-yellow-400 font-extrabold text-sm tracking-widest uppercase mb-2">🚀  KHÁM PHÁ HỆ MẶT TRỜI</div>
+      <h1 class="text-3xl md:text-4xl text-white font-extrabold mb-5 text-center drop-shadow-[0_0_20px_rgba(59,130,246,0.9)]">
+         
+      </h1>
+      <div class="login-card">
+          <div class="text-red-600 font-extrabold text-lg mb-1">BÀI 7: HTML VÀ CẤU TRÚC TRANG WEB</div>
+          <p class="text-slate-500 text-xs font-semibold mb-4">Chạm vào hành tinh có mũi tên nhấp nháy để giải mã tín hiệu!</p>
+
+          <div class="input-group">
+              <label class="input-label" for="username">👤 Họ và tên phi hành gia:</label>
+              <input type="text" id="username" placeholder="Ví dụ: Nguyễn Hoàng Anh" maxlength="35" class="input-field" autocomplete="off">
+          </div>
+
+          <div class="input-group">
+              <label class="input-label" for="userclass">🏫 Lớp:</label>
+              <input type="text" id="userclass" placeholder="Ví dụ: 12A1" maxlength="12" class="input-field" autocomplete="off">
+          </div>
+
+          <button id="start-btn" class="w-full bg-red-600 hover:bg-red-500 text-white font-extrabold py-3.5 rounded-xl border-b-4 border-red-800 active:border-b-0 active:translate-y-1 transition-all uppercase tracking-wider text-base shadow-lg mt-2">
+              KHỞI HÀNH NGAY 🚀
+          </button>
+      </div>
+  </div>
+
+  <!-- KHÔNG GIAN HỆ MẶT TRỜI -->
+  <div id="game-container" class="hidden">
+      <div class="ui-layer p-2 flex justify-between items-start flex-wrap gap-2">
+          <div class="pointer-events-auto flex flex-col items-start gap-2">
+              <div class="glass-panel px-3 py-2 rounded-xl border-l-4 border-blue-500">
+                  <div class="flex items-center gap-3">
+                      <div>
+                          <div class="text-[10px] text-gray-300 uppercase font-bold">Phi hành gia</div>
+                          <div id="hud-player" class="font-bold text-white text-xs md:text-sm truncate max-w-[150px]">...</div>
+                      </div>
+                      <div class="h-6 w-px bg-gray-500"></div>
+                      <div>
+                          <div class="text-[10px] text-gray-300 uppercase font-bold">Điểm</div>
+                          <div id="hud-score" class="font-extrabold text-yellow-400 text-base md:text-lg">0</div>
+                      </div>
+                      <div class="h-6 w-px bg-gray-500"></div>
+                      <div>
+                          <div class="text-[10px] text-gray-300 uppercase font-bold">Tiến độ</div>
+                          <div id="hud-progress" class="font-extrabold text-emerald-400 text-xs md:text-sm">1/10</div>
+                      </div>
+                  </div>
+              </div>
+
+              <!-- Các nút điều khiển trên màn hình vũ trụ -->
+              <div class="flex flex-wrap gap-2">
+                  <button id="open-lb-hud-btn" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold px-3 py-2 rounded-lg border border-emerald-400 shadow">
+                      🏆 Xem Bảng Xếp Hạng
+                  </button>
+                  <button id="replay-hud-btn" class="hidden bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold px-3 py-2 rounded-lg border border-blue-400 shadow animate-bounce">
+                      🔄 Chơi lại
+                  </button>
+              </div>
+
+              <!-- Thông báo hoàn thành hiện ngay trên màn hình Hệ Mặt Trời -->
+              <div id="victory-toast" class="hidden glass-panel px-3.5 py-2 rounded-xl border-2 border-yellow-400 text-xs font-bold text-yellow-300 shadow-lg">
+                  ✨ Đã hoàn thành Hệ Mặt Trời & lưu điểm lên Bảng xếp hạng!
+              </div>
+          </div>
+          
+          <div id="instruction-box" class="glass-panel px-3.5 py-2 rounded-full hidden pointer-events-auto border-2 border-yellow-400 shadow-lg cursor-pointer">
+              <div class="text-yellow-300 font-extrabold text-[10px] uppercase">👉 BẤM VÀO HÀNH TINH:</div> 
+              <div id="target-planet" class="text-white font-extrabold text-xs md:text-sm truncate"></div>
+          </div>
+      </div>
+
+      <div id="universe-wrapper">
+          <div id="stars-in-universe"></div>
+          <div id="solar-system" class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-0 h-0"></div>
+      </div>
+  </div>
+
+  <!-- Nút định vị nhanh hành tinh mục tiêu trên điện thoại -->
+  <div id="recenter-btn" class="center-btn hidden">🎯 Tìm hành tinh</div>
+
+  <!-- CỬA SỔ CÂU HỎI TRẮC NGHIỆM -->
+  <div id="quiz-modal" class="hidden flex items-center justify-center">
+      <div class="quiz-modern-panel">
+          <div class="question-box">
+              <div class="text-xs font-bold text-blue-600 uppercase tracking-wider mb-1">
+                  📡 TÍN HIỆU TỪ: <span id="quiz-planet" class="font-extrabold underline">PLANET</span>
+              </div>
+              <div id="quiz-question" class="question-text"></div>
+              <div id="quiz-code-box" class="code-snippet-box hidden"></div>
+          </div>
+          
+          <div id="quiz-options" class="quiz-options-grid"></div>
+          
+          <div id="quiz-feedback" class="hidden mt-3 text-center font-extrabold text-base p-2.5 rounded-xl border-2 shadow-sm bg-white"></div>
+          
+          <button id="btn-next-question" class="next-btn-modern hidden">
+              CÂU TIẾP THEO ➔
+          </button>
+      </div>
+  </div>
+
+  <!-- MÀN HÌNH BẢNG XẾP HẠNG TOÀN BỘ HỌC SINH (CHỈ MỞ KHI HỌC SINH BẤM NÚT) -->
+  <div id="end-screen">
+      <div class="lb-container">
+          <div class="lb-top-bar">
+              <div class="top-left-btns">
+                  <button type="button" class="btn-home" id="back-to-space-btn">
+                      <span>🪐</span> Quay lại ngắm Hệ Mặt Trời
+                  </button>
+                  <button type="button" class="btn-home" id="replay-from-lb-btn" style="background:#dcfce7; color:#166534; border-color:#86efac;">
+                      <span>🏠</span> Trang chủ (Chơi lại)
+                  </button>
+              </div>
+              <div class="lb-header-right">
+                  <span>🏆</span> BẢNG XẾP HẠNG
+              </div>
+          </div>
+
+          <div class="my-result-banner">
+              <div class="my-result-info">
+                  🎉 Phi hành gia: <span id="end-player-info">...</span> | Thời gian: <span id="end-time-spent">0s</span> | Thứ hạng: <span id="my-rank-badge" style="color:#d90429;">Đang tính...</span>
+              </div>
+              <div class="my-result-score">
+                  ĐIỂM: <span id="final-score">0</span> / 100
+              </div>
+          </div>
+
+          <div class="lb-toolbar">
+              <input type="text" id="search-input" class="search-box" placeholder="🔍 Tìm theo Họ tên hoặc Lớp (VD: 12A1, Hoàng Anh)...">
+              <div class="toolbar-actions">
+                  <button type="button" class="btn-find-me" id="find-me-btn">🎯 Vị trí của tôi</button>
+                  <div class="total-counter">Tổng: <span id="total-players-count">0</span> học sinh</div>
+              </div>
+          </div>
+
+          <div class="table-responsive">
+              <table class="lb-table">
+                  <thead>
+                      <tr>
+                          <th>#</th>
+                          <th>Lớp</th>
+                          <th style="text-align: left;">Họ tên</th>
+                          <th>Đề thi</th>
+                          <th>Điểm</th>
+                          <th>Ngày/Giờ làm bài</th>
+                          <th>Tổng TG</th>
+                          <th>Chi tiết</th>
+                      </tr>
+                  </thead>
+                  <tbody id="final-leaderboard-list">
+                      <tr>
+                          <td colspan="8" style="padding: 35px; color: #64748b; font-weight: bold;">
+                              Đang tải dữ liệu bảng xếp hạng thời gian thực... ⏳
+                          </td>
+                      </tr>
+                  </tbody>
+              </table>
+          </div>
+
+          <div class="pagination-bar">
+              <div>
+                  Hiển thị <strong id="showing-range">0 - 0</strong> / <strong id="showing-total">0</strong> học sinh
+              </div>
+              <div class="page-controls">
+                  <label for="page-size-select">Dòng/trang:</label>
+                  <select id="page-size-select" class="page-size-select">
+                      <option value="50" selected>50</option>
+                      <option value="100">100</option>
+                      <option value="200">200</option>
+                      <option value="500">500</option>
+                      <option value="999999">Tất cả</option>
+                  </select>
+                  <button type="button" class="page-btn" id="first-page-btn">⏮</button>
+                  <button type="button" class="page-btn" id="prev-page-btn">◀</button>
+                  <span style="font-weight:bold; padding: 0 6px;">Trang <span id="current-page-display">1</span>/<span id="total-pages-display">1</span></span>
+                  <button type="button" class="page-btn" id="next-page-btn">▶</button>
+                  <button type="button" class="page-btn" id="last-page-btn">⏭</button>
+              </div>
+          </div>
+      </div>
+  </div>
+
+  <!-- MODAL XEM CHI TIẾT ĐÁP ÁN ĐÃ CHỌN -->
+  <div id="detail-modal">
+      <div class="detail-card">
+          <div class="detail-header">
+              <span id="detail-modal-title">Chi tiết bài làm</span>
+              <button type="button" id="close-detail-btn" style="background:none; border:none; color:white; font-size:22px; cursor:pointer;">✖</button>
+          </div>
+          <div class="detail-body" id="detail-modal-body"></div>
+      </div>
+  </div>
+
+  <!-- 3. TÍCH HỢP FIREBASE REALTIME DATABASE & LOGIC HỆ MẶT TRỜI -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-analytics.js";
+    import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyBQ9Pos8awlh9j041qDWTPFRsVIjF-kPnk",
+        authDomain: "hoctap-91691.firebaseapp.com",
+        databaseURL: "https://hoctap-91691-default-rtdb.asia-southeast1.firebasedatabase.app",
+        projectId: "hoctap-91691",
+        storageBucket: "hoctap-91691.firebasestorage.app",
+        messagingSenderId: "1004553425319",
+        appId: "1:1004553425319:web:45d15cbae393f614c56682",
+        measurementId: "G-Q6X1TL9PRV"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+    const db = getDatabase(app);
+    const LEADERBOARD_PATH = 'leaderboard_bai7_html_v1';
+    const QUIZ_TITLE = 'Bài 7 - HTML & Cấu trúc Web';
+
+    // BỘ 10 CÂU HỎI BÀI 7: TRÌNH BÀY CẶP THẺ RÕ RÀNG NHƯ CHƯƠNG TRÌNH MẪU
+    const questions = [
+      { 
+        id: 'mercury', name: 'Sao Thủy', 
+        q: 'Câu 1: Từ viết tắt HTML là cụm từ tiếng Anh nào dưới đây?', 
+        a: [
+          'A. Hyperlinks and Text Markup Language.', 
+          'B. HyperText Markup Language.', 
+          'C. Home Tool Markup Language.', 
+          'D. HyperTool Multi Language.'
+        ], 
+        c: 1 
+      },
+      { 
+        id: 'venus', name: 'Sao Kim', 
+        q: 'Câu 2: Trong cấu trúc cơ bản của một tệp HTML, phần tử nào là phần tử gốc (root) bao bọc toàn bộ nội dung của trang web?', 
+        a: ['A. <head> ... </head>', 'B. <body> ... </body>', 'C. <html> ... </html>', 'D. <title> ... </title>'], 
+        c: 2 
+      },
+      { 
+        id: 'earth', name: 'Trái Đất', 
+        q: 'Câu 3: Cặp thẻ nào dùng để chứa các phần tử hiển thị trực tiếp trên màn hình trình duyệt của người dùng (như văn bản, hình ảnh, liên kết)?', 
+        a: ['A. <head> ... </head>', 'B. <title> ... </title>', 'C. <meta> ... </meta>', 'D. <body> ... </body>'], 
+        c: 3 
+      },
+      { 
+        id: 'moon', name: 'Mặt Trăng', 
+        q: 'Câu 4: Phát biểu nào sau đây là ĐÚNG khi nói về đặc điểm của các thẻ (tag) trong ngôn ngữ HTML?', 
+        a: [
+          'A. Tên thẻ trong HTML phân biệt chữ hoa và chữ thường.', 
+          'B. Mọi phần tử HTML bắt buộc phải có cả thẻ mở và thẻ đóng, không có ngoại lệ.', 
+          'C. Tên thẻ trong HTML không phân biệt chữ hoa và chữ thường, nhưng quy ước chuẩn thường viết bằng chữ thường.', 
+          'D. Trình duyệt web sẽ hiển thị nguyên văn cả tên thẻ <p> và </p> lên màn hình.'
+        ], 
+        c: 2 
+      },
+      { 
+        id: 'mars', name: 'Sao Hỏa', 
+        q: 'Câu 5: Trong cấu trúc cây HTML, cặp thẻ <title> ... </title> nằm trực tiếp bên trong phần tử nào và có chức năng gì?', 
+        a: [
+          'A. Nằm trong <body>, dùng để tạo tiêu đề chữ to nhất ngay đầu bài viết.', 
+          'B. Nằm trong <head>, dùng để xác định tên tiêu đề của trang web hiển thị trên thanh tab của trình duyệt.', 
+          'C. Nằm ngoài <html>, dùng để đặt tên tệp tin khi lưu vào ổ cứng.', 
+          'D. Nằm trong <head>, dùng để khai báo bảng mã kí tự tiếng Việt UTF-8.'
+        ], 
+        c: 1 
+      },
+      { 
+        id: 'jupiter', name: 'Sao Mộc', 
+        q: 'Câu 6: Cho phần tử HTML sau: <p align="center">Tin học 12</p>. Thành phần align="center" được gọi là gì?', 
+        a: [
+          'A. Tên thẻ (Tag name) của phần tử.', 
+          'B. Nội dung (Content) của phần tử.', 
+          'C. Thuộc tính (Attribute) của thẻ <p>, trong đó align là tên thuộc tính và "center" là giá trị.', 
+          'D. Thẻ đơn (Empty tag) dùng để ngắt dòng văn bản.'
+        ], 
+        c: 2 
+      },
+      { 
+        id: 'saturn', name: 'Sao Thổ', 
+        q: 'Câu 7: Đâu là sự khác biệt cơ bản giữa phần tử <br> và phần tử <p> ... </p> trong HTML?', 
+        a: [
+          'A. <br> là thẻ đôi có thẻ đóng, còn <p> là thẻ đơn không có thẻ đóng.', 
+          'B. <br> là thẻ đơn (không có thẻ đóng) dùng để xuống dòng, còn <p> ... </p> là thẻ đôi dùng để định nghĩa một đoạn văn bản.', 
+          'C. <br> chỉ dùng được trong phần <head>, còn <p> dùng trong phần <body>.', 
+          'D. <br> dùng để tạo đường kẻ ngang, còn <p> dùng để in đậm văn bản.'
+        ], 
+        c: 1 
+      },
+      { 
+        id: 'uranus', name: 'Sao Thiên Vương', 
+        q: 'Câu 8: Khi mở trang web tiếng Việt trên trình duyệt, chữ bị lỗi phông. Để khắc phục triệt để trong mã HTML, cần đặt thẻ nào vào trong cặp thẻ <head> ... </head>?', 
+        a: [
+          'A. <meta charset="utf-8">', 
+          'B. <title charset="utf-8">Tiếng Việt</title>', 
+          'C. <body lang="vi-VN">', 
+          'D. <html encoding="unicode">'
+        ], 
+        c: 0 
+      },
+      { 
+        id: 'neptune', name: 'Sao Hải Vương', 
+        q: 'Câu 9: Cho đoạn chương trình HTML sau, phát biểu nào là CHÍNH XÁC về quan hệ cha - con giữa các cặp thẻ?',
+        codeSnippet: `<div>\n  <h1>Hành Trình Số</h1>\n  <p>Chào mừng đến với <b>Tin học 12</b>.</p>\n</div>`,
+        a: [
+          'A. Phần tử <h1> là phần tử cha của phần tử <p>.', 
+          'B. Phần tử <div> là phần tử cha của cả <h1> và <p>, còn phần tử <b> là phần tử con của <p>.', 
+          'C. Phần tử <b> và phần tử <h1> là hai phần tử ngang hàng (cùng cấp).', 
+          'D. Phần tử <p> là phần tử gốc chứa phần tử <div>.'
+        ], 
+        c: 1 
+      },
+      { 
+        id: 'sun', name: 'Mặt Trời', 
+        q: 'Câu 10: Để hiển thị "Tập thể lớp 12A1" trên thanh tab trình duyệt và "Chào mừng 20/11" làm tiêu đề lớn nhất trong nội dung trang, chương trình HTML nào dưới đây đặt ĐÚNG vị trí các cặp thẻ?', 
+        isCodeOptions: true,
+        a: [
+`A. <!DOCTYPE html>
+<html>
+  <body>
+    <title>Tập thể lớp 12A1</title>
+  </body>
+  <head>
+    <h1>Chào mừng 20/11</h1>
+  </head>
+</html>`, 
+`B. <!DOCTYPE html>
+<html>
+  <head>
+    <title>Chào mừng 20/11</title>
+  </head>
+  <body>
+    <h1>Tập thể lớp 12A1</h1>
+  </body>
+</html>`, 
+`C. <!DOCTYPE html>
+<html>
+  <head>
+    <title>Tập thể lớp 12A1</title>
+  </head>
+  <body>
+    <h1>Chào mừng 20/11</h1>
+  </body>
+</html>`, 
+`D. <!DOCTYPE html>
+<head>
+  <title>Tập thể lớp 12A1</title>
+  <html>
+    <body>
+      <h1>Chào mừng 20/11</h1>
+    </body>
+  </html>
+</head>`
+        ], 
+        c: 2 
+      }
+    ];
+
+    const planetConfig = {
+        sun:     { au: 0,    size: 75, speed: 0,        color: 'sun', label: 'Mặt Trời' },
+        mercury: { au: 0.9,  size: 16, speed: 0.012,    color: 'mercury-bg', label: 'Sao Thủy' }, 
+        venus:   { au: 1.8,  size: 30, speed: 0.005,    color: 'venus-bg',   label: 'Sao Kim' },  
+        earth:   { au: 2.4,  size: 32, speed: 0.003,    color: 'earth-bg',   label: 'Trái Đất' }, 
+        mars:    { au: 2.9,  size: 20, speed: 0.002,    color: 'mars-bg',    label: 'Sao Hỏa' },  
+        jupiter: { au: 3.6,  size: 56, speed: 0.0014,   color: 'jupiter-bg', label: 'Sao Mộc' },
+        saturn:  { au: 4.4,  size: 48, speed: 0.001,    color: 'saturn-bg',  label: 'Sao Thổ', ring: true },
+        uranus:  { au: 5.0,  size: 30, speed: 0.0006,   color: 'uranus-bg',  label: 'Sao Thiên Vương' },
+        neptune: { au: 5.5,  size: 28, speed: 0.0004,   color: 'neptune-bg', label: 'Sao Hải Vương' }
+    };
+    
+    const moonConfig = { size: 9, speed: 0.035, dist: 48 }; 
+
+    let state = {
+        playerName: '', playerClass: '', score: 0, currentQ: 0,
+        angles: {}, moving: {}, baseUnit: 0,
+        startTime: 0, hasSubmitted: false, userAnswers: [],
+        sessionID: "user_" + Date.now() + "_" + Math.floor(Math.random() * 100000)
+    };
+
+    let allPlayersRanked = [];
+    let filteredPlayers = [];
+    let currentPage = 1;
+    let pageSize = 50;
+
+    function formatDuration(sec) {
+        if (!sec || sec < 0) return "0s";
+        const m = Math.floor(sec / 60);
+        const s = sec % 60;
+        return m > 0 ? `${m}p ${s}s` : `${s}s`;
+    }
+
+    function escapeHTML(str) {
+        return String(str)
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;");
+    }
+
+    function init() {
+        Object.keys(planetConfig).forEach(k => {
+            state.angles[k] = Math.random() * Math.PI * 2;
+            state.moving[k] = true;
+        });
+        state.angles.moon = 0; state.moving.moon = true;
+        renderSolarSystem();
+        window.addEventListener('resize', resizeSystem);
+        setTimeout(resizeSystem, 100);
+        requestAnimationFrame(gameLoop);
+        listenRealtimeLeaderboard();
+    }
+
+    function renderSolarSystem() {
+        const system = document.getElementById('solar-system');
+        system.innerHTML = '<div id="sun-center-point" style="position:absolute;width:1px;height:1px;"></div>';
+        
+        Object.keys(planetConfig).forEach((key) => {
+            const cfg = planetConfig[key];
+            
+            if (key !== 'sun') {
+                const ring = document.createElement('div');
+                ring.className = 'orbit-ring';
+                ring.id = `ring-${key}`;
+                system.appendChild(ring);
+            }
+
+            const pDiv = document.createElement('div');
+            pDiv.className = 'planet-container';
+            pDiv.id = `planet-${key}`;
+            pDiv.dataset.id = key;
+            pDiv.onclick = (e) => handlePlanetClick(e, key); 
+            
+            let shapeHTML = '';
+            if (key === 'sun') {
+                 shapeHTML = `<div class="sun-shape" id="planet-sun-shape" style="width:${cfg.size*2}px; height:${cfg.size*2}px;"></div>`;
+            } else if (cfg.ring) {
+                 shapeHTML = `
+                    <div style="position:absolute; width:${cfg.size*2}px; height:${cfg.size*2}px; top:50%; left:50%; transform:translate(-50%,-50%);">
+                        <div class="planet-shape ${cfg.color}" style="width:100%; height:100%;"></div>
+                        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 180%; height: 50%; border: 6px solid rgba(200, 180, 140, 0.7); border-radius: 50%;"></div>
+                    </div>`;
+            } else {
+                shapeHTML = `<div class="planet-shape ${cfg.color}" style="width:${cfg.size*2}px; height:${cfg.size*2}px;"></div>`;
+            }
+            
+            pDiv.innerHTML = shapeHTML + `<div class="planet-label">${cfg.label}</div>`;
+            system.appendChild(pDiv);
+
+            if (key === 'earth') {
+                const mDiv = document.createElement('div');
+                mDiv.id = 'planet-moon';
+                mDiv.className = 'planet-container';
+                mDiv.style.width = '55px'; mDiv.style.height = '55px';
+                mDiv.onclick = (e) => handlePlanetClick(e, 'moon');
+                mDiv.innerHTML = `<div class="planet-shape moon-bg" style="width:${moonConfig.size*2}px; height:${moonConfig.size*2}px;"></div><div class="planet-label" style="bottom:-15px; font-size:10px;">Mặt Trăng</div>`;
+                system.appendChild(mDiv); 
+            }
+        });
+    }
+
+    function resizeSystem() {
+        const baseUnit = Math.max(70, Math.min(window.innerWidth, window.innerHeight) / 3.8); 
+        const maxDist = baseUnit * planetConfig.neptune.au;
+        const totalSize = (maxDist * 2) + 320;
+        
+        const wrapper = document.getElementById('universe-wrapper');
+        wrapper.style.width = totalSize + 'px';
+        wrapper.style.height = totalSize + 'px';
+        
+        createUniverseStars();
+
+        Object.keys(planetConfig).forEach(key => {
+            if (key !== 'sun') {
+                const r = baseUnit * planetConfig[key].au;
+                const ring = document.getElementById(`ring-${key}`);
+                if (ring) { ring.style.width = (r * 2) + 'px'; ring.style.height = (r * 2) + 'px'; }
+            }
+        });
+        
+        state.baseUnit = baseUnit; 
+    }
+
+    function createUniverseStars() {
+        const c = document.getElementById('stars-in-universe');
+        if (c.childElementCount > 0) return;
+        const frag = document.createDocumentFragment();
+        for(let i = 0; i < 5000; i++) {
+            const s = document.createElement('div');
+            s.className = 'star';
+            s.style.left = Math.random()*100 + '%';
+            s.style.top = Math.random()*100 + '%';
+            const sz = Math.random()*2 + 1;
+            s.style.width = sz+'px'; s.style.height = sz+'px';
+            frag.appendChild(s);
+        }
+        c.appendChild(frag);
+    }
+
+    function gameLoop() {
+        if (state.baseUnit) {
+            Object.keys(planetConfig).forEach(key => {
+                if (key === 'sun') return;
+                if (state.moving[key]) state.angles[key] += planetConfig[key].speed;
+                
+                const r = state.baseUnit * planetConfig[key].au;
+                const x = Math.cos(state.angles[key]) * r;
+                const y = Math.sin(state.angles[key]) * r;
+                
+                const pDiv = document.getElementById(`planet-${key}`);
+                if (pDiv) pDiv.style.transform = `translate3d(${x}px, ${y}px, 0)`;
+                
+                if (key === 'earth') {
+                    if (state.moving.moon && state.moving.earth) state.angles.moon += moonConfig.speed;
+                    const mx = x + Math.cos(state.angles.moon) * moonConfig.dist;
+                    const my = y + Math.sin(state.angles.moon) * moonConfig.dist;
+                    
+                    const mDiv = document.getElementById('planet-moon');
+                    if (mDiv) mDiv.style.transform = `translate3d(${mx}px, ${my}px, 0)`;
+                }
+            });
+        }
+        requestAnimationFrame(gameLoop);
+    }
+
+    function centerSunView() {
+        const sunPoint = document.getElementById('solar-system');
+        if(sunPoint) sunPoint.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
+    }
+
+    function focusActivePlanet() {
+        if (state.currentQ < questions.length) {
+            const q = questions[state.currentQ];
+            const targetEl = document.getElementById(q.id === 'moon' ? 'planet-moon' : `planet-${q.id}`);
+            if (targetEl) {
+                targetEl.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
+                return;
+            }
+        }
+        centerSunView();
+    }
+
+    function startGame() {
+        const name = document.getElementById('username').value.trim();
+        const cls = document.getElementById('userclass').value.trim().toUpperCase();
+        if (!name) return alert('Vui lòng nhập Họ và tên của bạn!');
+        if (!cls) return alert('Vui lòng nhập Lớp của bạn (Ví dụ: 12A1)!');
+
+        state.playerName = name;
+        state.playerClass = cls;
+        state.startTime = Date.now();
+        state.score = 0;
+        state.currentQ = 0;
+        state.hasSubmitted = false;
+        state.userAnswers = [];
+
+        document.getElementById('login-screen').style.display = 'none';
+        document.getElementById('game-container').classList.remove('hidden'); 
+        document.getElementById('recenter-btn').classList.remove('hidden');
+        document.getElementById('recenter-btn').innerText = '🎯 Tìm hành tinh';
+        document.getElementById('victory-toast').classList.add('hidden');
+        document.getElementById('replay-hud-btn').classList.add('hidden');
+        document.getElementById('hud-player').textContent = `${name} (${cls})`;
+        document.getElementById('hud-score').textContent = '0';
+        resizeSystem();
+        updateTarget();
+    }
+
+    function updateTarget() {
+        if (state.currentQ >= questions.length) {
+            endGame(); return;
+        }
+        const q = questions[state.currentQ];
+        document.getElementById('instruction-box').classList.remove('hidden');
+        document.getElementById('target-planet').textContent = q.name;
+        document.getElementById('hud-progress').textContent = `${state.currentQ + 1}/10`;
+
+        document.querySelectorAll('.planet-container').forEach(el => el.classList.remove('planet-active'));
+        const targetId = q.id; 
+        const targetEl = document.getElementById(targetId === 'moon' ? 'planet-moon' : `planet-${targetId}`);
+        if (targetEl) {
+            targetEl.classList.add('planet-active');
+            if (targetId !== 'sun') state.moving[targetId] = false;
+            if (targetId === 'moon') state.moving['earth'] = false;
+            setTimeout(() => focusActivePlanet(), 250);
+        }
+    }
+
+    function handlePlanetClick(e, id) {
+        e.stopPropagation();
+        if (state.currentQ >= questions.length) return;
+        const currentTargetId = questions[state.currentQ].id;
+        if (id !== currentTargetId) {
+            focusActivePlanet();
+            return;
+        }
+        openQuiz();
+    }
+
+    function openQuiz() {
+        const q = questions[state.currentQ];
+        document.getElementById('quiz-planet').textContent = q.name;
+        document.getElementById('quiz-question').textContent = q.q;
+
+        const codeBox = document.getElementById('quiz-code-box');
+        if (q.codeSnippet) {
+            codeBox.textContent = q.codeSnippet;
+            codeBox.classList.remove('hidden');
+        } else {
+            codeBox.textContent = '';
+            codeBox.classList.add('hidden');
+        }
+
+        const optsDiv = document.getElementById('quiz-options');
+        optsDiv.innerHTML = '';
+        q.a.forEach((ans, idx) => {
+            const btn = document.createElement('button');
+            btn.className = q.isCodeOptions ? 'answer-btn-modern code-option' : 'answer-btn-modern'; 
+            btn.textContent = ans;
+            btn.onclick = () => checkAnswer(idx);
+            optsDiv.appendChild(btn);
+        });
+        document.getElementById('quiz-feedback').className = 'hidden';
+        const nextBtn = document.getElementById('btn-next-question');
+        nextBtn.classList.add('hidden'); 
+        nextBtn.textContent = (state.currentQ === questions.length - 1) ? '✨ HOÀN THÀNH & NGẮM HỆ MẶT TRỜI' : 'CÂU TIẾP THEO ➔';
+        document.getElementById('quiz-modal').classList.remove('hidden');
+    }
+
+    function checkAnswer(idx) {
+        const q = questions[state.currentQ];
+        const btns = document.querySelectorAll('.answer-btn-modern');
+        const feedback = document.getElementById('quiz-feedback');
+        btns.forEach(b => b.disabled = true);
+        const pid = q.id;
+        const pEl = document.getElementById(pid === 'moon' ? 'planet-moon' : `planet-${pid}`);
+        pEl.classList.remove('planet-active');
+        
+        const isCorrect = (idx === q.c);
+
+        state.userAnswers.push({
+            q: q.q + (q.codeSnippet ? `\n${q.codeSnippet}` : ''),
+            chosen: q.a[idx],
+            correctAns: q.a[q.c],
+            isCorrect: isCorrect
+        });
+
+        if (isCorrect) {
+            btns[idx].classList.add('correct');
+            feedback.textContent = '🎉 CHÍNH XÁC (+10 ĐIỂM)!';
+            feedback.className = 'mt-3 text-center font-extrabold text-base p-2.5 rounded-xl bg-green-100 text-green-700 border-2 border-green-500 block shadow';
+            state.score += 10;
+            document.getElementById('hud-score').textContent = state.score;
+            pEl.classList.add('planet-connected'); 
+            
+            if (pid === 'sun') {
+                const sunShape = document.getElementById('planet-sun-shape');
+                if(sunShape) sunShape.classList.add('sun-victory');
+            }
+        } else {
+            btns[idx].classList.add('wrong');
+            btns[q.c].classList.add('correct');
+            feedback.textContent = '❌ SAI RỒI! ĐÃ HIỂN THỊ ĐÁP ÁN ĐÚNG MÀU XANH.';
+            feedback.className = 'mt-3 text-center font-extrabold text-base p-2.5 rounded-xl bg-red-100 text-red-700 border-2 border-red-500 block shadow';
+            pEl.classList.add('planet-wrong');
+        }
+
+        const nextBtn = document.getElementById('btn-next-question');
+        nextBtn.classList.remove('hidden');
+    }
+
+    function nextQuestion() {
+        document.getElementById('quiz-modal').classList.add('hidden');
+        const q = questions[state.currentQ];
+        const pid = q.id;
+        
+        if (pid !== 'sun') state.moving[pid] = true;
+        if (pid === 'moon') state.moving['earth'] = true;
+        
+        state.currentQ++;
+        updateTarget();
+    }
+
+    async function submitScoreToFirebase() {
+        if (state.hasSubmitted) return;
+        state.hasSubmitted = true;
+
+        const durationSec = Math.max(1, Math.round((Date.now() - state.startTime) / 1000));
+        const now = new Date();
+        const dateTimeStr = now.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit', second: '2-digit' }) + ' ' + now.toLocaleDateString('vi-VN');
+
+        const resultData = {
+            id: state.sessionID,
+            name: state.playerName,
+            className: state.playerClass,
+            quizName: QUIZ_TITLE,
+            score: state.score,
+            dateTime: dateTimeStr,
+            duration: durationSec,
+            details: state.userAnswers,
+            timestamp: Date.now()
+        };
+
+        document.getElementById('final-score').innerText = state.score;
+        document.getElementById('end-player-info').innerText = `${state.playerName} (${state.playerClass})`;
+        document.getElementById('end-time-spent').innerText = formatDuration(durationSec);
+
+        try {
+            const playerRef = ref(db, `${LEADERBOARD_PATH}/${resultData.id}`);
+            await set(playerRef, resultData);
+            if (typeof gtag === 'function') {
+                gtag('event', 'finish_solar_bai7', {
+                    'event_category': 'Solar_Bai7_HTML',
+                    'event_label': `${resultData.className} - ${resultData.name}`,
+                    'value': resultData.score
+                });
+            }
+        } catch (err) {
+            console.error("Lỗi lưu điểm Firebase:", err);
+        }
+    }
+
+    // =========================================================================
+    // KHI LÀM XONG: Ở LẠI NGẮM HỆ MẶT TRỜI (KHÔNG TỰ CHUYỂN QUA BẢNG XẾP HẠNG)
+    // =========================================================================
+    async function endGame() {
+        document.getElementById('instruction-box').classList.add('hidden');
+        document.getElementById('hud-progress').textContent = '10/10 (Hoàn thành)';
+        document.getElementById('recenter-btn').innerText = '☀️ Về trung tâm Mặt Trời';
+        document.getElementById('victory-toast').classList.remove('hidden');
+        document.getElementById('replay-hud-btn').classList.remove('hidden');
+
+        // Đưa góc nhìn về ngay chính giữa Mặt Trời để học sinh chiêm ngưỡng thành quả
+        centerSunView();
+
+        // Lưu điểm ngầm lên Firebase
+        await submitScoreToFirebase();
+    }
+
+    function openLeaderboardScreen() {
+        if (!state.hasSubmitted && state.currentQ > 0) {
+            const curDur = Math.max(1, Math.round((Date.now() - state.startTime) / 1000));
+            document.getElementById('final-score').innerText = state.score;
+            document.getElementById('end-player-info').innerText = `${state.playerName} (${state.playerClass}) - Đang làm (${state.currentQ}/10)`;
+            document.getElementById('end-time-spent').innerText = formatDuration(curDur);
+        }
+        document.getElementById('end-screen').style.display = 'flex';
+        if (state.hasSubmitted) {
+            setTimeout(() => jumpToMyRank(), 250);
+        }
+    }
+
+    function listenRealtimeLeaderboard() {
+        const lbRef = ref(db, LEADERBOARD_PATH);
+        onValue(lbRef, (snapshot) => {
+            const data = snapshot.val();
+            let list = [];
+            if (data) {
+                list = Object.values(data);
+                list.sort((a, b) => {
+                    if (b.score !== a.score) return b.score - a.score;
+                    if ((a.duration || 999999) !== (b.duration || 999999)) return (a.duration || 999999) - (b.duration || 999999);
+                    return (a.timestamp || 0) - (b.timestamp || 0);
+                });
+
+                list.forEach((item, index) => {
+                    item.rank = index + 1;
+                });
+            }
+
+            allPlayersRanked = list;
+            document.getElementById('total-players-count').innerText = allPlayersRanked.length.toLocaleString('vi-VN');
+
+            const myRecord = allPlayersRanked.find(p => p.id === state.sessionID);
+            if (myRecord) {
+                document.getElementById('my-rank-badge').innerText = `#${myRecord.rank.toLocaleString('vi-VN')} / ${allPlayersRanked.length.toLocaleString('vi-VN')}`;
+            }
+
+            applySearchAndRender(false);
+        });
+    }
+
+    function applySearchAndRender(resetPage = true) {
+        const keyword = document.getElementById('search-input').value.trim().toLowerCase();
+        if (keyword === "") {
+            filteredPlayers = allPlayersRanked;
+        } else {
+            filteredPlayers = allPlayersRanked.filter(p => 
+                (p.name && p.name.toLowerCase().includes(keyword)) ||
+                (p.className && p.className.toLowerCase().includes(keyword)) ||
+                (String(p.rank) === keyword)
+            );
+        }
+
+        if (resetPage) currentPage = 1;
+        renderCurrentPage();
+    }
+
+    function renderCurrentPage() {
+        const listDiv = document.getElementById('final-leaderboard-list');
+        listDiv.innerHTML = '';
+
+        const total = filteredPlayers.length;
+        const totalPages = Math.max(1, Math.ceil(total / pageSize));
+        if (currentPage > totalPages) currentPage = totalPages;
+        if (currentPage < 1) currentPage = 1;
+
+        const startIdx = (currentPage - 1) * pageSize;
+        const endIdx = Math.min(startIdx + pageSize, total);
+        const pageItems = filteredPlayers.slice(startIdx, endIdx);
+
+        document.getElementById('showing-range').innerText = total > 0 ? `${(startIdx + 1).toLocaleString('vi-VN')} - ${endIdx.toLocaleString('vi-VN')}` : "0 - 0";
+        document.getElementById('showing-total').innerText = total.toLocaleString('vi-VN');
+        document.getElementById('current-page-display').innerText = currentPage.toLocaleString('vi-VN');
+        document.getElementById('total-pages-display').innerText = totalPages.toLocaleString('vi-VN');
+
+        document.getElementById('first-page-btn').disabled = (currentPage === 1);
+        document.getElementById('prev-page-btn').disabled = (currentPage === 1);
+        document.getElementById('next-page-btn').disabled = (currentPage === totalPages);
+        document.getElementById('last-page-btn').disabled = (currentPage === totalPages);
+
+        if (pageItems.length === 0) {
+            listDiv.innerHTML = `
+                <tr>
+                    <td colspan="8" style="padding: 35px; color: #64748b; font-weight: bold;">
+                        Chưa có dữ liệu nộp bài 📭
+                    </td>
+                </tr>`;
+            return;
+        }
+
+        const fragment = document.createDocumentFragment();
+
+        pageItems.forEach((p) => {
+            const tr = document.createElement('tr');
+            tr.id = `row_${p.id}`;
+            if (p.id === state.sessionID) tr.classList.add('me-row');
+
+            let rankDisplay = p.rank.toLocaleString('vi-VN');
+            if (p.rank === 1) rankDisplay = '🥇 1';
+            else if (p.rank === 2) rankDisplay = '🥈 2';
+            else if (p.rank === 3) rankDisplay = '🥉 3';
+
+            tr.innerHTML = `
+                <td style="font-weight: bold;">${rankDisplay}</td>
+                <td><span class="badge-class">${escapeHTML(p.className || '---')}</span></td>
+                <td style="text-align: left; font-weight: bold; color: #1e293b;">${escapeHTML(p.name)}</td>
+                <td>${escapeHTML(p.quizName || QUIZ_TITLE)}</td>
+                <td><span class="badge-score">${p.score}</span></td>
+                <td style="font-size: 13px; color: #64748b;">${escapeHTML(p.dateTime || '')}</td>
+                <td style="font-weight: bold; color: #0f766e;">${formatDuration(p.duration)}</td>
+                <td><button type="button" class="btn-detail" data-id="${p.id}">Xem</button></td>
+            `;
+            fragment.appendChild(tr);
+        });
+
+        listDiv.appendChild(fragment);
+
+        listDiv.querySelectorAll('.btn-detail').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const id = btn.getAttribute('data-id');
+                showPlayerDetail(id);
+            });
+        });
+    }
+
+    function jumpToMyRank() {
+        document.getElementById('search-input').value = '';
+        filteredPlayers = allPlayersRanked;
+        const myIndex = filteredPlayers.findIndex(p => p.id === state.sessionID);
+        if (myIndex === -1) {
+            alert("Bạn hãy hoàn thành đủ 10 hành tinh để được ghi danh lên Bảng xếp hạng nhé!");
+            return;
+        }
+        currentPage = Math.floor(myIndex / pageSize) + 1;
+        renderCurrentPage();
+
+        setTimeout(() => {
+            const myRow = document.getElementById(`row_${state.sessionID}`);
+            if (myRow) {
+                myRow.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }, 100);
+    }
+
+    function showPlayerDetail(playerId) {
+        const player = allPlayersRanked.find(p => p.id === playerId);
+        if (!player) return;
+
+        document.getElementById('detail-modal-title').innerText = `Hạng #${player.rank}: ${player.name} (${player.className}) - ${player.score} điểm`;
+        const body = document.getElementById('detail-modal-body');
+        body.innerHTML = '';
+
+        const details = player.details || [];
+        if (details.length === 0) {
+            body.innerHTML = '<p style="text-align:center; color:#64748b;">Không có dữ liệu chi tiết cho lượt chơi này.</p>';
+        } else {
+            details.forEach((d) => {
+                const div = document.createElement('div');
+                div.className = `detail-item ${d.isCorrect ? 'correct' : 'wrong'}`;
+                div.innerHTML = `
+                    <div style="font-weight:bold; color:#1e293b; margin-bottom:6px;">${escapeHTML(d.q)}</div>
+                    <div style="font-family: Consolas, monospace; font-size: 13.5px;">
+                        👉 Đã chọn:\n<strong style="color:${d.isCorrect ? '#16a34a' : '#dc2626'}">${escapeHTML(d.chosen)}</strong> 
+                        ${d.isCorrect ? '✅' : `\n\n✔️ Đáp án đúng:\n<strong style="color:#16a34a">${escapeHTML(d.correctAns)}</strong>`}
+                    </div>
+                `;
+                body.appendChild(div);
+            });
+        }
+        document.getElementById('detail-modal').style.display = 'flex';
+    }
+
+    function restartGame() {
+        document.querySelectorAll('.planet-container').forEach(el => {
+            el.classList.remove('planet-active', 'planet-connected', 'planet-wrong');
+        });
+        const sunShape = document.getElementById('planet-sun-shape');
+        if (sunShape) sunShape.classList.remove('sun-victory');
+
+        Object.keys(planetConfig).forEach(k => state.moving[k] = true);
+        state.moving.moon = true;
+
+        state.score = 0;
+        state.currentQ = 0;
+        state.hasSubmitted = false;
+        state.userAnswers = [];
+        state.sessionID = "user_" + Date.now() + "_" + Math.floor(Math.random() * 100000);
+
+        document.getElementById('end-screen').style.display = 'none';
+        document.getElementById('login-screen').style.display = 'flex';
+    }
+
+    document.getElementById('start-btn').addEventListener('click', startGame);
+    document.getElementById('btn-next-question').addEventListener('click', nextQuestion);
+    document.getElementById('recenter-btn').addEventListener('click', focusActivePlanet);
+    document.getElementById('instruction-box').addEventListener('click', focusActivePlanet);
+    document.getElementById('open-lb-hud-btn').addEventListener('click', openLeaderboardScreen);
+    document.getElementById('replay-hud-btn').addEventListener('click', restartGame);
+
+    document.getElementById('back-to-space-btn').addEventListener('click', () => {
+        document.getElementById('end-screen').style.display = 'none';
+    });
+    document.getElementById('replay-from-lb-btn').addEventListener('click', restartGame);
+
+    document.getElementById('find-me-btn').addEventListener('click', jumpToMyRank);
+    document.getElementById('search-input').addEventListener('input', () => applySearchAndRender(true));
+
+    document.getElementById('page-size-select').addEventListener('change', (e) => {
+        pageSize = parseInt(e.target.value, 10);
+        currentPage = 1;
+        renderCurrentPage();
+    });
+
+    document.getElementById('first-page-btn').addEventListener('click', () => { currentPage = 1; renderCurrentPage(); });
+    document.getElementById('prev-page-btn').addEventListener('click', () => { if (currentPage > 1) { currentPage--; renderCurrentPage(); } });
+    document.getElementById('next-page-btn').addEventListener('click', () => { 
+        const totalPages = Math.ceil(filteredPlayers.length / pageSize);
+        if (currentPage < totalPages) { currentPage++; renderCurrentPage(); } 
+    });
+    document.getElementById('last-page-btn').addEventListener('click', () => { 
+        currentPage = Math.max(1, Math.ceil(filteredPlayers.length / pageSize)); 
+        renderCurrentPage(); 
+    });
+
+    document.getElementById('close-detail-btn').addEventListener('click', () => {
+        document.getElementById('detail-modal').style.display = 'none';
+    });
+
+    init();
+  </script>
+ </body>
+</html>
