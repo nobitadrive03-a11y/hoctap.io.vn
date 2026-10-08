@@ -1,1 +1,1340 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Hành Trình Số - Ô Chữ Bí Mật</title>
 
+    <!-- NHÚNG FONT CHUẨN TIẾNG VIỆT (KHÔNG BAO GIỜ LỖI DẤU TRÊN MỌI THIẾT BỊ) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- 1. MÃ GA4 GỐC (Kết nối với Google Analytics) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-NSJCVSL9RM"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-NSJCVSL9RM'); 
+    </script>
+
+    <!-- 2. MÃ NHỊP TIM 30 GIÂY -->
+    <script>
+      setInterval(function() {
+        if (!document.hidden) { 
+          gtag('event', 'keep_alive', {
+            'event_category': 'Engagement',
+            'event_label': 'Học sinh đang giải Ô chữ Bài 6',
+            'non_interaction': false
+          });
+        }
+      }, 30000); 
+    </script>
+
+    <style>
+        * { 
+            box-sizing: border-box; 
+            -webkit-tap-highlight-color: transparent; 
+            font-family: 'Be Vietnam Pro', Arial, Helvetica, sans-serif;
+        }
+
+        html {
+            -webkit-text-size-adjust: 100%;
+            text-size-adjust: 100%;
+        }
+
+        body {
+            margin: 0;
+            padding: 15px 0 30px 0; 
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: linear-gradient(180deg, #f8fafc 0%, #e0f2fe 100%);
+            position: relative;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* ========================================================= */
+        /* --- GIAO DIỆN ĐĂNG NHẬP ĐẸP, CHUẨN FONT & MƯỢT MOBILE --- */
+        /* ========================================================= */
+        #login-screen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b0764 55%, #0f172a 100%);
+            z-index: 15000; display: flex; justify-content: center; align-items: center; 
+            padding: 12px; overflow-y: auto;
+        }
+
+        .login-card {
+            position: relative; z-index: 2;
+            background: #ffffff;
+            padding: 26px 22px; border-radius: 24px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            text-align: center; max-width: 460px; width: 100%;
+            border: 4px solid #f59e0b;
+            animation: popIn 0.4s ease-out;
+            margin: auto;
+        }
+
+        .login-badge-top {
+            display: inline-block;
+            background: linear-gradient(90deg, #ef4444, #f97316);
+            color: #ffffff; font-size: 13px; font-weight: 700;
+            padding: 6px 16px; border-radius: 50px;
+            margin-bottom: 12px;
+            box-shadow: 0 3px 10px rgba(239, 68, 68, 0.3);
+        }
+
+        /* Dãy ô chữ minh họa */
+        .mini-crossword-deco {
+            display: flex; justify-content: center; gap: 6px; margin-bottom: 12px;
+        }
+        .mc-tile {
+            width: 40px; height: 40px; border-radius: 10px;
+            display: flex; justify-content: center; align-items: center;
+            font-weight: 700; font-size: 19px; color: #ffffff;
+            box-shadow: 0 3px 0 rgba(0,0,0,0.2);
+        }
+        .mc-tile.t1 { background: #2563eb; }
+        .mc-tile.t2 { background: #10b981; }
+        .mc-tile.t3 { background: #f59e0b; }
+        .mc-tile.t4 { background: #ef4444; }
+        .mc-tile.t5 { background: #8b5cf6; }
+
+        .login-title {
+            font-size: 24px;
+            color: #d90429;
+            margin: 4px 0 4px 0; font-weight: 800;
+        }
+        .login-sub {
+            font-size: 14px; color: #1d4ed8; font-weight: 700; margin-bottom: 14px;
+        }
+
+        .rule-box {
+            background: #fffbeb;
+            border: 2px dashed #f59e0b; border-radius: 12px;
+            padding: 10px 12px; margin-bottom: 16px;
+            font-size: 13.5px; color: #92400e; text-align: left; line-height: 1.45;
+            font-weight: 500;
+        }
+        .rule-box strong { color: #d90429; font-weight: 700; }
+
+        .input-group { margin-bottom: 14px; text-align: left; }
+        .input-label {
+            display: block; font-weight: 700; color: #1e293b;
+            margin-bottom: 6px; font-size: 14.5px;
+        }
+        /* Không dùng icon đè trong input nữa để tránh lỗi tuyệt đối trên mọi máy */
+        .input-field {
+            width: 100%; padding: 12px 14px;
+            border: 2px solid #94a3b8; border-radius: 12px;
+            font-size: 16px; /* Chuẩn 16px để điện thoại không tự zoom */
+            outline: none; transition: border-color 0.2s;
+            background: #f8fafc; color: #0f172a; font-weight: 600;
+        }
+        .input-field:focus {
+            background: #ffffff; border-color: #f59e0b;
+            box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.25);
+        }
+
+        .btn-start {
+            background: linear-gradient(90deg, #16a34a, #059669);
+            color: #ffffff; border: none; padding: 14px 24px;
+            font-size: 17px; border-radius: 50px; cursor: pointer; font-weight: 700;
+            width: 100%; box-shadow: 0 5px 0 #047857;
+            margin-top: 6px; transition: transform 0.1s;
+        }
+        .btn-start:active { transform: translateY(3px); box-shadow: 0 2px 0 #047857; }
+
+        /* ========================================================= */
+        /* --- HEADER & THANH TRẠNG THÁI TRÊN ĐIỆN THOẠI & PC --- */
+        /* ========================================================= */
+        .header-wrapper {
+            display: flex; align-items: center; justify-content: center;
+            gap: 12px; margin-bottom: 8px; padding: 0 10px;
+        }
+
+        .logo-hs {
+            display: flex; align-items: center; justify-content: center;
+            width: 52px; height: 52px; border-radius: 50%;
+            border: 3px solid #facc15; background-color: #dc2626; 
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2); flex-shrink: 0;
+        }
+        .logo-hs span { color: white; font-weight: 800; font-size: 22px; }
+
+        h1 {
+            color: #d90429; font-size: 32px; font-weight: 800;
+            text-align: center; margin: 0;
+        }
+
+        .player-status-bar {
+            background: #1e293b; color: white; font-size: 15px; font-weight: 600;
+            padding: 8px 18px; border-radius: 25px; margin-bottom: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+            display: flex; gap: 10px; align-items: center; flex-wrap: wrap; justify-content: center;
+            border: 2px solid #f59e0b; max-width: 96%;
+        }
+        .stat-pill { padding: 3px 10px; border-radius: 20px; font-size: 13.5px; font-weight: 700; }
+        .stat-correct { background: #16a34a; color: white; }
+        .stat-wrong { background: #dc2626; color: white; }
+
+        .subtext {
+            color: #1d4ed8; font-size: 18px; font-weight: 700;
+            text-align: center; margin: 4px 0 14px 0; padding: 0 10px;
+            line-height: 1.35;
+        }
+
+        /* Hoa văn trang trí */
+        .flower {
+            position: absolute; font-size: 42px; opacity: 0.35;
+            z-index: -1; user-select: none; pointer-events: none;
+        }
+        .f1 { top: 5%; left: 3%; }
+        .f2 { top: 15%; right: 4%; }
+        .f3 { bottom: 10%; left: 5%; }
+        .f4 { bottom: 20%; right: 4%; }
+
+        @keyframes popIn {
+            0% { transform: scale(0.85); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        /* ========================================================= */
+        /* --- BẢNG Ô CHỮ TỰ CO GIÃN VỪA KHÍT MÀN HÌNH ĐIỆN THOẠI --- */
+        /* ========================================================= */
+        .board-wrapper {
+            width: 100%; max-width: 100vw;
+            display: flex; justify-content: center;
+            padding: 4px 6px 12px 6px;
+        }
+
+        .crossword-board {
+            display: flex; flex-direction: column;
+            gap: 8px; margin: 0 auto;
+        }
+
+        .crossword-row {
+            display: flex; gap: 6px; align-items: center;
+        }
+
+        .num-btn {
+            width: 46px; height: 46px;
+            background-color: #fbbf24; border: 2px solid #1e293b;
+            border-radius: 10px; display: flex; justify-content: center; align-items: center;
+            font-weight: 800; font-size: 20px; cursor: pointer; color: #0f172a;
+            box-shadow: 0 3px 0 #b45309; margin-right: 4px; flex-shrink: 0;
+        }
+        .num-btn.attempted {
+            background-color: #cbd5e1; color: #64748b; border-color: #94a3b8;
+            cursor: not-allowed; box-shadow: none; transform: translateY(2px);
+        }
+
+        .cell {
+            width: 46px; height: 46px;
+            background-color: #2563eb; border: 2px solid #1e3a8a;
+            border-radius: 6px; display: flex; justify-content: center; align-items: center;
+            font-weight: 800; font-size: 24px; color: #ffffff;
+            box-shadow: 0 2px 0 rgba(0,0,0,0.2); flex-shrink: 0;
+        }
+        .cell.vertical-secret {
+            background-color: #dc2626; border-color: #7f1d1d;
+        }
+        .cell.empty {
+            background-color: transparent; border: none; box-shadow: none;
+        }
+
+        /* ========================================================= */
+        /* --- CỬA SỔ CÂU HỎI MÀU ĐỎ & ĐÁP ÁN NỀN TRẮNG TINH --- */
+        /* ========================================================= */
+        .modal-overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(15, 23, 42, 0.75); z-index: 9999; 
+            justify-content: center; align-items: center; padding: 12px;
+        }
+
+        .modal-content {
+            background-color: #ffffff; padding: 24px; border-radius: 18px;
+            max-width: 1050px; width: 96%;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.45); text-align: center;
+            border: 3px solid #2563eb; max-height: 92vh; overflow-y: auto; 
+            animation: popIn 0.25s ease-out;
+        }
+
+        /* Câu hỏi màu đỏ nổi bật */
+        #question-text {
+            color: #d90429; background: #fff5f5;
+            border: 2px solid #fca5a5; padding: 16px 18px;
+            border-radius: 12px; font-size: 22px; font-weight: 700;
+            margin-bottom: 18px; line-height: 1.45;
+        }
+
+        .options-grid {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+        }
+
+        /* Ô trả lời nền trắng tinh (#ffffff) dễ nhìn */
+        .option-btn {
+            background-color: #ffffff; color: #0f172a;
+            border: 2px solid #3b82f6; padding: 15px 18px;
+            font-size: 19px; font-weight: 700; border-radius: 12px;
+            cursor: pointer; transition: all 0.15s; width: 100%;
+            box-shadow: 0 4px 0 #bfdbfe; text-align: left;
+        }
+        .option-btn:hover:not(.locked) { background-color: #eff6ff; }
+        .option-btn.locked { pointer-events: none; }
+        .option-btn.locked:not(.correct-choice):not(.wrong-choice) { opacity: 0.45; }
+
+        .option-btn.correct-choice {
+            background-color: #16a34a !important; color: white !important;
+            border-color: #14532d !important; opacity: 1 !important;
+            box-shadow: 0 4px 0 #14532d !important;
+        }
+        .option-btn.wrong-choice {
+            background-color: #dc2626 !important; color: white !important;
+            border-color: #7f1d1d !important; opacity: 1 !important;
+            box-shadow: 0 4px 0 #7f1d1d !important;
+        }
+
+        #feedback {
+            margin-top: 16px; font-weight: 700; font-size: 18px;
+            text-align: center; min-height: 28px; line-height: 1.4;
+        }
+
+        .close-btn {
+            margin-top: 14px; background-color: #2563eb; color: #fff;
+            font-weight: 700; border: none; padding: 12px 34px;
+            font-size: 18px; border-radius: 10px; cursor: pointer;
+            box-shadow: 0 4px 0 #1d4ed8;
+        }
+
+        /* Bảng thông báo cảnh báo (Alert) */
+        .alert-overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(15, 23, 42, 0.75); z-index: 16000; 
+            justify-content: center; align-items: center; padding: 12px;
+        }
+        .alert-content {
+            background-color: white; padding: 24px 20px; border-radius: 18px;
+            max-width: 480px; width: 95%; text-align: center;
+            border: 4px solid #f59e0b; box-shadow: 0 15px 35px rgba(0,0,0,0.4);
+            animation: popIn 0.25s ease-out;
+        }
+        .alert-icon { font-size: 46px; margin-bottom: 8px; }
+        #alert-message {
+            color: #b91c1c; font-size: 17px; font-weight: 700;
+            margin-bottom: 20px; line-height: 1.5;
+        }
+        .alert-btn-group { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+        .alert-close-btn {
+            background-color: #f59e0b; color: #fff; font-weight: 700;
+            border: none; padding: 11px 22px; font-size: 16px;
+            border-radius: 10px; cursor: pointer;
+        }
+
+        /* Các nút chức năng bên dưới bảng ô chữ */
+        .controls {
+            margin-top: 16px; margin-bottom: 20px;
+            display: flex; gap: 12px; flex-wrap: wrap;
+            justify-content: center; padding: 0 12px; width: 100%; max-width: 900px;
+        }
+        .action-btn {
+            background-color: #2563eb; color: white;
+            padding: 13px 22px; font-size: 17px; font-weight: 700;
+            border: none; border-radius: 12px; cursor: pointer;
+            box-shadow: 0 4px 0 #1e40af; transition: 0.15s;
+        }
+        .action-btn:active { transform: translateY(3px); box-shadow: none; }
+
+        /* ========================================================= */
+        /* --- MÀN HÌNH BẢNG XẾP HẠNG TOÀN BỘ HỌC SINH (8 CỘT) --- */
+        /* ========================================================= */
+        #end-screen {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #f1f5f9; z-index: 14000;
+            flex-direction: column; align-items: center; padding: 15px 10px; overflow-y: auto;
+            font-size: 15px;
+        }
+        .lb-container {
+            width: 100%; max-width: 1220px; background: #ffffff;
+            border-radius: 16px; padding: 18px; box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+        }
+        .lb-top-bar {
+            display: flex; justify-content: space-between; align-items: center;
+            padding-bottom: 14px; margin-bottom: 14px; border-bottom: 2px solid #f1f5f9;
+            flex-wrap: wrap; gap: 10px;
+        }
+        .top-left-btns { display: flex; gap: 8px; flex-wrap: wrap; }
+        .btn-home {
+            display: inline-flex; align-items: center; gap: 6px;
+            background: #f1f5f9; color: #334155; border: 1px solid #cbd5e1;
+            padding: 9px 14px; border-radius: 10px; font-weight: 700;
+            font-size: 14px; cursor: pointer;
+        }
+        .lb-header-right {
+            display: flex; align-items: center; gap: 8px;
+            font-size: 22px; font-weight: 800; color: #ea580c;
+            text-transform: uppercase;
+        }
+        
+        .my-result-banner {
+            display: flex; justify-content: space-between; align-items: center;
+            background: #fffbeb; border: 2px solid #f59e0b; border-radius: 12px;
+            padding: 10px 15px; margin-bottom: 14px; flex-wrap: wrap; gap: 8px;
+        }
+        .my-result-info { font-weight: 700; color: #92400e; font-size: 14.5px; }
+        .my-result-score { font-size: 18px; font-weight: 800; color: #d90429; }
+
+        .lb-toolbar {
+            display: flex; justify-content: space-between; align-items: center;
+            gap: 8px; margin-bottom: 12px; flex-wrap: wrap;
+        }
+        .search-box {
+            flex: 1; min-width: 200px; padding: 10px 12px;
+            border: 2px solid #cbd5e1; border-radius: 10px; font-size: 15px;
+            outline: none; background: #f8fafc; color: #1e293b;
+        }
+        .toolbar-actions { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+        .btn-find-me {
+            background: #10b981; color: white; border: none; padding: 10px 14px;
+            border-radius: 10px; font-weight: 700; font-size: 14px; cursor: pointer;
+        }
+        .total-counter {
+            background: #fff1f2; color: #e11d48; border: 1px solid #fecdd3;
+            padding: 9px 12px; border-radius: 10px; font-weight: 700; font-size: 14px;
+        }
+
+        .table-responsive {
+            width: 100%; overflow-x: auto; border-radius: 10px;
+            border: 1px solid #e2e8f0; max-height: 55vh; overflow-y: auto;
+        }
+        .lb-table {
+            width: 100%; border-collapse: collapse; min-width: 700px;
+            text-align: center; font-size: 14px;
+        }
+        .lb-table thead tr {
+            background: linear-gradient(90deg, #ff6b00 0%, #e63946 100%);
+            color: #ffffff; font-weight: 700; position: sticky; top: 0; z-index: 10;
+        }
+        .lb-table th { padding: 12px 8px; white-space: nowrap; }
+        .lb-table td {
+            padding: 10px 8px; border-bottom: 1px solid #f1f5f9;
+            color: #334155; font-weight: 600;
+        }
+        .lb-table tbody tr.me-row {
+            background: #dcfce7 !important; font-weight: 700;
+            border-left: 4px solid #16a34a;
+        }
+        .badge-class {
+            background: #e0f2fe; color: #0369a1; padding: 3px 8px;
+            border-radius: 6px; font-weight: 700; font-size: 13px;
+        }
+        .badge-score {
+            background: #fef2f2; color: #dc2626; padding: 3px 10px;
+            border-radius: 20px; font-weight: 800; border: 1px solid #fecaca;
+        }
+        .btn-detail {
+            background: #3b82f6; color: white; border: none;
+            padding: 5px 12px; border-radius: 6px; cursor: pointer;
+            font-weight: 700; font-size: 13px;
+        }
+
+        .pagination-bar {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-top: 12px; padding-top: 10px; border-top: 1px solid #e2e8f0;
+            flex-wrap: wrap; gap: 8px; font-size: 13.5px; color: #475569;
+        }
+        .page-controls { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+        .page-btn {
+            background: #f1f5f9; color: #334155; border: 1px solid #cbd5e1;
+            padding: 5px 10px; border-radius: 6px; font-weight: 700; cursor: pointer;
+        }
+        .page-btn:disabled { opacity: 0.4; }
+        .page-size-select {
+            padding: 5px 8px; border-radius: 6px; border: 1px solid #cbd5e1;
+            font-weight: 700; background: white;
+        }
+
+        /* Modal Xem Chi Tiết Bài Làm */
+        #detail-modal {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.65); z-index: 20000;
+            justify-content: center; align-items: center; padding: 12px;
+        }
+        .detail-card {
+            background: white; width: 100%; max-width: 700px; max-height: 85vh;
+            border-radius: 16px; display: flex; flex-direction: column; overflow: hidden;
+        }
+        .detail-header {
+            background: linear-gradient(90deg, #ff6b00, #e63946); color: white;
+            padding: 14px 18px; display: flex; justify-content: space-between; align-items: center;
+            font-weight: 700; font-size: 16px;
+        }
+        .detail-body { padding: 15px; overflow-y: auto; flex: 1; font-size: 14.5px; }
+        .detail-item {
+            padding: 10px; border-radius: 8px; margin-bottom: 8px;
+            border: 1px solid #e2e8f0; background: #f8fafc;
+        }
+        .detail-item.correct { border-left: 4px solid #22c55e; background: #f0fdf4; }
+        .detail-item.wrong { border-left: 4px solid #ef4444; background: #fef2f2; }
+
+        /* ========================================================= */
+        /* --- TỐI ƯU ĐẶC BIỆT CHO HỌC SINH DÙNG ĐIỆN THOẠI --- */
+        /* ========================================================= */
+        @media (max-width: 640px) {
+            body { padding: 10px 0 20px 0; }
+            .flower { display: none; } /* Ẩn hoa trên màn hình nhỏ cho gọn */
+
+            .header-wrapper { gap: 8px; margin-bottom: 6px; }
+            .logo-hs { width: 40px; height: 40px; border-width: 2px; }
+            .logo-hs span { font-size: 17px; }
+            h1 { font-size: 21px; }
+
+            .player-status-bar {
+                font-size: 12.5px; padding: 6px 10px; width: 96%; gap: 6px;
+                border-radius: 14px;
+            }
+            .stat-pill { font-size: 12px; padding: 2px 8px; }
+
+            .subtext { font-size: 14px; margin: 2px 0 10px 0; padding: 0 8px; }
+
+            /* Ô CHỮ CO GIÃN VỪA KHÍT 100% MÀN HÌNH DỌC ĐIỆN THOẠI (12 CỘT) */
+            .board-wrapper { padding: 2px 4px 8px 4px; }
+            .crossword-board { gap: 5px; width: 100%; align-items: center; }
+            .crossword-row { gap: 3px; justify-content: center; width: 100%; }
+            
+            .num-btn {
+                width: calc((100vw - 48px) / 12);
+                height: calc((100vw - 48px) / 12);
+                max-width: 34px; max-height: 34px;
+                font-size: 14px; border-radius: 6px; margin-right: 2px;
+                border-width: 1.5px; box-shadow: 0 2px 0 #b45309;
+            }
+            .cell {
+                width: calc((100vw - 48px) / 12);
+                height: calc((100vw - 48px) / 12);
+                max-width: 34px; max-height: 34px;
+                font-size: 15px; border-radius: 5px;
+                border-width: 1.5px;
+            }
+
+            /* Cửa sổ câu hỏi & hộp trả lời tràn 100% khung điện thoại */
+            .modal-overlay { padding: 6px; }
+            .modal-content { 
+                width: 100% !important; max-width: 100% !important; 
+                padding: 16px 12px; border-radius: 14px; 
+            }
+            #question-text { font-size: 16.5px; padding: 12px 10px; margin-bottom: 12px; }
+            .options-grid { grid-template-columns: 1fr; gap: 8px; }
+            .option-btn { font-size: 15.5px; padding: 12px 12px; border-radius: 10px; }
+            #feedback { font-size: 15px; margin-top: 12px; }
+            .close-btn { font-size: 16px; padding: 10px 28px; width: 100%; }
+
+            .controls { gap: 8px; padding: 0 10px; margin-top: 10px; }
+            .action-btn { font-size: 15px; padding: 12px 14px; width: 100%; border-radius: 10px; }
+
+            /* Đăng nhập trên điện thoại */
+            .login-card { padding: 20px 15px; border-radius: 20px; }
+            .login-title { font-size: 20px; }
+            .login-sub { font-size: 12.5px; }
+            .mc-tile { width: 34px; height: 34px; font-size: 16px; }
+            .rule-box { font-size: 12.5px; padding: 8px 10px; }
+            .btn-start { font-size: 15.5px; padding: 13px 18px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ========================================================= -->
+    <!-- MÀN HÌNH ĐĂNG NHẬP ĐẸP, CHUẨN FONT TIẾNG VIỆT & MOBILE -->
+    <!-- ========================================================= -->
+    <div id="login-screen">
+        <div class="login-card">
+            <div class="login-badge-top">🚀 HÀNH TRÌNH SỐ - TIN HỌC</div>
+
+            <div class="mini-crossword-deco">
+                <div class="mc-tile t1">Ô</div>
+                <div class="mc-tile t2">C</div>
+                <div class="mc-tile t3">H</div>
+                <div class="mc-tile t4">Ữ</div>
+                <div class="mc-tile t5">🔑</div>
+            </div>
+
+            <div class="login-title">BÀI 6: LƯU TRỮ VÀ CHIA SẺ TỆP TIN TRÊN INTERNET</div>
+            <div class="login-sub">MẬT MÃ Ô CHỮ BÍ MẬT</div>
+
+           
+            <div class="input-group">
+                <label class="input-label" for="player-name-input">👤 Họ và tên học sinh:</label>
+                <input type="text" id="player-name-input" class="input-field" placeholder="Ví dụ: Nguyễn Hoàng Anh" maxlength="35" autocomplete="off">
+            </div>
+
+            <div class="input-group">
+                <label class="input-label" for="player-class-input">🏫 Lớp của bạn:</label>
+                <input type="text" id="player-class-input" class="input-field" placeholder="Ví dụ: 12A1" maxlength="12" autocomplete="off">
+            </div>
+
+            <button type="button" class="btn-start" id="start-btn">🔥 BẮT ĐẦU CHINH PHỤC NGAY</button>
+        </div>
+    </div>
+
+    <!-- Hoa văn trang trí -->
+    <div class="flower f1">🌸</div>
+    <div class="flower f2">🌺</div>
+    <div class="flower f3">🌼</div>
+    <div class="flower f4">🌸</div>
+
+    <!-- Header chứa Logo và Tiêu đề -->
+    <div class="header-wrapper">
+        <div class="logo-hs">
+            <span>HS</span>
+        </div>
+        <h1>BÀI 6. Ô CHỮ BÍ MẬT</h1>
+    </div>
+
+    <!-- Thanh trạng thái học sinh có đếm số câu Đúng / Sai -->
+    <div class="player-status-bar">
+        <span>👤 <span id="display-name">...</span> (<span id="display-class">...</span>)</span>
+        <span>⭐ ĐIỂM: <span id="display-score" style="color:#fbbf24;">0</span></span>
+        <span class="stat-pill stat-correct">✅ Đúng: <span id="display-correct">0</span>/10</span>
+        <span class="stat-pill stat-wrong">❌ Sai: <span id="display-wrong">0</span> (Tối đa 1)</span>
+    </div>
+    
+    <div class="subtext" id="intro-text">Bấm vào các nút số màu vàng bên trái để trả lời câu hỏi!</div>
+
+    <!-- BẢNG THÔNG BÁO TÙY CHỈNH -->
+    <div class="alert-overlay" id="custom-alert-overlay">
+        <div class="alert-content">
+            <div class="alert-icon" id="alert-icon">⚠️</div>
+            <div id="alert-message">Nội dung thông báo</div>
+            <div class="alert-btn-group" id="alert-btn-group">
+                <button type="button" class="alert-close-btn" id="alert-close-btn">Đã hiểu</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cửa sổ nổi Trắc nghiệm -->
+    <div class="modal-overlay" id="modal-overlay">
+        <div class="modal-content">
+            <div id="question-text"></div>
+            <div class="options-grid" id="options-container"></div>
+            <div id="feedback"></div>
+            <button type="button" class="close-btn" id="close-modal-btn">Trở về bảng ô chữ</button>
+        </div>
+    </div>
+
+    <!-- Bảng Ô chữ tự động vừa khít màn hình điện thoại -->
+    <div class="board-wrapper">
+        <div class="crossword-board" id="board"></div>
+    </div>
+
+    <div class="controls">
+        <button type="button" class="action-btn" id="reveal-secret-btn">🔑 Mở Khóa Ô Chữ Bí Mật</button>
+        <button type="button" class="action-btn" id="view-lb-btn" style="background-color: #10b981; box-shadow: 0 4px 0 #047857;">🏆 Xem Bảng Xếp Hạng</button>
+        <button type="button" class="action-btn" id="reset-game-btn" style="background-color: #f59e0b; box-shadow: 0 4px 0 #b45309;">🔄 Chơi Lại</button>
+    </div>
+
+    <!-- MÀN HÌNH BẢNG XẾP HẠNG TOÀN BỘ HỌC SINH (KHÔNG GIỚI HẠN) -->
+    <div id="end-screen">
+        <div class="lb-container">
+            <div class="lb-top-bar">
+                <div class="top-left-btns">
+                    <button type="button" class="btn-home" id="back-to-board-btn">
+                        <span>🧩</span> Xem lại Ô Chữ
+                    </button>
+                    <button type="button" class="btn-home" id="replay-from-lb-btn" style="background:#dcfce7; color:#166534; border-color:#86efac;">
+                        <span>🏠</span> Trang chủ
+                    </button>
+                </div>
+                <div class="lb-header-right">
+                    <span>🏆</span> BẢNG XẾP HẠNG
+                </div>
+            </div>
+
+            <div class="my-result-banner">
+                <div class="my-result-info">
+                    🎉 Học sinh: <span id="end-player-info">...</span> | Thời gian: <span id="end-time-spent">0s</span> | Thứ hạng: <span id="my-rank-badge" style="color:#d90429;">Đang tính...</span>
+                </div>
+                <div class="my-result-score">
+                    ĐIỂM: <span id="final-score">0</span> / 100
+                </div>
+            </div>
+
+            <div class="lb-toolbar">
+                <input type="text" id="search-input" class="search-box" placeholder="🔍 Tìm theo Họ tên hoặc Lớp (VD: 12A1, Hoàng Anh)...">
+                <div class="toolbar-actions">
+                    <button type="button" class="btn-find-me" id="find-me-btn">🎯 Vị trí của tôi</button>
+                    <div class="total-counter">Tổng: <span id="total-players-count">0</span> học sinh</div>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table class="lb-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Lớp</th>
+                            <th style="text-align: left;">Họ tên</th>
+                            <th>Đề thi</th>
+                            <th>Điểm</th>
+                            <th>Ngày/Giờ làm bài</th>
+                            <th>Tổng TG</th>
+                            <th>Chi tiết</th>
+                        </tr>
+                    </thead>
+                    <tbody id="final-leaderboard-list">
+                        <tr>
+                            <td colspan="8" style="padding: 35px; color: #64748b; font-weight: bold;">
+                                Đang tải dữ liệu bảng xếp hạng thời gian thực... ⏳
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="pagination-bar">
+                <div>
+                    Hiển thị <strong id="showing-range">0 - 0</strong> / <strong id="showing-total">0</strong> học sinh
+                </div>
+                <div class="page-controls">
+                    <label for="page-size-select">Dòng/trang:</label>
+                    <select id="page-size-select" class="page-size-select">
+                        <option value="50" selected>50</option>
+                        <option value="100">100</option>
+                        <option value="200">200</option>
+                        <option value="500">500</option>
+                        <option value="999999">Tất cả</option>
+                    </select>
+                    <button type="button" class="page-btn" id="first-page-btn">⏮</button>
+                    <button type="button" class="page-btn" id="prev-page-btn">◀</button>
+                    <span style="font-weight:bold; padding: 0 6px;">Trang <span id="current-page-display">1</span>/<span id="total-pages-display">1</span></span>
+                    <button type="button" class="page-btn" id="next-page-btn">▶</button>
+                    <button type="button" class="page-btn" id="last-page-btn">⏭</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL XEM CHI TIẾT ĐÁP ÁN ĐÃ CHỌN -->
+    <div id="detail-modal">
+        <div class="detail-card">
+            <div class="detail-header">
+                <span id="detail-modal-title">Chi tiết bài làm</span>
+                <button type="button" id="close-detail-btn" style="background:none; border:none; color:white; font-size:22px; cursor:pointer;">✖</button>
+            </div>
+            <div class="detail-body" id="detail-modal-body"></div>
+        </div>
+    </div>
+
+    <!-- 3. TÍCH HỢP FIREBASE REALTIME DATABASE & LOGIC Ô CHỮ -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-analytics.js";
+        import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBQ9Pos8awlh9j041qDWTPFRsVIjF-kPnk",
+            authDomain: "hoctap-91691.firebaseapp.com",
+            databaseURL: "https://hoctap-91691-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "hoctap-91691",
+            storageBucket: "hoctap-91691.firebasestorage.app",
+            messagingSenderId: "1004553425319",
+            appId: "1:1004553425319:web:45d15cbae393f614c56682",
+            measurementId: "G-Q6X1TL9PRV"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+        const db = getDatabase(app);
+        const LEADERBOARD_PATH = 'leaderboard_ochu_bai6';
+        const QUIZ_TITLE = 'Bài 6 - Ô Chữ Bí Mật';
+
+        const puzzleData = [
+            { 
+                word: "TAILEN", startCol: 4, 
+                question: "Câu 1: Đưa một tệp tin từ máy tính cá nhân lên mạng gọi là gì? ",
+                options: ["A. LƯU TRỮ", "B. TẢI LÊN", "C. ĐỒNG BỘ", "D. GỬI LÊN"],
+                answer: 1, attempted: false
+            },
+            { 
+                word: "INTERNET", startCol: 1, 
+                question: "Câu 2: Mạng toàn cầu giúp chúng ta sử dụng các dịch vụ trực tuyến gọi là gì? ",
+                options: ["A. INTERNET", "B. ETHERNET", "C. INTRANET", "D. EXTRANET"],
+                answer: 0, attempted: false
+            },
+            { 
+                word: "DROPBOX", startCol: 1, 
+                question: "Câu 3: Dịch vụ lưu trữ nào có biểu tượng hình chiếc hộp màu xanh?",
+                options: ["A. ONEDISK", "B. ICLOUDS", "C. DROPBOX", "D. 4SHARED"],
+                answer: 2, attempted: false
+            },
+            { 
+                word: "TRUCTUYEN", startCol: 0, 
+                question: "Câu 4: Khi dùng dịch vụ lưu trữ đám mây, máy tính cần kết nối mạng. Ta gọi đó là làm việc...?",
+                options: ["A. MẠNG NỘI BỘ", "B. THIẾT BỊ SỐ", "C. PHẦN MỀM PC", "D. TRỰC TUYẾN"],
+                answer: 3, attempted: false
+            },
+            { 
+                word: "CHIASE", startCol: 2, 
+                question: "Câu 5: Tính năng cho phép nhiều người cùng xem hoặc sửa chung một tệp tin là gì?",
+                options: ["A. BẢO MẬT", "B. CHIA SẺ", "C. TẢI LÊN", "D. GỬI TIN"],
+                answer: 1, attempted: false
+            },
+            { 
+                word: "ONEDRIVE", startCol: 3, 
+                question: "Câu 6: Tên dịch vụ lưu trữ đám mây của hãng Microsoft là gì?",
+                options: ["A. MEDIABOX", "B. DROPBOXS", "C. ONEDRIVE", "D. MACCLOUD"],
+                answer: 2, attempted: false
+            },
+            { 
+                word: "DAMMAY", startCol: 2, 
+                question: "Câu 7: Thuật ngữ quen thuộc dùng để chỉ không gian lưu trữ trực tuyến là 'Lưu trữ...' gì?",
+                options: ["A. ĐÁM MÂY", "B. MÁY CHỦ", "C. FLOPPY", "D. BĂNG TỪ"],
+                answer: 0, attempted: false
+            },
+            { 
+                word: "TAIXUONG", startCol: 3, 
+                question: "Câu 8: Thao tác lấy một tệp tin từ trên mạng lưu về máy tính của mình gọi là gì?",
+                options: ["A. ĐĂNG XUẤT", "B. SAO CHÉP", "C. ĐỒNG BỘ", "D. TẢI XUỐNG"],
+                answer: 3, attempted: false
+            },
+            { 
+                word: "LIENKET", startCol: 1, 
+                question: "Câu 9: Bạn thường gửi đường gì (link) cho bạn bè để rủ họ vào xem chung tài liệu?",
+                options: ["A. MẬT KHẨU", "B. TÀI LIỆU", "C. LIÊN KẾT", "D. WEBSITE"],
+                answer: 2, attempted: false
+            },
+            { 
+                word: "GOOGLE", startCol: 1, 
+                question: "Câu 10: Tên 'ông lớn' công nghệ sở hữu dịch vụ lưu trữ Drive rất quen thuộc với chúng ta?",
+                options: ["A. AMAZON", "B. GOOGLE", "C. ORACLE", "D. GITHUB"],
+                answer: 1, attempted: false
+            }
+        ];
+
+        let currentRowIndex = -1;
+        let playerName = "";
+        let playerClass = "";
+        let score = 0;
+        let correctCount = 0;
+        let wrongCount = 0;
+        let attemptedCount = 0;
+        let startTime = 0;
+        let finalDuration = 0;
+        let hasSubmitted = false;
+        let userAnswers = [];
+        let sessionID = "user_" + Date.now() + "_" + Math.floor(Math.random() * 100000);
+
+        let allPlayersRanked = [];
+        let filteredPlayers = [];
+        let currentPage = 1;
+        let pageSize = 50;
+
+        function formatDuration(sec) {
+            if (!sec || sec < 0) return "0s";
+            const m = Math.floor(sec / 60);
+            const s = sec % 60;
+            return m > 0 ? `${m}p ${s}s` : `${s}s`;
+        }
+
+        function showCustomAlert(message, icon = "⚠️", showReplayBtn = false) {
+            document.getElementById("alert-icon").innerText = icon;
+            document.getElementById("alert-message").innerHTML = message;
+            const btnGroup = document.getElementById("alert-btn-group");
+            
+            if (showReplayBtn) {
+                btnGroup.innerHTML = `
+                    <button type="button" class="alert-close-btn" id="alert-replay-now" style="background:#10b981;">🔄 Chơi lại ngay</button>
+                    <button type="button" class="alert-close-btn" id="alert-view-lb" style="background:#2563eb;">🏆 Bảng Xếp Hạng</button>
+                    <button type="button" class="alert-close-btn" id="alert-close-btn">Đóng</button>
+                `;
+                document.getElementById("alert-replay-now").onclick = () => { closeCustomAlert(); resetGame(); };
+                document.getElementById("alert-view-lb").onclick = () => { closeCustomAlert(); openLeaderboardScreen(); };
+                document.getElementById("alert-close-btn").onclick = closeCustomAlert;
+            } else {
+                btnGroup.innerHTML = `<button type="button" class="alert-close-btn" id="alert-close-btn">Đã hiểu</button>`;
+                document.getElementById("alert-close-btn").onclick = closeCustomAlert;
+            }
+
+            document.getElementById("custom-alert-overlay").style.display = "flex";
+        }
+
+        function closeCustomAlert() {
+            document.getElementById("custom-alert-overlay").style.display = "none";
+        }
+
+        function enterGame() {
+            const inputName = document.getElementById('player-name-input').value.trim();
+            const inputClass = document.getElementById('player-class-input').value.trim().toUpperCase();
+            
+            if (inputName === "") { showCustomAlert("Vui lòng nhập Họ và tên của bạn!"); return; }
+            if (inputClass === "") { showCustomAlert("Vui lòng nhập Lớp của bạn (Ví dụ: 12A1)!"); return; }
+
+            playerName = inputName;
+            playerClass = inputClass;
+            startTime = Date.now();
+            score = 0;
+            correctCount = 0;
+            wrongCount = 0;
+            attemptedCount = 0;
+            hasSubmitted = false;
+            userAnswers = [];
+
+            document.getElementById('display-name').innerText = playerName;
+            document.getElementById('display-class').innerText = playerClass;
+            document.getElementById('display-score').innerText = "0";
+            document.getElementById('display-correct').innerText = "0";
+            document.getElementById('display-wrong').innerText = "0";
+            document.getElementById('login-screen').style.display = 'none';
+        }
+
+        function initializeGame() {
+            const board = document.getElementById("board");
+            board.innerHTML = "";
+
+            for (let row = 0; row < 10; row++) {
+                const rowDiv = document.createElement("div");
+                rowDiv.className = "crossword-row";
+
+                const numBtn = document.createElement("button");
+                numBtn.type = "button";
+                numBtn.className = "num-btn";
+                numBtn.id = `num-btn-${row}`;
+                numBtn.innerText = row + 1;
+                numBtn.onclick = () => showMCQ(row);
+                rowDiv.appendChild(numBtn);
+
+                const data = puzzleData[row];
+                for (let col = 0; col < 11; col++) {
+                    const cell = document.createElement("div");
+                    if (col >= data.startCol && col < data.startCol + data.word.length) {
+                        cell.className = "cell";
+                        if (col === 4) cell.classList.add("vertical-secret"); 
+                        
+                        cell.dataset.letter = data.word[col - data.startCol];
+                        cell.id = `cell-${row}-${col}`;
+                    } else {
+                        cell.className = "cell empty";
+                    }
+                    rowDiv.appendChild(cell);
+                }
+                
+                board.appendChild(rowDiv);
+            }
+        }
+
+        function showMCQ(rowIndex) {
+            const data = puzzleData[rowIndex];
+            
+            if (data.attempted) {
+                showCustomAlert("Câu này bạn đã trả lời rồi, không được mở lại đâu nhé!");
+                return;
+            }
+
+            currentRowIndex = rowIndex;
+            
+            document.getElementById("modal-overlay").style.display = "flex";
+            document.getElementById("feedback").innerText = "";
+            document.getElementById("question-text").innerText = data.question;
+            
+            const optionsContainer = document.getElementById("options-container");
+            optionsContainer.innerHTML = "";
+            
+            data.options.forEach((opt, index) => {
+                const btn = document.createElement("button");
+                btn.type = "button";
+                btn.className = "option-btn";
+                btn.id = `option-btn-${index}`;
+                btn.innerText = opt;
+                btn.onclick = () => checkAnswer(index, btn);
+                optionsContainer.appendChild(btn);
+            });
+        }
+
+        function closeModal() {
+            document.getElementById("modal-overlay").style.display = "none";
+            if (puzzleData.every(d => d.attempted) && !hasSubmitted) {
+                submitResultToFirebase();
+            }
+        }
+
+        function checkAnswer(selectedIndex, clickedBtn) {
+            const data = puzzleData[currentRowIndex];
+            const feedbackBox = document.getElementById("feedback");
+            const allOptionBtns = document.querySelectorAll(".option-btn");
+            const numBtn = document.getElementById(`num-btn-${currentRowIndex}`);
+
+            data.attempted = true;
+            attemptedCount++;
+            numBtn.classList.add("attempted"); 
+            allOptionBtns.forEach(btn => btn.classList.add("locked"));
+
+            const isCorrect = (selectedIndex === data.answer);
+
+            userAnswers.push({
+                q: data.question,
+                chosen: data.options[selectedIndex],
+                correctAns: data.options[data.answer],
+                isCorrect: isCorrect
+            });
+
+            if (isCorrect) {
+                score += 10;
+                correctCount++;
+                clickedBtn.classList.add("correct-choice");
+                feedbackBox.style.color = "#16a34a";
+                feedbackBox.innerText = "🎉 Chính xác (+10 điểm)! Bấm 'Trở về bảng ô chữ' để xem chữ cái mở ra.";
+                revealRow(currentRowIndex);
+            } else {
+                wrongCount++;
+                clickedBtn.classList.add("wrong-choice");
+                const correctBtn = document.getElementById(`option-btn-${data.answer}`);
+                if(correctBtn) correctBtn.classList.add("correct-choice");
+
+                feedbackBox.style.color = "#dc2626";
+                feedbackBox.innerText = `❌ Sai rồi! Bạn đã sai ${wrongCount} câu. Bấm 'Trở về bảng ô chữ'.`;
+            }
+
+            document.getElementById('display-score').innerText = score;
+            document.getElementById('display-correct').innerText = correctCount;
+            document.getElementById('display-wrong').innerText = wrongCount;
+
+            if (attemptedCount === 10 && !hasSubmitted) {
+                submitResultToFirebase();
+            }
+        }
+
+        function revealRow(rowIndex) {
+            const data = puzzleData[rowIndex];
+            for (let col = data.startCol; col < data.startCol + data.word.length; col++) {
+                const cell = document.getElementById(`cell-${rowIndex}-${col}`);
+                if (cell) cell.innerText = cell.dataset.letter;
+            }
+        }
+
+        async function submitResultToFirebase() {
+            if (hasSubmitted) return;
+            hasSubmitted = true;
+
+            finalDuration = Math.max(1, Math.round((Date.now() - startTime) / 1000));
+            const now = new Date();
+            const dateTimeStr = now.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit', second: '2-digit' }) + ' ' + now.toLocaleDateString('vi-VN');
+
+            const resultData = {
+                id: sessionID,
+                name: playerName,
+                className: playerClass,
+                quizName: QUIZ_TITLE,
+                score: score,
+                dateTime: dateTimeStr,
+                duration: finalDuration,
+                details: userAnswers,
+                timestamp: Date.now()
+            };
+
+            document.getElementById('final-score').innerText = score;
+            document.getElementById('end-player-info').innerText = `${playerName} (${playerClass})`;
+            document.getElementById('end-time-spent').innerText = formatDuration(finalDuration);
+
+            try {
+                const playerRef = ref(db, `${LEADERBOARD_PATH}/${resultData.id}`);
+                await set(playerRef, resultData);
+                if (typeof gtag === 'function') {
+                    gtag('event', 'finish_crossword_bai6', {
+                        'event_category': 'Crossword_Bai6',
+                        'event_label': `${resultData.className} - ${resultData.name}`,
+                        'value': resultData.score
+                    });
+                }
+            } catch (err) {
+                console.error("Lỗi lưu điểm Firebase:", err);
+            }
+        }
+
+        // KIỂM TRA ĐIỀU KIỆN MỞ KHÓA Ô CHỮ BÍ MẬT (PHẢI ĐÚNG >= 9 CÂU, SAI >= 2 CÂU KHÔNG CHO MỞ)
+        async function revealSecretWord() {
+            const allAttempted = puzzleData.every(data => data.attempted);
+            
+            if (!allAttempted) {
+                showCustomAlert(`Bạn mới làm <strong>${attemptedCount}/10</strong> câu hỏi.<br>Hãy trả lời đủ 10 câu trước khi mở khóa nhé!`);
+                return; 
+            }
+
+            await submitResultToFirebase();
+
+            if (wrongCount >= 2 || correctCount < 9) {
+                document.getElementById("intro-text").style.color = "#dc2626";
+                document.getElementById("intro-text").innerText = `🔒 CHƯA MỞ ĐƯỢC TỪ KHÓA (Đúng ${correctCount}/10, Sai ${wrongCount} câu). Cần đúng ít nhất 9 câu!`;
+                
+                showCustomAlert(
+                    `Rất tiếc! Bạn đã trả lời sai <strong>${wrongCount} câu</strong> (chỉ đạt <strong>${correctCount}/10 câu đúng</strong>).<br><br>🔒 Quy định: Phải đúng từ <strong>9 câu trở lên</strong> (sai tối đa 1 câu) mới được mở khóa Ô Chữ Bí Mật!`,
+                    "🔒",
+                    true
+                );
+                return;
+            }
+
+            for (let row = 0; row < 10; row++) {
+                const secretCell = document.getElementById(`cell-${row}-4`);
+                if(secretCell) secretCell.innerText = secretCell.dataset.letter;
+            }
+            document.getElementById("intro-text").style.color = "#16a34a";
+            document.getElementById("intro-text").innerText = "🎉 CHÚC MỪNG! TỪ KHÓA BÍ MẬT CHÍNH LÀ: TỆP TIN MẠNG";
+
+            showCustomAlert(
+                `Xuất sắc! Bạn đã trả lời đúng <strong>${correctCount}/10 câu</strong>!<br><br>🔑 Từ khóa bí mật chính là:<br><strong style="color:#16a34a; font-size:22px;">TỆP TIN MẠNG</strong>`,
+                "🏆",
+                true
+            );
+        }
+
+        function openLeaderboardScreen() {
+            if (!hasSubmitted && attemptedCount > 0) {
+                const curDur = Math.max(1, Math.round((Date.now() - startTime) / 1000));
+                document.getElementById('final-score').innerText = score;
+                document.getElementById('end-player-info').innerText = `${playerName} (${playerClass}) - Đang làm (${attemptedCount}/10 câu)`;
+                document.getElementById('end-time-spent').innerText = formatDuration(curDur);
+            }
+            document.getElementById('end-screen').style.display = 'flex';
+            if (hasSubmitted) {
+                setTimeout(() => jumpToMyRank(), 200);
+            }
+        }
+
+        function listenRealtimeLeaderboard() {
+            const lbRef = ref(db, LEADERBOARD_PATH);
+            onValue(lbRef, (snapshot) => {
+                const data = snapshot.val();
+                let list = [];
+                if (data) {
+                    list = Object.values(data);
+                    list.sort((a, b) => {
+                        if (b.score !== a.score) return b.score - a.score;
+                        if ((a.duration || 999999) !== (b.duration || 999999)) return (a.duration || 999999) - (b.duration || 999999);
+                        return (a.timestamp || 0) - (b.timestamp || 0);
+                    });
+
+                    list.forEach((item, index) => {
+                        item.rank = index + 1;
+                    });
+                }
+
+                allPlayersRanked = list;
+                document.getElementById('total-players-count').innerText = allPlayersRanked.length.toLocaleString('vi-VN');
+
+                const myRecord = allPlayersRanked.find(p => p.id === sessionID);
+                if (myRecord) {
+                    document.getElementById('my-rank-badge').innerText = `#${myRecord.rank.toLocaleString('vi-VN')} / ${allPlayersRanked.length.toLocaleString('vi-VN')}`;
+                }
+
+                applySearchAndRender(false);
+            });
+        }
+
+        function applySearchAndRender(resetPage = true) {
+            const keyword = document.getElementById('search-input').value.trim().toLowerCase();
+            if (keyword === "") {
+                filteredPlayers = allPlayersRanked;
+            } else {
+                filteredPlayers = allPlayersRanked.filter(p => 
+                    (p.name && p.name.toLowerCase().includes(keyword)) ||
+                    (p.className && p.className.toLowerCase().includes(keyword)) ||
+                    (String(p.rank) === keyword)
+                );
+            }
+
+            if (resetPage) currentPage = 1;
+            renderCurrentPage();
+        }
+
+        function renderCurrentPage() {
+            const listDiv = document.getElementById('final-leaderboard-list');
+            listDiv.innerHTML = '';
+
+            const total = filteredPlayers.length;
+            const totalPages = Math.max(1, Math.ceil(total / pageSize));
+            if (currentPage > totalPages) currentPage = totalPages;
+            if (currentPage < 1) currentPage = 1;
+
+            const startIdx = (currentPage - 1) * pageSize;
+            const endIdx = Math.min(startIdx + pageSize, total);
+            const pageItems = filteredPlayers.slice(startIdx, endIdx);
+
+            document.getElementById('showing-range').innerText = total > 0 ? `${(startIdx + 1).toLocaleString('vi-VN')} - ${endIdx.toLocaleString('vi-VN')}` : "0 - 0";
+            document.getElementById('showing-total').innerText = total.toLocaleString('vi-VN');
+            document.getElementById('current-page-display').innerText = currentPage.toLocaleString('vi-VN');
+            document.getElementById('total-pages-display').innerText = totalPages.toLocaleString('vi-VN');
+
+            document.getElementById('first-page-btn').disabled = (currentPage === 1);
+            document.getElementById('prev-page-btn').disabled = (currentPage === 1);
+            document.getElementById('next-page-btn').disabled = (currentPage === totalPages);
+            document.getElementById('last-page-btn').disabled = (currentPage === totalPages);
+
+            if (pageItems.length === 0) {
+                listDiv.innerHTML = `
+                    <tr>
+                        <td colspan="8" style="padding: 35px; color: #64748b; font-weight: bold;">
+                            Chưa có dữ liệu nộp bài 📭
+                        </td>
+                    </tr>`;
+                return;
+            }
+
+            const fragment = document.createDocumentFragment();
+
+            pageItems.forEach((p) => {
+                const tr = document.createElement('tr');
+                tr.id = `row_${p.id}`;
+                if (p.id === sessionID) tr.classList.add('me-row');
+
+                let rankDisplay = p.rank.toLocaleString('vi-VN');
+                if (p.rank === 1) rankDisplay = '🥇 1';
+                else if (p.rank === 2) rankDisplay = '🥈 2';
+                else if (p.rank === 3) rankDisplay = '🥉 3';
+
+                tr.innerHTML = `
+                    <td style="font-weight: bold;">${rankDisplay}</td>
+                    <td><span class="badge-class">${p.className || '---'}</span></td>
+                    <td style="text-align: left; font-weight: bold; color: #1e293b;">${p.name}</td>
+                    <td>${p.quizName || QUIZ_TITLE}</td>
+                    <td><span class="badge-score">${p.score}</span></td>
+                    <td style="font-size: 13px; color: #64748b;">${p.dateTime || ''}</td>
+                    <td style="font-weight: bold; color: #0f766e;">${formatDuration(p.duration)}</td>
+                    <td><button type="button" class="btn-detail" data-id="${p.id}">Xem</button></td>
+                `;
+                fragment.appendChild(tr);
+            });
+
+            listDiv.appendChild(fragment);
+
+            listDiv.querySelectorAll('.btn-detail').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const id = btn.getAttribute('data-id');
+                    showPlayerDetail(id);
+                });
+            });
+        }
+
+        function jumpToMyRank() {
+            document.getElementById('search-input').value = '';
+            filteredPlayers = allPlayersRanked;
+            const myIndex = filteredPlayers.findIndex(p => p.id === sessionID);
+            if (myIndex === -1) {
+                showCustomAlert("Bạn hãy hoàn thành 10 câu hỏi để được ghi danh lên Bảng xếp hạng nhé!");
+                return;
+            }
+            currentPage = Math.floor(myIndex / pageSize) + 1;
+            renderCurrentPage();
+
+            setTimeout(() => {
+                const myRow = document.getElementById(`row_${sessionID}`);
+                if (myRow) {
+                    myRow.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            }, 100);
+        }
+
+        function showPlayerDetail(playerId) {
+            const player = allPlayersRanked.find(p => p.id === playerId);
+            if (!player) return;
+
+            document.getElementById('detail-modal-title').innerText = `Hạng #${player.rank}: ${player.name} (${player.className}) - ${player.score} điểm`;
+            const body = document.getElementById('detail-modal-body');
+            body.innerHTML = '';
+
+            const details = player.details || [];
+            if (details.length === 0) {
+                body.innerHTML = '<p style="text-align:center; color:#64748b;">Không có dữ liệu chi tiết cho lượt chơi này.</p>';
+            } else {
+                details.forEach((d) => {
+                    const div = document.createElement('div');
+                    div.className = `detail-item ${d.isCorrect ? 'correct' : 'wrong'}`;
+                    div.innerHTML = `
+                        <div style="font-weight:bold; color:#1e293b; margin-bottom:4px;">${d.q}</div>
+                        <div>
+                            👉 Đã chọn: <strong style="color:${d.isCorrect ? '#16a34a' : '#dc2626'}">${d.chosen}</strong> 
+                            ${d.isCorrect ? '✅' : `<br>✔️ Đáp án đúng: <strong style="color:#16a34a">${d.correctAns}</strong>`}
+                        </div>
+                    `;
+                    body.appendChild(div);
+                });
+            }
+            document.getElementById('detail-modal').style.display = 'flex';
+        }
+
+        function resetGame() {
+            puzzleData.forEach(data => data.attempted = false);
+
+            for (let row = 0; row < 10; row++) {
+                const numBtn = document.getElementById(`num-btn-${row}`);
+                if (numBtn) numBtn.classList.remove("attempted");
+
+                const data = puzzleData[row];
+                for (let col = data.startCol; col < data.startCol + data.word.length; col++) {
+                    const cell = document.getElementById(`cell-${row}-${col}`);
+                    if (cell) cell.innerText = "";
+                }
+            }
+
+            score = 0;
+            correctCount = 0;
+            wrongCount = 0;
+            attemptedCount = 0;
+            hasSubmitted = false;
+            userAnswers = [];
+            sessionID = "user_" + Date.now() + "_" + Math.floor(Math.random() * 100000);
+            startTime = Date.now();
+
+            document.getElementById('display-score').innerText = "0";
+            document.getElementById('display-correct').innerText = "0";
+            document.getElementById('display-wrong').innerText = "0";
+            document.getElementById("intro-text").style.color = "#1d4ed8";
+            document.getElementById("intro-text").innerText = "Bấm vào các nút số màu vàng bên trái để trả lời câu hỏi (Đúng ≥ 9 câu mới mở được Từ khóa)!";
+            document.getElementById('end-screen').style.display = 'none';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        initializeGame();
+        listenRealtimeLeaderboard();
+
+        document.getElementById('start-btn').addEventListener('click', enterGame);
+        document.getElementById('alert-close-btn').addEventListener('click', closeCustomAlert);
+        document.getElementById('close-modal-btn').addEventListener('click', closeModal);
+        document.getElementById('reveal-secret-btn').addEventListener('click', revealSecretWord);
+        document.getElementById('view-lb-btn').addEventListener('click', openLeaderboardScreen);
+        document.getElementById('reset-game-btn').addEventListener('click', resetGame);
+        document.getElementById('back-to-board-btn').addEventListener('click', () => {
+            document.getElementById('end-screen').style.display = 'none';
+        });
+        document.getElementById('replay-from-lb-btn').addEventListener('click', () => {
+            resetGame();
+            document.getElementById('login-screen').style.display = 'flex';
+        });
+
+        document.getElementById('find-me-btn').addEventListener('click', jumpToMyRank);
+        document.getElementById('search-input').addEventListener('input', () => applySearchAndRender(true));
+
+        document.getElementById('page-size-select').addEventListener('change', (e) => {
+            pageSize = parseInt(e.target.value, 10);
+            currentPage = 1;
+            renderCurrentPage();
+        });
+
+        document.getElementById('first-page-btn').addEventListener('click', () => { currentPage = 1; renderCurrentPage(); });
+        document.getElementById('prev-page-btn').addEventListener('click', () => { if (currentPage > 1) { currentPage--; renderCurrentPage(); } });
+        document.getElementById('next-page-btn').addEventListener('click', () => { 
+            const totalPages = Math.ceil(filteredPlayers.length / pageSize);
+            if (currentPage < totalPages) { currentPage++; renderCurrentPage(); } 
+        });
+        document.getElementById('last-page-btn').addEventListener('click', () => { 
+            currentPage = Math.max(1, Math.ceil(filteredPlayers.length / pageSize)); 
+            renderCurrentPage(); 
+        });
+
+        document.getElementById('close-detail-btn').addEventListener('click', () => {
+            document.getElementById('detail-modal').style.display = 'none';
+        });
+    </script>
+</body>
+</html>
