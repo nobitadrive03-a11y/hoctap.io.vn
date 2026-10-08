@@ -1,0 +1,1073 @@
+<!doctype html>
+<html lang="vi" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Hành Trình Tri Thức - Bài 6: Giao tiếp và ứng xử trong không gian mạng</title>
+
+  <!-- 1. MÃ GA4 GỐC (Kết nối với Google Analytics) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-NSJCVSL9RM"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-NSJCVSL9RM'); 
+  </script>
+
+  <!-- 2. MÃ NHỊP TIM 30 GIÂY -->
+  <script>
+    setInterval(function() {
+      if (!document.hidden) { 
+        gtag('event', 'keep_alive', {
+          'event_category': 'Engagement',
+          'event_label': 'Học sinh đang làm bài',
+          'non_interaction': false
+        });
+      }
+    }, 30000); 
+  </script>
+
+  <style>
+        /* --- CẤU HÌNH CỐ ĐỊNH FONT --- */
+        html {
+            -webkit-text-size-adjust: 100%;
+            text-size-adjust: 100%;
+        }
+
+        body { 
+            box-sizing: border-box; 
+            overscroll-behavior: none;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 18px; 
+            background: linear-gradient(180deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            display: flex; flex-direction: column; user-select: none;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+        html, body { height: 100%; overflow: hidden; width: 100%; }
+
+        /* --- HIỆU ỨNG & LOGIN --- */
+        .particle {
+            position: absolute; width: 10px; height: 10px; border-radius: 50%;
+            pointer-events: none; z-index: 9999; animation: explode 0.8s ease-out forwards;
+            box-shadow: 0 0 10px currentColor;
+        }
+        @keyframes explode {
+            0% { transform: translate(0, 0) scale(1.5); opacity: 1; }
+            100% { transform: translate(var(--tx), var(--ty)) scale(0); opacity: 0; }
+        }
+
+        #login-screen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(8px);
+            z-index: 999; display: flex; justify-content: center; align-items: center; padding: 20px;
+        }
+        .login-card {
+            background: white; padding: 30px 25px; border-radius: 20px;
+            box-shadow: 0 0 50px rgba(243, 156, 18, 0.5); text-align: center;
+            max-width: 480px; width: 100%; border: 4px solid #f39c12; animation: popIn 0.5s ease-out;
+        }
+        @keyframes popIn { from { transform: scale(0.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+        .login-title { font-size: 1.9em; color: #2c3e50; margin-bottom: 8px; font-weight: bold; }
+        .input-group { margin-bottom: 15px; text-align: left; }
+        .input-label { display: block; font-weight: bold; color: #34495e; margin-bottom: 6px; font-size: 0.95em; }
+        .input-field {
+            width: 100%; padding: 12px 15px; border: 2px solid #cbd5e1;
+            border-radius: 10px; font-size: 1.05em; outline: none; transition: border-color 0.2s;
+            background: #ffffff; color: #1e293b; font-weight: 500;
+        }
+        .input-field:focus { border-color: #f39c12; box-shadow: 0 0 0 3px rgba(243, 156, 18, 0.2); }
+        
+        .btn-start {
+            background: #2ecc71; color: white; border: none; padding: 14px 30px;
+            font-size: 1.2em; border-radius: 50px; cursor: pointer; font-weight: bold;
+            width: 100%; box-shadow: 0 5px 0 #27ae60; margin-top: 10px;
+        }
+        .btn-start:active { transform: translateY(3px); box-shadow: 0 2px 0 #27ae60; }
+
+        /* --- GAME STAGE --- */
+        #game-wrapper { display: none; height: 100%; flex-direction: column; width: 100%; }
+        #game-wrapper.active { display: flex; }
+
+        .stage-area {
+            position: relative; flex: 0.85; width: 100%;
+            background: linear-gradient(180deg, #87CEEB 0%, #98D8E8 100%);
+            overflow: hidden; min-height: 170px;
+        }
+        .cloud { position: absolute; background: white; border-radius: 100px; opacity: 0.8; animation: float 20s infinite linear; }
+        @keyframes float { from { transform: translateX(-200px); } to { transform: translateX(calc(100% + 200px)); } }
+
+        .grass {
+            position: absolute; bottom: 0; width: 100%; height: 40px;
+            background: repeating-linear-gradient(45deg, #7cb342 0px, #7cb342 20px, #558b2f 20px, #558b2f 40px);
+            z-index: 2; border-top: 4px solid #33691e;
+        }
+        
+        #character {
+            position: absolute; bottom: 35px; left: 5%; font-size: 85px; z-index: 15;
+            filter: drop-shadow(5px 5px 5px rgba(0,0,0,0.3)); transform: scaleX(-1);
+            transition: left 1s cubic-bezier(0.25, 0.1, 0.25, 1);
+            text-align: center; width: 120px; margin-left: -60px;
+        }
+        .running { animation: run-bob 0.6s infinite alternate; }
+        @keyframes run-bob { 0% { transform: scaleX(-1) translateY(0); } 100% { transform: scaleX(-1) translateY(-10px); } }
+
+        .jump-anim-smooth { animation: jump 0.8s linear; }
+        @keyframes jump { 0% { transform: scaleX(-1) translateY(0); } 50% { transform: scaleX(-1) translateY(-140px); } 100% { transform: scaleX(-1) translateY(0); } }
+
+        .wrong-anim { animation: shake 0.5s; }
+        @keyframes shake { 0%, 100% { transform: scaleX(-1) translateX(0); } 25% { transform: scaleX(-1) translateX(-10px); } 75% { transform: scaleX(-1) translateX(10px); } }
+
+        .crown-overlay {
+            position: absolute; top: -60px; left: 50%; transform: translateX(-50%) rotate(0deg);
+            font-size: 60px; animation: crown-bounce 1s infinite alternate ease-in-out;
+            z-index: 100; filter: drop-shadow(0 0 15px gold); width: 100%; text-align: center;
+        }
+        @keyframes crown-bounce {
+            from { transform: translateX(-50%) translateY(0) rotate(-5deg); }
+            to { transform: translateX(-50%) translateY(-15px) rotate(5deg); }
+        }
+
+        #castle { position: absolute; bottom: 35px; right: 1%; font-size: 95px; z-index: 5; }
+        .milestone { position: absolute; bottom: 50px; font-size: 35px; z-index: 4; opacity: 0.8; }
+        
+        /* --- QUIZ AREA (CÂU HỎI ĐỎ & Ô ĐÁP ÁN NỀN TRẮNG TINH) --- */
+        .quiz-area {
+            flex: 1.15; background: #2c3e50; color: white; padding: 15px 25px;
+            display: flex; flex-direction: column; align-items: center;
+            border-top: 5px solid #f39c12; overflow-y: auto; width: 100%;
+        }
+        .stats {
+            font-size: 1.05em; font-weight: bold; background: #e67e22;
+            padding: 6px 25px; border-radius: 20px; margin-bottom: 12px;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+        }
+        .question-text {
+            font-size: 1.25em; text-align: center; background: #ffffff; 
+            color: #d90429; /* MÀU ĐỎ NỔI BẬT */
+            padding: 16px 24px; border-radius: 12px; margin-bottom: 16px; 
+            width: 95%; max-width: 1200px;
+            font-weight: bold; border: 3px solid #e74c3c;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            line-height: 1.45;
+        }
+        .options-grid { 
+            display: grid; grid-template-columns: 1fr 1fr; gap: 15px; 
+            width: 95%; max-width: 1200px; 
+        }
+        /* Ô ĐÁP ÁN NỀN TRẮNG TINH (#ffffff) DỄ NHÌN */
+        .btn {
+            background: #ffffff; color: #1e293b; border: 2px solid #cbd5e1;
+            padding: 16px 22px; border-radius: 12px; font-weight: bold; cursor: pointer;
+            min-height: 65px; display: flex; align-items: center; justify-content: flex-start;
+            text-align: left; box-shadow: 0 4px 0 #94a3b8; font-size: 1.05em; line-height: 1.4;
+            transition: all 0.15s ease;
+        }
+        .btn:hover:not(:disabled) { background: #f8fafc; border-color: #3b82f6; transform: translateY(-1px); }
+        .btn:active:not(:disabled) { transform: translateY(3px); box-shadow: none; }
+        
+        .next-btn {
+            display: none; margin-top: 18px; padding: 12px 40px; background: #f39c12;
+            color: white; border: none; border-radius: 30px; font-weight: bold; cursor: pointer;
+            box-shadow: 0 5px 0 #d68910; margin-bottom: 20px; font-size: 1.2em;
+        }
+
+        /* --- MÀN HÌNH BẢNG XẾP HẠNG KHÔNG GIỚI HẠN SỐ LƯỢNG --- */
+        #end-screen {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #f4f6f9; z-index: 10000;
+            flex-direction: column; align-items: center; padding: 20px 15px; overflow-y: auto;
+        }
+        .lb-container {
+            width: 100%; max-width: 1250px; background: #ffffff;
+            border-radius: 16px; padding: 22px; box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        }
+        .lb-top-bar {
+            display: flex; justify-content: space-between; align-items: center;
+            padding-bottom: 16px; margin-bottom: 16px; border-bottom: 2px solid #f1f5f9;
+            flex-wrap: wrap; gap: 12px;
+        }
+        .btn-home {
+            display: inline-flex; align-items: center; gap: 8px;
+            background: #f1f5f9; color: #334155; border: 1px solid #e2e8f0;
+            padding: 10px 18px; border-radius: 12px; font-weight: bold;
+            font-size: 0.95em; cursor: pointer; transition: 0.2s;
+        }
+        .btn-home:hover { background: #e2e8f0; }
+        .lb-header-right {
+            display: flex; align-items: center; gap: 10px;
+            font-size: 1.6em; font-weight: 900;
+            background: linear-gradient(90deg, #ff6b00, #e63946);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            text-transform: uppercase;
+        }
+        
+        /* Tóm tắt điểm & thứ hạng cá nhân vừa làm */
+        .my-result-banner {
+            display: flex; justify-content: space-between; align-items: center;
+            background: linear-gradient(135deg, #fffbeb, #fef3c7);
+            border: 2px solid #f59e0b; border-radius: 12px;
+            padding: 12px 18px; margin-bottom: 15px; flex-wrap: wrap; gap: 10px;
+        }
+        .my-result-info { font-weight: bold; color: #92400e; font-size: 1em; }
+        .my-result-score { font-size: 1.2em; font-weight: 900; color: #d90429; }
+
+        /* Thanh công cụ Tìm kiếm & Điều hướng nhanh cho 100.000+ học sinh */
+        .lb-toolbar {
+            display: flex; justify-content: space-between; align-items: center;
+            gap: 10px; margin-bottom: 15px; flex-wrap: wrap;
+        }
+        .search-box {
+            flex: 1; min-width: 220px; padding: 10px 14px;
+            border: 2px solid #cbd5e1; border-radius: 10px; font-size: 0.95em;
+            outline: none; background: #f8fafc; color: #1e293b;
+        }
+        .search-box:focus { border-color: #ff6b00; background: #ffffff; }
+        .toolbar-actions { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+        .btn-find-me {
+            background: #10b981; color: white; border: none; padding: 10px 16px;
+            border-radius: 10px; font-weight: bold; font-size: 0.9em; cursor: pointer;
+            transition: 0.2s; white-space: nowrap;
+        }
+        .btn-find-me:hover { background: #059669; }
+        .total-counter {
+            background: #fff1f2; color: #e11d48; border: 1px solid #fecdd3;
+            padding: 9px 14px; border-radius: 10px; font-weight: bold; font-size: 0.9em;
+            white-space: nowrap;
+        }
+
+        /* Bảng dữ liệu */
+        .table-responsive {
+            width: 100%; overflow-x: auto; border-radius: 12px;
+            border: 1px solid #e2e8f0; max-height: 55vh; overflow-y: auto;
+        }
+        .lb-table {
+            width: 100%; border-collapse: collapse; min-width: 750px;
+            text-align: center; font-size: 0.95em;
+        }
+        .lb-table thead tr {
+            background: linear-gradient(90deg, #ff6b00 0%, #ee5236 50%, #e63946 100%);
+            color: #ffffff; font-weight: bold; position: sticky; top: 0; z-index: 10;
+        }
+        .lb-table th {
+            padding: 14px 10px; white-space: nowrap; font-size: 0.95em;
+        }
+        .lb-table td {
+            padding: 12px 10px; border-bottom: 1px solid #f1f5f9;
+            color: #334155; font-weight: 500;
+        }
+        .lb-table tbody tr:hover { background: #f8fafc; }
+        .lb-table tbody tr.me-row {
+            background: #dcfce7 !important; font-weight: bold;
+            border-left: 5px solid #16a34a;
+        }
+        .badge-class {
+            background: #e0f2fe; color: #0369a1; padding: 4px 10px;
+            border-radius: 6px; font-weight: bold; font-size: 0.9em;
+        }
+        .badge-score {
+            background: #fef2f2; color: #dc2626; padding: 4px 12px;
+            border-radius: 20px; font-weight: 800; border: 1px solid #fecaca;
+        }
+        .btn-detail {
+            background: #3b82f6; color: white; border: none;
+            padding: 6px 14px; border-radius: 8px; cursor: pointer;
+            font-weight: bold; font-size: 0.85em; transition: 0.2s;
+        }
+        .btn-detail:hover { background: #2563eb; }
+
+        /* Thanh phân trang bên dưới */
+        .pagination-bar {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-top: 15px; padding-top: 12px; border-top: 1px solid #e2e8f0;
+            flex-wrap: wrap; gap: 10px; font-size: 0.9em; color: #475569;
+        }
+        .page-controls { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+        .page-btn {
+            background: #f1f5f9; color: #334155; border: 1px solid #cbd5e1;
+            padding: 6px 12px; border-radius: 8px; font-weight: bold; cursor: pointer;
+            transition: 0.15s;
+        }
+        .page-btn:hover:not(:disabled) { background: #ff6b00; color: white; border-color: #ff6b00; }
+        .page-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+        .page-size-select {
+            padding: 6px 10px; border-radius: 8px; border: 1px solid #cbd5e1;
+            font-weight: bold; color: #334155; outline: none; background: white;
+        }
+
+        /* Modal Xem Chi Tiết Bài Làm */
+        #detail-modal {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.65); z-index: 20000;
+            justify-content: center; align-items: center; padding: 15px;
+        }
+        .detail-card {
+            background: white; width: 100%; max-width: 750px; max-height: 85vh;
+            border-radius: 16px; display: flex; flex-direction: column; overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+        }
+        .detail-header {
+            background: linear-gradient(90deg, #ff6b00, #e63946); color: white;
+            padding: 15px 20px; display: flex; justify-content: space-between; align-items: center;
+            font-weight: bold; font-size: 1.15em;
+        }
+        .detail-body { padding: 20px; overflow-y: auto; flex: 1; }
+        .detail-item {
+            padding: 12px; border-radius: 10px; margin-bottom: 10px;
+            border: 1px solid #e2e8f0; background: #f8fafc;
+        }
+        .detail-item.correct { border-left: 5px solid #22c55e; background: #f0fdf4; }
+        .detail-item.wrong { border-left: 5px solid #ef4444; background: #fef2f2; }
+
+        /* ========================================================= */
+        /* --- [MOBILE] CÂU HỎI & HỘP DỮ LIỆU TRÀN HẾT KHUNG 100% --- */
+        /* ========================================================= */
+        @media (max-width: 768px) {
+            .stage-area { flex: 0.62; min-height: 130px; }
+            .quiz-area { flex: 1.38; padding: 8px 6px; }
+
+            #character { font-size: 50px; bottom: 28px; width: 65px; margin-left: -32px; }
+            #castle { font-size: 55px; bottom: 28px; }
+            .milestone { font-size: 20px; bottom: 42px; }
+            .crown-overlay { top: -35px; font-size: 32px; }
+
+            .login-card { padding: 20px 15px; width: 100%; }
+            .login-title { font-size: 20px !important; }
+            .input-field { font-size: 14px !important; padding: 10px; }
+            .btn-start { font-size: 15px !important; padding: 12px 20px; }
+
+            .stats { font-size: 12.5px !important; padding: 4px 12px; margin-bottom: 8px; }
+            
+            .question-text { 
+                width: 100% !important;
+                max-width: 100% !important;
+                color: #d90429 !important;
+                font-size: 13.5px !important; 
+                padding: 10px 10px; 
+                margin-bottom: 8px;
+                line-height: 1.4;
+                border-radius: 8px;
+            }
+            
+            .options-grid { 
+                width: 100% !important;
+                max-width: 100% !important;
+                grid-template-columns: 1fr; 
+                gap: 6px; 
+            }
+            
+            .btn { 
+                width: 100% !important;
+                background: #ffffff;
+                font-size: 13px !important; 
+                padding: 9px 10px; 
+                min-height: 42px; 
+                text-align: left; 
+                justify-content: flex-start; 
+                border-radius: 8px;
+            }
+            
+            .next-btn { font-size: 13px !important; padding: 10px 24px; margin-top: 10px; }
+            
+            #end-screen { padding: 6px; }
+            .lb-container { padding: 12px; width: 100% !important; border-radius: 12px; }
+            .lb-header-right { font-size: 1.2em; }
+            .btn-home { padding: 8px 12px; font-size: 0.85em; }
+            .my-result-banner { padding: 10px 12px; font-size: 0.88em; }
+            .search-box { width: 100%; font-size: 13px; }
+        }
+    </style>
+  <style>@view-transition { navigation: auto; }</style>
+  <script src="https://cdn.tailwindcss.com" type="text/javascript"></script>
+ </head>
+ <body>
+  <!-- MÀN HÌNH ĐĂNG NHẬP -->
+  <div id="login-screen">
+   <div class="login-card">
+    <h1 class="login-title" id="game-title">HÀNH TRÌNH TRI THỨC</h1>
+    <p style="margin-bottom: 18px; color: #d90429; font-weight: bold;">BÀI 6: GIAO TIẾP VÀ ỨNG XỬ TRONG KHÔNG GIAN MẠNG</p>
+    
+    <div class="input-group">
+     <label class="input-label" for="player-name-input">👤 Họ và tên học sinh:</label>
+     <input type="text" id="player-name-input" class="input-field" placeholder="Ví dụ: Nguyễn Hoàng Anh" maxlength="35">
+    </div>
+
+    <div class="input-group">
+     <label class="input-label" for="player-class-input">🏫 Lớp:</label>
+     <input type="text" id="player-class-input" class="input-field" placeholder="Ví dụ: 12A1" maxlength="12">
+    </div>
+
+    <button class="btn-start" id="start-btn">BẮT ĐẦU NGAY</button>
+   </div>
+  </div>
+
+  <!-- MÀN HÌNH CHƠI GAME -->
+  <div id="game-wrapper">
+   <div class="stage-area" id="stage">
+    <div class="cloud" style="top: 15%; font-size: 60px; animation-duration: 40s;">☁️</div>
+    <div class="cloud" style="top: 5%; font-size: 50px; animation-duration: 28s; left: 30%;">☁️</div>
+    
+    <div class="milestone" style="left: 13%;">🍄</div>
+    <div class="milestone" style="left: 21%;">🥚</div>
+    <div class="milestone" style="left: 29%;">🐤</div>
+    <div class="milestone" style="left: 37%;">🍔</div>
+    <div class="milestone" style="left: 45%;">🚲</div>
+    <div class="milestone" style="left: 53%;">🎮</div>
+    <div class="milestone" style="left: 61%;">🎸</div>
+    <div class="milestone" style="left: 69%;">🛸</div>
+    <div class="milestone" style="left: 77%;">💎</div>
+    <div class="milestone" style="left: 85%;">🗝️</div>
+    
+    <div id="character" class="running">🏃</div>
+    <div id="castle">🏰</div>
+    <div class="grass"></div>
+   </div>
+
+   <div class="quiz-area">
+    <div class="stats">
+     👤 <span id="display-name">...</span> (<span id="display-class">...</span>) | ĐIỂM: <span id="score">0</span>
+    </div>
+    <div class="question-text" id="question-text">Đang tải câu hỏi...</div>
+    <div class="options-grid" id="options-area"></div>
+    <button id="next-btn" class="next-btn">CÂU TIẾP THEO</button>
+   </div>
+  </div>
+
+  <!-- MÀN HÌNH BẢNG XẾP HẠNG TOÀN BỘ HỌC SINH (KHÔNG GIỚI HẠN) -->
+  <div id="end-screen">
+   <div class="lb-container">
+    <!-- Thanh tiêu đề trên cùng -->
+    <div class="lb-top-bar">
+     <button class="btn-home" id="replay-btn">
+      <span>🏠</span> Trang chủ 
+     </button>
+     <div class="lb-header-right">
+      <span style="-webkit-text-fill-color: initial;">🏆</span> BẢNG XẾP HẠNG
+     </div>
+    </div>
+
+    <!-- Thông báo điểm & thứ hạng cá nhân -->
+    <div class="my-result-banner">
+     <div class="my-result-info">
+      🎉 Học sinh: <span id="end-player-info">...</span> | Thời gian: <span id="end-time-spent">0s</span> | Thứ hạng: <span id="my-rank-badge" style="color:#d90429; font-weight:900;">Đang tính...</span>
+     </div>
+     <div class="my-result-score">
+      ĐIỂM: <span id="final-score">0</span> / 100
+     </div>
+    </div>
+
+    <!-- Thanh công cụ tìm kiếm & nhảy tới vị trí cá nhân -->
+    <div class="lb-toolbar">
+     <input type="text" id="search-input" class="search-box" placeholder="🔍 Tìm kiếm theo Họ tên hoặc Lớp (VD: 12A1, Hoàng Anh)...">
+     <div class="toolbar-actions">
+      <button class="btn-find-me" id="find-me-btn">🎯 Tìm vị trí của tôi</button>
+      <div class="total-counter">Tổng số: <span id="total-players-count">0</span> lượt nộp bài</div>
+     </div>
+    </div>
+
+    <!-- Bảng xếp hạng 8 cột chuẩn mẫu -->
+    <div class="table-responsive" id="table-scroll-container">
+     <table class="lb-table">
+      <thead>
+       <tr>
+        <th>#</th>
+        <th>Lớp</th>
+        <th style="text-align: left;">Họ tên</th>
+        <th>Đề thi</th>
+        <th>Điểm</th>
+        <th>Ngày/Giờ làm bài</th>
+        <th>Tổng TG</th>
+        <th>Chi tiết</th>
+       </tr>
+      </thead>
+      <tbody id="final-leaderboard-list">
+       <tr>
+        <td colspan="8" style="padding: 40px; color: #64748b; font-weight: bold;">
+         Đang tải dữ liệu bảng xếp hạng thời gian thực... ⏳
+        </td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+
+    <!-- Thanh phân trang thông minh hỗ trợ 100.000+ học sinh -->
+    <div class="pagination-bar">
+     <div>
+      Hiển thị <strong id="showing-range">0 - 0</strong> trên tổng số <strong id="showing-total">0</strong> học sinh
+     </div>
+     <div class="page-controls">
+      <label for="page-size-select">Số dòng/trang:</label>
+      <select id="page-size-select" class="page-size-select">
+       <option value="50" selected>50</option>
+       <option value="100">100</option>
+       <option value="200">200</option>
+       <option value="500">500</option>
+       <option value="999999">Tất cả</option>
+      </select>
+      <button class="page-btn" id="first-page-btn" title="Trang đầu">⏮</button>
+      <button class="page-btn" id="prev-page-btn">◀ Trước</button>
+      <span style="font-weight:bold; padding: 0 8px;">Trang <span id="current-page-display">1</span> / <span id="total-pages-display">1</span></span>
+      <button class="page-btn" id="next-page-btn">Sau ▶</button>
+      <button class="page-btn" id="last-page-btn" title="Trang cuối">⏭</button>
+     </div>
+    </div>
+   </div>
+  </div>
+
+  <!-- MODAL XEM CHI TIẾT ĐÁP ÁN ĐÃ CHỌN -->
+  <div id="detail-modal">
+   <div class="detail-card">
+    <div class="detail-header">
+     <span id="detail-modal-title">Chi tiết bài làm</span>
+     <button id="close-detail-btn" style="background:none; border:none; color:white; font-size:1.4em; cursor:pointer;">✖</button>
+    </div>
+    <div class="detail-body" id="detail-modal-body"></div>
+   </div>
+  </div>
+
+  <!-- 3. TÍCH HỢP FIREBASE REALTIME DATABASE & LOGIC XẾP HẠNG TOÀN BỘ -->
+  <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-analytics.js";
+        import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+        // Cấu hình Firebase của bạn
+        const firebaseConfig = {
+            apiKey: "AIzaSyBQ9Pos8awlh9j041qDWTPFRsVIjF-kPnk",
+            authDomain: "hoctap-91691.firebaseapp.com",
+            databaseURL: "https://hoctap-91691-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "hoctap-91691",
+            storageBucket: "hoctap-91691.firebasestorage.app",
+            messagingSenderId: "1004553425319",
+            appId: "1:1004553425319:web:45d15cbae393f614c56682",
+            measurementId: "G-Q6X1TL9PRV"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+        const db = getDatabase(app);
+        const LEADERBOARD_PATH = 'leaderboard_bai6_kntt_v2';
+        const QUIZ_TITLE = 'Bài 6 - Giao tiếp mạng';
+
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+        const questions = [
+            { 
+                q: "Câu 1: Không gian mạng (còn được gọi là thế giới ảo) được hiểu là gì?", 
+                a: [ 
+                    { t: "A. Môi trường giao tiếp trực tiếp giữa con người với nhau tại các địa điểm công cộng.", c: false }, 
+                    { t: "B. Môi trường được tạo ra nhờ sử dụng mạng máy tính, trong đó Internet được coi là không gian mạng lớn nhất.", c: true }, 
+                    { t: "C. Hệ thống các thiết bị phần cứng máy tính được lắp đặt cố định trong một phòng thực hành.", c: false }, 
+                    { t: "D. Tập hợp các quy định pháp luật về việc sử dụng các thiết bị điện tử viễn thông.", c: false } 
+                ] 
+            },
+            { 
+                q: "Câu 2: Đâu là một trong những ưu điểm nổi bật của giao tiếp trong không gian mạng?", 
+                a: [ 
+                    { t: "A. Thực hiện thuận tiện, tiết kiệm thời gian, chi phí và mở rộng kết nối xã hội.", c: true }, 
+                    { t: "B. Luôn truyền tải đầy đủ các tín hiệu phi ngôn ngữ như nét mặt, ngôn ngữ cơ thể trong mọi công cụ.", c: false }, 
+                    { t: "C. Đảm bảo tuyệt đối an toàn về bảo mật dữ liệu và không bao giờ xảy ra rủi ro lộ thông tin riêng tư.", c: false }, 
+                    { t: "D. Hoàn toàn không bị ảnh hưởng hay gián đoạn bởi các sự cố kĩ thuật hoặc đường truyền.", c: false } 
+                ] 
+            },
+            { 
+                q: "Câu 3: Việc ứng xử nhân văn khi giao tiếp trong không gian mạng được thể hiện qua bốn khía cạnh quan trọng nào?", 
+                a: [ 
+                    { t: "A. Nhanh chóng, chính xác, bảo mật và tiết kiệm.", c: false }, 
+                    { t: "B. Tự do, thoải mái, ẩn danh và đa dạng.", c: false }, 
+                    { t: "C. Tôn trọng, lịch sự, thấu hiểu và hỗ trợ.", c: true }, 
+                    { t: "D. Nghiêm khắc, thẳng thắn, phê bình và áp đặt.", c: false } 
+                ] 
+            },
+            { 
+                q: "Câu 4: Trong các tình huống dưới đây, tình huống nào KHÔNG phải là giao tiếp trong không gian mạng?", 
+                a: [ 
+                    { t: "A. Giao tiếp với một trợ lí ảo (chatbot) trên trang web tuyển sinh của một trường đại học.", c: false }, 
+                    { t: "B. Tham gia thảo luận bài học trong một lớp học trực tuyến.", c: false }, 
+                    { t: "C. Hai người bạn sử dụng ứng dụng trên điện thoại để gọi video (FaceTime) cho nhau.", c: false }, 
+                    { t: "D. Hẹn gặp bạn bè để trò chuyện trực tiếp tại một quán cà phê Internet.", c: true } 
+                ] 
+            },
+            { 
+                q: "Câu 5: Vì sao giao tiếp qua thư điện tử (email) hoặc tin nhắn văn bản đôi khi dễ dẫn đến những hiểu lầm không đáng có giữa người gửi và người nhận?", 
+                a: [ 
+                    { t: "A. Do thư điện tử và tin nhắn văn bản tốn nhiều chi phí di chuyển hơn giao tiếp trực tiếp.", c: false }, 
+                    { t: "B. Do các phương thức này thiếu tín hiệu phi ngôn ngữ như nét mặt, ngôn ngữ cơ thể và biểu cảm giọng nói.", c: true }, 
+                    { t: "C. Do người dùng bắt buộc phải sử dụng ngôn ngữ chuyên ngành và từ lóng khi nhắn tin.", c: false }, 
+                    { t: "D. Do thư điện tử không cho phép người dùng đính kèm các tệp tin đa phương tiện.", c: false } 
+                ] 
+            },
+            { 
+                q: "Câu 6: Hành vi nào dưới đây thể hiện đúng sự \"Tôn trọng\" và \"Lịch sự\" khi giao tiếp trên không gian mạng?", 
+                a: [ 
+                    { t: "A. Tự ý đăng tải thông tin cá nhân, số điện thoại của người khác lên diễn đàn công khai khi chưa xin phép.", c: false }, 
+                    { t: "B. Liên tục gửi các tin nhắn quảng cáo, thư rác không liên quan vào nhóm học tập của lớp.", c: false }, 
+                    { t: "C. Sử dụng ngôn từ đúng mực, chia sẻ thông tin đã kiểm chứng và tôn trọng quan điểm riêng của người khác.", c: true }, 
+                    { t: "D. Bắt buộc mọi người trong nhóm trực tuyến phải đồng tình và chia sẻ quan điểm cá nhân của mình.", c: false } 
+                ] 
+            },
+            { 
+                q: "Câu 7: Để hình thành thói quen ứng xử nhân văn trong không gian mạng, người dùng cần thực hiện biện pháp nào sau đây?", 
+                a: [ 
+                    { t: "A. Tự kiểm tra, cải thiện hành vi trực tuyến và đối xử với người khác theo cách mà mình muốn được đối xử.", c: true }, 
+                    { t: "B. Tạo các tài khoản ẩn danh, giả mạo thông tin để thoải mái bình luận chê bai mà không sợ bị phát hiện.", c: false }, 
+                    { t: "C. Luôn dùng từ ngữ mang tính khiêu khích để giành phần thắng trong các cuộc tranh luận trên mạng xã hội.", c: false }, 
+                    { t: "D. Chia sẻ ngay lập tức mọi tin đồn giật gân chưa rõ nguồn gốc để thu hút sự chú ý của cộng đồng mạng.", c: false } 
+                ] 
+            },
+            { 
+                q: "Câu 8: Tình huống: Trong lúc vô tình, bạn Nam quay được đoạn video hai bạn trong lớp xô xát với nhau và định đăng lên mạng xã hội để câu lượt xem (view). Nếu có mặt ở đó, cách ứng xử nào sau đây của em là nhân văn và đúng đắn nhất?", 
+                a: [ 
+                    { t: "A. Khuyên Nam gửi riêng đoạn video đó vào nhóm chat của khối để các bạn khác cùng bàn tán.", c: false }, 
+                    { t: "B. Cổ vũ Nam đăng ngay lên mạng xã hội kèm theo những lời bình luận châm chọc hai bạn kia.", c: false }, 
+                    { t: "C. Ngăn cản không cho Nam đăng video lên mạng, đồng thời khuyên bạn xóa video và báo với giáo viên để giải quyết.", c: true }, 
+                    { t: "D. Xin Nam đoạn video đó để tự mình đăng lên tài khoản cá nhân trước.", c: false } 
+                ] 
+            },
+            { 
+                q: "Câu 9: Tình huống: Khi tham gia thảo luận về một chủ đề học tập trên diễn đàn trực tuyến của trường, em đọc được một bài viết có quan điểm trái ngược hoàn toàn với suy nghĩ của mình. Em nên ứng xử như thế nào?", 
+                a: [ 
+                    { t: "A. Bình luận công kích cá nhân, dùng từ ngữ gay gắt để phủ nhận hoàn toàn ý kiến của bạn.", c: false }, 
+                    { t: "B. Đọc kĩ bài viết để hiểu góc nhìn của bạn, sau đó bình tĩnh đưa ra lí do và phản biện một cách lịch sự, tôn trọng.", c: true }, 
+                    { t: "C. Chụp màn hình bài viết của bạn gửi cho người khác để cùng chế giễu và chê bai.", c: false }, 
+                    { t: "D. Lập nhiều tài khoản ảo vào báo cáo xấu (report) và spam bình luận khiêu khích dưới bài viết đó.", c: false } 
+                ] 
+            },
+            { 
+                q: "Câu 10: Tình huống: Bạn Lan nhắn tin riêng (qua ứng dụng nhắn tin) tâm sự với em về một chuyện buồn trong gia đình và nhờ em giữ kín. Để thể hiện tính nhân văn trong không gian mạng, em cần làm gì?", 
+                a: [ 
+                    { t: "A. Chụp lại màn hình đoạn tin nhắn và gửi cho một vài người bạn thân khác trong lớp cùng xem.", c: false }, 
+                    { t: "B. Đăng một bài viết ẩn ý kể lại câu chuyện của Lan lên mạng xã hội để mọi người vào đoán xem đó là ai.", c: false }, 
+                    { t: "C. Lắng nghe, gửi lời động viên an ủi chân thành và tuyệt đối không chia sẻ nội dung cuộc trò chuyện cho bên thứ ba.", c: true }, 
+                    { t: "D. Bỏ qua tin nhắn không trả lời và đem chuyện đó kể trực tiếp cho các bạn ở lớp vào ngày hôm sau.", c: false } 
+                ] 
+            }
+        ];
+
+        let currentIdx = 0; 
+        let score = 0; 
+        let playerName = ""; 
+        let playerClass = "";
+        let startTime = 0;
+        let userAnswers = [];
+        
+        // Dữ liệu bảng xếp hạng toàn bộ học sinh
+        let allPlayersRanked = []; // Chứa toàn bộ 100% học sinh đã được gắn số thứ tự rank
+        let filteredPlayers = [];  // Chứa danh sách sau khi tìm kiếm/lọc
+        let currentPage = 1;
+        let pageSize = 50;
+
+        let currentPos = 5;
+        let sessionID = "user_" + Date.now() + "_" + Math.floor(Math.random() * 100000); 
+
+        const char = document.getElementById('character'); 
+        const qText = document.getElementById('question-text');
+        const optArea = document.getElementById('options-area'); 
+        const scoreDisplay = document.getElementById('score');
+        const nextBtn = document.getElementById('next-btn');
+
+        function formatDuration(sec) {
+            if (!sec || sec < 0) return "0s";
+            const m = Math.floor(sec / 60);
+            const s = sec % 60;
+            return m > 0 ? `${m}p ${s}s` : `${s}s`;
+        }
+
+        // Lưu điểm lên Firebase Realtime Database
+        async function saveScoreToFirebase(playerData) {
+            try {
+                const playerRef = ref(db, `${LEADERBOARD_PATH}/${playerData.id}`);
+                await set(playerRef, playerData);
+                if (typeof gtag === 'function') {
+                    gtag('event', 'finish_quiz', {
+                        'event_category': 'Quiz_Bai6',
+                        'event_label': `${playerData.className} - ${playerData.name}`,
+                        'value': playerData.score
+                    });
+                }
+            } catch (err) {
+                console.error("Lỗi lưu điểm Firebase:", err);
+            }
+        }
+
+        // Lắng nghe và Xếp hạng TOÀN BỘ 100% học sinh theo thời gian thực
+        function listenRealtimeLeaderboard() {
+            const lbRef = ref(db, LEADERBOARD_PATH);
+            onValue(lbRef, (snapshot) => {
+                const data = snapshot.val();
+                let list = [];
+                if (data) {
+                    list = Object.values(data);
+                    // Sắp xếp toàn bộ học sinh: Điểm cao -> Thời gian nhanh -> Nộp sớm
+                    list.sort((a, b) => {
+                        if (b.score !== a.score) return b.score - a.score;
+                        if ((a.duration || 999999) !== (b.duration || 999999)) return (a.duration || 999999) - (b.duration || 999999);
+                        return (a.timestamp || 0) - (b.timestamp || 0);
+                    });
+
+                    // Gắn thứ hạng chính xác (từ 1 đến N, kể cả 100.000 học sinh)
+                    list.forEach((item, index) => {
+                        item.rank = index + 1;
+                    });
+                }
+
+                allPlayersRanked = list;
+                document.getElementById('total-players-count').innerText = allPlayersRanked.length.toLocaleString('vi-VN');
+
+                // Cập nhật thứ hạng của người chơi hiện tại trên Banner
+                const myRecord = allPlayersRanked.find(p => p.id === sessionID);
+                if (myRecord) {
+                    document.getElementById('my-rank-badge').innerText = `#${myRecord.rank.toLocaleString('vi-VN')} / ${allPlayersRanked.length.toLocaleString('vi-VN')}`;
+                }
+
+                applySearchAndRender(false);
+            });
+        }
+
+        function applySearchAndRender(resetPage = true) {
+            const keyword = document.getElementById('search-input').value.trim().toLowerCase();
+            if (keyword === "") {
+                filteredPlayers = allPlayersRanked;
+            } else {
+                filteredPlayers = allPlayersRanked.filter(p => 
+                    (p.name && p.name.toLowerCase().includes(keyword)) ||
+                    (p.className && p.className.toLowerCase().includes(keyword)) ||
+                    (String(p.rank) === keyword)
+                );
+            }
+
+            if (resetPage) currentPage = 1;
+            renderCurrentPage();
+        }
+
+        function renderCurrentPage() {
+            const listDiv = document.getElementById('final-leaderboard-list');
+            listDiv.innerHTML = '';
+
+            const total = filteredPlayers.length;
+            const totalPages = Math.max(1, Math.ceil(total / pageSize));
+            if (currentPage > totalPages) currentPage = totalPages;
+            if (currentPage < 1) currentPage = 1;
+
+            const startIdx = (currentPage - 1) * pageSize;
+            const endIdx = Math.min(startIdx + pageSize, total);
+            const pageItems = filteredPlayers.slice(startIdx, endIdx);
+
+            // Cập nhật thông tin phân trang
+            document.getElementById('showing-range').innerText = total > 0 ? `${(startIdx + 1).toLocaleString('vi-VN')} - ${endIdx.toLocaleString('vi-VN')}` : "0 - 0";
+            document.getElementById('showing-total').innerText = total.toLocaleString('vi-VN');
+            document.getElementById('current-page-display').innerText = currentPage.toLocaleString('vi-VN');
+            document.getElementById('total-pages-display').innerText = totalPages.toLocaleString('vi-VN');
+
+            document.getElementById('first-page-btn').disabled = (currentPage === 1);
+            document.getElementById('prev-page-btn').disabled = (currentPage === 1);
+            document.getElementById('next-page-btn').disabled = (currentPage === totalPages);
+            document.getElementById('last-page-btn').disabled = (currentPage === totalPages);
+
+            if (pageItems.length === 0) {
+                listDiv.innerHTML = `
+                    <tr>
+                        <td colspan="8" style="padding: 45px; color: #64748b; font-weight: bold; font-size: 1.1em;">
+                            Chưa có dữ liệu nộp bài phù hợp 📭
+                        </td>
+                    </tr>`;
+                return;
+            }
+
+            const fragment = document.createDocumentFragment();
+
+            pageItems.forEach((p) => {
+                const tr = document.createElement('tr');
+                tr.id = `row_${p.id}`;
+                if (p.id === sessionID) tr.classList.add('me-row');
+
+                let rankDisplay = p.rank.toLocaleString('vi-VN');
+                if (p.rank === 1) rankDisplay = '🥇 1';
+                else if (p.rank === 2) rankDisplay = '🥈 2';
+                else if (p.rank === 3) rankDisplay = '🥉 3';
+
+                tr.innerHTML = `
+                    <td style="font-weight: bold;">${rankDisplay}</td>
+                    <td><span class="badge-class">${p.className || '---'}</span></td>
+                    <td style="text-align: left; font-weight: bold; color: #1e293b;">${p.name}</td>
+                    <td>${p.quizName || QUIZ_TITLE}</td>
+                    <td><span class="badge-score">${p.score}</span></td>
+                    <td style="font-size: 0.9em; color: #64748b;">${p.dateTime || p.date || ''}</td>
+                    <td style="font-weight: bold; color: #0f766e;">${formatDuration(p.duration)}</td>
+                    <td><button class="btn-detail" data-id="${p.id}">Xem</button></td>
+                `;
+                fragment.appendChild(tr);
+            });
+
+            listDiv.appendChild(fragment);
+
+            // Gắn sự kiện nút Xem chi tiết
+            listDiv.querySelectorAll('.btn-detail').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const id = btn.getAttribute('data-id');
+                    showPlayerDetail(id);
+                });
+            });
+        }
+
+        // Nhảy đến đúng trang và vị trí của học sinh vừa làm bài
+        function jumpToMyRank() {
+            document.getElementById('search-input').value = '';
+            filteredPlayers = allPlayersRanked;
+            const myIndex = filteredPlayers.findIndex(p => p.id === sessionID);
+            if (myIndex === -1) {
+                alert("Chưa tìm thấy lượt nộp bài của bạn trên bảng xếp hạng!");
+                return;
+            }
+            currentPage = Math.floor(myIndex / pageSize) + 1;
+            renderCurrentPage();
+
+            setTimeout(() => {
+                const myRow = document.getElementById(`row_${sessionID}`);
+                if (myRow) {
+                    myRow.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            }, 100);
+        }
+
+        function showPlayerDetail(playerId) {
+            const player = allPlayersRanked.find(p => p.id === playerId);
+            if (!player) return;
+
+            document.getElementById('detail-modal-title').innerText = `Hạng #${player.rank}: ${player.name} (${player.className}) - ${player.score} điểm`;
+            const body = document.getElementById('detail-modal-body');
+            body.innerHTML = '';
+
+            const details = player.details || [];
+            if (details.length === 0) {
+                body.innerHTML = '<p style="text-align:center; color:#64748b;">Không có dữ liệu chi tiết cho lượt chơi này.</p>';
+            } else {
+                details.forEach((d) => {
+                    const div = document.createElement('div');
+                    div.className = `detail-item ${d.isCorrect ? 'correct' : 'wrong'}`;
+                    div.innerHTML = `
+                        <div style="font-weight:bold; color:#1e293b; margin-bottom:6px;">${d.q}</div>
+                        <div style="font-size:0.95em;">
+                            👉 Đã chọn: <strong style="color:${d.isCorrect ? '#16a34a' : '#dc2626'}">${d.chosen}</strong> 
+                            ${d.isCorrect ? '✅' : `<br>✔️ Đáp án đúng: <strong style="color:#16a34a">${d.correctAns}</strong>`}
+                        </div>
+                    `;
+                    body.appendChild(div);
+                });
+            }
+            document.getElementById('detail-modal').style.display = 'flex';
+        }
+
+        listenRealtimeLeaderboard();
+
+        async function enterGame() {
+            const inputName = document.getElementById('player-name-input').value.trim();
+            const inputClass = document.getElementById('player-class-input').value.trim().toUpperCase();
+            
+            if (inputName === "") { alert("Vui lòng nhập Họ và tên của bạn!"); return; }
+            if (inputClass === "") { alert("Vui lòng nhập Lớp của bạn (Ví dụ: 12A1)!"); return; }
+            
+            if (audioCtx.state === 'suspended') { await audioCtx.resume(); }
+
+            playerName = inputName;
+            playerClass = inputClass;
+            startTime = Date.now();
+            userAnswers = [];
+
+            document.getElementById('display-name').innerText = playerName;
+            document.getElementById('display-class').innerText = playerClass;
+            document.getElementById('login-screen').style.display = 'none';
+            document.getElementById('game-wrapper').style.display = 'flex';
+            document.getElementById('game-wrapper').classList.add('active');
+            loadQuestion();
+        }
+
+        function createFireworks(x, y) {
+            for (let i = 0; i < 20; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                document.body.appendChild(particle);
+                const colors = ['#e74c3c', '#f1c40f', '#2ecc71', '#3498db', 'gold'];
+                particle.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                particle.style.left = x + 'px'; particle.style.top = y + 'px';
+                const angle = Math.random() * Math.PI * 2;
+                const velocity = 80 + Math.random() * 100;
+                particle.style.setProperty('--tx', `${Math.cos(angle) * velocity}px`);
+                particle.style.setProperty('--ty', `${Math.sin(angle) * velocity}px`);
+                setTimeout(() => particle.remove(), 800);
+            }
+        }
+        
+        function playSound(type) {
+            if (audioCtx.state === 'suspended') { audioCtx.resume(); }
+            const osc = audioCtx.createOscillator(); 
+            const gain = audioCtx.createGain();
+            osc.connect(gain); gain.connect(audioCtx.destination);
+            if (type === 'correct') {
+                osc.type = 'sine'; osc.frequency.setValueAtTime(600, audioCtx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(1200, audioCtx.currentTime + 0.1);
+                gain.gain.setValueAtTime(0.3, audioCtx.currentTime); gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.5);
+                osc.start(); osc.stop(audioCtx.currentTime + 0.5);
+            } else {
+                osc.type = 'sawtooth'; osc.frequency.setValueAtTime(150, audioCtx.currentTime);
+                osc.frequency.linearRampToValueAtTime(100, audioCtx.currentTime + 0.3);
+                gain.gain.setValueAtTime(0.3, audioCtx.currentTime); gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+                osc.start(); osc.stop(audioCtx.currentTime + 0.3);
+            }
+        }
+
+        function loadQuestion() {
+            if (currentIdx >= questions.length) { finishGame(); return; }
+            const q = questions[currentIdx];
+            qText.innerHTML = q.q;
+            optArea.innerHTML = '';
+            nextBtn.style.display = 'none';
+
+            q.a.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.className = 'btn';
+                btn.innerHTML = opt.t;
+                btn.onclick = () => checkAnswer(idx);
+                optArea.appendChild(btn);
+            });
+        }
+
+        async function checkAnswer(selected) {
+            const q = questions[currentIdx];
+            const allBtns = optArea.querySelectorAll('.btn');
+            const btnClicked = allBtns[selected];
+            allBtns.forEach(b => b.disabled = true);
+
+            const isCorrect = q.a[selected].c;
+            const correctOption = q.a.find(item => item.c);
+
+            userAnswers.push({
+                q: q.q,
+                chosen: q.a[selected].t,
+                correctAns: correctOption ? correctOption.t : "",
+                isCorrect: isCorrect
+            });
+
+            if (isCorrect) {
+                playSound('correct');
+                btnClicked.style.backgroundColor = "#2ecc71"; 
+                btnClicked.style.borderColor = "#27ae60";
+                btnClicked.style.color = "white";
+                score += 10;
+                
+                if(score === 100) {
+                     char.innerHTML = '🤴<div class="crown-overlay">👑</div>';
+                }
+                
+                char.classList.remove('running'); char.classList.add('jump-anim-smooth');
+                setTimeout(() => { char.classList.remove('jump-anim-smooth'); char.classList.add('running'); }, 800);
+                currentPos += 8.3; char.style.left = currentPos + "%";
+                createFireworks(window.innerWidth / 2, 150);
+            } else {
+                playSound('wrong');
+                btnClicked.style.backgroundColor = "#e74c3c"; 
+                btnClicked.style.borderColor = "#c0392b";
+                btnClicked.style.color = "white";
+                char.classList.remove('running'); char.classList.add('wrong-anim'); char.innerText = "😵";
+                setTimeout(() => { char.classList.remove('wrong-anim'); char.classList.add('running'); char.innerText = "🏃"; }, 500);
+                q.a.forEach((opt, idx) => { 
+                    if(opt.c) { 
+                        allBtns[idx].style.backgroundColor = "#2ecc71"; 
+                        allBtns[idx].style.borderColor = "#27ae60";
+                        allBtns[idx].style.color = "white"; 
+                    } 
+                });
+            }
+
+            scoreDisplay.textContent = score;
+            nextBtn.style.display = "block";
+            nextBtn.innerText = (currentIdx === questions.length - 1) ? "XEM BẢNG XẾP HẠNG" : "CÂU TIẾP THEO";
+        }
+
+        function handleNextQuestion() { 
+            if (currentIdx === questions.length - 1) { finishGame(); } 
+            else { currentIdx++; loadQuestion(); }
+        }
+
+        async function finishGame() {
+            const durationSec = Math.max(1, Math.round((Date.now() - startTime) / 1000));
+            const now = new Date();
+            const dateTimeStr = now.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit', second: '2-digit' }) + ' ' + now.toLocaleDateString('vi-VN');
+
+            const resultData = { 
+                id: sessionID, 
+                name: playerName, 
+                className: playerClass,
+                quizName: QUIZ_TITLE,
+                score: score, 
+                dateTime: dateTimeStr,
+                duration: durationSec,
+                details: userAnswers,
+                timestamp: Date.now()
+            };
+            
+            document.getElementById('end-screen').style.display = 'flex';
+            document.getElementById('final-score').innerText = score;
+            document.getElementById('end-player-info').innerText = `${playerName} (${playerClass})`;
+            document.getElementById('end-time-spent').innerText = formatDuration(durationSec);
+            
+            if(score === 100) { 
+                char.style.left = "88%"; 
+                char.innerHTML = '🤴<div class="crown-overlay">👑</div>';
+                char.classList.add('jump-anim-smooth'); 
+            } else if (score >= 80) {
+                 char.style.left = "88%"; 
+                 char.innerHTML = "🤴"; 
+                 char.classList.add('jump-anim-smooth');
+            }
+
+            createFireworks(window.innerWidth/2, window.innerHeight/2);
+
+            // Lưu lên Firebase và tự động nhảy đến trang có tên của học sinh
+            await saveScoreToFirebase(resultData);
+            setTimeout(() => jumpToMyRank(), 300);
+        }
+
+        function replayGame() {
+            score = 0; currentIdx = 0; currentPos = 5; scoreDisplay.innerText = 0;
+            char.style.left = "5%"; 
+            char.innerHTML = "🏃"; 
+            char.classList.remove('jump-anim-smooth', 'wrong-anim'); char.classList.add('running');
+            document.getElementById('end-screen').style.display = 'none';
+            sessionID = "user_" + Date.now() + "_" + Math.floor(Math.random() * 100000);
+            document.getElementById('login-screen').style.display = 'flex';
+            document.getElementById('game-wrapper').style.display = 'none';
+        }
+
+        // Gắn sự kiện cho các nút điều khiển & phân trang
+        document.getElementById('start-btn').addEventListener('click', enterGame);
+        document.getElementById('next-btn').addEventListener('click', handleNextQuestion);
+        document.getElementById('replay-btn').addEventListener('click', replayGame);
+        document.getElementById('find-me-btn').addEventListener('click', jumpToMyRank);
+        document.getElementById('search-input').addEventListener('input', () => applySearchAndRender(true));
+
+        document.getElementById('page-size-select').addEventListener('change', (e) => {
+            pageSize = parseInt(e.target.value, 10);
+            currentPage = 1;
+            renderCurrentPage();
+        });
+
+        document.getElementById('first-page-btn').addEventListener('click', () => { currentPage = 1; renderCurrentPage(); });
+        document.getElementById('prev-page-btn').addEventListener('click', () => { if (currentPage > 1) { currentPage--; renderCurrentPage(); } });
+        document.getElementById('next-page-btn').addEventListener('click', () => { 
+            const totalPages = Math.ceil(filteredPlayers.length / pageSize);
+            if (currentPage < totalPages) { currentPage++; renderCurrentPage(); } 
+        });
+        document.getElementById('last-page-btn').addEventListener('click', () => { 
+            currentPage = Math.max(1, Math.ceil(filteredPlayers.length / pageSize)); 
+            renderCurrentPage(); 
+        });
+
+        document.getElementById('close-detail-btn').addEventListener('click', () => {
+            document.getElementById('detail-modal').style.display = 'none';
+        });
+    </script>
+ </body>
+</html>
