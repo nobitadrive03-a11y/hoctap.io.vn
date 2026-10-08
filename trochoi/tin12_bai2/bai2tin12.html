@@ -1,1 +1,1546 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Vòng Quay May Mắn - Bài 2 Tin học 12</title>
 
+    <!-- Google tag (gtag.js) - Google Analytics Measurement -->
+    <!-- 1. MÃ GA4 GỐC (Kết nối với Google Analytics) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-NSJCVSL9RM"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-NSJCVSL9RM'); 
+  </script>
+
+  <!-- 2. MÃ NHỊP TIM 30 GIÂY -->
+  <script>
+    setInterval(function() {
+      if (!document.hidden) { 
+        gtag('event', 'keep_alive', {
+          'event_category': 'Engagement',
+          'event_label': 'Học sinh đang làm ...',
+          'non_interaction': false
+        });
+      }
+    }, 30000); 
+  </script>
+
+    <!-- Confetti hiệu ứng pháo hoa -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <!-- Firebase SDK (Compat) -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+
+    <style>
+        :root {
+            --primary-color: #1e3a8a;
+            --secondary-color: #facc15;
+            --text-color: #ffffff;
+            --rank-1: #FFD700;
+            --rank-2: #C0C0C0;
+            --rank-3: #CD7F32;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            -webkit-text-size-adjust: 100%;
+        }
+
+        body {
+            background: radial-gradient(circle at 35% 25%, #1d4ed8 0%, #0f172a 65%, #020617 100%);
+            color: var(--text-color);
+            overflow: hidden;
+            height: 100dvh;
+            width: 100vw;
+            user-select: none;
+            display: flex;
+            touch-action: manipulation;
+        }
+
+        @keyframes popIn {
+            0% { opacity: 0; transform: scale(0.94) translateY(8px); }
+            100% { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        /* --- 1. MÀN HÌNH ĐĂNG NHẬP SANG TRỌNG, CUỐN HÚT HỌC SINH --- */
+        #login-screen {
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(circle at center, rgba(30, 64, 175, 0.88) 0%, rgba(15, 23, 42, 0.96) 100%);
+            backdrop-filter: blur(8px);
+            z-index: 2000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 16px;
+            transition: opacity 0.35s ease;
+        }
+        .login-card {
+            background: #ffffff;
+            width: 100%;
+            max-width: 440px;
+            border-radius: 28px;
+            overflow: hidden;
+            border: 4px solid #facc15;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.65);
+            animation: popIn 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+            color: #1e293b;
+        }
+        .login-header {
+            background: linear-gradient(135deg, #1e40af 0%, #2563eb 55%, #0284c7 100%);
+            padding: 22px 20px;
+            text-align: center;
+            color: #ffffff;
+            border-bottom: 3px solid #facc15;
+        }
+        .login-icon-badge {
+            width: 60px;
+            height: 60px;
+            border-radius: 18px;
+            background: rgba(255, 255, 255, 0.18);
+            border: 2px solid #fde047;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            margin-bottom: 6px;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+        }
+        .login-header h2 {
+            font-size: 1.6rem;
+            font-weight: 900;
+            letter-spacing: 0.5px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
+        }
+        .login-header p {
+            color: #fde047;
+            font-size: 0.85rem;
+            font-weight: 700;
+            margin-top: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .login-body {
+            padding: 22px 24px 24px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+        .form-group label {
+            display: block;
+            font-size: 0.92rem;
+            font-weight: 700;
+            color: #1e3a8a;
+            margin-bottom: 6px;
+        }
+        .login-input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #cbd5e1;
+            border-radius: 14px;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #1e293b;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            user-select: text;
+        }
+        .login-input:focus {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+        }
+        .login-error {
+            color: #dc2626;
+            font-weight: 700;
+            font-size: 0.88rem;
+            text-align: center;
+            margin-bottom: 12px;
+            display: none;
+        }
+        .start-btn {
+            width: 100%;
+            padding: 14px 24px;
+            font-size: 1.1rem;
+            background: linear-gradient(135deg, #ef4444 0%, #ea580c 100%);
+            border: none;
+            border-radius: 14px;
+            color: #ffffff;
+            font-weight: 900;
+            cursor: pointer;
+            box-shadow: 0 6px 18px rgba(239, 68, 68, 0.4);
+            transition: transform 0.15s ease;
+        }
+        .start-btn:hover { transform: translateY(-2px); }
+        .start-btn:active { transform: scale(0.98); }
+        .login-footer-note {
+            margin-top: 14px;
+            font-size: 0.82rem;
+            color: #64748b;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        /* --- 2. LAYOUT CHÍNH & VÒNG QUAY --- */
+        #main-area {
+            flex: 1;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            height: 100dvh;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .top-right-actions {
+            position: absolute;
+            top: 14px;
+            right: 16px;
+            display: flex;
+            gap: 8px;
+            z-index: 60;
+        }
+        .exit-btn {
+            background: linear-gradient(135deg, #ef4444, #b91c1c);
+            color: #fff;
+            padding: 8px 16px;
+            border-radius: 999px;
+            cursor: pointer;
+            font-size: 0.88rem;
+            font-weight: 800;
+            border: 2px solid #fca5a5;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.35);
+            transition: transform 0.15s ease;
+        }
+        .exit-btn:hover { transform: translateY(-2px); }
+        .exit-btn:active { transform: scale(0.96); }
+
+        .mobile-bxh-btn {
+            display: none;
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: #fff;
+            padding: 8px 14px;
+            border-radius: 999px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 800;
+            border: 2px solid #fde047;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.35);
+        }
+
+        #game-container {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            padding: 16px 12px 20px;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+        h1.game-title {
+            text-align: center;
+            text-shadow: 0 3px 12px rgba(0, 229, 255, 0.45);
+            color: var(--secondary-color);
+            margin-top: 6px;
+            margin-bottom: 4px;
+            font-size: 2rem;
+            font-weight: 900;
+            letter-spacing: 1px;
+        }
+        .game-subtitle {
+            color: #bae6fd;
+            font-weight: 700;
+            font-size: 0.96rem;
+            margin-bottom: 14px;
+            text-align: center;
+        }
+        .status-bar {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 16px;
+            margin-bottom: 22px;
+            font-size: 1.05rem;
+            background: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(8px);
+            padding: 10px 24px;
+            border-radius: 999px;
+            border: 1.5px solid rgba(255, 255, 255, 0.25);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+        }
+        .highlight { color: var(--secondary-color); font-weight: 900; }
+
+        /* --- VÒNG QUAY CHUẨN TÂM TUYỆT ĐỐI CHO CÁC CON SỐ 1 -> 10 --- */
+        .wheel-container {
+            position: relative;
+            width: 350px;
+            height: 350px;
+            margin: 6px auto 0;
+        }
+        .pointer {
+            position: absolute;
+            top: -22px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 18px solid transparent;
+            border-right: 18px solid transparent;
+            border-top: 42px solid #ff1744;
+            z-index: 15;
+            filter: drop-shadow(0 4px 4px rgba(0,0,0,0.65));
+        }
+        .wheel {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 8px solid #ffffff;
+            position: relative;
+            overflow: hidden;
+            transition: transform 1.15s cubic-bezier(0.22, 1, 0.36, 1);
+            box-shadow: 0 0 35px rgba(56, 189, 248, 0.55), inset 0 0 18px rgba(0,0,0,0.25);
+            cursor: pointer;
+            will-change: transform;
+        }
+        .wheel-inner {
+            width: 100%;
+            height: 100%;
+            background: conic-gradient(
+                #ef4444 0deg 36deg,
+                #ec4899 36deg 72deg,
+                #a855f7 72deg 108deg,
+                #6366f1 108deg 144deg,
+                #3b82f6 144deg 180deg,
+                #0ea5e9 180deg 216deg,
+                #06b6d4 216deg 252deg,
+                #10b981 252deg 288deg,
+                #84cc16 288deg 324deg,
+                #eab308 324deg 360deg
+            );
+            border-radius: 50%;
+        }
+
+        .wheel-divider {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            width: 2px;
+            height: 50%;
+            background: rgba(255, 255, 255, 0.45);
+            transform-origin: bottom center;
+            margin-left: -1px;
+            pointer-events: none;
+        }
+
+        .number {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 40px;
+            height: 40px;
+            margin-left: -20px;
+            margin-top: -20px;
+            transform-origin: center center;
+            font-weight: 900;
+            font-size: 21px;
+            color: #ffffff;
+            background: rgba(15, 23, 42, 0.28);
+            border: 2px solid rgba(255, 255, 255, 0.75);
+            border-radius: 50%;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            pointer-events: none;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+        }
+        .number.used {
+            background: rgba(15, 23, 42, 0.65);
+            border-color: rgba(255,255,255,0.25);
+            color: rgba(255, 255, 255, 0.35);
+        }
+        .number.used::after {
+            content: "✔";
+            position: absolute;
+            color: #4ade80;
+            font-size: 22px;
+            font-weight: 900;
+            text-shadow: 0 1px 3px #000;
+        }
+
+        .center-circle {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 78px;
+            height: 78px;
+            background: radial-gradient(circle, #ffffff 0%, #fef08a 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            color: #1e3a8a;
+            box-shadow: 0 0 20px rgba(0,0,0,0.6);
+            z-index: 10;
+            cursor: pointer;
+            border: 5px solid #1e3a8a;
+            text-align: center;
+            font-size: 1rem;
+            letter-spacing: 0.5px;
+            transition: transform 0.15s ease;
+        }
+        .center-circle:hover {
+            transform: translate(-50%, -50%) scale(1.06);
+        }
+
+        /* --- 3. SIDEBAR BẢNG XẾP HẠNG TRỰC TUYẾN --- */
+        #sidebar-leaderboard {
+            width: 340px;
+            background: rgba(15, 23, 42, 0.82);
+            border-left: 3px solid var(--secondary-color);
+            padding: 18px;
+            box-sizing: border-box;
+            display: none;
+            flex-direction: column;
+            height: 100dvh;
+            backdrop-filter: blur(12px);
+            z-index: 50;
+        }
+        .lb-header { flex-shrink: 0; margin-bottom: 10px; position: relative; }
+        .lb-close-mobile {
+            display: none;
+            position: absolute;
+            top: -4px;
+            right: 0;
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .lb-title {
+            color: var(--secondary-color);
+            text-align: center;
+            font-size: 1.4rem;
+            margin-bottom: 4px;
+            text-shadow: 0 0 8px rgba(250, 204, 21, 0.4);
+            font-weight: 900;
+            border-bottom: 2px solid rgba(255,255,255,0.2);
+            padding-bottom: 10px;
+        }
+        .lb-status {
+            text-align: center;
+            font-size: 0.78rem;
+            color: #4ade80;
+            font-weight: 700;
+            margin-top: 6px;
+        }
+        #sidebar-list { flex-grow: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; padding-right: 4px; }
+        #sidebar-list::-webkit-scrollbar { width: 6px; }
+        #sidebar-list::-webkit-scrollbar-track { background: rgba(255,255,255,0.08); border-radius: 4px; }
+        #sidebar-list::-webkit-scrollbar-thumb { background: var(--secondary-color); border-radius: 4px; }
+
+        .lb-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.1);
+            margin-bottom: 7px;
+            padding: 9px 12px;
+            border-radius: 12px;
+            transition: transform 0.2s;
+            font-size: 0.92rem;
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+        .lb-item.current-user-highlight {
+            background: rgba(37, 99, 235, 0.45);
+            border: 1.5px solid #facc15;
+        }
+        .lb-rank {
+            font-weight: 900;
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            margin-right: 10px;
+            color: #000;
+            font-size: 0.88rem;
+            flex-shrink: 0;
+        }
+        .rank-1 .lb-rank { background: var(--rank-1); box-shadow: 0 0 10px var(--rank-1); }
+        .rank-2 .lb-rank { background: var(--rank-2); }
+        .rank-3 .lb-rank { background: var(--rank-3); }
+        .rank-other .lb-rank { background: #e2e8f0; color: #1e293b; font-size: 0.8rem; }
+        .lb-name { flex: 1; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-align: left; }
+        .lb-score { font-weight: 900; color: #4ade80; margin-left: 10px; min-width: 35px; text-align: right; }
+
+        /* --- 4. MODAL HIỂN THỊ CÂU HỎI SÀNH ĐIỆU & VỪA KHÍT MÀN HÌNH --- */
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(10, 18, 36, 0.82);
+            backdrop-filter: blur(6px);
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            padding: 12px;
+        }
+        .quiz-modal-card {
+            background: #ffffff;
+            color: #1e293b;
+            border-radius: 24px;
+            width: 100%;
+            max-width: 720px;
+            max-height: 94dvh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.65), 0 0 0 3px rgba(250, 204, 21, 0.7);
+            animation: popIn 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .quiz-modal-header {
+            background: linear-gradient(135deg, #1e40af 0%, #2563eb 55%, #0284c7 100%);
+            padding: 10px 18px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            color: #ffffff;
+            border-bottom: 3px solid #facc15;
+            flex-shrink: 0;
+        }
+        .quiz-header-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .quiz-badge-num {
+            width: 38px;
+            height: 38px;
+            border-radius: 11px;
+            background: #facc15;
+            color: #1e3a8a;
+            font-weight: 900;
+            font-size: 1.15rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.25);
+            flex-shrink: 0;
+        }
+        .quiz-header-info-sub {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #bae6fd;
+            font-weight: 700;
+        }
+        .quiz-header-info-title {
+            font-size: 0.95rem;
+            font-weight: 800;
+            color: #ffffff;
+        }
+        .quiz-points-pill {
+            background: rgba(255, 255, 255, 0.18);
+            border: 1px solid rgba(253, 224, 71, 0.65);
+            color: #fde047;
+            padding: 4px 12px;
+            border-radius: 999px;
+            font-size: 0.82rem;
+            font-weight: 800;
+            white-space: nowrap;
+        }
+
+        .quiz-modal-body {
+            padding: 14px 20px 16px;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        /* Hộp câu hỏi chữ màu ĐỎ nổi bật */
+        .question-box {
+            background: #fff1f2;
+            border: 2px solid #fecdd3;
+            border-radius: 15px;
+            padding: 12px 16px;
+            margin-bottom: 12px;
+            box-shadow: inset 0 2px 6px rgba(225, 29, 72, 0.04);
+        }
+        .question-text {
+            font-size: 1.18rem;
+            margin: 0;
+            font-weight: 800;
+            color: #dc2626;
+            line-height: 1.42;
+            text-align: center;
+        }
+
+        /* Danh sách lựa chọn A, B, C, D cỡ chữ lớn, dễ nhìn */
+        .options-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 9px;
+        }
+        .option-btn {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            width: 100%;
+            padding: 11px 15px;
+            border: 2px solid #cbd5e1;
+            border-radius: 14px;
+            background: #f8fafc;
+            color: #1e3a8a;
+            cursor: pointer;
+            font-size: 1.14rem;
+            font-weight: 700;
+            text-align: left;
+            line-height: 1.38;
+            transition: transform 0.15s ease, background-color 0.15s ease, border-color 0.15s ease;
+            touch-action: manipulation;
+        }
+        .option-btn:hover:not(:disabled) {
+            background: #dbeafe;
+            border-color: #2563eb;
+            transform: translateY(-1px);
+            box-shadow: 0 5px 12px rgba(37, 99, 235, 0.15);
+        }
+        .option-btn:active:not(:disabled) {
+            transform: scale(0.985);
+        }
+        .option-btn:hover:not(:disabled) .option-letter-badge {
+            background: #2563eb;
+            color: #ffffff;
+            border-color: #2563eb;
+        }
+        .option-letter-badge {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: #dbeafe;
+            border: 2px solid #93c5fd;
+            color: #1d4ed8;
+            font-weight: 900;
+            font-size: 1.05rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: all 0.15s ease;
+        }
+
+        /* KHI BẤM ĐÁP ÁN ĐÚNG -> CHUYỂN MÀU XANH BLUE RỰC RỠ */
+        .option-btn.correct {
+            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%) !important;
+            color: #ffffff !important;
+            border-color: #1e40af !important;
+            box-shadow: 0 5px 16px rgba(37, 99, 235, 0.35) !important;
+        }
+        .option-btn.correct .option-letter-badge {
+            background: #ffffff !important;
+            color: #1d4ed8 !important;
+            border-color: #ffffff !important;
+        }
+
+        /* KHI BẤM ĐÁP ÁN SAI -> MÀU ĐỎ */
+        .option-btn.wrong {
+            background: #ef4444 !important;
+            color: #ffffff !important;
+            border-color: #b91c1c !important;
+        }
+        .option-btn.wrong .option-letter-badge {
+            background: #ffffff !important;
+            color: #dc2626 !important;
+            border-color: #ffffff !important;
+        }
+
+        .feedback-msg {
+            margin-top: 10px;
+            font-size: 1.08rem;
+            font-weight: 800;
+            text-align: center;
+            min-height: 1.3em;
+            color: #dc2626;
+        }
+
+        .close-btn {
+            margin: 10px auto 0;
+            padding: 11px 34px;
+            background: linear-gradient(135deg, #2563eb, #4f46e5);
+            color: white;
+            border: none;
+            border-radius: 999px;
+            cursor: pointer;
+            font-size: 1.05rem;
+            font-weight: 800;
+            display: none;
+            box-shadow: 0 5px 15px rgba(37, 99, 235, 0.35);
+            transition: transform 0.15s ease;
+            touch-action: manipulation;
+        }
+        .close-btn:hover { transform: translateY(-2px); }
+        .close-btn:active { transform: scale(0.97); }
+
+        /* --- TỐI ƯU CỰC MƯỢT VÀ VỪA KHÍT MÀN HÌNH ĐIỆN THOẠI DI ĐỘNG --- */
+        @media (max-width: 800px) {
+            body {
+                flex-direction: column;
+                overflow-y: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+            #main-area {
+                width: 100%;
+                height: 100dvh;
+                justify-content: center;
+            }
+            .top-right-actions {
+                top: 10px;
+                right: 10px;
+                left: 10px;
+                justify-content: space-between;
+            }
+            .mobile-bxh-btn {
+                display: inline-flex;
+                align-items: center;
+                gap: 4px;
+                padding: 6px 12px;
+                font-size: 0.78rem;
+            }
+            .exit-btn {
+                padding: 6px 12px;
+                font-size: 0.78rem;
+            }
+
+            /* Sidebar BXH khi mở trên điện thoại sẽ thành popup mượt mà */
+            #sidebar-leaderboard {
+                position: fixed;
+                inset: 0;
+                width: 100%;
+                height: 100dvh;
+                z-index: 150;
+                border-left: none;
+                background: rgba(15, 23, 42, 0.96);
+                display: none;
+            }
+            .lb-close-mobile {
+                display: block;
+            }
+
+            #game-container {
+                padding: 44px 10px 12px;
+            }
+            h1.game-title {
+                font-size: 1.45rem;
+                margin-top: 4px;
+            }
+            .game-subtitle {
+                font-size: 0.8rem;
+                margin-bottom: 10px;
+            }
+            .status-bar {
+                gap: 8px 12px;
+                padding: 8px 14px;
+                font-size: 0.86rem;
+                margin-bottom: 14px;
+                border-radius: 18px;
+            }
+
+            .wheel-container {
+                width: 276px;
+                height: 276px;
+            }
+            .number {
+                width: 32px;
+                height: 32px;
+                margin-left: -16px;
+                margin-top: -16px;
+                font-size: 16px;
+            }
+            .center-circle {
+                width: 64px;
+                height: 64px;
+                font-size: 0.85rem;
+            }
+
+            /* Modal Câu hỏi vừa khít trong 1 khung màn hình điện thoại (không bị tràn) */
+            .modal {
+                padding: 8px;
+            }
+            .quiz-modal-card {
+                border-radius: 18px;
+                max-height: 95dvh;
+            }
+            .quiz-modal-header {
+                padding: 8px 12px;
+            }
+            .quiz-badge-num {
+                width: 30px;
+                height: 30px;
+                font-size: 0.98rem;
+                border-radius: 8px;
+            }
+            .quiz-header-info-sub {
+                font-size: 0.6rem;
+            }
+            .quiz-header-info-title {
+                font-size: 0.78rem;
+            }
+            .quiz-points-pill {
+                font-size: 0.72rem;
+                padding: 3px 9px;
+            }
+
+            .quiz-modal-body {
+                padding: 10px 11px 12px;
+            }
+            .question-box {
+                padding: 9px 11px;
+                margin-bottom: 9px;
+                border-radius: 12px;
+            }
+            .question-text {
+                font-size: 0.98rem;
+                line-height: 1.34;
+            }
+            .options-grid {
+                gap: 6px;
+            }
+            .option-btn {
+                font-size: 0.96rem;
+                padding: 8px 10px;
+                gap: 9px;
+                border-radius: 11px;
+                line-height: 1.32;
+            }
+            .option-letter-badge {
+                width: 30px;
+                height: 30px;
+                font-size: 0.92rem;
+                border-radius: 8px;
+            }
+            .feedback-msg {
+                margin-top: 7px;
+                font-size: 0.92rem;
+                min-height: 1.2em;
+            }
+            .close-btn {
+                margin-top: 7px;
+                padding: 9px 26px;
+                font-size: 0.95rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 1. MÀN HÌNH ĐĂNG NHẬP SANG TRỌNG, BẮT MẮT -->
+    <div id="login-screen">
+        <div class="login-card">
+            <div class="login-header">
+                <div class="login-icon-badge">🎡</div>
+                <h2>Bài 2: Trí tuệ nhân tạo trong khoa học và đời sống</h2>
+                <p>VÒNG QUAY MAY MẮN</p>
+            </div>
+            <div class="login-body">
+                <div class="form-group">
+                    <label>👤 Họ và tên học sinh</label>
+                    <input type="text" id="player-name-input" class="login-input" placeholder="Nhập họ và tên của em...">
+                </div>
+                <div class="form-group">
+                    <label>🏫 Lớp</label>
+                    <input type="text" id="player-class-input" class="login-input" placeholder="Nhập lớp của em (VD: 12A1, 12A11...)">
+                </div>
+                <div id="login-error" class="login-error">⚠️ Vui lòng nhập đầy đủ Họ tên và Lớp!</div>
+                <button class="start-btn" onclick="startGame()">🚀 BẮT ĐẦU QUAY THƯỞNG</button>
+                <div class="login-footer-note">🏆 Trang web được phát triển bởi cô Lê Huyền Sinh</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. KHU VỰC VÒNG QUAY CHÍNH -->
+    <div id="main-area">
+        <div id="game-container">
+            <div class="top-right-actions">
+                <button class="mobile-bxh-btn" onclick="toggleMobileLeaderboard(true)">🏆 Bảng Xếp Hạng</button>
+                <button class="exit-btn" onclick="returnToLogin()">Thoát trang</button>
+            </div>
+
+            <h1 class="game-title">VÒNG QUAY MAY MẮN</h1>
+            <div class="game-subtitle">Bài 2: Trí tuệ nhân tạo trong khoa học và đời sống (Tin học 12)</div>
+
+            <div class="status-bar">
+                <div>👤 Học sinh: <span id="player-display" class="highlight">...</span></div>
+                <div>🏫 Lớp: <span id="class-display" class="highlight">...</span></div>
+                <div>⭐ Điểm: <span id="score" class="highlight">0</span></div>
+                <div>🎯 Vòng: <span id="turns" class="highlight">0</span>/10</div>
+            </div>
+
+            <div class="wheel-container">
+                <div class="pointer"></div>
+                <div class="wheel" id="wheel" onclick="spinWheel()">
+                    <div class="wheel-inner"></div>
+                    <div id="dividers-container"></div>
+                    <div id="numbers-container"></div>
+                </div>
+                <div class="center-circle" onclick="spinWheel()" id="spin-btn">QUAY</div>
+            </div>
+            
+            <p id="instruction" style="margin-top:18px; color: #fde047; font-weight: 800; font-size: 1.02rem; text-align: center; padding: 0 10px;">
+                ✨ Bấm vào nút QUAY ở giữa vòng quay để mở câu hỏi
+            </p>
+        </div>
+    </div>
+
+    <!-- 3. BẢNG XẾP HẠNG TRỰC TUYẾN BÊN PHẢI -->
+    <div id="sidebar-leaderboard">
+        <div class="lb-header">
+            <button class="lb-close-mobile" onclick="toggleMobileLeaderboard(false)">&times;</button>
+            <div class="lb-title">🏆 BẢNG XẾP HẠNG</div>
+            <div class="lb-status" id="firebase-status-text">● Đồng bộ trực tuyến (Realtime Database)</div>
+        </div>
+        <div id="sidebar-list"></div>
+    </div>
+
+    <!-- 4. MODAL CÂU HỎI SÀNH ĐIỆU & VỪA KHÍT MÀN HÌNH -->
+    <div class="modal" id="questionModal">
+        <div class="quiz-modal-card">
+            <div class="quiz-modal-header">
+                <div class="quiz-header-left">
+                    <div class="quiz-badge-num" id="q-badge-num">1</div>
+                    <div style="text-align: left;">
+                        <div class="quiz-header-info-sub">Thử thách Vòng Quay</div>
+                        <div class="quiz-header-info-title">Bài 2: Trí tuệ nhân tạo trong khoa học và đời sống</div>
+                    </div>
+                </div>
+                <div class="quiz-points-pill">+10 điểm</div>
+            </div>
+
+            <div class="quiz-modal-body">
+                <div class="question-box">
+                    <p class="question-text" id="q-text">Nội dung câu hỏi...</p>
+                </div>
+                <div class="options-grid" id="options-area"></div>
+                <div id="feedback-area" class="feedback-msg"></div>
+                <div style="text-align: center;">
+                    <button class="close-btn" id="nextBtn" onclick="closeModal()">Tiếp tục quay ➔</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- 0. CẤU HÌNH FIREBASE REALTIME DATABASE ---
+        const firebaseConfig = {
+            apiKey: "AIzaSyC4ou3Fu8IxAPYV347pHKT1jtPxQe5TBM4",
+            authDomain: "hanhtrinhso-e3368.firebaseapp.com",
+            databaseURL: "https://hanhtrinhso-e3368-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "hanhtrinhso-e3368",
+            storageBucket: "hanhtrinhso-e3368.firebasestorage.app",
+            messagingSenderId: "1046142513655",
+            appId: "1:1046142513655:web:5c7bb3a47ee90ac279fef2"
+        };
+
+        const STORAGE_KEY = 'tin12_bai2_trituenhantao_scores';
+        const LEADERBOARD_REF = 'bxh_tin12_bai2_trituenhantao';
+        let database = null;
+        let realtimeLeaderboard = [];
+
+        try {
+            if (!firebase.apps.length) {
+                firebase.initializeApp(firebaseConfig);
+            }
+            database = firebase.database();
+
+            database.ref(LEADERBOARD_REF).on('value', (snapshot) => {
+                const data = snapshot.val();
+                realtimeLeaderboard = [];
+                if (data) {
+                    Object.keys(data).forEach(key => {
+                        realtimeLeaderboard.push({
+                            id: key,
+                            ...data[key]
+                        });
+                    });
+                    realtimeLeaderboard.sort((a, b) => {
+                        if (b.score !== a.score) return b.score - a.score;
+                        return (a.timestamp || 0) - (b.timestamp || 0);
+                    });
+                }
+                renderSidebarLeaderboard();
+            }, (err) => {
+                console.error("Lỗi đọc Firebase:", err);
+                const st = document.getElementById('firebase-status-text');
+                if (st) {
+                    st.textContent = "● Đang lưu cục bộ (Offline)";
+                    st.style.color = "#fb923c";
+                }
+            });
+        } catch (e) {
+            console.error("Không thể khởi tạo Firebase:", e);
+        }
+
+        // Nhịp tim Google Analytics mỗi 30 giây
+        let playerName = "";
+        let playerClass = "";
+        setInterval(() => {
+            if (typeof gtag === 'function' && playerName) {
+                gtag('event', 'study_heartbeat', {
+                    'event_category': 'Tin12_Bai2_TriTueNhanTao',
+                    'student_name': `${playerName} (${playerClass})`,
+                    'turns_completed': turnCount
+                });
+            }
+        }, 30000);
+
+        // --- HỆ THỐNG LỜI KHEN & ĐỘNG VIÊN KHÔNG LẶP ---
+        const originalCompliments = [
+            "Quá xuất sắc! Em nắm bài rất vững!",
+            "Đỉnh của chóp! Hoàn toàn chính xác!",
+            "Tuyệt vời! Chuẩn không cần chỉnh!",
+            "Hay quá! Một câu trả lời hoàn hảo!",
+            "Kiến thức uyên thâm! Rất đáng khen!",
+            "Chính xác tuyệt đối! Xuất sắc!",
+            "Siêu trí tuệ! Quá giỏi luôn!",
+            "Tuyệt cú mèo! Chúc mừng em!"
+        ];
+
+        const originalEncouragements = [
+            "Đừng buồn! Thất bại là mẹ thành công!",
+            "Cố lên! Câu tiếp theo sẽ đúng thôi!",
+            "Tiếc quá! Em hãy ghi nhớ đáp án đúng nhé!",
+            "Bình tĩnh nhé! Cơ hội ghi điểm vẫn còn!",
+            "Không sao! Hãy đọc kĩ hơn ở câu sau nhé!",
+            "Hãy tin vào bản thân! Em làm được mà!",
+            "Vạn sự khởi đầu nan, đừng nản chí nhé!",
+            "Thua keo này ta bày keo khác!"
+        ];
+
+        let availableCompliments = [...originalCompliments];
+        let availableEncouragements = [...originalEncouragements];
+
+        function getUniqueMessage(type) {
+            let arr = (type === 'correct') ? availableCompliments : availableEncouragements;
+            let orig = (type === 'correct') ? originalCompliments : originalEncouragements;
+
+            if (arr.length === 0) {
+                arr = [...orig];
+                if (type === 'correct') availableCompliments = arr;
+                else availableEncouragements = arr;
+            }
+
+            const index = Math.floor(Math.random() * arr.length);
+            const message = arr[index];
+            arr.splice(index, 1);
+            return message;
+        }
+
+        // --- LƯU VÀ LẤY ĐIỂM SỐ (FIREBASE + LOCAL STORAGE) ---
+        function saveScore(name, cls, score) {
+            const record = {
+                name: name,
+                className: cls,
+                score: score,
+                timestamp: Date.now(),
+                date: new Date().toLocaleString('vi-VN')
+            };
+
+            if (database) {
+                database.ref(LEADERBOARD_REF).push(record).catch(err => {
+                    console.error("Lỗi ghi điểm lên Firebase:", err);
+                });
+            }
+
+            let scores = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+            scores.push(record);
+            scores.sort((a, b) => b.score - a.score);
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(scores));
+
+            if (typeof gtag === 'function') {
+                gtag('event', 'quiz_complete', {
+                    'event_category': 'Tin12_Bai2_TriTueNhanTao',
+                    'student_name': `${name} - ${cls}`,
+                    'value': score
+                });
+            }
+        }
+
+        function getScores() {
+            if (realtimeLeaderboard && realtimeLeaderboard.length > 0) {
+                return realtimeLeaderboard;
+            }
+            return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+        }
+
+        function renderSidebarLeaderboard() {
+            const list = document.getElementById('sidebar-list');
+            list.innerHTML = '';
+            const scores = getScores();
+            if (scores.length === 0) {
+                list.innerHTML = '<div style="text-align:center; color:#cbd5e1; padding:20px; font-style:italic;">Chưa có lượt ghi điểm nào</div>';
+                return;
+            }
+            scores.forEach((item, index) => {
+                const rank = index + 1;
+                let rankClass = rank === 1 ? 'rank-1' : (rank === 2 ? 'rank-2' : (rank === 3 ? 'rank-3' : 'rank-other'));
+                const isMe = (playerName && item.name === playerName && (item.className || '') === playerClass);
+                const div = document.createElement('div');
+                div.className = `lb-item ${rankClass} ${isMe ? 'current-user-highlight' : ''}`;
+                const displayCls = item.className ? ` (${item.className})` : '';
+                div.innerHTML = `
+                    <div class="lb-rank">${rank}</div>
+                    <div class="lb-name" title="${item.name}${displayCls}">${item.name}${displayCls}</div>
+                    <div class="lb-score">${item.score}</div>
+                `;
+                list.appendChild(div);
+            });
+        }
+
+        function toggleMobileLeaderboard(show) {
+            const sb = document.getElementById('sidebar-leaderboard');
+            sb.style.display = show ? 'flex' : 'none';
+        }
+
+        // --- HỆ THỐNG ÂM THANH ---
+        let audioCtx;
+        function initAudio() {
+            if (!audioCtx) { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+        }
+        function playTickSound() {
+            if (!audioCtx) return;
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(180, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.07);
+            gain.gain.setValueAtTime(0.22, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.07);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.07);
+        }
+        function playCorrectSound() {
+            if (!audioCtx) return;
+            const t = audioCtx.currentTime;
+            createNote(600, t, 0.1, 'sine');
+            createNote(800, t + 0.1, 0.1, 'sine');
+            createNote(1200, t + 0.2, 0.35, 'sine');
+        }
+        function playWrongSound() {
+            if (!audioCtx) return;
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(150, audioCtx.currentTime);
+            osc.frequency.linearRampToValueAtTime(45, audioCtx.currentTime + 0.4);
+            gain.gain.setValueAtTime(0.25, audioCtx.currentTime);
+            gain.gain.linearRampToValueAtTime(0.001, audioCtx.currentTime + 0.4);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.4);
+        }
+        function createNote(freq, t, dur, type) {
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = type;
+            osc.frequency.value = freq;
+            gain.gain.setValueAtTime(0.25, t);
+            gain.gain.exponentialRampToValueAtTime(0.001, t + dur);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start(t);
+            osc.stop(t + dur);
+        }
+
+        // --- 10 CÂU HỎI BÀI 2: TRÍ TUỆ NHÂN TẠO TRONG KHOA HỌC VÀ ĐỜI SỐNG (TIN HỌC 12) ---
+        const questions = [
+            {
+                id: 1,
+                text: "Trong lĩnh vực y tế và chăm sóc sức khỏe, trí tuệ nhân tạo (AI) thường được ứng dụng trực tiếp vào công việc nào sau đây?",
+                options: [
+                    "A. Phân tích các hình ảnh y khoa như X-quang, CT, MRI để hỗ trợ bác sĩ phát hiện sớm các dấu hiệu bệnh lí.",
+                    "B. Thay thế hoàn toàn vai trò của đội ngũ y bác sĩ trong việc quyết định phác đồ điều trị và kí giấy xuất viện.",
+                    "C. Tự động sửa chữa toàn bộ các sự cố hỏng hóc phần cứng cơ khí bên trong máy chụp cộng hưởng từ của bệnh viện.",
+                    "D. Trực tiếp sản xuất ra các loại thiết bị vật tư y tế bằng kim loại mà không cần đến dây chuyền nhà máy."
+                ],
+                correct: 0
+            },
+            {
+                id: 2,
+                text: "Lĩnh vực nghiên cứu nào của khoa học máy tính và trí tuệ nhân tạo giúp máy tính có khả năng thu nhận, xử lí và phân tích hình ảnh từ thế giới thực?",
+                options: [
+                    "A. Lĩnh vực thiết kế bảng mạch điện tử bán dẫn giúp tăng tốc độ truyền tải tín hiệu điện bên trong máy tính.",
+                    "B. Lĩnh vực thị giác máy tính (Computer Vision) giúp trích xuất thông tin và nhận dạng đối tượng từ hình ảnh.",
+                    "C. Lĩnh vực quản trị cơ sở dữ liệu quan hệ giúp lưu trữ các bảng thông tin dưới dạng các dòng và các cột.",
+                    "D. Lĩnh vực bảo trì hệ thống mạng cục bộ giúp kết nối các máy tính cá nhân với máy in trong cùng phòng."
+                ],
+                correct: 1
+            },
+            {
+                id: 3,
+                text: "Trong lĩnh vực giao thông vận tải hiện đại, ứng dụng nào dưới đây là minh chứng tiêu biểu nhất cho sự phát triển của trí tuệ nhân tạo?",
+                options: [
+                    "A. Sử dụng các biển báo giao thông bằng kim loại sơn phản quang được lắp đặt cố định dọc theo các tuyến đường bộ.",
+                    "B. Xây dựng các cây cầu vượt bằng bê tông cốt thép để phân luồng phương tiện di chuyển tại các ngã tư đông đúc.",
+                    "C. Phát triển các phương tiện giao thông tự hành (xe tự lái) và hệ thống điều tiết đèn tín hiệu giao thông thông minh.",
+                    "D. Trang bị hệ thống gương chiếu hậu hai bên thân xe để người lái xe tự quan sát các phương tiện đi phía sau."
+                ],
+                correct: 2
+            },
+            {
+                id: 4,
+                text: "Nguy cơ nào sau đây là một trong những thách thức lớn cần được cảnh báo khi trí tuệ nhân tạo phát triển mạnh mẽ trong đời sống xã hội?",
+                options: [
+                    "A. Nguy cơ làm cho toàn bộ các thiết bị phần cứng máy tính trên thế giới bị mất hết dung lượng bộ nhớ ngoài.",
+                    "B. Nguy cơ khiến các ngôn ngữ lập trình bậc cao không thể tiếp tục biên dịch sang ngôn ngữ máy để thực thi.",
+                    "C. Nguy cơ làm giảm tốc độ truyền tải sóng điện từ của các trạm thu phát sóng viễn thông di động trên mặt đất.",
+                    "D. Nguy cơ xâm phạm quyền riêng tư cá nhân và sử dụng công nghệ Deepfake để tạo video, âm thanh giả mạo lừa đảo."
+                ],
+                correct: 3
+            },
+            {
+                id: 5,
+                text: "Vì sao sự phát triển mạnh mẽ của các hệ thống trí tuệ nhân tạo lại có thể hỗ trợ thúc đẩy sự phát triển của nhiều lĩnh vực khoa học tự nhiên?",
+                options: [
+                    "A. Vì AI có thể tự động viết lại toàn bộ các định luật vật lí và hóa học mà không cần làm thí nghiệm kiểm chứng.",
+                    "B. Vì AI có khả năng xử lí khối lượng dữ liệu khổng lồ, mô phỏng các quá trình phức tạp và phát hiện quy luật mới.",
+                    "C. Vì AI giúp các nhà khoa học không cần phải thu thập bất kì dữ liệu thực tế nào trong suốt quá trình nghiên cứu.",
+                    "D. Vì AI thay thế hoàn toàn trí tưởng tượng và tư duy đặt giả thuyết nghiên cứu của tất cả các nhà khoa học."
+                ],
+                correct: 1
+            },
+            {
+                id: 6,
+                text: "Trong lĩnh vực giáo dục và đào tạo, trí tuệ nhân tạo hỗ trợ “cá nhân hóa việc học tập” của người học theo cách thức nào sau đây?",
+                options: [
+                    "A. Phân tích năng lực và tiến độ của từng học sinh để đề xuất lộ trình, tài liệu và bài tập phù hợp với mỗi cá nhân.",
+                    "B. Bắt buộc tất cả học sinh ở mọi trình độ khác nhau phải làm chung một bộ đề thi duy nhất vào cùng một thời điểm.",
+                    "C. Tự động cấp bằng tốt nghiệp cho toàn bộ người học ngay sau khi đăng kí tài khoản trên hệ thống học trực tuyến.",
+                    "D. Xóa bỏ hoàn toàn các bài kiểm tra đánh giá định kì và không lưu trữ kết quả học tập của người học trên hệ thống."
+                ],
+                correct: 0
+            },
+            {
+                id: 7,
+                text: "Tại sao việc thu thập dữ liệu người dùng để huấn luyện các mô hình trí tuệ nhân tạo lại dễ dẫn đến nguy cơ xâm phạm quyền riêng tư?",
+                options: [
+                    "A. Vì các mô hình AI chỉ có thể hoạt động được khi người dùng công khai mật khẩu ngân hàng lên mạng xã hội.",
+                    "B. Vì mọi phần mềm trí tuệ nhân tạo đều tự động xóa hết các tệp văn bản cá nhân đang lưu trên ổ đĩa cứng.",
+                    "C. Vì các hệ thống AI thường thu thập lượng lớn thông tin cá nhân, thói quen, vị trí và có thể bị rò rỉ hoặc lạm dụng.",
+                    "D. Vì quá trình huấn luyện AI luôn yêu cầu người sử dụng phải nộp bản gốc giấy tờ tùy thân tại trụ sở công ty."
+                ],
+                correct: 2
+            },
+            {
+                id: 8,
+                text: "Mối quan hệ tác động qua lại giữa “Học máy” (Machine Learning) và “Khoa học dữ liệu” (Data Science) với Trí tuệ nhân tạo được hiểu đúng như thế nào?",
+                options: [
+                    "A. Khoa học dữ liệu và học máy là hai lĩnh vực hoàn toàn tách biệt, không có bất kì sự liên quan nào đến trí tuệ nhân tạo.",
+                    "B. Dữ liệu lớn và các thuật toán học máy giúp hệ thống AI học hỏi từ kinh nghiệm để ngày càng thông minh và chính xác hơn.",
+                    "C. Hệ thống trí tuệ nhân tạo càng hiện đại thì càng không cần sử dụng đến dữ liệu hay các thuật toán học máy.",
+                    "D. Học máy chỉ dùng để lắp ráp các linh kiện phần cứng máy tính, còn trí tuệ nhân tạo dùng để soạn thảo văn bản."
+                ],
+                correct: 1
+            },
+            {
+                id: 9,
+                text: "Một trang trại nông nghiệp công nghệ cao muốn ứng dụng trí tuệ nhân tạo để tự động phát hiện sớm sâu bệnh trên lá cây và tối ưu hóa lượng nước tưới tiêu hằng ngày. Giải pháp kết hợp công nghệ nào sau đây là phù hợp nhất?",
+                options: [
+                    "A. Tuyển dụng thêm nhiều nhân công lao động thủ công đi ghi chép số liệu thời tiết vào sổ giấy vào mỗi buổi sáng sớm.",
+                    "B. Lắp đặt hệ thống loa phóng thanh công suất lớn phát nhạc liên tục suốt ngày đêm để xua đuổi côn trùng trong trang trại.",
+                    "C. Cài đặt phần mềm soạn thảo văn bản trên máy tính văn phòng để nhân viên kế toán nhập danh sách các loại phân bón.",
+                    "D. Sử dụng hệ thống camera kết hợp thị giác máy tính để nhận diện lá bệnh và cảm biến IoT kết hợp AI để điều khiển tưới tự động."
+                ],
+                correct: 3
+            },
+            {
+                id: 10,
+                text: "Bạn Lan nhận được một cuộc gọi video ngắn từ tài khoản mạng xã hội của người thân với khuôn mặt và giọng nói rất giống thật, yêu cầu chuyển gấp một khoản tiền lớn vào tài khoản lạ. Trước nguy cơ lừa đảo bằng công nghệ AI (Deepfake), cách xử lí nào sau đây của Lan là đúng đắn nhất?",
+                options: [
+                    "A. Bình tĩnh tạm dừng giao dịch, liên hệ trực tiếp qua số điện thoại di động truyền thống hoặc gặp mặt để xác minh thông tin.",
+                    "B. Chuyển tiền ngay lập tức theo yêu cầu vì hình ảnh khuôn mặt và giọng nói trong cuộc gọi video đã hoàn toàn trùng khớp.",
+                    "C. Cung cấp toàn bộ mã OTP ngân hàng và mật khẩu cá nhân của mình qua tin nhắn để người đó tự thực hiện giao dịch.",
+                    "D. Chia sẻ công khai thông tin tài khoản ngân hàng và số căn cước công dân của mình lên mạng xã hội để nhờ cộng đồng kiểm tra."
+                ],
+                correct: 0
+            }
+        ];
+
+        let currentScore = 0;
+        let turnCount = 0;
+        let isSpinning = false;
+        let currentRotation = 0;
+        let availableQuestions = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+        let segmentAngle = 360 / 10;
+        let spinInterval;
+        let isGameSaved = false;
+
+        const loginScreen = document.getElementById('login-screen');
+        const gameContainer = document.getElementById('game-container');
+        const sidebar = document.getElementById('sidebar-leaderboard');
+        const wheel = document.getElementById('wheel');
+        const numbersContainer = document.getElementById('numbers-container');
+        const dividersContainer = document.getElementById('dividers-container');
+        const questionModal = document.getElementById('questionModal');
+        const feedbackArea = document.getElementById('feedback-area');
+
+        // Khởi tạo Vòng Quay với 10 vạch chia và 10 con số nằm chính giữa từng múi quạt
+        function initWheel() {
+            numbersContainer.innerHTML = '';
+            dividersContainer.innerHTML = '';
+            const isMobile = window.innerWidth <= 800;
+            const radius = isMobile ? 90 : 116;
+
+            for (let i = 0; i < 10; i++) {
+                const divLine = document.createElement('div');
+                divLine.className = 'wheel-divider';
+                divLine.style.transform = `rotate(${i * segmentAngle}deg)`;
+                dividersContainer.appendChild(divLine);
+
+                const d = document.createElement('div');
+                d.className = 'number';
+                if (!availableQuestions.includes(i)) {
+                    d.classList.add('used');
+                }
+                d.id = `num-${i}`;
+                d.textContent = i + 1;
+                const centerAngle = (i * segmentAngle) + (segmentAngle / 2);
+                d.style.transform = `rotate(${centerAngle}deg) translate(0, -${radius}px) rotate(-${centerAngle}deg)`;
+                numbersContainer.appendChild(d);
+            }
+        }
+        initWheel();
+        window.addEventListener('resize', initWheel);
+
+        function startGame() {
+            const inputName = document.getElementById('player-name-input').value.trim();
+            const inputClass = document.getElementById('player-class-input').value.trim();
+            const errEl = document.getElementById('login-error');
+
+            if (!inputName || !inputClass) {
+                errEl.style.display = 'block';
+                return;
+            }
+            errEl.style.display = 'none';
+
+            initAudio();
+            playerName = inputName;
+            playerClass = inputClass;
+            currentScore = 0;
+            turnCount = 0;
+            isGameSaved = false;
+            availableQuestions = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+
+            document.getElementById('player-display').textContent = playerName;
+            document.getElementById('class-display').textContent = playerClass;
+            document.getElementById('score').textContent = "0";
+            document.getElementById('turns').textContent = "0";
+            document.getElementById('spin-btn').textContent = "QUAY";
+            document.getElementById('spin-btn').style.pointerEvents = 'auto';
+            document.getElementById('instruction').textContent = "✨ Bấm vào nút QUAY ở giữa vòng quay để mở câu hỏi";
+
+            initWheel();
+            renderSidebarLeaderboard();
+
+            loginScreen.style.opacity = 0;
+            setTimeout(() => {
+                loginScreen.style.display = 'none';
+                gameContainer.style.display = 'flex';
+                if (window.innerWidth > 800) {
+                    sidebar.style.display = 'flex';
+                }
+                gameContainer.style.opacity = 1;
+            }, 350);
+
+            if (typeof gtag === 'function') {
+                gtag('event', 'quiz_start', {
+                    'event_category': 'Tin12_Bai2_TriTueNhanTao',
+                    'student_name': `${playerName} - ${playerClass}`
+                });
+            }
+        }
+
+        function returnToLogin() {
+            questionModal.style.display = 'none';
+            gameContainer.style.display = 'none';
+            sidebar.style.display = 'none';
+
+            playerName = "";
+            playerClass = "";
+            document.getElementById('player-name-input').value = "";
+            document.getElementById('player-class-input').value = "";
+            loginScreen.style.display = 'flex';
+            requestAnimationFrame(() => {
+                loginScreen.style.opacity = 1;
+            });
+        }
+
+        function spinWheel() {
+            if (isSpinning || availableQuestions.length === 0) return;
+
+            isSpinning = true;
+            document.getElementById('spin-btn').style.pointerEvents = 'none';
+            let c = 0;
+            spinInterval = setInterval(() => {
+                playTickSound();
+                c++;
+                if (c > 18) clearInterval(spinInterval);
+            }, 55);
+
+            const randIdx = Math.floor(Math.random() * availableQuestions.length);
+            const sIdx = availableQuestions[randIdx];
+            const tAngle = (sIdx * segmentAngle) + (segmentAngle / 2);
+            const dist = (5 * 360) + (360 - tAngle + Math.floor(Math.random() * 16) - 8) - (currentRotation % 360);
+            currentRotation += (dist < 0 ? dist + 360 : dist);
+            wheel.style.transform = `rotate(${currentRotation}deg)`;
+
+            setTimeout(() => {
+                clearInterval(spinInterval);
+                isSpinning = false;
+                showQuestion(sIdx);
+            }, 1150);
+        }
+
+        function showQuestion(i) {
+            const q = questions[i];
+            document.getElementById('q-badge-num').textContent = i + 1;
+            document.getElementById('q-text').textContent = `Câu ${i + 1}: ${q.text}`;
+            feedbackArea.textContent = "";
+
+            const area = document.getElementById('options-area');
+            area.innerHTML = '';
+            document.getElementById('nextBtn').style.display = 'none';
+
+            const letters = ['A', 'B', 'C', 'D'];
+            q.options.forEach((opt, idx) => {
+                const cleanText = opt.replace(/^[A-D]\.\s*/, '');
+                const b = document.createElement('button');
+                b.className = 'option-btn';
+                b.innerHTML = `
+                    <span class="option-letter-badge">${letters[idx]}</span>
+                    <span>${cleanText}</span>
+                `;
+                b.onclick = () => checkAnswer(b, idx, q.correct, i);
+                area.appendChild(b);
+            });
+            questionModal.style.display = 'flex';
+        }
+
+        function checkAnswer(btn, sIdx, cIdx, qIdx) {
+            const all = document.querySelectorAll('.option-btn');
+            all.forEach(b => {
+                b.onclick = null;
+                b.disabled = true;
+            });
+
+            const isCorrect = (sIdx === cIdx);
+            let feedback = "";
+
+            if (isCorrect) {
+                btn.classList.add('correct');
+                currentScore += 10;
+                document.getElementById('score').textContent = currentScore;
+                playCorrectSound();
+                confetti({ particleCount: 45, spread: 60 });
+
+                const msg = getUniqueMessage('correct');
+                feedback = `🎉 +10 Điểm! ${msg}`;
+                feedbackArea.style.color = "#1d4ed8";
+            } else {
+                btn.classList.add('wrong');
+                all[cIdx].classList.add('correct');
+                playWrongSound();
+
+                const msg = getUniqueMessage('wrong');
+                feedback = `💡 Đáp án đúng là ${['A', 'B', 'C', 'D'][cIdx]}. ${msg}`;
+                feedbackArea.style.color = "#dc2626";
+            }
+
+            if (typeof gtag === 'function') {
+                gtag('event', 'answer_question', {
+                    'event_category': 'Tin12_Bai2_TriTueNhanTao',
+                    'question_number': qIdx + 1,
+                    'is_correct': isCorrect,
+                    'student_name': `${playerName} - ${playerClass}`
+                });
+            }
+
+            feedbackArea.textContent = feedback;
+
+            availableQuestions = availableQuestions.filter(x => x !== qIdx);
+            document.getElementById(`num-${qIdx}`).classList.add('used');
+            turnCount++;
+            document.getElementById('turns').textContent = turnCount;
+
+            const nb = document.getElementById('nextBtn');
+            nb.textContent = turnCount >= 10 ? "Hoàn thành vòng quay ➔" : "Tiếp tục quay ➔";
+            nb.onclick = turnCount >= 10 ? finishOnMainScreen : closeModal;
+            nb.style.display = 'inline-block';
+        }
+
+        function closeModal() {
+            questionModal.style.display = 'none';
+            document.getElementById('spin-btn').style.pointerEvents = 'auto';
+        }
+
+        // Khi trả lời hết câu cuối cùng -> Trở về màn hình Vòng Quay chính (Không bật bảng kết quả che mất vòng quay)
+        function finishOnMainScreen() {
+            questionModal.style.display = 'none';
+
+            if (!isGameSaved) {
+                saveScore(playerName, playerClass, currentScore);
+                isGameSaved = true;
+            }
+
+            renderSidebarLeaderboard();
+
+            // Cập nhật trạng thái hoàn thành ngay trên màn hình Vòng Quay chính
+            const spinBtn = document.getElementById('spin-btn');
+            spinBtn.textContent = "XONG";
+            spinBtn.style.pointerEvents = 'none';
+
+            document.getElementById('instruction').innerHTML = `🎉 Chúc mừng <b>${playerName} (${playerClass})</b> đã hoàn thành 10/10 vòng quay với <b>${currentScore} điểm</b>!`;
+
+            // Bắn pháo hoa chúc mừng trên màn hình Vòng Quay
+            playCorrectSound();
+            var duration = 2.5 * 1000;
+            var animationEnd = Date.now() + duration;
+            var interval = setInterval(function() {
+                var timeLeft = animationEnd - Date.now();
+                if (timeLeft <= 0) return clearInterval(interval);
+                confetti({
+                    particleCount: 40,
+                    spread: 70,
+                    origin: { x: Math.random() * 0.6 + 0.2, y: 0.5 }
+                });
+            }, 300);
+        }
+
+        document.getElementById("player-class-input").addEventListener("keypress", function(e) {
+            if (e.key === "Enter") startGame();
+        });
+    </script>
+</body>
+</html>
