@@ -1,0 +1,991 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Sách Lật: Nẻo Về Của Những Đứa Trẻ Lạc Lối</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Plus+Jakarta+Sans:wght@500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg-gradient: linear-gradient(135deg, #d1fae5 0%, #e0f2fe 50%, #fef3c7 100%);
+      --paper-bg: #fffdf9;
+      --paper-border: #cbd5e1;
+      --text-main: #1e293b;
+      --text-muted: #64748b;
+      --emerald-main: #0f766e;
+      --emerald-dark: #064e3b;
+      --emerald-light: #ccfbf1;
+      --gold-accent: #f59e0b;
+      --book-shadow: 0 24px 50px rgba(6, 78, 59, 0.18), 0 6px 18px rgba(15, 23, 42, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100dvh;
+      overflow: hidden;
+      background: var(--bg-gradient);
+      font-family: 'Lora', serif;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      color: var(--text-main);
+    }
+
+    /* Thanh công cụ phía trên */
+    .top-bar {
+      width: 100%;
+      max-width: 1120px;
+      height: 48px;
+      padding: 0 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      z-index: 30;
+      flex-shrink: 0;
+    }
+
+    .book-brand {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: var(--emerald-dark);
+      background: rgba(255, 255, 255, 0.9);
+      border: 1px solid rgba(15, 118, 110, 0.2);
+      padding: 6px 16px;
+      border-radius: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+
+    .icon-btn {
+      background: rgba(255, 255, 255, 0.9);
+      border: 1px solid rgba(15, 118, 110, 0.2);
+      color: var(--emerald-dark);
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 0.84rem;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+      transition: all 0.2s;
+    }
+
+    .icon-btn:hover {
+      background: #ffffff;
+      transform: translateY(-1px);
+    }
+
+    /* Sân khấu chứa sách */
+    .stage {
+      width: 100%;
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 4px 16px;
+      perspective: 2000px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* Khung sách: Bìa đầu / Bìa cuối / Điện thoại luôn là 1 trang đơn */
+    .book {
+      width: 100%;
+      max-width: 465px;
+      height: 100%;
+      max-height: 740px;
+      position: relative;
+      display: flex;
+      border-radius: 18px;
+      box-shadow: var(--book-shadow);
+      background: var(--paper-bg);
+      border: 2px solid #cbd5e1;
+      overflow: hidden;
+      transition: max-width 0.45s cubic-bezier(0.22, 1, 0.36, 1), transform 0.35s ease;
+    }
+
+    /* Gáy sách bên trái khi hiển thị 1 trang */
+    .book.single-mode::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 16px;
+      background: linear-gradient(90deg, rgba(0, 0, 0, 0.22) 0%, rgba(0, 0, 0, 0.04) 65%, transparent 100%);
+      z-index: 25;
+      pointer-events: none;
+    }
+
+    /* Trên máy tính (>= 860px): Khi mở ruột sách sẽ mở rộng thành 2 trang đôi */
+    @media (min-width: 860px) {
+      .book.spread-mode {
+        max-width: 1080px;
+        max-height: 680px;
+        border-radius: 20px;
+      }
+
+      /* Rãnh gáy sách ở chính giữa khi mở 2 trang */
+      .book.spread-mode::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 50%;
+        width: 36px;
+        transform: translateX(-50%);
+        background: linear-gradient(90deg, 
+          rgba(0,0,0,0.0) 0%, 
+          rgba(15, 80, 75, 0.11) 42%, 
+          rgba(15, 60, 55, 0.22) 50%, 
+          rgba(15, 80, 75, 0.11) 58%, 
+          rgba(0,0,0,0.0) 100%);
+        z-index: 25;
+        pointer-events: none;
+      }
+    }
+
+    /* Từng trang sách */
+    .page {
+      display: none;
+      width: 100%;
+      height: 100%;
+      background: var(--paper-bg);
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      overflow: hidden;
+      animation: pageTurn 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .page.visible {
+      display: flex;
+    }
+
+    @media (min-width: 860px) {
+      .book.spread-mode .page {
+        width: 50%;
+      }
+      .book.spread-mode .page.left-page {
+        border-right: 1px solid #e2e8f0;
+      }
+    }
+
+    @keyframes pageTurn {
+      0% {
+        opacity: 0.4;
+        transform: scale(0.988) translateY(3px);
+      }
+      100% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+      }
+    }
+
+    /* Khung ảnh minh họa bo góc trên từng trang ruột (chiếm 42% chiều cao) */
+    .page-visual {
+      width: calc(100% - 36px);
+      height: 42%;
+      margin: 16px 18px 0 18px;
+      border-radius: 14px;
+      position: relative;
+      overflow: hidden;
+      flex-shrink: 0;
+      background: linear-gradient(135deg, #0f766e 0%, #f59e0b 100%);
+      box-shadow: 0 6px 16px rgba(15, 23, 42, 0.08);
+    }
+
+    .page-visual img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      filter: brightness(1.04) saturate(1.1);
+      transition: transform 5s ease;
+      display: block;
+    }
+
+    .page.visible .page-visual img {
+      transform: scale(1.04);
+    }
+
+    /* Phần thân chữ: Đảm bảo 100% không bao giờ bị cắt mất dòng đầu hay dòng cuối */
+    .page-body {
+      flex: 1;
+      padding: 18px 28px 12px 30px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      overflow: hidden;
+    }
+
+    .content-wrap {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      padding-top: 6px;
+    }
+
+    .page-text {
+      font-size: clamp(1.14rem, 2.35vh, 1.32rem);
+      line-height: 1.62;
+      color: var(--text-main);
+      text-align: justify;
+      font-weight: 500;
+    }
+
+    .dropcap::first-letter {
+      float: left;
+      font-size: 2.45em;
+      line-height: 0.86;
+      padding-right: 10px;
+      padding-top: 3px;
+      color: var(--emerald-main);
+      font-weight: 700;
+    }
+
+    /* Khung Châm Ngôn nổi bật ở Trang 10 */
+    .maxim-card {
+      margin-top: 4px;
+      padding: 18px 20px;
+      background: linear-gradient(135deg, #ecfdf5 0%, #fef3c7 100%);
+      border: 2px solid #34d399;
+      border-radius: 16px;
+      box-shadow: 0 8px 20px rgba(15, 118, 110, 0.1);
+      text-align: center;
+    }
+
+    .maxim-icon {
+      font-size: 1.6rem;
+      color: var(--emerald-main);
+      line-height: 1;
+      margin-bottom: 4px;
+      display: block;
+    }
+
+    .maxim-text {
+      font-style: italic;
+      font-size: clamp(1.12rem, 2.3vh, 1.28rem);
+      line-height: 1.56;
+      color: var(--emerald-dark);
+      font-weight: 700;
+    }
+
+    .page-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px dashed #cbd5e1;
+      padding-top: 8px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      flex-shrink: 0;
+    }
+
+    /* ============================================================
+       TRANG BÌA ĐẦU (KHUNG VÒM NGỌC LỤC BẢO & CHỈ VÀNG)
+       ============================================================ */
+    .front-cover {
+      background: linear-gradient(155deg, #0f766e 0%, #065f46 55%, #042f2e 100%);
+      color: #ffffff;
+      padding: 16px;
+    }
+
+    .cover-frame {
+      width: 100%;
+      height: 100%;
+      border: 2px solid rgba(252, 211, 77, 0.55);
+      border-radius: 14px;
+      padding: 16px 20px 12px 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      text-align: center;
+      background: radial-gradient(circle at top, rgba(255,255,255,0.1) 0%, transparent 70%);
+    }
+
+    .cover-tag {
+      background: rgba(254, 243, 199, 0.18);
+      border: 1px solid #fcd34d;
+      color: #fde68a;
+      padding: 5px 16px;
+      border-radius: 20px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .cover-main-title {
+      font-size: clamp(1.5rem, 3.4vh, 2.05rem);
+      font-weight: 700;
+      line-height: 1.24;
+      color: #fef3c7;
+      text-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
+    }
+
+    .arch-window {
+      width: 82%;
+      height: 41%;
+      border-radius: 130px 130px 16px 16px;
+      overflow: hidden;
+      border: 3px solid #fcd34d;
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.35);
+      flex-shrink: 0;
+      background: #064e3b;
+    }
+
+    .arch-window img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .cover-desc {
+      font-size: clamp(0.98rem, 2.05vh, 1.12rem);
+      color: #ecfdf5;
+      line-height: 1.48;
+      font-style: italic;
+      max-width: 95%;
+    }
+
+    .gold-action-btn {
+      background: linear-gradient(135deg, #fde68a 0%, #f59e0b 100%);
+      color: #0f172a;
+      border: none;
+      padding: 11px 26px;
+      border-radius: 30px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 0.92rem;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+      transition: all 0.25s ease;
+    }
+
+    .gold-action-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 24px rgba(245, 158, 11, 0.45);
+    }
+
+    .cover-bottom-meta {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      border-top: 1px solid rgba(255, 255, 255, 0.2);
+      padding-top: 8px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 0.76rem;
+      color: #cbd5e1;
+    }
+
+    /* ============================================================
+       TRANG BÌA CUỐI RỰC RỠ SẮC MÀU (ROYAL SUNSET & EMERALD BACK COVER)
+       ============================================================ */
+    .back-cover {
+      background: linear-gradient(160deg, #134e4a 0%, #0f766e 45%, #b45309 100%);
+      color: #ffffff;
+      padding: 16px;
+    }
+
+    .back-hero-window {
+      width: 88%;
+      height: 36%;
+      border-radius: 16px;
+      overflow: hidden;
+      border: 2.5px solid #fcd34d;
+      box-shadow: 0 12px 26px rgba(0, 0, 0, 0.32);
+      flex-shrink: 0;
+      background: #064e3b;
+    }
+
+    .back-hero-window img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .back-glass-quote {
+      background: rgba(255, 255, 255, 0.14);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(253, 230, 138, 0.45);
+      border-radius: 14px;
+      padding: 12px 16px;
+      font-size: clamp(0.96rem, 2vh, 1.1rem);
+      line-height: 1.5;
+      color: #fffbeb;
+      font-style: italic;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+    }
+
+    /* Vùng chạm lật trang nhanh 2 bên mép */
+    .tap-zone {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 11%;
+      z-index: 28;
+      cursor: pointer;
+    }
+    .tap-left { left: 0; }
+    .tap-right { right: 0; }
+
+    /* Thanh điều khiển dưới cùng */
+    .bottom-bar {
+      width: 100%;
+      max-width: 680px;
+      height: 56px;
+      padding: 0 20px 8px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      z-index: 30;
+      flex-shrink: 0;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    .nav-btn {
+      background: #ffffff;
+      border: 1px solid rgba(15, 118, 110, 0.22);
+      color: var(--emerald-dark);
+      height: 40px;
+      padding: 0 20px;
+      border-radius: 22px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+      transition: all 0.2s ease;
+    }
+
+    .nav-btn:hover:not(:disabled) {
+      background: var(--emerald-light);
+      border-color: var(--emerald-main);
+    }
+
+    .nav-btn:disabled {
+      opacity: 0.38;
+      pointer-events: none;
+    }
+
+    .dots-container {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      background: rgba(255, 255, 255, 0.85);
+      padding: 8px 14px;
+      border-radius: 20px;
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #cbd5e1;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .dot.active {
+      width: 22px;
+      border-radius: 10px;
+      background: var(--emerald-main);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Thanh tiêu đề trên cùng -->
+  <header class="top-bar">
+    <div class="book-brand">
+      <span>🌿</span>
+      <span>Nẻo Về Của Những Đứa Trẻ Lạc Lối</span>
+    </div>
+    <button class="icon-btn" id="fullscreenBtn">⛶ Toàn màn hình</button>
+  </header>
+
+  <!-- Sân khấu chính -->
+  <main class="stage" id="touchStage">
+    <div class="tap-zone tap-left" id="tapPrev" title="Trang trước"></div>
+    <div class="tap-zone tap-right" id="tapNext" title="Trang sau"></div>
+
+    <div class="book single-mode" id="bookContainer">
+
+      <!-- MỤC 0: TRANG BÌA ĐẦU (1 TRANG ĐƠN) -->
+      <section class="page front-cover" data-index="0">
+        <div class="cover-frame">
+          <span class="cover-tag">Tủ Sách Hạt Giống Tâm Hồn</span>
+          
+          <h1 class="cover-main-title">NẺO VỀ CỦA NHỮNG<br/>ĐỨA TRẺ LẠC LỐI</h1>
+
+          <div class="arch-window">
+            <img src="https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=1000&q=85" alt="Ánh sáng nơi mái trường" />
+          </div>
+
+          <p class="cover-desc">
+            Từ những tháng ngày ngông nghênh lạc bước đến giọt nước mắt thức tỉnh trước đôi dép tổ ong lấm bùn của mẹ.
+          </p>
+
+          <button class="gold-action-btn" id="startReadBtn">
+            📖 Mở Sách Đọc Truyện ➔
+          </button>
+
+          <div class="cover-bottom-meta">
+            <span>Bìa Trước</span>
+            <span>Truyện ngắn giáo dục</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- TRANG 1: CẬU HỌC TRÒ NỔI LOẠN LỚP 10A5 & QUÁN INTERNET -->
+      <section class="page" data-index="1">
+        <div class="page-visual">
+          <!-- Hình ảnh góc máy tính chơi game trong quán internet chân thực -->
+          <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=1000&q=85" alt="Góc quán internet nơi Nam mải mê chơi game" />
+        </div>
+        <div class="page-body">
+          <div class="content-wrap">
+            <p class="page-text dropcap">
+              Tại lớp 10A5, Nam luôn là cái tên khiến các thầy cô phải đau đầu. Với mái tóc nhuộm màu nổi loạn, chiếc áo đồng phục chưa bao giờ cài đủ cúc, Nam dành phần lớn thời gian ở quán internet hơn là trên giảng đường.
+            </p>
+          </div>
+          <div class="page-footer">
+            <span>Nẻo Về Của Những Đứa Trẻ Lạc Lối</span>
+            <span>Trang 1 / 10</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- TRANG 2: VỎ BỌC BẤT CẦN & HÀNH LANG TRƯỜNG BUỔI CHIỀU ĐỊNH MỆNH -->
+      <section class="page" data-index="2">
+        <div class="page-visual">
+          <img src="https://images.unsplash.com/photo-1580582932707-520aed937b7b?auto=format&fit=crop&w=1000&q=85" alt="Lớp học và hành lang nhà trường buổi chiều" />
+        </div>
+        <div class="page-body">
+          <div class="content-wrap">
+            <p class="page-text dropcap">
+              Những lời nhắc nhở của thầy cô hay giọt mắt của mẹ dường như chỉ làm dày thêm cái vỏ bọc bất cần của cậu. Nam luôn tự hào về sự "ngông nghênh" của mình, cho đến một buổi chiều định mệnh.
+            </p>
+          </div>
+          <div class="page-footer">
+            <span>Nẻo Về Của Những Đứa Trẻ Lạc Lối</span>
+            <span>Trang 2 / 10</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- TRANG 3: DÁNG MẸ QUÊ VIỆT NAM TẦN TẢO KHẮC KHỔ -->
+      <section class="page" data-index="3">
+        <div class="page-visual">
+          <!-- Hình ảnh người mẹ nông dân Việt Nam đội nón lá tần tảo -->
+          <img src="https://images.unsplash.com/photo-1528127269322-539801943592?auto=format&fit=crop&w=1000&q=85" alt="Dáng mẹ quê Việt Nam tần tảo khắc khổ" />
+        </div>
+        <div class="page-body">
+          <div class="content-wrap">
+            <p class="page-text dropcap">
+              Hôm đó, vì mải mê với những trận game và mâu thuẫn ngoài phố, Nam bị gọi lên văn phòng nhà trường để nhận quyết định đình chỉ học tập. Khi Nam chuẩn bị buông những lời thách thức cuối cùng, cánh cửa phòng hé mở. Cậu khựng lại khi thấy mẹ mình bước vào, dáng vẻ khắc khổ và run rẩy.
+            </p>
+          </div>
+          <div class="page-footer">
+            <span>Nẻo Về Của Những Đứa Trẻ Lạc Lối</span>
+            <span>Trang 3 / 10</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- TRANG 4: CÁNH ĐỒNG QUÊ BÙN ĐẤT NƠI MẸ VỪA TẤT TẢ CHẠY ĐẾN -->
+      <section class="page" data-index="4">
+        <div class="page-visual">
+          <img src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1000&q=85" alt="Cánh đồng quê nơi mẹ vừa tất tả chạy lên trường" />
+        </div>
+        <div class="page-body">
+          <div class="content-wrap">
+            <p class="page-text dropcap">
+              Người mẹ ấy không hề mắng chửi Nam, bà chỉ lặng lẽ cúi đầu trước thầy hiệu trưởng, những giọt nước mắt lăn dài trên gương mặt đầy nếp nhăn, miệng không ngừng van nài cho con một cơ hội cuối cùng. Nam nhìn xuống đôi dép tổ ong cũ nát bám đầy bùn đất của mẹ, sự ngạo mạn trong cậu bỗng chốc vỡ vụn, thay bằng nỗi xấu hổ và hối hận trào dâng.
+            </p>
+          </div>
+          <div class="page-footer">
+            <span>Nẻo Về Của Những Đứa Trẻ Lạc Lối</span>
+            <span>Trang 4 / 10</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- TRANG 5: ĐÊM THỨC TRẮNG BÊN ÁNH ĐÈN KHUYA ẤM ÁP -->
+      <section class="page" data-index="5">
+        <div class="page-visual">
+          <img src="https://images.unsplash.com/photo-1507473885765-e6ed057f782c?auto=format&fit=crop&w=1000&q=85" alt="Ánh đèn bàn ấm áp trong đêm khuya tĩnh lặng" />
+        </div>
+        <div class="page-body">
+          <div class="content-wrap">
+            <p class="page-text dropcap">
+              Đêm đó, nhìn mẹ ngồi lặng lẽ khâu lại chiếc áo sứt chỉ dưới ánh đèn khuya, Nam đã thức trắng. Cậu nhận ra rằng những lần mình "thể hiện" bản thân chỉ là sự ích kỷ đang bóp nghẹt đôi vai gầy của mẹ.
+            </p>
+          </div>
+          <div class="page-footer">
+            <span>Nẻo Về Của Những Đứa Trẻ Lạc Lối</span>
+            <span>Trang 5 / 10</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- TRANG 6: XIN LỖI THẦY CÔ & MIỆT MÀI BÊN TRANG SÁCH -->
+      <section class="page" data-index="6">
+        <div class="page-visual">
+          <img src="https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?auto=format&fit=crop&w=1000&q=85" alt="Miệt mài bên trang sách để lấp đầy lỗ hổng kiến thức" />
+        </div>
+        <div class="page-body">
+          <div class="content-wrap">
+            <p class="page-text dropcap">
+              Sáng hôm sau, Nam xin lỗi thầy cô, tự tay nhuộm lại mái tóc đen và bắt đầu những chuỗi ngày miệt mài bên trang sách để lấp đầy những lỗ hổng kiến thức. Cậu học trò ngỗ ngược ngày nào giờ đây luôn là người đến lớp sớm nhất, sẵn sàng giúp đỡ bạn bè và tham gia tích cực các phong trào của trường.
+            </p>
+          </div>
+          <div class="page-footer">
+            <span>Nẻo Về Của Những Đứa Trẻ Lạc Lối</span>
+            <span>Trang 6 / 10</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- TRANG 7: MƯỜI NĂM SAU TRỞ VỀ TRONG BỘ VEST LỊCH LÃM -->
+      <section class="page" data-index="7">
+        <div class="page-visual">
+          <!-- Hình ảnh doanh nhân lịch lãm trong bộ vest tối màu (không lộ mặt người Tây) -->
+          <img src="https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=1000&q=85" alt="Trở về trường cũ trong bộ vest lịch lãm" />
+        </div>
+        <div class="page-body">
+          <div class="content-wrap">
+            <p class="page-text dropcap">
+              Cậu không còn tìm kiếm sự chú ý bằng những trò quậy phá, mà tập trung xây dựng giá trị bản thân bằng sự nỗ lực không ngừng. Mười năm sau, Nam trở về trường cũ trong bộ vest lịch lãm với tư cách là một doanh nhân thành đạt, mang theo một quỹ học bổng dành cho những học sinh có hoàn cảnh khó khăn.
+            </p>
+          </div>
+          <div class="page-footer">
+            <span>Nẻo Về Của Những Đứa Trẻ Lạc Lối</span>
+            <span>Trang 7 / 10</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- TRANG 8: BỤC GIẢNG MÁI TRƯỜNG XƯA & LỜI CHIA SẺ XÚC ĐỘNG -->
+      <section class="page" data-index="8">
+        <div class="page-visual">
+          <img src="https://images.unsplash.com/photo-1497633762265-9d179a990aa6?auto=format&fit=crop&w=1000&q=85" alt="Bục giảng và những trang sách tri thức nơi trường cũ" />
+        </div>
+        <div class="page-body">
+          <div class="content-wrap">
+            <p class="page-text dropcap">
+              Đứng trên bục giảng, nhìn những gương mặt trẻ thơ, Nam xúc động chia sẻ: "Mỗi chúng ta đều có quyền sai lầm, nhưng chúng ta không có quyền bỏ mặc bản thân mình trong bóng tối."
+            </p>
+          </div>
+          <div class="page-footer">
+            <span>Nẻo Về Của Những Đứa Trẻ Lạc Lối</span>
+            <span>Trang 8 / 10</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- TRANG 9: BÀI HỌC VÔ GIÁ VỀ SỰ THỨC TỈNH -->
+      <section class="page" data-index="9">
+        <div class="page-visual">
+          <img src="https://images.unsplash.com/photo-1499209974431-9dddcece7f88?auto=format&fit=crop&w=1000&q=85" alt="Con đường ngập tràn ánh nắng ấm áp" />
+        </div>
+        <div class="page-body">
+          <div class="content-wrap">
+            <p class="page-text dropcap">
+              Câu chuyện về sự thức tỉnh của Nam đã trở thành một bài học vô giá, truyền động lực mạnh mẽ cho biết bao thế hệ học trò trên hành trình hoàn thiện bản thân và hướng tới tương lai.
+            </p>
+          </div>
+          <div class="page-footer">
+            <span>Nẻo Về Của Những Đứa Trẻ Lạc Lối</span>
+            <span>Trang 9 / 10</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- TRANG 10: TRANG CHÂM NGÔN RIÊNG BIỆT -->
+      <section class="page" data-index="10">
+        <div class="page-visual">
+          <img src="https://images.unsplash.com/photo-1470252649378-9c29740c9fa8?auto=format&fit=crop&w=1000&q=85" alt="Bình minh rực rỡ mở ra chân trời mới" />
+        </div>
+        <div class="page-body">
+          <div class="content-wrap">
+            <div class="maxim-card">
+              <span class="maxim-icon">❝</span>
+              <p class="maxim-text">
+                Không bao giờ là quá muộn để quay đầu, chỉ cần ta đủ dũng cảm để đối diện với lỗi lầm và chọn lấy một con đường đúng đắn để vươn lên.
+              </p>
+            </div>
+          </div>
+          <div class="page-footer">
+            <span>Châm Ngôn Sống</span>
+            <span>Trang 10 / 10</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- MỤC 11: TRANG BÌA CUỐI SẮC MÀU RỰC RỠ & SANG TRỌNG (1 TRANG ĐƠN) -->
+      <section class="page back-cover" data-index="11">
+        <div class="cover-frame">
+          <span class="cover-tag">Khép Lại Trang Sách</span>
+
+          <h2 class="cover-main-title" style="font-size: clamp(1.35rem, 3vh, 1.8rem);">
+            NẺO VỀ CỦA NHỮNG<br/>ĐỨA TRẺ LẠC LỐI
+          </h2>
+
+          <div class="back-hero-window">
+            <img src="https://images.unsplash.com/photo-1559592413-7cec4d0cae2b?auto=format&fit=crop&w=1000&q=85" alt="Bình minh ấm áp trên quê hương Việt Nam" />
+          </div>
+
+          <div class="back-glass-quote">
+            “Đằng sau mỗi đứa trẻ lạc lối luôn cần một vòng tay bao dung và một cơ hội để quay về. Khi biết thương lấy giọt nước mắt của mẹ, con đường trưởng thành sẽ tự khắc mở ra.”
+          </div>
+
+          <button class="gold-action-btn" id="restartReadBtn">
+            ↺ Đọc Lại Từ Bìa Trước
+          </button>
+
+          <div class="cover-bottom-meta">
+            <span>Bìa Sau • Hết</span>
+            <span>Cảm ơn bạn đã đón đọc</span>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- Thanh điều hướng dưới cùng -->
+  <footer class="bottom-bar">
+    <button class="nav-btn" id="prevBtn">
+      <span>❮</span> Trước
+    </button>
+
+    <div class="dots-container" id="dotsContainer"></div>
+
+    <button class="nav-btn" id="nextBtn">
+      Mở sách <span>❯</span>
+    </button>
+  </footer>
+
+  <script>
+    (function () {
+      const bookContainer = document.getElementById('bookContainer');
+      const pages = Array.from(document.querySelectorAll('.page'));
+      const prevBtn = document.getElementById('prevBtn');
+      const nextBtn = document.getElementById('nextBtn');
+      const tapPrev = document.getElementById('tapPrev');
+      const tapNext = document.getElementById('tapNext');
+      const startReadBtn = document.getElementById('startReadBtn');
+      const restartReadBtn = document.getElementById('restartReadBtn');
+      const dotsContainer = document.getElementById('dotsContainer');
+      const touchStage = document.getElementById('touchStage');
+      const fullscreenBtn = document.getElementById('fullscreenBtn');
+
+      // Cơ chế bảo vệ hình ảnh: Nếu máy tính mất mạng hoặc link ảnh bất kỳ bị lỗi, tự động vẽ tranh phong cảnh Việt Nam SVG ngay lập tức
+      const fallbackSvg = "data:image/svg+xml;utf8," + encodeURIComponent(`
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450">
+          <defs>
+            <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#0f766e"/>
+              <stop offset="60%" stop-color="#f59e0b"/>
+              <stop offset="100%" stop-color="#fef3c7"/>
+            </linearGradient>
+          </defs>
+          <rect width="800" height="450" fill="url(#sky)"/>
+          <circle cx="400" cy="210" r="65" fill="#fde68a" opacity="0.9"/>
+          <path d="M0 340 Q200 260 420 330 T800 310 L800 450 L0 450 Z" fill="#065f46" opacity="0.75"/>
+          <path d="M0 375 Q260 320 520 370 T800 355 L800 450 L0 450 Z" fill="#042f2e"/>
+        </svg>
+      `);
+
+      document.querySelectorAll('img').forEach((img) => {
+        img.addEventListener('error', function () {
+          if (this.src !== fallbackSvg) {
+            this.src = fallbackSvg;
+          }
+        });
+      });
+
+      let currentViewIndex = 0;
+
+      // Màn hình máy tính (>= 860px) mở 2 trang ruột; Điện thoại mở từng trang đơn
+      function isDesktop() {
+        return window.innerWidth >= 860;
+      }
+
+      function getViews() {
+        if (isDesktop()) {
+          return [
+            [0],       // Bìa đầu (1 trang đơn)
+            [1, 2],    // Cặp 1: Trang 1 & Trang 2
+            [3, 4],    // Cặp 2: Trang 3 & Trang 4
+            [5, 6],    // Cặp 3: Trang 5 & Trang 6
+            [7, 8],    // Cặp 4: Trang 7 & Trang 8
+            [9, 10],   // Cặp 5: Trang 9 & Trang 10 (Châm ngôn)
+            [11]       // Bìa cuối (1 trang đơn)
+          ];
+        } else {
+          return [[0], [1], [2], [3], [4], [5], [6], [7], [8], [9], [10], [11]];
+        }
+      }
+
+      function renderDots(views) {
+        dotsContainer.innerHTML = '';
+        views.forEach((_, idx) => {
+          const dot = document.createElement('div');
+          dot.className = 'dot' + (idx === currentViewIndex ? ' active' : '');
+          dot.addEventListener('click', () => {
+            currentViewIndex = idx;
+            updateBook();
+          });
+          dotsContainer.appendChild(dot);
+        });
+      }
+
+      function updateBook() {
+        const views = getViews();
+        if (currentViewIndex >= views.length) {
+          currentViewIndex = views.length - 1;
+        }
+        if (currentViewIndex < 0) {
+          currentViewIndex = 0;
+        }
+
+        const activePair = views[currentViewIndex];
+        const isSpread = activePair.length === 2;
+
+        bookContainer.classList.toggle('spread-mode', isSpread);
+        bookContainer.classList.toggle('single-mode', !isSpread);
+
+        pages.forEach((page, idx) => {
+          page.classList.remove('visible', 'left-page', 'right-page');
+          if (activePair.includes(idx)) {
+            page.classList.add('visible');
+            if (isSpread) {
+              if (idx === activePair[0]) page.classList.add('left-page');
+              if (idx === activePair[1]) page.classList.add('right-page');
+            }
+          }
+        });
+
+        renderDots(views);
+
+        prevBtn.disabled = currentViewIndex === 0;
+
+        if (currentViewIndex === 0) {
+          nextBtn.innerHTML = 'Mở sách <span>❯</span>';
+        } else if (currentViewIndex === views.length - 1) {
+          nextBtn.innerHTML = 'Đọc lại ↺';
+        } else {
+          nextBtn.innerHTML = 'Sau <span>❯</span>';
+        }
+      }
+
+      function nextView() {
+        const views = getViews();
+        if (currentViewIndex < views.length - 1) {
+          currentViewIndex++;
+        } else {
+          currentViewIndex = 0;
+        }
+        updateBook();
+      }
+
+      function prevView() {
+        if (currentViewIndex > 0) {
+          currentViewIndex--;
+          updateBook();
+        }
+      }
+
+      nextBtn.addEventListener('click', nextView);
+      prevBtn.addEventListener('click', prevView);
+      tapNext.addEventListener('click', nextView);
+      tapPrev.addEventListener('click', prevView);
+
+      startReadBtn.addEventListener('click', () => {
+        currentViewIndex = 1;
+        updateBook();
+      });
+
+      restartReadBtn.addEventListener('click', () => {
+        currentViewIndex = 0;
+        updateBook();
+      });
+
+      // Vuốt tay lật từng trang trên điện thoại
+      let startX = 0;
+      let startY = 0;
+
+      touchStage.addEventListener('touchstart', (e) => {
+        startX = e.changedTouches[0].screenX;
+        startY = e.changedTouches[0].screenY;
+      }, { passive: true });
+
+      touchStage.addEventListener('touchend', (e) => {
+        const endX = e.changedTouches[0].screenX;
+        const endY = e.changedTouches[0].screenY;
+        const diffX = startX - endX;
+        const diffY = Math.abs(startY - endY);
+
+        if (Math.abs(diffX) > 40 && diffY < 90) {
+          if (diffX > 0) nextView();
+          else prevView();
+        }
+      }, { passive: true });
+
+      // Phím mũi tên trên máy tính
+      window.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight') nextView();
+        if (e.key === 'ArrowLeft') prevView();
+      });
+
+      let lastDesktopState = isDesktop();
+      window.addEventListener('resize', () => {
+        const nowDesktop = isDesktop();
+        if (nowDesktop !== lastDesktopState) {
+          currentViewIndex = 0;
+          lastDesktopState = nowDesktop;
+        }
+        updateBook();
+      });
+
+      fullscreenBtn.addEventListener('click', () => {
+        if (!document.fullscreenElement) {
+          document.documentElement.requestFullscreen().catch(() => {});
+        } else {
+          document.exitFullscreen().catch(() => {});
+        }
+      });
+
+      updateBook();
+    })();
+  </script>
+</body>
+</html>

@@ -1,1 +1,855 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Sách Lật: Ánh Sáng Từ Đôi Vai Gầy</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Plus+Jakarta+Sans:wght@500;600;700&display=swap" rel="stylesheet">
 
+  <style>
+    :root {
+      --bg-gradient: linear-gradient(135deg, #e0f2fe 0%, #fef3c7 50%, #ffedd5 100%);
+      --paper-bg: #fffdf9;
+      --paper-border: #dfd5c3;
+      --text-main: #1e293b;
+      --text-muted: #64748b;
+      --accent: #d97706;
+      --accent-dark: #b45309;
+      --accent-soft: #fef3c7;
+      --book-shadow: 0 24px 48px rgba(15, 23, 42, 0.18), 0 6px 16px rgba(15, 23, 42, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100dvh;
+      overflow: hidden;
+      background: var(--bg-gradient);
+      font-family: 'Lora', serif;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      color: var(--text-main);
+    }
+
+    /* Thanh công cụ phía trên */
+    .top-bar {
+      width: 100%;
+      max-width: 1100px;
+      height: 50px;
+      padding: 0 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      z-index: 30;
+      flex-shrink: 0;
+    }
+
+    .book-brand {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 700;
+      font-size: 0.98rem;
+      color: #0f172a;
+      background: rgba(255, 255, 255, 0.8);
+      padding: 6px 14px;
+      border-radius: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+
+    .icon-btn {
+      background: rgba(255, 255, 255, 0.88);
+      border: 1px solid rgba(15, 23, 42, 0.12);
+      color: #0f172a;
+      padding: 7px 14px;
+      border-radius: 20px;
+      font-size: 0.84rem;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      transition: all 0.2s;
+    }
+
+    .icon-btn:hover {
+      background: #ffffff;
+      transform: translateY(-1px);
+    }
+
+    /* Khu vực sân khấu */
+    .stage {
+      width: 100%;
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 6px 16px;
+      perspective: 2000px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* Khung sách: Mặc định (và khi ở Bìa đầu / Bìa cuối) là 1 trang đơn */
+    .book {
+      width: 100%;
+      max-width: 470px;
+      height: 100%;
+      max-height: 750px;
+      position: relative;
+      display: flex;
+      border-radius: 16px;
+      box-shadow: var(--book-shadow);
+      background: var(--paper-bg);
+      border: 2px solid var(--paper-border);
+      overflow: hidden;
+      transition: max-width 0.45s cubic-bezier(0.22, 1, 0.36, 1), transform 0.35s ease;
+    }
+
+    /* Gáy sách bên trái khi hiển thị 1 trang bìa (tạo cảm giác cuốn sách đóng) */
+    .book.single-mode::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 18px;
+      background: linear-gradient(90deg, rgba(120, 70, 20, 0.22) 0%, rgba(120, 70, 20, 0.06) 60%, transparent 100%);
+      z-index: 25;
+      pointer-events: none;
+    }
+
+    /* Khi mở ruột sách trên máy tính: Mở rộng thành 2 trang đôi */
+    @media (min-width: 860px) {
+      .book.spread-mode {
+        max-width: 1060px;
+        max-height: 690px;
+        border-radius: 18px;
+      }
+
+      /* Rãnh gáy sách ở chính giữa khi mở 2 trang */
+      .book.spread-mode::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 50%;
+        width: 36px;
+        transform: translateX(-50%);
+        background: linear-gradient(90deg, 
+          rgba(0,0,0,0.0) 0%, 
+          rgba(120, 80, 30, 0.12) 42%, 
+          rgba(80, 50, 15, 0.24) 50%, 
+          rgba(120, 80, 30, 0.12) 58%, 
+          rgba(0,0,0,0.0) 100%);
+        z-index: 25;
+        pointer-events: none;
+      }
+    }
+
+    /* Từng trang sách */
+    .page {
+      display: none;
+      width: 100%;
+      height: 100%;
+      background: var(--paper-bg);
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      overflow: hidden;
+      animation: pageTurn 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .page.visible {
+      display: flex;
+    }
+
+    @media (min-width: 860px) {
+      .book.spread-mode .page {
+        width: 50%;
+      }
+      .book.spread-mode .page.left-page {
+        border-right: 1px solid #e2d9c8;
+      }
+    }
+
+    @keyframes pageTurn {
+      0% {
+        opacity: 0.35;
+        transform: scale(0.985) translateY(4px);
+      }
+      100% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+      }
+    }
+
+    /* Hình ảnh minh họa trên từng trang */
+    .page-visual {
+      width: 100%;
+      height: 41%;
+      position: relative;
+      overflow: hidden;
+      flex-shrink: 0;
+      background: #e0f2fe;
+    }
+
+    .page-visual img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      filter: brightness(1.05) saturate(1.12);
+      transition: transform 5s ease;
+    }
+
+    .page.visible .page-visual img {
+      transform: scale(1.04);
+    }
+
+    .page-visual::after {
+      content: "";
+      position: absolute;
+      inset: auto 0 0 0;
+      height: 28px;
+      background: linear-gradient(to top, var(--paper-bg) 5%, transparent 100%);
+    }
+
+    /* Phần thân chữ (cỡ chữ lớn +4px, không cần cuộn) */
+    .page-body {
+      flex: 1;
+      padding: 12px 26px 14px 28px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      overflow: hidden;
+    }
+
+    .content-wrap {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .page-text {
+      font-size: clamp(1.14rem, 2.45vh, 1.34rem);
+      line-height: 1.58;
+      color: var(--text-main);
+      text-align: justify;
+      font-weight: 500;
+    }
+
+    .dropcap::first-letter {
+      float: left;
+      font-size: 2.55em;
+      line-height: 0.84;
+      padding-right: 10px;
+      padding-top: 4px;
+      color: var(--accent);
+      font-weight: 700;
+    }
+
+    /* Trang 6: Thiết kế trang Châm Ngôn nổi bật */
+    .maxim-box {
+      margin-top: 14px;
+      padding: 18px 20px;
+      background: linear-gradient(135deg, #fef3c7 0%, #ffedd5 100%);
+      border-left: 5px solid var(--accent);
+      border-radius: 4px 14px 14px 4px;
+      box-shadow: 0 6px 16px rgba(217, 119, 6, 0.1);
+      position: relative;
+    }
+
+    .maxim-text {
+      font-style: italic;
+      font-size: clamp(1.12rem, 2.4vh, 1.32rem);
+      line-height: 1.56;
+      color: #92400e;
+      font-weight: 600;
+      text-align: center;
+    }
+
+    .page-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid #ede6d8;
+      padding-top: 8px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      flex-shrink: 0;
+    }
+
+    /* TRANG BÌA ĐẦU & TRANG BÌA CUỐI (1 TRANG ĐƠN) */
+    .cover-page {
+      background: linear-gradient(to bottom, #fffdf9 0%, #fef9ee 100%);
+    }
+
+    .cover-hero {
+      width: 100%;
+      height: 52%;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cover-hero img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: brightness(1.06) saturate(1.15);
+    }
+
+    .cover-hero::after {
+      content: "";
+      position: absolute;
+      inset: auto 0 0 0;
+      height: 45px;
+      background: linear-gradient(to top, #fffdf9 10%, transparent 100%);
+    }
+
+    .cover-content {
+      flex: 1;
+      padding: 8px 28px 18px 28px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      text-align: center;
+      align-items: center;
+    }
+
+    .cover-badge {
+      background: #fef3c7;
+      border: 1px solid #f59e0b;
+      color: #b45309;
+      padding: 5px 14px;
+      border-radius: 20px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+    }
+
+    .cover-title {
+      font-size: clamp(1.75rem, 3.8vh, 2.3rem);
+      font-weight: 700;
+      line-height: 1.22;
+      color: #b45309;
+      margin: 4px 0;
+    }
+
+    .cover-divider {
+      width: 64px;
+      height: 4px;
+      background: #f59e0b;
+      border-radius: 2px;
+      margin: 6px auto;
+    }
+
+    .cover-subtitle {
+      font-size: clamp(1.06rem, 2.2vh, 1.22rem);
+      color: #334155;
+      line-height: 1.52;
+      font-style: italic;
+      max-width: 92%;
+    }
+
+    /* Nút bấm Mở Sách trên Bìa Đầu & Bìa Cuối */
+    .open-book-btn {
+      background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+      color: #ffffff;
+      border: none;
+      padding: 12px 26px;
+      border-radius: 28px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 8px 20px rgba(217, 119, 6, 0.3);
+      transition: all 0.25s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .open-book-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 24px rgba(217, 119, 6, 0.4);
+    }
+
+    /* Khung thông tin Bìa Sau */
+    .back-cover-card {
+      background: #ffffff;
+      border: 1px solid #e5dccb;
+      border-radius: 14px;
+      padding: 16px 20px;
+      margin: 6px 0;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.04);
+      text-align: center;
+    }
+
+    /* Vùng chạm lật trang nhanh 2 bên mép */
+    .tap-zone {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 12%;
+      z-index: 28;
+      cursor: pointer;
+    }
+    .tap-left { left: 0; }
+    .tap-right { right: 0; }
+
+    /* Thanh điều khiển dưới cùng */
+    .bottom-bar {
+      width: 100%;
+      max-width: 680px;
+      height: 58px;
+      padding: 0 20px 8px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      z-index: 30;
+      flex-shrink: 0;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    .nav-btn {
+      background: #ffffff;
+      border: 1px solid rgba(15, 23, 42, 0.14);
+      color: #0f172a;
+      height: 42px;
+      padding: 0 20px;
+      border-radius: 22px;
+      font-size: 0.92rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+      transition: all 0.2s ease;
+    }
+
+    .nav-btn:hover:not(:disabled) {
+      background: #fef3c7;
+      border-color: #f59e0b;
+      color: #b45309;
+    }
+
+    .nav-btn:disabled {
+      opacity: 0.38;
+      pointer-events: none;
+    }
+
+    .dots-container {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.75);
+      padding: 8px 14px;
+      border-radius: 20px;
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #cbd5e1;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .dot.active {
+      width: 24px;
+      border-radius: 10px;
+      background: #d97706;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Thanh tiêu đề trên cùng -->
+  <header class="top-bar">
+    <div class="book-brand">
+      <span>☀️</span>
+      <span>Ánh Sáng Từ Đôi Vai Gầy</span>
+    </div>
+    <button class="icon-btn" id="fullscreenBtn">⛶ Toàn màn hình</button>
+  </header>
+
+  <!-- Sân khấu chính -->
+  <main class="stage" id="touchStage">
+    <div class="tap-zone tap-left" id="tapPrev" title="Trang trước"></div>
+    <div class="tap-zone tap-right" id="tapNext" title="Trang sau"></div>
+
+    <div class="book single-mode" id="bookContainer">
+
+      <!-- MỤC 0: TRANG BÌA ĐẦU (LUÔN HIỂN THỊ 1 TRANG ĐƠN) -->
+      <section class="page cover-page" data-index="0">
+        <div class="cover-hero">
+          <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1000&q=85" alt="Bình minh tươi sáng trên biển" />
+        </div>
+        <div class="cover-content">
+          <span class="cover-badge">Truyện Ngắn Truyền Cảm Hứng</span>
+          <div>
+            <h1 class="cover-title">ÁNH SÁNG TỪ<br/>ĐÔI VAI GẦY</h1>
+            <div class="cover-divider"></div>
+          </div>
+          <p class="cover-subtitle">
+            Hành trình vượt lên số phận của cậu học trò nghèo nơi làng chài đầy nắng gió và bão giông.
+          </p>
+          <button class="open-book-btn" id="startReadBtn">
+            📖 Mở Sách Đọc Truyện ➔
+          </button>
+          <div class="page-footer" style="width: 100%;">
+            <span>Bìa Trước</span>
+            <span>Ấn phẩm kỹ thuật số</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- MỤC 1: TRANG 1 - CẢNH LÀNG CHÀI VEN BIỂN -->
+      <section class="page" data-index="1">
+        <div class="page-visual">
+          <img src="https://images.unsplash.com/photo-1559592413-7cec4d0cae2b?auto=format&fit=crop&w=1000&q=85" alt="Làng chài ven biển Việt Nam" />
+        </div>
+        <div class="page-body">
+          <div class="content-wrap">
+            <p class="page-text dropcap">
+              Ở một làng chài nghèo ven biển, nơi những cơn gió mặn chát luôn rít qua từng kẽ lá, có một cậu học trò tên là Minh. Căn nhà của Minh chỉ là túp lều tạm bợ, trống huếch trống hoác mỗi khi mùa bão về. Ba mất sớm trong một chuyến biển xa, mẹ Minh một mình tần tảo sớm hôm với gánh hàng cá để nuôi hai anh em ăn học và chăm sóc người bà đau yếu.
+            </p>
+          </div>
+          <div class="page-footer">
+            <span>Ánh Sáng Từ Đôi Vai Gầy</span>
+            <span>Trang 1 / 6</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- MỤC 2: TRANG 2 - BUỔI SỚM PHỤ MẸ & CHIỀU RA BỜ ĐÊ -->
+      <section class="page" data-index="2">
+        <div class="page-visual">
+          <img src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1000&q=85" alt="Bình minh sớm mai nơi bờ đê làng quê" />
+        </div>
+        <div class="page-body">
+          <div class="content-wrap">
+            <p class="page-text dropcap">
+              Hằng ngày, khi mặt trời còn chưa kịp ló rạng, Minh đã thức dậy để giúp mẹ dọn hàng ra chợ. Đôi bàn tay nhỏ bé sớm chai sần vì phụ mẹ bưng bê, dọn dẹp. Buổi chiều sau giờ học, trong khi bạn bè cùng trang lứa mải mê với những trận đá bóng hay trò chơi điện tử, Minh lại lầm lũi ra bờ đê hái rau, mò cua bắt ốc để cải thiện bữa cơm gia đình.
+            </p>
+          </div>
+          <div class="page-footer">
+            <span>Ánh Sáng Từ Đôi Vai Gầy</span>
+            <span>Trang 2 / 6</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- MỤC 3: TRANG 3 - ĐÈN DẦU ĐÊM KHUYA & MƯA BÃO -->
+      <section class="page" data-index="3">
+        <div class="page-visual">
+          <img src="https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?auto=format&fit=crop&w=1000&q=85" alt="Những trang sách học trò bên ánh đèn" />
+        </div>
+        <div class="page-body">
+          <div class="content-wrap">
+            <p class="page-text dropcap">
+              Dưới ánh đèn dầu leo lét mỗi đêm, cậu học trò nghèo miệt mài bên những trang vở cũ kĩ, mồ hôi nhễ nhại nhưng ánh mắt luôn rực sáng một quyết tâm sắt đá. Có những ngày mưa bão trắng trời, mái nhà dột nát khiến sách vở ướt nhòe, Minh phải vừa che nón lá vừa học bài.
+            </p>
+          </div>
+          <div class="page-footer">
+            <span>Ánh Sáng Từ Đôi Vai Gầy</span>
+            <span>Trang 3 / 6</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- MỤC 4: TRANG 4 - THƯƠNG MẸ & NIỀM TIN VÀO CON CHỮ -->
+      <section class="page" data-index="4">
+        <div class="page-visual">
+          <img src="https://images.unsplash.com/photo-1516627145497-ae6968895b74?auto=format&fit=crop&w=1000&q=85" alt="Đôi bàn tay tần tảo và niềm hy vọng" />
+        </div>
+        <div class="page-body">
+          <div class="content-wrap">
+            <p class="page-text dropcap">
+              Đã có lúc, vì quá thương mẹ vất vả, Minh định thắt lòng xin nghỉ học để đi làm thuê. Nhưng nhìn vào đôi mắt đầy kỳ vọng và đôi bàn tay thô ráp của mẹ, cậu lại tự nhủ phải cố gắng gấp bội. Minh hiểu rằng, chỉ có con chữ mới là con đường ngắn nhất để giúp gia đình thoát khỏi cảnh nghèo khó và những cơn sóng dữ của cuộc đời.
+            </p>
+          </div>
+          <div class="page-footer">
+            <span>Ánh Sáng Từ Đôi Vai Gầy</span>
+            <span>Trang 4 / 6</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- MỤC 5: TRANG 5 - TRÁI NGỌT NỞ HOA TRƯỚC BIỂN LỚN -->
+      <section class="page" data-index="5">
+        <div class="page-visual">
+          <img src="https://images.unsplash.com/photo-1505118380757-91f5f5632de0?auto=format&fit=crop&w=1000&q=85" alt="Đứng trước những con sóng biển vỗ bờ" />
+        </div>
+        <div class="page-body">
+          <div class="content-wrap">
+            <p class="page-text dropcap">
+              Sự nỗ lực không mệt mỏi ấy cuối cùng đã nở hoa. Trong kỳ thi học sinh giỏi cấp quốc gia, Minh đã xuất sắc giành giải Nhất trong sự ngỡ ngàng và khâm phục của thầy cô, bạn bè. Ngày nhận được học bổng toàn phần vào một trường đại học danh tiếng, Minh đứng trước biển, nhìn những con sóng vỗ bờ mà trào nước mắt. Đôi vai gầy ấy giờ đây không còn chỉ gánh vác nỗi lo toan cơm áo, mà đã đủ vững chãi để nâng đỡ cả những ước mơ lớn lao.
+            </p>
+          </div>
+          <div class="page-footer">
+            <span>Ánh Sáng Từ Đôi Vai Gầy</span>
+            <span>Trang 5 / 6</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- MỤC 6: TRANG 6 - TRANG CHÂM NGÔN RIÊNG BIỆT -->
+      <section class="page" data-index="6">
+        <div class="page-visual">
+          <img src="https://images.unsplash.com/photo-1470252649378-9c29740c9fa8?auto=format&fit=crop&w=1000&q=85" alt="Mặt trời rực rỡ trên bầu trời tri thức" />
+        </div>
+        <div class="page-body">
+          <div class="content-wrap">
+            <p class="page-text dropcap">
+              Câu chuyện về "cậu bé làng chài" đã trở thành ngọn lửa truyền cảm hứng mạnh mẽ, khẳng định rằng:
+            </p>
+            <div class="maxim-box">
+              <p class="maxim-text">
+                “Gian khổ không phải là rào cản, mà chính là bệ phóng để những trái tim đầy nghị lực bay cao, bay xa hơn trên bầu trời tri thức.”
+              </p>
+            </div>
+          </div>
+          <div class="page-footer">
+            <span>Lời Kết Truyền Cảm Hứng</span>
+            <span>Trang 6 / 6</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- MỤC 7: TRANG BÌA CUỐI (ĐÓNG SÁCH LẠI - HIỂN THỊ 1 TRANG ĐƠN) -->
+      <section class="page cover-page" data-index="7">
+        <div class="cover-hero" style="height: 46%;">
+          <img src="https://images.unsplash.com/photo-1518837695005-2083093ee35b?auto=format&fit=crop&w=1000&q=85" alt="Biển êm đềm lúc hoàng hôn" />
+        </div>
+        <div class="cover-content">
+          <span class="cover-badge">Khép Lại Trang Sách</span>
+          <div>
+            <h2 class="cover-title" style="font-size: clamp(1.45rem, 3.2vh, 1.9rem);">ÁNH SÁNG TỪ ĐÔI VAI GẦY</h2>
+            <div class="cover-divider"></div>
+          </div>
+          <div class="back-cover-card">
+            <p class="cover-subtitle" style="max-width: 100%; font-size: clamp(1rem, 2.05vh, 1.15rem);">
+              “Mỗi cơn sóng dữ đi qua đều để lại một bờ cát vững vàng hơn. Chỉ cần giữ vững ngọn lửa tri thức, mọi ước mơ đều tìm thấy bến bờ.”
+            </p>
+          </div>
+          <button class="open-book-btn" id="restartReadBtn">
+            ↺ Mở Lại Từ Trang Bìa
+          </button>
+          <div class="page-footer" style="width: 100%;">
+            <span>Bìa Sau • Hết</span>
+            <span>Cảm ơn bạn đã đón đọc</span>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- Thanh điều hướng dưới cùng -->
+  <footer class="bottom-bar">
+    <button class="nav-btn" id="prevBtn">
+      <span>❮</span> Trước
+    </button>
+
+    <div class="dots-container" id="dotsContainer"></div>
+
+    <button class="nav-btn" id="nextBtn">
+      Mở sách <span>❯</span>
+    </button>
+  </footer>
+
+  <script>
+    (function () {
+      const bookContainer = document.getElementById('bookContainer');
+      const pages = Array.from(document.querySelectorAll('.page'));
+      const prevBtn = document.getElementById('prevBtn');
+      const nextBtn = document.getElementById('nextBtn');
+      const tapPrev = document.getElementById('tapPrev');
+      const tapNext = document.getElementById('tapNext');
+      const startReadBtn = document.getElementById('startReadBtn');
+      const restartReadBtn = document.getElementById('restartReadBtn');
+      const dotsContainer = document.getElementById('dotsContainer');
+      const touchStage = document.getElementById('touchStage');
+      const fullscreenBtn = document.getElementById('fullscreenBtn');
+
+      // Danh sách các bước lật sách (Views)
+      // Trên máy tính: Bìa đầu [0] -> Cặp [1,2] -> Cặp [3,4] -> Cặp [5,6] -> Bìa cuối [7]
+      // Trên điện thoại: Từng trang đơn [0], [1], [2], [3], [4], [5], [6], [7]
+      let currentViewIndex = 0;
+
+      function isDesktop() {
+        return window.innerWidth >= 860;
+      }
+
+      function getViews() {
+        if (isDesktop()) {
+          return [
+            [0],       // Bìa đầu (1 trang)
+            [1, 2],    // Mở 2 trang: Trang 1 & Trang 2
+            [3, 4],    // Mở 2 trang: Trang 3 & Trang 4
+            [5, 6],    // Mở 2 trang: Trang 5 & Trang 6 (Châm ngôn)
+            [7]        // Bìa cuối (1 trang)
+          ];
+        } else {
+          return [[0], [1], [2], [3], [4], [5], [6], [7]];
+        }
+      }
+
+      function renderDots(views) {
+        dotsContainer.innerHTML = '';
+        views.forEach((_, idx) => {
+          const dot = document.createElement('div');
+          dot.className = 'dot' + (idx === currentViewIndex ? ' active' : '');
+          dot.addEventListener('click', () => {
+            currentViewIndex = idx;
+            updateBook();
+          });
+          dotsContainer.appendChild(dot);
+        });
+      }
+
+      function updateBook() {
+        const views = getViews();
+        if (currentViewIndex >= views.length) {
+          currentViewIndex = views.length - 1;
+        }
+        if (currentViewIndex < 0) {
+          currentViewIndex = 0;
+        }
+
+        const activePair = views[currentViewIndex];
+        const isSpread = activePair.length === 2;
+
+        // Chuyển đổi khung sách giữa chế độ 1 trang (Bìa đầu / Bìa cuối / Điện thoại) và 2 trang (Ruột sách trên máy tính)
+        bookContainer.classList.toggle('spread-mode', isSpread);
+        bookContainer.classList.toggle('single-mode', !isSpread);
+
+        pages.forEach((page, idx) => {
+          page.classList.remove('visible', 'left-page', 'right-page');
+          if (activePair.includes(idx)) {
+            page.classList.add('visible');
+            if (isSpread) {
+              if (idx === activePair[0]) page.classList.add('left-page');
+              if (idx === activePair[1]) page.classList.add('right-page');
+            }
+          }
+        });
+
+        renderDots(views);
+
+        prevBtn.disabled = currentViewIndex === 0;
+
+        if (currentViewIndex === 0) {
+          nextBtn.innerHTML = 'Mở sách <span>❯</span>';
+        } else if (currentViewIndex === views.length - 1) {
+          nextBtn.innerHTML = 'Đọc lại ↺';
+        } else {
+          nextBtn.innerHTML = 'Sau <span>❯</span>';
+        }
+      }
+
+      function nextView() {
+        const views = getViews();
+        if (currentViewIndex < views.length - 1) {
+          currentViewIndex++;
+        } else {
+          currentViewIndex = 0;
+        }
+        updateBook();
+      }
+
+      function prevView() {
+        if (currentViewIndex > 0) {
+          currentViewIndex--;
+          updateBook();
+        }
+      }
+
+      nextBtn.addEventListener('click', nextView);
+      prevBtn.addEventListener('click', prevView);
+      tapNext.addEventListener('click', nextView);
+      tapPrev.addEventListener('click', prevView);
+
+      startReadBtn.addEventListener('click', () => {
+        currentViewIndex = 1;
+        updateBook();
+      });
+
+      restartReadBtn.addEventListener('click', () => {
+        currentViewIndex = 0;
+        updateBook();
+      });
+
+      // Vuốt tay trên điện thoại
+      let startX = 0;
+      let startY = 0;
+
+      touchStage.addEventListener('touchstart', (e) => {
+        startX = e.changedTouches[0].screenX;
+        startY = e.changedTouches[0].screenY;
+      }, { passive: true });
+
+      touchStage.addEventListener('touchend', (e) => {
+        const endX = e.changedTouches[0].screenX;
+        const endY = e.changedTouches[0].screenY;
+        const diffX = startX - endX;
+        const diffY = Math.abs(startY - endY);
+
+        if (Math.abs(diffX) > 40 && diffY < 90) {
+          if (diffX > 0) nextView();
+          else prevView();
+        }
+      }, { passive: true });
+
+      // Phím mũi tên trên máy tính
+      window.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight') nextView();
+        if (e.key === 'ArrowLeft') prevView();
+      });
+
+      // Giữ đúng vị trí trang khi thu phóng màn hình máy tính <-> điện thoại
+      let lastDesktopState = isDesktop();
+      window.addEventListener('resize', () => {
+        const nowDesktop = isDesktop();
+        if (nowDesktop !== lastDesktopState) {
+          currentViewIndex = 0;
+          lastDesktopState = nowDesktop;
+        }
+        updateBook();
+      });
+
+      fullscreenBtn.addEventListener('click', () => {
+        if (!document.fullscreenElement) {
+          document.documentElement.requestFullscreen().catch(() => {});
+        } else {
+          document.exitFullscreen().catch(() => {});
+        }
+      });
+
+      updateBook();
+    })();
+  </script>
+</body>
+</html>
