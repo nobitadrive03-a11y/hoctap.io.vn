@@ -1,1 +1,1197 @@
+<!DOCTYPE html>
+<html lang="vi" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Khám Phá Hệ Điều Hành - Bài 1 Tin học 11</title>
 
+    <!-- Google tag (gtag.js) - Google Analytics Measurement -->
+       <!-- 1. MÃ GA4 GỐC (Kết nối với Google Analytics) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-NSJCVSL9RM"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-NSJCVSL9RM'); 
+  </script>
+
+  <!-- 2. MÃ NHỊP TIM 30 GIÂY -->
+  <script>
+    setInterval(function() {
+      if (!document.hidden) { 
+        gtag('event', 'keep_alive', {
+          'event_category': 'Engagement',
+          'event_label': 'Học sinh đang làm ...',
+          'non_interaction': false
+        });
+      }
+    }, 30000); 
+  </script>
+
+    <!-- Tailwind CSS & Confetti -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <!-- Firebase SDK (Compat) -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            overflow: hidden;
+            margin: 0;
+            padding: 0;
+            touch-action: manipulation;
+            user-select: none;
+            height: 100dvh;
+            width: 100vw;
+        }
+
+        /* --- 1. HIỆU ỨNG ANIMATION MƯỢT MÀ (GPU ACCELERATED) --- */
+        @keyframes float {
+            0%, 100% { transform: translate(-50%, -50%) translateY(0px); }
+            50% { transform: translate(-50%, -50%) translateY(-10px); }
+        }
+        @keyframes wave {
+            0%, 100% { transform: translateX(0) translateY(0); }
+            25% { transform: translateX(5px) translateY(-4px); }
+            75% { transform: translateX(-5px) translateY(4px); }
+        }
+        @keyframes glow {
+            0%, 100% { filter: drop-shadow(0 0 10px rgba(250, 204, 21, 0.65)); }
+            50% { filter: drop-shadow(0 0 22px rgba(250, 204, 21, 1)); }
+        }
+        @keyframes logoFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-4px); }
+        }
+        @keyframes hop {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-3px); }
+        }
+        .animal-hop { animation: hop 1s ease-in-out infinite; }
+        
+        .star-particle {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background: #fbbf24;
+            border-radius: 50%;
+            pointer-events: none;
+            opacity: 0;
+            box-shadow: 0 0 6px #facc15;
+            will-change: transform, opacity;
+        }
+        @keyframes starFloat {
+            0% { transform: translate(0, 0) scale(0.3); opacity: 0; }
+            25% { opacity: 0.95; transform: scale(1); }
+            80% { opacity: 0.85; }
+            100% { transform: translate(var(--tx), var(--ty)) scale(0.1); opacity: 0; }
+        }
+
+        @keyframes flyFlock {
+            0% { transform: translateX(-20vw) translateY(var(--startY)) scale(var(--scale)); opacity: 0; }
+            5% { opacity: 1; }
+            95% { opacity: 1; }
+            100% { transform: translateX(120vw) translateY(var(--endY)) scale(var(--scale)); opacity: 0; }
+        }
+        @keyframes wingFlapRealistic {
+            0% { transform: scaleY(1); }
+            50% { transform: scaleY(-0.6); }
+            100% { transform: scaleY(1); }
+        }
+        .bird-flock { position: absolute; pointer-events: none; z-index: 4; will-change: transform; }
+        .bird { position: absolute; }
+
+        @keyframes sailBoat1 {
+            0% { transform: translateX(-100px) translateY(0px); }
+            50% { transform: translateX(55vw) translateY(-6px); }
+            100% { transform: translateX(115vw) translateY(0px); }
+        }
+        @keyframes sailBoat2 {
+            0% { transform: translateX(115vw) scaleX(-1) translateY(0px); }
+            50% { transform: translateX(50vw) scaleX(-1) translateY(-8px); }
+            100% { transform: translateX(-100px) scaleX(-1) translateY(0px); }
+        }
+        .boat { position: absolute; pointer-events: none; z-index: 5; will-change: transform; }
+        @media (max-width: 640px) { .boat { transform: scale(0.6); } }
+        .boat1 { animation: sailBoat1 45s linear infinite; top: 10%; }
+        .boat2 { animation: sailBoat2 52s linear infinite; top: 26%; }
+
+        /* --- TRẠNG THÁI ĐẢO --- */
+        .island-container {
+            position: absolute;
+            transform: translate(-50%, -50%);
+            z-index: 20;
+            cursor: pointer;
+            transition: transform 0.35s ease, filter 0.35s ease;
+            width: 155px;
+            height: 155px;
+            will-change: transform;
+        }
+        @media (max-width: 640px) { 
+            .island-container { 
+                width: 96px;
+                height: 96px; 
+            } 
+        }
+        
+        .island-svg {
+            width: 100%;
+            height: 100%;
+            transition: transform 0.3s ease, filter 0.3s ease;
+            filter: drop-shadow(0 6px 14px rgba(0,0,0,0.28));
+        }
+        .island-container:hover .island-svg {
+            transform: scale(1.08) translateY(-4px);
+            filter: drop-shadow(0 12px 22px rgba(0, 0, 0, 0.4));
+        }
+        .island-locked { pointer-events: none; }
+        .island-locked .island-svg { filter: grayscale(100%) brightness(0.42) contrast(1.15); }
+        .island-active { pointer-events: auto; animation: float 3.2s ease-in-out infinite; }
+        .island-active .island-svg {
+            filter: grayscale(0%) brightness(1.08);
+            animation: glow 2.2s ease-in-out infinite alternate;
+        }
+        .island-correct { pointer-events: auto; }
+        .island-correct .island-svg { filter: grayscale(0%) brightness(1.18) contrast(1.08) saturate(1.2); }
+        .island-wrong .island-svg { filter: grayscale(80%) brightness(0.45); }
+
+        .bg-ocean {
+            background: radial-gradient(circle at 50% 20%, #2563eb 0%, #1d4ed8 45%, #1e3a8a 100%);
+        }
+        .wave-bg { animation: wave 8s ease-in-out infinite; }
+
+        /* --- GIAO DIỆN MODAL CÂU HỎI (CHỮ CÂU HỎI ĐỎ & BẤM ĐÁP ÁN MÀU XANH BLUE) --- */
+        .quiz-modal-card {
+            background: #ffffff;
+            border-radius: 24px;
+            box-shadow: 0 25px 60px -12px rgba(0, 0, 0, 0.65), 0 0 0 3px rgba(59, 130, 246, 0.4);
+            display: flex;
+            flex-direction: column;
+            max-height: 88dvh;
+            width: 94%;
+            max-width: 680px;
+            overflow: hidden;
+            animation: modalPop 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        @keyframes modalPop {
+            0% { opacity: 0; transform: scale(0.92) translateY(12px); }
+            100% { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        .quiz-header-bar {
+            background: linear-gradient(135deg, #1e40af 0%, #2563eb 50%, #0284c7 100%);
+            padding: 0.85rem 1.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            color: white;
+            border-bottom: 3px solid #facc15;
+        }
+        .quiz-content-scroll { 
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            flex-grow: 1;
+            padding: 1.1rem 1.15rem 1.25rem;
+            scrollbar-width: thin;
+            scrollbar-color: #cbd5e1 transparent; 
+        }
+        @media (min-width: 768px) {
+            .quiz-content-scroll { padding: 1.5rem 1.75rem; }
+        }
+        .quiz-content-scroll::-webkit-scrollbar { width: 6px; }
+        .quiz-content-scroll::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 4px; }
+
+        /* Nút đáp án mặc định */
+        .answer-option-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            width: 100%;
+            padding: 0.75rem 0.95rem;
+            border-radius: 16px;
+            background: #f8fafc;
+            border: 2px solid #cbd5e1;
+            text-align: left;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+        @media (min-width: 768px) {
+            .answer-option-btn { padding: 0.9rem 1.15rem; gap: 1rem; }
+        }
+        .answer-option-btn:hover:not(:disabled) {
+            background: #dbeafe;
+            border-color: #2563eb;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(37, 99, 235, 0.2);
+        }
+        .answer-option-btn:active:not(:disabled) {
+            transform: scale(0.99);
+        }
+        .answer-badge {
+            flex-shrink: 0;
+            width: 34px;
+            height: 34px;
+            border-radius: 10px;
+            background: #dbeafe;
+            color: #1d4ed8;
+            font-weight: 800;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+        @media (min-width: 768px) {
+            .answer-badge { width: 38px; height: 38px; font-size: 1.05rem; }
+        }
+        .answer-option-btn:hover:not(:disabled) .answer-badge {
+            background: #2563eb;
+            color: #ffffff;
+        }
+        .answer-text {
+            color: #1e3a8a;
+            font-weight: 600;
+            font-size: 0.92rem;
+            line-height: 1.45;
+        }
+        @media (min-width: 768px) {
+            .answer-text { font-size: 1.05rem; }
+        }
+
+        /* Khi bấm chọn đáp án: Chuyển sang màu XANH BLUE (#2563eb) nổi bật, chữ Trắng */
+        .answer-selected-blue {
+            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%) !important;
+            border-color: #1e40af !important;
+            box-shadow: 0 6px 18px rgba(37, 99, 235, 0.4) !important;
+            transform: scale(1.01);
+        }
+        .answer-selected-blue .answer-badge {
+            background: #ffffff !important;
+            color: #1d4ed8 !important;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+        }
+        .answer-selected-blue .answer-text {
+            color: #ffffff !important;
+            font-weight: 700 !important;
+        }
+
+        /* Trạng thái khi bấm nhầm đáp án Sai (đỏ) */
+        .answer-wrong {
+            background: #ef4444 !important;
+            border-color: #b91c1c !important;
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3) !important;
+        }
+        .answer-wrong .answer-badge {
+            background: #ffffff !important;
+            color: #dc2626 !important;
+        }
+        .answer-wrong .answer-text {
+            color: #ffffff !important;
+            font-weight: 700 !important;
+        }
+
+        /* --- LEADERBOARD CSS --- */
+        .leaderboard-modal {
+            background: rgba(255, 255, 255, 0.98);
+            border-radius: 24px;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.6);
+            max-width: 540px;
+            width: 94%;
+            border: 3px solid #facc15;
+            animation: modalPop 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+            z-index: 100;
+        }
+        .rank-row:nth-child(1) td { color: #b45309; font-weight: bold; background-color: #fef3c7; }
+        .rank-row:nth-child(2) td { color: #334155; font-weight: bold; background-color: #f1f5f9; }
+        .rank-row:nth-child(3) td { color: #9a3412; font-weight: bold; background-color: #ffedd5; }
+        .rank-row.current-user td { background-color: #dbeafe; border-top: 2px solid #3b82f6; border-bottom: 2px solid #3b82f6; color: #1e3a8a; }
+
+        .btn-pulse { animation: pulseBtn 1.5s infinite; }
+        @keyframes pulseBtn {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.65); }
+            70% { transform: scale(1.04); box-shadow: 0 0 0 10px rgba(37, 99, 235, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(37, 99, 235, 0); }
+        }
+
+        /* Logo HS Góc dưới phải */
+        .logo-hs-container {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            z-index: 40;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            pointer-events: none;
+            animation: logoFloat 3s ease-in-out infinite;
+        }
+        .logo-hs-badge {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, #ef4444, #b91c1c);
+            border: 2px solid #facc15;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            color: white;
+            font-weight: 900;
+            font-size: 16px;
+            text-shadow: 1px 1px 0 #000;
+        }
+        .logo-hs-text {
+            font-weight: bold;
+            color: rgba(255,255,255,0.85);
+            font-size: 9px;
+            text-transform: uppercase;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .sparkle { animation: sparkle 2s ease-in-out infinite; }
+    </style>
+</head>
+<body class="bg-ocean">
+
+    <!-- 1. MÀN HÌNH ĐĂNG NHẬP (NHẬP VĂN BẢN TỰ DO CHO HỌ TÊN & LỚP) -->
+    <div id="loginScreen" class="fixed inset-0 z-50 flex items-center justify-center p-4 transition-opacity duration-500" style="background: radial-gradient(circle at center, rgba(30, 58, 138, 0.85) 0%, rgba(15, 23, 42, 0.95) 100%); backdrop-filter: blur(8px);">
+        <div class="bg-white rounded-3xl shadow-2xl max-w-md w-full overflow-hidden border-4 border-yellow-400 transform transition-all">
+            <!-- Header trang trí -->
+            <div class="bg-gradient-to-r from-blue-700 via-blue-600 to-cyan-600 p-5 md:p-6 text-center relative">
+                <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-white/15 backdrop-blur-md border-2 border-yellow-300 shadow-lg mb-2">
+                    <span class="text-3xl">🏝️</span>
+                </div>
+                <h1 class="text-2xl md:text-3xl font-extrabold text-white tracking-wide drop-shadow">KHÁM PHÁ CÁC ĐẢO</h1>
+                <p class="text-yellow-300 font-bold text-xs md:text-sm mt-1 uppercase tracking-wider">Tin học 11 • Bài 1: Hệ điều hành</p>
+            </div>
+
+            <!-- Form nhập Tên và Lớp tự do -->
+            <div class="p-5 md:p-7 space-y-4">
+                <div>
+                    <label class="block text-xs md:text-sm font-bold text-blue-900 mb-1.5">👤 Họ và tên học sinh</label>
+                    <input type="text" id="studentNameInput" placeholder="Nhập họ và tên của bạn..." class="w-full px-4 py-2.5 md:py-3 border-2 border-slate-200 rounded-xl text-sm md:text-base font-medium text-slate-800 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition">
+                </div>
+
+                <div>
+                    <label class="block text-xs md:text-sm font-bold text-blue-900 mb-1.5">🏫 Lớp</label>
+                    <input type="text" id="studentClassInput" placeholder="Nhập lớp của bạn (VD: 11A, 11A15...)" class="w-full px-4 py-2.5 md:py-3 border-2 border-slate-200 rounded-xl text-sm md:text-base font-medium text-slate-800 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition">
+                </div>
+
+                <p id="loginErrorMsg" class="text-xs font-bold text-red-600 text-center hidden">⚠️ Vui lòng nhập đầy đủ Họ tên và Lớp!</p>
+
+                <button onclick="startGame()" class="w-full bg-gradient-to-r from-red-600 to-orange-500 text-white font-extrabold py-3 md:py-3.5 px-6 rounded-xl text-base md:text-lg hover:from-red-700 hover:to-orange-600 transition transform active:scale-95 shadow-lg flex items-center justify-center gap-2">
+                    <span>🚀 BẮT ĐẦU KHÁM PHÁ</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. MÀN HÌNH CHÍNH TRÒ CHƠI -->
+    <div id="app" class="w-full h-full relative hidden opacity-0 transition-opacity duration-700">
+        
+        <svg class="absolute inset-0 w-full h-full pointer-events-none" preserveAspectRatio="xMidYMid slice">
+            <defs>
+                <pattern id="waves" x="0" y="0" width="200" height="40" patternUnits="userSpaceOnUse">
+                    <path d="M0,20 Q50,10 100,20 T200,20" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="2" class="wave-bg" />
+                </pattern>
+            </defs>
+            <rect width="100%" height="100%" fill="url(#waves)" />
+        </svg>
+
+        <!-- GÓC TRÊN PHẢI: CHỈ HIỂN THỊ TIẾN ĐỘ ĐẢO -->
+        <div class="absolute top-2 right-2 md:top-4 md:right-4 z-40 pointer-events-auto">
+            <div class="bg-white/95 backdrop-blur-sm px-3 py-1.5 md:px-4 md:py-2 rounded-2xl border-2 border-yellow-400 shadow-lg text-center flex items-center gap-2">
+                <span class="text-base md:text-xl">🧭</span>
+                <div class="text-left">
+                    <p class="text-[10px] md:text-xs font-bold text-slate-500 uppercase leading-none">Hành trình</p>
+                    <p id="islandProgressText" class="text-xs md:text-base font-extrabold text-blue-900 leading-tight">Đảo <span id="currentIslandNum" class="text-red-600">1</span> / 10</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- GÓC DƯỚI TRÁI: THÔNG TIN HỌC SINH, LỚP, ĐIỂM & BẢNG XẾP HẠNG -->
+        <div class="absolute bottom-2 left-2 md:bottom-4 md:left-4 z-40 pointer-events-auto max-w-[225px] sm:max-w-[270px]">
+            <div class="bg-white/95 backdrop-blur-md p-2 md:p-3 rounded-2xl border-2 border-blue-500 shadow-xl transition-all">
+                <div class="flex items-center gap-2">
+                    <div class="w-8 h-8 md:w-10 md:h-10 rounded-xl bg-blue-600 text-white font-extrabold flex items-center justify-center text-sm md:text-lg shadow-inner shrink-0">
+                        🎓
+                    </div>
+                    <div class="min-w-0 flex-1">
+                        <p class="text-slate-800 font-extrabold text-xs md:text-sm truncate" id="displayStudentName">...</p>
+                        <div class="flex items-center gap-1.5 mt-0.5">
+                            <span class="inline-block bg-blue-100 text-blue-800 font-bold px-1.5 py-0.5 rounded text-[10px] md:text-xs" id="displayStudentClass">Lớp: ...</span>
+                            <span class="inline-block bg-red-100 text-red-600 font-extrabold px-1.5 py-0.5 rounded text-[10px] md:text-xs">⭐ <span id="scoreDisplay">0</span>đ</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Thông báo nhỏ khi hoàn thành 10 đảo để chiêm ngưỡng thành quả -->
+                <div id="completedBanner" class="hidden mt-1.5 px-2 py-1 rounded-lg bg-emerald-100 border border-emerald-300 text-emerald-800 font-extrabold text-[10px] md:text-xs text-center">
+                    🎉 Đã hoàn thành 10/10 đảo!
+                </div>
+
+                <div class="mt-2 pt-1.5 border-t border-slate-200 flex items-center gap-1.5">
+                    <button onclick="showLeaderboard()" class="flex-1 bg-gradient-to-r from-amber-500 to-yellow-500 text-white font-bold py-1 px-2 rounded-lg hover:from-amber-600 hover:to-yellow-600 transition shadow text-[10px] md:text-xs flex items-center justify-center gap-1">
+                        <span>🏆 BXH</span>
+                    </button>
+                    <button id="btnReplayQuick" onclick="restartGame()" class="hidden bg-blue-600 text-white font-bold py-1 px-2 rounded-lg hover:bg-blue-700 transition text-[10px] md:text-xs">
+                        🔄 Làm lại
+                    </button>
+                    <button onclick="location.reload()" class="bg-slate-200 text-slate-700 font-bold py-1 px-2 rounded-lg hover:bg-slate-300 transition text-[10px] md:text-xs" title="Đổi học sinh">
+                        Thoát
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- LOGO GÓC DƯỚI PHẢI -->
+        <div class="logo-hs-container">
+            <div class="logo-hs-text">Design by</div>
+            <div class="logo-hs-badge">HS</div>
+        </div>
+
+        <!-- THUYỀN BUỒM TRÊN BIỂN -->
+        <div class="absolute inset-0 z-10 pointer-events-none overflow-hidden">
+            <div class="boat boat1">
+                <svg width="80" height="60" viewBox="0 0 80 60">
+                    <polygon points="20,45 60,45 55,50 25,50" fill="#8b4513" opacity="0.8" />
+                    <rect x="38" y="15" width="4" height="30" fill="#654321" />
+                    <polygon points="40,15 40,35 15,35" fill="#ef4444" opacity="0.9" />
+                    <polygon points="42,18 42,30 60,30" fill="#dc2626" opacity="0.9" />
+                </svg>
+            </div>
+            <div class="boat boat2">
+                <svg width="70" height="55" viewBox="0 0 70 55">
+                    <polygon points="15,40 55,40 50,45 20,45" fill="#8b4513" opacity="0.8" />
+                    <rect x="33" y="12" width="4" height="28" fill="#654321" />
+                    <polygon points="35,12 35,32 12,32" fill="#3b82f6" opacity="0.9" />
+                    <polygon points="37,15 37,28 52,28" fill="#2563eb" opacity="0.9" />
+                </svg>
+            </div>
+        </div>
+
+        <!-- ĐÀN CHIM BAY -->
+        <div id="birdsContainer" class="absolute inset-0 z-30 pointer-events-none overflow-hidden"></div>
+
+        <!-- BẢN ĐỒ 10 HÒN ĐẢO -->
+        <div id="islandsMap" class="relative w-full h-full z-20 max-w-[1400px] mx-auto"></div>
+
+        <!-- 3. MODAL CÂU HỎI TRẮC NGHIỆM (CHỮ CÂU HỎI ĐỎ & BẤM ĐÁP ÁN MÀU XANH BLUE) -->
+        <div id="quizModal" class="fixed inset-0 bg-slate-900/75 backdrop-blur-sm z-50 hidden items-center justify-center p-2.5 sm:p-4 transition-opacity duration-300">
+            <div class="quiz-modal-card">
+                <!-- Thanh tiêu đề câu hỏi -->
+                <div class="quiz-header-bar">
+                    <div class="flex items-center gap-2.5">
+                        <div class="w-9 h-9 md:w-11 md:h-11 rounded-xl bg-yellow-400 text-blue-950 font-black flex items-center justify-center text-base md:text-xl shadow">
+                            <span id="quizNumber">1</span>
+                        </div>
+                        <div>
+                            <p class="text-[10px] md:text-xs text-blue-100 font-semibold uppercase tracking-wider">Thử thách khám phá đảo</p>
+                            <h2 class="text-xs md:text-base font-extrabold text-white">Bài 1: Hệ điều hành (Tin học 11)</h2>
+                        </div>
+                    </div>
+                    <div class="bg-white/20 px-2.5 py-1 rounded-full text-xs md:text-sm font-bold text-yellow-300">
+                        +10 điểm
+                    </div>
+                </div>
+                
+                <!-- Nội dung câu hỏi (MÀU ĐỎ) & các phương án (BẤM VÀO MÀU XANH BLUE) -->
+                <div class="quiz-content-scroll">
+                    <div class="bg-red-50/70 border-2 border-red-200 rounded-2xl p-3.5 md:p-4 mb-3.5 md:mb-4 shadow-sm">
+                        <p id="quizQuestion" class="text-base sm:text-lg md:text-xl text-red-600 font-extrabold leading-relaxed text-center"></p>
+                    </div>
+
+                    <div id="quizAnswers" class="space-y-2.5 md:space-y-3"></div>
+
+                    <div id="quizFeedback" class="mt-3 md:mt-4 p-2.5 md:p-3 rounded-xl text-center font-bold text-xs sm:text-sm md:text-base hidden"></div>
+
+                    <div id="nextQuestionContainer" class="mt-3.5 md:mt-5 hidden flex justify-center">
+                        <button onclick="nextQuestionAction()" class="btn-pulse bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-extrabold py-2.5 px-7 md:py-3 md:px-9 rounded-full text-sm md:text-base shadow-lg hover:from-blue-700 hover:to-indigo-700 transition transform active:scale-95 flex items-center gap-2">
+                            <span id="nextBtnText">TIẾP TỤC HÀNH TRÌNH</span>
+                            <span>➔</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4. MODAL BẢNG XẾP HẠNG FIREBASE REALTIME DATABASE -->
+        <div id="leaderboardModalWrapper" class="fixed inset-0 bg-slate-900/75 z-[70] hidden items-center justify-center p-3 sm:p-4 backdrop-blur-sm">
+            <div class="leaderboard-modal flex flex-col p-4 md:p-6 relative">
+                <button onclick="closeLeaderboard()" class="absolute top-3 right-4 text-slate-400 hover:text-red-500 text-2xl font-bold leading-none">&times;</button>
+                <div class="text-center mb-2">
+                    <span class="text-3xl">🏆</span>
+                    <h3 class="text-lg md:text-2xl font-extrabold text-amber-600 tracking-wide">BẢNG XẾP HẠNG</h3>
+                    <p id="firebaseStatusText" class="text-[11px] md:text-xs text-emerald-600 font-semibold mt-0.5">● Đồng bộ trực tuyến (Firebase Realtime Database)</p>
+                </div>
+
+                <div class="overflow-y-auto max-h-[52vh] rounded-xl border border-slate-200 bg-white shadow-inner">
+                    <table class="w-full text-left border-collapse text-xs sm:text-sm md:text-base">
+                        <thead class="bg-slate-100 sticky top-0 z-10">
+                            <tr>
+                                <th class="p-2 md:p-3 font-bold text-slate-700 border-b text-center w-14">Hạng</th>
+                                <th class="p-2 md:p-3 font-bold text-slate-700 border-b">Học Sinh</th>
+                                <th class="p-2 md:p-3 font-bold text-slate-700 border-b text-center w-20">Lớp</th>
+                                <th class="p-2 md:p-3 font-bold text-slate-700 border-b text-right w-16">Điểm</th>
+                            </tr>
+                        </thead>
+                        <tbody id="leaderboardBody" class="text-slate-800 divide-y divide-slate-100"></tbody>
+                    </table>
+                </div>
+
+                <div class="mt-4 flex justify-center gap-2">
+                    <button onclick="closeLeaderboard()" class="bg-blue-600 text-white font-bold py-2 px-8 rounded-full hover:bg-blue-700 transition shadow-md text-xs md:text-sm">Đóng</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // --- 0. CẤU HÌNH FIREBASE REALTIME DATABASE ---
+        const firebaseConfig = {
+            apiKey: "AIzaSyC4ou3Fu8IxAPYV347pHKT1jtPxQe5TBM4",
+            authDomain: "hanhtrinhso-e3368.firebaseapp.com",
+            databaseURL: "https://hanhtrinhso-e3368-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "hanhtrinhso-e3368",
+            storageBucket: "hanhtrinhso-e3368.firebasestorage.app",
+            messagingSenderId: "1046142513655",
+            appId: "1:1046142513655:web:5c7bb3a47ee90ac279fef2"
+        };
+
+        let database = null;
+        const LEADERBOARD_REF = 'bxh_tin11_bai1_hedieuhanh';
+        let realtimeLeaderboard = [];
+
+        try {
+            if (!firebase.apps.length) {
+                firebase.initializeApp(firebaseConfig);
+            }
+            database = firebase.database();
+
+            // Lắng nghe dữ liệu trực tiếp theo thời gian thực từ Firebase
+            database.ref(LEADERBOARD_REF).on('value', (snapshot) => {
+                const data = snapshot.val();
+                realtimeLeaderboard = [];
+                if (data) {
+                    Object.keys(data).forEach(key => {
+                        realtimeLeaderboard.push({
+                            id: key,
+                            ...data[key]
+                        });
+                    });
+                    realtimeLeaderboard.sort((a, b) => {
+                        if (b.score !== a.score) return b.score - a.score;
+                        return (a.timestamp || 0) - (b.timestamp || 0);
+                    });
+                }
+                const modal = document.getElementById('leaderboardModalWrapper');
+                if (modal && !modal.classList.contains('hidden')) {
+                    renderLeaderboardRows();
+                }
+            }, (error) => {
+                console.error("Lỗi đọc dữ liệu Firebase:", error);
+                const statusEl = document.getElementById('firebaseStatusText');
+                if (statusEl) {
+                    statusEl.innerText = "● Đang hiển thị dữ liệu lưu trên thiết bị (Offline)";
+                    statusEl.className = "text-[11px] md:text-xs text-orange-500 font-semibold mt-0.5";
+                }
+            });
+        } catch (err) {
+            console.error("Không thể khởi tạo Firebase:", err);
+        }
+
+        // Nhịp tim Google Analytics mỗi 30 giây
+        setInterval(() => {
+            if (typeof gtag === 'function' && studentName) {
+                gtag('event', 'study_heartbeat', {
+                    'event_category': 'Tin11_Bai1_HeDieuHanh',
+                    'student_name': `${studentName} (${studentClass})`,
+                    'current_island': Math.min(currentIslandIndex + 1, 10)
+                });
+            }
+        }, 30000);
+
+        // --- 1. DỮ LIỆU 10 CÂU HỎI BÀI 1: HỆ ĐIỀU HÀNH (TIN HỌC 11) ---
+        const questions = [
+            {
+                question: "Câu 1: Trong các chức năng sau đây, chức năng nào KHÔNG phải là nhóm chức năng cơ bản của hệ điều hành máy tính?",
+                answers: [
+                    "A. Tổ chức thực hiện các chương trình và phân phối tài nguyên cho các tiến trình xử lí trên máy tính.",
+                    "B. Cung cấp môi trường giao tiếp giúp người sử dụng trao đổi thông tin với hệ thống máy tính thuận tiện.",
+                    "C. Cung cấp các tiện ích giúp nâng cao hiệu quả sử dụng máy tính và hỗ trợ quản lí lưu trữ dữ liệu.",
+                    "D. Trực tiếp biên dịch toàn bộ mã nguồn của mọi ngôn ngữ lập trình bậc cao sang ngôn ngữ máy để chạy."
+                ],
+                correct: 3
+            },
+            {
+                question: "Câu 2: Phát biểu nào dưới đây nêu đúng đặc điểm của giao diện đồ họa (GUI) trong các hệ điều hành hiện đại?",
+                answers: [
+                    "A. Người sử dụng chỉ có thể tương tác với hệ thống thông qua việc gõ các câu lệnh bằng kí tự từ bàn phím.",
+                    "B. Sử dụng các phần tử đồ họa như cửa sổ, biểu tượng và bảng chọn để giúp người dùng giao tiếp trực quan.",
+                    "C. Yêu cầu người sử dụng phải học thuộc lòng cú pháp của tất cả các câu lệnh điều khiển hệ thống phức tạp.",
+                    "D. Chỉ cho phép thực hiện duy nhất một chương trình ứng dụng tại một thời điểm và không hỗ trợ dùng chuột."
+                ],
+                correct: 1
+            },
+            {
+                question: "Câu 3: Hệ điều hành Android được sử dụng phổ biến trên các thiết bị di động hiện nay được phát triển dựa trên nhân của hệ điều hành nào?",
+                answers: [
+                    "A. Được xây dựng và phát triển trực tiếp dựa trên nền tảng nhân của hệ điều hành nguồn mở Linux.",
+                    "B. Được xây dựng và phát triển trực tiếp dựa trên nền tảng nhân của hệ điều hành thương mại Windows.",
+                    "C. Được xây dựng và phát triển trực tiếp dựa trên nền tảng nhân của hệ điều hành độc quyền macOS.",
+                    "D. Được xây dựng và phát triển trực tiếp dựa trên nền tảng của hệ điều hành đơn nhiệm MS-DOS cũ."
+                ],
+                correct: 0
+            },
+            {
+                question: "Câu 4: Cơ chế “plug & play” (cắm và chạy) xuất hiện trong quá trình phát triển của hệ điều hành máy tính cá nhân có tác dụng gì?",
+                answers: [
+                    "A. Tự động xóa bỏ toàn bộ các tệp tin rác trên ổ đĩa cứng ngay khi người dùng vừa khởi động máy tính.",
+                    "B. Giúp hệ điều hành tự động nhận biết thiết bị ngoại vi khi khởi động và hỗ trợ cài đặt trình điều khiển.",
+                    "C. Cho phép mọi phần mềm ứng dụng chạy trực tiếp trên phần cứng mà không cần thông qua hệ điều hành.",
+                    "D. Tự động kết nối máy tính cá nhân với mạng Internet tốc độ cao mà không cần sử dụng thiết bị mạng."
+                ],
+                correct: 1
+            },
+            {
+                question: "Câu 5: Vì sao giao diện đồ họa (GUI) lại giúp người mới bắt đầu sử dụng máy tính dễ dàng tiếp cận hơn so với giao diện dòng lệnh (Command Line)?",
+                answers: [
+                    "A. Vì giao diện đồ họa tiêu tốn ít tài nguyên bộ nhớ và dung lượng lưu trữ hơn so với giao diện dòng lệnh.",
+                    "B. Vì người dùng được quan sát trực quan các biểu tượng, bảng chọn thay vì phải nhớ chính xác cú pháp lệnh.",
+                    "C. Vì giao diện đồ họa giúp tốc độ xử lí tính toán của bộ vi xử lí (CPU) tăng lên gấp nhiều lần khi chạy.",
+                    "D. Vì giao diện đồ họa không cần sử dụng đến các thiết bị vào – ra cơ bản như bàn phím hay màn hình máy tính."
+                ],
+                correct: 1
+            },
+            {
+                question: "Câu 6: Điểm khác biệt quan trọng giữa hệ điều hành dành cho thiết bị di động so với hệ điều hành dành cho máy tính cá nhân là gì?",
+                answers: [
+                    "A. Hệ điều hành cho thiết bị di động không có khả năng quản lí các tệp tin và thư mục lưu trữ trên bộ nhớ.",
+                    "B. Hệ điều hành cho thiết bị di động chú trọng tối ưu kết nối mạng không dây và tích hợp nhiều cảm biến.",
+                    "C. Hệ điều hành cho thiết bị di động chỉ cho phép người dùng thực hiện cuộc gọi chứ không cài được ứng dụng.",
+                    "D. Hệ điều hành cho thiết bị di động có dung lượng cài đặt lớn hơn rất nhiều so với hệ điều hành máy tính."
+                ],
+                correct: 1
+            },
+            {
+                question: "Câu 7: Phát biểu nào sau đây giải thích đúng vai trò trung gian của hệ điều hành trong mối quan hệ giữa phần cứng và phần mềm ứng dụng?",
+                answers: [
+                    "A. Phần mềm ứng dụng điều khiển trực tiếp phần cứng máy tính và dùng hệ điều hành để lưu trữ kết quả.",
+                    "B. Hệ điều hành cung cấp các dịch vụ điều khiển phần cứng để phần mềm ứng dụng khai thác và hoạt động.",
+                    "C. Phần cứng máy tính trực tiếp quản lí các phần mềm ứng dụng mà không cần sự can thiệp của hệ điều hành.",
+                    "D. Hệ điều hành chỉ làm nhiệm vụ bật tắt nguồn điện cho phần cứng còn phần mềm ứng dụng tự quản lí bộ nhớ."
+                ],
+                correct: 1
+            },
+            {
+                question: "Câu 8: Đặc điểm nào của hệ điều hành nguồn mở Linux đã tạo điều kiện thuận lợi cho cộng đồng công nghệ phát triển nhiều biến thể khác nhau?",
+                answers: [
+                    "A. Mã nguồn của hệ điều hành được công khai giúp lập trình viên tự do nghiên cứu, sửa đổi và phát triển thêm.",
+                    "B. Hệ điều hành này được cài đặt sẵn mặc định trên toàn bộ các dòng máy tính cá nhân bán ra trên thị trường.",
+                    "C. Người sử dụng bắt buộc phải trả một khoản chi phí bản quyền rất lớn hàng năm để được phép tải về cài đặt.",
+                    "D. Hệ điều hành này không cho phép bất kì ai thay đổi cấu trúc bên trong nhằm đảm bảo an toàn tuyệt đối."
+                ],
+                correct: 0
+            },
+            {
+                question: "Câu 9: Bạn An vừa mua một máy in mới và kết nối vào máy tính đang chạy Windows 10 nhưng máy tính chưa nhận diện ngay để in được. Dựa vào kiến thức về hệ điều hành, giải pháp phù hợp nhất mà An cần thực hiện là gì?",
+                answers: [
+                    "A. Cài đặt bổ sung chương trình điều khiển (driver) tương thích của máy in đó cho hệ điều hành trên máy tính.",
+                    "B. Gỡ bỏ toàn bộ hệ điều hành Windows 10 đang dùng và chuyển sang cài đặt hệ điều hành nguồn mở Linux.",
+                    "C. Thay thế màn hình máy tính mới có độ phân giải cao hơn để giao diện đồ họa hiển thị được biểu tượng máy in.",
+                    "D. Xóa bớt các phần mềm soạn thảo văn bản trên máy tính để giải phóng dung lượng bộ nhớ trong cho máy in."
+                ],
+                correct: 0
+            },
+            {
+                question: "Câu 10: Một phòng thực hành Tin học muốn cài đặt hệ điều hành và bộ phần mềm văn phòng cho 40 máy tính với yêu cầu tiết kiệm tối đa chi phí bản quyền và có thể tự do sao chép, phân phối cho học sinh học tập. Phương án lựa chọn nào sau đây là hợp lí nhất?",
+                answers: [
+                    "A. Cài đặt hệ điều hành thương mại Windows bản quyền kết hợp với bộ phần mềm văn phòng Microsoft Office.",
+                    "B. Cài đặt hệ điều hành nguồn mở Ubuntu (Linux) kết hợp với bộ phần mềm văn phòng tự do OpenOffice/LibreOffice.",
+                    "C. Cài đặt hệ điều hành độc quyền macOS của hãng Apple kết hợp với các phần mềm thiết kế đồ họa chuyên nghiệp.",
+                    "D. Cài đặt hệ điều hành di động iOS lên toàn bộ dàn máy tính để bàn của phòng thực hành để dễ dàng quản lí."
+                ],
+                correct: 1
+            }
+        ];
+
+        // --- 2. HỆ THỐNG ÂM THANH ---
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+        function playCorrectSound() {
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            const osc = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(523.25, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(1046.5, audioCtx.currentTime + 0.1); 
+            gainNode.gain.setValueAtTime(0.4, audioCtx.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.45);
+            osc.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.45);
+            setTimeout(() => {
+                const osc2 = audioCtx.createOscillator();
+                const gain2 = audioCtx.createGain();
+                osc2.type = 'triangle';
+                osc2.frequency.setValueAtTime(1318.51, audioCtx.currentTime); 
+                gain2.gain.setValueAtTime(0.25, audioCtx.currentTime);
+                gain2.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.5);
+                osc2.connect(gain2);
+                gain2.connect(audioCtx.destination);
+                osc2.start();
+                osc2.stop(audioCtx.currentTime + 0.5);
+            }, 90);
+        }
+
+        function playWrongSound() {
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            const osc = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(150, audioCtx.currentTime);
+            osc.frequency.linearRampToValueAtTime(100, audioCtx.currentTime + 0.3); 
+            gainNode.gain.setValueAtTime(0.4, audioCtx.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.35);
+            osc.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.35);
+        }
+
+        const praises = ["Tuyệt vời!", "Chính xác!", "Hoan hô!", "Xuất sắc!", "Đúng rồi!", "Hay quá!", "Đỉnh của chóp!"];
+        const encouragements = ["Cố lên nhé!", "Tiếc quá!", "Hãy nhớ kỹ kiến thức này nhé!", "Chưa chính xác rồi!"];
+
+        // --- 3. HÌNH ẢNH ĐẢO ---
+        const rabbitSVG = `<g class="animal-hop"><ellipse cx="0" cy="0" rx="4" ry="3" fill="white"/><circle cx="0" cy="-3" r="2.5" fill="white"/><path d="M-1.5,-4 L-2,-7 M1.5,-4 L2,-7" stroke="white" stroke-width="1" stroke-linecap="round"/></g>`;
+        const sheepSVG = `<g><ellipse cx="0" cy="0" rx="5" ry="4" fill="#fdf4ff"/><circle cx="-4" cy="-2" r="3" fill="#fdf4ff"/><path d="M-3,3 L-3,6 M3,3 L3,6" stroke="#4b5563" stroke-width="1.5"/></g>`; 
+        const personSVG = (color="#ef4444") => `<g class="person-static"><circle cx="0" cy="-6" r="2" fill="#fecaca"/><path d="M-2,0 L2,0 L3,6 L-3,6 Z" fill="${color}"/><line x1="-1.5" y1="6" x2="-1.5" y2="10" stroke="#334155" stroke-width="1"/><line x1="1.5" y1="6" x2="1.5" y2="10" stroke="#334155" stroke-width="1"/></g>`;
+        const treeSVG = (x, y, scale=1) => `<g transform="translate(${x}, ${y}) scale(${scale})"><path d="M0,0 L-6,18 L6,18 Z" fill="#15803d"/><path d="M0,-6 L-5,8 L5,8 Z" fill="#16a34a"/><rect x="-1" y="18" width="2" height="4" fill="#78350f"/></g>`;
+        const bushSVG = (x, y, r=4, color="#22c55e") => `<circle cx="${x}" cy="${y}" r="${r}" fill="${color}"/>`;
+        const flowerSVG = (x, y, color="#fde047") => `<circle cx="${x}" cy="${y}" r="2" fill="${color}"/>`;
+
+        const C_WHITE = "#f8fafc";
+        const C_RED = "#ff2a2a";
+        const C_BLUE = "#3b82f6";
+        const C_YELLOW = "#ffdd00";
+        const C_GREEN = "#22c55e";
+        const C_PURPLE = "#d946ef";
+        const C_ORANGE = "#f97316";
+        const C_DARK_BLUE_TOWER = "#1e3a8a";
+
+        const islandDesigns = [
+            `<svg class="island-svg" width="140" height="140" viewBox="0 0 140 140"><defs><radialGradient id="island1"><stop offset="0%" style="stop-color:#4ade80"/><stop offset="100%" style="stop-color:#16a34a"/></radialGradient><filter id="glow1"><feGaussianBlur stdDeviation="2" result="coloredBlur"/><feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs><ellipse cx="70" cy="85" rx="50" ry="28" fill="url(#island1)"/><path d="M50,45 Q48,55 50,75" stroke="#15803d" stroke-width="3.5" fill="none"/><circle cx="50" cy="45" r="13" fill="#ff4081" filter="url(#glow1)"/><path d="M70,38 Q68,53 70,75" stroke="#15803d" stroke-width="4" fill="none"/><circle cx="70" cy="38" r="15" fill="${C_YELLOW}" filter="url(#glow1)"/><path d="M90,45 Q88,55 90,75" stroke="#15803d" stroke-width="3.5" fill="none"/><circle cx="90" cy="45" r="13" fill="#8b5cf6" filter="url(#glow1)"/><path d="M58,55 Q56,63 58,75" stroke="#15803d" stroke-width="3" fill="none"/><circle cx="58" cy="55" r="11" fill="${C_RED}" filter="url(#glow1)"/><path d="M82,55 Q80,63 82,75" stroke="#15803d" stroke-width="3" fill="none"/><circle cx="82" cy="55" r="11" fill="${C_BLUE}" filter="url(#glow1)"/>${bushSVG(35, 80, 5, C_GREEN)} ${bushSVG(105, 80, 5, C_GREEN)} ${bushSVG(70, 95, 4, "#15803d")}${flowerSVG(38, 85, C_YELLOW)} ${flowerSVG(102, 85, C_RED)} ${flowerSVG(65, 90, C_PURPLE)} ${flowerSVG(75, 90, C_BLUE)}<g transform="translate(45, 90)">${rabbitSVG}</g><g transform="translate(85, 92)" style="animation-delay:0.5s">${rabbitSVG}</g><g transform="translate(25, 85)">${rabbitSVG}</g><g transform="translate(60, 95)">${personSVG(C_YELLOW)}</g> <g transform="translate(80, 95)">${personSVG(C_BLUE)}</g><text x="70" y="108" text-anchor="middle" font-size="28" font-weight="bold" fill="#fef3c7" stroke="#000" stroke-width="2.5">1</text></svg>`,
+            `<svg class="island-svg" width="140" height="140" viewBox="0 0 140 140"><defs><radialGradient id="island2"><stop offset="0%" style="stop-color:#4ade80"/><stop offset="100%" style="stop-color:#16a34a"/></radialGradient><linearGradient id="castle2"><stop offset="0%" style="stop-color:#c026d3"/><stop offset="100%" style="stop-color:#9333ea"/></linearGradient></defs><ellipse cx="70" cy="92" rx="52" ry="30" fill="url(#island2)"/><rect x="45" y="50" width="50" height="42" fill="url(#castle2)"/><polygon points="45,50 70,30 95,50" fill="#a855f7"/><rect x="53" y="65" width="14" height="27" fill="${C_YELLOW}"/><rect x="66" y="35" width="8" height="15" fill="${C_RED}"/><polygon points="66,35 70,26 74,35" fill="#ff6b6b"/>${treeSVG(30, 80, 0.8)} ${treeSVG(110, 82, 0.9)} ${treeSVG(95, 85, 0.7)} ${treeSVG(40, 90, 0.6)} ${treeSVG(20, 85, 0.7)} ${treeSVG(120, 80, 0.7)}${bushSVG(35, 95, 3, C_YELLOW)} ${bushSVG(105, 95, 3, C_PURPLE)}<g transform="translate(75, 90)">${rabbitSVG}</g> <g transform="translate(35, 90)">${rabbitSVG}</g><g transform="translate(60, 90)">${personSVG(C_RED)}</g> <g transform="translate(85, 90)">${personSVG(C_PURPLE)}</g><text x="70" y="118" text-anchor="middle" font-size="28" font-weight="bold" fill="#fff" stroke="#000" stroke-width="3">2</text></svg>`,
+            `<svg class="island-svg" width="160" height="160" viewBox="0 0 140 140"><defs><radialGradient id="island3"><stop offset="0%" style="stop-color:#4ade80"/><stop offset="100%" style="stop-color:#16a34a"/></radialGradient><linearGradient id="windmill"><stop offset="0%" style="stop-color:#ef4444"/><stop offset="100%" style="stop-color:#b91c1c"/></linearGradient></defs><ellipse cx="70" cy="95" rx="53" ry="28" fill="url(#island3)"/><path d="M42,68 Q40,78 42,92" stroke="#15803d" stroke-width="3.5" fill="none"/><ellipse cx="42" cy="65" rx="6" ry="12" fill="${C_RED}"/><path d="M92,70 Q90,80 92,92" stroke="#15803d" stroke-width="3.5" fill="none"/><ellipse cx="92" cy="67" rx="6" ry="12" fill="${C_BLUE}"/><path d="M60,90 L65,55 L75,55 L80,90 Z" fill="url(#windmill)"/><rect x="63" y="85" width="14" height="10" fill="#7f1d1d"/><polygon points="70,55 70,28 50,55" fill="#fefce8"/><polygon points="70,55 90,28 90,55" fill="#fef9c3"/><polygon points="70,55 90,75 70,75" fill="#fefce8"/><polygon points="70,55 50,75 50,55" fill="#fef9c3"/><circle cx="70" cy="55" r="6" fill="#8b5cf6"/>${flowerSVG(35, 85, C_YELLOW)} ${flowerSVG(105, 85, C_RED)} ${flowerSVG(110, 90, C_PURPLE)} ${bushSVG(25, 90, 4, C_GREEN)} ${bushSVG(115, 90, 4, C_GREEN)}<g transform="translate(35, 95)">${sheepSVG}</g><g transform="translate(100, 92)">${sheepSVG}</g><g transform="translate(45, 100)">${sheepSVG}</g><g transform="translate(110, 85)">${sheepSVG}</g><g transform="translate(55, 95)">${personSVG(C_BLUE)}</g> <g transform="translate(85, 95)">${personSVG(C_ORANGE)}</g><text x="70" y="120" text-anchor="middle" font-size="28" font-weight="bold" fill="#fff" stroke="#000" stroke-width="3">3</text></svg>`,
+            `<svg class="island-svg" width="150" height="150" viewBox="0 0 150 150"><defs><radialGradient id="island4"><stop offset="0%" style="stop-color:#4ade80"/><stop offset="100%" style="stop-color:#16a34a"/></radialGradient><linearGradient id="palace4"><stop offset="0%" style="stop-color:#fde047"/><stop offset="100%" style="stop-color:#eab308"/></linearGradient></defs><ellipse cx="75" cy="102" rx="58" ry="32" fill="url(#island4)"/><rect x="40" y="55" width="70" height="47" fill="url(#palace4)"/><path d="M40,55 Q75,40 110,55" fill="#facc15"/><circle cx="75" cy="50" r="18" fill="#fef08a"/><rect x="70" y="35" width="10" height="15" fill="${C_RED}"/><polygon points="70,35 75,23 80,35" fill="#ff6b6b"/><rect x="48" y="70" width="12" height="32" fill="${C_BLUE}"/><rect x="90" y="70" width="12" height="32" fill="${C_BLUE}"/><rect x="68" y="75" width="14" height="27" fill="#fbbf24"/>${treeSVG(20, 60, 2.0)} ${treeSVG(130, 60, 2.0)} ${bushSVG(35, 105, 4, C_GREEN)} ${bushSVG(115, 105, 4, C_GREEN)} ${flowerSVG(40, 110, C_PURPLE)} ${flowerSVG(110, 110, C_PURPLE)}<g transform="translate(100, 110)">${rabbitSVG}</g> <g transform="translate(50, 115)">${rabbitSVG}</g><g transform="translate(60, 110)">${personSVG(C_PURPLE)}</g> <g transform="translate(90, 110)">${personSVG(C_RED)}</g><text x="75" y="130" text-anchor="middle" font-size="30" font-weight="bold" fill="#fff" stroke="#000" stroke-width="3">4</text></svg>`,
+            `<svg class="island-svg" width="140" height="140" viewBox="0 0 140 140"><defs><radialGradient id="island5"><stop offset="0%" style="stop-color:#4ade80"/><stop offset="100%" style="stop-color:#16a34a"/></radialGradient><linearGradient id="temple5"><stop offset="0%" style="stop-color:#ef4444"/><stop offset="100%" style="stop-color:#991b1b"/></linearGradient></defs><ellipse cx="70" cy="95" rx="54" ry="30" fill="url(#island5)"/><rect x="45" y="60" width="50" height="35" fill="url(#temple5)"/><polygon points="40,60 70,42 100,60" fill="#dc2626"/><polygon points="42,52 70,36 98,52" fill="${C_YELLOW}"/><rect x="60" y="68" width="20" height="27" fill="${C_YELLOW}"/>${treeSVG(25, 90, 0.9)} ${treeSVG(115, 90, 0.9)} ${treeSVG(35, 85, 0.7)} ${treeSVG(105, 85, 0.7)} ${treeSVG(20, 85, 0.7)}${flowerSVG(30, 95, "#fda4af")} ${flowerSVG(110, 95, "#fda4af")} ${bushSVG(50, 95, 3, "#fb7185")} ${bushSVG(90, 95, 3, "#fb7185")}<g transform="translate(55, 100)">${personSVG(C_BLUE)}</g> <g transform="translate(85, 100)">${personSVG(C_PURPLE)}</g> <g transform="translate(100, 100)">${rabbitSVG}</g><text x="70" y="120" text-anchor="middle" font-size="28" font-weight="bold" fill="#fff" stroke="#000" stroke-width="3">5</text></svg>`,
+            `<svg class="island-svg" width="140" height="140" viewBox="0 0 140 140"><defs><radialGradient id="island6"><stop offset="0%" style="stop-color:#4ade80"/><stop offset="100%" style="stop-color:#16a34a"/></radialGradient><linearGradient id="tower6"><stop offset="0%" style="stop-color:#a855f7"/><stop offset="100%" style="stop-color:#6b21a8"/></linearGradient></defs><ellipse cx="70" cy="95" rx="52" ry="28" fill="url(#island6)"/><rect x="58" y="40" width="24" height="55" fill="url(#tower6)"/><rect x="56" y="37" width="28" height="6" fill="#581c87"/><polygon points="58,40 70,22 82,40" fill="#9333ea"/><polygon points="60,32 70,18 80,32" fill="#c084fc"/><rect x="64" y="84" width="12" height="11" fill="${C_YELLOW}"/><path d="M50,90 Q52,80 50,70" stroke="#166534" stroke-width="2" fill="none"/><circle cx="50" cy="70" r="3" fill="#4ade80"/><circle cx="90" cy="85" r="3" fill="#c084fc"/><circle cx="95" cy="90" r="3" fill="#e879f9"/><circle cx="30" cy="95" r="4" fill="#15803d"/>${treeSVG(40, 85, 0.8)} ${treeSVG(100, 85, 0.8)} ${treeSVG(30, 88, 0.7)} ${treeSVG(110, 88, 0.7)}${bushSVG(30, 90, 4, "#4ade80")} ${bushSVG(110, 90, 4, "#4ade80")}<g transform="translate(100, 95)">${rabbitSVG}</g> <g transform="translate(40, 95)">${rabbitSVG}</g><g transform="translate(55, 100)">${personSVG(C_ORANGE)}</g> <g transform="translate(85, 100)">${personSVG(C_BLUE)}</g><text x="70" y="120" text-anchor="middle" font-size="28" font-weight="bold" fill="#fff" stroke="#000" stroke-width="3">6</text></svg>`,
+            `<svg class="island-svg" width="140" height="140" viewBox="0 0 140 140"><defs><radialGradient id="island7"><stop offset="0%" style="stop-color:#4ade80"/><stop offset="100%" style="stop-color:#16a34a"/></radialGradient><linearGradient id="church7"><stop offset="0%" style="stop-color:#fef3c7"/><stop offset="100%" style="stop-color:#fcd34d"/></linearGradient></defs><ellipse cx="70" cy="93" rx="53" ry="29" fill="url(#island7)"/><rect x="50" y="55" width="40" height="38" fill="url(#church7)"/><polygon points="50,55 70,38 90,55" fill="${C_YELLOW}"/><polygon points="52,48 70,33 88,48" fill="#fbbf24"/><rect x="66" y="35" width="8" height="20" fill="#fbbf24"/><rect x="64" y="68" width="12" height="25" fill="${C_BLUE}"/><circle cx="70" cy="48" r="5" fill="#8b5cf6"/>${treeSVG(25, 85, 0.7)} ${treeSVG(115, 85, 0.7)} ${treeSVG(35, 90, 0.6)} ${treeSVG(105, 90, 0.6)} ${treeSVG(15, 85, 0.6)}${bushSVG(45, 95, 4, C_GREEN)} ${bushSVG(95, 95, 4, C_GREEN)} ${flowerSVG(40, 90, C_RED)} ${flowerSVG(100, 90, C_YELLOW)}<g transform="translate(60, 98)">${personSVG(C_BLUE)}</g> <g transform="translate(80, 98)">${personSVG(C_GREEN)}</g> <g transform="translate(30, 98)">${rabbitSVG}</g><g transform="translate(20, 90)">${sheepSVG}</g><g transform="translate(120, 90)">${sheepSVG}</g><text x="70" y="118" text-anchor="middle" font-size="28" font-weight="bold" fill="#fff" stroke="#000" stroke-width="3">7</text></svg>`,
+            `<svg class="island-svg" width="140" height="140" viewBox="0 0 140 140"><defs><radialGradient id="island8"><stop offset="0%" style="stop-color:#4ade80"/><stop offset="100%" style="stop-color:#16a34a"/></radialGradient><linearGradient id="villa8"><stop offset="0%" style="stop-color:#f9a8d4"/><stop offset="100%" style="stop-color:#db2777"/></linearGradient></defs><ellipse cx="70" cy="94" rx="54" ry="30" fill="url(#island8)"/><rect x="42" y="58" width="56" height="36" fill="url(#villa8)"/><polygon points="40,58 70,42 100,58" fill="#be185d"/><polygon points="42,52 70,38 98,52" fill="#f472b6"/><rect x="55" y="70" width="13" height="24" fill="${C_YELLOW}"/><rect x="72" y="70" width="13" height="24" fill="${C_BLUE}"/><rect x="48" y="48" width="10" height="10" fill="${C_RED}"/>${treeSVG(25, 80, 0.8)} ${treeSVG(115, 80, 0.8)} ${treeSVG(15, 82, 0.7)} ${treeSVG(125, 82, 0.7)}${flowerSVG(30, 80, "#e11d48")} ${flowerSVG(35, 85, "#e11d48")} ${flowerSVG(110, 85, "#e11d48")} ${bushSVG(40, 90, 4, "#fbcfe8")} ${bushSVG(100, 90, 4, "#fbcfe8")}<g transform="translate(100, 95)">${rabbitSVG}</g> <g transform="translate(40, 100)">${rabbitSVG}</g><g transform="translate(65, 100)">${personSVG(C_BLUE)}</g> <g transform="translate(85, 100)">${personSVG(C_YELLOW)}</g><text x="70" y="119" text-anchor="middle" font-size="28" font-weight="bold" fill="#fff" stroke="#000" stroke-width="3">8</text></svg>`,
+            `<svg class="island-svg" width="140" height="140" viewBox="0 0 140 140"><defs><radialGradient id="island9"><stop offset="0%" style="stop-color:#4ade80"/><stop offset="100%" style="stop-color:#16a34a"/></radialGradient><linearGradient id="fortress9"><stop offset="0%" style="stop-color:#a8a29e"/><stop offset="100%" style="stop-color:#57534e"/></linearGradient></defs><ellipse cx="70" cy="94" rx="55" ry="30" fill="url(#island9)"/><rect x="40" y="50" width="60" height="44" fill="url(#fortress9)"/><rect x="40" y="44" width="10" height="12" fill="#44403c"/><rect x="55" y="44" width="10" height="12" fill="#44403c"/><rect x="75" y="44" width="10" height="12" fill="#44403c"/><rect x="90" y="44" width="10" height="12" fill="#44403c"/><rect x="56" y="66" width="28" height="28" fill="${C_RED}"/><polygon points="56,66 70,52 84,66" fill="#ef4444"/><rect x="65" y="74" width="10" height="20" fill="#78350f"/>${treeSVG(100, 95, 0.8)} ${treeSVG(30, 95, 0.8)} ${treeSVG(110, 90, 0.7)} ${treeSVG(20, 90, 0.7)} ${treeSVG(15, 95, 0.6)}${bushSVG(40, 95, 4, C_GREEN)} ${bushSVG(100, 95, 4, C_GREEN)}<g transform="translate(50, 98)">${personSVG(C_RED)}</g> <g transform="translate(90, 98)">${personSVG(C_RED)}</g> <g transform="translate(110, 100)">${rabbitSVG}</g><text x="70" y="119" text-anchor="middle" font-size="28" font-weight="bold" fill="#fff" stroke="#000" stroke-width="3">9</text></svg>`,
+            `<svg class="island-svg" width="220" height="220" viewBox="0 0 200 200"><defs><radialGradient id="island10"><stop offset="0%" style="stop-color:#34d399"/><stop offset="100%" style="stop-color:#059669"/></radialGradient><linearGradient id="royalGold" x1="0" x2="1" y1="0" y2="1"><stop offset="0%" stop-color="#fde047"/><stop offset="50%" stop-color="#f59e0b"/><stop offset="100%" stop-color="#b45309"/></linearGradient><radialGradient id="blueGlow" cx="50%" cy="50%"><stop offset="0%" stop-color="#3b82f6" stop-opacity="0.9"/><stop offset="100%" stop-color="#1e40af" stop-opacity="0"/></radialGradient><filter id="glowGold"><feGaussianBlur stdDeviation="2.5" result="coloredBlur"/><feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs><circle cx="100" cy="100" r="80" fill="url(#blueGlow)" opacity="0.7" class="sparkle"/><ellipse cx="100" cy="140" rx="90" ry="40" fill="url(#island10)"/><path d="M30,130 L40,90 L50,130 Z" fill="#14532d"/><path d="M170,130 L160,90 L150,130 Z" fill="#14532d"/><path d="M50,135 L55,105 L60,135 Z" fill="#15803d"/><path d="M150,135 L145,105 L140,135 Z" fill="#15803d"/>${treeSVG(40, 130, 0.8)} ${treeSVG(160, 130, 0.8)} ${treeSVG(60, 135, 0.6)} ${treeSVG(140, 135, 0.6)} ${bushSVG(50, 150, 6, C_YELLOW)} ${bushSVG(150, 150, 6, C_YELLOW)}<rect x="40" y="80" width="20" height="60" fill="${C_WHITE}" stroke="${C_DARK_BLUE_TOWER}"/><polygon points="35,80 50,60 65,80" fill="${C_RED}"/><rect x="140" y="80" width="20" height="60" fill="${C_WHITE}" stroke="${C_DARK_BLUE_TOWER}"/><polygon points="135,80 150,60 165,80" fill="${C_RED}"/><rect x="70" y="60" width="60" height="80" fill="${C_WHITE}" stroke="${C_DARK_BLUE_TOWER}"/><polygon points="65,60 100,20 135,60" fill="${C_BLUE}"/><rect x="90" y="100" width="20" height="40" fill="#dc2626" stroke="#fff"/><polygon points="90,100 100,90 110,100" fill="#7f1d1d"/><path d="M100,20 L100,-20 L150,0 L100,20 Z" fill="${C_YELLOW}" stroke="#b45309" class="flag"/><circle cx="60" cy="140" r="3" fill="${C_YELLOW}"/><circle cx="80" cy="145" r="3" fill="${C_RED}"/><circle cx="120" cy="145" r="3" fill="${C_YELLOW}"/><circle cx="140" cy="140" r="3" fill="${C_RED}"/><g transform="translate(110, 160)">${rabbitSVG}</g><g transform="translate(80, 160)">${rabbitSVG}</g><g transform="translate(160, 155)">${rabbitSVG}</g><g transform="translate(90, 150)">${personSVG(C_RED)}</g> <g transform="translate(70, 155)">${personSVG(C_BLUE)}</g> <g transform="translate(130, 155)">${personSVG(C_YELLOW)}</g><g transform="translate(50, 150)">${sheepSVG}</g><g transform="translate(150, 150)">${sheepSVG}</g> <text x="100" y="175" text-anchor="middle" font-size="32" font-weight="bold" fill="#fef3c7" stroke="#000" stroke-width="3">10</text></svg>`
+        ];
+
+        // --- 4. VỊ TRÍ ĐẢO ---
+        const islandPositions = [
+            { x: 18, y: 24 },
+            { x: 45, y: 18 },
+            { x: 74, y: 20 },
+            { x: 88, y: 42 },
+            { x: 68, y: 54 },
+            { x: 40, y: 55 },
+            { x: 16, y: 62 },
+            { x: 43, y: 82 },
+            { x: 68, y: 80 },
+            { x: 88, y: 78 }
+        ];
+
+        // --- 5. LOGIC TRÒ CHƠI ---
+        let currentIslandIndex = 0;
+        let score = 0;
+        let studentName = "";
+        let studentClass = "";
+        let islandStates = new Array(10).fill('locked');
+        let isGameSaved = false;
+
+        function createBirdFlocks() {
+            const birdsContainer = document.getElementById('birdsContainer');
+            birdsContainer.innerHTML = '';
+            for (let flockId = 0; flockId < 2; flockId++) {
+                const flock = document.createElement('div');
+                flock.className = 'bird-flock';
+                const startY = 10 + Math.random() * 25;
+                const endY = startY + (Math.random() * 16 - 8);
+                const scale = 0.5 + Math.random() * 0.35;
+                const duration = 26 + Math.random() * 12;
+                const delay = flockId * 10; 
+
+                flock.style.setProperty('--startY', `${startY}vh`);
+                flock.style.setProperty('--endY', `${endY}vh`);
+                flock.style.setProperty('--scale', scale);
+                flock.style.animation = `flyFlock ${duration}s linear infinite`;
+                flock.style.animationDelay = `${delay}s`;
+
+                const numBirds = 4;
+                for (let i = 0; i < numBirds; i++) {
+                    const bird = document.createElement('div');
+                    bird.className = 'bird';
+                    bird.style.left = `${i * 28 + Math.random() * 12}px`;
+                    bird.style.top = `${(i % 2 === 0 ? -1 : 1) * Math.random() * 16}px`;
+
+                    bird.innerHTML = `
+                        <svg width="36" height="18" viewBox="0 0 40 20" style="animation: wingFlapRealistic 0.85s infinite alternate ${Math.random()}s">
+                            <path d="M20,12 Q10,0 0,10" fill="none" stroke="#f8fafc" stroke-width="2.5" stroke-linecap="round"/>
+                            <path d="M20,12 Q30,0 40,10" fill="none" stroke="#f8fafc" stroke-width="2.5" stroke-linecap="round"/>
+                            <circle cx="20" cy="12" r="2.5" fill="#facc15"/>
+                        </svg>
+                    `;
+                    flock.appendChild(bird);
+                }
+                birdsContainer.appendChild(flock);
+            }
+        }
+
+        function addSparklesToIsland(islandDiv) {
+            const oldStars = islandDiv.querySelectorAll('.star-particle');
+            oldStars.forEach(star => star.remove());
+
+            const starCount = window.innerWidth < 640 ? 8 : 12;
+            for (let i = 0; i < starCount; i++) {
+                const star = document.createElement('div');
+                star.className = 'star-particle';
+                const startX = (Math.random() - 0.5) * 50;
+                const startY = (Math.random() - 0.5) * 35;
+                const tx = startX * (1 + Math.random());
+                const ty = startY - 35 - Math.random() * 35; 
+                
+                star.style.left = `calc(50% + ${startX}px)`;
+                star.style.top = `calc(50% + ${startY}px)`;
+                star.style.setProperty('--tx', `${tx}px`);
+                star.style.setProperty('--ty', `${ty}px`);
+                
+                const duration = 2 + Math.random() * 1.5;
+                const delay = Math.random() * 2;
+                star.style.animation = `starFloat ${duration}s ease-out infinite ${delay}s`;
+                
+                islandDiv.appendChild(star);
+            }
+        }
+
+        function startGame() {
+            const nameVal = document.getElementById('studentNameInput').value.trim();
+            const classVal = document.getElementById('studentClassInput').value.trim();
+            const errEl = document.getElementById('loginErrorMsg');
+
+            if (!nameVal || !classVal) {
+                errEl.classList.remove('hidden');
+                return;
+            }
+            errEl.classList.add('hidden');
+
+            studentName = nameVal;
+            studentClass = classVal;
+            document.getElementById('displayStudentName').textContent = studentName;
+            document.getElementById('displayStudentClass').textContent = `Lớp: ${studentClass}`;
+
+            if (typeof gtag === 'function') {
+                gtag('event', 'quiz_start', {
+                    'event_category': 'Tin11_Bai1_HeDieuHanh',
+                    'student_name': `${studentName} - ${studentClass}`
+                });
+            }
+            
+            const loginScreen = document.getElementById('loginScreen');
+            loginScreen.style.opacity = '0';
+            setTimeout(() => {
+                loginScreen.classList.add('hidden');
+                const app = document.getElementById('app');
+                app.classList.remove('hidden');
+                requestAnimationFrame(() => {
+                    app.style.opacity = '1';
+                    createBirdFlocks();
+                });
+            }, 400);
+            
+            islandStates[0] = 'active';
+            renderMap();
+        }
+
+        function restartGame() {
+            currentIslandIndex = 0;
+            score = 0;
+            isGameSaved = false;
+            document.getElementById('scoreDisplay').innerText = score;
+            document.getElementById('islandProgressText').innerHTML = `Đảo <span id="currentIslandNum" class="text-red-600">1</span> / 10`;
+            document.getElementById('btnReplayQuick').classList.add('hidden');
+            document.getElementById('completedBanner').classList.add('hidden');
+            islandStates = new Array(10).fill('locked');
+            islandStates[0] = 'active';
+            renderMap();
+        }
+
+        function renderMap() {
+            const map = document.getElementById('islandsMap');
+            map.innerHTML = '';
+            
+            let pathD = `M ${islandPositions[0].x}% ${islandPositions[0].y}%`;
+            for (let i = 1; i < islandPositions.length; i++) {
+                pathD += ` L ${islandPositions[i].x}% ${islandPositions[i].y}%`;
+            }
+            
+            const svgLines = `
+            <svg class="absolute inset-0 w-full h-full pointer-events-none overflow-visible">
+                <path d="${pathD}" fill="none" stroke="rgba(255,255,255,0.35)" stroke-width="3.5" stroke-dasharray="8,8" />
+            </svg>`;
+            map.innerHTML += svgLines;
+
+            islandPositions.forEach((pos, index) => {
+                let state = islandStates[index];
+                if (index === currentIslandIndex && state === 'locked') state = 'active';
+                
+                let filterClass = "";
+                if (state === 'locked') filterClass = "island-locked";
+                else if (state === 'active') filterClass = "island-active";
+                else if (state === 'correct') filterClass = "island-correct";
+                else if (state === 'wrong') filterClass = "island-wrong";
+
+                const islandDiv = document.createElement('div');
+                islandDiv.className = `island-container ${filterClass}`;
+                islandDiv.style.left = pos.x + '%';
+                islandDiv.style.top = pos.y + '%';
+                islandDiv.innerHTML = islandDesigns[index];
+                
+                if (state === 'active' || state === 'correct') {
+                    addSparklesToIsland(islandDiv);
+                }
+
+                islandDiv.onclick = () => {
+                    if (index === currentIslandIndex && state !== 'correct' && state !== 'wrong') {
+                        showQuestion(index);
+                    }
+                };
+                
+                map.appendChild(islandDiv);
+            });
+        }
+
+        function showQuestion(index) {
+            const q = questions[index];
+            document.getElementById('quizNumber').innerText = index + 1;
+            document.getElementById('quizQuestion').innerText = q.question;
+            
+            const ansContainer = document.getElementById('quizAnswers');
+            ansContainer.innerHTML = '';
+            
+            const letters = ['A', 'B', 'C', 'D'];
+            q.answers.forEach((ans, i) => {
+                const cleanText = ans.replace(/^[A-D]\.\s*/, '');
+                const btn = document.createElement('button');
+                btn.className = "answer-option-btn";
+                btn.innerHTML = `
+                    <span class="answer-badge">${letters[i]}</span>
+                    <span class="answer-text">${cleanText}</span>
+                `;
+                btn.onclick = () => handleAnswer(index, i);
+                ansContainer.appendChild(btn);
+            });
+
+            document.getElementById('quizFeedback').className = "hidden";
+            document.getElementById('nextQuestionContainer').classList.add('hidden');
+            document.getElementById('nextBtnText').innerText = (index === 9) ? "HOÀN THÀNH HÀNH TRÌNH" : "TIẾP TỤC HÀNH TRÌNH";
+            
+            const modal = document.getElementById('quizModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function handleAnswer(qIndex, ansIndex) {
+            const btns = document.getElementById('quizAnswers').querySelectorAll('button');
+            btns.forEach(b => b.disabled = true);
+
+            const correctIndex = questions[qIndex].correct;
+            const feedback = document.getElementById('quizFeedback');
+            feedback.classList.remove('hidden');
+
+            const isCorrect = (ansIndex === correctIndex);
+
+            if (typeof gtag === 'function') {
+                gtag('event', 'answer_question', {
+                    'event_category': 'Tin11_Bai1_HeDieuHanh',
+                    'question_number': qIndex + 1,
+                    'is_correct': isCorrect,
+                    'student_name': `${studentName} - ${studentClass}`
+                });
+            }
+
+            if (isCorrect) {
+                playCorrectSound();
+                score += 10;
+                document.getElementById('scoreDisplay').innerText = score;
+                btns[ansIndex].classList.add('answer-selected-blue');
+                const randomPraise = praises[Math.floor(Math.random() * praises.length)];
+                feedback.innerText = `🎉 ${randomPraise} Bạn nhận được +10 điểm!`;
+                feedback.className = "mt-3 md:mt-4 p-2.5 md:p-3 rounded-xl text-center font-bold text-xs sm:text-sm md:text-base bg-blue-100 text-blue-800 border border-blue-300";
+                islandStates[qIndex] = 'correct';
+                
+                confetti({
+                    particleCount: 45,
+                    spread: 60,
+                    origin: { y: 0.65 }
+                });
+            } else {
+                playWrongSound();
+                btns[ansIndex].classList.add('answer-wrong');
+                btns[correctIndex].classList.add('answer-selected-blue');
+                const randomEncouragement = encouragements[Math.floor(Math.random() * encouragements.length)];
+                feedback.innerText = `💡 Đáp án đúng là ${['A','B','C','D'][correctIndex]}. ${randomEncouragement}`;
+                feedback.className = "mt-3 md:mt-4 p-2.5 md:p-3 rounded-xl text-center font-bold text-xs sm:text-sm md:text-base bg-rose-100 text-rose-800 border border-rose-300";
+                islandStates[qIndex] = 'wrong';
+            }
+            
+            document.getElementById('nextQuestionContainer').classList.remove('hidden');
+        }
+
+        function nextQuestionAction() {
+            const modal = document.getElementById('quizModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+            
+            currentIslandIndex++;
+            if (currentIslandIndex < 10) {
+                document.getElementById('currentIslandNum').innerText = currentIslandIndex + 1;
+                islandStates[currentIslandIndex] = 'active';
+            }
+            renderMap();
+
+            if (currentIslandIndex >= 10) {
+                endGame();
+            }
+        }
+
+        // --- 6. LƯU ĐIỂM LÊN FIREBASE REALTIME DATABASE & GOOGLE ANALYTICS ---
+        function saveScore() {
+            const record = {
+                name: studentName,
+                className: studentClass,
+                score: score,
+                timestamp: Date.now(),
+                date: new Date().toLocaleString('vi-VN')
+            };
+
+            // 1. Lưu trực tiếp lên Firebase Realtime Database
+            if (database) {
+                database.ref(LEADERBOARD_REF).push(record).catch((err) => {
+                    console.error("Lỗi ghi điểm lên Firebase:", err);
+                });
+            }
+
+            // 2. Lưu dự phòng vào LocalStorage
+            const STORAGE_KEY = 'tin11_bai1_hedieuhanh_scores';
+            const history = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+            history.push(record);
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(history));
+
+            // 3. Ghi nhận sự kiện hoàn thành trên Google Analytics
+            if (typeof gtag === 'function') {
+                gtag('event', 'quiz_complete', {
+                    'event_category': 'Tin11_Bai1_HeDieuHanh',
+                    'student_name': `${studentName} - ${studentClass}`,
+                    'value': score
+                });
+            }
+        }
+
+        function endGame() {
+            if (!isGameSaved) {
+                saveScore();
+                isGameSaved = true;
+            }
+
+            // Hiển thị trạng thái hoàn thành ở góc màn hình và giữ nguyên bản đồ để học sinh chiêm ngưỡng 10 đảo
+            document.getElementById('btnReplayQuick').classList.remove('hidden');
+            document.getElementById('completedBanner').classList.remove('hidden');
+            document.getElementById('islandProgressText').innerHTML = `<span class="text-emerald-600">Hoàn thành 10/10</span>`;
+            
+            var duration = 3 * 1000;
+            var animationEnd = Date.now() + duration;
+            var defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 35 };
+
+            var interval = setInterval(function() {
+                var timeLeft = animationEnd - Date.now();
+                if (timeLeft <= 0) {
+                    return clearInterval(interval);
+                }
+                var particleCount = 45 * (timeLeft / duration);
+                confetti(Object.assign({}, defaults, { particleCount, origin: { x: Math.random() * 0.2 + 0.1, y: Math.random() - 0.2 } }));
+                confetti(Object.assign({}, defaults, { particleCount, origin: { x: Math.random() * 0.2 + 0.7, y: Math.random() - 0.2 } }));
+            }, 250);
+        }
+
+        // --- 7. HIỂN THỊ BẢNG XẾP HẠNG KHI NGƯỜI DÙNG BẤM NÚT "🏆 BXH" ---
+        function getLeaderboardData() {
+            if (realtimeLeaderboard && realtimeLeaderboard.length > 0) {
+                return realtimeLeaderboard;
+            }
+            const localData = JSON.parse(localStorage.getItem('tin11_bai1_hedieuhanh_scores') || '[]');
+            localData.sort((a, b) => b.score - a.score);
+            return localData;
+        }
+
+        function renderLeaderboardRows() {
+            const data = getLeaderboardData();
+            const tbody = document.getElementById('leaderboardBody');
+            tbody.innerHTML = '';
+
+            if (data.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="4" class="p-5 text-center text-slate-500 italic">Chưa có lượt ghi điểm nào. Hãy là người đầu tiên chinh phục 10 hòn đảo!</td></tr>`;
+                return;
+            }
+            
+            data.forEach((player, index) => {
+                const tr = document.createElement('tr');
+                const isCurrentUser = (player.name === studentName && (player.className || '') === studentClass);
+                tr.className = `rank-row hover:bg-slate-50 transition ${isCurrentUser ? 'current-user' : ''}`;
+                
+                let rankDisplay = index + 1;
+                if (index === 0) rankDisplay = "🥇 1";
+                else if (index === 1) rankDisplay = "🥈 2";
+                else if (index === 2) rankDisplay = "🥉 3";
+
+                const displayClass = player.className || "---";
+
+                tr.innerHTML = `
+                    <td class="p-2 md:p-3 text-center">${rankDisplay}</td>
+                    <td class="p-2 md:p-3 font-semibold ${isCurrentUser ? 'text-blue-900 font-extrabold' : ''}">${player.name} ${isCurrentUser ? '<span class="text-[10px] bg-blue-600 text-white px-1.5 py-0.5 rounded ml-1">Bạn</span>' : ''}</td>
+                    <td class="p-2 md:p-3 text-center font-medium text-slate-600">${displayClass}</td>
+                    <td class="p-2 md:p-3 text-right font-mono text-sm md:text-base font-extrabold text-red-600">${player.score}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function showLeaderboard() {
+            renderLeaderboardRows();
+            const modal = document.getElementById('leaderboardModalWrapper');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeLeaderboard() {
+            const modal = document.getElementById('leaderboardModalWrapper');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+    </script>
+</body>
+</html>
