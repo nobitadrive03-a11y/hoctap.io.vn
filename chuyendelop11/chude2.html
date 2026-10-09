@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chủ đề 2: Lưu trữ, tìm kiếm và chia sẻ thông tin - Hành Trình Số</title>
+    <!-- Tích hợp Font chữ Google -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&family=Merriweather:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <!-- Tích hợp thư viện Icon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style id="main-style">
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1e40af;
+            --tech-gradient: linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%);
+            /* Nền màu hồng - đỏ rực rỡ chuẩn giao diện Hành Trình Số */
+            --landing-bg: linear-gradient(135deg, #ec4899 0%, #ef4444 100%); 
+            --accent: #f59e0b;
+            --bg-body: #e0f2fe;
+            --text-main: #334155;
+            --text-muted: #64748b;
+            --white: #ffffff;
+            --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 20px 40px -5px rgba(0, 0, 0, 0.15);
+            --radius-md: 12px;
+            --radius-lg: 24px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-body);
+            color: var(--text-main);
+            line-height: 1.8;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* ----- MÀN HÌNH CHÀO (LANDING) ----- */
+        #landing-view {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: var(--landing-bg);
+            padding: 20px;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        .hero-card {
+            background: var(--white);
+            padding: 50px 40px;
+            border-radius: var(--radius-lg);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            max-width: 650px;
+            width: 100%;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Logo Hành Trình Số */
+        .logo-hs {
+            width: 85px;
+            height: 85px;
+            background-color: #dc2626;
+            border: 4px solid #fbbf24;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2.2rem;
+            font-weight: 900;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 15px rgba(220, 38, 38, 0.4);
+        }
+
+        .hero-card h1 {
+            font-family: 'Inter', sans-serif;
+            color: #dc2626;
+            font-size: 1.5rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+            letter-spacing: 1px;
+        }
+
+        .hero-card h2 {
+            font-family: 'Inter', sans-serif;
+            color: #dc2626;
+            font-size: 1.6rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            margin-bottom: 25px;
+            line-height: 1.4;
+        }
+
+        .motto-text {
+            font-family: 'Merriweather', serif;
+            color: var(--text-muted);
+            font-size: 1.15rem;
+            font-style: italic;
+            margin-bottom: 40px;
+            padding: 0 20px;
+            position: relative;
+        }
+
+        .motto-text::before, .motto-text::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            width: 40px;
+            height: 1px;
+            background: #cbd5e1;
+        }
+        .motto-text::before { left: -30px; }
+        .motto-text::after { right: -30px; }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+            width: 100%;
+        }
+
+        .btn {
+            padding: 14px 28px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .btn-primary {
+            background: #3b82f6;
+            color: var(--white);
+            box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.3);
+        }
+
+        .btn-primary:hover {
+            background: #2563eb;
+            transform: translateY(-2px);
+        }
+
+        .btn-outline {
+            background-color: #f8fafc;
+            color: #334155;
+            border: 1px solid #cbd5e1;
+        }
+
+        .btn-outline:hover {
+            background-color: #f1f5f9;
+            transform: translateY(-2px);
+        }
+
+        /* ----- MÀN HÌNH ĐỌC SÁCH (READER) ----- */
+        #reader-view {
+            display: none;
+            max-width: 1000px;
+            margin: 40px auto;
+            background: #f8fafc;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+            animation: slideUp 0.6s ease-out;
+            border: 1px solid rgba(255,255,255,0.5);
+        }
+
+        .reader-header {
+            background: var(--tech-gradient);
+            color: var(--white);
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .reader-header h2 { font-size: 1.2rem; font-weight: 600; margin: 0; }
+        .nav-controls { display: flex; gap: 15px; }
+        
+        .btn-small {
+            padding: 8px 16px;
+            font-size: 0.9rem;
+            border-radius: 12px;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: 1px solid rgba(255,255,255,0.4);
+            backdrop-filter: blur(5px);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: 0.3s;
+        }
+        .btn-small:hover { background: rgba(255,255,255,0.3); }
+
+        .reader-content { padding: 50px; background: var(--white); }
+
+        h1.main-title {
+            font-family: 'Merriweather', serif;
+            color: var(--primary-dark);
+            text-align: center;
+            margin-bottom: 40px;
+            font-size: 2.2rem;
+            line-height: 1.4;
+        }
+
+        h1.main-title span {
+            display: block;
+            font-family: 'Inter', sans-serif;
+            font-size: 1.1rem;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+        }
+
+        .obj-box {
+            background: linear-gradient(to right, #f0f9ff, #e0f2fe);
+            border: 1px solid #bae6fd;
+            padding: 25px 30px;
+            border-radius: var(--radius-md);
+            margin-bottom: 40px;
+            box-shadow: inset 0 2px 4px rgba(255,255,255,0.8);
+        }
+        
+        .obj-box strong { color: #0284c7; display: flex; align-items: center; gap: 10px; font-size: 1.1rem; margin-bottom: 15px;}
+        .obj-box ul { list-style: none; padding-left: 0; margin: 0;}
+        .obj-box ul li { position: relative; padding-left: 25px; margin-bottom: 10px; }
+        .obj-box ul li::before {
+            content: '\f00c';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            color: #0ea5e9;
+            position: absolute;
+            left: 0;
+            top: 2px;
+        }
+
+        h2.part-title {
+            background: #f1f5f9;
+            color: var(--primary-dark);
+            padding: 15px 20px;
+            border-radius: 12px;
+            border-left: 6px solid var(--primary);
+            margin: 40px 0 25px 0;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        h3.lesson-title {
+            color: var(--primary);
+            font-size: 1.15rem;
+            margin: 25px 0 15px 0;
+            border-bottom: 1px dashed #cbd5e1;
+            padding-bottom: 8px;
+        }
+
+        p { margin-bottom: 15px; text-align: justify; font-size: 1.05rem; }
+        
+        .reader-content > ul {
+            list-style-type: none;
+            padding-left: 10px;
+        }
+        .reader-content > ul > li {
+            position: relative;
+            padding-left: 30px;
+            margin-bottom: 15px;
+            background: #f8fafc;
+            padding: 15px 15px 15px 40px;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+        }
+        .reader-content > ul > li::before {
+            content: '\f105';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            color: var(--primary);
+            position: absolute;
+            left: 15px;
+            top: 15px;
+            font-size: 1.2rem;
+        }
+        
+        .code-tag {
+            background: #f1f5f9;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: monospace;
+            color: #dc2626;
+            font-weight: bold;
+        }
+
+        .myth-box {
+            background: #fffbeb;
+            border-radius: var(--radius-md);
+            padding: 25px 30px;
+            margin: 35px 0;
+            box-shadow: 0 10px 15px -3px rgba(245, 158, 11, 0.1);
+            position: relative;
+            border: 1px solid #fde68a;
+        }
+
+        .myth-box::before {
+            content: '\f0eb'; 
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            color: var(--white);
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            font-size: 1.2rem;
+            position: absolute;
+            top: -20px;
+            left: 30px;
+            width: 45px;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(245, 158, 11, 0.3);
+            transform: rotate(-5deg);
+        }
+        
+        .myth-box strong { color: #b45309; font-size: 1.1rem; display: block; margin-bottom: 8px;}
+
+        .table-wrapper {
+            background: var(--white);
+            border-radius: var(--radius-md);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+            overflow: hidden;
+            margin: 30px 0;
+            border: 1px solid #e2e8f0;
+        }
+
+        .modern-table { width: 100%; border-collapse: collapse; }
+
+        .modern-table th, .modern-table td {
+            padding: 16px 20px;
+            border-bottom: 1px solid #f1f5f9;
+            text-align: left;
+        }
+
+        .modern-table th {
+            background: #f8fafc;
+            color: var(--primary-dark);
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+        }
+        
+        .modern-table tr:last-child td { border-bottom: none; }
+        .modern-table tr:hover { background: #f8fafc; }
+        .modern-table td strong { color: var(--primary); }
+
+        .footer-credit {
+            text-align: center;
+            margin-top: 60px;
+            padding-top: 30px;
+            border-top: 2px dashed #e2e8f0;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+        .footer-credit i { color: #ef4444; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
+
+        @media (max-width: 768px) {
+            .reader-content { padding: 25px; }
+            .action-buttons { flex-direction: column; }
+            .btn { width: 100%; }
+            .table-wrapper { overflow-x: auto; }
+            h1.main-title { font-size: 1.8rem; }
+            .motto-text::before, .motto-text::after { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ================= MÀN HÌNH CHÀO ================= -->
+    <div id="landing-view">
+        <div class="hero-card">
+            <div class="logo-hs">HS</div>
+            
+            <h1>Chuyên đề học tập Tin học 11</h1>
+            <h2>Lưu trữ, tìm kiếm và<br>chia sẻ thông tin</h2>
+            
+            <p class="motto-text">"Mang công nghệ vào mọi chuyến đi"</p>
+
+            <div class="action-buttons">
+                <button class="btn btn-primary" onclick="openReader()">
+                    <i class="fa-solid fa-book-open"></i> Đọc trực tiếp
+                </button>
+                <button class="btn btn-outline" onclick="downloadContent()">
+                    <i class="fa-solid fa-cloud-arrow-down"></i> Tải bản Offline
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= MÀN HÌNH ĐỌC SÁCH BÊN TRONG ================= -->
+    <div id="reader-view">
+        <div class="reader-header" id="no-print">
+            <h2><i class="fa-solid fa-cloud"></i> Không gian học tập</h2>
+            <div class="nav-controls">
+                <button class="btn btn-small" onclick="downloadContent()">
+                    <i class="fa-solid fa-download"></i> Lưu máy
+                </button>
+                <button class="btn btn-small" onclick="closeReader()" style="background: rgba(0,0,0,0.2);">
+                    <i class="fa-solid fa-xmark"></i> Thoát
+                </button>
+            </div>
+        </div>
+
+        <div class="reader-content" id="printable-content">
+            <h1 class="main-title">
+                <span>Chuyên đề Tin học 11 - Chủ đề 2</span>
+                LƯU TRỮ, TÌM KIẾM VÀ CHIA SẺ THÔNG TIN TRÊN INTERNET
+            </h1>
+
+            <div class="obj-box">
+                <strong><i class="fa-solid fa-route"></i> Mục tiêu chuyên đề:</strong>
+                <ul>
+                    <li>Làm chủ các công cụ lưu trữ đám mây (Cloud Storage) để đồng bộ và chia sẻ dữ liệu an toàn.</li>
+                    <li>Sử dụng thành thạo các toán tử tìm kiếm nâng cao để tra cứu thông tin nhanh chóng, chính xác.</li>
+                    <li>Biết cách phân loại, đánh dấu quản lý thư điện tử (Email) và khai thác các tính năng hữu ích của mạng xã hội.</li>
+                </ul>
+            </div>
+
+            <!-- BÀI 6 -->
+            <h2 class="part-title"><i class="fa-solid fa-cloud-arrow-up"></i> Bài 6: Lưu trữ và chia sẻ tệp tin trên Internet</h2>
+            
+            <h3 class="lesson-title">1. Khái niệm Ổ đĩa trực tuyến (Cloud Storage)</h3>
+            <p><strong>Lưu trữ đám mây</strong> là dịch vụ cho phép người dùng lưu trữ, quản lý và sao lưu dữ liệu trên các máy chủ ảo do các nhà cung cấp dịch vụ Internet duy trì. Các dịch vụ phổ biến hiện nay bao gồm: Google Drive, Microsoft OneDrive, Dropbox.</p>
+            <p>Ưu điểm vượt trội: Dữ liệu được đồng bộ liên tục, có thể truy cập từ bất kỳ thiết bị nào có Internet (điện thoại, máy tính bảng, PC) và dễ dàng phục hồi khi thiết bị cá nhân bị hỏng.</p>
+
+            <h3 class="lesson-title">2. Thực hành: Lưu trữ và chia sẻ</h3>
+            <p>Khi chia sẻ một tệp tin trên ổ đĩa trực tuyến, ta không gửi bản sao của tệp tin đó đi, mà cấp quyền truy cập vào chính bản gốc đang nằm trên đám mây. Có 3 mức phân quyền cơ bản:</p>
+            <ul>
+                <li><strong>Người xem (Viewer):</strong> Chỉ được phép đọc/xem nội dung và tải về.</li>
+                <li><strong>Người nhận xét (Commenter):</strong> Có thể xem và để lại các ghi chú, góp ý nhưng không làm thay đổi nội dung gốc.</li>
+                <li><strong>Người chỉnh sửa (Editor):</strong> Có toàn quyền thay đổi nội dung, xóa tệp, hoặc chia sẻ lại cho người khác.</li>
+            </ul>
+
+            <div class="myth-box">
+                <strong>Góc giải ảo: "Đám mây" nằm ở đâu?</strong> 
+                Nhiều người nghĩ dữ liệu trên đám mây đang "bay lơ lửng" trong không gian mạng. Thực chất, dữ liệu của bạn được lưu vào các ổ cứng vật lý khổng lồ đặt tại các Trung tâm dữ liệu (Data Center) của Google, Microsoft... Việc chia sẻ link cho bạn bè xem video không hề làm tốn dung lượng ổ đĩa của họ, vì họ chỉ đang "nhìn" vào ổ đĩa của bạn từ xa.
+            </div>
+
+            <!-- BÀI 7 -->
+            <h2 class="part-title"><i class="fa-solid fa-magnifying-glass"></i> Bài 7: Thực hành tìm kiếm thông tin trên Internet</h2>
+            
+            <p>Internet là một "đại dương" dữ liệu. Máy tìm kiếm (Search Engine) như Google, Bing, Yahoo chính là chiếc la bàn giúp ta điều hướng và chắt lọc thông tin.</p>
+
+            <ul>
+                <li><strong>Nhiệm vụ 1 & 2: Tìm kiếm văn bản và tiếng nói:</strong> Ngoài việc gõ văn bản truyền thống, tính năng Voice Search (Tìm kiếm bằng giọng nói) ngày càng phổ biến nhờ công nghệ AI nhận diện ngôn ngữ tự nhiên. Rất hữu ích khi thao tác trên thiết bị di động.</li>
+                <li><strong>Nhiệm vụ 3: Sử dụng toán tử tìm kiếm nâng cao:</strong> Để tránh việc máy tìm kiếm trả về hàng triệu kết quả "rác", học sinh cần nắm vững các từ khóa đặc biệt:
+                    <br><br>
+                    - Cụm từ chính xác: Đặt trong dấu ngoặc kép <span class="code-tag">"Trường THPT Phan Đình Phùng"</span><br>
+                    - Tìm theo định dạng tệp: Sử dụng <span class="code-tag">filetype:pdf</span> hoặc <span class="code-tag">filetype:pptx</span><br>
+                    - Tìm trong một trang web cụ thể: <span class="code-tag">site:edu.vn</span>
+                </li>
+                <li><strong>Nhiệm vụ 4: Trải nghiệm các máy tìm kiếm:</strong> Cùng một từ khóa, Google có thể trả về kết quả khác với Microsoft Bing, do thuật toán đánh giá và sắp xếp trang web của mỗi hãng là khác nhau.</li>
+            </ul>
+
+            <div class="myth-box">
+                <strong>Góc giải ảo: Máy tìm kiếm có biết tuốt?</strong> 
+                Khi bạn bấm "Tìm kiếm", Google KHÔNG lùng sục toàn bộ Internet ngay lúc đó. Thay vào đó, nó tìm trong "Mục lục" (Index) nội bộ khổng lồ mà nó đã tạo ra từ trước. Kỹ năng tìm kiếm giỏi không phải là hỏi một câu dài lê thê, mà là biết cách lắp ghép các từ khóa cốt lõi (Keywords) để loại bỏ thông tin nhiễu.
+            </div>
+
+            <!-- BÀI 8 -->
+            <h2 class="part-title"><i class="fa-solid fa-envelope-open-text"></i> Bài 8: Nâng cao sử dụng Thư điện tử & Mạng xã hội</h2>
+            
+            <h3 class="lesson-title">1. Phân loại và đánh dấu Thư điện tử (Email)</h3>
+            <p>Hộp thư đến (Inbox) quá tải là nguyên nhân làm trôi mất các thông báo quan trọng. Để quản lý khoa học, ta sử dụng các công cụ:</p>
+            <ul>
+                <li><strong>Gắn sao (Starred):</strong> Đánh dấu các email khẩn cấp cần xử lý ngay.</li>
+                <li><strong>Gắn nhãn (Labels/Folders):</strong> Phân loại email vào các ngăn tủ như "Học tập", "Công việc", "Cá nhân".</li>
+                <li><strong>Tạo bộ lọc (Filters):</strong> Tự động hóa việc phân loại. Ví dụ: Cài đặt để mọi email gửi từ giáo viên tự động được dán nhãn "Quan trọng".</li>
+            </ul>
+
+            <h3 class="lesson-title">2. Khai thác Mạng xã hội chuyên sâu</h3>
+            <p>Mạng xã hội không chỉ để giải trí mà còn là công cụ học tập và làm việc mạnh mẽ nếu biết cách khai thác:</p>
+            <ul>
+                <li>Sử dụng tính năng <strong>Nhóm (Groups)</strong> để tạo không gian thảo luận bài tập kín.</li>
+                <li>Thiết lập <strong>Quyền riêng tư (Privacy Settings)</strong> khắt khe để bảo vệ hình ảnh cá nhân, giới hạn người xem bài viết.</li>
+                <li>Biết cách báo cáo (Report) hoặc chặn (Block) các nội dung xấu độc, bắt nạt trên không gian mạng.</li>
+            </ul>
+
+            <div class="footer-credit">
+                Hệ thống tài liệu điện tử | <strong>Hành Trình Số</strong> <br>
+                Biên soạn bởi Cô Lê Huyền Sinh (Cỏ Dại) <i class="fa-solid fa-heart"></i>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const landing = document.getElementById('landing-view');
+        const reader = document.getElementById('reader-view');
+
+        function openReader() {
+            landing.style.display = 'none';
+            reader.style.display = 'block';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            
+            // Xóa nền khi đọc
+            document.body.style.background = "var(--bg-body)";
+        }
+
+        function closeReader() {
+            reader.style.display = 'none';
+            landing.style.display = 'flex';
+            // Khôi phục nền đỏ khi ra ngoài
+            document.body.style.background = "var(--landing-bg)";
+        }
+
+        // Khởi tạo nền
+        document.body.style.background = "var(--landing-bg)";
+
+        function downloadContent() {
+            const styleCSS = document.getElementById('main-style').innerHTML;
+            const contentHTML = document.getElementById('printable-content').innerHTML;
+
+            const htmlFile = `
+            <!DOCTYPE html>
+            <html lang="vi">
+            <head>
+                <meta charset="UTF-8">
+                <title>Chủ đề 2: Lưu trữ, tìm kiếm và chia sẻ thông tin</title>
+                <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&family=Merriweather:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+                <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+                <style>
+                    ${styleCSS}
+                    body { background: #e0f2fe; padding: 20px; display: block; }
+                    .reader-content { background: white; max-width: 900px; margin: 0 auto; padding: 40px; border-radius: 24px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); border: 1px solid rgba(255,255,255,0.8); }
+                </style>
+            </head>
+            <body>
+                <div class="reader-content">
+                    ${contentHTML}
+                </div>
+                <script>alert("Tài liệu đã được lưu offline thành công!");<\/script>
+            </body>
+            </html>`;
+
+            const blob = new Blob([htmlFile], { type: 'text/html' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = "ChuyenDe_TinHoc11_ChuDe2_HanhTrinhSo.html"; // Đổi tên file cho phù hợp với Chủ đề 2
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }
+    </script>
+</body>
+</html>

@@ -1,1 +1,627 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chủ đề 4: Hệ cơ sở dữ liệu - Hành Trình Số</title>
+    <!-- Tích hợp Font chữ Google -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&family=Merriweather:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <!-- Tích hợp thư viện Icon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style id="main-style">
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1e40af;
+            --tech-gradient: linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%);
+            --landing-bg: linear-gradient(135deg, #ec4899 0%, #ef4444 100%); 
+            --accent: #f59e0b;
+            --bg-body: #e0f2fe;
+            --text-main: #334155;
+            --text-muted: #64748b;
+            --white: #ffffff;
+            --shadow-lg: 0 20px 40px -5px rgba(0, 0, 0, 0.15);
+            --radius-md: 12px;
+            --radius-lg: 24px;
+        }
 
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-body);
+            color: var(--text-main);
+            line-height: 1.8;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* ----- MÀN HÌNH CHÀO (LANDING) ----- */
+        #landing-view {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: var(--landing-bg);
+            padding: 20px;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        .hero-card {
+            background: var(--white);
+            padding: 50px 40px;
+            border-radius: var(--radius-lg);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            max-width: 650px;
+            width: 100%;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .logo-hs {
+            width: 85px;
+            height: 85px;
+            background-color: #dc2626;
+            border: 4px solid #fbbf24;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2.2rem;
+            font-weight: 900;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 15px rgba(220, 38, 38, 0.4);
+        }
+
+        .hero-card h1 {
+            color: #dc2626;
+            font-size: 1.5rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+            letter-spacing: 1px;
+        }
+
+        .hero-card h2 {
+            color: #dc2626;
+            font-size: 1.6rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            margin-bottom: 25px;
+            line-height: 1.4;
+        }
+
+        .motto-text {
+            font-family: 'Merriweather', serif;
+            color: var(--text-muted);
+            font-size: 1.15rem;
+            font-style: italic;
+            margin-bottom: 40px;
+            padding: 0 20px;
+            position: relative;
+        }
+
+        .motto-text::before, .motto-text::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            width: 40px;
+            height: 1px;
+            background: #cbd5e1;
+        }
+        .motto-text::before { left: -30px; }
+        .motto-text::after { right: -30px; }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+            width: 100%;
+        }
+
+        .btn {
+            padding: 14px 28px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .btn-primary {
+            background: #3b82f6;
+            color: var(--white);
+            box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.3);
+        }
+
+        .btn-primary:hover {
+            background: #2563eb;
+            transform: translateY(-2px);
+        }
+
+        .btn-outline {
+            background-color: #f8fafc;
+            color: #334155;
+            border: 1px solid #cbd5e1;
+        }
+
+        .btn-outline:hover {
+            background-color: #f1f5f9;
+            transform: translateY(-2px);
+        }
+
+        /* ----- MÀN HÌNH ĐỌC SÁCH (READER) ----- */
+        #reader-view {
+            display: none;
+            max-width: 1000px;
+            margin: 40px auto;
+            background: #f8fafc;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+            animation: slideUp 0.6s ease-out;
+            border: 1px solid rgba(255,255,255,0.5);
+        }
+
+        .reader-header {
+            background: var(--tech-gradient);
+            color: var(--white);
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .reader-header h2 { font-size: 1.2rem; font-weight: 600; margin: 0; }
+        .nav-controls { display: flex; gap: 15px; }
+        
+        .btn-small {
+            padding: 8px 16px;
+            font-size: 0.9rem;
+            border-radius: 12px;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: 1px solid rgba(255,255,255,0.4);
+            backdrop-filter: blur(5px);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: 0.3s;
+        }
+        .btn-small:hover { background: rgba(255,255,255,0.3); }
+
+        .reader-content { padding: 50px; background: var(--white); }
+
+        h1.main-title {
+            font-family: 'Merriweather', serif;
+            color: var(--primary-dark);
+            text-align: center;
+            margin-bottom: 40px;
+            font-size: 2.2rem;
+            line-height: 1.4;
+        }
+
+        h1.main-title span {
+            display: block;
+            font-family: 'Inter', sans-serif;
+            font-size: 1.1rem;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+        }
+
+        .obj-box {
+            background: linear-gradient(to right, #f0f9ff, #e0f2fe);
+            border: 1px solid #bae6fd;
+            padding: 25px 30px;
+            border-radius: var(--radius-md);
+            margin-bottom: 40px;
+        }
+        
+        .obj-box strong { color: #0284c7; display: flex; align-items: center; gap: 10px; font-size: 1.1rem; margin-bottom: 15px;}
+        .obj-box ul { list-style: none; padding-left: 0; margin: 0;}
+        .obj-box ul li { position: relative; padding-left: 25px; margin-bottom: 10px; }
+        .obj-box ul li::before {
+            content: '\f00c';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            color: #0ea5e9;
+            position: absolute;
+            left: 0;
+            top: 2px;
+        }
+
+        h2.part-title {
+            background: #f1f5f9;
+            color: var(--primary-dark);
+            padding: 15px 20px;
+            border-radius: 12px;
+            border-left: 6px solid var(--primary);
+            margin: 40px 0 25px 0;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        h3.lesson-title {
+            color: var(--primary);
+            font-size: 1.15rem;
+            margin: 25px 0 15px 0;
+            border-bottom: 1px dashed #cbd5e1;
+            padding-bottom: 8px;
+        }
+
+        p { margin-bottom: 15px; text-align: justify; font-size: 1.05rem; }
+        
+        .reader-content > ul {
+            list-style-type: none;
+            padding-left: 10px;
+        }
+        .reader-content > ul > li {
+            position: relative;
+            padding-left: 30px;
+            margin-bottom: 15px;
+            background: #f8fafc;
+            padding: 15px 15px 15px 40px;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+        }
+        .reader-content > ul > li::before {
+            content: '\f105';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            color: var(--primary);
+            position: absolute;
+            left: 15px;
+            top: 15px;
+            font-size: 1.2rem;
+        }
+
+        .code-tag {
+            background: #f1f5f9;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: monospace;
+            color: #dc2626;
+            font-weight: bold;
+            border: 1px solid #cbd5e1;
+        }
+
+        .code-block {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 12px;
+            font-family: monospace;
+            font-size: 0.95rem;
+            margin: 20px 0;
+            overflow-x: auto;
+            border-left: 5px solid #3b82f6;
+        }
+
+        .theory-note {
+            background: #f8fafc;
+            border-left: 4px solid var(--accent);
+            padding: 20px;
+            border-radius: 0 12px 12px 0;
+            margin: 25px 0;
+            border: 1px solid #e2e8f0;
+            border-left-width: 5px;
+        }
+        .theory-note strong { color: #b45309; display: block; margin-bottom: 8px; font-size: 1.1rem; }
+
+        /* Bảng biểu chuẩn khoa học */
+        .scientific-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 25px 0;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 0 0 1px #cbd5e1;
+        }
+        .scientific-table th, .scientific-table td {
+            padding: 12px 15px;
+            border: 1px solid #cbd5e1;
+            text-align: left;
+        }
+        .scientific-table th {
+            background: #f1f5f9;
+            color: var(--primary-dark);
+            font-weight: 600;
+        }
+
+        .footer-credit {
+            text-align: center;
+            margin-top: 60px;
+            padding-top: 30px;
+            border-top: 2px dashed #e2e8f0;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+        .footer-credit i { color: #ef4444; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
+
+        @media (max-width: 768px) {
+            .reader-content { padding: 25px; }
+            .action-buttons { flex-direction: column; }
+            .btn { width: 100%; }
+            h1.main-title { font-size: 1.8rem; }
+            .motto-text::before, .motto-text::after { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ================= MÀN HÌNH CHÀO ================= -->
+    <div id="landing-view">
+        <div class="hero-card">
+            <div class="logo-hs">HS</div>
+            
+            <h1>Chuyên đề học tập Tin học 11</h1>
+            <h2>Hệ cơ sở dữ liệu<br>và SQL Chuyên sâu</h2>
+            
+            <p class="motto-text">"Mang công nghệ vào mọi chuyến đi"</p>
+
+            <div class="action-buttons">
+                <button class="btn btn-primary" onclick="openReader()">
+                    <i class="fa-solid fa-book-open"></i> Đọc trực tiếp
+                </button>
+                <button class="btn btn-outline" onclick="downloadContent()">
+                    <i class="fa-solid fa-cloud-arrow-down"></i> Tải bản Offline
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= MÀN HÌNH ĐỌC SÁCH BÊN TRONG ================= -->
+    <div id="reader-view">
+        <div class="reader-header" id="no-print">
+            <h2><i class="fa-solid fa-database"></i> Tài liệu Chuyên đề Hệ cơ sở dữ liệu</h2>
+            <div class="nav-controls">
+                <button class="btn btn-small" onclick="downloadContent()">
+                    <i class="fa-solid fa-download"></i> Lưu máy
+                </button>
+                <button class="btn btn-small" onclick="closeReader()" style="background: rgba(0,0,0,0.2);">
+                    <i class="fa-solid fa-xmark"></i> Thoát
+                </button>
+            </div>
+        </div>
+
+        <div class="reader-content" id="printable-content">
+            <h1 class="main-title">
+                <span>Chuyên đề Tin học 11 - Chủ đề 4</span>
+                HỆ CƠ SỞ DỮ LIỆU VÀ TRUY VẤN SQL
+            </h1>
+
+            <div class="obj-box">
+                <strong><i class="fa-solid fa-bullseye"></i> Mục tiêu chuyên đề học tập:</strong>
+                <ul>
+                    <li>Hiểu rõ bản chất khoa học của việc lưu trữ và quản lý dữ liệu phục vụ quản lý hiện đại.</li>
+                    <li>Phân tích cấu trúc Cơ sở dữ liệu quan hệ, phân biệt rõ các loại trường, khóa chính và khóa ngoại.</li>
+                    <li>Thực hành thành thạo các nhóm lệnh SQL cơ bản trong việc khởi tạo, cập nhật và truy xuất dữ liệu.</li>
+                    <li>Nắm vững các nguyên tắc cốt lõi về bảo mật và an toàn hệ thống cơ sở dữ liệu.</li>
+                </ul>
+            </div>
+
+            <!-- BÀI 10 -->
+            <h2 class="part-title"><i class="fa-solid fa-server"></i> Bài 10: Lưu trữ dữ liệu và khai thác thông tin phục vụ quản lí</h2>
+            
+            <h3 class="lesson-title">1. Các hoạt động quản lý dữ liệu cơ bản</h3>
+            <p>Trong hệ thống thông tin của một tổ chức (như trường học, doanh nghiệp, cơ quan nhà nước), quá trình xử lý thông tin dựa trên cơ sở dữ liệu tuân theo chu trình khép kín:</p>
+            <ul>
+                <li><strong>Cập nhật dữ liệu (Data Update):</strong> Bao gồm ba thao tác nghiệp vụ chính: <em>Thêm mới</em> (Insert) bản ghi khi có đối tượng phát sinh; <em>Chỉnh sửa</em> (Update) thông tin khi có sự thay đổi; và <em>Xóa</em> (Delete) các bản ghi không còn giá trị sử dụng.</li>
+                <li><strong>Truy xuất và khai thác thông tin (Data Retrieval & Mining):</strong> Trích xuất các tập dữ liệu theo những tiêu chí xác định, kết hợp xử lý logic để chuyển hóa dữ liệu thô thành tri thức hoặc báo cáo phục vụ công tác ra quyết định của nhà quản lý.</li>
+                <li><strong>Thu thập dữ liệu tự động (Automatic Data Collection):</strong> Giải pháp thay thế phương thức nhập liệu thủ công bằng cách ứng dụng công nghệ như mã vạch (Barcode), mã QR, thẻ từ RFID, các trạm cảm biến IoT (Internet of Things) hoặc hệ thống nhận diện quang học (OCR), giúp tối ưu hóa tốc độ và độ chính xác của dữ liệu đầu vào.</li>
+            </ul>
+
+            <!-- BÀI 11 -->
+            <h2 class="part-title"><i class="fa-solid fa-cubes"></i> Bài 11: Cơ sở dữ liệu</h2>
+            
+            <h3 class="lesson-title">1. Yêu cầu tổ chức lưu trữ dữ liệu khoa học</h3>
+            <p>Việc lưu trữ dữ liệu truyền thống trên các tệp văn bản độc lập thường dẫn đến tình trạng dư thừa dữ liệu, không nhất quán và khó khăn trong việc chia sẻ. Do đó, tổ chức dữ liệu theo định hướng cơ sở dữ liệu phải thỏa mãn các yêu cầu khoa học:</p>
+            <ul>
+                <li>Giảm thiểu tối đa sự dư thừa dữ liệu nhằm tiết kiệm không gian lưu trữ và tránh mâu thuẫn thông tin.</li>
+                <li>Đảm bảo tính độc lập giữa dữ liệu và chương trình ứng dụng (sự thay đổi cấu trúc dữ liệu không làm tê liệt hệ thống phần mềm).</li>
+                <li>Đảm bảo tính toàn vẹn, tính nhất quán và khả năng chia sẻ đồng thời cho nhiều người dùng được phân quyền.</li>
+            </ul>
+
+            <h3 class="lesson-title">2. Khái niệm và các thuộc tính cơ bản của CSDL</h3>
+            <p><strong>Cơ sở dữ liệu (Database - CSDL)</strong> là một tập hợp các dữ liệu có cấu trúc, có liên quan logic với nhau, phản ánh các thực thể của một thế giới thực, được lưu trữ trên các thiết bị nhớ để đáp ứng nhu cầu khai thác thông tin đồng thời của nhiều người dùng.</p>
+            <p>Các thuộc tính cốt lõi của một CSDL chuẩn khoa học bao gồm: <em>Tính tích hợp</em> (dữ liệu được gom từ nhiều nguồn nhưng thống nhất về cấu trúc), <em>Tính chia sẻ</em> (nhiều người/nhiều ứng dụng cùng truy cập), và <em>Tính bền vững</em> (lưu trữ lâu dài, không bị mất khi ngắt nguồn điện).</p>
+
+            <!-- BÀI 12 -->
+            <h2 class="part-title"><i class="fa-solid fa-network-wired"></i> Bài 12: Hệ quản trị cơ sở dữ liệu và hệ cơ sở dữ liệu</h2>
+            
+            <h3 class="lesson-title">1. Khái niệm Hệ quản trị cơ sở dữ liệu (DBMS)</h3>
+            <p><strong>Hệ quản trị cơ sở dữ liệu (Database Management System - DBMS)</strong> là một phần mềm hệ thống cung cấp môi trường để khởi tạo, khai thác, duy trì và kiểm soát quyền truy cập CSDL. DBMS đóng vai trò là tầng trung gian chịu trách nhiệm xử lý mọi yêu cầu truy xuất dữ liệu từ các chương trình ứng dụng hoặc người dùng.</p>
+
+            <h3 class="lesson-title">2. Hệ cơ sở dữ liệu (Database System)</h3>
+            <p>Một <strong>Hệ CSDL hoàn chỉnh</strong> là sự tích hợp của ba thành phần cơ bản: <em>Cơ sở dữ liệu (CSDL)</em>, <em>Hệ quản trị CSDL (DBMS)</em>, và <em>Các phần mềm ứng dụng</em> cùng đội ngũ quản trị, người dùng khai thác hệ thống.</p>
+
+            <h3 class="lesson-title">3. Hệ CSDL tập trung và phân tán</h3>
+            <ul>
+                <li><strong>Hệ CSDL tập trung:</strong> Toàn bộ dữ liệu và DBMS được cài đặt và lưu trữ trên một máy chủ duy nhất. Phù hợp với các tổ chức quy mô nhỏ, quản lý tập trung, dễ vận hành nhưng phụ thuộc hoàn toàn vào độ ổn định của máy chủ trung tâm.</li>
+                <li><strong>Hệ CSDL phân tán:</strong> Dữ liệu được chia nhỏ và lưu trữ tại nhiều máy tính khác nhau kết nối qua mạng máy tính. Hệ thống phân tán giúp tối ưu hiệu năng truy vấn cho các đơn vị ở xa, tăng khả năng chịu lỗi nhưng đòi hỏi cơ chế đồng bộ hóa dữ liệu phức tạp.</li>
+            </ul>
+
+            <!-- BÀI 13 (CỰC KỲ CHI TIẾT THEO YÊU CẦU) -->
+            <h2 class="part-title"><i class="fa-solid fa-table-cells"></i> Bài 13: Cơ sở dữ liệu quan hệ</h2>
+            
+            <h3 class="lesson-title">1. Khái niệm Cơ sở dữ liệu quan hệ</h3>
+            <p><strong>Mô hình CSDL quan hệ (Relational Database Model)</strong> do Edgar Frank Codd đề xuất, trong đó dữ liệu được tổ chức dưới dạng các <em>Bảng (Table)</em> hai chiều. Đây là mô hình chuẩn mực và phổ biến nhất trong các hệ thống quản trị dữ liệu hiện đại (như MySQL, PostgreSQL, SQL Server).</p>
+
+            <h3 class="lesson-title">2. Các thuật ngữ và cấu trúc thành phần chi tiết</h3>
+            <p>Mỗi bảng trong CSDL quan hệ biểu diễn một thực thể hoặc một mối quan hệ giữa các thực thể, bao gồm các thành phần khoa học sau:</p>
+            <ul>
+                <li><strong>Thuộc tính (Attribute / Cột / Field):</strong> Mỗi cột trong bảng đại diện cho một thuộc tính của thực thể (ví dụ: <em>MaHS</em>, <em>HoTen</em>, <em>NgaySinh</em>). Mỗi trường có một tên định danh và một <em>kiểu dữ liệu</em> xác định (Integer, Varchar, Date, Float...).</li>
+                <li><strong>Bản ghi (Tuple / Hàng / Record):</strong> Mỗi hàng trong bảng (ngoại trừ hàng tiêu đề) chứa tập hợp các giá trị cụ thể của các thuộc tính tương ứng với một đối tượng thực tế.</li>
+                <li><strong>Miền giá trị (Domain):</strong> Tập hợp các giá trị hợp lệ mà một thuộc tính có thể nhận (ví dụ: Miền giá trị của thuộc tính <em>GioiTinh</em> chỉ gồm {"Nam", "Nữ"}).</li>
+                <li><strong>Khóa chính (Primary Key - PK):</strong> Một hoặc một tập hợp các thuộc tính có giá trị duy nhất cho mỗi bản ghi trong bảng, dùng để định danh phân biệt các bản ghi với nhau. <em>Ví dụ:</em> Trong bảng <span class="code-tag">HOC_SINH</span>, thuộc tính <span class="code-tag">MaHS</span> là khóa chính vì không thể có hai học sinh trùng mã số.</li>
+                <li><strong>Khóa ngoại (Foreign Key - FK):</strong> Một hoặc tập hợp thuộc tính trong bảng này nhưng tham chiếu đến khóa chính của một bảng khác, dùng để thiết lập mối liên kết logic giữa hai bảng. <em>Ví dụ:</em> Trong bảng <span class="code-tag">DIEM_SO</span> có thuộc tính <span class="code-tag">MaHS</span> đóng vai trò là khóa ngoại liên kết ngược lại với bảng <span class="code-tag">HOC_SINH</span>.</li>
+            </ul>
+
+            <div class="theory-note">
+                <strong>Ví dụ minh họa cấu trúc quan hệ giữa hai bảng:</strong>
+                <p>Bảng 1: <span class="code-tag">LOP_HOC</span> (Khóa chính: <span class="code-tag">MaLop</span>)</p>
+                <table class="scientific-table">
+                    <tr><th>MaLop (PK)</th><th>TenLop</th><th>GiaoVienCN</th></tr>
+                    <tr><td>11A1</td><td>Lớp 11 Toán</td><td>Thầy Bình</td></tr>
+                    <tr><td>11A2</td><td>Lớp 11 Tin</td><td>Cô Sinh</td></tr>
+                </table>
+                <p>Bảng 2: <span class="code-tag">HOC_SINH</span> (Khóa chính: <span class="code-tag">MaHS</span>, Khóa ngoại: <span class="code-tag">MaLop</span>)</p>
+                <table class="scientific-table">
+                    <tr><th>MaHS (PK)</th><th>HoTen</th><th>MaLop (FK)</th></tr>
+                    <tr><td>HS001</td><td>Nguyễn Văn An</td><td>11A2</td></tr>
+                    <tr><td>HS002</td><td>Trần Thị Bình</td><td>11A1</td></tr>
+                </table>
+                <p><em>Phân tích khoa học:</em> Thuộc tính <span class="code-tag">MaLop</span> ở bảng <span class="code-tag">HOC_SINH</span> là khóa ngoại, bắt buộc mọi giá trị của nó phải tồn tại trong tập giá trị khóa chính của bảng <span class="code-tag">LOP_HOC</span>. Điều này đảm bảo tính toàn vẹn tham chiếu.</p>
+            </div>
+
+            <!-- BÀI 14 (CÓ VÍ DỤ CÂU LỆNH SQL THỰC TẾ) -->
+            <h2 class="part-title"><i class="fa-solid fa-code"></i> Bài 14: SQL - Ngôn ngữ truy vấn có cấu trúc</h2>
+            
+            <h3 class="lesson-title">1. Lợi ích của ngôn ngữ truy vấn có cấu trúc (SQL)</h3>
+            <p><strong>SQL (Structured Query Language)</strong> là ngôn ngữ chuẩn quốc tế được thiết kế để giao tiếp, thao tác và quản trị các hệ cơ sở dữ liệu quan hệ. Lợi ích cốt lõi của SQL là tính độc lập hãng sản xuất (một câu lệnh chuẩn có thể chạy trên nhiều DBMS khác nhau), cú pháp gần gũi với ngôn ngữ tự nhiên, tính khai báo cao (chỉ định rõ lấy cái gì thay vì phải lập trình chi tiết cách lấy như thế nào).</p>
+
+            <h3 class="lesson-title">2. Các nhóm lệnh SQL cơ bản và ví dụ minh họa</h3>
+            <ul>
+                <li><strong>Nhóm Định nghĩa dữ liệu (DDL - Data Definition Language):</strong> Dùng để khởi tạo và cấu trúc hóa cơ sở dữ liệu.
+                    <div class="code-block">
+-- Khởi tạo cơ sở dữ liệu mới<br>
+CREATE DATABASE QuanLyHocSinh;<br><br>
+-- Khởi tạo bảng dữ liệu<br>
+CREATE TABLE HOC_SINH (<br>
+&nbsp;&nbsp;&nbsp;&nbsp;MaHS VARCHAR(10) PRIMARY KEY,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;HoTen VARCHAR(50) NOT NULL,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;NgaySinh DATE<br>
+);
+                    </div>
+                </li>
+                <li><strong>Nhóm Thao tác dữ liệu (DML - Data Manipulation Language):</strong> Dùng để cập nhật và truy xuất thông tin bên trong bảng.
+                    <div class="code-block">
+-- Thêm một bản ghi mới (INSERT)<br>
+INSERT INTO HOC_SINH VALUES ('HS003', 'Lê Hoàng Nam', '2009-05-12');<br><br>
+-- Cập nhật dữ liệu (UPDATE)<br>
+UPDATE HOC_SINH SET HoTen = 'Lê Hoàng Minh' WHERE MaHS = 'HS003';<br><br>
+-- Xóa bản ghi (DELETE)<br>
+DELETE FROM HOC_SINH WHERE MaHS = 'HS003';<br><br>
+-- Truy xuất dữ liệu (SELECT): Lấy toàn bộ danh sách học sinh<br>
+SELECT * FROM HOC_SINH;<br><br>
+-- Truy xuất có điều kiện: Lọc học sinh sinh năm 2009 trở đi<br>
+SELECT HoTen, NgaySinh FROM HOC_SINH WHERE NgaySinh >= '2009-01-01';
+                    </div>
+                </li>
+                <li><strong>Nhóm Kiểm soát dữ liệu (DCL - Data Control Language):</strong> Dùng để phân quyền truy cập cho người dùng.
+                    <div class="code-block">
+-- Cấp quyền SELECT trên bảng HOC_SINH cho tài khoản giaoVien<br>
+GRANT SELECT ON HOC_SINH TO 'giaoVien';<br><br>
+-- Thu hồi quyền<br>
+REVOKE SELECT ON HOC_SINH FROM 'giaoVien';
+                    </div>
+                </li>
+            </ul>
+
+            <!-- BÀI 15 -->
+            <h2 class="part-title"><i class="fa-solid fa-shield-halved"></i> Bài 15: Bảo mật và an toàn hệ cơ sở dữ liệu</h2>
+            
+            <h3 class="lesson-title">1. Bảo mật hệ CSDL (Database Security)</h3>
+            <p>Bảo mật là tập hợp các biện pháp phòng chống sự truy cập trái phép, rò rỉ hoặc phá hoại dữ liệu từ phía con người. Các giải pháp kỹ thuật tiêu chuẩn gồm:</p>
+            <ul>
+                <li><strong>Phân quyền truy cập:</strong> Thiết lập chính sách người dùng dựa trên vai trò (Role-based access control), giới hạn quyền thực thi trên từng bảng/cột cụ thể.</li>
+                <li><strong>Xác thực định danh:</strong> Sử dụng mật khẩu mạnh, xác thực đa yếu tố (MFA).</li>
+                <li><strong>Mã hóa dữ liệu (Encryption):</strong> Mã hóa dữ liệu ngay cả khi lưu trữ trên ổ cứng (At rest) hoặc khi truyền tải trên mạng (In transit).</li>
+            </ul>
+
+            <h3 class="lesson-title">2. Bảo đảm an toàn dữ liệu (Database Safety & Reliability)</h3>
+            <p>An toàn dữ liệu tập trung giải quyết các sự cố khách quan xuất phát từ lỗi phần cứng, sự cố nguồn điện, thiên tai hoặc sai sót thao tác của con người:</p>
+            <ul>
+                <li><strong>Sao lưu dự phòng (Backup):</strong> Định kỳ tạo các bản sao lưu toàn bộ hoặc gia tăng của CSDL lưu trữ tại các thiết bị hoặc vùng mây độc lập.</li>
+                <li><strong>Phục hồi dữ liệu (Recovery):</strong> Khôi phục lại trạng thái ổn định gần nhất của CSDL dựa trên các tệp bản sao lưu và nhật ký giao dịch (Transaction Log) khi xảy ra sự cố sập hệ thống.</li>
+            </ul>
+
+            <div class="footer-credit">
+                Hệ thống tài liệu điện tử chuyên sâu | <strong>Hành Trình Số</strong> <br>
+                Biên soạn chuẩn khoa học bởi Cô Lê Huyền Sinh (Cỏ Dại) <i class="fa-solid fa-heart"></i>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const landing = document.getElementById('landing-view');
+        const reader = document.getElementById('reader-view');
+
+        function openReader() {
+            landing.style.display = 'none';
+            reader.style.display = 'block';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            document.body.style.background = "var(--bg-body)";
+        }
+
+        function closeReader() {
+            reader.style.display = 'none';
+            landing.style.display = 'flex';
+            document.body.style.background = "var(--landing-bg)";
+        }
+
+        document.body.style.background = "var(--landing-bg)";
+
+        function downloadContent() {
+            const styleCSS = document.getElementById('main-style').innerHTML;
+            const contentHTML = document.getElementById('printable-content').innerHTML;
+
+            const htmlFile = `
+            <!DOCTYPE html>
+            <html lang="vi">
+            <head>
+                <meta charset="UTF-8">
+                <title>Chủ đề 4: Hệ cơ sở dữ liệu - Hành Trình Số</title>
+                <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&family=Merriweather:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+                <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+                <style>
+                    ${styleCSS}
+                    body { background: #e0f2fe; padding: 20px; display: block; }
+                    .reader-content { background: white; max-width: 900px; margin: 0 auto; padding: 40px; border-radius: 24px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); border: 1px solid rgba(255,255,255,0.8); }
+                </style>
+            </head>
+            <body>
+                <div class="reader-content">
+                    ${contentHTML}
+                </div>
+                <script>alert("Tài liệu đã được lưu offline thành công!");<\/script>
+            </body>
+            </html>`;
+
+            const blob = new Blob([htmlFile], { type: 'text/html' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = "ChuyenDe_TinHoc11_ChuDe4_ChuyenSo.html";
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }
+    </script>
+</body>
+</html>

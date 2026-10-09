@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chuyên đề Học tập Tin học 11 - Hành Trình Số</title>
+    <!-- Tích hợp Font chữ Google -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&family=Merriweather:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <!-- Tích hợp thư viện Icon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style id="main-style">
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1e40af;
+            --tech-gradient: linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%);
+            /* Nền màu hồng - đỏ rực rỡ chuẩn theo giao diện mẫu */
+            --landing-bg: linear-gradient(135deg, #ec4899 0%, #ef4444 100%); 
+            --accent: #f59e0b;
+            --bg-body: #e0f2fe;
+            --text-main: #334155;
+            --text-muted: #64748b;
+            --white: #ffffff;
+            --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 20px 40px -5px rgba(0, 0, 0, 0.15);
+            --radius-md: 12px;
+            --radius-lg: 24px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-body);
+            color: var(--text-main);
+            line-height: 1.8;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* ----- MÀN HÌNH CHÀO (LANDING) ----- */
+        #landing-view {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: var(--landing-bg); /* Áp dụng nền hồng đỏ */
+            padding: 20px;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        .hero-card {
+            background: var(--white);
+            padding: 50px 40px;
+            border-radius: var(--radius-lg);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Logo Hành Trình Số giống ảnh mẫu */
+        .logo-hs {
+            width: 85px;
+            height: 85px;
+            background-color: #dc2626; /* Đỏ đô */
+            border: 4px solid #fbbf24; /* Viền vàng */
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2.2rem;
+            font-weight: 900;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 15px rgba(220, 38, 38, 0.4);
+        }
+
+        .hero-card h1 {
+            font-family: 'Inter', sans-serif;
+            color: #dc2626;
+            font-size: 1.5rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+            letter-spacing: 1px;
+        }
+
+        .hero-card h2 {
+            font-family: 'Inter', sans-serif;
+            color: #dc2626;
+            font-size: 1.8rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            margin-bottom: 25px;
+            line-height: 1.3;
+        }
+
+        .motto-text {
+            font-family: 'Merriweather', serif;
+            color: var(--text-muted);
+            font-size: 1.15rem;
+            font-style: italic;
+            margin-bottom: 40px;
+            padding: 0 20px;
+            position: relative;
+        }
+
+        .motto-text::before, .motto-text::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            width: 40px;
+            height: 1px;
+            background: #cbd5e1;
+        }
+        .motto-text::before { left: -30px; }
+        .motto-text::after { right: -30px; }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+            width: 100%;
+        }
+
+        .btn {
+            padding: 14px 28px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .btn-primary {
+            background: #3b82f6;
+            color: var(--white);
+            box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.3);
+        }
+
+        .btn-primary:hover {
+            background: #2563eb;
+            transform: translateY(-2px);
+        }
+
+        .btn-outline {
+            background-color: #f8fafc;
+            color: #334155;
+            border: 1px solid #cbd5e1;
+        }
+
+        .btn-outline:hover {
+            background-color: #f1f5f9;
+            transform: translateY(-2px);
+        }
+
+        /* ----- MÀN HÌNH ĐỌC SÁCH (READER) - PHONG CÁCH CÔNG NGHỆ ----- */
+        #reader-view {
+            display: none;
+            max-width: 1000px;
+            margin: 40px auto;
+            background: #f8fafc;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+            animation: slideUp 0.6s ease-out;
+            border: 1px solid rgba(255,255,255,0.5);
+        }
+
+        .reader-header {
+            background: var(--tech-gradient);
+            color: var(--white);
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .reader-header h2 { font-size: 1.2rem; font-weight: 600; margin: 0; }
+        .nav-controls { display: flex; gap: 15px; }
+        
+        .btn-small {
+            padding: 8px 16px;
+            font-size: 0.9rem;
+            border-radius: 12px;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: 1px solid rgba(255,255,255,0.4);
+            backdrop-filter: blur(5px);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: 0.3s;
+        }
+        .btn-small:hover { background: rgba(255,255,255,0.3); }
+
+        .reader-content { padding: 50px; background: var(--white); }
+
+        h1.main-title {
+            font-family: 'Merriweather', serif;
+            color: var(--primary-dark);
+            text-align: center;
+            margin-bottom: 40px;
+            font-size: 2.2rem;
+            line-height: 1.4;
+        }
+
+        h1.main-title span {
+            display: block;
+            font-family: 'Inter', sans-serif;
+            font-size: 1.1rem;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+        }
+
+        .obj-box {
+            background: linear-gradient(to right, #f0f9ff, #e0f2fe);
+            border: 1px solid #bae6fd;
+            padding: 25px 30px;
+            border-radius: var(--radius-md);
+            margin-bottom: 40px;
+            box-shadow: inset 0 2px 4px rgba(255,255,255,0.8);
+        }
+        
+        .obj-box strong { color: #0284c7; display: flex; align-items: center; gap: 10px; font-size: 1.1rem; margin-bottom: 15px;}
+        .obj-box ul { list-style: none; padding-left: 0; margin: 0;}
+        .obj-box ul li { position: relative; padding-left: 25px; margin-bottom: 10px; }
+        .obj-box ul li::before {
+            content: '\f00c';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            color: #0ea5e9;
+            position: absolute;
+            left: 0;
+            top: 2px;
+        }
+
+        h2.part-title {
+            background: #f1f5f9;
+            color: var(--primary-dark);
+            padding: 15px 20px;
+            border-radius: 12px;
+            border-left: 6px solid var(--primary);
+            margin: 40px 0 25px 0;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        p { margin-bottom: 15px; text-align: justify; font-size: 1.05rem; }
+        
+        .reader-content > ul {
+            list-style-type: none;
+            padding-left: 10px;
+        }
+        .reader-content > ul > li {
+            position: relative;
+            padding-left: 30px;
+            margin-bottom: 15px;
+            background: #f8fafc;
+            padding: 15px 15px 15px 40px;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+        }
+        .reader-content > ul > li::before {
+            content: '\f105';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            color: var(--primary);
+            position: absolute;
+            left: 15px;
+            top: 15px;
+            font-size: 1.2rem;
+        }
+
+        .myth-box {
+            background: #fffbeb;
+            border-radius: var(--radius-md);
+            padding: 25px 30px;
+            margin: 35px 0;
+            box-shadow: 0 10px 15px -3px rgba(245, 158, 11, 0.1);
+            position: relative;
+            border: 1px solid #fde68a;
+        }
+
+        .myth-box::before {
+            content: '\f0eb'; 
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            color: var(--white);
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            font-size: 1.2rem;
+            position: absolute;
+            top: -20px;
+            left: 30px;
+            width: 45px;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(245, 158, 11, 0.3);
+            transform: rotate(-5deg);
+        }
+        
+        .myth-box strong { color: #b45309; font-size: 1.1rem; display: block; margin-bottom: 8px;}
+
+        .table-wrapper {
+            background: var(--white);
+            border-radius: var(--radius-md);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+            overflow: hidden;
+            margin: 30px 0;
+            border: 1px solid #e2e8f0;
+        }
+
+        .modern-table { width: 100%; border-collapse: collapse; }
+
+        .modern-table th, .modern-table td {
+            padding: 16px 20px;
+            border-bottom: 1px solid #f1f5f9;
+            text-align: left;
+        }
+
+        .modern-table th {
+            background: #f8fafc;
+            color: var(--primary-dark);
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+        }
+        
+        .modern-table tr:last-child td { border-bottom: none; }
+        .modern-table tr:hover { background: #f8fafc; }
+        .modern-table td strong { color: var(--primary); }
+
+        .footer-credit {
+            text-align: center;
+            margin-top: 60px;
+            padding-top: 30px;
+            border-top: 2px dashed #e2e8f0;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+        .footer-credit i { color: #ef4444; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
+
+        @media (max-width: 768px) {
+            .reader-content { padding: 25px; }
+            .action-buttons { flex-direction: column; }
+            .btn { width: 100%; }
+            .table-wrapper { overflow-x: auto; }
+            h1.main-title { font-size: 1.8rem; }
+            .motto-text::before, .motto-text::after { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ================= MÀN HÌNH CHÀO (Cập nhật giao diện Hành Trình Số) ================= -->
+    <div id="landing-view">
+        <div class="hero-card">
+            <!-- Logo HS chuẩn -->
+            <div class="logo-hs">HS</div>
+            
+            <h1>Chuyên đề học tập Tin học 11</h1>
+            <h2>Máy tính, xã hội<br>và tri thức</h2>
+            
+            <p class="motto-text">"Mang công nghệ vào mọi chuyến đi"</p>
+
+            <div class="action-buttons">
+                <button class="btn btn-primary" onclick="openReader()">
+                    <i class="fa-solid fa-book-open"></i> Đọc trực tiếp
+                </button>
+                <button class="btn btn-outline" onclick="downloadContent()">
+                    <i class="fa-solid fa-cloud-arrow-down"></i> Tải bản Offline
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= MÀN HÌNH ĐỌC SÁCH BÊN TRONG ================= -->
+    <div id="reader-view">
+        <div class="reader-header" id="no-print">
+            <h2><i class="fa-solid fa-laptop-code"></i> Không gian học tập</h2>
+            <div class="nav-controls">
+                <button class="btn btn-small" onclick="downloadContent()">
+                    <i class="fa-solid fa-download"></i> Lưu máy
+                </button>
+                <button class="btn btn-small" onclick="closeReader()" style="background: rgba(0,0,0,0.2);">
+                    <i class="fa-solid fa-xmark"></i> Thoát
+                </button>
+            </div>
+        </div>
+
+        <div class="reader-content" id="printable-content">
+            <h1 class="main-title">
+                <span>Chuyên đề Tin học 11</span>
+                MÁY TÍNH, XÃ HỘI VÀ TRI THỨC
+            </h1>
+
+            <div class="obj-box">
+                <strong><i class="fa-solid fa-route"></i> Mục tiêu chuyên đề:</strong>
+                <ul>
+                    <li>Hiểu và thao tác thành thạo trên môi trường Hệ điều hành máy tính cá nhân và thiết bị di động.</li>
+                    <li>Phân biệt và khai thác hiệu quả hệ sinh thái phần mềm (thương mại, nguồn mở, trực tuyến).</li>
+                    <li>Nắm vững cấu trúc vi mô của phần cứng (CPU, RAM, Ổ cứng, Mạch lôgic) và nguyên lý kết nối thiết bị số.</li>
+                </ul>
+            </div>
+
+            <!-- PHẦN 1 -->
+            <h2 class="part-title"><i class="fa-brands fa-windows"></i> Phần 1: Nền tảng Điều hành và Hệ sinh thái Phần mềm</h2>
+            <p><strong>Hệ điều hành (HĐH)</strong> là tập hợp các chương trình điều khiển hoạt động của máy tính, đóng vai trò trung gian giao tiếp giữa phần cứng và người dùng. Lịch sử HĐH đi từ giao diện dòng lệnh văn bản (MS-DOS) tiến lên giao diện đồ họa trực quan (Windows, macOS) và mở rộng sang các hệ điều hành tối ưu cho thao tác chạm, tiết kiệm năng lượng trên thiết bị di động (Android, iOS).</p>
+            
+            <div class="myth-box">
+                <strong>Góc giải ảo:</strong> 
+                Người dùng thường nhầm lẫn mọi thứ trên màn hình đều là HĐH. Hãy hình dung HĐH là "nhà hát và sân khấu" cung cấp năng lượng, mặt bằng, âm thanh. Phần mềm ứng dụng (Google Chrome, Zalo, Microsoft Word) là các "diễn viên". Không có nhà hát, diễn viên không thể biểu diễn; nhưng nhà hát trống không thì khán giả cũng không có gì để xem.
+            </div>
+
+            <p>Khi sử dụng hệ thống, việc <strong>Quản lý tệp và thư mục</strong> là kỹ năng sống còn. Hệ thống tệp được tổ chức theo cấu trúc hình cây (Directory Tree). Phân vùng hệ thống (thường là ổ C:) là nơi chứa các tập tin vận hành của HĐH, không nên can thiệp hoặc lưu trữ dữ liệu cá nhân tại đây để tránh rủi ro mất dữ liệu khi lỗi hệ thống.</p>
+            
+            <p>Về hệ sinh thái phần mềm, không gian số hiện nay được chia thành ba mô hình phân phối chính:</p>
+            
+            <div class="table-wrapper">
+                <table class="modern-table">
+                    <thead>
+                        <tr>
+                            <th>Tiêu chí</th>
+                            <th>Phần mềm Thương mại</th>
+                            <th>Nguồn mở (Open Source)</th>
+                            <th>Trên Internet (Cloud App)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Bản chất</strong></td>
+                            <td>Sản phẩm đóng gói, mã nguồn bị ẩn.</td>
+                            <td>Công khai mã nguồn, cho phép tùy chỉnh.</td>
+                            <td>Chạy trực tiếp trên trình duyệt, lưu đám mây.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Chi phí</strong></td>
+                            <td>Mua bản quyền (đứt hoặc thuê bao).</td>
+                            <td>Thường miễn phí.</td>
+                            <td>Trả phí theo gói hoặc miễn phí kèm quảng cáo.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Bảo trì</strong></td>
+                            <td>Hỗ trợ kỹ thuật từ nhà phát triển.</td>
+                            <td>Phụ thuộc vào cộng đồng lập trình.</td>
+                            <td>Tự động cập nhật bởi nhà cung cấp.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Ví dụ</strong></td>
+                            <td>Microsoft Office, Adobe Photoshop.</td>
+                            <td>Linux, Python, GIMP.</td>
+                            <td>Google Docs, Padlet, Canva.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- PHẦN 2 -->
+            <h2 class="part-title"><i class="fa-solid fa-microchip"></i> Phần 2: Cấu trúc Vi mô và Nguyên lý Hoạt động</h2>
+            <p>Một hệ thống máy tính hoàn chỉnh được cấu thành từ các linh kiện phần cứng giao tiếp chặt chẽ với nhau thông qua <strong>Bo mạch chủ (Mainboard)</strong>. Các thành phần cốt lõi bao gồm:</p>
+            <ul>
+                <li><strong>CPU (Bộ vi xử lý trung tâm):</strong> Đóng vai trò là bộ não, thực hiện tính toán và điều phối mọi hoạt động của hệ thống.</li>
+                <li><strong>Bộ nhớ trong (RAM/ROM):</strong> ROM chứa các chương trình hệ thống cơ sở không bị mất khi tắt máy. RAM là nơi lưu trữ tạm thời dữ liệu đang được CPU xử lý.</li>
+                <li><strong>Thiết bị lưu trữ ngoài (HDD/SSD):</strong> Nơi lưu trữ vĩnh viễn hệ điều hành, phần mềm và dữ liệu cá nhân.</li>
+            </ul>
+
+            <div class="myth-box">
+                <strong>Góc giải ảo:</strong> 
+                Việc gọi chung RAM và Ổ cứng là "bộ nhớ" thường gây nhầm lẫn. Hãy coi Ổ cứng là Chiếc tủ tài liệu khổng lồ lưu giữ mọi thứ kể cả khi tắt điện, còn RAM là Mặt bàn làm việc. Khi CPU cần xử lý, tài liệu phải được lấy từ tủ (ổ cứng) đặt lên mặt bàn (RAM). Bàn càng rộng (RAM càng lớn) thì càng làm được nhiều việc cùng lúc. Tuy nhiên, cuối ngày phải cất lại vào tủ (thao tác Save tệp), vì mọi thứ trên bàn sẽ bị dọn sạch khi tắt máy.
+            </div>
+
+            <p>Ở cấp độ vi mạch, mọi luồng thông tin phức tạp đều được CPU xử lý thông qua các <strong>Mạch lôgic cơ bản</strong>. Các mạch này hoạt động dựa trên đại số Boole với hai trạng thái 0 (Sai/Tắt) và 1 (Đúng/Bật):</p>
+            <ul>
+                <li><strong>Cổng AND:</strong> Chỉ xuất tín hiệu 1 khi <em>tất cả</em> đầu vào là 1 (Ví dụ: Thẻ ATM hợp lệ AND đúng mã PIN thì mới nhả tiền).</li>
+                <li><strong>Cổng OR:</strong> Xuất tín hiệu 1 khi <em>ít nhất một</em> đầu vào là 1 (Ví dụ: Mở khóa bằng Vân tay OR Mật khẩu đều được).</li>
+                <li><strong>Cổng NOT:</strong> Đảo ngược trạng thái đầu vào (Từ 0 thành 1 và ngược lại).</li>
+            </ul>
+
+            <!-- PHẦN 3 -->
+            <h2 class="part-title"><i class="fa-brands fa-usb"></i> Phần 3: Kết nối Máy tính với Thiết bị số</h2>
+            <p>Để giao tiếp với thế giới bên ngoài, máy tính sử dụng các <strong>Thiết bị vào - ra (I/O)</strong>.</p>
+            <ul>
+                <li><strong>Thiết bị vào (Input):</strong> Bàn phím, chuột, micro, máy quét – số hóa thông tin từ môi trường vật lý đưa vào máy tính.</li>
+                <li><strong>Thiết bị ra (Output):</strong> Màn hình, máy in, loa – chuyển đổi dữ liệu số thành hình thức con người có thể tiếp nhận.</li>
+            </ul>
+            <p>Máy tính kết nối với các thiết bị số thông qua các cổng giao tiếp vật lý (USB, HDMI) hoặc giao thức không dây (Wi-Fi, Bluetooth).</p>
+
+            <div class="myth-box">
+                <strong>Góc giải ảo:</strong> 
+                Việc cắm một thiết bị vào máy tính qua cáp vật lý không đảm bảo thiết bị đó sẽ hoạt động. Máy tính và thiết bị ngoại vi nói hai ngôn ngữ khác nhau. Để chúng "hiểu" nhau, HĐH cần một phần mềm phiên dịch gọi là <strong>Trình điều khiển (Driver)</strong>. Hiện nay, tính năng Plug-and-Play (cắm là chạy) phổ biến là do HĐH đã tích hợp sẵn hàng ngàn Driver cơ bản. Với thiết bị chuyên dụng, người dùng vẫn phải tự cài đặt Driver.
+            </div>
+
+            <div class="footer-credit">
+                Hệ thống tài liệu điện tử | <strong>Hành Trình Số</strong> <br>
+                Biên soạn bởi Cô Lê Huyền Sinh  <i class="fa-solid fa-heart"></i>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const landing = document.getElementById('landing-view');
+        const reader = document.getElementById('reader-view');
+
+        function openReader() {
+            landing.style.display = 'none';
+            reader.style.display = 'block';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            
+            // Xóa màu nền gradient khi vào chế độ đọc để hiển thị màu trắng/xám nguyên bản
+            document.body.style.background = "var(--bg-body)";
+        }
+
+        function closeReader() {
+            reader.style.display = 'none';
+            landing.style.display = 'flex';
+            // Khôi phục màu nền gradient khi quay lại màn hình chào
+            document.body.style.background = "var(--landing-bg)";
+        }
+
+        // Đảm bảo khi mới mở web lên nền là màu gradient đỏ/hồng
+        document.body.style.background = "var(--landing-bg)";
+
+        function downloadContent() {
+            const styleCSS = document.getElementById('main-style').innerHTML;
+            const contentHTML = document.getElementById('printable-content').innerHTML;
+
+            const htmlFile = `
+            <!DOCTYPE html>
+            <html lang="vi">
+            <head>
+                <meta charset="UTF-8">
+                <title>Tài Liệu: Máy tính, Xã hội và Tri thức</title>
+                <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&family=Merriweather:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+                <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+                <style>
+                    ${styleCSS}
+                    body { background: #e0f2fe; padding: 20px; display: block; }
+                    .reader-content { background: white; max-width: 900px; margin: 0 auto; padding: 40px; border-radius: 24px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); border: 1px solid rgba(255,255,255,0.8); }
+                </style>
+            </head>
+            <body>
+                <div class="reader-content">
+                    ${contentHTML}
+                </div>
+                <script>alert("Tài liệu đã được lưu offline thành công!");<\/script>
+            </body>
+            </html>`;
+
+            const blob = new Blob([htmlFile], { type: 'text/html' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = "ChuyenDe_TinHoc11_HanhTrinhSo.html";
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }
+    </script>
+</body>
+</html>

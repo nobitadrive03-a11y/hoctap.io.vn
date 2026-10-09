@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chủ đề 6: Quản trị CSDL trên máy tính - Hành Trình Số</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&family=Merriweather:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style id="main-style">
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1e40af;
+            --tech-gradient: linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%);
+            --landing-bg: linear-gradient(135deg, #ec4899 0%, #ef4444 100%); 
+            --accent: #f59e0b;
+            --success: #10b981;
+            --bg-body: #e0f2fe;
+            --text-main: #334155;
+            --text-muted: #64748b;
+            --white: #ffffff;
+            --shadow-lg: 0 20px 40px -5px rgba(0, 0, 0, 0.15);
+            --radius-md: 12px;
+            --radius-lg: 24px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg-body); color: var(--text-main); line-height: 1.8; min-height: 100vh; overflow-x: hidden; }
+
+        /* ----- MÀN HÌNH CHÀO ----- */
+        #landing-view { display: flex; align-items: center; justify-content: center; min-height: 100vh; background: var(--landing-bg); padding: 20px; animation: fadeIn 0.8s ease-out; }
+        .hero-card { background: var(--white); padding: 40px 20px; border-radius: var(--radius-lg); box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); max-width: 700px; width: 100%; text-align: center; display: flex; flex-direction: column; align-items: center; }
+        .logo-hs { width: 80px; height: 80px; background-color: #dc2626; border: 4px solid #fbbf24; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 2rem; font-weight: 900; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(220, 38, 38, 0.4); }
+        .hero-card h1 { color: #dc2626; font-size: 1.3rem; font-weight: 700; text-transform: uppercase; margin-bottom: 5px; }
+        .hero-card h2 { color: #dc2626; font-size: 1.5rem; font-weight: 900; text-transform: uppercase; margin-bottom: 20px; line-height: 1.4; }
+        
+        .motto-text { font-family: 'Merriweather', serif; color: var(--text-muted); font-size: 1.1rem; font-style: italic; margin-bottom: 30px; }
+        .action-buttons { display: flex; gap: 15px; justify-content: center; flex-direction: column; width: 100%; max-width: 400px; }
+        .btn { padding: 14px 20px; border: none; border-radius: 12px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; }
+        .btn-primary { background: #3b82f6; color: var(--white); box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.3); }
+        .btn-outline { background-color: #f8fafc; color: #334155; border: 1px solid #cbd5e1; }
+
+        /* ----- MÀN HÌNH ĐỌC SÁCH ----- */
+        #reader-view { display: none; max-width: 900px; margin: 20px auto; background: #f8fafc; border-radius: var(--radius-md); box-shadow: var(--shadow-lg); overflow: hidden; animation: slideUp 0.6s ease-out; }
+        .reader-header { background: var(--tech-gradient); color: var(--white); padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 10; }
+        .reader-header h2 { font-size: 1.1rem; font-weight: 600; margin: 0; }
+        .nav-controls { display: flex; gap: 10px; }
+        .btn-small { padding: 8px 12px; font-size: 0.85rem; border-radius: 8px; background: rgba(255,255,255,0.2); color: white; border: 1px solid rgba(255,255,255,0.4); cursor: pointer; display: flex; align-items: center; gap: 5px; }
+
+        .reader-content { padding: 25px 20px; background: var(--white); }
+        h1.main-title { font-family: 'Merriweather', serif; color: var(--primary-dark); text-align: center; margin-bottom: 30px; font-size: 1.8rem; line-height: 1.4; }
+        h1.main-title span { display: block; font-family: 'Inter', sans-serif; font-size: 1rem; color: var(--primary); text-transform: uppercase; margin-bottom: 8px; }
+
+        .obj-box { background: #f0f9ff; border: 1px solid #bae6fd; padding: 20px; border-radius: 12px; margin-bottom: 30px; }
+        .obj-box strong { color: #0284c7; display: flex; align-items: center; gap: 8px; font-size: 1.1rem; margin-bottom: 12px;}
+        .obj-box ul { padding-left: 20px; margin: 0; }
+        
+        h2.part-title { background: #f1f5f9; color: var(--primary-dark); padding: 12px 15px; border-radius: 8px; border-left: 5px solid var(--primary); margin: 35px 0 20px 0; font-size: 1.2rem; display: flex; align-items: center; gap: 10px; }
+        h3.lesson-title { color: var(--primary); font-size: 1.1rem; margin: 20px 0 10px 0; border-bottom: 1px dashed #cbd5e1; padding-bottom: 5px; }
+        p { margin-bottom: 12px; text-align: justify; font-size: 1rem; }
+
+        /* Trình bày Tỉ mỉ theo từng bước GUI */
+        .gui-step-box { background: #ffffff; border: 1px solid #e2e8f0; border-left: 5px solid #10b981; padding: 15px 20px; border-radius: 8px; margin: 15px 0; }
+        .gui-step-box ol { padding-left: 20px; margin-bottom: 0; }
+        .gui-step-box li { margin-bottom: 10px; padding-left: 5px; }
+        .gui-step-box strong { color: #0f766e; }
+
+        /* Code block tối ưu hiển thị Mobile */
+        .sql-example { margin-bottom: 25px; }
+        .sql-example h4 { color: #dc2626; font-size: 1.05rem; margin-bottom: 8px; margin-top: 0; }
+        .code-block { background: #1e293b; color: #e2e8f0; padding: 15px; border-radius: 8px; font-family: 'Consolas', 'Monaco', monospace; font-size: 0.9rem; overflow-x: auto; border-left: 4px solid #3b82f6; line-height: 1.7; white-space: pre-wrap; }
+        
+        .code-tag { background: #f1f5f9; padding: 2px 5px; border-radius: 4px; font-family: monospace; color: #dc2626; font-weight: bold; border: 1px solid #cbd5e1; font-size: 0.9rem; }
+        .code-keyword { color: #38bdf8; font-weight: bold; }
+        .code-string { color: #a3e635; }
+
+        /* Bảng biểu trượt ngang trên điện thoại */
+        .table-responsive { width: 100%; overflow-x: auto; margin: 15px 0; border-radius: 8px; box-shadow: 0 0 0 1px #cbd5e1; }
+        .scientific-table { width: 100%; border-collapse: collapse; background: white; min-width: 500px; }
+        .scientific-table th, .scientific-table td { padding: 10px 12px; border: 1px solid #cbd5e1; text-align: left; font-size: 0.95rem; }
+        .scientific-table th { background: #f1f5f9; color: var(--primary-dark); font-weight: 600; }
+        
+        /* Box Bài tập */
+        .exercise-box { background: #fff; border: 1px solid #cbd5e1; padding: 20px; border-radius: 12px; margin-bottom: 30px; }
+        .exercise-box h3 { color: var(--primary-dark); font-size: 1.15rem; margin-top: 0; margin-bottom: 15px; border-bottom: 2px solid var(--accent); padding-bottom: 8px; }
+        
+        .question-item { margin-bottom: 20px; }
+        .question-text { font-weight: 600; color: #334155; margin-bottom: 8px; }
+        .solution-box { background: #f0fdf4; border-left: 4px solid var(--success); padding: 15px; border-radius: 0 8px 8px 0; }
+
+        .footer-credit { text-align: center; margin-top: 40px; padding-top: 20px; border-top: 1px dashed #cbd5e1; color: var(--text-muted); font-size: 0.9rem; }
+
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Media Query cho PC */
+        @media (min-width: 768px) {
+            .action-buttons { flex-direction: row; }
+            .hero-card { padding: 50px; }
+            .reader-content { padding: 40px 50px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ================= MÀN HÌNH CHÀO ================= -->
+    <div id="landing-view">
+        <div class="hero-card">
+            <div class="logo-hs">HS</div>
+            <h1>Chuyên đề học tập Tin học 11</h1>
+            <h2>Thực hành CSDL<br>MySQL & HeidiSQL</h2>
+            <p class="motto-text">"Mang công nghệ vào mọi chuyến đi"</p>
+            <div class="action-buttons">
+                <button class="btn btn-primary" onclick="openReader()">
+                    <i class="fa-solid fa-book-open"></i> Vào bài học
+                </button>
+                <button class="btn btn-outline" onclick="downloadContent()">
+                    <i class="fa-solid fa-cloud-arrow-down"></i> Lưu tài liệu
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= MÀN HÌNH ĐỌC SÁCH ================= -->
+    <div id="reader-view">
+        <div class="reader-header" id="no-print">
+            <h2><i class="fa-solid fa-database"></i> Tài liệu HeidiSQL</h2>
+            <div class="nav-controls">
+                <button class="btn btn-small" onclick="closeReader()">
+                    <i class="fa-solid fa-xmark"></i> Đóng
+                </button>
+            </div>
+        </div>
+
+        <div class="reader-content" id="printable-content">
+            <h1 class="main-title">
+                <span>Chuyên đề Tin học 11 - Chủ đề 6</span>
+                QUẢN TRỊ CƠ SỞ DỮ LIỆU TRÊN MÁY TÍNH
+            </h1>
+
+            <!-- DỮ LIỆU ĐẦU VÀO TRỰC QUAN -->
+            <h2 class="part-title"><i class="fa-solid fa-table"></i> Tập Dữ liệu mẫu: Quản lý Trường học</h2>
+            <p>Để dễ hình dung, chúng ta sẽ thực hành xây dựng hệ thống gồm 2 bảng có quan hệ 1-N (Một Lớp có Nhiều Học sinh):</p>
+            
+            <p><strong>Bảng 1: LOPHOC (Lớp học - Bảng Cha)</strong></p>
+            <div class="table-responsive">
+                <table class="scientific-table">
+                    <tr><th>idLop (Khóa chính)</th><th>tenLop</th><th>phongHoc</th></tr>
+                    <tr><td>1</td><td>11A2</td><td>Phòng 301</td></tr>
+                    <tr><td>2</td><td>11A5</td><td>Phòng 302</td></tr>
+                </table>
+            </div>
+
+            <p><strong>Bảng 2: HOCSINH (Học sinh - Bảng Con)</strong></p>
+            <div class="table-responsive">
+                <table class="scientific-table">
+                    <tr><th>idHS (Khóa chính)</th><th>hoTen</th><th>ngaySinh</th><th>idLop (Khóa ngoại)</th></tr>
+                    <tr><td>1</td><td>Nguyễn Hoàng Bảo</td><td>2009-05-12</td><td>1 (11A2)</td></tr>
+                    <tr><td>2</td><td>Lê Văn Tuấn</td><td>2009-11-05</td><td>2 (11A5)</td></tr>
+                </table>
+            </div>
+
+            <!-- BÀI 17, 18, 19 -->
+            <h2 class="part-title"><i class="fa-solid fa-folder-plus"></i> Bài 17, 18, 19: Thao tác tạo lập CSDL và bảng LopHoc</h2>
+            <p>Chúng ta sử dụng phần mềm <strong>HeidiSQL</strong> để khởi tạo CSDL bằng các thao tác click chuột trực quan.</p>
+            
+            <div class="gui-step-box">
+                <strong>Bước 1: Tạo Cơ sở dữ liệu (Database)</strong>
+                <ol>
+                    <li>Mở HeidiSQL và kết nối vào hệ thống.</li>
+                    <li>Ở khung bên trái, <strong>nhấp chuột phải</strong> vào dòng kết nối (ví dụ: Unnamed).</li>
+                    <li>Chọn <strong>Tạo mới (Create new)</strong> &rarr; Chọn <strong>Cơ sở dữ liệu (Database)</strong>.</li>
+                    <li>Nhập tên là <span class="code-tag">QL_TruongHoc</span>.</li>
+                    <li>Mục <em>Collation</em>, bắt buộc chọn <span class="code-tag">utf8mb4_unicode_ci</span> (để gõ được tiếng Việt). Nhấn <strong>OK</strong>.</li>
+                </ol>
+            </div>
+
+            <div class="gui-step-box">
+                <strong>Bước 2: Tạo Bảng Cha (LopHoc)</strong>
+                <ol>
+                    <li><strong>Nhấp chuột phải</strong> vào CSDL `QL_TruongHoc` vừa tạo.</li>
+                    <li>Chọn <strong>Tạo mới</strong> &rarr; Chọn <strong>Bảng (Table)</strong>. Đặt tên bảng là <span class="code-tag">LopHoc</span>.</li>
+                    <li>Sang tab <strong>Cột (Columns)</strong>, nhấn nút <strong>Thêm (Add)</strong> để tạo 3 trường:
+                        <br>- `idLop` (Kiểu: INT). Tick chọn ô <strong>Auto_increment</strong>.
+                        <br>- `tenLop` (Kiểu: VARCHAR, Độ dài: 50).
+                        <br>- `phongHoc` (Kiểu: VARCHAR, Độ dài: 50).
+                    </li>
+                    <li><strong>Tạo Khóa chính:</strong> Nhấp chuột phải vào cột `idLop` &rarr; Chọn <strong>Tạo chỉ mục mới</strong> &rarr; Chọn <strong>PRIMARY</strong>.</li>
+                    <li>Nhấn nút <strong>Lưu (Save)</strong> trên thanh công cụ.</li>
+                </ol>
+            </div>
+
+            <!-- BÀI 20 -->
+            <h2 class="part-title"><i class="fa-solid fa-key"></i> Bài 20: Tạo bảng HocSinh và thiết lập Khóa ngoại</h2>
+            
+            <div class="gui-step-box">
+                <strong>Bước 3: Tạo Bảng Con và Khóa Ngoại (Foreign Key)</strong>
+                <ol>
+                    <li>Làm lại thao tác tạo bảng mới, đặt tên là <span class="code-tag">HocSinh</span>.</li>
+                    <li>Thêm 4 cột: `idHS` (INT, Auto_increment, gán PRIMARY KEY), `hoTen` (VARCHAR 100), `ngaySinh` (DATE), `idLop` (INT).</li>
+                    <li>Chuyển sang thẻ <strong>Khóa ngoại (Foreign keys)</strong> nằm ngay cạnh thẻ Cột. Nhấn <strong>Thêm (Add)</strong>.</li>
+                    <li>Thiết lập ràng buộc:
+                        <br>- <em>Cột tham chiếu:</em> Tick chọn `idLop` (của bảng HocSinh).
+                        <br>- <em>Bảng tham chiếu:</em> Chọn bảng `LopHoc`.
+                        <br>- <em>Cột đích:</em> Chọn `idLop` (của bảng LopHoc).
+                    </li>
+                    <li>Nhấn nút <strong>Lưu (Save)</strong>.</li>
+                </ol>
+            </div>
+
+            <!-- BÀI 21, 22 -->
+            <h2 class="part-title"><i class="fa-solid fa-pen-to-square"></i> Bài 21 & 22: Thao tác nhập liệu trực tiếp</h2>
+            <p><strong>Lưu ý cực kỳ quan trọng:</strong> Phải nhập dữ liệu cho bảng `LopHoc` trước, bảng `HocSinh` sau.</p>
+            <div class="gui-step-box">
+                <strong>Bước 4: Nhập liệu vào hệ thống</strong>
+                <ol>
+                    <li>Nhấp đúp chuột vào bảng <span class="code-tag">LopHoc</span> ở khung bên trái.</li>
+                    <li>Nhìn sang khung bên phải, chọn thẻ <strong>Dữ liệu (Data)</strong>.</li>
+                    <li>Nhấn biểu tượng dấu cộng màu xanh <strong>(+)</strong> hoặc phím <span class="code-tag">Insert</span> để thêm hàng.</li>
+                    <li>Cột `idLop` bỏ trống (vì máy tự nhảy số). Cột `tenLop` gõ `11A2`, cột `phongHoc` gõ `Phòng 301`. Nhấn Enter.</li>
+                    <li>Mở bảng <span class="code-tag">HocSinh</span> và làm tương tự. Ở cột `idLop`, bạn phải gõ đúng số `1` hoặc `2` để máy hiểu học sinh đó thuộc lớp nào.</li>
+                </ol>
+            </div>
+
+            <!-- BÀI 23 -->
+            <h2 class="part-title"><i class="fa-solid fa-code"></i> Bài 23: 10 Ví dụ Truy xuất dữ liệu (Câu lệnh SQL)</h2>
+            <p>Mở thẻ <strong>Truy vấn (Query)</strong> trên HeidiSQL để gõ và chạy (Run) các câu lệnh sau:</p>
+
+            <div class="sql-example">
+                <h4>Ví dụ 1: Lấy toàn bộ dữ liệu lớp học</h4>
+                <div class="code-block"><span class="code-keyword">SELECT</span> * 
+<span class="code-keyword">FROM</span> LopHoc;</div>
+            </div>
+
+            <div class="sql-example">
+                <h4>Ví dụ 2: Chỉ lấy cột Họ tên và Ngày sinh</h4>
+                <div class="code-block"><span class="code-keyword">SELECT</span> hoTen, ngaySinh 
+<span class="code-keyword">FROM</span> HocSinh;</div>
+            </div>
+
+            <div class="sql-example">
+                <h4>Ví dụ 3: Lọc học sinh có họ "Nguyễn" (Toán tử LIKE)</h4>
+                <div class="code-block"><span class="code-keyword">SELECT</span> * 
+<span class="code-keyword">FROM</span> HocSinh 
+<span class="code-keyword">WHERE</span> hoTen <span class="code-keyword">LIKE</span> <span class="code-string">'Nguyễn%'</span>;</div>
+            </div>
+
+            <div class="sql-example">
+                <h4>Ví dụ 4: Tìm lớp học đang ở dãy phòng 300</h4>
+                <div class="code-block"><span class="code-keyword">SELECT</span> tenLop, phongHoc 
+<span class="code-keyword">FROM</span> LopHoc 
+<span class="code-keyword">WHERE</span> phongHoc <span class="code-keyword">LIKE</span> <span class="code-string">'%30%'</span>;</div>
+            </div>
+
+            <div class="sql-example">
+                <h4>Ví dụ 5: Lọc các học sinh sinh nhật trong tháng 8</h4>
+                <div class="code-block"><span class="code-keyword">SELECT</span> hoTen, ngaySinh 
+<span class="code-keyword">FROM</span> HocSinh 
+<span class="code-keyword">WHERE MONTH</span>(ngaySinh) = 8;</div>
+            </div>
+
+            <div class="sql-example">
+                <h4>Ví dụ 6: Sắp xếp ngày sinh giảm dần (Trẻ nhất lên đầu)</h4>
+                <div class="code-block"><span class="code-keyword">SELECT</span> hoTen, ngaySinh 
+<span class="code-keyword">FROM</span> HocSinh 
+<span class="code-keyword">ORDER BY</span> ngaySinh <span class="code-keyword">DESC</span>;</div>
+            </div>
+
+            <div class="sql-example">
+                <h4>Ví dụ 7: Lấy 2 học sinh đầu tiên trong bảng (Giới hạn dòng)</h4>
+                <div class="code-block"><span class="code-keyword">SELECT</span> * 
+<span class="code-keyword">FROM</span> HocSinh 
+<span class="code-keyword">LIMIT</span> 2;</div>
+            </div>
+
+            <div class="sql-example">
+                <h4>Ví dụ 8: INNER JOIN (Ghép Tên HS và Tên Lớp)</h4>
+                <div class="code-block"><span class="code-keyword">SELECT</span> HocSinh.hoTen, LopHoc.tenLop 
+<span class="code-keyword">FROM</span> HocSinh 
+<span class="code-keyword">INNER JOIN</span> LopHoc <span class="code-keyword">ON</span> HocSinh.idLop = LopHoc.idLop;</div>
+            </div>
+
+            <div class="sql-example">
+                <h4>Ví dụ 9: Lấy danh sách chi tiết các học sinh đang học lớp 11A2</h4>
+                <div class="code-block"><span class="code-keyword">SELECT</span> HocSinh.hoTen, LopHoc.phongHoc 
+<span class="code-keyword">FROM</span> HocSinh 
+<span class="code-keyword">INNER JOIN</span> LopHoc <span class="code-keyword">ON</span> HocSinh.idLop = LopHoc.idLop 
+<span class="code-keyword">WHERE</span> LopHoc.tenLop = <span class="code-string">'11A2'</span>;</div>
+            </div>
+
+            <div class="sql-example">
+                <h4>Ví dụ 10: Thống kê tổng số lượng học sinh của từng lớp (GROUP BY)</h4>
+                <div class="code-block"><span class="code-keyword">SELECT</span> LopHoc.tenLop, <span class="code-keyword">COUNT</span>(HocSinh.idHS) <span class="code-keyword">AS</span> SoLuongHS 
+<span class="code-keyword">FROM</span> LopHoc 
+<span class="code-keyword">LEFT JOIN</span> HocSinh <span class="code-keyword">ON</span> LopHoc.idLop = HocSinh.idLop 
+<span class="code-keyword">GROUP BY</span> LopHoc.tenLop;</div>
+            </div>
+
+            <!-- PHẦN BÀI TẬP TỔNG HỢP -->
+            <h2 class="part-title" style="border-left-color: #f59e0b; background: #fffbeb;"><i class="fa-solid fa-graduation-cap" style="color: #f59e0b;"></i> BÀI TẬP THỰC HÀNH TỔNG HỢP</h2>
+            
+            <!-- BÀI TẬP 1 -->
+            <div class="exercise-box">
+                <h3><i class="fa-solid fa-book"></i> Bài tập 1: CSDL Quản lý Thư viện (`QL_ThuVien`)</h3>
+                <p>Hệ thống gồm 2 bảng:<br>
+                - <strong>TacGia:</strong> <span class="code-tag">idTG</span> (Khóa chính), <span class="code-tag">tenTG</span><br>
+                - <strong>Sach:</strong> <span class="code-tag">idSach</span> (Khóa chính), <span class="code-tag">tenSach</span>, <span class="code-tag">namXB</span>, <span class="code-tag">idTG</span> (Khóa ngoại)</p>
+                
+                <div class="question-item">
+                    <div class="question-text">Câu 1.1: Viết lệnh SQL thêm tác giả "Nam Cao" (có id = 1) và sách "Chí Phèo" (xuất bản 1941) của tác giả này.</div>
+                    <div class="solution-box">
+                        <div class="code-block">
+<span class="code-keyword">INSERT INTO</span> TacGia (idTG, tenTG) 
+<span class="code-keyword">VALUES</span> (1, <span class="code-string">'Nam Cao'</span>);
+
+<span class="code-keyword">INSERT INTO</span> Sach (tenSach, namXB, idTG) 
+<span class="code-keyword">VALUES</span> (<span class="code-string">'Chí Phèo'</span>, 1941, 1);
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question-item">
+                    <div class="question-text">Câu 1.2: Hiển thị danh sách các cuốn sách được xuất bản sau năm 2000.</div>
+                    <div class="solution-box">
+                        <div class="code-block">
+<span class="code-keyword">SELECT</span> * 
+<span class="code-keyword">FROM</span> Sach 
+<span class="code-keyword">WHERE</span> namXB > 2000;
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question-item">
+                    <div class="question-text">Câu 1.3: Cập nhật đổi tên sách "Chí Phèo" thành "Chí Phèo - Tuyển tập".</div>
+                    <div class="solution-box">
+                        <div class="code-block">
+<span class="code-keyword">UPDATE</span> Sach 
+<span class="code-keyword">SET</span> tenSach = <span class="code-string">'Chí Phèo - Tuyển tập'</span> 
+<span class="code-keyword">WHERE</span> tenSach = <span class="code-string">'Chí Phèo'</span>;
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question-item">
+                    <div class="question-text">Câu 1.4: In ra màn hình Tên Sách, Năm XB và Tên Tác Giả bằng cách nối 2 bảng.</div>
+                    <div class="solution-box">
+                        <div class="code-block">
+<span class="code-keyword">SELECT</span> Sach.tenSach, Sach.namXB, TacGia.tenTG 
+<span class="code-keyword">FROM</span> Sach 
+<span class="code-keyword">INNER JOIN</span> TacGia <span class="code-keyword">ON</span> Sach.idTG = TacGia.idTG;
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- BÀI TẬP 2 -->
+            <div class="exercise-box">
+                <h3><i class="fa-solid fa-cart-shopping"></i> Bài tập 2: CSDL Quản lý Bán hàng (`QL_BanHang`)</h3>
+                <p>Hệ thống gồm 2 bảng:<br>
+                - <strong>KhachHang:</strong> <span class="code-tag">idKH</span> (Khóa chính), <span class="code-tag">tenKH</span><br>
+                - <strong>DonHang:</strong> <span class="code-tag">idDH</span> (Khóa chính), <span class="code-tag">ngayMua</span>, <span class="code-tag">tongTien</span>, <span class="code-tag">idKH</span> (Khóa ngoại)</p>
+                
+                <div class="question-item">
+                    <div class="question-text">Câu 2.1: Lấy toàn bộ Đơn hàng, sắp xếp theo ngày mua giảm dần.</div>
+                    <div class="solution-box">
+                        <div class="code-block">
+<span class="code-keyword">SELECT</span> * 
+<span class="code-keyword">FROM</span> DonHang 
+<span class="code-keyword">ORDER BY</span> ngayMua <span class="code-keyword">DESC</span>;
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question-item">
+                    <div class="question-text">Câu 2.2: Đếm tổng số lượng đơn hàng đã được bán ra.</div>
+                    <div class="solution-box">
+                        <div class="code-block">
+<span class="code-keyword">SELECT COUNT</span>(idDH) <span class="code-keyword">AS</span> TongSoDon 
+<span class="code-keyword">FROM</span> DonHang;
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question-item">
+                    <div class="question-text">Câu 2.3: Hiển thị Tên khách hàng và Tổng tiền của các hóa đơn họ mua.</div>
+                    <div class="solution-box">
+                        <div class="code-block">
+<span class="code-keyword">SELECT</span> KhachHang.tenKH, DonHang.tongTien 
+<span class="code-keyword">FROM</span> DonHang 
+<span class="code-keyword">INNER JOIN</span> KhachHang <span class="code-keyword">ON</span> DonHang.idKH = KhachHang.idKH;
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question-item">
+                    <div class="question-text">Câu 2.4: Xóa vĩnh viễn thông tin Khách hàng có idKH = 5.</div>
+                    <div class="solution-box">
+                        <div class="code-block">
+<span class="code-keyword">DELETE FROM</span> KhachHang 
+<span class="code-keyword">WHERE</span> idKH = 5;
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-credit">
+                Hệ thống tài liệu điện tử chuyên sâu | <strong>Hành Trình Số</strong> <br>
+                Biên soạn chuẩn khoa học bởi Cô Lê Huyền Sinh (Cỏ Dại) <i class="fa-solid fa-heart"></i>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const landing = document.getElementById('landing-view');
+        const reader = document.getElementById('reader-view');
+        function openReader() { landing.style.display = 'none'; reader.style.display = 'block'; window.scrollTo({ top: 0, behavior: 'smooth' }); document.body.style.background = "var(--bg-body)"; }
+        function closeReader() { reader.style.display = 'none'; landing.style.display = 'flex'; document.body.style.background = "var(--landing-bg)"; }
+        document.body.style.background = "var(--landing-bg)";
+
+        function downloadContent() {
+            const styleCSS = document.getElementById('main-style').innerHTML;
+            const contentHTML = document.getElementById('printable-content').innerHTML;
+
+            const htmlFile = `<!DOCTYPE html><html lang="vi"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Chủ đề 6: Quản trị CSDL trên máy tính</title><link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&family=Merriweather:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"><style>${styleCSS} body { background: #e0f2fe; padding: 10px; display: block; } .reader-content { background: white; max-width: 900px; margin: 0 auto; padding: 20px; border-radius: 12px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); border: 1px solid rgba(255,255,255,0.8); } @media(min-width:768px){.reader-content{padding: 40px; border-radius: 24px;}}</style></head><body><div class="reader-content">${contentHTML}</div><script>alert("Tài liệu đã được lưu offline thành công!");<\/script></body></html>`;
+
+            const blob = new Blob([htmlFile], { type: 'text/html' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = "ChuyenDe_TinHoc11_ChuDe6_HanhTrinhSo.html";
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }
+    </script>
+</body>
+</html>
