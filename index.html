@@ -14,7 +14,36 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
+    
+<!-- 1. MÃ GA4 GỐC (Kết nối với Google Analytics) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-NSJCVSL9RM"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-NSJCVSL9RM'); 
+</script>
+
+<!-- 2. MÃ NHỊP TIM 30 GIÂY -->
+<script>
+  setInterval(function() {
+    if (!document.hidden) { 
+      gtag('event', 'keep_alive', {
+        'event_category': 'Engagement',
+        'event_label': 'Học sinh đang làm bài',
+        'non_interaction': false
+      });
+    }
+  }, 30000); 
+</script>
+
+
+
+
     <style>
+
+
         body {
             font-family: 'Inter', 'Segoe UI', sans-serif;
             background-color: #f8fafc; 
@@ -119,12 +148,10 @@
                     <button onclick="showLessons('Âm nhạc học đường', giaiTriAmNhac)" class="w-full bg-[#f97316] text-white font-bold py-2 px-4 rounded-lg hover:brightness-110 shadow-sm transition-all text-sm text-left">ÂM NHẠC</button>
                     <button onclick="showLessons('Góc chia sẻ kỉ niệm', giaiTriKiNiem)" class="w-full bg-[#22c55e] text-white font-bold py-2 px-4 rounded-lg hover:brightness-110 shadow-sm transition-all text-sm text-left">KỈ NIỆM</button>
                     <button onclick="showLessons('Minigame Trí tuệ', giaiTriGame)" class="w-full bg-[#8b5cf6] text-white font-bold py-2 px-4 rounded-lg hover:brightness-110 shadow-sm transition-all text-sm text-left">SÁCH LẬT</button>
-                   <!--  <button onclick="showLessons('Thư viện hình ảnh', giaiTriAnh)" class="w-full bg-[#eab308] text-white font-bold py-2 px-4 rounded-lg hover:brightness-110 shadow-sm transition-all text-sm text-left">HÌNH ẢNH</button>
-                    <button onclick="showLessons('Tạp chí trường học', giaiTriTapChi)" class="w-full bg-[#3b82f6] text-white font-bold py-2 px-4 rounded-lg hover:brightness-110 shadow-sm transition-all text-sm text-left">TẠP CHÍ</button>-->
                 </div>
             </li>
 
-            <!-- TRỢ LÝ AI (ĐÃ GẮN LINK chat) -->
+            <!-- TRỢ LÝ AI -->
             <li>
                 <a href="trolyai/codeaihs.html" class="nav-item block px-2 md:px-4 py-2 md:py-4">TRỢ LÝ AI</a>
             </li>
@@ -235,12 +262,10 @@
                 </div>
             </div>
 
-            <!-- KHUNG LƯỚI KHỐI MÀU BÀI HỌC (SẼ ẨN SIDEBAR VÀ MỞ RỘNG TOÀN MÀN HÌNH KHI BẤM MENU) -->
-           <!-- KHUNG LƯỚI KHỐI MÀU BÀI HỌC -->
+           <!-- KHUNG LƯỚI KHỐI MÀU BÀI HỌC / KIỂM TRA -->
             <div id="grid-view" class="hidden bg-white rounded-xl shadow-md border border-gray-100 p-4 md:p-8 min-h-[400px]">
                 <h2 id="grid-title" class="text-center font-extrabold text-xl md:text-3xl uppercase mb-6 md:mb-8 text-gray-800 drop-shadow-sm">TIÊU ĐỀ MỤC</h2>
                 
-                <!-- Chia cố định 2 cột đẹp mắt -->
                 <div id="grid-container" class="grid grid-cols-1 md:grid-cols-2 gap-12 max-w-5xl mx-auto">
                     <!-- Các thẻ bài học sẽ tự động được Javascript vẽ vào đây -->
                 </div>
@@ -309,156 +334,198 @@
     const colorClasses = ['bg-[#dc2626]', 'bg-[#2563eb]', 'bg-[#16a34a]', 'bg-[#f97316]', 'bg-[#9333ea]', 'bg-[#eab308]', 'bg-[#0d9488]', 'bg-[#1e293b]', 'bg-[#be123c]', 'bg-[#0284c7]'];
 
     // =========================================================================
-    // KHU VỰC NHẬP DỮ LIỆU BÀI HỌC
+    // KHU VỰC NHẬP DỮ LIỆU TÀI LIỆU
     // =========================================================================
 
     // TÀI LIỆU TIN HỌC
     const duLieuTin10 = [
-      
-        { title: "Sách giáo khoa Tin học 10. Định hướng tin học ứng dụng", link: "https://books.fliphtml5.com/lmpyl/occo/#p=1",
-         image: "https://placehold.co/600x300/0d9488/ffffff?text=Tin+10+Bai+1", 
-         icon: "fa-book" },
-      { title: "Sách bài tập Tin học 10. Định hướng tin học ứng dụng", link: "https://books.fliphtml5.com/jaooym/SBT-TIN-HOC-10/#p=1",
-         image: "https://placehold.co/600x300/0d9488/ffffff?text=Tin+10+Bai+1", 
-         icon: "fa-book" },
-        { title: "Sách bài tập Tin học 10. Định hướng tin học ứng dụng", link: "https://books.fliphtml5.com/jaooym/iaif/#p=1",
-         image: "https://placehold.co/600x300/0d9488/ffffff?text=Tin+10+Bai+1", 
-         icon: "fa-book" },
-
-
-        
+        { title: "Sách giáo khoa Tin học 10. Định hướng tin học ứng dụng", link: "https://books.fliphtml5.com/lmpyl/occo/#p=1", image: "https://placehold.co/600x300/0d9488/ffffff?text=Tin+10+Bai+1", icon: "fa-book" },
+        { title: "Sách bài tập Tin học 10. Định hướng tin học ứng dụng", link: "https://books.fliphtml5.com/jaooym/SBT-TIN-HOC-10/#p=1", image: "https://placehold.co/600x300/0d9488/ffffff?text=Tin+10+Bai+1", icon: "fa-book" },
+        { title: "Sách bài tập Tin học 10. Định hướng tin học ứng dụng", link: "https://books.fliphtml5.com/jaooym/iaif/#p=1", image: "https://placehold.co/600x300/0d9488/ffffff?text=Tin+10+Bai+1", icon: "fa-book" },
         { title: "Bài 3. Thực hành sử dụng thiết bị số", link: "tin10/bai3.html", image: "https://placehold.co/600x300/eab308/ffffff?text=Tin+10+Bai+3", icon: "fa-mobile-screen" }
     ];
 
     const duLieuTin11 = [
-
-      { title: "Chủ đề 1. Hệ điều hành", link: "chuyendelop11/chude1.html", 
-        image: "chuyendelop11/chude1.jpg", 
-        icon: "fa-laptop" },
-
-
-        { title: "Chủ đề 2. Tổ chức lưu trữ, tìm kiếm và trao đổi thông tin",
-         link: "chuyendelop11/chude2.html", 
-        image: "chuyendelop11/chude2.jpg", 
-        icon: "fa-laptop" },
-      
-
-
-       { title: " Chủ đề 4. Giới thiệu các hệ cơ sở dữ liệu",
-        link: "chuyendelop11/chude4.html", 
-        image: "chuyendelop11/chude4.jpg", 
-        icon: "fa-laptop" },
-
-
-
-         { title: "  Chủ đề 6. Thực hành tạo và khai thác cơ sở dữ liệu",
-             link: "chuyendelop11/chude6.html", 
-        image: "chuyendelop11/chude6.png", 
-        icon: "fa-laptop" },
-        
-        { title: "Sách giáo khoa Tin học 11. Định hướng tin học ứng dụng", link: "https://books.fliphtml5.com/jaooym/huqd/#p=12",
-         image: "https://placehold.co/600x300/0d9488/ffffff?text=Tin+10+Bai+1", 
-         icon: "fa-book" },
-    
-        { title: "Sách chuyên đề Tin học 11. Định hướng tin học ứng dụng", link: "https://thuvien.hanoi.edu.vn/tai-lieu/sach-dien-tu/chuyen-de-hoc-tap-tin-hoc-11-dinh-huong-tin-hoc-ung-dung-1138995",
-         image: "https://placehold.co/600x300/0d9488/ffffff?text=Tin+10+Bai+1", 
-         icon: "fa-book" }
-       
+        { title: "Chủ đề 1. Hệ điều hành", link: "chuyendelop11/chude1.html", image: "chuyendelop11/chude1.jpg", icon: "fa-laptop" },
+        { title: "Chủ đề 2. Tổ chức lưu trữ, tìm kiếm và trao đổi thông tin", link: "chuyendelop11/chude2.html", image: "chuyendelop11/chude2.jpg", icon: "fa-laptop" },
+        { title: "Chủ đề 4. Giới thiệu các hệ cơ sở dữ liệu", link: "chuyendelop11/chude4.html", image: "chuyendelop11/chude4.jpg", icon: "fa-laptop" },
+        { title: "Chủ đề 6. Thực hành tạo và khai thác cơ sở dữ liệu", link: "chuyendelop11/chude6.html", image: "chuyendelop11/chude6.png", icon: "fa-laptop" },
+        { title: "Sách giáo khoa Tin học 11. Định hướng tin học ứng dụng", link: "https://books.fliphtml5.com/jaooym/huqd/#p=12", image: "https://placehold.co/600x300/0d9488/ffffff?text=Tin+10+Bai+1", icon: "fa-book" },
+        { title: "Sách chuyên đề Tin học 11. Định hướng tin học ứng dụng", link: "https://thuvien.hanoi.edu.vn/tai-lieu/sach-dien-tu/chuyen-de-hoc-tap-tin-hoc-11-dinh-huong-tin-hoc-ung-dung-1138995", image: "https://placehold.co/600x300/0d9488/ffffff?text=Tin+10+Bai+1", icon: "fa-book" }
     ];
 
     const duLieuTin12 = [
-       { title: "Sách giáo khoa Tin học 12. Định hướng tin học ứng dụng", link: "https://books.fliphtml5.com/jaooym/rjda/#p=1",
-         image: "https://placehold.co/600x300/0d9488/ffffff?text=Tin+10+Bai+1", 
-         icon: "fa-book" },
+        { title: "Sách giáo khoa Tin học 12. Định hướng tin học ứng dụng", link: "https://books.fliphtml5.com/jaooym/rjda/#p=1", image: "https://placehold.co/600x300/0d9488/ffffff?text=Tin+10+Bai+1", icon: "fa-book" },
         { title: "Bài 2. Cơ sở dữ liệu quan hệ", link: "lop12/tin12bai2.html", image: "https://placehold.co/600x300/0284c7/ffffff?text=Tin+12+Bai+2", icon: "fa-database" },
         { title: "Bài 3. Thực hành quản trị CSDL", link: "lop12/tin12bai3.html", image: "https://placehold.co/600x300/16a34a/ffffff?text=Tin+12+Bai+3", icon: "fa-server" }
     ];
 
-    // BÀI KIỂM TRA
-    const kiemTraTin10 = [
-        { title: "Sách giáo khoa Tin học 10. Định hướng tin học ứng dụng", link: "https://books.fliphtml5.com/lmpyl/occo/#p=1",
-         image: "https://placehold.co/600x300/0d9488/ffffff?text=Tin+10+Bai+1", 
-         icon: "fa-book" },
-
-        { title: "Đề kiểm tra 15 phút số 2", link: "#", image: "https://placehold.co/600x300/22c55e/ffffff?text=Kiem+Tra+2", icon: "fa-file-lines" },
-        { title: "Đề kiểm tra Giữa kì", link: "#", image: "https://placehold.co/600x300/ef4444/ffffff?text=Giua+Ki", icon: "fa-star" }
+    // =========================================================================
+    // DỮ LIỆU CÁC ĐỀ KIỂM TRA TIN HỌC 10 (Sửa LINK_CUA_BAN_O_DAY.html thành link thật)
+    // =========================================================================
+    const tin10_tx1 = [
+        { title: "Bài kiểm tra TX 1 - Đề số 1", link: "LINK_CUA_BAN_O_DAY.html", icon: "fa-file-signature" },
+        { title: "Bài kiểm tra TX 1 - Đề số 2", link: "LINK_CUA_BAN_O_DAY.html", icon: "fa-file-signature" },
+        { title: "Bài kiểm tra TX 1 - Đề số 3", link: "LINK_CUA_BAN_O_DAY.html", icon: "fa-file-signature" }
     ];
-    
+    const tin10_gk1 = [
+        { title: "Kiểm tra Giữa kỳ 1 - Mã đề 01", link: "LINK_CUA_BAN_O_DAY.html", icon: "fa-star" },
+        { title: "Kiểm tra Giữa kỳ 1 - Mã đề 02", link: "LINK_CUA_BAN_O_DAY.html", icon: "fa-star" },
+        { title: "Kiểm tra Giữa kỳ 1 - Đề luyện tập", link: "LINK_CUA_BAN_O_DAY.html", icon: "fa-star" }
+    ];
+    const tin10_ck1 = [
+        { title: "Đề cương ôn tập Cuối kỳ 1", link: "LINK_CUA_BAN_O_DAY.html", icon: "fa-award" },
+        { title: "Đề thi Cuối kỳ 1 - Mẫu số 1", link: "LINK_CUA_BAN_O_DAY.html", icon: "fa-award" },
+        { title: "Đề thi Cuối kỳ 1 - Mẫu số 2", link: "LINK_CUA_BAN_O_DAY.html", icon: "fa-award" }
+    ];
+    const tin10_tx2 = [
+        { title: "Bài kiểm tra TX 2 - Đề số 1", link: "LINK_CUA_BAN_O_DAY.html", icon: "fa-file-signature" },
+        { title: "Bài kiểm tra TX 2 - Đề số 2", link: "LINK_CUA_BAN_O_DAY.html", icon: "fa-file-signature" },
+        { title: "Bài kiểm tra TX 2 - Đề số 3", link: "LINK_CUA_BAN_O_DAY.html", icon: "fa-file-signature" }
+    ];
+    const tin10_gk2 = [
+        { title: "Kiểm tra Giữa kỳ 2 - Mã đề 01", link: "LINK_CUA_BAN_O_DAY.html", icon: "fa-star" },
+        { title: "Kiểm tra Giữa kỳ 2 - Mã đề 02", link: "LINK_CUA_BAN_O_DAY.html", icon: "fa-star" },
+        { title: "Kiểm tra Giữa kỳ 2 - Đề luyện tập", link: "LINK_CUA_BAN_O_DAY.html", icon: "fa-star" }
+    ];
+    const tin10_ck2 = [
+        { title: "Đề cương ôn tập Cuối kỳ 2", link: "LINK_CUA_BAN_O_DAY.html", icon: "fa-award" },
+        { title: "Đề thi Cuối kỳ 2 - Mẫu số 1", link: "LINK_CUA_BAN_O_DAY.html", icon: "fa-award" },
+        { title: "Đề thi Cuối kỳ 2 - Mẫu số 2", link: "LINK_CUA_BAN_O_DAY.html", icon: "fa-award" }
+    ];
+    const tin10_tn = [
+        { title: "Trắc nghiệm - Bài 1, 2, 3", link: "LINK_CUA_BAN_O_DAY.html", icon: "fa-list-check" },
+        { title: "Trắc nghiệm - Bài 4, 5, 6", link: "LINK_CUA_BAN_O_DAY.html", icon: "fa-list-check" },
+        { title: "Trắc nghiệm - Bài 7, 8, 9", link: "LINK_CUA_BAN_O_DAY.html", icon: "fa-list-check" }
+    ];
+
+    // =========================================================================
+    // DỮ LIỆU CÁC ĐỀ KIỂM TRA TIN HỌC 11 (Sửa LINK_CUA_BAN_O_DAY.html thành link thật)
+    // =========================================================================
+    const tin11_tx1 = [
+        { title: "Bài kiểm tra TX 1 - Đề số 1", link: "LINK_CUA_BAN_O_DAY.html", icon: "fa-file-signature" },
+        { title: "Bài kiểm tra TX 1 - Đề số 2", link: "LINK_CUA_BAN_O_DAY.html", icon: "fa-file-signature" },
+        { title: "Bài kiểm tra TX 1 - Đề số 3", link: "LINK_CUA_BAN_O_DAY.html", icon: "fa-file-signature" }
+    ];
+    const tin11_gk1 = [
+        { title: "Kiểm tra Giữa kỳ 1 - Mã đề 01", link: "LINK_CUA_BAN_O_DAY.html", icon: "fa-star" },
+        { title: "Kiểm tra Giữa kỳ 1 - Mã đề 02", link: "LINK_CUA_BAN_O_DAY.html", icon: "fa-star" },
+        { title: "Kiểm tra Giữa kỳ 1 - Đề luyện tập", link: "LINK_CUA_BAN_O_DAY.html", icon: "fa-star" }
+    ];
+    const tin11_ck1 = [
+        { title: "Đề cương ôn tập Cuối kỳ 1", link: "LINK_CUA_BAN_O_DAY.html", icon: "fa-award" },
+        { title: "Đề thi Cuối kỳ 1 - Mẫu số 1", link: "LINK_CUA_BAN_O_DAY.html", icon: "fa-award" },
+        { title: "Đề thi Cuối kỳ 1 - Mẫu số 2", link: "LINK_CUA_BAN_O_DAY.html", icon: "fa-award" }
+    ];
+    const tin11_tx2 = [
+        { title: "Bài kiểm tra TX 2 - Đề số 1", link: "LINK_CUA_BAN_O_DAY.html", icon: "fa-file-signature" },
+        { title: "Bài kiểm tra TX 2 - Đề số 2", link: "LINK_CUA_BAN_O_DAY.html", icon: "fa-file-signature" },
+        { title: "Bài kiểm tra TX 2 - Đề số 3", link: "LINK_CUA_BAN_O_DAY.html", icon: "fa-file-signature" }
+    ];
+    const tin11_gk2 = [
+        { title: "Kiểm tra Giữa kỳ 2 - Mã đề 01", link: "LINK_CUA_BAN_O_DAY.html", icon: "fa-star" },
+        { title: "Kiểm tra Giữa kỳ 2 - Mã đề 02", link: "LINK_CUA_BAN_O_DAY.html", icon: "fa-star" },
+        { title: "Kiểm tra Giữa kỳ 2 - Đề luyện tập", link: "LINK_CUA_BAN_O_DAY.html", icon: "fa-star" }
+    ];
+    const tin11_ck2 = [
+        { title: "Đề cương ôn tập Cuối kỳ 2", link: "LINK_CUA_BAN_O_DAY.html", icon: "fa-award" },
+        { title: "Đề thi Cuối kỳ 2 - Mẫu số 1", link: "LINK_CUA_BAN_O_DAY.html", icon: "fa-award" },
+        { title: "Đề thi Cuối kỳ 2 - Mẫu số 2", link: "LINK_CUA_BAN_O_DAY.html", icon: "fa-award" }
+    ];
+    const tin11_tn = [
+        { title: "Trắc nghiệm - Bài 1, 2, 3", link: "LINK_CUA_BAN_O_DAY.html", icon: "fa-list-check" },
+        { title: "Trắc nghiệm - Bài 4, 5, 6", link: "LINK_CUA_BAN_O_DAY.html", icon: "fa-list-check" },
+        { title: "Trắc nghiệm - Bài 7, 8, 9", link: "LINK_CUA_BAN_O_DAY.html", icon: "fa-list-check" }
+    ];
+
+    // =========================================================================
+    // DỮ LIỆU CÁC ĐỀ KIỂM TRA TIN HỌC 12 (Sửa LINK_CUA_BAN_O_DAY.html thành link thật)
+    // =========================================================================
+    const tin12_tx1 = [
+        { title: "Bài kiểm tra TX 1 - Đề số 1", link: "LINK_CUA_BAN_O_DAY.html", icon: "fa-file-signature" },
+        { title: "Bài kiểm tra TX 1 - Đề số 2", link: "LINK_CUA_BAN_O_DAY.html", icon: "fa-file-signature" },
+        { title: "Bài kiểm tra TX 1 - Đề số 3", link: "LINK_CUA_BAN_O_DAY.html", icon: "fa-file-signature" }
+    ];
+    const tin12_gk1 = [
+        { title: "Kiểm tra Giữa kỳ 1 - Mã đề 01", link: "LINK_CUA_BAN_O_DAY.html", icon: "fa-star" },
+        { title: "Kiểm tra Giữa kỳ 1 - Mã đề 02", link: "LINK_CUA_BAN_O_DAY.html", icon: "fa-star" },
+        { title: "Kiểm tra Giữa kỳ 1 - Đề luyện tập", link: "LINK_CUA_BAN_O_DAY.html", icon: "fa-star" }
+    ];
+    const tin12_ck1 = [
+        { title: "Đề cương ôn tập Cuối kỳ 1", link: "LINK_CUA_BAN_O_DAY.html", icon: "fa-award" },
+        { title: "Đề thi Cuối kỳ 1 - Mẫu số 1", link: "LINK_CUA_BAN_O_DAY.html", icon: "fa-award" },
+        { title: "Đề thi Cuối kỳ 1 - Mẫu số 2", link: "LINK_CUA_BAN_O_DAY.html", icon: "fa-award" }
+    ];
+    const tin12_tx2 = [
+        { title: "Bài kiểm tra TX 2 - Đề số 1", link: "LINK_CUA_BAN_O_DAY.html", icon: "fa-file-signature" },
+        { title: "Bài kiểm tra TX 2 - Đề số 2", link: "LINK_CUA_BAN_O_DAY.html", icon: "fa-file-signature" },
+        { title: "Bài kiểm tra TX 2 - Đề số 3", link: "LINK_CUA_BAN_O_DAY.html", icon: "fa-file-signature" }
+    ];
+    const tin12_gk2 = [
+        { title: "Kiểm tra Giữa kỳ 2 - Mã đề 01", link: "LINK_CUA_BAN_O_DAY.html", icon: "fa-star" },
+        { title: "Kiểm tra Giữa kỳ 2 - Mã đề 02", link: "LINK_CUA_BAN_O_DAY.html", icon: "fa-star" },
+        { title: "Kiểm tra Giữa kỳ 2 - Đề luyện tập", link: "LINK_CUA_BAN_O_DAY.html", icon: "fa-star" }
+    ];
+    const tin12_ck2 = [
+        { title: "Đề cương ôn tập Cuối kỳ 2", link: "LINK_CUA_BAN_O_DAY.html", icon: "fa-award" },
+        { title: "Đề thi Cuối kỳ 2 - Mẫu số 1", link: "LINK_CUA_BAN_O_DAY.html", icon: "fa-award" },
+        { title: "Đề thi Cuối kỳ 2 - Mẫu số 2", link: "LINK_CUA_BAN_O_DAY.html", icon: "fa-award" }
+    ];
+    const tin12_tn = [
+        { title: "Trắc nghiệm - Bài 1, 2, 3", link: "LINK_CUA_BAN_O_DAY.html", icon: "fa-list-check" },
+        { title: "Trắc nghiệm - Bài 4, 5, 6", link: "LINK_CUA_BAN_O_DAY.html", icon: "fa-list-check" },
+        { title: "Trắc nghiệm - Bài 7, 8, 9", link: "LINK_CUA_BAN_O_DAY.html", icon: "fa-list-check" }
+    ];
+
+    // CẤU TRÚC DANH MỤC 7 THƯ MỤC KIỂM TRA ĐƯỢC GỌI RA Ở MENU
+    const kiemTraTin10 = [
+        { title: "Kiểm tra thường xuyên học kỳ 1", link: "javascript:showTestBlocks('Kiểm tra thường xuyên HK1 - Tin 10', tin10_tx1)", image: "https://placehold.co/600x300/3b82f6/ffffff?text=KTTX+HK1", icon: "fa-folder-open" },
+        { title: "Kiểm tra giữa kỳ 1", link: "javascript:showTestBlocks('Kiểm tra giữa kỳ 1 - Tin 10', tin10_gk1)", image: "https://placehold.co/600x300/10b981/ffffff?text=KTGK+1", icon: "fa-folder-open" },
+        { title: "Kiểm tra cuối kỳ 1", link: "javascript:showTestBlocks('Kiểm tra cuối kỳ 1 - Tin 10', tin10_ck1)", image: "https://placehold.co/600x300/ef4444/ffffff?text=KTCK+1", icon: "fa-folder-open" },
+        { title: "Kiểm tra thường xuyên học kỳ 2", link: "javascript:showTestBlocks('Kiểm tra thường xuyên HK2 - Tin 10', tin10_tx2)", image: "https://placehold.co/600x300/f59e0b/ffffff?text=KTTX+HK2", icon: "fa-folder-open" },
+        { title: "Kiểm tra giữa kỳ 2", link: "javascript:showTestBlocks('Kiểm tra giữa kỳ 2 - Tin 10', tin10_gk2)", image: "https://placehold.co/600x300/8b5cf6/ffffff?text=KTGK+2", icon: "fa-folder-open" },
+        { title: "Kiểm tra cuối kỳ 2", link: "javascript:showTestBlocks('Kiểm tra cuối kỳ 2 - Tin 10', tin10_ck2)", image: "https://placehold.co/600x300/ec4899/ffffff?text=KTCK+2", icon: "fa-folder-open" },
+        { title: "Đề thi trắc nghiệm qua các bài học", link: "javascript:showTestBlocks('Đề thi trắc nghiệm - Tin 10', tin10_tn)", image: "https://placehold.co/600x300/6366f1/ffffff?text=Trac+Nghiem", icon: "fa-folder-open" }
+    ];
+
     const kiemTraTin11 = [
-        { title: "Đề kiểm tra 15 phút số 1", link: "#", image: "https://placehold.co/600x300/f97316/ffffff?text=Kiem+Tra+1", icon: "fa-file-lines" },
-        { title: "Đề kiểm tra 15 phút số 2", link: "#", image: "https://placehold.co/600x300/22c55e/ffffff?text=Kiem+Tra+2", icon: "fa-file-lines" },
-        { title: "Đề kiểm tra Giữa kì", link: "#", image: "https://placehold.co/600x300/ef4444/ffffff?text=Giua+Ki", icon: "fa-star" }
+        { title: "Kiểm tra thường xuyên học kỳ 1", link: "javascript:showTestBlocks('Kiểm tra thường xuyên HK1 - Tin 11', tin11_tx1)", image: "https://placehold.co/600x300/3b82f6/ffffff?text=KTTX+HK1", icon: "fa-folder-open" },
+        { title: "Kiểm tra giữa kỳ 1", link: "javascript:showTestBlocks('Kiểm tra giữa kỳ 1 - Tin 11', tin11_gk1)", image: "https://placehold.co/600x300/10b981/ffffff?text=KTGK+1", icon: "fa-folder-open" },
+        { title: "Kiểm tra cuối kỳ 1", link: "javascript:showTestBlocks('Kiểm tra cuối kỳ 1 - Tin 11', tin11_ck1)", image: "https://placehold.co/600x300/ef4444/ffffff?text=KTCK+1", icon: "fa-folder-open" },
+        { title: "Kiểm tra thường xuyên học kỳ 2", link: "javascript:showTestBlocks('Kiểm tra thường xuyên HK2 - Tin 11', tin11_tx2)", image: "https://placehold.co/600x300/f59e0b/ffffff?text=KTTX+HK2", icon: "fa-folder-open" },
+        { title: "Kiểm tra giữa kỳ 2", link: "javascript:showTestBlocks('Kiểm tra giữa kỳ 2 - Tin 11', tin11_gk2)", image: "https://placehold.co/600x300/8b5cf6/ffffff?text=KTGK+2", icon: "fa-folder-open" },
+        { title: "Kiểm tra cuối kỳ 2", link: "javascript:showTestBlocks('Kiểm tra cuối kỳ 2 - Tin 11', tin11_ck2)", image: "https://placehold.co/600x300/ec4899/ffffff?text=KTCK+2", icon: "fa-folder-open" },
+        { title: "Đề thi trắc nghiệm qua các bài học", link: "javascript:showTestBlocks('Đề thi trắc nghiệm - Tin 11', tin11_tn)", image: "https://placehold.co/600x300/6366f1/ffffff?text=Trac+Nghiem", icon: "fa-folder-open" }
     ];
 
     const kiemTraTin12 = [
-        { title: "Đề kiểm tra 15 phút số 1", link: "#", image: "https://placehold.co/600x300/f97316/ffffff?text=Kiem+Tra+1", icon: "fa-file-lines" },
-        { title: "Đề kiểm tra 15 phút số 2", link: "#", image: "https://placehold.co/600x300/22c55e/ffffff?text=Kiem+Tra+2", icon: "fa-file-lines" },
-        { title: "Đề kiểm tra Giữa kì", link: "#", image: "https://placehold.co/600x300/ef4444/ffffff?text=Giua+Ki", icon: "fa-star" }
+        { title: "Kiểm tra thường xuyên học kỳ 1", link: "javascript:showTestBlocks('Kiểm tra thường xuyên HK1 - Tin 12', tin12_tx1)", image: "https://placehold.co/600x300/3b82f6/ffffff?text=KTTX+HK1", icon: "fa-folder-open" },
+        { title: "Kiểm tra giữa kỳ 1", link: "javascript:showTestBlocks('Kiểm tra giữa kỳ 1 - Tin 12', tin12_gk1)", image: "https://placehold.co/600x300/10b981/ffffff?text=KTGK+1", icon: "fa-folder-open" },
+        { title: "Kiểm tra cuối kỳ 1", link: "javascript:showTestBlocks('Kiểm tra cuối kỳ 1 - Tin 12', tin12_ck1)", image: "https://placehold.co/600x300/ef4444/ffffff?text=KTCK+1", icon: "fa-folder-open" },
+        { title: "Kiểm tra thường xuyên học kỳ 2", link: "javascript:showTestBlocks('Kiểm tra thường xuyên HK2 - Tin 12', tin12_tx2)", image: "https://placehold.co/600x300/f59e0b/ffffff?text=KTTX+HK2", icon: "fa-folder-open" },
+        { title: "Kiểm tra giữa kỳ 2", link: "javascript:showTestBlocks('Kiểm tra giữa kỳ 2 - Tin 12', tin12_gk2)", image: "https://placehold.co/600x300/8b5cf6/ffffff?text=KTGK+2", icon: "fa-folder-open" },
+        { title: "Kiểm tra cuối kỳ 2", link: "javascript:showTestBlocks('Kiểm tra cuối kỳ 2 - Tin 12', tin12_ck2)", image: "https://placehold.co/600x300/ec4899/ffffff?text=KTCK+2", icon: "fa-folder-open" },
+        { title: "Đề thi trắc nghiệm qua các bài học", link: "javascript:showTestBlocks('Đề thi trắc nghiệm - Tin 12', tin12_tn)", image: "https://placehold.co/600x300/6366f1/ffffff?text=Trac+Nghiem", icon: "fa-folder-open" }
     ];
 
-    // GIẢI TRÍ
+    // CÁC MỤC GIẢI TRÍ VÀ TRÒ CHƠI BÊN TRÁI 
     const giaiTriAmNhac = [
-        { 
-            title: "Mùa thu vẫn gọi những bước chân", 
-            link: "https://www.youtube.com/watch?v=i1jEP6P7Sqc", 
-            image: "https://img.youtube.com/vi/i1jEP6P7Sqc/hqdefault.jpg", 
-            icon: "fa-music" 
-        },
-        { 
-            title: "Vui đến trường", 
-            link: "https://www.youtube.com/watch?v=nBslIBnqOUM&list=RDnBslIBnqOUM&start_radio=1", 
-            image: "https://img.youtube.com/vi/nBslIBnqOUM/hqdefault.jpg", 
-            icon: "fa-headphones" 
-        },
-        { 
-           title: "Trang Web YouTube", 
-            link: "https://www.youtube.com/", 
-            image: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2MDAgMzAwIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZmZmZmZmIi8+PGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTQ1LCAxMDgpIHNjYWxlKDEuNCkiPjxwYXRoIGQ9Ik02MyAxNC44N2E3Ljg4IDcuODggMCAwIDAtNS41NS01LjU4QzUyLjU0IDggMzIuODUgOCAzMi44NSA4cy0xOS42OSAwLTI0LjYgMS4yOWE3Ljg4IDcuODggMCAwIDAtNS41NSA1LjU4QzEuNCAxOS44IDEuNCAzMCAxLjQgMzBzMCAxMC4yIDEuMyAxNS4xM2E3Ljg4IDcuODggMCAwIDAgNS41NSA1LjU4QzEzLjE2IDUyIDMyLjg1IDUyIDMyLjg1IDUyczE5LjY5IDAgMjQuNi0xLjI5YTcuODggNy44OCAwIDAgMCA1LjU1LTUuNThDNjQuMyA0MC4yIDY0LjMgMzAgNjQuMyAzMHMwLTEwLjItMS4zLTE1LjEzeiIgZmlsbD0iI0ZGMDAwMCIvPjxwb2x5Z29uIHBvaW50cz0iMjYuNCAzOS40IDQyLjggMzAgMjYuNCAyMC42IiBmaWxsPSIjRkZGRkZGIi8+PHRleHQgeD0iNzIiIHk9IjQyIiBmb250LWZhbWlseT0iQXJpYWwsIEhlbHZldGljYSwgc2Fucy1zZXJpZiIgZm9udC13ZWlnaHQ9IjkwMCIgZm9udC1zaXplPSIzNiIgbGV0dGVyLXNwYWNpbmc9Ii0xIiBmaWxsPSIjMjEyMTIxIj5Zb3VUdWJlPC90ZXh0PjwvZz48L3N2Zz4=", 
-            icon: "fa-circle-play"
-        }
+        { title: "Mùa thu vẫn gọi những bước chân", link: "https://www.youtube.com/watch?v=i1jEP6P7Sqc", image: "https://img.youtube.com/vi/i1jEP6P7Sqc/hqdefault.jpg", icon: "fa-music" },
+        { title: "Vui đến trường", link: "https://www.youtube.com/watch?v=nBslIBnqOUM&list=RDnBslIBnqOUM&start_radio=1", image: "https://img.youtube.com/vi/nBslIBnqOUM/hqdefault.jpg", icon: "fa-headphones" },
+        { title: "Trang Web YouTube", link: "https://www.youtube.com/", image: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2MDAgMzAwIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZmZmZmZmIi8+PGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTQ1LCAxMDgpIHNjYWxlKDEuNCkiPjxwYXRoIGQ9Ik02MyAxNC44N2E3Ljg4IDcuODggMCAwIDAtNS41NS01LjU4QzUyLjU0IDggMzIuODUgOCAzMi44NSA4cy0xOS42OSAwLTI0LjYgMS4yOWE3Ljg4IDcuODggMCAwIDAtNS41NSA1LjU4QzEuNCAxOS44IDEuNCAzMCAxLjQgMzBzMCAxMC4yIDEuMyAxNS4xM2E3Ljg4IDcuODggMCAwIDAgNS41NSA1LjU4QzEzLjE2IDUyIDMyLjg1IDUyIDMyLjg1IDUyczE5LjY5IDAgMjQuNi0xLjI5YTcuODggNy44OCAwIDAgMCA1LjU1LTUuNThDNjQuMyA0MC4yIDY0LjMgMzAgNjQuMyAzMHMwLTEwLjItMS4zLTE1LjEzeiIgZmlsbD0iI0ZGMDAwMCIvPjxwb2x5Z29uIHBvaW50cz0iMjYuNCAzOS40IDQyLjggMzAgMjYuNCAyMC42IiBmaWxsPSIjRkZGRkZGIi8+PHRleHQgeD0iNzIiIHk9IjQyIiBmb250LWZhbWlseT0iQXJpYWwsIEhlbHZldGljYSwgc2Fucy1zZXJpZiIgZm9udC13ZWlnaHQ9IjkwMCIgZm9udC1zaXplPSIzNiIgbGV0dGVyLXNwYWNpbmc9Ii0xIiBmaWxsPSIjMjEyMTIxIj5Zb3VUdWJlPC90ZXh0PjwvZz48L3N2Zz4=", icon: "fa-circle-play" }
     ];
 
     const giaiTriKiNiem = [
-        { 
-            title: "Kho Lưu Trữ Những Hình Ảnh Đẹp", 
-            link: "https://padlet.com/nobitadrive03/kho-luu-tru-nhung-hinh-anh-ep-s024aa2fn0oly7vbqx90", 
-            image: "dentruong.png", 
-            icon: "fa-images" 
-        },
-        { 
-            title: "Góc Chia Sẻ Thanh Xuân", 
-            link: "https://padlet.com/nobitadrive03/goc-chia-se-thanh-xuan-s0245utfw1cxjovv2i6h", 
-            image: "santruong.png", 
-            icon: "fa-heart" 
-        }
+        { title: "Kho Lưu Trữ Những Hình Ảnh Đẹp", link: "https://padlet.com/nobitadrive03/kho-luu-tru-nhung-hinh-anh-ep-s024aa2fn0oly7vbqx90", image: "dentruong.png", icon: "fa-images" },
+        { title: "Góc Chia Sẻ Thanh Xuân", link: "https://padlet.com/nobitadrive03/goc-chia-se-thanh-xuan-s0245utfw1cxjovv2i6h", image: "santruong.png", icon: "fa-heart" }
     ];
 
     const giaiTriGame = [
-         { title: "Câu chuyện: Ánh sáng từ đôi vai gầy", 
-        link: "sachlat/chuyen1.html", 
-        image: "sachlat/chuyen1.png", icon: "fa-puzzle-piece" },
-
-
-{ title: "Câu chuyện: Nẻo về của những đứa trẻ lạc lối.", 
-        link: "sachlat/chuyen2/chuyen2.html", 
-        image: "sachlat/chuyen2.png", icon: "fa-puzzle-piece" },
-       
-        { title: "Câu chuyện: Những ngọn đèn không tắt.", 
-        link: "sachlat/chuyen3/chuyen3.html", 
-        image: "sachlat/chuyen3/anh-bia.jpg", icon: "fa-puzzle-piece" },
-         
-        
-        { title: "Câu chuyện: Ánh sáng từ một bàn tay.", 
-        link: "sachlat/chuyen4/chuyen4.html", 
-        image: "sachlat/chuyen4/anh-bia.jpg", icon: "fa-puzzle-piece" }
-
+        { title: "Câu chuyện: Ánh sáng từ đôi vai gầy", link: "sachlat/chuyen1.html", image: "sachlat/chuyen1.png", icon: "fa-puzzle-piece" },
+        { title: "Câu chuyện: Nẻo về của những đứa trẻ lạc lối.", link: "sachlat/chuyen2/chuyen2.html", image: "sachlat/chuyen2.png", icon: "fa-puzzle-piece" },
+        { title: "Câu chuyện: Những ngọn đèn không tắt.", link: "sachlat/chuyen3/chuyen3.html", image: "sachlat/chuyen3/anh-bia.jpg", icon: "fa-puzzle-piece" },
+        { title: "Câu chuyện: Ánh sáng từ một bàn tay.", link: "sachlat/chuyen4/chuyen4.html", image: "sachlat/chuyen4/anh-bia.jpg", icon: "fa-puzzle-piece" }
     ];
-
-        
-
-
-      
-  
 
     const giaiTriAnh = [
         { title: "Album Hoạt động Đoàn", link: "#", image: "https://placehold.co/600x300/fb923c/ffffff?text=Album+1", icon: "fa-images" },
@@ -472,47 +539,19 @@
         { title: "Tạp chí Tháng 11/2026", link: "#", image: "https://placehold.co/600x300/475569/ffffff?text=Tap+Chi+3", icon: "fa-book-open" }
     ];
 
-    // CÁC MỤC Ở THANH BÊN TRÁI
     const troChoiOChu = [
-         { title: "Trò chơi khám phá các đảo. Tin học 11. Bài 1.Hệ điều hành", 
-        link: "trochoi/tin11_bai1/bai1tin11.html", image: "trochoi/tin11_bai1/anhbai1_11.png", 
-        icon: "fa-border-all" },
-
-        { title: "Trò chơi đi tìm ô chử. Tin học 11. Bài 6.Lưu trữ và chia sẽ tập tin trên Internet", 
-        link: "trochoi/tin11_bai6/bai6tin11.html", image: "trochoi/tin11_bai6/anhbai6_11.png", 
-        icon: "fa-border-all" },
-
-         { title: "Trò chơi đi tìm bức tranh bí ẩn. Tin học 11. Bài 8.Thực hành nâng cao sử dụng thư điện tử và mạng xã hội", 
-        link: "trochoi/tin11_bai8/bai8tin11.html", image: "trochoi/tin11_bai8/anhbai8_11.png", 
-        icon: "fa-border-all" },
-
-        { title: "Trò chơi vòng quay. Tin học 12. Bài 2: Trí tuệ nhân tạo trong khoa học và đời sống", 
-        link: "trochoi/tin12_bai2/bai2tin12.html", image: "trochoi/tin12_bai2/anhbai2_12.png", 
-        icon: "fa-border-all" },
-
-
- { title: "Trò chơi giải mã mật thư. Tin học 12. Bài 3: Một số thiết bị mạng thông dụng", 
-        link: "trochoi/tin12_bai3/bai3tin12.html", image: "trochoi/tin12_bai3/anhbai3_12.png", 
-        icon: "fa-border-all" },
-
-         { title: "Trò chơi Mario. Tin học 12. Bài 6: Giao tiếp và ứng xử trên không gian mạng", 
-        link: "trochoi/tin12_bai6/bai6_tin12.html", image: "trochoi/tin12_bai6/anhbai6_12.png", 
-        icon: "fa-border-all" },
-
-
-
-       { title: "Trò chơi khám phá hệ mặt trời. Tin học 12. BÀI 7: HTML VÀ CẤU TRÚC TRANG WEB", 
-        link: "trochoi/tin12_bai7/bai7tin12.html", image: "trochoi/tin12_bai7/anhbai7_12.png", 
-        icon: "fa-border-all" }
+        { title: "Trò chơi khám phá các đảo. Tin học 11. Bài 1.Hệ điều hành", link: "trochoi/tin11_bai1/bai1tin11.html", image: "trochoi/tin11_bai1/anhbai1_11.png", icon: "fa-border-all" },
+        { title: "Trò chơi đi tìm ô chử. Tin học 11. Bài 6.Lưu trữ và chia sẽ tập tin trên Internet", link: "trochoi/tin11_bai6/bai6tin11.html", image: "trochoi/tin11_bai6/anhbai6_11.png", icon: "fa-border-all" },
+        { title: "Trò chơi đi tìm bức tranh bí ẩn. Tin học 11. Bài 8.Thực hành nâng cao sử dụng thư điện tử và mạng xã hội", link: "trochoi/tin11_bai8/bai8tin11.html", image: "trochoi/tin11_bai8/anhbai8_11.png", icon: "fa-border-all" },
+        { title: "Trò chơi vòng quay. Tin học 12. Bài 2: Trí tuệ nhân tạo trong khoa học và đời sống", link: "trochoi/tin12_bai2/bai2tin12.html", image: "trochoi/tin12_bai2/anhbai2_12.png", icon: "fa-border-all" },
+        { title: "Trò chơi giải mã mật thư. Tin học 12. Bài 3: Một số thiết bị mạng thông dụng", link: "trochoi/tin12_bai3/bai3tin12.html", image: "trochoi/tin12_bai3/anhbai3_12.png", icon: "fa-border-all" },
+        { title: "Trò chơi Mario. Tin học 12. Bài 6: Giao tiếp và ứng xử trên không gian mạng", link: "trochoi/tin12_bai6/bai6_tin12.html", image: "trochoi/tin12_bai6/anhbai6_12.png", icon: "fa-border-all" },
+        { title: "Trò chơi khám phá hệ mặt trời. Tin học 12. BÀI 7: HTML VÀ CẤU TRÚC TRANG WEB", link: "trochoi/tin12_bai7/bai7tin12.html", image: "trochoi/tin12_bai7/anhbai7_12.png", icon: "fa-border-all" }
     ];
 
     const tracNghiemMario = [
-        { title: "Trò chơi Mario. Tin học 12. Bài 6: Giao tiếp và ứng xử trên không gian mạng", 
-        link: "trochoi/tin12_bai6/bai6_tin12.html", image: "trochoi/tin12_bai6/anhbai6_12.png", 
-        icon: "fa-border-all" },
-      { title: "Trò chơi đi tìm ô chử. Tin học 11. Bài 6.Lưu trữ và chia sẽ tập tin trên Internet", 
-        link: "trochoi/tin11_bai6/bai6tin11.html", image: "trochoi/tin11_bai6/anhbai6_11.png", 
-        icon: "fa-border-all" },
+        { title: "Trò chơi Mario. Tin học 12. Bài 6: Giao tiếp và ứng xử trên không gian mạng", link: "trochoi/tin12_bai6/bai6_tin12.html", image: "trochoi/tin12_bai6/anhbai6_12.png", icon: "fa-border-all" },
+        { title: "Trò chơi đi tìm ô chử. Tin học 11. Bài 6.Lưu trữ và chia sẽ tập tin trên Internet", link: "trochoi/tin11_bai6/bai6tin11.html", image: "trochoi/tin11_bai6/anhbai6_11.png", icon: "fa-border-all" },
         { title: "Cửa ải 3: Đánh trùm", link: "#", image: "https://placehold.co/600x300/dc2626/ffffff?text=Mario+3", icon: "fa-trophy" }
     ];
 
@@ -522,7 +561,6 @@
         { title: "Thư viện mẫu đồ họa", link: "#", image: "https://placehold.co/600x300/ec4899/ffffff?text=Du+An+3", icon: "fa-swatchbook" }
     ];
 
-    // LIÊN HỆ
     const lienHeHoTro = [
         { title: "Hướng dẫn sử dụng Web", link: "#", image: "https://placehold.co/600x300/64748b/ffffff?text=Ho+Tro+1", icon: "fa-circle-question" },
         { title: "Báo lỗi tài liệu", link: "#", image: "https://placehold.co/600x300/64748b/ffffff?text=Ho+Tro+2", icon: "fa-triangle-exclamation" },
@@ -540,26 +578,25 @@
     ];
 
     // =========================================================================
-    // HÀM XỬ LÝ
+    // HÀM XỬ LÝ GIAO DIỆN HIỂN THỊ
     // =========================================================================
     
+    // 1. Hàm hiển thị các mục Tài liệu, Trò chơi (Có ảnh đại diện to, chia 2 cột)
     function showLessons(title, lessonsArray) {
         hideDropdowns();
         
-        // Ẩn khung trang chủ và hiển thị khung danh sách bài học
         document.getElementById('default-view').style.display = 'none';
         document.getElementById('grid-view').style.display = 'block';
         document.getElementById('grid-title').innerText = title.toUpperCase();
 
-        // Ẩn hoàn toàn Danh mục học tập bên trái trên mọi màn hình
         document.getElementById('sidebar').style.display = 'none';
-
-        // Mở rộng khung nội dung chiếm toàn bộ 4 cột (100% chiều ngang)
         const contentArea = document.getElementById('content-area');
         contentArea.classList.remove('lg:col-span-3');
         contentArea.classList.add('lg:col-span-4');
 
         const container = document.getElementById('grid-container');
+        // Sử dụng lưới 2 cột cho các mục có ảnh lớn
+        container.className = 'grid grid-cols-1 md:grid-cols-2 gap-12 max-w-5xl mx-auto';
         container.innerHTML = ''; 
 
         lessonsArray.forEach((lesson, index) => {
@@ -570,7 +607,7 @@
             card.href = lesson.link;
             card.className = `${color} text-white p-4 md:p-5 rounded-2xl shadow-md hover:-translate-y-1 hover:shadow-xl transition-all duration-300 flex flex-col items-start border border-black/10`;
             
-           card.innerHTML = `
+            card.innerHTML = `
                 <div class="w-full h-44 md:h-52 bg-white rounded-xl mb-4 overflow-hidden shadow-inner">
                     <img src="${lesson.image}" alt="${lesson.title}" onerror="this.src='https://placehold.co/600x300/ffffff/555555?text=Hinh+Anh'" class="w-full h-full object-cover hover:scale-110 transition-all duration-500">
                 </div>
@@ -578,6 +615,42 @@
                     <i class="fa-solid ${icon} text-xl opacity-90 drop-shadow-sm"></i>
                     <span class="font-bold text-base md:text-lg leading-tight drop-shadow-sm flex-1">${lesson.title}</span>
                 </div>
+            `;
+            container.appendChild(card);
+        });
+        
+        document.getElementById('grid-view').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    // 2. Hàm: Hiển thị giao diện bài tập trắc nghiệm chi tiết (Khối màu không ảnh, chia 4 cột)
+    function showTestBlocks(title, testsArray) {
+        hideDropdowns();
+        
+        document.getElementById('default-view').style.display = 'none';
+        document.getElementById('grid-view').style.display = 'block';
+        document.getElementById('grid-title').innerText = title.toUpperCase();
+
+        document.getElementById('sidebar').style.display = 'none';
+        const contentArea = document.getElementById('content-area');
+        contentArea.classList.remove('lg:col-span-3');
+        contentArea.classList.add('lg:col-span-4');
+
+        const container = document.getElementById('grid-container');
+        // Đổi sang cấu trúc lưới 4 cột trải rộng trên màn hình lớn, 2 cột trên ipad
+        container.className = 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 w-full';
+        container.innerHTML = ''; 
+
+        testsArray.forEach((test, index) => {
+            const color = colorClasses[index % colorClasses.length];
+            const icon = test.icon || 'fa-file-lines';
+            
+            const card = document.createElement('a');
+            card.href = test.link;
+            card.className = `${color} text-white p-4 md:p-5 rounded-xl shadow-md hover:brightness-110 hover:-translate-y-1 hover:shadow-xl transition-all duration-300 flex items-center gap-3 border border-black/10`;
+            
+            card.innerHTML = `
+                <i class="fa-solid ${icon} text-xl md:text-2xl opacity-90 drop-shadow-sm w-8 text-center"></i>
+                <span class="font-bold text-sm md:text-base leading-tight drop-shadow-sm flex-1">${test.title}</span>
             `;
             container.appendChild(card);
         });
