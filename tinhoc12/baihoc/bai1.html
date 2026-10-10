@@ -1,1 +1,899 @@
+<!doctype html>
+<html lang="vi" class="w-full h-full m-0 p-0">
+ <head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <title>Tin Học 12 - Hành Trình Số</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
+  <!-- 1. MÃ GA4 GỐC (Kết nối với Google Analytics) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-NSJCVSL9RM"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-NSJCVSL9RM'); 
+</script>
+
+<!-- 2. MÃ NHỊP TIM 30 GIÂY -->
+<script>
+  setInterval(function() {
+    if (!document.hidden) { 
+      gtag('event', 'keep_alive', {
+        'event_category': 'Engagement',
+        'event_label': 'Học sinh đang làm bài',
+        'non_interaction': false
+      });
+    }
+  }, 30000); 
+</script>
+
+
+
+  <style>
+    * { 
+        -webkit-tap-highlight-color: transparent; 
+        -webkit-touch-callout: none !important; 
+        touch-action: manipulation;
+    }
+    
+    html, body { width: 100%; min-height: 100vh; margin: 0; padding: 0; overflow-x: hidden; }
+    
+    body { 
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
+      background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+      background-size: 400% 400%;
+      animation: gradientBG 15s ease infinite;
+    }
+    
+    @keyframes gradientBG {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+
+    #app { width: 100%; min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden; }
+    
+    .glass-card {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    .option-label { transition: background-color 0.1s ease, border-color 0.1s ease; cursor: pointer; border-color: #e2e8f0; }
+    .option-label:hover { background-color: #f0fdfa; border-color: #38bdf8; }
+    
+    input[type="radio"].single-radio:checked + .option-label {
+      background: linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%);
+      color: white; border-color: transparent;
+      box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+    }
+    input[type="radio"].single-radio:checked + .option-label div:first-child { background-color: rgba(255,255,255,0.25); border-color: transparent; color: white; }
+    input[type="radio"].single-radio:checked + .option-label div:last-child { color: white; }
+    
+    .fade-in { animation: fadeIn 0.4s ease forwards; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    
+    .my-score-row {
+      background: linear-gradient(to right, #fdf4ff, #ffffff) !important;
+      border-left: 4px solid #db2777 !important; font-weight: 700 !important;
+      color: #9d174d !important; box-shadow: 0 2px 8px rgba(0,0,0,0.05); position: relative; z-index: 10;
+    }
+    .my-score-row td { padding-top: 16px; padding-bottom: 16px; }
+    
+    .btn-tf { transition: background-color 0.1s ease; border-width: 2px; }
+    .btn-tf.selected { background-color: #2563eb; color: white; border-color: #1d4ed8; }
+    .btn-tf:not(.selected) { background-color: white; color: #4b5563; border-color: #e5e7eb; }
+    .btn-tf:not(:disabled):active { transform: scale(0.95); }
+    
+    .math-scroll { overflow-x: auto; min-width: 0; padding-bottom: 4px; scrollbar-width: none; -ms-overflow-style: none; }
+    .math-scroll::-webkit-scrollbar { display: none; }
+  </style>
+
+ </head>
+ <body>
+  <div id="app" class="p-0 sm:p-4 md:p-8 transition-all">
+   
+   <div id="login-section" class="w-full max-w-md mx-auto fade-in flex flex-col justify-center flex-grow">
+    <div class="glass-card rounded-none sm:rounded-3xl p-6 sm:p-8 flex flex-col justify-start shadow-2xl border-t-8 border-indigo-600 bg-white">
+     <div class="text-center mb-6 pt-4 sm:pt-0">
+      <div class="flex items-center justify-center w-24 h-24 mx-auto mb-4 rounded-full border-4 border-yellow-400 bg-red-600 shadow-lg transform transition-transform hover:scale-105">
+          <span class="text-white font-black text-4xl tracking-tighter">HS</span>
+      </div>
+      <h1 class="text-2xl sm:text-3xl font-bold text-red-500 mb-3"> BÀI 1: LÀM QUEN VỚI TRÍ TUỆ NHÂN TẠO </h1>
+     </div>
+      <div id="login-form" class="space-y-4">
+      <div class="flex flex-col gap-4">
+          <div class="w-full">
+               <label class="block text-lg font-bold text-gray-700 mb-1">Họ và tên</label> 
+               <input type="text" id="hoTen" class="w-full px-4 py-4 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-100 outline-none transition-all font-semibold text-lg" placeholder="Nhập họ tên...">
+          </div>
+          <div class="w-full">
+               <label class="block text-lg font-bold text-gray-700 mb-1">Lớp</label> 
+               <input type="text" id="lop" class="w-full px-4 py-4 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-100 outline-none transition-all font-semibold text-lg" placeholder="12A1">
+          </div>
+      </div>
+
+      <div id="login-error" class="hidden bg-red-100 border border-red-300 text-red-700 font-bold text-base p-3 rounded-xl text-center shadow-sm"></div>
+
+      <button type="button" onclick="window.startQuizAction()" id="start-btn" class="w-full py-5 mt-6 bg-gradient-to-r from-blue-500 to-cyan-400 text-white font-extrabold rounded-2xl shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all text-2xl tracking-wide"> 🚀 BẮT ĐẦU THI </button>
+     </div>
+    </div>
+   </div>
+
+   <div id="quiz-section" class="w-full max-w-4xl mx-auto hidden flex-grow flex flex-col">
+    <div class="glass-card rounded-none sm:rounded-3xl p-4 sm:p-8 flex flex-col flex-grow relative border-t-8 border-blue-500 bg-white shadow-2xl">
+     <div class="flex items-center justify-between mb-4 sm:mb-6 pb-4 border-b-2 border-gray-100">
+      
+      <div class="flex items-center gap-3">
+       <div class="flex items-center justify-center w-12 h-12 rounded-full border-2 border-yellow-400 bg-red-600 shadow-sm flex-shrink-0">
+           <span class="text-white font-black text-xl tracking-tighter">HS</span>
+       </div>
+       <div>
+        <h2 id="quiz-title" class="text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">Đề Kiểm Tra</h2>
+        <p id="student-info" class="text-base font-bold text-gray-500 mt-1 uppercase tracking-wide"></p>
+       </div>
+      </div>
+
+      <div class="text-right bg-blue-50 px-4 py-2 rounded-xl border border-blue-100" id="progress-container">
+       <div class="text-sm text-blue-500 font-bold uppercase tracking-wider mb-1">Tiến độ (Câu)</div>
+       <div id="progress-text" class="text-2xl font-black text-blue-700">0/28</div>
+      </div>
+     </div>
+     
+     <div id="timer-banner" class="mb-6 p-4 bg-gradient-to-r from-orange-50 to-red-50 border-2 border-red-100 rounded-2xl flex items-center justify-between shadow-sm sticky top-2 z-40">
+        <span class="text-red-800 font-extrabold flex items-center gap-2 text-lg"><span class="text-2xl animate-pulse">⏰</span> THỜI GIAN:</span> 
+        <span id="timer" class="text-4xl font-black text-red-600 font-mono tracking-wider drop-shadow-sm">45:00</span>
+     </div>
+
+     <div id="question-container" class="mb-8 flex-grow w-full max-w-full"></div>
+     
+     <div id="network-error" class="hidden bg-red-100 text-red-700 p-4 rounded-xl mt-4 text-center font-bold text-sm border-2 border-red-300 mb-4 shadow-sm"></div>
+
+    <div class="flex pt-4 sm:pt-6 border-t-2 border-gray-100 mt-auto pb-4 sm:pb-0">
+        <button id="submit-btn" onclick="window.promptSubmit()" class="w-full py-5 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-bold text-2xl rounded-2xl shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1">✅ NỘP BÀI NGAY</button>
+     </div>
+    </div>
+   </div>
+
+   <div id="confirm-submit-modal" class="fixed inset-0 hidden flex items-center justify-center bg-black/60 backdrop-blur-sm z-50 transition-opacity">
+       <div class="bg-white rounded-3xl w-full max-w-sm shadow-2xl p-6 text-center transform transition-all scale-100 mx-4 border-2 border-gray-100">
+           <div class="text-yellow-400 mb-4 flex justify-center">
+               <svg xmlns="http://www.w3.org/2000/svg" class="h-24 w-24" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+               </svg>
+           </div>
+           <h3 class="text-3xl font-black text-gray-800 mb-2 uppercase tracking-wide">Xác nhận nộp</h3>
+           <p class="text-gray-600 mb-6 font-medium text-xl">Các em mới làm <span id="confirm-answered" class="text-red-600 font-black text-2xl">0</span>/<span id="confirm-total" class="font-black text-2xl">28</span> câu. Có chắc chắn muốn nộp bài không? Những câu chưa làm sẽ bị tính là sai.</p>
+           <div class="flex flex-col gap-3">
+               <button onclick="window.closeConfirmModal()" class="w-full py-4 bg-gray-100 text-gray-800 font-extrabold text-xl rounded-xl hover:bg-gray-200 border border-gray-200">Quay lại làm tiếp</button>
+               <button onclick="window.executeSubmit()" class="w-full py-4 bg-emerald-600 text-white font-extrabold text-xl rounded-xl hover:bg-emerald-700 shadow-md">Vẫn Nộp Luôn</button>
+           </div>
+       </div>
+   </div>
+
+   <div id="result-section" class="w-full max-w-2xl mx-auto hidden fade-in flex flex-col justify-center flex-grow pb-8">
+    <div class="glass-card rounded-none sm:rounded-3xl p-6 sm:p-8 flex flex-col justify-start border-t-8 border-green-500 bg-white shadow-2xl" id="result-content">
+    </div>
+   </div>
+
+   <div id="review-section" class="w-full max-w-4xl mx-auto hidden flex-grow flex flex-col">
+    <div class="glass-card rounded-none sm:rounded-3xl p-4 sm:p-8 flex flex-col flex-grow border-t-8 border-indigo-500 bg-white overflow-hidden shadow-2xl">
+     <div class="flex flex-col-reverse sm:flex-row items-start sm:items-center justify-between mb-6 pb-4 border-b-2 border-gray-100 gap-4">
+      <div class="flex flex-wrap gap-2">
+          <button onclick="window.goHome()" class="px-5 py-3 bg-gray-100 text-gray-700 rounded-xl font-bold hover:bg-gray-200 text-lg shadow-sm border border-gray-200">🏠 Trang chủ</button>
+          <button onclick="window.backFromReview()" class="px-5 py-3 bg-indigo-50 text-indigo-700 rounded-xl font-bold hover:bg-indigo-100 text-lg shadow-sm border border-indigo-200">🔙 Quay lại</button>
+          <button onclick="window.viewScoresAction()" class="px-5 py-3 bg-orange-50 text-orange-700 rounded-xl font-bold hover:bg-orange-100 text-lg shadow-sm border border-orange-200">🏆 Bảng điểm</button>
+      </div>
+      <h2 class="text-3xl sm:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">📝 Xem Lại Bài Làm</h2>
+     </div>
+     <div id="review-content" class="space-y-8 w-full max-w-full"></div>
+    </div>
+   </div>
+
+   <div id="scores-section" class="w-full max-w-6xl mx-auto hidden flex-grow flex flex-col">
+    <div class="glass-card rounded-none sm:rounded-3xl p-4 sm:p-8 flex flex-col flex-grow border-t-8 border-orange-500 bg-white w-full max-w-full shadow-2xl">
+     <div class="mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b-2 border-gray-100 pb-4">
+      <button onclick="window.goHome()" class="px-5 py-3 bg-gray-100 text-gray-700 rounded-xl font-bold hover:bg-gray-200 text-lg shadow-sm border border-gray-200 whitespace-nowrap">🏠 Trang chủ</button>
+      <h2 class="text-3xl sm:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-red-600 text-center flex-grow">🏆 BẢNG XẾP HẠNG</h2>
+     </div>
+     
+     <div class="flex flex-col sm:flex-row justify-between items-center mb-4 gap-4 bg-gray-50 p-4 rounded-xl border border-gray-200">
+         <div id="my-rank-display" class="text-xl font-bold text-gray-700">🏆 Thứ hạng của bạn: <span class="text-gray-400">--</span></div>
+         <div class="w-full sm:w-auto flex-grow max-w-sm">
+             <input type="text" id="search-student" oninput="window.searchStudent(this.value)" placeholder="🔍 Nhập tên học sinh để tìm..." class="w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm focus:border-orange-500 focus:ring-2 focus:ring-orange-200 outline-none transition-all font-medium">
+         </div>
+     </div>
+
+     <div class="overflow-x-auto rounded-xl border border-slate-200 flex-grow shadow-inner bg-white/50 w-full">
+      <table class="w-full text-sm sm:text-base whitespace-nowrap min-w-max">
+       <thead class="bg-gradient-to-r from-orange-500 to-red-500 text-white">
+        <tr>
+         <th class="px-3 sm:px-4 py-4 text-center font-extrabold w-16">Hạng</th>
+         <th class="px-3 sm:px-4 py-4 text-left font-extrabold">Họ tên</th>
+         <th class="px-3 sm:px-4 py-4 text-center font-extrabold">Lớp</th>
+         <th class="px-3 sm:px-4 py-4 text-center font-extrabold">Thời gian</th>
+         <th class="px-3 sm:px-4 py-4 text-center font-extrabold">Điểm</th>
+         <th class="px-2 sm:px-4 py-4 text-center font-extrabold">Xem lại</th>
+        </tr>
+       </thead>
+       <tbody id="scores-tbody" class="bg-white/80 divide-y divide-gray-100"></tbody>
+      </table>
+      <div id="no-scores" class="text-center py-12 hidden text-gray-500 font-bold text-xl">Không tìm thấy dữ liệu thi 🥲</div>
+     </div>
+     
+     <div id="pagination-controls" class="w-full flex justify-center mt-6"></div>
+    </div>
+  </div>
+
+  <script>
+    let database = null;
+    let scoresRef = null;
+
+    try {
+        const firebaseConfig = {
+            apiKey: "AIzaSyBQ9Pos8awlh9j041qDWTPFRsVIjF-kPnk",
+            authDomain: "hoctap-91691.firebaseapp.com",
+            databaseURL: "https://hoctap-91691-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "hoctap-91691",
+            storageBucket: "hoctap-91691.firebasestorage.app",
+            messagingSenderId: "1004553425319",
+            appId: "1:1004553425319:web:45d15cbae393f614c56682",
+            measurementId: "G-Q6X1TL9PRV"
+        };
+        if (typeof firebase !== 'undefined') {
+            if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+            database = firebase.database();
+            scoresRef = database.ref('bxh_tin_12_1');
+        }
+    } catch(err) { console.error("Lỗi Firebase:", err); }
+
+    let isQuizStarted = false; 
+    let currentQuestions = [];
+    let deviceId = '';
+    let allScores = [];
+    let currentStudent = {};
+    let userAnswers = {};
+    let timerInterval;
+    let quizStartTime, quizEndTime;
+    
+    let searchTerm = '';
+    let currentPage = 1;
+    const itemsPerPage = 10;
+
+    const exam_data = [
+        { 
+            id: "q1", type: "single", question: "Câu 1: Theo định nghĩa cơ bản trong khoa học máy tính, thuật ngữ Trí tuệ nhân tạo (AI) được hiểu chính xác là gì?", 
+            options: ["Khả năng máy tính thực hiện các công việc lặp đi lặp lại một cách cơ giới hoá.", "Khả năng máy tính thực hiện những công việc mang tính trí tuệ của con người.", "Khả năng máy tính kết nối với các thiết bị ngoại vi thông qua mạng cáp quang.", "Khả năng máy tính tự động ngắt nguồn điện lưới khi nhiệt độ phần cứng tăng."], 
+            correct: 1, explanation: "Trí tuệ nhân tạo (AI) ra đời với mục tiêu mô phỏng các khả năng trí tuệ của con người trên máy tính." 
+        },
+        { 
+            id: "q2", type: "single", question: "Câu 2: Vào năm 1950, nhà khoa học Alan Turing đã đưa ra một phép thử nổi tiếng (phép thử Turing) nhằm mục đích gì?", 
+            options: ["Nhằm đánh giá tốc độ xử lí dữ liệu đa phương tiện của bộ vi xử lí máy chủ.", "Nhằm đánh giá khả năng của máy tính trong việc thể hiện hành vi thông minh.", "Nhằm đánh giá khả năng truyền tải dữ liệu của mạng không dây qua vệ tinh.", "Nhằm đánh giá độ bền vật lí của các bộ phận linh kiện phần cứng máy tính."], 
+            correct: 1, explanation: "Phép thử Turing được thiết kế để kiểm tra xem một cỗ máy có thể có hành vi thông minh giống con người hay không." 
+        },
+        { 
+            id: "q3", type: "single", question: "Câu 3: Hội thảo Dartmouth được tổ chức vào năm 1956 tại Mỹ được giới khoa học máy tính ghi nhận là sự kiện lịch sử mang ý nghĩa gì?", 
+            options: ["Đánh dấu sự ra đời của mạng toàn cầu Internet và hệ thống giao thức truyền tải TCP/IP.", "Đánh dấu việc phát minh ra chiếc máy vi tính cá nhân đầu tiên phục vụ cho người dùng.", "Đánh dấu sự ra đời của thuật ngữ và sự khởi đầu chính thức của lĩnh vực Trí tuệ nhân tạo.", "Đánh dấu việc hoàn thiện và đưa vào vận hành hệ điều hành máy tính đồ họa thế hệ mới."], 
+            correct: 2, explanation: "Hội thảo Dartmouth năm 1956 được coi là thời điểm ra đời chính thức của thuật ngữ AI." 
+        },
+        { 
+            id: "q4", type: "single", question: "Câu 4: Hệ chuyên gia MYCIN được phát triển tại Đại học Stanford (Mỹ) từ năm 1972 là một hệ thống trí tuệ nhân tạo được ứng dụng trong lĩnh vực nào?", 
+            options: ["Được ứng dụng trong lĩnh vực quân sự nhằm điều khiển đội hình máy bay chiến đấu tự động.", "Được ứng dụng trong lĩnh vực y học để hỗ trợ chẩn đoán chính xác bệnh nhiễm trùng máu.", "Được ứng dụng trong lĩnh vực giáo dục nhằm hỗ trợ hệ thống chấm điểm tự luận tự động.", "Được ứng dụng trong lĩnh vực giao thông nhằm hỗ trợ điều hướng luồng xe ô tô tự hành."], 
+            correct: 1, explanation: "MYCIN là hệ chuyên gia y tế dùng để chẩn đoán các bệnh nhiễm khuẩn máu." 
+        },
+        { 
+            id: "q5", type: "single", question: "Câu 5: Robot Asimo là một trong những sản phẩm robot hình người thông minh đầu tiên trên thế giới được chế tạo bởi tập đoàn công nghệ nào?", 
+            options: ["Sản phẩm robot hình người thông minh này được nghiên cứu và chế tạo bởi hãng xe Honda.", "Sản phẩm robot hình người thông minh này được nghiên cứu và chế tạo bởi tập đoàn Apple.", "Sản phẩm robot hình người thông minh này được nghiên cứu và chế tạo bởi tập đoàn Microsoft.", "Sản phẩm robot hình người thông minh này được nghiên cứu và chế tạo bởi tập đoàn Samsung."], 
+            correct: 0, explanation: "Asimo được tập đoàn Honda nghiên cứu và phát triển." 
+        },
+        { 
+            id: "q6", type: "single", question: "Câu 6: Đặc trưng kĩ thuật nào sau đây KHÔNG thuộc về một trong những đặc trưng cơ bản của hệ thống Trí tuệ nhân tạo hiện đại?", 
+            options: ["Đặc trưng thể hiện khả năng tự động học hỏi và nắm bắt thông tin từ dữ liệu để thay đổi.", "Đặc trưng thể hiện khả năng nhận thức và hiểu biết môi trường sống thông qua các cảm biến.", "Đặc trưng thể hiện khả năng suy luận logic nhằm đưa ra những quyết định dựa trên tri thức.", "Đặc trưng thể hiện khả năng tính toán cơ học mang tính cố định mà không cần thêm dữ liệu."], 
+            correct: 3, explanation: "AI có khả năng học, nhận thức, suy luận. Khả năng tính toán cơ học cố định thuộc về máy tính truyền thống." 
+        },
+        { 
+            id: "q7", type: "single", question: "Câu 7: Trong phân loại trí tuệ nhân tạo, 'Trí tuệ nhân tạo hẹp' (hay Trí tuệ nhân tạo yếu) được định nghĩa chuẩn xác là hệ thống có khả năng gì?", 
+            options: ["Hệ thống có khả năng tự học hỏi, tự thích nghi và thực hiện vô vàn công việc như con người.", "Hệ thống có khả năng thực hiện tự động một nhiệm vụ vật lý được lập trình sẵn lặp đi lặp lại.", "Hệ thống được thiết kế chuyên biệt nhằm thực hiện thành thạo một nhiệm vụ thông minh cụ thể.", "Hệ thống có khả năng kết nối và điều khiển toàn bộ các thiết bị điện gia dụng trong ngôi nhà."], 
+            correct: 2, explanation: "Trí tuệ nhân tạo hẹp chỉ tập trung xử lý xuất sắc một nhiệm vụ cụ thể được thiết kế sẵn." 
+        },
+        { 
+            id: "q8", type: "single", question: "Câu 8: Siri, Bixby, Cortana và Google Assistant là những phần mềm được ứng dụng công nghệ AI mạnh mẽ và thường được gọi chung bằng thuật ngữ gì?", 
+            options: ["Các phần mềm chuyên dụng này thường được người sử dụng gọi chung bằng tên là Hệ chuyên gia y khoa.", "Các phần mềm chuyên dụng này thường được người sử dụng gọi chung bằng tên là Máy tìm kiếm dữ liệu.", "Các phần mềm chuyên dụng này thường được người sử dụng gọi chung bằng tên là Trợ lí ảo thông minh.", "Các phần mềm chuyên dụng này thường được người sử dụng gọi chung bằng tên là Người máy tự hành."], 
+            correct: 2, explanation: "Chúng được gọi chung là các Trợ lí ảo thông minh trên các thiết bị công nghệ." 
+        },
+        { 
+            id: "q9", type: "single", question: "Câu 9: Xét về bản chất công nghệ, điểm khác biệt cốt lõi nhất dùng để phân biệt giữa một hệ thống Trí tuệ nhân tạo và một hệ thống tự động hoá máy móc thông thường là gì?", 
+            options: ["Hệ thống tự động hoá có khả năng nhận thức môi trường, còn AI thì chỉ làm theo những câu lệnh lập trình sẵn.", "Hệ thống tự động hoá thực hiện lặp lại thao tác đơn điệu, còn AI cần kết hợp vận dụng các đặc trưng trí tuệ.", "Hệ thống tự động hoá có thể tự học từ dữ liệu cảm biến mới, còn AI yêu cầu kỹ sư nạp mã nguồn liên tục.", "Hệ thống tự động hoá luôn mang hình dáng cơ khí giống người, còn AI chỉ là đoạn mã nhị phân nằm ở máy chủ."], 
+            correct: 1, explanation: "Hệ thống tự động hóa làm việc máy móc đơn điệu lặp đi lặp lại, còn hệ thống AI vận dụng các đặc trưng như suy luận, học máy." 
+        },
+        { 
+            id: "q10", type: "single", question: "Câu 10: Trong danh sách các đặc trưng trí tuệ của AI, 'Khả năng học' được các nhà khoa học diễn giải một cách chi tiết mang ý nghĩa công nghệ gì?", 
+            options: ["Đó chính là khả năng nắm bắt thông tin từ dữ liệu thực tế và tự động điều chỉnh hành vi dựa trên thông tin mới đó.", "Đó chính là khả năng vận dụng logic toán học và các tri thức có sẵn trên mạng để đưa ra quyết định hay một kết luận.", "Đó chính là khả năng hiểu và xử lí chuyên sâu các loại ngôn ngữ tự nhiên của con người bao gồm văn bản và tiếng nói.", "Đó chính là khả năng cảm nhận và phản ứng linh hoạt với môi trường vật lí xung quanh thông qua các cảm biến thiết bị."], 
+            correct: 0, explanation: "Khả năng học là việc nắm bắt dữ liệu và điều chỉnh hành vi, đây là nền tảng của Machine Learning." 
+        },
+        { 
+            id: "q11", type: "single", question: "Câu 11: Điểm đặc thù trong phương thức hoạt động của hệ chuyên gia MYCIN thời kì đầu khi chẩn đoán y học được sách giáo khoa mô tả như thế nào?", 
+            options: ["Hệ thống sử dụng kỹ thuật Học máy hiện đại để phân tích hàng triệu bệnh án điện tử nhằm đưa ra kết quả chẩn đoán bệnh.", "Hệ thống dựa vào mô phỏng suy diễn từ tập hợp khoảng sáu trăm luật tri thức do chuyên gia cung cấp mà không dùng Học máy.", "Hệ thống nhận diện hình ảnh vi khuẩn trực tiếp thông qua hệ thống camera vi phẫu kết hợp với phần mềm nhận dạng khuôn mặt.", "Hệ thống áp dụng mô hình ngôn ngữ thế hệ mới để giao tiếp với bệnh nhân bằng tiếng nói tự nhiên và in ra đơn thuốc chữa bệnh."], 
+            correct: 1, explanation: "MYCIN hoạt động dựa trên các luật suy diễn cố định của chuyên gia cung cấp mà không dùng Học máy." 
+        },
+        { 
+            id: "q12", type: "single", question: "Câu 12: Tính năng dịch thuật tự động trên môi trường Internet (ví dụ Google Translator) hiện nay đã vượt xa mức dịch từng từ đơn lẻ. Sự cải tiến vượt bậc này là nhờ hệ thống AI áp dụng tốt khả năng gì?", 
+            options: ["Tận dụng tối đa khả năng thiết lập các biểu đồ phân tích số liệu tài chính siêu tốc của nhiều quốc gia trên toàn bộ thế giới.", "Tận dụng tối đa khả năng nhận dạng sinh trắc học khuôn mặt người dùng nhằm xác định chuẩn xác vị trí vùng miền địa lí.", "Tận dụng tối đa khả năng thấu hiểu và xử lí luồng ngôn ngữ tự nhiên, tự động phát hiện mã ngôn ngữ rồi dịch tức thời.", "Tận dụng tối đa khả năng điều khiển các hệ thống mạng lưới robot từ xa tham gia trực tiếp hỗ trợ biên dịch theo nhóm mạng."], 
+            correct: 2, explanation: "Khả năng xử lý ngôn ngữ tự nhiên giúp AI thấu hiểu cấu trúc, ngữ nghĩa và dịch sát nghĩa hơn." 
+        },
+        { 
+            id: "q13", type: "single", question: "Câu 13: Công nghệ 'Trí tuệ nhân tạo tổng quát' (còn gọi là Trí tuệ nhân tạo mạnh) hiện nay đang ở trong tình trạng phát triển thực tế như thế nào trên toàn cầu?", 
+            options: ["Công nghệ này đã được ứng dụng vô cùng rộng rãi trong mọi lĩnh vực đời sống, thay thế hoàn toàn được toàn bộ não bộ con người.", "Công nghệ này đang là mục tiêu dài hạn của các nghiên cứu về trí tuệ nhân tạo và trên thực tế hiện nay nhân loại vẫn chưa đạt được.", "Công nghệ này chỉ được phép áp dụng giới hạn trong các phần mềm chơi cờ vua trên máy tính và hệ thống dự báo thời tiết ảo hoá.", "Công nghệ này đã bị cấm phát triển hoàn toàn trên toàn thế giới vì nguy cơ đe doạ nghiêm trọng đến sự an toàn của nhân loại."], 
+            correct: 1, explanation: "AI mạnh (tổng quát) có thể làm được mọi thứ như con người hiện vẫn đang là mục tiêu dài hạn chưa đạt được." 
+        },
+        { 
+            id: "q14", type: "single", question: "Câu 14: Trong lĩnh vực hành chính và giao dịch thương mại điện tử, công nghệ AI xử lý và nhận dạng chữ viết tay mang lại lợi ích quy trình cụ thể gì cho doanh nghiệp?", 
+            options: ["Công nghệ này giúp chuyển đổi ngay hình ảnh chữ viết tay thành dữ liệu văn bản để tự động hoá việc xử lí hoá đơn và tài liệu.", "Công nghệ này giúp phân tích chuẩn xác cảm xúc của người mua hàng thông qua nét chữ để đưa ra đề xuất nhiều quảng cáo mới.", "Công nghệ này giúp biến đổi mọi tệp văn bản đánh máy thành các bản thảo viết tay trông giống hệt như do chính con người viết ra.", "Công nghệ này giúp tự động ghi âm và trả lời các cuộc gọi khiếu nại của khách hàng bằng giọng nói tự nhiên mô phỏng con người."], 
+            correct: 0, explanation: "Nhận dạng chữ viết tay giúp số hóa nhanh chóng các văn bản giấy như hóa đơn, chứng từ." 
+        },
+        { 
+            id: "q15", type: "single", question: "Câu 15: Ứng dụng công nghệ nhận dạng khuôn mặt trên mạng xã hội Facebook chủ yếu được nền tảng này sử dụng để tự động thực hiện tính năng độc đáo nào sau đây?", 
+            options: ["Tự động tiến hành chỉnh sửa các chi tiết khuôn mặt của người dùng trở nên xinh đẹp hơn trước khi bài viết được đăng tải công khai lên mạng.", "Tự động dò tìm xác định và gán nhãn tên khá chính xác cho những người quen cùng xuất hiện trong một bức ảnh tải lên trang cá nhân.", "Tự động dùng thuật toán loại bỏ và xóa mờ hoàn toàn hình ảnh của những người lạ mặt không có trong danh bạ khỏi bức ảnh chụp chung.", "Tự động thu thập và phân tích chi tiết tình trạng sức khoẻ của người dùng thông qua thần sắc khuôn mặt được cập nhật hàng ngày."], 
+            correct: 1, explanation: "Facebook sử dụng nhận dạng khuôn mặt để tự động tag (gán nhãn tên) bạn bè trong ảnh." 
+        },
+        { 
+            id: "q16", type: "single", question: "Câu 16: Tại sao robot Asimo do hãng Honda chế tạo lại được các chuyên gia đánh giá là một minh chứng tiêu biểu cho ứng dụng AI thay vì chỉ là một cỗ máy tự động hoá thông thường?", 
+            options: ["Do Asimo là một thiết bị gia dụng siêu hiện đại có khả năng tự động ngắt điện an toàn ngay khi hoàn thành mọi công việc nhà được giao phó.", "Do Asimo chỉ được cấu tạo từ các hệ thống bánh răng cơ học hoạt động lặp đi lặp lại một chuỗi các hành động theo một lịch trình ấn định sẵn.", "Do Asimo được tích hợp năng lực AI tổng quát giúp cho thiết bị suy nghĩ, nhận thức và có cảm xúc buồn vui hoàn toàn giống như một con người.", "Do Asimo được tích hợp nhiều kỹ thuật AI như tự điều khiển đi lại thăng bằng, thị giác máy nhìn nhận đồ vật và khả năng thấu hiểu tiếng nói."], 
+            correct: 3, explanation: "Sự kết hợp của nhiều công nghệ AI (thị giác, di chuyển thăng bằng, nhận diện giọng nói) khiến Asimo đặc biệt." 
+        },
+        { 
+            id: "q17", type: "single", question: "Câu 17: Bạn Tuấn truy cập YouTube để xem các video hướng dẫn tự học Toán. Vài ngày sau, trang chủ của Tuấn tự động xuất hiện hàng loạt video về giải đề Toán và Hóa học dù Tuấn chưa hề gõ tìm kiếm. Nền tảng mạng này đã vận dụng đặc trưng nào của hệ thống AI?", 
+            options: ["Nền tảng hệ thống đã vận dụng triệt để khả năng tự động phiên dịch đa ngôn ngữ tiếng nói tự nhiên.", "Nền tảng hệ thống đã vận dụng triệt để khả năng nhận diện hình ảnh khuôn mặt của người đang sử dụng.", "Nền tảng hệ thống đã vận dụng triệt để khả năng học hỏi từ dữ liệu lịch sử xem để đưa ra đề xuất mới.", "Nền tảng hệ thống đã vận dụng triệt để khả năng điều khiển các phương tiện vận tải robot di chuyển."], 
+            correct: 2, explanation: "Khả năng học của AI phân tích thói quen người dùng để đề xuất các nội dung tương tự." 
+        },
+        { 
+            id: "q18", type: "single", question: "Câu 18: Tại bệnh viện, bác sĩ sử dụng một phần mềm yêu cầu nhập các chỉ số xét nghiệm sinh hóa của bệnh nhân. Dựa trên tri thức y khoa đã được lập trình sẵn các quy tắc, phần mềm kết luận bệnh nhân có nguy cơ tiểu đường cao. Phần mềm này đang thể hiện rõ nhất đặc trưng trí tuệ nào của AI?", 
+            options: ["Thiết bị đang thể hiện khả năng nhận thức môi trường vật lí xung quanh thông qua các trạm cảm biến số.", "Thiết bị đang thể hiện khả năng suy luận vận dụng logic và tri thức chuyên gia để đưa ra một chẩn đoán.", "Thiết bị đang thể hiện khả năng tự động học hỏi từ những hành vi thói quen mới của chính người bệnh.", "Thiết bị đang thể hiện khả năng giao tiếp ngôn ngữ tự nhiên thông qua hình thức gọi điện thoại trực tiếp."], 
+            correct: 1, explanation: "Sử dụng tri thức lập trình sẵn để đưa ra kết luận chẩn đoán chính là biểu hiện của khả năng suy luận logic." 
+        },
+        { 
+            id: "q19", type: "single", question: "Câu 19: Trên đường phố, một chiếc xe ô tô điện đang tự động di chuyển thì bỗng nhiên tự giảm tốc độ và phanh gấp lại khi có một người đi bộ bất ngờ băng qua mũi xe. Hành động phản ứng tức thời này của chiếc xe ô tô chủ yếu dựa trên khả năng nào của hệ thống AI tích hợp?", 
+            options: ["Nó dựa trên khả năng cảm nhận và nhận biết môi trường xung quanh thông qua mạng cảm biến radar và hệ thống camera quét liên tục.", "Nó dựa trên khả năng nhận dạng chữ viết tay thông minh hiển thị trên biển số của các phương tiện lưu thông cùng chiều với ô tô.", "Nó dựa trên khả năng tự động dịch thuật và phân tích lời nói của người đi bộ để đưa ra phương án xử lý nhanh chóng giảm tốc độ.", "Nó dựa trên khả năng trích xuất toàn bộ dữ liệu lịch sử dự báo thời tiết trong quá khứ nhằm dự báo các sự cố va chạm tai nạn xe."], 
+            correct: 0, explanation: "Xe sử dụng khả năng nhận thức qua camera, cảm biến để 'nhìn' chướng ngại vật." 
+        },
+        { 
+            id: "q20", type: "single", question: "Câu 20: Bạn Lan tải một ứng dụng từ điển ngôn ngữ trên điện thoại thông minh, đưa cụm camera hướng thẳng vào một tờ thực đơn viết bằng tiếng Nhật, ngay lập tức màn hình hiển thị các dòng chữ tiếng Việt đè lên trên bản gốc. Ứng dụng điện thoại đó đã kết hợp những công nghệ AI cốt lõi nào?", 
+            options: ["Hệ thống đã kết hợp khả năng chẩn đoán bệnh lí y khoa chuyên sâu và khả năng điều khiển các chi tiết cơ khí rô bốt phần cứng.", "Hệ thống đã kết hợp khả năng nhận ra các từ vựng trong hình ảnh chụp và khả năng xử lý ngôn ngữ dịch thuật tự động tức thời.", "Hệ thống đã kết hợp khả năng dự báo thời tiết khí hậu theo thời gian thực và khả năng ghi âm giọng nói chuẩn xác của người dùng.", "Hệ thống đã kết hợp khả năng xác minh chữ kí điện tử kĩ thuật số và khả năng tự động phân loại sắp xếp thư mục tệp tin máy tính."], 
+            correct: 1, explanation: "Đó là sự kết hợp của thị giác máy (nhận diện hình ảnh chữ) và hiểu/dịch ngôn ngữ tự nhiên." 
+        },
+        { 
+            id: "q21", type: "single", question: "Câu 21: Cửa kính tự động tại trung tâm thương mại sẽ trượt mở ra mỗi khi có người bước tới gần vùng quét của cảm biến hồng ngoại. Bạn An quả quyết cho rằng đây là một ứng dụng tuyệt vời của 'Trí tuệ nhân tạo'. Theo kiến thức bài học, nhận định của bạn An là đúng hay sai và giải thích vì sao?", 
+            options: ["Nhận định này hoàn toàn đúng bởi vì bất kỳ một hệ thống tự động hoá máy móc nào thời nay cũng đều được khoa học coi là hệ chuyên gia AI.", "Nhận định này hoàn toàn sai bởi vì hệ thống cửa chỉ thực hiện thao tác máy móc cố định theo cảm biến mà thiếu hẳn các đặc trưng trí tuệ.", "Nhận định này hoàn toàn đúng bởi vì chiếc cửa kính đã ứng dụng tính năng tự học từ dữ liệu khuôn mặt khách hàng để tiến hành mở khoá.", "Nhận định này hoàn toàn sai bởi vì hệ thống cửa siêu thị yêu cầu khách hàng phải trực tiếp nhập mật khẩu bằng tay thì mới có thể tiến vào."], 
+            correct: 1, explanation: "Cửa tự động chỉ là một cảm biến cơ học đơn thuần, không tự học hay suy luận nên không phải là AI." 
+        },
+        { 
+            id: "q22", type: "single", question: "Câu 22: Bạn Bình muốn thiết lập báo thức điện thoại lúc 6 giờ sáng ngày mai. Thay vì mở ứng dụng cài đặt thủ công, Bình chỉ cần bật micro và nói: 'Hãy đánh thức tôi lúc 6 giờ sáng'. Điện thoại lập tức báo: 'Đã cài báo thức 6 giờ'. Công cụ AI này được xếp vào nhóm phần mềm ứng dụng thông minh nào?", 
+            options: ["Công cụ phần mềm mà Bình sử dụng được xếp vào nhóm ứng dụng thuộc về hệ chuyên gia y học và chẩn đoán phân tích bệnh lí.", "Công cụ phần mềm mà Bình sử dụng được xếp vào nhóm ứng dụng thuộc về hệ thống nhận dạng hình ảnh đồ họa môi trường tự nhiên.", "Công cụ phần mềm mà Bình sử dụng được xếp vào nhóm ứng dụng thuộc về mảng điều khiển thiết bị robot hình người làm việc độc lập.", "Công cụ phần mềm mà Bình sử dụng được xếp vào nhóm ứng dụng thuộc về phân loại các Trợ lí ảo hỗ trợ tương tác bằng tiếng nói."], 
+            correct: 3, explanation: "Giao tiếp bằng tiếng nói để thực hiện các thao tác trên điện thoại là chức năng của các Trợ lí ảo." 
+        },
+        { 
+            id: "q23", type: "single", question: "Câu 23: Cơ quan khí tượng quốc gia sử dụng một siêu máy tính chạy phần mềm phân tích các dữ liệu nhiệt độ, độ ẩm, sức gió đã thu thập từ vệ tinh trong mười năm qua để đưa ra cảnh báo chính xác về quỹ đạo cơn bão sắp tới. Khả năng trí tuệ nào của hệ thống AI đang được áp dụng mạnh mẽ nhất ở đây?", 
+            options: ["Cơ quan khí tượng áp dụng khả năng giải quyết vấn đề dựa trên mô hình phân tích kho dữ liệu quá khứ để đưa ra những dự báo tương lai.", "Cơ quan khí tượng áp dụng khả năng xử lí ngôn ngữ tự nhiên nhằm soạn thảo nhanh chóng một bản tin thông báo cảnh báo bão khẩn cấp.", "Cơ quan khí tượng áp dụng khả năng nhận dạng khuôn mặt chuyên sâu nhằm mục đích xác định chuẩn danh tính người dân trong vùng bão.", "Cơ quan khí tượng áp dụng khả năng điều khiển hệ thống cánh tay robot công nghiệp thông minh để xây dựng khẩn cấp các đê chắn sóng biển."], 
+            correct: 0, explanation: "Xử lý, phân tích dữ liệu lớn quá khứ để tìm giải pháp dự báo tương lai thuộc về khả năng giải quyết vấn đề." 
+        },
+        { 
+            id: "q24", type: "single", question: "Câu 24: Thầy Hùng giải thích với lớp về một hệ thống siêu AI chuyên chơi cờ vây đã đánh bại nhà vô địch thế giới, nhưng nếu yêu cầu chính phần mềm đó nhận diện một bức ảnh con mèo thì nó hoàn toàn không làm được. Cỗ máy AI đánh cờ này được phân loại vào nhóm công nghệ nào?", 
+            options: ["Cỗ máy AI siêu việt này được phân loại chính thức thuộc về nhóm công nghệ Trí tuệ nhân tạo yếu (hay còn gọi là Trí tuệ nhân tạo hẹp).", "Cỗ máy AI siêu việt này được phân loại chính thức thuộc về nhóm công nghệ Trí tuệ nhân tạo mạnh (hay còn gọi là Trí tuệ nhân tạo tổng quát).", "Cỗ máy AI siêu việt này được phân loại chính thức thuộc về nhóm công nghệ Trợ lí ảo hỗ trợ xử lý đa nền tảng cho thiết bị điện thoại.", "Cỗ máy AI siêu việt này được phân loại chính thức thuộc về nhóm công nghệ Máy tìm kiếm thông tin văn bản toàn cầu trên mạng Internet."], 
+            correct: 0, explanation: "Chỉ làm tốt duy nhất một tác vụ đặc thù, hệ thống này thuộc Trí tuệ nhân tạo hẹp." 
+        },
+        
+        { id: "qII_1", type: "tf_cluster", context: "Câu 1: Bạn An đang chuẩn bị bài thuyết trình về các khái niệm cơ bản của Trí tuệ nhân tạo và những cột mốc lịch sử phát triển của nó. Hãy kiểm tra tính Đúng/Sai trong các luận điểm mà An đã soạn thảo trong tài liệu:", items: [
+            { id: "a", text: "a) Hội thảo khoa học máy tính được tổ chức tại Đại học Dartmouth vào năm 1956 được giới học thuật ghi nhận là sự kiện đánh dấu sự ra đời của thuật ngữ Trí tuệ nhân tạo (AI).", correct: true, expl: "Hội thảo Dartmouth năm 1956 đánh dấu sự khởi đầu chính thức của thuật ngữ AI." },
+            { id: "b", text: "b) Theo đặc trưng của AI, mọi hệ thống tự động hoá truyền thống thực hiện lặp đi lặp lại một công việc cố định đều được coi là một hệ thống Trí tuệ nhân tạo chuyên biệt.", correct: false, expl: "Hệ thống tự động hoá truyền thống không có năng lực tư duy, học hay suy luận nên không được coi là hệ thống có ứng dụng AI." },
+            { id: "c", text: "c) Các mục tiêu của Trí tuệ nhân tạo tổng quát (còn gọi là AI mạnh) hiện nay đã được nghiên cứu thành công rực rỡ và đang thay thế hoàn toàn bác sĩ con người trong ngành y tế.", correct: false, expl: "Trí tuệ nhân tạo tổng quát (AI mạnh) hiện vẫn đang là mục tiêu dài hạn chưa đạt được trong thực tế." },
+            { id: "d", text: "d) Bình nước siêu tốc tự ngắt nguồn điện khi nhiệt độ nước đạt độ sôi tại nhà bạn An là một minh chứng hoàn hảo về ứng dụng của công nghệ Trí tuệ nhân tạo hẹp trong thiết bị dân dụng.", correct: false, expl: "Ấm đun nước tự ngắt điện chỉ là hệ thống tự động hoá cơ học thuần tuý, không phải AI." }
+        ]},
+        { id: "qII_2", type: "tf_cluster", context: "Câu 2: Trong bài kiểm tra môn Tin học, thầy Hùng yêu cầu học sinh phân tích 5 đặc trưng cơ bản giúp làm nên năng lực của một hệ thống Trí tuệ nhân tạo. Những phát biểu sau đây của học sinh là Đúng hay Sai:", items: [
+            { id: "a", text: "a) Khả năng nhận thức trong Trí tuệ nhân tạo chính là khả năng máy tính tự vận dụng logic toán học cốt lõi để lập luận và đưa ra quyết định chẩn đoán bệnh lâm sàng.", correct: false, expl: "Vận dụng logic để ra quyết định là 'Khả năng suy luận'. 'Khả năng nhận thức' là cảm nhận môi trường qua cảm biến (như radar, camera)." },
+            { id: "b", text: "b) Đặc trưng 'Khả năng học' của AI cho phép hệ thống phần mềm nắm bắt thông tin từ dữ liệu thực tế đầu vào và tự động điều chỉnh hành vi dựa trên các luồng thông tin mới đó.", correct: true, expl: "Khả năng học là nắm bắt thông tin từ dữ liệu và điều chỉnh hành vi dựa trên thông tin mới." },
+            { id: "c", text: "c) Hệ chuyên gia chẩn đoán y khoa MYCIN thời kỳ đầu hoạt động chủ yếu dựa trên tập hợp 600 luật suy diễn dạng 'nếu... thì...' được lập trình sẵn mà chưa cần sử dụng đến kỹ thuật Học máy.", correct: true, expl: "MYCIN gồm khoảng 600 luật suy diễn và không sử dụng các kĩ thuật Học máy vẫn được coi là một bước quan trọng." },
+            { id: "d", text: "d) Bạn Lan cài đặt và sử dụng tính năng nhận diện sinh trắc học khuôn mặt để mở khoá điện thoại thông minh cá nhân; tính năng này là bằng chứng cho sự thành công rực rỡ của Trí tuệ nhân tạo tổng quát (AI mạnh).", correct: false, expl: "Nhận dạng khuôn mặt chỉ là tác vụ 'Trí tuệ nhân tạo hẹp/yếu', không phải AI tổng quát." }
+        ]},
+        { id: "qII_3", type: "tf_cluster", context: "Câu 3: Tổ nhóm của bạn Tuấn đang thực hiện khảo sát các ứng dụng thực tiễn của Trí tuệ nhân tạo trong khoa học và đời sống. Hãy xác định tính chuẩn xác trong các tài liệu mà Tuấn thu thập được:", items: [
+            { id: "a", text: "a) Dịch vụ Google Translator (Google dịch) do hãng Google phát triển vào năm 2006 là ứng dụng AI cho phép tự động dịch thuật hiệu quả nhiều dạng văn bản và nguyên cả trang web.", correct: true, expl: "Google dịch phát triển năm 2006, cho phép dịch từ, cụm từ, tệp, trang web nhờ tự động phát hiện ngôn ngữ." },
+            { id: "b", text: "b) Về mặt giao tiếp phần mềm, các trợ lí ảo thông minh như Cortana, Siri hay Bixby chỉ có khả năng nhận lệnh bằng thao tác gõ phím chứ hoàn toàn không thể hiểu được tiếng nói tự nhiên của con người.", correct: false, expl: "Các trợ lí ảo này có thể trò chuyện và hỗ trợ bằng chính tiếng nói của người dùng." },
+            { id: "c", text: "c) Công nghệ AI nhận dạng chữ viết tay hiện đang được các doanh nghiệp ứng dụng rộng rãi trong giao dịch thương mại điện tử để tự động hoá quy trình nhập dữ liệu hoá đơn và xác minh chữ kí số.", correct: true, expl: "Công nghệ nhận dạng chữ viết tay được sử dụng để tự động hoá quy trình nhập dữ liệu hoá đơn và xác minh chữ kí." },
+            { id: "d", text: "d) Khi Bình cài đặt một ứng dụng phần mềm đánh cờ vua AI trên điện thoại, hệ thống này được lập trình năng lực tự học để có thể tự động chuyển sang làm nhạc trưởng điều khiển dàn nhạc giao hưởng giống hệt như robot Asimo.", correct: false, expl: "Phần mềm cờ vua là 'Trí tuệ nhân tạo hẹp', không có khả năng tự nhảy sang làm một chuyên môn khác như nhạc trưởng." }
+        ]},
+        { id: "qII_4", type: "tf_cluster", context: "Câu 4: Trong bài tập thảo luận về khả năng xử lý ngôn ngữ và nhận thức của các cỗ máy thông minh, bạn Lan trình bày những điểm đáng lưu ý. Hãy xác định tính Đúng/Sai của các đánh giá sau:", items: [
+            { id: "a", text: "a) Theo mô tả chuyên môn, khả năng 'hiểu ngôn ngữ' của hệ thống AI bao gồm cả việc cỗ máy hiểu được văn bản viết tay và thấu hiểu cả tiếng nói tự nhiên do con người phát ra.", correct: true, expl: "Khả năng hiểu ngôn ngữ là 'Hiểu và xử lí ngôn ngữ tự nhiên của con người, bao gồm cả hiểu văn bản và tiếng nói'." },
+            { id: "b", text: "b) Robot hình người Asimo của hãng Honda được các nhà khoa học ưu ái tích hợp hàng loạt kỹ thuật AI tiên tiến như tự động điều khiển di chuyển thăng bằng bằng hai chân, nhận dạng hình ảnh và tiếng nói.", correct: true, expl: "Asimo được tích hợp tự động điều khiển thăng bằng bằng 2 chân, nhận dạng hình ảnh, nhận dạng tiếng nói." },
+            { id: "c", text: "c) Công nghệ nhận dạng khuôn mặt ứng dụng trên mạng xã hội Facebook chỉ được thiết kế dùng duy nhất cho mục đích mở khoá tài khoản riêng tư chứ tuyệt đối không thể tự động xác định hay gán nhãn tên người trong ảnh tải lên.", correct: false, expl: "Facebook ứng dụng nhận dạng khuôn mặt để xác định và gán nhãn tên khá chính xác những người quen xuất hiện trong ảnh." },
+            { id: "d", text: "d) Khi bạn Tuấn vừa lái xe vừa yêu cầu Google Assistant mở một bản nhạc trên điện thoại bằng giọng nói, hệ thống phần mềm này đã vận dụng xuất sắc khả năng hiểu ngôn ngữ tự nhiên để thực thi mệnh lệnh trợ lí ảo.", correct: true, expl: "Trợ lý ảo lắng nghe và xử lý tiếng nói, đó là đặc trưng cốt lõi của khả năng hiểu ngôn ngữ tự nhiên trong AI." }
+        ]}
+    ];
+
+    window.startQuizAction = function() {
+        try {
+            const errDiv = document.getElementById('login-error');
+            if(errDiv) errDiv.classList.add('hidden');
+            
+            const nameEl = document.getElementById('hoTen');
+            const lopEl = document.getElementById('lop');
+            
+            const name = nameEl.value.trim();
+            const lop = lopEl.value.trim();
+            
+            if (!name || !lop) {
+                if(errDiv) {
+                    errDiv.innerText = "⚠️ Vui lòng nhập đầy đủ Họ tên và Lớp!";
+                    errDiv.classList.remove('hidden');
+                } else {
+                    alert("⚠️ Vui lòng nhập đầy đủ Họ tên và Lớp!");
+                }
+                return;
+            }
+            
+            currentStudent = { hoTen: name, lop: lop, maDe: 'de1', tenDe: 'Đề Trắc Nghiệm Bài 1' };
+            currentQuestions = JSON.parse(JSON.stringify(exam_data));
+            quizStartTime = new Date();
+            
+            setTimeout(() => { isQuizStarted = true; }, 1000);
+            showSection('quiz');
+            
+            userAnswers = {};
+            window.renderAllQuestions();
+            startTimer(45 * 60); 
+            
+        } catch (error) {
+            alert("❌ Đã xảy ra lỗi khởi tạo bài thi: " + error.message + ".");
+            console.error(error);
+        }
+    };
+
+    window.viewScoresAction = function() {
+        searchTerm = ''; 
+        document.getElementById('search-student').value = '';
+        currentPage = 1;
+
+        if (database) {
+            scoresRef.once('value').then((snapshot) => {
+                const data = snapshot.val();
+                allScores = data ? Object.keys(data).map(key => ({...data[key], id: key})) : [];
+                window.renderScores();
+                showSection('scores');
+            });
+        }
+    };
+
+    window.searchStudent = function(val) {
+        searchTerm = val.toLowerCase();
+        currentPage = 1;
+        window.renderScores();
+    };
+
+    window.changePage = function(page) {
+        currentPage = page;
+        window.renderScores();
+    };
+
+    window.goHome = function() {
+        if(document.getElementById('hoTen')) document.getElementById('hoTen').value = ''; 
+        if(document.getElementById('lop')) document.getElementById('lop').value = ''; 
+        clearInterval(timerInterval);
+        showSection('login');
+    };
+
+    function getTotalScoreItems() { return currentQuestions.length; }
+
+    function getAnsweredCount() {
+        let count = 0;
+        currentQuestions.forEach(q => {
+            if (q.type === 'single') {
+                if (userAnswers[q.id] !== undefined) count++;
+            } else if (q.type === 'tf_cluster') {
+                let answeredItems = 0;
+                q.items.forEach(item => {
+                    if (userAnswers[q.id + '_' + item.id] !== undefined) answeredItems++;
+                });
+                if (answeredItems === 4) count++; 
+            }
+        });
+        return count;
+    }
+
+   window.selectAnswer = function(qId, val, type) {
+        if (type === 'tf') {
+            userAnswers[qId] = val;
+            const btnT = document.getElementById(`btnT_${qId}`);
+            const btnF = document.getElementById(`btnF_${qId}`);
+            if (val === true) {
+                btnT.classList.add('selected'); btnT.classList.remove('bg-white');
+                btnF.classList.remove('selected'); btnF.classList.add('bg-white');
+            } else {
+                btnF.classList.add('selected'); btnF.classList.remove('bg-white');
+                btnT.classList.remove('selected'); btnT.classList.add('bg-white');
+            }
+        } else if (type === 'single') {
+            userAnswers[qId] = val;
+        }
+        
+        requestAnimationFrame(() => {
+            const pgText = document.getElementById('progress-text');
+            if(pgText) pgText.innerText = `${getAnsweredCount()}/${getTotalScoreItems()}`;
+        });
+    };
+
+    window.renderAllQuestions = function() {
+        if (!currentQuestions || currentQuestions.length === 0) return;
+        const container = document.getElementById('question-container');
+        if(!container) return;
+
+        let html = '';
+        let currentType = '';
+
+        currentQuestions.forEach((q) => {
+            if (q.type !== currentType) {
+                currentType = q.type;
+                let headerText = ''; let roman = '';
+                if(currentType === 'single') { headerText = 'TRẮC NGHIỆM NHIỀU PHƯƠNG ÁN LỰA CHỌN'; roman = 'I'; }
+                if(currentType === 'tf_cluster') { headerText = 'TRẮC NGHIỆM ĐÚNG/SAI'; roman = 'II'; }
+                
+                html += `<div class="flex items-center gap-3 mt-8 mb-4 border-b-2 border-blue-100 pb-3"><span class="bg-gradient-to-br from-blue-500 to-indigo-600 text-white w-14 h-14 flex items-center justify-center rounded-xl font-black text-2xl shadow-md">${roman}</span><h3 class="text-2xl sm:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-700 to-indigo-700 tracking-wide uppercase">${headerText}</h3></div>`;
+            }
+
+            html += `<div class="fade-in w-full bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-blue-100 relative mb-6 hover:shadow-md transition-shadow">`;
+            
+            if (q.type === 'single') {
+                const uAns = userAnswers[q.id];
+                html += `<div class="flex gap-4 mb-5"><div class="w-full math-scroll"><p class="text-xl font-bold text-red-600 mt-1 leading-snug tracking-tight">${q.question}</p></div></div>`;
+                html += `<div class="space-y-4 md:pl-6 mt-6">`;
+                q.options.forEach((opt, i) => {
+                    const isChecked = (uAns === i) ? 'checked' : '';
+                    html += `<div class="flex items-center">
+                        <input type="radio" id="opt_${q.id}_${i}" name="q_${q.id}" value="${i}" class="hidden single-radio" ${isChecked} onchange="window.selectAnswer('${q.id}', ${i}, 'single')">
+                        <label for="opt_${q.id}_${i}" class="option-label w-full p-4 border-2 border-gray-200 rounded-2xl flex items-center gap-4 bg-white shadow-sm font-bold text-lg hover:border-blue-300">
+                            <div class="w-12 h-12 rounded-xl border-2 border-gray-300 flex items-center justify-center text-lg font-black text-gray-400 flex-shrink-0 bg-gray-50">${String.fromCharCode(65 + i)}</div>
+                            <div class="text-gray-700 leading-relaxed math-scroll flex-1">${opt}</div>
+                        </label>
+                    </div>`;
+                });
+                html += `</div>`;
+            } 
+            else if (q.type === 'tf_cluster') {
+                html += `<div class="bg-red-50 text-red-700 p-5 rounded-xl font-bold mb-4 border-2 border-red-100 text-xl leading-relaxed math-scroll">${q.context}</div>`;
+                html += `<div class="space-y-4 mt-6">`;
+                q.items.forEach((item) => {
+                    const combinedId = q.id + '_' + item.id;
+                    let ans = userAnswers[combinedId];
+                    let btnT = ans === true ? 'selected' : 'bg-white';
+                    let btnF = ans === false ? 'selected' : 'bg-white';
+
+                    html += `<div class="p-5 border-2 border-gray-100 rounded-2xl bg-white shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4 transition-all hover:border-blue-200">
+                        <div class="font-bold text-gray-800 flex-1 text-lg math-scroll">${item.text}</div>
+                        <div class="flex gap-3 shrink-0">
+                            <button id="btnT_${combinedId}" onclick="window.selectAnswer('${combinedId}', true, 'tf')" class="btn-tf w-24 sm:w-28 py-3 rounded-xl font-extrabold text-lg ${btnT}">ĐÚNG</button>
+                            <button id="btnF_${combinedId}" onclick="window.selectAnswer('${combinedId}', false, 'tf')" class="btn-tf w-24 sm:w-28 py-3 rounded-xl font-extrabold text-lg ${btnF}">SAI</button>
+                        </div>
+                    </div>`;
+                });
+                html += `</div>`;
+            } 
+            html += `</div>`;
+        });
+        
+        container.innerHTML = html;
+        const pgText = document.getElementById('progress-text');
+        if(pgText) pgText.innerText = `${getAnsweredCount()}/${getTotalScoreItems()}`;
+    };
+
+    function formatDuration(sec) {
+        const m = Math.floor(sec / 60); const s = sec % 60;
+        return `${m}p ${s}s`;
+    }
+
+    window.promptSubmit = function() {
+        if (!isQuizStarted) return;
+        const total = getTotalScoreItems();
+        const answered = getAnsweredCount();
+        
+        document.getElementById('confirm-answered').innerText = answered;
+        document.getElementById('confirm-total').innerText = total;
+        
+        const modal = document.getElementById('confirm-submit-modal');
+        modal.classList.remove('hidden');
+    };
+
+    window.closeConfirmModal = function() {
+        const modal = document.getElementById('confirm-submit-modal');
+        modal.classList.add('hidden');
+    };
+
+    window.executeSubmit = function() {
+        window.closeConfirmModal();
+        isQuizStarted = false; 
+        quizEndTime = new Date();
+        clearInterval(timerInterval);
+        
+        let score = 0;
+
+        currentQuestions.forEach(q => {
+            if (q.type === 'single') {
+                if (userAnswers[q.id] === q.correct) score += 0.25;
+            } else if (q.type === 'tf_cluster') {
+                q.items.forEach(item => { if (userAnswers[q.id + '_' + item.id] === item.correct) score += 0.25; });
+            }
+        });
+
+        score = score.toFixed(2); 
+
+        const record = {
+            hoTen: currentStudent.hoTen, lop: currentStudent.lop, tenDe: currentStudent.tenDe, maDe: currentStudent.maDe,
+            diem: parseFloat(score),
+            startTime: quizStartTime.toLocaleTimeString('vi-VN') + ' ' + quizStartTime.toLocaleDateString('vi-VN'),
+            endTime: quizEndTime.toLocaleTimeString('vi-VN') + ' ' + quizEndTime.toLocaleDateString('vi-VN'),
+            duration: formatDuration(Math.floor((quizEndTime - quizStartTime) / 1000)),
+            thoiGian: new Date().toISOString(), deviceId: deviceId,
+            userAnswers: userAnswers 
+        };
+        
+        if(database) {
+            scoresRef.push(record, () => { window.showModalResult(score, record.duration); });
+        } else {
+            window.showModalResult(score, record.duration);
+        }
+    };
+
+    window.showModalResult = function(score, dur) {
+        ['login', 'quiz', 'scores', 'review'].forEach(s => {
+            const el = document.getElementById(s+'-section');
+            if(el) el.classList.add('hidden');
+        });
+        const resEl = document.getElementById('result-section');
+        if(resEl) resEl.classList.remove('hidden');
+        const contentEl = document.getElementById('result-content');
+        if(contentEl) contentEl.innerHTML = `
+        <div class="flex justify-start mb-4">
+            <button onclick="window.goHome()" class="px-5 py-3 bg-gray-100 text-gray-700 rounded-xl font-bold hover:bg-gray-200 transition-colors shadow-sm border border-gray-200 text-lg">🏠 Trang chủ</button>
+        </div>
+        <div class="text-center">
+            <div class="text-7xl mb-4 animate-bounce">🎉</div>
+            <h3 class="text-3xl font-black text-emerald-600 mb-2">Hoàn thành bài thi!</h3>
+            <p class="text-gray-600 mb-6 mt-2"><span class="font-extrabold text-blue-700 text-xl uppercase tracking-wider">${currentStudent.hoTen} - Lớp ${currentStudent.lop}</span></p>
+        </div>
+        <div class="bg-blue-50 border-2 border-blue-100 rounded-3xl p-8 mb-6 shadow-inner relative text-center">
+            <div class="text-base text-blue-500 font-extrabold mb-2 uppercase tracking-widest">ĐIỂM SỐ CỦA BẠN</div>
+            <div class="text-7xl font-black text-blue-600 drop-shadow-sm">${score} <span class="text-3xl text-gray-400">/ 10</span></div>
+            <div class="text-lg font-extrabold text-indigo-600 mt-5 bg-white inline-block px-6 py-3 rounded-full shadow-sm border border-blue-100">Thời gian làm bài: ${dur}</div>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+            <button onclick="window.reviewQuiz()" class="w-full py-4 bg-gradient-to-r from-indigo-500 to-purple-500 text-white rounded-xl font-extrabold shadow-sm hover:shadow-md transition-colors text-xl">📝 Xem lại bài</button>
+            <button onclick="window.viewScoresAction()" class="w-full py-4 bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-xl font-extrabold shadow-sm hover:shadow-md transition-colors text-xl">🏆 Bảng điểm</button>
+        </div>`;
+    };
+
+    function getStatusBadge(isCorrect, isUnanswered) {
+        if (isUnanswered) return `<div class="mt-4 mb-2 inline-block px-4 py-2 bg-yellow-100 text-yellow-800 text-base font-black rounded-lg border border-yellow-300 shadow-sm">⚠️ BẠN CHƯA LÀM CÂU NÀY</div>`;
+        if (isCorrect) return `<div class="mt-4 mb-2 inline-block px-4 py-2 bg-emerald-100 text-emerald-800 text-base font-black rounded-lg border border-emerald-300 shadow-sm">✅ BẠN LÀM ĐÚNG RỒI</div>`;
+        return `<div class="mt-4 mb-2 inline-block px-4 py-2 bg-red-100 text-red-800 text-base font-black rounded-lg border border-red-300 shadow-sm">❌ BẠN LÀM SAI RỒI</div>`;
+    }
+
+    window.reviewQuiz = function() {
+        showSection('review');
+        const container = document.getElementById('review-content');
+        if(!container) return;
+        let html = '';
+
+        currentQuestions.forEach((q) => {
+            if (q.type === 'single') {
+                let uAns = userAnswers[q.id];
+                let isUnanswered = (uAns === undefined);
+                let isCorrect = (uAns === q.correct);
+                let borderColor = isCorrect ? 'border-emerald-300 bg-emerald-50' : 'border-red-300 bg-red-50';
+                
+                html += `<div class="p-6 border-2 rounded-2xl shadow-sm mb-6 ${borderColor}">`;
+                html += `<div class="font-bold text-xl text-red-600 mb-5 leading-relaxed math-scroll">${q.question}</div>`;
+                html += `<div class="space-y-3">`;
+                
+                q.options.forEach((opt, i) => {
+                    let optBg = ''; let iconHtml = '';
+                    if (q.correct === i) {
+                        optBg = 'bg-emerald-100 text-emerald-900 border-emerald-400 border-2'; 
+                        iconHtml = '<div class="text-3xl drop-shadow-sm ml-auto pl-2 flex-shrink-0">✅</div>';
+                    } else if (uAns === i && !isCorrect) {
+                        optBg = 'bg-red-100 text-red-900 line-through border-red-400 border-2'; 
+                        iconHtml = '<div class="text-3xl drop-shadow-sm ml-auto pl-2 flex-shrink-0">❌</div>';
+                    } else { optBg = 'bg-white text-slate-700 border border-slate-200'; }
+
+                    html += `<div class="p-4 rounded-xl ${optBg} flex items-center gap-4"><div class="w-10 h-10 flex items-center justify-center rounded-lg bg-white/50 text-base font-black shadow-sm flex-shrink-0">${String.fromCharCode(65 + i)}</div><div class="${(q.correct === i || uAns === i) ? 'font-semibold' : 'font-medium'} flex-1 text-lg math-scroll">${opt}</div>${iconHtml}</div>`;
+                });
+                html += `</div>`;
+                
+                html += getStatusBadge(isCorrect, isUnanswered); 
+                
+                if (q.explanation) {
+                    html += `<div class="review-explanation mt-3 pt-3 border-t-2 border-gray-200"><p class="text-base font-black uppercase tracking-widest text-blue-600 mb-2">💡 Giải chi tiết:</p><p class="text-black font-medium text-lg leading-loose math-scroll">${q.explanation}</p></div>`;
+                }
+                html += `</div>`;
+            } 
+            else if (q.type === 'tf_cluster') {
+                html += `<div class="p-6 border-2 border-indigo-200 bg-indigo-50 rounded-2xl shadow-sm mb-6">`;
+                html += `<div class="font-bold text-xl text-indigo-800 mb-5 math-scroll">${q.context}</div>`;
+                html += `<div class="space-y-5">`;
+                q.items.forEach(item => {
+                    let uAns = userAnswers[q.id + '_' + item.id];
+                    let isUnanswered = (uAns === undefined);
+                    let isCorrect = (uAns === item.correct);
+                    let iconHtml = isCorrect ? '✅' : '❌';
+                    let ansText = item.correct ? 'ĐÚNG' : 'SAI';
+
+                    html += `<div class="p-5 bg-white border border-indigo-100 rounded-xl shadow-sm">
+                        <div class="font-bold text-gray-800 text-lg math-scroll">${item.text}</div>
+                        <div class="mt-3 flex items-center justify-between border-b border-gray-100 pb-3">
+                            <span class="text-base font-bold text-gray-500">Bạn chọn: <span class="${isUnanswered ? 'text-gray-400' : 'text-blue-600'} font-black uppercase">${isUnanswered ? 'Chưa trả lời' : (uAns?'Đúng':'Sai')}</span></span>
+                            <span class="font-black text-xl ${isCorrect ? 'text-emerald-500' : 'text-red-500'}">Đáp án: ${ansText} ${iconHtml}</span>
+                        </div>`;
+                        
+                    html += getStatusBadge(isCorrect, isUnanswered);
+                    if(item.expl) {
+                        html += `<div class="review-explanation mt-3 pt-3 text-lg text-gray-700 font-medium leading-relaxed math-scroll"><span class="text-indigo-500 font-bold uppercase">Giải chi tiết:</span><br> ${item.expl}</div>`;
+                    }
+                    html += `</div>`;
+                });
+                html += `</div></div>`;
+            }
+        });
+        container.innerHTML = html;
+    };
+
+    window.backToResult = function() { showSection('result'); };
+    
+    let isReviewingFromLeaderboard = false;
+    
+    window.backFromReview = function() {
+        if (isReviewingFromLeaderboard) {
+            showSection('scores');
+            isReviewingFromLeaderboard = false;
+        } else {
+            window.backToResult();
+        }
+    };
+
+    window.reviewStudentScore = function(scoreId) {
+        const record = allScores.find(x => x.id === scoreId);
+        if (!record) return;
+        
+        currentStudent = { hoTen: record.hoTen, lop: record.lop, tenDe: record.tenDe, maDe: record.maDe };
+        userAnswers = record.userAnswers || {}; 
+        
+        currentQuestions = JSON.parse(JSON.stringify(exam_data)); 
+        
+        isReviewingFromLeaderboard = true;
+        window.reviewQuiz();
+    };
+
+    window.renderScores = function() {
+        const tbody = document.getElementById('scores-tbody');
+        const noScore = document.getElementById('no-scores');
+        const myRankDisplay = document.getElementById('my-rank-display');
+        const paginationContainer = document.getElementById('pagination-controls');
+        
+        if(!tbody) return;
+
+        const sortedAll = [...allScores].sort((a, b) => (b.diem - a.diem) || (a.duration.localeCompare(b.duration)));
+        
+        sortedAll.forEach((s, i) => s.absoluteRank = i + 1);
+
+        const myRankIndex = sortedAll.findIndex(s => s.deviceId === deviceId);
+        if (myRankDisplay) {
+            if (myRankIndex !== -1) {
+                myRankDisplay.innerHTML = `🏆 Thứ hạng của bạn: <span class="text-red-600 font-black">#${sortedAll[myRankIndex].absoluteRank}</span>`;
+            } else {
+                myRankDisplay.innerHTML = `🏆 Thứ hạng của bạn: <span class="text-gray-400">Chưa thi</span>`;
+            }
+        }
+
+        const filteredScores = searchTerm ? sortedAll.filter(s => s.hoTen.toLowerCase().includes(searchTerm)) : sortedAll;
+
+        if (filteredScores.length === 0) {
+            tbody.innerHTML = ''; 
+            noScore.classList.remove('hidden'); 
+            paginationContainer.innerHTML = '';
+            return; 
+        }
+        
+        noScore.classList.add('hidden');
+
+        const totalPages = Math.ceil(filteredScores.length / itemsPerPage);
+        if (currentPage > totalPages) currentPage = totalPages;
+        if (currentPage < 1) currentPage = 1;
+
+        const startIndex = (currentPage - 1) * itemsPerPage;
+        const endIndex = startIndex + itemsPerPage;
+        const pageItems = filteredScores.slice(startIndex, endIndex);
+
+        tbody.innerHTML = pageItems.map((s) => {
+            const isMe = s.deviceId === deviceId;
+            return `<tr class="${isMe ? 'my-score-row' : 'hover:bg-slate-50'} transition-colors border-b border-slate-100">
+            <td class="px-4 py-5 font-black text-slate-500 text-base text-center">#${s.absoluteRank}</td>
+            <td class="px-4 py-5 font-extrabold text-slate-800 text-base">${s.hoTen} ${isMe ? '<span class="ml-2 bg-pink-500 text-white text-xs px-2 py-1 rounded-md shadow-sm">Bạn</span>' : ''}</td>
+            <td class="px-4 py-5 font-black text-blue-600 text-base text-center">${s.lop}</td>
+            <td class="px-4 py-5 text-center font-black text-orange-600 text-sm">${s.duration}</td>
+            <td class="px-4 py-5 text-center"><span class="font-black text-2xl ${s.diem >= 5 ? 'text-emerald-600' : 'text-red-500'}">${s.diem}</span></td>
+            <td class="px-4 py-5 text-center">
+                <button onclick="window.reviewStudentScore('${s.id}')" class="bg-indigo-100 text-indigo-700 hover:bg-indigo-200 px-4 py-2 rounded-lg font-bold text-sm transition-colors border border-indigo-200 shadow-sm cursor-pointer whitespace-nowrap">Xem lại</button>
+            </td>
+        </tr>`;
+        }).join('');
+
+        renderPagination(totalPages);
+    };
+
+    function renderPagination(totalPages) {
+        const container = document.getElementById('pagination-controls');
+        if (!container) return;
+        
+        if (totalPages <= 1) {
+            container.innerHTML = '';
+            return;
+        }
+
+        let html = '<div class="flex flex-wrap items-center justify-center gap-2">';
+        
+        html += `<button onclick="window.changePage(${currentPage - 1})" class="px-4 py-2 rounded-xl font-bold transition-colors ${currentPage === 1 ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 shadow-sm'}" ${currentPage === 1 ? 'disabled' : ''}>&laquo; Trước</button>`;
+
+        let startPage = Math.max(1, currentPage - 1);
+        let endPage = Math.min(totalPages, currentPage + 1);
+
+        if (startPage > 1) {
+            html += `<button onclick="window.changePage(1)" class="px-4 py-2 rounded-xl font-bold bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 shadow-sm">1</button>`;
+            if (startPage > 2) html += `<span class="px-2 text-gray-400 font-black">...</span>`;
+        }
+
+        for (let i = startPage; i <= endPage; i++) {
+            html += `<button onclick="window.changePage(${i})" class="px-4 py-2 rounded-xl font-bold transition-all ${i === currentPage ? 'bg-orange-500 text-white shadow-md border-orange-600' : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 shadow-sm'}">${i}</button>`;
+        }
+
+        if (endPage < totalPages) {
+            if (endPage < totalPages - 1) html += `<span class="px-2 text-gray-400 font-black">...</span>`;
+            html += `<button onclick="window.changePage(${totalPages})" class="px-4 py-2 rounded-xl font-bold bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 shadow-sm">${totalPages}</button>`;
+        }
+
+        html += `<button onclick="window.changePage(${currentPage + 1})" class="px-4 py-2 rounded-xl font-bold transition-colors ${currentPage === totalPages ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 shadow-sm'}" ${currentPage === totalPages ? 'disabled' : ''}>Sau &raquo;</button>`;
+        
+        html += '</div>';
+        container.innerHTML = html;
+    }
+
+    function showSection(id) {
+        ['login', 'quiz', 'scores', 'result', 'review'].forEach(s => {
+            const el = document.getElementById(s+'-section');
+            if(el) el.classList.add('hidden');
+        });
+        const tgt = document.getElementById(id+'-section');
+        if(tgt) tgt.classList.remove('hidden');
+    }
+
+    function startTimer(seconds) {
+        const display = document.getElementById('timer');
+        if(!display) return;
+        let remaining = seconds;
+        timerInterval = setInterval(() => {
+            remaining--;
+            const m = Math.floor(remaining / 60).toString().padStart(2, '0');
+            const s = (remaining % 60).toString().padStart(2, '0');
+            display.innerText = `${m}:${s}`;
+            if (remaining <= 0) window.submitQuiz();
+        }, 1000);
+    }
+
+    try {
+        if (!localStorage.getItem('deviceId')) localStorage.setItem('deviceId', 'dev_' + Math.random().toString(36).substr(2) + Date.now());
+        deviceId = localStorage.getItem('deviceId');
+    } catch (e) { deviceId = 'dev_temp_' + Math.random().toString(36).substr(2); }
+  </script>
+ </body>
+</html>

@@ -1,0 +1,900 @@
+<!doctype html>
+<html lang="vi" class="w-full h-full m-0 p-0">
+ <head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <title>Tin Học 12 - Bài 4</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+  <!-- 1. MÃ GA4 GỐC (Kết nối với Google Analytics) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-NSJCVSL9RM"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-NSJCVSL9RM'); 
+  </script>
+
+  <!-- 2. MÃ NHỊP TIM 30 GIÂY -->
+  <script>
+    setInterval(function() {
+      if (!document.hidden) { 
+        gtag('event', 'keep_alive', {
+          'event_category': 'Engagement',
+          'event_label': 'Học sinh đang làm bài',
+          'non_interaction': false
+        });
+      }
+    }, 30000); 
+  </script>
+
+  <style>
+    * { 
+        -webkit-tap-highlight-color: transparent; 
+        -webkit-touch-callout: none !important; 
+        touch-action: manipulation;
+    }
+    
+    html, body { width: 100%; min-height: 100vh; margin: 0; padding: 0; overflow-x: hidden; }
+    
+    body { 
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
+      background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+      background-size: 400% 400%;
+      animation: gradientBG 15s ease infinite;
+    }
+    
+    @keyframes gradientBG {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+
+    #app { width: 100%; min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden; }
+    
+    .glass-card {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    .option-label { transition: background-color 0.1s ease, border-color 0.1s ease; cursor: pointer; border-color: #e2e8f0; }
+    .option-label:hover { background-color: #f0fdfa; border-color: #38bdf8; }
+    
+    input[type="radio"].single-radio:checked + .option-label {
+      background: linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%);
+      color: white; border-color: transparent;
+      box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+    }
+    input[type="radio"].single-radio:checked + .option-label div:first-child { background-color: rgba(255,255,255,0.25); border-color: transparent; color: white; }
+    input[type="radio"].single-radio:checked + .option-label div:last-child { color: white; }
+    
+    .fade-in { animation: fadeIn 0.4s ease forwards; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    
+    .my-score-row {
+      background: linear-gradient(to right, #fdf4ff, #ffffff) !important;
+      border-left: 4px solid #db2777 !important; font-weight: 700 !important;
+      color: #9d174d !important; box-shadow: 0 2px 8px rgba(0,0,0,0.05); position: relative; z-index: 10;
+    }
+    .my-score-row td { padding-top: 16px; padding-bottom: 16px; }
+    
+    .btn-tf { transition: background-color 0.1s ease; border-width: 2px; }
+    .btn-tf.selected { background-color: #2563eb; color: white; border-color: #1d4ed8; }
+    .btn-tf:not(.selected) { background-color: white; color: #4b5563; border-color: #e5e7eb; }
+    .btn-tf:not(:disabled):active { transform: scale(0.95); }
+    
+    .math-scroll { overflow-x: auto; min-width: 0; padding-bottom: 4px; scrollbar-width: none; -ms-overflow-style: none; }
+    .math-scroll::-webkit-scrollbar { display: none; }
+  </style>
+
+ </head>
+ <body>
+  <div id="app" class="p-0 sm:p-4 md:p-8 transition-all">
+   
+   <div id="login-section" class="w-full max-w-md mx-auto fade-in flex flex-col justify-center flex-grow">
+    <div class="glass-card rounded-none sm:rounded-3xl p-6 sm:p-8 flex flex-col justify-start shadow-2xl border-t-8 border-indigo-600 bg-white">
+     <div class="text-center mb-6 pt-4 sm:pt-0">
+      <div class="flex items-center justify-center w-24 h-24 mx-auto mb-4 rounded-full border-4 border-yellow-400 bg-red-600 shadow-lg transform transition-transform hover:scale-105">
+          <span class="text-white font-black text-4xl tracking-tighter">HS</span>
+      </div>
+      <h1 class="text-2xl sm:text-3xl font-bold text-red-500 mb-3"> BÀI 4: GIAO THỨC MẠNG </h1>
+     </div>
+      <div id="login-form" class="space-y-4">
+      <div class="flex flex-col gap-4">
+          <div class="w-full">
+               <label class="block text-lg font-bold text-gray-700 mb-1">Họ và tên</label> 
+               <input type="text" id="hoTen" class="w-full px-4 py-4 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-100 outline-none transition-all font-semibold text-lg" placeholder="Nhập họ tên...">
+          </div>
+          <div class="w-full">
+               <label class="block text-lg font-bold text-gray-700 mb-1">Lớp</label> 
+               <input type="text" id="lop" class="w-full px-4 py-4 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-100 outline-none transition-all font-semibold text-lg" placeholder="12A1">
+          </div>
+      </div>
+
+      <div id="login-error" class="hidden bg-red-100 border border-red-300 text-red-700 font-bold text-base p-3 rounded-xl text-center shadow-sm"></div>
+
+      <button type="button" onclick="window.startQuizAction()" id="start-btn" class="w-full py-5 mt-6 bg-gradient-to-r from-blue-500 to-cyan-400 text-white font-extrabold rounded-2xl shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all text-2xl tracking-wide"> 🚀 BẮT ĐẦU THI </button>
+     </div>
+    </div>
+   </div>
+
+   <div id="quiz-section" class="w-full max-w-4xl mx-auto hidden flex-grow flex flex-col">
+    <div class="glass-card rounded-none sm:rounded-3xl p-4 sm:p-8 flex flex-col flex-grow relative border-t-8 border-blue-500 bg-white shadow-2xl">
+     <div class="flex items-center justify-between mb-4 sm:mb-6 pb-4 border-b-2 border-gray-100">
+      
+      <div class="flex items-center gap-3">
+       <div class="flex items-center justify-center w-12 h-12 rounded-full border-2 border-yellow-400 bg-red-600 shadow-sm flex-shrink-0">
+           <span class="text-white font-black text-xl tracking-tighter">HS</span>
+       </div>
+       <div>
+        <h2 id="quiz-title" class="text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">Đề Kiểm Tra</h2>
+        <p id="student-info" class="text-base font-bold text-gray-500 mt-1 uppercase tracking-wide"></p>
+       </div>
+      </div>
+
+      <div class="text-right bg-blue-50 px-4 py-2 rounded-xl border border-blue-100" id="progress-container">
+       <div class="text-sm text-blue-500 font-bold uppercase tracking-wider mb-1">Tiến độ (Câu)</div>
+       <div id="progress-text" class="text-2xl font-black text-blue-700">0/28</div>
+      </div>
+     </div>
+     
+     <div id="timer-banner" class="mb-6 p-4 bg-gradient-to-r from-orange-50 to-red-50 border-2 border-red-100 rounded-2xl flex items-center justify-between shadow-sm sticky top-2 z-40">
+        <span class="text-red-800 font-extrabold flex items-center gap-2 text-lg"><span class="text-2xl animate-pulse">⏰</span> THỜI GIAN:</span> 
+        <span id="timer" class="text-4xl font-black text-red-600 font-mono tracking-wider drop-shadow-sm">45:00</span>
+     </div>
+
+     <div id="question-container" class="mb-8 flex-grow w-full max-w-full"></div>
+     
+     <div id="network-error" class="hidden bg-red-100 text-red-700 p-4 rounded-xl mt-4 text-center font-bold text-sm border-2 border-red-300 mb-4 shadow-sm"></div>
+
+    <div class="flex pt-4 sm:pt-6 border-t-2 border-gray-100 mt-auto pb-4 sm:pb-0">
+        <button id="submit-btn" onclick="window.promptSubmit()" class="w-full py-5 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-bold text-2xl rounded-2xl shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1">✅ NỘP BÀI NGAY</button>
+     </div>
+    </div>
+   </div>
+
+   <div id="confirm-submit-modal" class="fixed inset-0 hidden flex items-center justify-center bg-black/60 backdrop-blur-sm z-50 transition-opacity">
+       <div class="bg-white rounded-3xl w-full max-w-sm shadow-2xl p-6 text-center transform transition-all scale-100 mx-4 border-2 border-gray-100">
+           <div class="text-yellow-400 mb-4 flex justify-center">
+               <svg xmlns="http://www.w3.org/2000/svg" class="h-24 w-24" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+               </svg>
+           </div>
+           <h3 class="text-3xl font-black text-gray-800 mb-2 uppercase tracking-wide">Xác nhận nộp</h3>
+           <p class="text-gray-600 mb-6 font-medium text-xl">Các em mới làm <span id="confirm-answered" class="text-red-600 font-black text-2xl">0</span>/<span id="confirm-total" class="font-black text-2xl">28</span> câu. Có chắc chắn muốn nộp bài không? Những câu chưa làm sẽ bị tính là sai.</p>
+           <div class="flex flex-col gap-3">
+               <button onclick="window.closeConfirmModal()" class="w-full py-4 bg-gray-100 text-gray-800 font-extrabold text-xl rounded-xl hover:bg-gray-200 border border-gray-200">Quay lại làm tiếp</button>
+               <button onclick="window.executeSubmit()" class="w-full py-4 bg-emerald-600 text-white font-extrabold text-xl rounded-xl hover:bg-emerald-700 shadow-md">Vẫn Nộp Luôn</button>
+           </div>
+       </div>
+   </div>
+
+   <div id="result-section" class="w-full max-w-2xl mx-auto hidden fade-in flex flex-col justify-center flex-grow pb-8">
+    <div class="glass-card rounded-none sm:rounded-3xl p-6 sm:p-8 flex flex-col justify-start border-t-8 border-green-500 bg-white shadow-2xl" id="result-content">
+    </div>
+   </div>
+
+   <div id="review-section" class="w-full max-w-4xl mx-auto hidden flex-grow flex flex-col">
+    <div class="glass-card rounded-none sm:rounded-3xl p-4 sm:p-8 flex flex-col flex-grow border-t-8 border-indigo-500 bg-white overflow-hidden shadow-2xl">
+     <div class="flex flex-col-reverse sm:flex-row items-start sm:items-center justify-between mb-6 pb-4 border-b-2 border-gray-100 gap-4">
+      <div class="flex flex-wrap gap-2">
+          <button onclick="window.goHome()" class="px-5 py-3 bg-gray-100 text-gray-700 rounded-xl font-bold hover:bg-gray-200 text-lg shadow-sm border border-gray-200">🏠 Trang chủ</button>
+          <button onclick="window.backFromReview()" class="px-5 py-3 bg-indigo-50 text-indigo-700 rounded-xl font-bold hover:bg-indigo-100 text-lg shadow-sm border border-indigo-200">🔙 Quay lại</button>
+          <button onclick="window.viewScoresAction()" class="px-5 py-3 bg-orange-50 text-orange-700 rounded-xl font-bold hover:bg-orange-100 text-lg shadow-sm border border-orange-200">🏆 Bảng điểm</button>
+      </div>
+      <h2 class="text-3xl sm:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">📝 Xem Lại Bài Làm</h2>
+     </div>
+     <div id="review-content" class="space-y-8 w-full max-w-full"></div>
+    </div>
+   </div>
+
+   <div id="scores-section" class="w-full max-w-6xl mx-auto hidden flex-grow flex flex-col">
+    <div class="glass-card rounded-none sm:rounded-3xl p-4 sm:p-8 flex flex-col flex-grow border-t-8 border-orange-500 bg-white w-full max-w-full shadow-2xl">
+     <div class="mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b-2 border-gray-100 pb-4">
+      <button onclick="window.goHome()" class="px-5 py-3 bg-gray-100 text-gray-700 rounded-xl font-bold hover:bg-gray-200 text-lg shadow-sm border border-gray-200 whitespace-nowrap">🏠 Trang chủ</button>
+      <h2 class="text-3xl sm:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-red-600 text-center flex-grow">🏆 BẢNG XẾP HẠNG BÀI 4</h2>
+     </div>
+     
+     <div class="flex flex-col sm:flex-row justify-between items-center mb-4 gap-4 bg-gray-50 p-4 rounded-xl border border-gray-200">
+         <div id="my-rank-display" class="text-xl font-bold text-gray-700">🏆 Thứ hạng của bạn: <span class="text-gray-400">--</span></div>
+         <div class="w-full sm:w-auto flex-grow max-w-sm">
+             <input type="text" id="search-student" oninput="window.searchStudent(this.value)" placeholder="🔍 Nhập tên học sinh để tìm..." class="w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm focus:border-orange-500 focus:ring-2 focus:ring-orange-200 outline-none transition-all font-medium">
+         </div>
+     </div>
+
+     <div class="overflow-x-auto rounded-xl border border-slate-200 flex-grow shadow-inner bg-white/50 w-full">
+      <table class="w-full text-sm sm:text-base whitespace-nowrap min-w-max">
+       <thead class="bg-gradient-to-r from-orange-500 to-red-500 text-white">
+        <tr>
+         <th class="px-3 sm:px-4 py-4 text-center font-extrabold w-16">Hạng</th>
+         <th class="px-3 sm:px-4 py-4 text-left font-extrabold">Họ tên</th>
+         <th class="px-3 sm:px-4 py-4 text-center font-extrabold">Lớp</th>
+         <th class="px-3 sm:px-4 py-4 text-center font-extrabold">Thời gian</th>
+         <th class="px-3 sm:px-4 py-4 text-center font-extrabold">Điểm</th>
+         <th class="px-2 sm:px-4 py-4 text-center font-extrabold">Xem lại</th>
+        </tr>
+       </thead>
+       <tbody id="scores-tbody" class="bg-white/80 divide-y divide-gray-100"></tbody>
+      </table>
+      <div id="no-scores" class="text-center py-12 hidden text-gray-500 font-bold text-xl">Không tìm thấy dữ liệu thi 🥲</div>
+     </div>
+     
+     <div id="pagination-controls" class="w-full flex justify-center mt-6"></div>
+    </div>
+  </div>
+
+  <script>
+    let database = null;
+    let scoresRef = null;
+
+    try {
+        const firebaseConfig = {
+            apiKey: "AIzaSyBQ9Pos8awlh9j041qDWTPFRsVIjF-kPnk",
+            authDomain: "hoctap-91691.firebaseapp.com",
+            databaseURL: "https://hoctap-91691-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "hoctap-91691",
+            storageBucket: "hoctap-91691.firebasestorage.app",
+            messagingSenderId: "1004553425319",
+            appId: "1:1004553425319:web:45d15cbae393f614c56682",
+            measurementId: "G-Q6X1TL9PRV"
+        };
+        if (typeof firebase !== 'undefined') {
+            if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+            database = firebase.database();
+            
+            // ĐÃ ĐỔI TÊN BẢNG XẾP HẠNG THÀNH BÀI 4
+            scoresRef = database.ref('bxh_tin_12_4');
+        }
+    } catch(err) { console.error("Lỗi Firebase:", err); }
+
+    let isQuizStarted = false; 
+    let currentQuestions = [];
+    let deviceId = '';
+    let allScores = [];
+    let currentStudent = {};
+    let userAnswers = {};
+    let timerInterval;
+    let quizStartTime, quizEndTime;
+    
+    let searchTerm = '';
+    let currentPage = 1;
+    const itemsPerPage = 10;
+
+    // DATA BÀI 4: GIAO THỨC MẠNG
+    const exam_data = [
+        { 
+            id: "q1", type: "single", question: "Câu 1: Thuật ngữ 'giao thức mạng' (network protocol) trong kiến trúc truyền thông máy tính được định nghĩa chuẩn xác nhất là gì?", 
+            options: ["Là tập hợp các quy định về cách thức giao tiếp để truyền nhận dữ liệu qua mạng.", "Là một loại phần mềm giúp ngăn chặn vi rút lây lan trong hệ thống mạng cục bộ.", "Là loại thiết bị phần cứng giúp chuyển đổi tín hiệu số thành sóng tương tự analog.", "Là cơ chế bảo mật tuyệt đối chống lại mọi sự xâm nhập trái phép từ bên ngoài."], 
+            correct: 0, explanation: "Giao thức mạng là tập hợp các quy định, bộ quy tắc về cách thức giao tiếp để truyền và nhận dữ liệu qua mạng." 
+        },
+        { 
+            id: "q2", type: "single", question: "Câu 2: Mạng thông tin toàn cầu Internet hiện nay được các nhà khoa học thiết kế để hoạt động chủ yếu dựa trên bộ giao thức nào?", 
+            options: ["Hoạt động chủ yếu dựa trên bộ giao thức quản lý truyền thông chuẩn TCP/IP.", "Hoạt động chủ yếu dựa trên bộ giao thức truyền tải tín hiệu cục bộ Ethernet.", "Hoạt động chủ yếu dựa trên bộ giao thức chuyển phát thư điện tử chuẩn SMTP.", "Hoạt động chủ yếu dựa trên bộ giao thức phân giải hệ thống tên miền chuẩn DNS."], 
+            correct: 0, explanation: "Internet hoạt động trên nền tảng cốt lõi là bộ giao thức truyền thông TCP/IP." 
+        },
+        { 
+            id: "q3", type: "single", question: "Câu 3: Giao thức mạng IP (Internet Protocol) được thiết kế xoay quanh hai nội dung chuyên môn kĩ thuật vô cùng quan trọng nào?", 
+            options: ["Xoay quanh hai nội dung chính là cách đánh địa chỉ thiết bị mạng và định tuyến.", "Xoay quanh hai nội dung chính là cách bảo mật dữ liệu mạng và quét vi rút độc.", "Xoay quanh hai nội dung chính là cách cấp phát cổng ứng dụng và gộp gói tin.", "Xoay quanh hai nội dung chính là cách tạo giao diện đồ họa và tạo tên miền ảo."], 
+            correct: 0, explanation: "Giao thức IP quản lý hai nội dung thiết yếu là đánh địa chỉ cho các thiết bị và định hướng (định tuyến) đường dẫn gói tin." 
+        },
+        { 
+            id: "q4", type: "single", question: "Câu 4: Theo chuẩn công nghệ hiện tại, một địa chỉ IPv4 tiêu chuẩn được biểu diễn bằng một dãy số có kích thước tổng cộng là bao nhiêu?", 
+            options: ["Kích thước tổng cộng của một địa chỉ mạng IPv4 tiêu chuẩn là đúng sáu byte.", "Kích thước tổng cộng của một địa chỉ mạng IPv4 tiêu chuẩn là đúng tám byte.", "Kích thước tổng cộng của một địa chỉ mạng IPv4 tiêu chuẩn là đúng bốn byte.", "Kích thước tổng cộng của một địa chỉ mạng IPv4 tiêu chuẩn là đúng mười byte."], 
+            correct: 2, explanation: "Địa chỉ IPv4 chuẩn là một dãy số nhị phân có kích thước bằng 4 byte (tức 32 bit)." 
+        },
+        { 
+            id: "q5", type: "single", question: "Câu 5: Đối với các thiết bị mạng, loại địa chỉ nào sau đây được gắn chết vào phần cứng từ khi sản xuất và hoàn toàn không thể thay đổi?", 
+            options: ["Địa chỉ này thường được chuyên gia mạng gọi tên là địa chỉ vật lí chuẩn MAC.", "Địa chỉ này thường được chuyên gia mạng gọi tên là địa chỉ liên mạng IPv4.", "Địa chỉ này thường được chuyên gia mạng gọi tên là địa chỉ liên mạng IPv6.", "Địa chỉ này thường được chuyên gia mạng gọi tên là địa chỉ máy chủ DNS."], 
+            correct: 0, explanation: "Địa chỉ MAC (Media Access Control) là địa chỉ vật lý dài 6 byte được gắn cố định vào phần cứng thiết bị mạng từ nhà máy." 
+        },
+        { 
+            id: "q6", type: "single", question: "Câu 6: Trong bộ giao thức TCP/IP, thành phần TCP (Transmission Control Protocol) chuyên đảm nhận vai trò kĩ thuật cốt lõi nào?", 
+            options: ["Vai trò cốt lõi là thiết lập đường đi ngắn nhất để gói tin di chuyển qua các trạm.", "Vai trò cốt lõi là đảm bảo việc truyền dữ liệu chính xác, tin cậy và không sai sót.", "Vai trò cốt lõi là biên dịch toàn bộ các dải địa chỉ IP thành dạng chữ cho dễ nhớ.", "Vai trò cốt lõi là chuyển đổi tín hiệu điện của cáp quang sang định dạng vô tuyến."], 
+            correct: 1, explanation: "Giao thức TCP chịu trách nhiệm kiểm soát truyền dẫn, đảm bảo dữ liệu đến nơi một cách nguyên vẹn, chính xác và đúng thứ tự." 
+        },
+        { 
+            id: "q7", type: "single", question: "Câu 7: Để giúp người dùng dễ nhớ các trang web thay vì phải gõ địa chỉ IP phức tạp, Internet sử dụng loại giao thức thông minh nào?", 
+            options: ["Hệ thống mạng lưới sử dụng giao thức quản lý hộp thư điện tử chuẩn POP3.", "Hệ thống mạng lưới sử dụng giao thức cấp phát hệ thống tên miền chuẩn DNS.", "Hệ thống mạng lưới sử dụng giao thức truyền thông báo kiểm tra mạng ICMP.", "Hệ thống mạng lưới sử dụng giao thức cấp quyền kiểm soát truyền tin chuẩn TCP."], 
+            correct: 1, explanation: "Hệ thống phân giải tên miền (DNS) cho phép người dùng gõ tên chữ (như edu.vn) thay vì chuỗi số IP khó nhớ." 
+        },
+        { 
+            id: "q8", type: "single", question: "Câu 8: Trong quá trình truyền thông liên mạng, bộ định tuyến Router đóng vai trò quan trọng như thế nào đối với các gói dữ liệu?", 
+            options: ["Đóng vai trò làm cổng chuyển đổi tín hiệu đồ họa và âm thanh đa phương tiện.", "Đóng vai trò là điểm lưu trữ đám mây khổng lồ bảo mật mọi tập tin của cá nhân.", "Đóng vai trò làm phần mềm phát hiện và chặn đứng mọi đoạn mã độc lây nhiễm.", "Đóng vai trò là điểm chuyển mạch, hướng dẫn dữ liệu tìm đường tới mạng nhận."], 
+            correct: 3, explanation: "Router đóng vai trò định hướng đường đi (định tuyến) giúp các gói tin tìm được cách tới thiết bị đích." 
+        },
+        { 
+            id: "q9", type: "single", question: "Câu 9: Ý nghĩa cốt lõi của việc thiết lập và áp dụng các bộ giao thức mạng truyền thông đối với mọi thiết bị máy tính trên toàn cầu là gì?", 
+            options: ["Bảo đảm dữ liệu được gửi và nhận một cách vô cùng chính xác, tin cậy, hiệu quả.", "Bảo đảm hệ thống máy tính có khả năng tự động xử lý mọi lỗi thiết bị phần cứng.", "Bảo đảm người dùng mạng được bảo vệ tuyệt đối khỏi mọi quảng cáo không mời.", "Bảo đảm các nhà mạng viễn thông tự do thu phí người tiêu dùng mức cao nhất."], 
+            correct: 0, explanation: "Các giao thức quy định 'luật' giao tiếp giúp bảo đảm quá trình gửi và nhận dữ liệu diễn ra tin cậy và hiệu quả." 
+        },
+        { 
+            id: "q10", type: "single", question: "Câu 10: Tại sao các giao thức mạng yêu cầu dữ liệu gửi đi phải được chia cắt thành nhiều gói nhỏ có độ dài xác định thay vì truyền liền một mạch?", 
+            options: ["Việc truyền gói dữ liệu quá dài có nguy cơ làm quá tải máy nhận và cản trở cuộc truyền khác.", "Việc truyền gói dữ liệu quá dài khiến hệ điều hành máy tính không thể hiển thị giao diện ảnh.", "Việc truyền gói dữ liệu quá dài làm cho phần mềm quét virus của hệ thống mạng bị treo cứng.", "Việc truyền gói dữ liệu quá dài làm tăng mức tiêu thụ điện năng của màn hình lên mức rủi ro."], 
+            correct: 0, explanation: "Nếu truyền một đoạn dữ liệu vô hạn có thể làm quá tải (tràn bộ đệm) ở máy nhận và chiếm dụng băng thông của người khác." 
+        },
+        { 
+            id: "q11", type: "single", question: "Câu 11: Trong trường hợp nào thì máy tính buộc phải dựa vào địa chỉ IP thay vì địa chỉ vật lý MAC để truyền gửi một tập tin dữ liệu?", 
+            options: ["Khi hai máy tính hoàn toàn thuộc cùng một mạng cục bộ không có thiết bị định tuyến.", "Khi hai máy tính không nằm trong cùng một mạng LAN và cần bộ định tuyến trợ giúp.", "Khi hai máy tính được kết nối trực tiếp với nhau thông qua một cáp nối chéo đặc biệt.", "Khi hai máy tính đều đang cắm vào cùng một thiết bị chia tín hiệu phần cứng Switch."], 
+            correct: 1, explanation: "Khi truyền gửi dữ liệu đi ra ngoài mạng LAN nội bộ, máy tính bắt buộc phải nhờ router định tuyến dựa trên địa chỉ IP của thiết bị đích." 
+        },
+        { 
+            id: "q12", type: "single", question: "Câu 12: Việc giao thức TCP tiến hành cấp phát một số hiệu chuyên biệt gọi là 'cổng ứng dụng' mang lại lợi ích kĩ thuật cụ thể nào?", 
+            options: ["Đảm bảo dữ liệu không bị trộn lẫn giữa các ứng dụng chạy đồng thời trên cùng máy.", "Đảm bảo dung lượng lưu trữ trên hệ thống ổ cứng đạt được độ tối ưu hóa cao nhất.", "Đảm bảo máy tính có thể kết nối ngay lập tức với các màn hình trình chiếu cỡ lớn.", "Đảm bảo thiết bị vi xử lý không bao giờ bị rơi vào tình trạng quá tải do nóng nhiệt."], 
+            correct: 0, explanation: "Nhờ gắn mã cổng ứng dụng, hệ thống mạng lưới mới biết chính xác gói tin nào thuộc về phần mềm duyệt web, gói tin nào thuộc về game để tránh nhầm lẫn." 
+        },
+        { 
+            id: "q13", type: "single", question: "Câu 13: Cơ chế yêu cầu xác nhận dữ liệu của giao thức TCP nhằm mục đích kĩ thuật cốt lõi nào trong quá trình truyền tải tệp tin?", 
+            options: ["Giúp hệ thống tự động đổi tên tệp tin để tránh bị trùng lặp ở bộ lưu trữ cục bộ.", "Giúp bộ vi xử lý máy tính giảm tải đáng kể dung lượng bộ nhớ RAM đang tiêu thụ.", "Giúp cho nơi gửi biết các gói tin đến có sai sót hoặc thất lạc hay không để gửi lại.", "Giúp cho hệ điều hành lập tức tắt nguồn thiết bị khi phát hiện có mã độc xâm nhập."], 
+            correct: 2, explanation: "Máy nhận sẽ phải trả tín hiệu báo cáo về (ACK). Nếu không thấy báo, máy gửi sẽ gửi lại gói dữ liệu bị lỗi/thất lạc để đảm bảo chính xác." 
+        },
+        { 
+            id: "q14", type: "single", question: "Câu 14: Đặc điểm kĩ thuật nào giúp phương pháp định tuyến động tỏ ra ưu việt và khác biệt hoàn toàn so với mô hình định tuyến tĩnh?", 
+            options: ["Cho phép tự động mã hóa mọi thông điệp thành các chuỗi kí tự cực kì phức tạp.", "Cho phép có thể thay đổi cổng gửi đi tuỳ thuộc vào điều kiện môi trường mạng cụ thể.", "Cho phép thiết bị Router liên tục tự khởi động lại nhằm tránh hiện tượng bị treo máy.", "Cho phép máy tính người dùng trực tiếp in ra hóa đơn thanh toán thông qua Internet."], 
+            correct: 1, explanation: "Định tuyến động giúp Router linh hoạt tự phân tích, cập nhật tuyến đường và thay đổi cổng dựa trên tình trạng băng thông tắc nghẽn." 
+        },
+        { 
+            id: "q15", type: "single", question: "Câu 15: Việc chia tách dữ liệu thành hàng nghìn gói nhỏ li ti mang lại ưu điểm tuyệt vời nào cho hạ tầng đường truyền vật lý toàn cầu?", 
+            options: ["Tính năng này cho phép nhiều cuộc truyền khác nhau thực hiện xen kẽ trên cùng đường truyền.", "Tính năng này cho phép tự động chuyển hóa cáp đồng tiêu chuẩn thành cáp quang siêu tốc.", "Tính năng này cho phép chặn đứng hoàn toàn việc tin tặc có thể đánh cắp những dữ liệu lớn.", "Tính năng này cho phép mạng máy tính loại bỏ hẳn nhu cầu sử dụng các bộ định tuyến Router."], 
+            correct: 0, explanation: "Thay vì độc chiếm một sợi cáp trong thời gian dài, các gói tin nhỏ của nhiều máy có thể luân phiên chạy đan xen lẫn nhau trên hệ thống dây." 
+        },
+        { 
+            id: "q16", type: "single", question: "Câu 16: Sự phân biệt rõ rệt giữa hai loại địa chỉ mạng quan trọng nhất là MAC (6 byte) và IPv4 (4 byte) được thể hiện chủ yếu ở khía cạnh nào?", 
+            options: ["Địa chỉ MAC là địa chỉ gắn chết theo phần cứng, còn địa chỉ IP gán cho thiết bị có thể thay đổi.", "Địa chỉ MAC là để mã hóa đường truyền hình ảnh, còn địa chỉ IP dùng để mã hóa truyền âm thanh.", "Địa chỉ MAC chỉ có giá trị khi dùng wifi sóng ngắn, còn địa chỉ IP dùng riêng cho mạng truyền hình.", "Địa chỉ MAC không bao giờ được dùng để truyền tin mạng LAN, còn địa chỉ IP bị cấm ở mạng WAN."], 
+            correct: 0, explanation: "Địa chỉ MAC được nạp vĩnh viễn vào card mạng vật lý, còn IP là địa chỉ logic do thiết bị trung tâm (Router) cấp phát động cho từng mạng." 
+        },
+        { 
+            id: "q17", type: "single", question: "Câu 17: Khi bạn Bình hoàn tất việc soạn thảo một bức thư điện tử và bấm nút gửi đến nhóm lớp, dữ liệu thư cùng địa chỉ sẽ được đóng gói truyền đi. Máy tính của Bình đang thực thi chính xác giao thức truyền thông nào?", 
+            options: ["Giao thức chuyển phát siêu văn bản bảo mật quốc tế có tên viết tắt chuẩn là HTTP.", "Giao thức truyền tải hệ thống thư tín điện tử đơn giản có tên viết tắt chuẩn là SMTP.", "Giao thức cấp phát và phân giải địa chỉ tên miền mạng có tên viết tắt chuẩn là DNS.", "Giao thức quản lí hệ thống điều khiển truyền dẫn mạng có tên viết tắt chuẩn là ICMP."], 
+            correct: 1, explanation: "Giao thức đảm nhận việc đóng gói và chuyển phát các bức thư điện tử (email) đi là SMTP (Simple Mail Transfer Protocol)." 
+        },
+        { 
+            id: "q18", type: "single", question: "Câu 18: Khi tải một bộ phim dung lượng lớn, máy tính của bạn Tuấn tiếp nhận hàng triệu gói dữ liệu nhỏ bị đảo lộn không theo trình tự do đi qua nhiều đường khác nhau. Thành phần nào của bộ giao thức sẽ đứng ra tổ chức, ráp nối chúng lại chuẩn xác?", 
+            options: ["Thành phần chuyên xử lý ngôn ngữ siêu văn bản đồ họa tên là giao thức mạng HTTP.", "Thành phần chuyên xử lý định tuyến và tìm đường đi gói tin tên là giao thức mạng IP.", "Thành phần chuyên kiểm soát và sắp xếp gói tin ứng dụng tên là giao thức mạng TCP.", "Thành phần chuyên nhận diện và gắn nhãn thiết bị phần cứng tên là giao thức Ethernet."], 
+            correct: 2, explanation: "Nhiệm vụ kiểm tra số thứ tự để sắp xếp, ráp nối lại các mảnh gói tin một cách chính xác là đặc trưng của TCP." 
+        },
+        { 
+            id: "q19", type: "single", question: "Câu 19: Bạn Lan muốn thiết lập lại hệ thống kết nối mạng để thay thế dải số '192.168.1.5' hiện tại trên máy tính vì cảm thấy không thích hợp. Dựa vào kiến thức về địa chỉ, Lan hoàn toàn có thể tự thay đổi được cấu hình nào?", 
+            options: ["Bạn Lan hoàn toàn có thể thay đổi được địa chỉ IP bằng cấu hình, nhưng không thể đổi địa chỉ MAC.", "Bạn Lan hoàn toàn có thể thay đổi được địa chỉ MAC bằng cấu hình, nhưng không thể đổi địa chỉ IP.", "Bạn Lan hoàn toàn có thể thay đổi được cùng lúc cả địa chỉ IP hiện tại lẫn thông số địa chỉ thẻ MAC.", "Bạn Lan hoàn toàn không thể thay đổi được bất cứ địa chỉ nào vì cả hai đều hàn cố định vào vi mạch."], 
+            correct: 0, explanation: "192.168.1.5 là một địa chỉ IP nội bộ, là địa chỉ logic mà người dùng có thể tự cấu hình và thay đổi, còn MAC thì không thể thay đổi." 
+        },
+        { 
+            id: "q20", type: "single", question: "Câu 20: Khi bạn An gửi một tập tin từ máy ở Việt Nam sang một máy chủ đặt tại Mỹ, nếu gói tin đi qua trạm Router nhưng Router này không có thông tin chi tiết về đường đi trực tiếp tới Mỹ trong bảng định tuyến, nó sẽ phản ứng thế nào?", 
+            options: ["Bộ định tuyến Router sẽ tự động ném bỏ gói tin đó vào thùng rác kĩ thuật và báo lỗi cho bạn An.", "Bộ định tuyến Router sẽ lưu tạm gói tin đó lại vào ổ đĩa chờ đến khi kĩ thuật viên tự tay cập nhật.", "Bộ định tuyến Router sẽ chuyển tiếp gói tin đó đi một cách ngẫu nhiên tới bất kỳ một cổng mạng nào.", "Bộ định tuyến Router sẽ chuyển tiếp gói tin đó dọc theo đường dẫn của cổng gửi đi mặc định sẵn có."], 
+            correct: 3, explanation: "Nếu không tìm thấy tuyến đường tối ưu, Router sẽ đẩy gói tin sang cổng mặc định (default route) để hy vọng Router tiếp theo sẽ biết đường chuyển tiếp." 
+        },
+        { 
+            id: "q21", type: "single", question: "Câu 21: Khi Dũng lướt web tải tài liệu bài tập, Dũng chỉ cần gõ dải kí tự moet.edu.vn rất đơn giản thay vì phải nhớ và nhập một chuỗi số IP dài ngoằng cực kì phức tạp. Sự tiện lợi ưu việt này được mang lại bởi tính năng của giao thức nào?", 
+            options: ["Nó được mang lại bởi tính năng của giao thức hệ thống phân giải tên miền quốc tế DNS.", "Nó được mang lại bởi tính năng của giao thức thiết lập kết nối mã hóa truyền thông SSH.", "Nó được mang lại bởi tính năng của giao thức nhận và chuyển tải thư tín hộp thư POP3.", "Nó được mang lại bởi tính năng của giao thức quản lý điều khiển đường truyền dữ liệu IP."], 
+            correct: 0, explanation: "Giao thức Hệ thống Tên miền (DNS) đóng vai trò làm cuốn danh bạ chuyển đổi từ địa chỉ IP số học sang địa chỉ chữ viết dễ nhớ." 
+        },
+        { 
+            id: "q22", type: "single", question: "Câu 22: Trong giờ thực hành mạng, thấy máy tính của bạn An báo biểu tượng chéo đỏ ở kết nối, thầy Hùng hướng dẫn An gõ dòng lệnh 'ping' trên màn hình đen để gửi tín hiệu thăm dò đến máy chủ. Tiện ích lệnh này thuộc về giao thức đặc biệt nào?", 
+            options: ["Lệnh thăm dò này hoạt động dựa trên nguyên lý của giao thức thông báo kiểm soát ICMP.", "Lệnh thăm dò này hoạt động dựa trên nguyên lý của giao thức truyền tải siêu văn bản HTTP.", "Lệnh thăm dò này hoạt động dựa trên nguyên lý của giao thức truy cập thư tín điện tử IMAP.", "Lệnh thăm dò này hoạt động dựa trên nguyên lý của giao thức mạng lưới nội bộ Ethernet."], 
+            correct: 0, explanation: "Lệnh ping được sử dụng để thăm dò tình trạng kết nối. Nó hoạt động dựa trên giao thức thông báo kiểm soát mạng ICMP." 
+        },
+        { 
+            id: "q23", type: "single", question: "Câu 23: Khi Mai vừa gọi điện thoại video cho bạn bè vừa song song tải một bản nhạc dung lượng lớn, hệ thống máy tính vẫn phân loại rành mạch hai luồng tín hiệu mà không hề trộn lẫn hình ảnh vào file nhạc. Tính năng nào của TCP bảo hộ quá trình này?", 
+            options: ["Tính năng tự động đánh số thứ tự cho các thiết bị định tuyến trong quá trình tải.", "Tính năng thực hiện việc cấp phát số hiệu cổng ứng dụng chuyên biệt cho mỗi luồng.", "Tính năng yêu cầu nơi nhận liên tục gửi xác nhận phản hồi chống lỗi cho người gửi.", "Tính năng chia dữ liệu thành những gói rất dài nhằm giúp đẩy nhanh quá trình duyệt."], 
+            correct: 1, explanation: "Cơ chế 'cổng ứng dụng' (port) của TCP giúp máy tính phân chia gói tin gửi đến các phần mềm khác nhau mà không bao giờ bị loạn." 
+        },
+        { 
+            id: "q24", type: "single", question: "Câu 24: Mặc dù Tuấn vừa mua một chiếc máy tính xách tay cũ kĩ, sau đó cài đặt mới hoàn toàn lại hệ điều hành Windows và đăng nhập vào một điểm truy cập Wi-Fi hoàn toàn mới, có một thông số mạng nội tại của máy sẽ vĩnh viễn không bao giờ thay đổi. Đó là gì?", 
+            options: ["Đó chính là hệ thống địa chỉ định tuyến mạng lưới theo giao thức chuẩn Internet IPv6.", "Đó chính là hệ thống địa chỉ truyền thông logic theo giao thức chuẩn Internet IPv4.", "Đó chính là hệ thống địa chỉ mã hóa phần cứng quản lý truy cập vật lý chuẩn MAC.", "Đó chính là hệ thống địa chỉ dịch vụ nhận phát thư tín hộp thư điện tử chuẩn IMAP."], 
+            correct: 2, explanation: "Địa chỉ vật lý MAC là mã số độc bản được gán thẳng vào phần cứng (card Wi-Fi), nó sẽ theo máy tính suốt vòng đời mà không thay đổi." 
+        },
+        
+        { id: "qII_1", type: "tf_cluster", context: "Câu 1: Bạn An đang chuẩn bị tài liệu thuyết trình về nguyên lí hoạt động của mạng máy tính và giao thức truyền thông. Đánh giá tính Đúng/Sai trong các nhận định của An:", items: [
+            { id: "a", text: "a) Khái niệm 'giao thức mạng' (network protocol) được dùng để định nghĩa một tập hợp các quy định khắt khe về cách thức giao tiếp nhằm truyền tải nhận dữ liệu hiệu quả.", correct: true, expl: "Giao thức mạng là tập hợp các quy định về cách thức giao tiếp để truyền nhận dữ liệu qua mạng." },
+            { id: "b", text: "b) Theo tiêu chuẩn của giao thức mạng cục bộ Ethernet, hệ thống máy tính được phép liên tục truyền một khối lượng gói tin dài không giới hạn độ lớn nhằm tăng tối đa tốc độ.", correct: false, expl: "Giữa hai máy tính không thể truyền một lượng tin dài không giới hạn vì có thể làm quá tải máy nhận; phải chia thành các gói dữ liệu có độ dài xác định." },
+            { id: "c", text: "c) Xét về đặc tính kỹ thuật, địa chỉ MAC là một dải mã logic gồm 4 byte, hoàn toàn có thể được người sử dụng thay đổi và gán lại một cách tự do tuỳ theo sở thích cấu hình mạng.", correct: false, expl: "Địa chỉ MAC là địa chỉ 6 byte gắn với phần cứng, không thay đổi được (địa chỉ IP mới là 4 byte và thay đổi được)." },
+            { id: "d", text: "d) Khi bạn An chia sẻ một thư mục nội bộ bằng kết nối dây cáp với bạn Bình, hệ thống cáp tự động từ chối đính kèm các mã kiểm tra phát hiện lỗi vì môi trường mạng LAN vốn dĩ đã vô cùng an toàn.", correct: false, expl: "Giao thức mạng (như Ethernet) luôn quy định dữ liệu chuyển đi phải kèm theo một mã kiểm tra để máy nhận phát hiện lỗi truyền, dù trong mạng LAN hay WAN." }
+        ]},
+        { id: "qII_2", type: "tf_cluster", context: "Câu 2: Trong tiết học Tin học, thầy Hùng phân tích sâu về giao thức cốt lõi IP và nguyên lý cấu trúc định tuyến (routing). Các học sinh lắng nghe và đưa ra một vài ghi chép sau, ý nào là Đúng/Sai:", items: [
+            { id: "a", text: "a) Giao thức mạng IP được thiết lập với hai nội dung nền tảng chính: cách thức đánh địa chỉ kĩ thuật cho thiết bị và cơ chế định tuyến để tìm đường dẫn dắt gói dữ liệu.", correct: true, expl: "Giao thức IP có hai nội dung chính là cách đánh địa chỉ và định tuyến để dẫn dữ liệu." },
+            { id: "b", text: "b) Khi ứng dụng phương pháp định tuyến tĩnh trong hệ thống, bộ định tuyến Router sẽ được tự do thay đổi đường gửi dữ liệu liên tục tuỳ thuộc vào điều kiện mật độ giao thông mạng lưới.", correct: false, expl: "Phương pháp định tuyến có 'thay đổi cổng gửi đi tuỳ thuộc vào điều kiện cụ thể' được gọi là 'định tuyến động', không phải 'định tuyến tĩnh' (định tuyến tĩnh dùng bảng cố định)." },
+            { id: "c", text: "c) Các dải địa chỉ định danh IPv4 chuẩn mực trên mạng Internet sẽ luôn luôn bao gồm cấu trúc độ dài bằng 4 byte và thường được viết theo định dạng thập phân có các dấu chấm.", correct: true, expl: "Mỗi địa chỉ IPv4 là một số 4 byte, thường được viết theo kiểu 'dot decimal' (phân cách bởi dấu chấm)." },
+            { id: "d", text: "d) Nhằm tiến hành tải trực tiếp một kho tài liệu vô cùng khổng lồ từ máy chủ đặt tại nước ngoài, bạn Tuấn có thể thiết lập bỏ qua địa chỉ IP và chỉ cần dùng riêng địa chỉ vật lí MAC là đã tải thành công.", correct: false, expl: "Dữ liệu ngoài mạng LAN không thể truyền trực tiếp chỉ dựa vào địa chỉ MAC. Nó bắt buộc phải gửi dựa trên địa chỉ IP thông qua sự hỗ trợ của các router." }
+        ]},
+        { id: "qII_3", type: "tf_cluster", context: "Câu 3: Bạn Lan nghiên cứu chuyên đề về nguyên tắc vận hành của bộ giao thức TCP (Transmission Control Protocol) hỗ trợ điều khiển truyền tải. Các nhận định chuyên môn dưới đây của Lan là Đúng hay Sai:", items: [
+            { id: "a", text: "a) Vai trò chức năng vĩ mô nhất của giao thức TCP là cung cấp cơ chế bảo đảm quy trình kết nối và truyền tin diễn ra một cách vô cùng chính xác, tin cậy tuyệt đối và hạn chế mọi sai sót.", correct: true, expl: "Giao thức TCP đảm bảo việc truyền tin cậy, không có sai sót, chính xác và hiệu quả." },
+            { id: "b", text: "b) Cơ chế khắt khe về việc đánh số thứ tự gói tin của bộ giao thức TCP có năng lực giúp các thiết bị đầu cuối tự động tạo ra những địa chỉ IP mạng hoàn toàn mới lạ cho mỗi một lần kết nối.", correct: false, expl: "Cơ chế đánh số thứ tự gói tin của TCP nhằm mục đích để ở nơi nhận, các gói tin 'được ráp lại đúng thứ tự', chứ không liên quan đến việc tạo địa chỉ IP mới." },
+            { id: "c", text: "c) Việc thực hiện cắt nhỏ toàn bộ thông điệp gốc ra thành rất nhiều các gói dữ liệu riêng lẻ cho phép vô số cuộc hội thoại khác nhau có thể truyền xen kẽ liên tục trên cùng một đường dây cáp quang.", correct: true, expl: "Việc tách dữ liệu thành nhiều gói cho phép nhiều cuộc truyền khác nhau thực hiện xen kẽ nhau trên cùng đường truyền vật lí." },
+            { id: "d", text: "d) Khi bạn Bình vừa bật ứng dụng xem phim trực tuyến vừa khởi chạy ứng dụng trò chơi điện tử nhiều người, giao thức phân giải IP chính là cơ chế kĩ thuật duy nhất trực tiếp giúp hệ thống phân tách luồng dữ liệu riêng.", correct: false, expl: "Giao thức IP chỉ đảm bảo chuyển dữ liệu giữa các mạng. Cơ chế giúp phân biệt dữ liệu của các ứng dụng chạy đồng thời là do giao thức TCP (nhờ việc cấp phát 'cổng ứng dụng')." }
+        ]},
+        { id: "qII_4", type: "tf_cluster", context: "Câu 4: Trong kỳ thi thực hành kiến thức an ninh mạng và giao thức truyền thông, tổ thảo luận đưa ra các quan điểm quan trọng liên quan đến các giao thức HTTP, DNS và SMTP. Những quan điểm này là Đúng hay Sai:", items: [
+            { id: "a", text: "a) Chuẩn giao thức HTTP (Hypertext Transmission Protocol) là bộ quy tắc chuyên biệt được hệ thống máy tính sử dụng riêng vào việc quy định cách thức mã hóa và biểu diễn các trang web hiển thị.", correct: true, expl: "HTTP là giao thức quy định cách biểu diễn (mã hoá) các trang web." },
+            { id: "b", text: "b) Giao thức hệ thống tên miền DNS mang lại sự tiện ích vô cùng to lớn bằng cách cho phép người duyệt web sử dụng hệ thống tên bằng chữ dễ ghi nhớ để thay thế cho những dải số địa chỉ IP phức tạp.", correct: true, expl: "DNS cho phép dùng hệ thống tên bằng chữ thay thế cho địa chỉ IP vốn khó nhớ." },
+            { id: "c", text: "c) Theo kiến trúc truyền thống, giao thức SMTP (Simple Mail Transfer Protocol) được thiết kế và quy định chặt chẽ nhằm phục vụ mục đích duy nhất là đóng gói hỗ trợ luân chuyển các hệ thống thư tín điện tử.", correct: true, expl: "Các quy định liên quan đến việc gửi thư điện tử có tên là giao thức SMTP." },
+            { id: "d", text: "d) Để có thể thực hành nhanh thao tác kiểm tra tính liên tục của đường truyền dẫn tới máy chủ học tập, Dũng gõ lệnh lệnh ping, công cụ chuyên biệt này hoạt động hoàn toàn dựa vào nguyên lí của giao thức POP3.", correct: false, expl: "Lệnh ping hoạt động dựa trên giao thức ICMP (Internet Control Message Protocol), không phải giao thức nhận thư POP3." }
+        ]}
+    ];
+
+    window.startQuizAction = function() {
+        try {
+            const errDiv = document.getElementById('login-error');
+            if(errDiv) errDiv.classList.add('hidden');
+            
+            const nameEl = document.getElementById('hoTen');
+            const lopEl = document.getElementById('lop');
+            
+            const name = nameEl.value.trim();
+            const lop = lopEl.value.trim();
+            
+            if (!name || !lop) {
+                if(errDiv) {
+                    errDiv.innerText = "⚠️ Vui lòng nhập đầy đủ Họ tên và Lớp!";
+                    errDiv.classList.remove('hidden');
+                } else {
+                    alert("⚠️ Vui lòng nhập đầy đủ Họ tên và Lớp!");
+                }
+                return;
+            }
+            
+            currentStudent = { hoTen: name, lop: lop, maDe: 'bài 4', tenDe: 'Đề Kiểm Tra Bài 4' };
+            currentQuestions = JSON.parse(JSON.stringify(exam_data));
+            quizStartTime = new Date();
+            
+            setTimeout(() => { isQuizStarted = true; }, 1000);
+            showSection('quiz');
+            
+            userAnswers = {};
+            window.renderAllQuestions();
+            startTimer(45 * 60); 
+            
+        } catch (error) {
+            alert("❌ Đã xảy ra lỗi khởi tạo bài thi: " + error.message + ".");
+            console.error(error);
+        }
+    };
+
+    window.viewScoresAction = function() {
+        searchTerm = ''; 
+        document.getElementById('search-student').value = '';
+        currentPage = 1;
+
+        if (database) {
+            scoresRef.once('value').then((snapshot) => {
+                const data = snapshot.val();
+                allScores = data ? Object.keys(data).map(key => ({...data[key], id: key})) : [];
+                window.renderScores();
+                showSection('scores');
+            });
+        }
+    };
+
+    window.searchStudent = function(val) {
+        searchTerm = val.toLowerCase();
+        currentPage = 1;
+        window.renderScores();
+    };
+
+    window.changePage = function(page) {
+        currentPage = page;
+        window.renderScores();
+    };
+
+    window.goHome = function() {
+        if(document.getElementById('hoTen')) document.getElementById('hoTen').value = ''; 
+        if(document.getElementById('lop')) document.getElementById('lop').value = ''; 
+        clearInterval(timerInterval);
+        showSection('login');
+    };
+
+    function getTotalScoreItems() { return currentQuestions.length; }
+
+    function getAnsweredCount() {
+        let count = 0;
+        currentQuestions.forEach(q => {
+            if (q.type === 'single') {
+                if (userAnswers[q.id] !== undefined) count++;
+            } else if (q.type === 'tf_cluster') {
+                let answeredItems = 0;
+                q.items.forEach(item => {
+                    if (userAnswers[q.id + '_' + item.id] !== undefined) answeredItems++;
+                });
+                if (answeredItems === 4) count++; 
+            }
+        });
+        return count;
+    }
+
+   window.selectAnswer = function(qId, val, type) {
+        if (type === 'tf') {
+            userAnswers[qId] = val;
+            const btnT = document.getElementById(`btnT_${qId}`);
+            const btnF = document.getElementById(`btnF_${qId}`);
+            if (val === true) {
+                btnT.classList.add('selected'); btnT.classList.remove('bg-white');
+                btnF.classList.remove('selected'); btnF.classList.add('bg-white');
+            } else {
+                btnF.classList.add('selected'); btnF.classList.remove('bg-white');
+                btnT.classList.remove('selected'); btnT.classList.add('bg-white');
+            }
+        } else if (type === 'single') {
+            userAnswers[qId] = val;
+        }
+        
+        requestAnimationFrame(() => {
+            const pgText = document.getElementById('progress-text');
+            if(pgText) pgText.innerText = `${getAnsweredCount()}/${getTotalScoreItems()}`;
+        });
+    };
+
+    window.renderAllQuestions = function() {
+        if (!currentQuestions || currentQuestions.length === 0) return;
+        const container = document.getElementById('question-container');
+        if(!container) return;
+
+        let html = '';
+        let currentType = '';
+
+        currentQuestions.forEach((q) => {
+            if (q.type !== currentType) {
+                currentType = q.type;
+                let headerText = ''; let roman = '';
+                if(currentType === 'single') { headerText = 'TRẮC NGHIỆM NHIỀU PHƯƠNG ÁN LỰA CHỌN'; roman = 'I'; }
+                if(currentType === 'tf_cluster') { headerText = 'TRẮC NGHIỆM ĐÚNG/SAI'; roman = 'II'; }
+                
+                html += `<div class="flex items-center gap-3 mt-8 mb-4 border-b-2 border-blue-100 pb-3"><span class="bg-gradient-to-br from-blue-500 to-indigo-600 text-white w-14 h-14 flex items-center justify-center rounded-xl font-black text-2xl shadow-md">${roman}</span><h3 class="text-2xl sm:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-700 to-indigo-700 tracking-wide uppercase">${headerText}</h3></div>`;
+            }
+
+            html += `<div class="fade-in w-full bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-blue-100 relative mb-6 hover:shadow-md transition-shadow">`;
+            
+            if (q.type === 'single') {
+                const uAns = userAnswers[q.id];
+                html += `<div class="flex gap-4 mb-5"><div class="w-full math-scroll"><p class="text-xl font-bold text-red-600 mt-1 leading-snug tracking-tight">${q.question}</p></div></div>`;
+                html += `<div class="space-y-4 md:pl-6 mt-6">`;
+                q.options.forEach((opt, i) => {
+                    const isChecked = (uAns === i) ? 'checked' : '';
+                    html += `<div class="flex items-center">
+                        <input type="radio" id="opt_${q.id}_${i}" name="q_${q.id}" value="${i}" class="hidden single-radio" ${isChecked} onchange="window.selectAnswer('${q.id}', ${i}, 'single')">
+                        <label for="opt_${q.id}_${i}" class="option-label w-full p-4 border-2 border-gray-200 rounded-2xl flex items-center gap-4 bg-white shadow-sm font-bold text-lg hover:border-blue-300">
+                            <div class="w-12 h-12 rounded-xl border-2 border-gray-300 flex items-center justify-center text-lg font-black text-gray-400 flex-shrink-0 bg-gray-50">${String.fromCharCode(65 + i)}</div>
+                            <div class="text-gray-700 leading-relaxed math-scroll flex-1">${opt}</div>
+                        </label>
+                    </div>`;
+                });
+                html += `</div>`;
+            } 
+            else if (q.type === 'tf_cluster') {
+                html += `<div class="bg-red-50 text-red-700 p-5 rounded-xl font-bold mb-4 border-2 border-red-100 text-xl leading-relaxed math-scroll">${q.context}</div>`;
+                html += `<div class="space-y-4 mt-6">`;
+                q.items.forEach((item) => {
+                    const combinedId = q.id + '_' + item.id;
+                    let ans = userAnswers[combinedId];
+                    let btnT = ans === true ? 'selected' : 'bg-white';
+                    let btnF = ans === false ? 'selected' : 'bg-white';
+
+                    html += `<div class="p-5 border-2 border-gray-100 rounded-2xl bg-white shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4 transition-all hover:border-blue-200">
+                        <div class="font-bold text-gray-800 flex-1 text-lg math-scroll">${item.text}</div>
+                        <div class="flex gap-3 shrink-0">
+                            <button id="btnT_${combinedId}" onclick="window.selectAnswer('${combinedId}', true, 'tf')" class="btn-tf w-24 sm:w-28 py-3 rounded-xl font-extrabold text-lg ${btnT}">ĐÚNG</button>
+                            <button id="btnF_${combinedId}" onclick="window.selectAnswer('${combinedId}', false, 'tf')" class="btn-tf w-24 sm:w-28 py-3 rounded-xl font-extrabold text-lg ${btnF}">SAI</button>
+                        </div>
+                    </div>`;
+                });
+                html += `</div>`;
+            } 
+            html += `</div>`;
+        });
+        
+        container.innerHTML = html;
+        const pgText = document.getElementById('progress-text');
+        if(pgText) pgText.innerText = `${getAnsweredCount()}/${getTotalScoreItems()}`;
+    };
+
+    function formatDuration(sec) {
+        const m = Math.floor(sec / 60); const s = sec % 60;
+        return `${m}p ${s}s`;
+    }
+
+    window.promptSubmit = function() {
+        if (!isQuizStarted) return;
+        const total = getTotalScoreItems();
+        const answered = getAnsweredCount();
+        
+        document.getElementById('confirm-answered').innerText = answered;
+        document.getElementById('confirm-total').innerText = total;
+        
+        const modal = document.getElementById('confirm-submit-modal');
+        modal.classList.remove('hidden');
+    };
+
+    window.closeConfirmModal = function() {
+        const modal = document.getElementById('confirm-submit-modal');
+        modal.classList.add('hidden');
+    };
+
+    window.executeSubmit = function() {
+        window.closeConfirmModal();
+        isQuizStarted = false; 
+        quizEndTime = new Date();
+        clearInterval(timerInterval);
+        
+        let score = 0;
+
+        currentQuestions.forEach(q => {
+            if (q.type === 'single') {
+                if (userAnswers[q.id] === q.correct) score += 0.25;
+            } else if (q.type === 'tf_cluster') {
+                q.items.forEach(item => { if (userAnswers[q.id + '_' + item.id] === item.correct) score += 0.25; });
+            }
+        });
+
+        score = score.toFixed(2); 
+
+        const record = {
+            hoTen: currentStudent.hoTen, lop: currentStudent.lop, tenDe: currentStudent.tenDe, maDe: currentStudent.maDe,
+            diem: parseFloat(score),
+            startTime: quizStartTime.toLocaleTimeString('vi-VN') + ' ' + quizStartTime.toLocaleDateString('vi-VN'),
+            endTime: quizEndTime.toLocaleTimeString('vi-VN') + ' ' + quizEndTime.toLocaleDateString('vi-VN'),
+            duration: formatDuration(Math.floor((quizEndTime - quizStartTime) / 1000)),
+            thoiGian: new Date().toISOString(), deviceId: deviceId,
+            userAnswers: userAnswers 
+        };
+        
+        if(database) {
+            scoresRef.push(record, () => { window.showModalResult(score, record.duration); });
+        } else {
+            window.showModalResult(score, record.duration);
+        }
+    };
+
+    window.showModalResult = function(score, dur) {
+        ['login', 'quiz', 'scores', 'review'].forEach(s => {
+            const el = document.getElementById(s+'-section');
+            if(el) el.classList.add('hidden');
+        });
+        const resEl = document.getElementById('result-section');
+        if(resEl) resEl.classList.remove('hidden');
+        const contentEl = document.getElementById('result-content');
+        if(contentEl) contentEl.innerHTML = `
+        <div class="flex justify-start mb-4">
+            <button onclick="window.goHome()" class="px-5 py-3 bg-gray-100 text-gray-700 rounded-xl font-bold hover:bg-gray-200 transition-colors shadow-sm border border-gray-200 text-lg">🏠 Trang chủ</button>
+        </div>
+        <div class="text-center">
+            <div class="text-7xl mb-4 animate-bounce">🎉</div>
+            <h3 class="text-3xl font-black text-emerald-600 mb-2">Hoàn thành bài thi!</h3>
+            <p class="text-gray-600 mb-6 mt-2"><span class="font-extrabold text-blue-700 text-xl uppercase tracking-wider">${currentStudent.hoTen} - Lớp ${currentStudent.lop}</span></p>
+        </div>
+        <div class="bg-blue-50 border-2 border-blue-100 rounded-3xl p-8 mb-6 shadow-inner relative text-center">
+            <div class="text-base text-blue-500 font-extrabold mb-2 uppercase tracking-widest">ĐIỂM SỐ CỦA BẠN</div>
+            <div class="text-7xl font-black text-blue-600 drop-shadow-sm">${score} <span class="text-3xl text-gray-400">/ 10</span></div>
+            <div class="text-lg font-extrabold text-indigo-600 mt-5 bg-white inline-block px-6 py-3 rounded-full shadow-sm border border-blue-100">Thời gian làm bài: ${dur}</div>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+            <button onclick="window.reviewQuiz()" class="w-full py-4 bg-gradient-to-r from-indigo-500 to-purple-500 text-white rounded-xl font-extrabold shadow-sm hover:shadow-md transition-colors text-xl">📝 Xem lại bài</button>
+            <button onclick="window.viewScoresAction()" class="w-full py-4 bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-xl font-extrabold shadow-sm hover:shadow-md transition-colors text-xl">🏆 Bảng điểm</button>
+        </div>`;
+    };
+
+    function getStatusBadge(isCorrect, isUnanswered) {
+        if (isUnanswered) return `<div class="mt-4 mb-2 inline-block px-4 py-2 bg-yellow-100 text-yellow-800 text-base font-black rounded-lg border border-yellow-300 shadow-sm">⚠️ BẠN CHƯA LÀM CÂU NÀY</div>`;
+        if (isCorrect) return `<div class="mt-4 mb-2 inline-block px-4 py-2 bg-emerald-100 text-emerald-800 text-base font-black rounded-lg border border-emerald-300 shadow-sm">✅ BẠN LÀM ĐÚNG RỒI</div>`;
+        return `<div class="mt-4 mb-2 inline-block px-4 py-2 bg-red-100 text-red-800 text-base font-black rounded-lg border border-red-300 shadow-sm">❌ BẠN LÀM SAI RỒI</div>`;
+    }
+
+    window.reviewQuiz = function() {
+        showSection('review');
+        const container = document.getElementById('review-content');
+        if(!container) return;
+        let html = '';
+
+        currentQuestions.forEach((q) => {
+            if (q.type === 'single') {
+                let uAns = userAnswers[q.id];
+                let isUnanswered = (uAns === undefined);
+                let isCorrect = (uAns === q.correct);
+                let borderColor = isCorrect ? 'border-emerald-300 bg-emerald-50' : 'border-red-300 bg-red-50';
+                
+                html += `<div class="p-6 border-2 rounded-2xl shadow-sm mb-6 ${borderColor}">`;
+                html += `<div class="font-bold text-xl text-red-600 mb-5 leading-relaxed math-scroll">${q.question}</div>`;
+                html += `<div class="space-y-3">`;
+                
+                q.options.forEach((opt, i) => {
+                    let optBg = ''; let iconHtml = '';
+                    if (q.correct === i) {
+                        optBg = 'bg-emerald-100 text-emerald-900 border-emerald-400 border-2'; 
+                        iconHtml = '<div class="text-3xl drop-shadow-sm ml-auto pl-2 flex-shrink-0">✅</div>';
+                    } else if (uAns === i && !isCorrect) {
+                        optBg = 'bg-red-100 text-red-900 line-through border-red-400 border-2'; 
+                        iconHtml = '<div class="text-3xl drop-shadow-sm ml-auto pl-2 flex-shrink-0">❌</div>';
+                    } else { optBg = 'bg-white text-slate-700 border border-slate-200'; }
+
+                    html += `<div class="p-4 rounded-xl ${optBg} flex items-center gap-4"><div class="w-10 h-10 flex items-center justify-center rounded-lg bg-white/50 text-base font-black shadow-sm flex-shrink-0">${String.fromCharCode(65 + i)}</div><div class="${(q.correct === i || uAns === i) ? 'font-semibold' : 'font-medium'} flex-1 text-lg math-scroll">${opt}</div>${iconHtml}</div>`;
+                });
+                html += `</div>`;
+                
+                html += getStatusBadge(isCorrect, isUnanswered); 
+                
+                if (q.explanation) {
+                    html += `<div class="review-explanation mt-3 pt-3 border-t-2 border-gray-200"><p class="text-base font-black uppercase tracking-widest text-blue-600 mb-2">💡 Giải chi tiết:</p><p class="text-black font-medium text-lg leading-loose math-scroll">${q.explanation}</p></div>`;
+                }
+                html += `</div>`;
+            } 
+            else if (q.type === 'tf_cluster') {
+                html += `<div class="p-6 border-2 border-indigo-200 bg-indigo-50 rounded-2xl shadow-sm mb-6">`;
+                html += `<div class="font-bold text-xl text-indigo-800 mb-5 math-scroll">${q.context}</div>`;
+                html += `<div class="space-y-5">`;
+                q.items.forEach(item => {
+                    let uAns = userAnswers[q.id + '_' + item.id];
+                    let isUnanswered = (uAns === undefined);
+                    let isCorrect = (uAns === item.correct);
+                    let iconHtml = isCorrect ? '✅' : '❌';
+                    let ansText = item.correct ? 'ĐÚNG' : 'SAI';
+
+                    html += `<div class="p-5 bg-white border border-indigo-100 rounded-xl shadow-sm">
+                        <div class="font-bold text-gray-800 text-lg math-scroll">${item.text}</div>
+                        <div class="mt-3 flex items-center justify-between border-b border-gray-100 pb-3">
+                            <span class="text-base font-bold text-gray-500">Bạn chọn: <span class="${isUnanswered ? 'text-gray-400' : 'text-blue-600'} font-black uppercase">${isUnanswered ? 'Chưa trả lời' : (uAns?'Đúng':'Sai')}</span></span>
+                            <span class="font-black text-xl ${isCorrect ? 'text-emerald-500' : 'text-red-500'}">Đáp án: ${ansText} ${iconHtml}</span>
+                        </div>`;
+                        
+                    html += getStatusBadge(isCorrect, isUnanswered);
+                    if(item.expl) {
+                        html += `<div class="review-explanation mt-3 pt-3 text-lg text-gray-700 font-medium leading-relaxed math-scroll"><span class="text-indigo-500 font-bold uppercase">Giải chi tiết:</span><br> ${item.expl}</div>`;
+                    }
+                    html += `</div>`;
+                });
+                html += `</div></div>`;
+            }
+        });
+        container.innerHTML = html;
+    };
+
+    window.backToResult = function() { showSection('result'); };
+    
+    let isReviewingFromLeaderboard = false;
+    
+    window.backFromReview = function() {
+        if (isReviewingFromLeaderboard) {
+            showSection('scores');
+            isReviewingFromLeaderboard = false;
+        } else {
+            window.backToResult();
+        }
+    };
+
+    window.reviewStudentScore = function(scoreId) {
+        const record = allScores.find(x => x.id === scoreId);
+        if (!record) return;
+        
+        currentStudent = { hoTen: record.hoTen, lop: record.lop, tenDe: record.tenDe, maDe: record.maDe };
+        userAnswers = record.userAnswers || {}; 
+        
+        currentQuestions = JSON.parse(JSON.stringify(exam_data)); 
+        
+        isReviewingFromLeaderboard = true;
+        window.reviewQuiz();
+    };
+
+    window.renderScores = function() {
+        const tbody = document.getElementById('scores-tbody');
+        const noScore = document.getElementById('no-scores');
+        const myRankDisplay = document.getElementById('my-rank-display');
+        const paginationContainer = document.getElementById('pagination-controls');
+        
+        if(!tbody) return;
+
+        const sortedAll = [...allScores].sort((a, b) => (b.diem - a.diem) || (a.duration.localeCompare(b.duration)));
+        
+        sortedAll.forEach((s, i) => s.absoluteRank = i + 1);
+
+        const myRankIndex = sortedAll.findIndex(s => s.deviceId === deviceId);
+        if (myRankDisplay) {
+            if (myRankIndex !== -1) {
+                myRankDisplay.innerHTML = `🏆 Thứ hạng của bạn: <span class="text-red-600 font-black">#${sortedAll[myRankIndex].absoluteRank}</span>`;
+            } else {
+                myRankDisplay.innerHTML = `🏆 Thứ hạng của bạn: <span class="text-gray-400">Chưa thi</span>`;
+            }
+        }
+
+        const filteredScores = searchTerm ? sortedAll.filter(s => s.hoTen.toLowerCase().includes(searchTerm)) : sortedAll;
+
+        if (filteredScores.length === 0) {
+            tbody.innerHTML = ''; 
+            noScore.classList.remove('hidden'); 
+            paginationContainer.innerHTML = '';
+            return; 
+        }
+        
+        noScore.classList.add('hidden');
+
+        const totalPages = Math.ceil(filteredScores.length / itemsPerPage);
+        if (currentPage > totalPages) currentPage = totalPages;
+        if (currentPage < 1) currentPage = 1;
+
+        const startIndex = (currentPage - 1) * itemsPerPage;
+        const endIndex = startIndex + itemsPerPage;
+        const pageItems = filteredScores.slice(startIndex, endIndex);
+
+        tbody.innerHTML = pageItems.map((s) => {
+            const isMe = s.deviceId === deviceId;
+            return `<tr class="${isMe ? 'my-score-row' : 'hover:bg-slate-50'} transition-colors border-b border-slate-100">
+            <td class="px-4 py-5 font-black text-slate-500 text-base text-center">#${s.absoluteRank}</td>
+            <td class="px-4 py-5 font-extrabold text-slate-800 text-base">${s.hoTen} ${isMe ? '<span class="ml-2 bg-pink-500 text-white text-xs px-2 py-1 rounded-md shadow-sm">Bạn</span>' : ''}</td>
+            <td class="px-4 py-5 font-black text-blue-600 text-base text-center">${s.lop}</td>
+            <td class="px-4 py-5 text-center font-black text-orange-600 text-sm">${s.duration}</td>
+            <td class="px-4 py-5 text-center"><span class="font-black text-2xl ${s.diem >= 5 ? 'text-emerald-600' : 'text-red-500'}">${s.diem}</span></td>
+            <td class="px-4 py-5 text-center">
+                <button onclick="window.reviewStudentScore('${s.id}')" class="bg-indigo-100 text-indigo-700 hover:bg-indigo-200 px-4 py-2 rounded-lg font-bold text-sm transition-colors border border-indigo-200 shadow-sm cursor-pointer whitespace-nowrap">Xem lại</button>
+            </td>
+        </tr>`;
+        }).join('');
+
+        renderPagination(totalPages);
+    };
+
+    function renderPagination(totalPages) {
+        const container = document.getElementById('pagination-controls');
+        if (!container) return;
+        
+        if (totalPages <= 1) {
+            container.innerHTML = '';
+            return;
+        }
+
+        let html = '<div class="flex flex-wrap items-center justify-center gap-2">';
+        
+        html += `<button onclick="window.changePage(${currentPage - 1})" class="px-4 py-2 rounded-xl font-bold transition-colors ${currentPage === 1 ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 shadow-sm'}" ${currentPage === 1 ? 'disabled' : ''}>&laquo; Trước</button>`;
+
+        let startPage = Math.max(1, currentPage - 1);
+        let endPage = Math.min(totalPages, currentPage + 1);
+
+        if (startPage > 1) {
+            html += `<button onclick="window.changePage(1)" class="px-4 py-2 rounded-xl font-bold bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 shadow-sm">1</button>`;
+            if (startPage > 2) html += `<span class="px-2 text-gray-400 font-black">...</span>`;
+        }
+
+        for (let i = startPage; i <= endPage; i++) {
+            html += `<button onclick="window.changePage(${i})" class="px-4 py-2 rounded-xl font-bold transition-all ${i === currentPage ? 'bg-orange-500 text-white shadow-md border-orange-600' : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 shadow-sm'}">${i}</button>`;
+        }
+
+        if (endPage < totalPages) {
+            if (endPage < totalPages - 1) html += `<span class="px-2 text-gray-400 font-black">...</span>`;
+            html += `<button onclick="window.changePage(${totalPages})" class="px-4 py-2 rounded-xl font-bold bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 shadow-sm">${totalPages}</button>`;
+        }
+
+        html += `<button onclick="window.changePage(${currentPage + 1})" class="px-4 py-2 rounded-xl font-bold transition-colors ${currentPage === totalPages ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 shadow-sm'}" ${currentPage === totalPages ? 'disabled' : ''}>Sau &raquo;</button>`;
+        
+        html += '</div>';
+        container.innerHTML = html;
+    }
+
+    function showSection(id) {
+        ['login', 'quiz', 'scores', 'result', 'review'].forEach(s => {
+            const el = document.getElementById(s+'-section');
+            if(el) el.classList.add('hidden');
+        });
+        const tgt = document.getElementById(id+'-section');
+        if(tgt) tgt.classList.remove('hidden');
+    }
+
+    function startTimer(seconds) {
+        const display = document.getElementById('timer');
+        if(!display) return;
+        let remaining = seconds;
+        timerInterval = setInterval(() => {
+            remaining--;
+            const m = Math.floor(remaining / 60).toString().padStart(2, '0');
+            const s = (remaining % 60).toString().padStart(2, '0');
+            display.innerText = `${m}:${s}`;
+            if (remaining <= 0) window.submitQuiz();
+        }, 1000);
+    }
+
+    try {
+        if (!localStorage.getItem('deviceId')) localStorage.setItem('deviceId', 'dev_' + Math.random().toString(36).substr(2) + Date.now());
+        deviceId = localStorage.getItem('deviceId');
+    } catch (e) { deviceId = 'dev_temp_' + Math.random().toString(36).substr(2); }
+  </script>
+ </body>
+</html>

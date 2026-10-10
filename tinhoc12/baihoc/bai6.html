@@ -1,0 +1,900 @@
+<!doctype html>
+<html lang="vi" class="w-full h-full m-0 p-0">
+ <head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <title>Tin Học 12 - Bài 6</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+  <!-- 1. MÃ GA4 GỐC (Kết nối với Google Analytics) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-NSJCVSL9RM"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-NSJCVSL9RM'); 
+  </script>
+
+  <!-- 2. MÃ NHỊP TIM 30 GIÂY -->
+  <script>
+    setInterval(function() {
+      if (!document.hidden) { 
+        gtag('event', 'keep_alive', {
+          'event_category': 'Engagement',
+          'event_label': 'Học sinh đang làm bài',
+          'non_interaction': false
+        });
+      }
+    }, 30000); 
+  </script>
+
+  <style>
+    * { 
+        -webkit-tap-highlight-color: transparent; 
+        -webkit-touch-callout: none !important; 
+        touch-action: manipulation;
+    }
+    
+    html, body { width: 100%; min-height: 100vh; margin: 0; padding: 0; overflow-x: hidden; }
+    
+    body { 
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
+      background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+      background-size: 400% 400%;
+      animation: gradientBG 15s ease infinite;
+    }
+    
+    @keyframes gradientBG {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+
+    #app { width: 100%; min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden; }
+    
+    .glass-card {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    .option-label { transition: background-color 0.1s ease, border-color 0.1s ease; cursor: pointer; border-color: #e2e8f0; }
+    .option-label:hover { background-color: #f0fdfa; border-color: #38bdf8; }
+    
+    input[type="radio"].single-radio:checked + .option-label {
+      background: linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%);
+      color: white; border-color: transparent;
+      box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+    }
+    input[type="radio"].single-radio:checked + .option-label div:first-child { background-color: rgba(255,255,255,0.25); border-color: transparent; color: white; }
+    input[type="radio"].single-radio:checked + .option-label div:last-child { color: white; }
+    
+    .fade-in { animation: fadeIn 0.4s ease forwards; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    
+    .my-score-row {
+      background: linear-gradient(to right, #fdf4ff, #ffffff) !important;
+      border-left: 4px solid #db2777 !important; font-weight: 700 !important;
+      color: #9d174d !important; box-shadow: 0 2px 8px rgba(0,0,0,0.05); position: relative; z-index: 10;
+    }
+    .my-score-row td { padding-top: 16px; padding-bottom: 16px; }
+    
+    .btn-tf { transition: background-color 0.1s ease; border-width: 2px; }
+    .btn-tf.selected { background-color: #2563eb; color: white; border-color: #1d4ed8; }
+    .btn-tf:not(.selected) { background-color: white; color: #4b5563; border-color: #e5e7eb; }
+    .btn-tf:not(:disabled):active { transform: scale(0.95); }
+    
+    .math-scroll { overflow-x: auto; min-width: 0; padding-bottom: 4px; scrollbar-width: none; -ms-overflow-style: none; }
+    .math-scroll::-webkit-scrollbar { display: none; }
+  </style>
+
+ </head>
+ <body>
+  <div id="app" class="p-0 sm:p-4 md:p-8 transition-all">
+   
+   <div id="login-section" class="w-full max-w-md mx-auto fade-in flex flex-col justify-center flex-grow">
+    <div class="glass-card rounded-none sm:rounded-3xl p-6 sm:p-8 flex flex-col justify-start shadow-2xl border-t-8 border-indigo-600 bg-white">
+     <div class="text-center mb-6 pt-4 sm:pt-0">
+      <div class="flex items-center justify-center w-24 h-24 mx-auto mb-4 rounded-full border-4 border-yellow-400 bg-red-600 shadow-lg transform transition-transform hover:scale-105">
+          <span class="text-white font-black text-4xl tracking-tighter">HS</span>
+      </div>
+      <h1 class="text-2xl sm:text-3xl font-bold text-red-500 mb-3"> BÀI 6: GIAO TIẾP VÀ ỨNG XỬ TRONG KHÔNG GIAN MẠNG </h1>
+     </div>
+      <div id="login-form" class="space-y-4">
+      <div class="flex flex-col gap-4">
+          <div class="w-full">
+               <label class="block text-lg font-bold text-gray-700 mb-1">Họ và tên</label> 
+               <input type="text" id="hoTen" class="w-full px-4 py-4 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-100 outline-none transition-all font-semibold text-lg" placeholder="Nhập họ tên...">
+          </div>
+          <div class="w-full">
+               <label class="block text-lg font-bold text-gray-700 mb-1">Lớp</label> 
+               <input type="text" id="lop" class="w-full px-4 py-4 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-100 outline-none transition-all font-semibold text-lg" placeholder="12A1">
+          </div>
+      </div>
+
+      <div id="login-error" class="hidden bg-red-100 border border-red-300 text-red-700 font-bold text-base p-3 rounded-xl text-center shadow-sm"></div>
+
+      <button type="button" onclick="window.startQuizAction()" id="start-btn" class="w-full py-5 mt-6 bg-gradient-to-r from-blue-500 to-cyan-400 text-white font-extrabold rounded-2xl shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all text-2xl tracking-wide"> 🚀 BẮT ĐẦU THI </button>
+     </div>
+    </div>
+   </div>
+
+   <div id="quiz-section" class="w-full max-w-4xl mx-auto hidden flex-grow flex flex-col">
+    <div class="glass-card rounded-none sm:rounded-3xl p-4 sm:p-8 flex flex-col flex-grow relative border-t-8 border-blue-500 bg-white shadow-2xl">
+     <div class="flex items-center justify-between mb-4 sm:mb-6 pb-4 border-b-2 border-gray-100">
+      
+      <div class="flex items-center gap-3">
+       <div class="flex items-center justify-center w-12 h-12 rounded-full border-2 border-yellow-400 bg-red-600 shadow-sm flex-shrink-0">
+           <span class="text-white font-black text-xl tracking-tighter">HS</span>
+       </div>
+       <div>
+        <h2 id="quiz-title" class="text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">Đề Kiểm Tra</h2>
+        <p id="student-info" class="text-base font-bold text-gray-500 mt-1 uppercase tracking-wide"></p>
+       </div>
+      </div>
+
+      <div class="text-right bg-blue-50 px-4 py-2 rounded-xl border border-blue-100" id="progress-container">
+       <div class="text-sm text-blue-500 font-bold uppercase tracking-wider mb-1">Tiến độ (Câu)</div>
+       <div id="progress-text" class="text-2xl font-black text-blue-700">0/28</div>
+      </div>
+     </div>
+     
+     <div id="timer-banner" class="mb-6 p-4 bg-gradient-to-r from-orange-50 to-red-50 border-2 border-red-100 rounded-2xl flex items-center justify-between shadow-sm sticky top-2 z-40">
+        <span class="text-red-800 font-extrabold flex items-center gap-2 text-lg"><span class="text-2xl animate-pulse">⏰</span> THỜI GIAN:</span> 
+        <span id="timer" class="text-4xl font-black text-red-600 font-mono tracking-wider drop-shadow-sm">45:00</span>
+     </div>
+
+     <div id="question-container" class="mb-8 flex-grow w-full max-w-full"></div>
+     
+     <div id="network-error" class="hidden bg-red-100 text-red-700 p-4 rounded-xl mt-4 text-center font-bold text-sm border-2 border-red-300 mb-4 shadow-sm"></div>
+
+    <div class="flex pt-4 sm:pt-6 border-t-2 border-gray-100 mt-auto pb-4 sm:pb-0">
+        <button id="submit-btn" onclick="window.promptSubmit()" class="w-full py-5 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-bold text-2xl rounded-2xl shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1">✅ NỘP BÀI NGAY</button>
+     </div>
+    </div>
+   </div>
+
+   <div id="confirm-submit-modal" class="fixed inset-0 hidden flex items-center justify-center bg-black/60 backdrop-blur-sm z-50 transition-opacity">
+       <div class="bg-white rounded-3xl w-full max-w-sm shadow-2xl p-6 text-center transform transition-all scale-100 mx-4 border-2 border-gray-100">
+           <div class="text-yellow-400 mb-4 flex justify-center">
+               <svg xmlns="http://www.w3.org/2000/svg" class="h-24 w-24" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+               </svg>
+           </div>
+           <h3 class="text-3xl font-black text-gray-800 mb-2 uppercase tracking-wide">Xác nhận nộp</h3>
+           <p class="text-gray-600 mb-6 font-medium text-xl">Các em mới làm <span id="confirm-answered" class="text-red-600 font-black text-2xl">0</span>/<span id="confirm-total" class="font-black text-2xl">28</span> câu. Có chắc chắn muốn nộp bài không? Những câu chưa làm sẽ bị tính là sai.</p>
+           <div class="flex flex-col gap-3">
+               <button onclick="window.closeConfirmModal()" class="w-full py-4 bg-gray-100 text-gray-800 font-extrabold text-xl rounded-xl hover:bg-gray-200 border border-gray-200">Quay lại làm tiếp</button>
+               <button onclick="window.executeSubmit()" class="w-full py-4 bg-emerald-600 text-white font-extrabold text-xl rounded-xl hover:bg-emerald-700 shadow-md">Vẫn Nộp Luôn</button>
+           </div>
+       </div>
+   </div>
+
+   <div id="result-section" class="w-full max-w-2xl mx-auto hidden fade-in flex flex-col justify-center flex-grow pb-8">
+    <div class="glass-card rounded-none sm:rounded-3xl p-6 sm:p-8 flex flex-col justify-start border-t-8 border-green-500 bg-white shadow-2xl" id="result-content">
+    </div>
+   </div>
+
+   <div id="review-section" class="w-full max-w-4xl mx-auto hidden flex-grow flex flex-col">
+    <div class="glass-card rounded-none sm:rounded-3xl p-4 sm:p-8 flex flex-col flex-grow border-t-8 border-indigo-500 bg-white overflow-hidden shadow-2xl">
+     <div class="flex flex-col-reverse sm:flex-row items-start sm:items-center justify-between mb-6 pb-4 border-b-2 border-gray-100 gap-4">
+      <div class="flex flex-wrap gap-2">
+          <button onclick="window.goHome()" class="px-5 py-3 bg-gray-100 text-gray-700 rounded-xl font-bold hover:bg-gray-200 text-lg shadow-sm border border-gray-200">🏠 Trang chủ</button>
+          <button onclick="window.backFromReview()" class="px-5 py-3 bg-indigo-50 text-indigo-700 rounded-xl font-bold hover:bg-indigo-100 text-lg shadow-sm border border-indigo-200">🔙 Quay lại</button>
+          <button onclick="window.viewScoresAction()" class="px-5 py-3 bg-orange-50 text-orange-700 rounded-xl font-bold hover:bg-orange-100 text-lg shadow-sm border border-orange-200">🏆 Bảng điểm</button>
+      </div>
+      <h2 class="text-3xl sm:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">📝 Xem Lại Bài Làm</h2>
+     </div>
+     <div id="review-content" class="space-y-8 w-full max-w-full"></div>
+    </div>
+   </div>
+
+   <div id="scores-section" class="w-full max-w-6xl mx-auto hidden flex-grow flex flex-col">
+    <div class="glass-card rounded-none sm:rounded-3xl p-4 sm:p-8 flex flex-col flex-grow border-t-8 border-orange-500 bg-white w-full max-w-full shadow-2xl">
+     <div class="mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b-2 border-gray-100 pb-4">
+      <button onclick="window.goHome()" class="px-5 py-3 bg-gray-100 text-gray-700 rounded-xl font-bold hover:bg-gray-200 text-lg shadow-sm border border-gray-200 whitespace-nowrap">🏠 Trang chủ</button>
+      <h2 class="text-3xl sm:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-red-600 text-center flex-grow">🏆 BẢNG XẾP HẠNG BÀI 6</h2>
+     </div>
+     
+     <div class="flex flex-col sm:flex-row justify-between items-center mb-4 gap-4 bg-gray-50 p-4 rounded-xl border border-gray-200">
+         <div id="my-rank-display" class="text-xl font-bold text-gray-700">🏆 Thứ hạng của bạn: <span class="text-gray-400">--</span></div>
+         <div class="w-full sm:w-auto flex-grow max-w-sm">
+             <input type="text" id="search-student" oninput="window.searchStudent(this.value)" placeholder="🔍 Nhập tên học sinh để tìm..." class="w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm focus:border-orange-500 focus:ring-2 focus:ring-orange-200 outline-none transition-all font-medium">
+         </div>
+     </div>
+
+     <div class="overflow-x-auto rounded-xl border border-slate-200 flex-grow shadow-inner bg-white/50 w-full">
+      <table class="w-full text-sm sm:text-base whitespace-nowrap min-w-max">
+       <thead class="bg-gradient-to-r from-orange-500 to-red-500 text-white">
+        <tr>
+         <th class="px-3 sm:px-4 py-4 text-center font-extrabold w-16">Hạng</th>
+         <th class="px-3 sm:px-4 py-4 text-left font-extrabold">Họ tên</th>
+         <th class="px-3 sm:px-4 py-4 text-center font-extrabold">Lớp</th>
+         <th class="px-3 sm:px-4 py-4 text-center font-extrabold">Thời gian</th>
+         <th class="px-3 sm:px-4 py-4 text-center font-extrabold">Điểm</th>
+         <th class="px-2 sm:px-4 py-4 text-center font-extrabold">Xem lại</th>
+        </tr>
+       </thead>
+       <tbody id="scores-tbody" class="bg-white/80 divide-y divide-gray-100"></tbody>
+      </table>
+      <div id="no-scores" class="text-center py-12 hidden text-gray-500 font-bold text-xl">Không tìm thấy dữ liệu thi 🥲</div>
+     </div>
+     
+     <div id="pagination-controls" class="w-full flex justify-center mt-6"></div>
+    </div>
+  </div>
+
+  <script>
+    let database = null;
+    let scoresRef = null;
+
+    try {
+        const firebaseConfig = {
+            apiKey: "AIzaSyBQ9Pos8awlh9j041qDWTPFRsVIjF-kPnk",
+            authDomain: "hoctap-91691.firebaseapp.com",
+            databaseURL: "https://hoctap-91691-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "hoctap-91691",
+            storageBucket: "hoctap-91691.firebasestorage.app",
+            messagingSenderId: "1004553425319",
+            appId: "1:1004553425319:web:45d15cbae393f614c56682",
+            measurementId: "G-Q6X1TL9PRV"
+        };
+        if (typeof firebase !== 'undefined') {
+            if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+            database = firebase.database();
+            
+            // ĐÃ ĐỔI TÊN BẢNG XẾP HẠNG THÀNH BÀI 6
+            scoresRef = database.ref('bxh_tin_12_6');
+        }
+    } catch(err) { console.error("Lỗi Firebase:", err); }
+
+    let isQuizStarted = false; 
+    let currentQuestions = [];
+    let deviceId = '';
+    let allScores = [];
+    let currentStudent = {};
+    let userAnswers = {};
+    let timerInterval;
+    let quizStartTime, quizEndTime;
+    
+    let searchTerm = '';
+    let currentPage = 1;
+    const itemsPerPage = 10;
+
+    // DATA BÀI 6: GIAO TIẾP VÀ ỨNG XỬ TRONG KHÔNG GIAN MẠNG
+    const exam_data = [
+        { 
+            id: "q1", type: "single", question: "Câu 1: Theo kiến thức sách giáo khoa, khái niệm 'không gian mạng' (hay thế giới ảo) được định nghĩa chuẩn xác nhất là gì?", 
+            options: ["Là môi trường giao tiếp kĩ thuật số được tạo ra hoàn toàn nhờ sử dụng hệ thống mạng máy tính.", "Là môi trường không gian ba chiều được tạo ra bởi các thiết bị kính thực tế ảo độc lập chuyên dụng.", "Là môi trường giao tiếp cộng đồng chỉ được phép hoạt động bên trong các tòa nhà cơ quan nhà nước.", "Là môi trường sóng vô tuyến điện từ dùng để kết nối trực tiếp các thiết bị điện thoại di động cổ điển."], 
+            correct: 0, explanation: "Không gian mạng là môi trường được tạo ra nhờ kết nối mạng máy tính, cho phép mọi người giao tiếp thông qua phần mềm/dịch vụ trực tuyến." 
+        },
+        { 
+            id: "q2", type: "single", question: "Câu 2: Lợi ích nổi bật nào dưới đây được xem là ưu điểm quan trọng của việc giao tiếp trong không gian mạng?", 
+            options: ["Hỗ trợ người dùng tiết kiệm tối đa lượng điện năng tiêu thụ khi sử dụng các thiết bị vi tính.", "Hỗ trợ người dùng thực hiện giao tiếp thuận tiện ở mọi lúc mọi nơi miễn là có kết nối mạng.", "Hỗ trợ người dùng ngăn chặn triệt để mọi tin tặc tấn công ăn cắp dữ liệu tài chính cá nhân.", "Hỗ trợ người dùng loại bỏ hoàn toàn các loại bức xạ độc hại phát ra từ màn hình điện thoại."], 
+            correct: 1, explanation: "Ưu điểm cốt lõi của giao tiếp mạng là xóa bỏ rào cản địa lý, giúp mọi người tương tác dễ dàng mọi lúc mọi nơi chỉ cần Internet." 
+        },
+        { 
+            id: "q3", type: "single", question: "Câu 3: Việc không nhìn thấy trực tiếp biểu cảm khuôn mặt và ngôn ngữ cơ thể của người đối diện là đặc điểm thể hiện nhược điểm nào của giao tiếp mạng?", 
+            options: ["Đặc điểm này thể hiện nhược điểm thiếu đi các loại tín hiệu giao tiếp phi ngôn ngữ.", "Đặc điểm này thể hiện nhược điểm ẩn chứa nhiều nguy cơ lộ lọt bảo mật và riêng tư.", "Đặc điểm này thể hiện nhược điểm thiếu kết nối và mối quan hệ cá nhân chặt chẽ.", "Đặc điểm này thể hiện nhược điểm dễ bị ảnh hưởng trì hoãn bởi các sự cố kĩ thuật."], 
+            correct: 0, explanation: "Sự thiếu vắng ánh mắt, biểu cảm, giọng nói... được gọi chung là hạn chế về 'tín hiệu phi ngôn ngữ', dễ gây hiểu lầm." 
+        },
+        { 
+            id: "q4", type: "single", question: "Câu 4: Khi tham gia giao tiếp trong không gian số, yếu tố cốt lõi nào sau đây thể hiện sự 'Tôn trọng' giữa những người dùng?", 
+            options: ["Thể hiện ở việc tuyệt đối không bao giờ phát tán thông tin riêng tư khi chưa được sự cho phép.", "Thể hiện ở việc sẵn sàng chia sẻ mọi loại mã nguồn phần mềm diệt virus cho tất cả mọi người.", "Thể hiện ở việc liên tục gửi hàng ngàn bức thư rác quảng cáo miễn phí đến nhóm diễn đàn.", "Thể hiện ở việc tự ý lấy hình ảnh cá nhân của người khác để làm ảnh đại diện cho tài khoản."], 
+            correct: 0, explanation: "Tôn trọng người khác trên mạng là tuyệt đối không xâm phạm, không phát tán thông tin riêng tư của họ nếu chưa được cho phép." 
+        },
+        { 
+            id: "q5", type: "single", question: "Câu 5: Nguyên tắc ứng xử 'Lịch sự' trên môi trường mạng đòi hỏi công dân số phải tuyệt đối tránh xa những hành vi sai trái nào?", 
+            options: ["Bắt buộc phải tránh việc chia sẻ các tài liệu học tập bổ ích đã được chứng thực về bản quyền.", "Bắt buộc phải tránh việc sử dụng hệ thống gọi điện thoại video qua mạng lưới kết nối wifi.", "Bắt buộc phải tránh việc sử dụng từ lóng không phổ biến hoặc ngôn ngữ châm chọc, phỉ báng.", "Bắt buộc phải tránh việc nhắn tin hỏi thăm sức khỏe gia đình bạn bè qua hệ thống thư điện tử."], 
+            correct: 2, explanation: "Lịch sự trên mạng bao gồm việc sử dụng ngôn từ đúng mực, tuyệt đối tránh xa từ ngữ thô tục, châm chọc hay lăng mạ người khác." 
+        },
+        { 
+            id: "q6", type: "single", question: "Câu 6: Trong các phương thức hình thành thói quen ứng xử nhân văn trên mạng, hành động 'Cẩn trọng với ngôn từ' mang ý nghĩa gì?", 
+            options: ["Sử dụng đúng ngôn từ để ngăn chặn phần mềm độc hại tự động cài đặt vào máy tính cá nhân.", "Chú ý đến cách viết nhằm đảm bảo nó không gây ra sự hiểu lầm hoặc mang tính khiêu khích.", "Sử dụng đúng ngôn từ để nâng cấp hệ thống máy chủ mạng nội bộ lên phiên bản đời cao nhất.", "Chú ý đến cách viết để hệ thống định tuyến tự động tìm đường truyền dữ liệu đi nhanh nhất."], 
+            correct: 1, explanation: "Cẩn trọng ngôn từ là viết sao cho rõ ràng, tránh gây hiểu lầm hoặc tạo cảm giác khiêu khích, tổn thương cho người đọc." 
+        },
+        { 
+            id: "q7", type: "single", question: "Câu 7: Một trong bốn khía cạnh quan trọng nhất để thể hiện tính nhân văn trong không gian mạng chính là yếu tố 'Hỗ trợ'. Yếu tố này có nghĩa là gì?", 
+            options: ["Nghĩa là luôn sẵn lòng giúp đỡ người khác khi họ gặp khó khăn thông qua những lời động viên.", "Nghĩa là luôn hỗ trợ cài đặt mọi loại phần mềm bẻ khóa bản quyền cho bất kỳ người dùng nào.", "Nghĩa là luôn sẵn sàng cho mượn tài khoản thẻ tín dụng cá nhân để người lạ nạp thẻ trò chơi.", "Nghĩa là luôn cung cấp mật khẩu truy cập wifi của gia đình cho toàn bộ cư dân trong thành phố."], 
+            correct: 0, explanation: "Hỗ trợ trên mạng thể hiện qua việc sẵn sàng giúp đỡ, đưa ra lời khuyên hoặc đơn giản chỉ là một tin nhắn an ủi đúng lúc." 
+        },
+        { 
+            id: "q8", type: "single", question: "Câu 8: Đối với hoạt động gọi điện thoại video (Video call), quy tắc ứng xử văn minh được sách giáo khoa khuyến nghị là gì?", 
+            options: ["Cần phải cố ý quay thiết bị camera ra hướng ngoài đường phố để hiển thị toàn cảnh xe cộ.", "Cần phải chú ý mặc trang phục lịch sự và không để lộ vật dụng hoặc cảnh quan không phù hợp.", "Cần phải luôn bật thêm một đoạn nhạc sàn với âm lượng cực đại để tăng thêm không khí vui vẻ.", "Cần phải tắt hoàn toàn thiết bị thu âm micro để người đối diện tự động đọc hình khẩu hình miệng."], 
+            correct: 1, explanation: "Khi gọi video, việc mặc trang phục lịch sự và chú ý khung cảnh phía sau là phép lịch sự cơ bản để tôn trọng người đối diện." 
+        },
+        { 
+            id: "q9", type: "single", question: "Câu 9: Nhược điểm 'Thiếu kết nối quan hệ cá nhân chặt chẽ' trong giao tiếp mạng thường bắt nguồn từ nguyên nhân kỹ thuật và tâm lý nào?", 
+            options: ["Do tốc độ cáp quang quá chậm khiến cho video call bị giật lag liên tục không thể nói chuyện.", "Do người dùng bị ép buộc phải cung cấp chi tiết mọi hình ảnh căn cước công dân lên hệ thống.", "Do người dùng dễ dàng giấu mặt và tạo ra các bản sao giả mạo khiến việc xây dựng lòng tin khó.", "Do nhà mạng viễn thông tự động vô hiệu hóa toàn bộ các ứng dụng nhắn tin gọi điện thoại miễn phí."], 
+            correct: 2, explanation: "Trên mạng ai cũng có thể tạo nick ảo, giấu danh tính... nên rất khó để xác minh và xây dựng lòng tin chặt chẽ." 
+        },
+        { 
+            id: "q10", type: "single", question: "Câu 10: Tại sao các ứng dụng hội nghị truyền hình trực tuyến (như Zoom, MS Teams) lại được đánh giá là phát huy tối đa ưu điểm của không gian mạng?", 
+            options: ["Vì chúng hoàn toàn miễn nhiễm với mọi loại sự cố lỗi đường truyền mạng hoặc rớt wifi tín hiệu.", "Vì chúng giúp tiết kiệm thời gian, chi phí di chuyển mà vẫn đảm bảo được hiệu quả thực hiện công việc.", "Vì chúng cho phép người tham dự ẩn danh tuyệt đối để tha hồ dùng ngôn ngữ lăng mạ người khác.", "Vì chúng tự động tích hợp luôn hệ thống chỉnh sửa đồ họa đa chiều vào trong vi mạch máy tính."], 
+            correct: 1, explanation: "Hội nghị trực tuyến tận dụng ưu điểm xóa bỏ rào cản địa lí, giúp tiết kiệm lớn về chi phí và thời gian đi lại cho mọi người." 
+        },
+        { 
+            id: "q11", type: "single", question: "Câu 11: Trong quy tắc ứng xử mạng, việc 'Thấu hiểu' người khác mang lại giá trị nhân văn to lớn nào cho việc xây dựng cộng đồng trực tuyến?", 
+            options: ["Giúp chúng ta dễ dàng hack vào tài khoản mạng xã hội của đối phương để kiểm tra thông tin.", "Giúp chúng ta phân tích được dữ liệu hệ thống nhằm bán thông tin đó cho bên môi giới thứ ba.", "Giúp chúng ta đặt mình vào hoàn cảnh của người khác để có thể giúp đỡ họ một cách hiệu quả.", "Giúp chúng ta tự động gửi đi hàng triệu email quảng cáo sản phẩm mà không bị coi là tin rác."], 
+            correct: 2, explanation: "Sự thấu hiểu là khả năng đồng cảm, đặt mình vào vị trí người khác để có cách phản ứng, chia sẻ và hỗ trợ phù hợp." 
+        },
+        { 
+            id: "q12", type: "single", question: "Câu 12: Khi phát hiện một tin đồn thất thiệt chưa được xác minh trên mạng xã hội, hành động KHÔNG chia sẻ lan truyền thông tin đó thể hiện khía cạnh nhân văn nào?", 
+            options: ["Thể hiện đúng nguyên tắc 'Lịch sự' bằng cách chỉ chia sẻ thông tin chính xác và đáng tin cậy.", "Thể hiện đúng nguyên tắc 'Thấu hiểu' bằng cách tự động tải phần mềm diệt vi rút về máy chủ.", "Thể hiện đúng nguyên tắc 'Hỗ trợ' bằng cách mua thêm thiết bị phát sóng mạng cho điện thoại.", "Thể hiện đúng nguyên tắc 'Tự kiểm tra' bằng cách xóa toàn bộ tài khoản facebook của bản thân."], 
+            correct: 0, explanation: "Theo nguyên tắc 'Lịch sự', người dùng chỉ nên chia sẻ những thông tin đã được kiểm chứng, chính xác và có giá trị tin cậy." 
+        },
+        { 
+            id: "q13", type: "single", question: "Câu 13: Việc sử dụng các từ lóng phức tạp hoặc ngôn ngữ chuyên ngành hẹp khi nhắn tin với người bình thường có thể vi phạm điều gì trong giao tiếp mạng?", 
+            options: ["Vi phạm quy tắc Tôn trọng do cố tình để lộ mã nguồn mật khẩu hệ thống phần mềm của đối tác.", "Vi phạm quy định về bảo mật do hệ điều hành máy tính không thể dịch được loại kí tự đặc biệt này.", "Vi phạm nguyên tắc Lịch sự vì nó có thể làm cho đối phương hoàn toàn không hiểu được nội dung.", "Vi phạm tính chất Hỗ trợ vì nó vô tình tạo ra vô số các thư điện tử chứa nhiều tệp tin độc hại lớn."], 
+            correct: 2, explanation: "Dùng từ lóng, từ chuyên ngành khi đối tượng giao tiếp không thuộc chuyên môn sẽ gây ra sự khó hiểu, vi phạm tính Lịch sự." 
+        },
+        { 
+            id: "q14", type: "single", question: "Câu 14: Khi thảo luận về các vấn đề nhạy cảm trên một diễn đàn mở, nếu chúng ta gặp phải một ý kiến hoàn toàn trái ngược với mình, cách xử lý chuẩn mực là gì?", 
+            options: ["Cần phải nhanh chóng tung tin đồn giả mạo để hạ bệ uy tín danh dự của người vừa phát biểu.", "Cần phải tìm cách xâm nhập vào quản trị viên diễn đàn để khóa vĩnh viễn tài khoản đối phương.", "Cần phải dùng ngay ngôn từ thô tục, châm chọc để thể hiện bản lĩnh chiến thắng trong tranh luận.", "Cần phải giữ bình tĩnh, đưa ra lí do và phản bác lại quan điểm đó một cách cực kỳ lịch sự, văn hóa."], 
+            correct: 3, explanation: "Nếu không đồng tình, cách hành xử nhân văn là phản bác bằng lý lẽ, luận điểm văn minh thay vì chửi bới hay lăng mạ." 
+        },
+        { 
+            id: "q15", type: "single", question: "Câu 15: Yếu tố 'Nguy cơ bảo mật và quyền riêng tư' trong không gian mạng thường trực tiếp gây ra những lo ngại thực tế nào cho người tham gia?", 
+            options: ["Gây ra sự cố mất điện cục bộ khiến cho các modem phát mạng liên tục bị chập chờn khởi động lại.", "Gây ra việc dữ liệu cá nhân bị xâm phạm, lộ lọt thông tin nhạy cảm và bị tấn công bởi kẻ xấu.", "Gây ra rào cản địa lí khiến con người ở cách xa nhau không thể gọi điện thoại video cho nhau.", "Gây ra hiện tượng nhiễu sóng từ trường làm cho hình ảnh khuôn mặt trên webcam liên tục mờ nhòe."], 
+            correct: 1, explanation: "Môi trường mạng tiềm ẩn nhiều rủi ro về việc bị hack tài khoản, đánh cắp mật khẩu và xâm phạm quyền riêng tư dữ liệu." 
+        },
+        { 
+            id: "q16", type: "single", question: "Câu 16: Việc luôn tự kiểm tra, xem lại và tự đánh giá các hành vi của chính mình trên mạng xã hội mang lại tác dụng tích cực nào cho mỗi công dân số?", 
+            options: ["Giúp người dùng nâng cao tốc độ phản hồi phím bấm cơ học của chuột và bàn phím máy tính.", "Giúp người dùng phát hiện sớm các thiết bị phần cứng đang bị hao mòn để tiến hành bảo trì.", "Giúp người dùng điều chỉnh những hành vi không đúng mực hoặc thiếu nhân văn để sửa đổi.", "Giúp người dùng tự động thu thập được hàng ngàn người theo dõi trực tuyến trong một đêm."], 
+            correct: 2, explanation: "Thói quen tự đánh giá (tự kiểm điểm) giúp chúng ta nhận ra lỗi sai, từ đó hoàn thiện và ứng xử nhân văn hơn." 
+        },
+        { 
+            id: "q17", type: "single", question: "Câu 17: Bạn Lan chuẩn bị tham gia vòng phỏng vấn học bổng trực tuyến qua ứng dụng Zoom. Để tuân thủ đúng quy tắc ứng xử nhân văn trên không gian mạng, Lan tuyệt đối phải chuẩn bị điều gì trước khi bật camera?", 
+            options: ["Lan tuyệt đối phải mặc đồ thật lịch sự, dọn dẹp không gian phía sau gọn gàng và không để lộ cảnh quan nhạy cảm.", "Lan tuyệt đối phải đeo kính râm màu đen che kín một nửa khuôn mặt để bảo mật triệt để hình ảnh nhận diện cá nhân.", "Lan tuyệt đối phải bật các đoạn nhạc điện tử âm lượng cực lớn để thử thách khả năng chịu đựng của ban giám khảo.", "Lan tuyệt đối phải kết nối hệ thống máy tính cá nhân vào mạng wifi công cộng của quán cà phê để tiết kiệm chi phí."], 
+            correct: 0, explanation: "Dọn dẹp bối cảnh và ăn mặc lịch sự khi gọi video call thể hiện thái độ nghiêm túc và tôn trọng người phỏng vấn." 
+        },
+        { 
+            id: "q18", type: "single", question: "Câu 18: Trong lúc cãi vã, bạn Tuấn đã lén chụp ảnh màn hình những đoạn tin nhắn tâm sự thầm kín của Bình rồi công khai gửi vào nhóm chat toàn lớp để làm nhục Bình. Hành vi của Tuấn đã vi phạm nghiêm trọng nguyên tắc nào?", 
+            options: ["Tuấn đã vi phạm nguyên tắc 'Lịch sự' vì sử dụng ngôn từ chuyên ngành quá phức tạp để mô tả bạn.", "Tuấn đã vi phạm nguyên tắc 'Hỗ trợ' vì không chịu mua thẻ nạp điện thoại để tặng cho bạn cùng lớp.", "Tuấn đã vi phạm nguyên tắc 'Thấu hiểu' vì cố tình cung cấp sai số liệu bảng tính Excel cho nhóm.", "Tuấn đã vi phạm nguyên tắc 'Tôn trọng' vì tự ý phát tán thông tin riêng tư khi chưa được sự cho phép."], 
+            correct: 3, explanation: "Chụp lén và công khai tin nhắn riêng tư là sự vi phạm quyền bí mật cá nhân, vi phạm nghiêm trọng nguyên tắc Tôn trọng." 
+        },
+        { 
+            id: "q19", type: "single", question: "Câu 19: Bạn An đọc được một bài đăng trên Facebook cảnh báo về một đợt bão sắp tới nhưng không rõ nguồn gốc. Dù thấy nhiều người chia sẻ, An quyết định tra cứu lại trên trang web của Trung tâm Khí tượng trước khi đăng lại. Hành động này của An thể hiện điều gì?", 
+            options: ["Hành động này của An thể hiện sự cẩn trọng và lịch sự khi tránh chia sẻ các thông tin sai lệch.", "Hành động này của An thể hiện tính cách bảo thủ do không chịu hòa nhập cùng với bạn bè trên mạng.", "Hành động này của An thể hiện kỹ năng lập trình phần mềm khí tượng mô phỏng đa không gian 3D.", "Hành động này của An thể hiện sự yếu kém trong kỹ năng thao tác nhấp chuột trên trình duyệt web."], 
+            correct: 0, explanation: "Việc xác minh tính xác thực của thông tin trước khi chia sẻ thể hiện thái độ cẩn trọng, văn minh và lịch sự trên môi trường số." 
+        },
+        { 
+            id: "q20", type: "single", question: "Câu 20: Dũng đang làm bài tập trực tuyến thì đột nhiên khu vực bị mất kết nối cáp quang khiến Dũng không thể nộp bài đúng hạn. Tình huống éo le này là ví dụ điển hình minh họa cho nhược điểm nào của giao tiếp không gian mạng?", 
+            options: ["Minh họa cho nhược điểm dễ bị đánh cắp toàn bộ tiền bạc trong tài khoản giao dịch thẻ ngân hàng.", "Minh họa cho nhược điểm thiếu đi các tín hiệu phi ngôn ngữ do không thể sử dụng hệ thống webcam.", "Minh họa cho nhược điểm người dùng rất dễ dàng tạo ra nhiều tài khoản giả mạo để lừa gạt cộng đồng.", "Minh họa cho nhược điểm dễ bị ảnh hưởng trì hoãn và gián đoạn công việc bởi các sự cố về kĩ thuật."], 
+            correct: 3, explanation: "Rớt mạng, hỏng máy là những 'sự cố kỹ thuật' khách quan làm gián đoạn mọi hoạt động giao tiếp và làm việc trên Internet." 
+        },
+        { 
+            id: "q21", type: "single", question: "Câu 21: Khi Mai đăng một bức ảnh cá nhân lên Zalo, một người lạ vào bình luận chê bai ngoại hình của Mai bằng những từ ngữ khiếm nhã. Áp dụng kỹ năng xử lý tình huống nhân văn, Mai nên phản ứng như thế nào?", 
+            options: ["Mai nên dùng ngay tài khoản ảo để vào trang cá nhân của người đó chửi bới và lăng mạ trả thù liên tục.", "Mai nên giữ bình tĩnh, có thể xóa bình luận hoặc chặn người đó mà không cần sử dụng ngôn từ khiêu khích.", "Mai nên tung toàn bộ thông tin cá nhân và hình ảnh của người đó lên mọi diễn đàn để kêu gọi tẩy chay.", "Mai nên đập vỡ ngay chiếc điện thoại thông minh đang sử dụng để ngăn chặn virus lây lan vào máy tính."], 
+            correct: 1, explanation: "Ứng xử nhân văn là không lấy cái ác trả cái ác. Cách tốt nhất là dùng chức năng kỹ thuật (xóa/block) để xử lý thay vì cãi vã." 
+        },
+        { 
+            id: "q22", type: "single", question: "Câu 22: Thầy Hùng tổ chức một nhóm hỗ trợ học tập môn Toán qua Zalo. Bất cứ khi nào có học sinh gặp bài toán khó nhắn tin hỏi lúc tối muộn, thầy đều kiên nhẫn ghi âm lời giảng và động viên các em cố gắng. Thầy Hùng đang phát huy tuyệt vời yếu tố nhân văn nào?", 
+            options: ["Thầy Hùng đang phát huy yếu tố 'Hỗ trợ' bằng cách luôn sẵn lòng giúp đỡ và đưa ra những lời động viên.", "Thầy Hùng đang phát huy yếu tố 'Tôn trọng' bằng cách không bao giờ kiểm tra tiến độ làm bài tập.", "Thầy Hùng đang phát huy yếu tố 'Tự kiểm tra' bằng cách liên tục xóa lịch sử tin nhắn của toàn bộ lớp.", "Thầy Hùng đang phát huy yếu tố 'Bảo mật' bằng cách tự tay mã hóa mọi bức ảnh chụp bài giải môn Toán."], 
+            correct: 0, explanation: "Hành động giải đáp tận tình và động viên là minh chứng rõ nét nhất cho nguyên tắc 'Hỗ trợ' trong cộng đồng mạng." 
+        },
+        { 
+            id: "q23", type: "single", question: "Câu 23: Cửa hàng bánh của cô Lan dù nằm trong ngõ hẻm nhưng nhờ việc tích cực trả lời tin nhắn, tạo video đẹp mắt và thân thiện trên nền tảng Tiktok mà có hàng ngàn khách quen. Cô Lan đã tận dụng triệt để ưu điểm nào của giao tiếp không gian mạng?", 
+            options: ["Ưu điểm tự động thiết lập hệ thống tường lửa chống lại các mã độc tống tiền doanh nghiệp.", "Ưu điểm tiết kiệm dung lượng lưu trữ trên các thiết bị máy chủ máy tính cá nhân đời cổ.", "Ưu điểm giúp mở rộng mạng lưới kết nối xã hội để tạo ấn tượng thu hút lượng khách hàng.", "Ưu điểm loại bỏ hoàn toàn các phương thức giao tiếp sử dụng chữ viết truyền thống lỗi thời."], 
+            correct: 2, explanation: "Nhờ sức mạnh của mạng xã hội, người dùng có thể dễ dàng xóa bỏ khoảng cách địa lý và mở rộng phạm vi kinh doanh/kết nối xã hội." 
+        },
+        { 
+            id: "q24", type: "single", question: "Câu 24: Trong một nhóm thảo luận môn học, một bạn nêu quan điểm sai lệch. Thay vì hùa theo số đông chỉ trích gay gắt, Tuấn gõ một đoạn tin nhắn rất lịch sự phân tích chỗ sai và đính kèm đường link dẫn chứng để bạn đó hiểu ra. Hành động của Tuấn ứng dụng kỹ năng nào?", 
+            options: ["Kỹ năng thiết lập phần tử giả (pseudo-element) trong ngôn ngữ HTML để đánh lừa thị giác người đọc.", "Kỹ năng thiết lập một mạng riêng ảo VPN để che giấu danh tính trước khi thực hiện bình luận dạo.", "Kỹ năng bình tĩnh lắng nghe, thấu hiểu và đưa ra lý do phản bác một cách văn minh, lịch sự tôn trọng.", "Kỹ năng điều khiển hệ thống trí tuệ nhân tạo tạo sinh (AI) để tự động soạn thảo đoạn văn bản tranh luận."], 
+            correct: 2, explanation: "Phản biện có lý do, có dẫn chứng cụ thể nhưng vẫn dùng ngôn từ lịch sự, bình tĩnh là biểu hiện của ứng xử văn minh." 
+        },
+        
+        { id: "qII_1", type: "tf_cluster", context: "Câu 1: Bạn An đang làm bài thu hoạch về ưu và nhược điểm của giao tiếp trên môi trường Internet. Hãy kiểm tra tính Đúng/Sai trong các nhận định của An:", items: [
+            { id: "a", text: "a) Khái niệm không gian mạng (hay còn gọi là thế giới ảo) là môi trường hoàn toàn mang tính chất cơ học được tạo ra bằng cáp đồng mà không cần sử dụng phần mềm.", correct: false, expl: "Sách giáo khoa định nghĩa: 'Không gian mạng... là môi trường được tạo ra nhờ sử dụng mạng máy tính... cho phép con người giao tiếp với nhau thông qua các phần mềm và dịch vụ'." },
+            { id: "b", text: "b) Nhược điểm lớn nhất khiến cho giao tiếp qua mạng bị hạn chế là nó bắt buộc người sử dụng phải chi trả chi phí cực kì đắt đỏ cho việc di chuyển địa lí hàng tháng.", correct: false, expl: "Ưu điểm của giao tiếp mạng là 'tiết kiệm thời gian và chi phí di chuyển', không phải là nhược điểm đắt đỏ di chuyển." },
+            { id: "c", text: "c) Do thiếu vắng hoàn toàn các tín hiệu phi ngôn ngữ như nét mặt hay giọng nói, mọi tin nhắn văn bản trên mạng lưới máy tính luôn luôn truyền đạt cảm xúc tốt hơn so với nói chuyện trực tiếp.", correct: false, expl: "Sự 'thiếu tín hiệu phi ngôn ngữ... có thể gây khó khăn trong việc truyền đạt cảm xúc và dẫn đến những hiểu lầm không đáng có'." },
+            { id: "d", text: "d) Khi bạn Lan sử dụng ứng dụng gọi video (FaceTime) để trò chuyện với người chị gái đang du học ở nước ngoài, Lan đang tận dụng ưu điểm giao tiếp thuận tiện mọi lúc mọi nơi để tiết kiệm thời gian và chi phí.", correct: true, expl: "Giao tiếp qua video call (FaceTime) giúp con người 'gần nhau hơn khi không có điều kiện sống cùng nhau', 'giảm nhu cầu đi lại', 'tiết kiệm thời gian và chi phí'." }
+        ]},
+        { id: "qII_2", type: "tf_cluster", context: "Câu 2: Thầy Hùng giáo dục học sinh về các khía cạnh đạo đức, nhân văn trên mạng. Đánh giá tính Đúng/Sai của những nhận định dưới đây:", items: [
+            { id: "a", text: "a) Việc ứng xử nhân văn trong không gian mạng được biểu hiện đa dạng nhưng nổi bật qua bốn khía cạnh trọng tâm là: Tôn trọng, Lịch sự, Thấu hiểu và Hỗ trợ.", correct: true, expl: "Ứng xử nhân văn thể hiện qua các khía cạnh: Tôn trọng, Lịch sự, Thấu hiểu, Hỗ trợ." },
+            { id: "b", text: "b) Căn cứ theo nguyên tắc 'Lịch sự', người dùng mạng được yêu cầu tuyệt đối tránh xa việc sử dụng các ngôn từ thô tục, mang tính chất lăng mạ, châm chọc hoặc phân biệt giới tính.", correct: true, expl: "Khía cạnh Lịch sự bao gồm: 'không sử dụng ngôn từ nhạy cảm, lăng mạ, châm chọc, phỉ báng hoặc phân biệt chủng tộc, giới tính...'." },
+            { id: "c", text: "c) Nguyên tắc 'Tôn trọng' cho phép chúng ta có quyền tự do phát tán mọi thông tin riêng tư cá nhân của người khác lên diễn đàn mạng, miễn là thông tin đó là thông tin sự thật 100%.", correct: false, expl: "Tôn trọng bao gồm 'không phát tán thông tin riêng tư của người khác mà không có sự cho phép của họ' (bất kể đó là sự thật hay không)." },
+            { id: "d", text: "d) Bạn Bình tham gia vào diễn đàn học tập của lớp và cố tình sử dụng phần mềm để gửi hàng loạt các bức thư rác quảng cáo game online; hành động này được pháp luật tôn vinh là sự Thấu hiểu người dùng.", correct: false, expl: "Việc 'gửi nội dung thư rác hoặc quảng cáo không liên quan' là hành vi vi phạm nguyên tắc 'Lịch sự'." }
+        ]},
+        { id: "qII_3", type: "tf_cluster", context: "Câu 3: Nhóm thảo luận của bạn Mai lập bảng đánh giá về cách hình thành thói quen văn minh trên Internet. Những đánh giá nào là Đúng hay Sai:", items: [
+            { id: "a", text: "a) Một trong những phương pháp hữu hiệu để hình thành thói quen ứng xử nhân văn là biết tự kiểm tra, xem lại và chủ động cải thiện các hành vi trực tuyến của chính bản thân mình.", correct: true, expl: "'Tự kiểm tra, cải thiện hành vi trực tuyến của mình' là một cách để hình thành thói quen ứng xử nhân văn." },
+            { id: "b", text: "b) Trong một nhóm tranh luận trên Facebook, nếu chúng ta cảm thấy không đồng ý với quan điểm của ai đó, cách ứng xử đúng đắn và chuẩn mực nhất là ngay lập tức dùng ngôn ngữ khiêu khích để phản bác.", correct: false, expl: "Khi không đồng ý, 'hãy đưa ra lí do và phản bác một cách lịch sự', và 'không bao giờ sử dụng ngôn ngữ khiêu khích...'." },
+            { id: "c", text: "c) Khi tiến hành giao tiếp thông qua hình thức thư hoặc tin nhắn điện tử, người dùng có văn hóa cần phải tuyệt đối tôn trọng quyền riêng tư, không tùy tiện chia sẻ tin nhắn riêng của hai người cho bên thứ ba.", correct: true, expl: "'Luôn tôn trọng quyền riêng tư của người nhận, không chia sẻ thông tin trao đổi riêng giữa hai người với một bên thứ ba khi chưa được phép'." },
+            { id: "d", text: "d) Vì lợi thế đang ngồi làm việc một mình tại phòng ngủ ở nhà riêng, bạn Tuấn hoàn toàn có quyền mặc đồ lót cởi trần và để phòng ốc bừa bộn rác thải khi thực hiện cuộc gọi video trực tuyến với các giáo viên.", correct: false, expl: "Khi trò chuyện qua video, 'hãy mặc quần áo lịch sự và không để lộ những vật dụng hoặc cảnh quan không phù hợp'." }
+        ]},
+        { id: "qII_4", type: "tf_cluster", context: "Câu 4: Bạn Dũng trình bày những góc khuất, rủi ro trên không gian mạng và cách vận dụng lòng nhân ái để hỗ trợ cộng đồng. Hãy xác nhận tính Đúng/Sai của các ý kiến này:", items: [
+            { id: "a", text: "a) Các sự cố kĩ thuật thường gặp trên môi trường số như mất kết nối mạng, đứt cáp hoặc phần mềm lỗi không tương thích là một nhược điểm lớn dễ dẫn đến việc quá trình giao tiếp trực tuyến bị gián đoạn.", correct: true, expl: "'Dễ bị ảnh hưởng bởi sự cố kĩ thuật' như mất kết nối mạng và phần mềm không tương thích làm cản trở, trì hoãn giao tiếp là một nhược điểm." },
+            { id: "b", text: "b) Môi trường không gian mạng tạo điều kiện dễ dàng để kẻ xấu che giấu thân phận hoặc tạo lập các tài khoản giả mạo, điều này trực tiếp gây ra trở ngại vô cùng lớn cho việc thiết lập lòng tin và mối quan hệ cá nhân chặt chẽ.", correct: true, expl: "Trong không gian mạng dễ dàng giấu mặt, tạo bản sao giả mạo 'gây khó khăn trong việc xây dựng mối quan hệ và lòng tin' (Thiếu kết nối quan hệ cá nhân chặt chẽ)." },
+            { id: "c", text: "c) Nhằm tạo dựng một môi trường mạng hoàn toàn trong sạch, luật pháp nhà nước đã ban hành các quy định cấm triệt để mọi hình thức mở rộng quan hệ kết nối xã hội trên không gian Internet.", correct: false, expl: "Mở rộng kết nối xã hội là một 'ưu điểm' của giao tiếp trực tuyến, nhà nước không hề cấm mở rộng quan hệ mà chỉ quy định về các hành vi ứng xử tuân thủ pháp luật." },
+            { id: "d", text: "d) Khi tình cờ thấy một người bạn cùng lớp đăng dòng trạng thái bế tắc vì áp lực điểm số, hành động Dũng chủ động gửi tin nhắn động viên an ủi chính là sự thể hiện tuyệt vời khía cạnh 'Hỗ trợ' trong giao tiếp nhân văn.", correct: true, expl: "Hỗ trợ bao gồm 'sẵn lòng giúp đỡ... đôi khi chỉ là những lời động viên chân thành, những tin nhắn an ủi kịp thời'." }
+        ]}
+    ];
+
+    window.startQuizAction = function() {
+        try {
+            const errDiv = document.getElementById('login-error');
+            if(errDiv) errDiv.classList.add('hidden');
+            
+            const nameEl = document.getElementById('hoTen');
+            const lopEl = document.getElementById('lop');
+            
+            const name = nameEl.value.trim();
+            const lop = lopEl.value.trim();
+            
+            if (!name || !lop) {
+                if(errDiv) {
+                    errDiv.innerText = "⚠️ Vui lòng nhập đầy đủ Họ tên và Lớp!";
+                    errDiv.classList.remove('hidden');
+                } else {
+                    alert("⚠️ Vui lòng nhập đầy đủ Họ tên và Lớp!");
+                }
+                return;
+            }
+            
+            currentStudent = { hoTen: name, lop: lop, maDe: 'bài 6', tenDe: 'Đề Kiểm Tra Bài 6' };
+            currentQuestions = JSON.parse(JSON.stringify(exam_data));
+            quizStartTime = new Date();
+            
+            setTimeout(() => { isQuizStarted = true; }, 1000);
+            showSection('quiz');
+            
+            userAnswers = {};
+            window.renderAllQuestions();
+            startTimer(45 * 60); 
+            
+        } catch (error) {
+            alert("❌ Đã xảy ra lỗi khởi tạo bài thi: " + error.message + ".");
+            console.error(error);
+        }
+    };
+
+    window.viewScoresAction = function() {
+        searchTerm = ''; 
+        document.getElementById('search-student').value = '';
+        currentPage = 1;
+
+        if (database) {
+            scoresRef.once('value').then((snapshot) => {
+                const data = snapshot.val();
+                allScores = data ? Object.keys(data).map(key => ({...data[key], id: key})) : [];
+                window.renderScores();
+                showSection('scores');
+            });
+        }
+    };
+
+    window.searchStudent = function(val) {
+        searchTerm = val.toLowerCase();
+        currentPage = 1;
+        window.renderScores();
+    };
+
+    window.changePage = function(page) {
+        currentPage = page;
+        window.renderScores();
+    };
+
+    window.goHome = function() {
+        if(document.getElementById('hoTen')) document.getElementById('hoTen').value = ''; 
+        if(document.getElementById('lop')) document.getElementById('lop').value = ''; 
+        clearInterval(timerInterval);
+        showSection('login');
+    };
+
+    function getTotalScoreItems() { return currentQuestions.length; }
+
+    function getAnsweredCount() {
+        let count = 0;
+        currentQuestions.forEach(q => {
+            if (q.type === 'single') {
+                if (userAnswers[q.id] !== undefined) count++;
+            } else if (q.type === 'tf_cluster') {
+                let answeredItems = 0;
+                q.items.forEach(item => {
+                    if (userAnswers[q.id + '_' + item.id] !== undefined) answeredItems++;
+                });
+                if (answeredItems === 4) count++; 
+            }
+        });
+        return count;
+    }
+
+   window.selectAnswer = function(qId, val, type) {
+        if (type === 'tf') {
+            userAnswers[qId] = val;
+            const btnT = document.getElementById(`btnT_${qId}`);
+            const btnF = document.getElementById(`btnF_${qId}`);
+            if (val === true) {
+                btnT.classList.add('selected'); btnT.classList.remove('bg-white');
+                btnF.classList.remove('selected'); btnF.classList.add('bg-white');
+            } else {
+                btnF.classList.add('selected'); btnF.classList.remove('bg-white');
+                btnT.classList.remove('selected'); btnT.classList.add('bg-white');
+            }
+        } else if (type === 'single') {
+            userAnswers[qId] = val;
+        }
+        
+        requestAnimationFrame(() => {
+            const pgText = document.getElementById('progress-text');
+            if(pgText) pgText.innerText = `${getAnsweredCount()}/${getTotalScoreItems()}`;
+        });
+    };
+
+    window.renderAllQuestions = function() {
+        if (!currentQuestions || currentQuestions.length === 0) return;
+        const container = document.getElementById('question-container');
+        if(!container) return;
+
+        let html = '';
+        let currentType = '';
+
+        currentQuestions.forEach((q) => {
+            if (q.type !== currentType) {
+                currentType = q.type;
+                let headerText = ''; let roman = '';
+                if(currentType === 'single') { headerText = 'TRẮC NGHIỆM NHIỀU PHƯƠNG ÁN LỰA CHỌN'; roman = 'I'; }
+                if(currentType === 'tf_cluster') { headerText = 'TRẮC NGHIỆM ĐÚNG/SAI'; roman = 'II'; }
+                
+                html += `<div class="flex items-center gap-3 mt-8 mb-4 border-b-2 border-blue-100 pb-3"><span class="bg-gradient-to-br from-blue-500 to-indigo-600 text-white w-14 h-14 flex items-center justify-center rounded-xl font-black text-2xl shadow-md">${roman}</span><h3 class="text-2xl sm:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-700 to-indigo-700 tracking-wide uppercase">${headerText}</h3></div>`;
+            }
+
+            html += `<div class="fade-in w-full bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-blue-100 relative mb-6 hover:shadow-md transition-shadow">`;
+            
+            if (q.type === 'single') {
+                const uAns = userAnswers[q.id];
+                html += `<div class="flex gap-4 mb-5"><div class="w-full math-scroll"><p class="text-xl font-bold text-red-600 mt-1 leading-snug tracking-tight">${q.question}</p></div></div>`;
+                html += `<div class="space-y-4 md:pl-6 mt-6">`;
+                q.options.forEach((opt, i) => {
+                    const isChecked = (uAns === i) ? 'checked' : '';
+                    html += `<div class="flex items-center">
+                        <input type="radio" id="opt_${q.id}_${i}" name="q_${q.id}" value="${i}" class="hidden single-radio" ${isChecked} onchange="window.selectAnswer('${q.id}', ${i}, 'single')">
+                        <label for="opt_${q.id}_${i}" class="option-label w-full p-4 border-2 border-gray-200 rounded-2xl flex items-center gap-4 bg-white shadow-sm font-bold text-lg hover:border-blue-300">
+                            <div class="w-12 h-12 rounded-xl border-2 border-gray-300 flex items-center justify-center text-lg font-black text-gray-400 flex-shrink-0 bg-gray-50">${String.fromCharCode(65 + i)}</div>
+                            <div class="text-gray-700 leading-relaxed math-scroll flex-1">${opt}</div>
+                        </label>
+                    </div>`;
+                });
+                html += `</div>`;
+            } 
+            else if (q.type === 'tf_cluster') {
+                html += `<div class="bg-red-50 text-red-700 p-5 rounded-xl font-bold mb-4 border-2 border-red-100 text-xl leading-relaxed math-scroll">${q.context}</div>`;
+                html += `<div class="space-y-4 mt-6">`;
+                q.items.forEach((item) => {
+                    const combinedId = q.id + '_' + item.id;
+                    let ans = userAnswers[combinedId];
+                    let btnT = ans === true ? 'selected' : 'bg-white';
+                    let btnF = ans === false ? 'selected' : 'bg-white';
+
+                    html += `<div class="p-5 border-2 border-gray-100 rounded-2xl bg-white shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4 transition-all hover:border-blue-200">
+                        <div class="font-bold text-gray-800 flex-1 text-lg math-scroll">${item.text}</div>
+                        <div class="flex gap-3 shrink-0">
+                            <button id="btnT_${combinedId}" onclick="window.selectAnswer('${combinedId}', true, 'tf')" class="btn-tf w-24 sm:w-28 py-3 rounded-xl font-extrabold text-lg ${btnT}">ĐÚNG</button>
+                            <button id="btnF_${combinedId}" onclick="window.selectAnswer('${combinedId}', false, 'tf')" class="btn-tf w-24 sm:w-28 py-3 rounded-xl font-extrabold text-lg ${btnF}">SAI</button>
+                        </div>
+                    </div>`;
+                });
+                html += `</div>`;
+            } 
+            html += `</div>`;
+        });
+        
+        container.innerHTML = html;
+        const pgText = document.getElementById('progress-text');
+        if(pgText) pgText.innerText = `${getAnsweredCount()}/${getTotalScoreItems()}`;
+    };
+
+    function formatDuration(sec) {
+        const m = Math.floor(sec / 60); const s = sec % 60;
+        return `${m}p ${s}s`;
+    }
+
+    window.promptSubmit = function() {
+        if (!isQuizStarted) return;
+        const total = getTotalScoreItems();
+        const answered = getAnsweredCount();
+        
+        document.getElementById('confirm-answered').innerText = answered;
+        document.getElementById('confirm-total').innerText = total;
+        
+        const modal = document.getElementById('confirm-submit-modal');
+        modal.classList.remove('hidden');
+    };
+
+    window.closeConfirmModal = function() {
+        const modal = document.getElementById('confirm-submit-modal');
+        modal.classList.add('hidden');
+    };
+
+    window.executeSubmit = function() {
+        window.closeConfirmModal();
+        isQuizStarted = false; 
+        quizEndTime = new Date();
+        clearInterval(timerInterval);
+        
+        let score = 0;
+
+        currentQuestions.forEach(q => {
+            if (q.type === 'single') {
+                if (userAnswers[q.id] === q.correct) score += 0.25;
+            } else if (q.type === 'tf_cluster') {
+                q.items.forEach(item => { if (userAnswers[q.id + '_' + item.id] === item.correct) score += 0.25; });
+            }
+        });
+
+        score = score.toFixed(2); 
+
+        const record = {
+            hoTen: currentStudent.hoTen, lop: currentStudent.lop, tenDe: currentStudent.tenDe, maDe: currentStudent.maDe,
+            diem: parseFloat(score),
+            startTime: quizStartTime.toLocaleTimeString('vi-VN') + ' ' + quizStartTime.toLocaleDateString('vi-VN'),
+            endTime: quizEndTime.toLocaleTimeString('vi-VN') + ' ' + quizEndTime.toLocaleDateString('vi-VN'),
+            duration: formatDuration(Math.floor((quizEndTime - quizStartTime) / 1000)),
+            thoiGian: new Date().toISOString(), deviceId: deviceId,
+            userAnswers: userAnswers 
+        };
+        
+        if(database) {
+            scoresRef.push(record, () => { window.showModalResult(score, record.duration); });
+        } else {
+            window.showModalResult(score, record.duration);
+        }
+    };
+
+    window.showModalResult = function(score, dur) {
+        ['login', 'quiz', 'scores', 'review'].forEach(s => {
+            const el = document.getElementById(s+'-section');
+            if(el) el.classList.add('hidden');
+        });
+        const resEl = document.getElementById('result-section');
+        if(resEl) resEl.classList.remove('hidden');
+        const contentEl = document.getElementById('result-content');
+        if(contentEl) contentEl.innerHTML = `
+        <div class="flex justify-start mb-4">
+            <button onclick="window.goHome()" class="px-5 py-3 bg-gray-100 text-gray-700 rounded-xl font-bold hover:bg-gray-200 transition-colors shadow-sm border border-gray-200 text-lg">🏠 Trang chủ</button>
+        </div>
+        <div class="text-center">
+            <div class="text-7xl mb-4 animate-bounce">🎉</div>
+            <h3 class="text-3xl font-black text-emerald-600 mb-2">Hoàn thành bài thi!</h3>
+            <p class="text-gray-600 mb-6 mt-2"><span class="font-extrabold text-blue-700 text-xl uppercase tracking-wider">${currentStudent.hoTen} - Lớp ${currentStudent.lop}</span></p>
+        </div>
+        <div class="bg-blue-50 border-2 border-blue-100 rounded-3xl p-8 mb-6 shadow-inner relative text-center">
+            <div class="text-base text-blue-500 font-extrabold mb-2 uppercase tracking-widest">ĐIỂM SỐ CỦA BẠN</div>
+            <div class="text-7xl font-black text-blue-600 drop-shadow-sm">${score} <span class="text-3xl text-gray-400">/ 10</span></div>
+            <div class="text-lg font-extrabold text-indigo-600 mt-5 bg-white inline-block px-6 py-3 rounded-full shadow-sm border border-blue-100">Thời gian làm bài: ${dur}</div>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+            <button onclick="window.reviewQuiz()" class="w-full py-4 bg-gradient-to-r from-indigo-500 to-purple-500 text-white rounded-xl font-extrabold shadow-sm hover:shadow-md transition-colors text-xl">📝 Xem lại bài</button>
+            <button onclick="window.viewScoresAction()" class="w-full py-4 bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-xl font-extrabold shadow-sm hover:shadow-md transition-colors text-xl">🏆 Bảng điểm</button>
+        </div>`;
+    };
+
+    function getStatusBadge(isCorrect, isUnanswered) {
+        if (isUnanswered) return `<div class="mt-4 mb-2 inline-block px-4 py-2 bg-yellow-100 text-yellow-800 text-base font-black rounded-lg border border-yellow-300 shadow-sm">⚠️ BẠN CHƯA LÀM CÂU NÀY</div>`;
+        if (isCorrect) return `<div class="mt-4 mb-2 inline-block px-4 py-2 bg-emerald-100 text-emerald-800 text-base font-black rounded-lg border border-emerald-300 shadow-sm">✅ BẠN LÀM ĐÚNG RỒI</div>`;
+        return `<div class="mt-4 mb-2 inline-block px-4 py-2 bg-red-100 text-red-800 text-base font-black rounded-lg border border-red-300 shadow-sm">❌ BẠN LÀM SAI RỒI</div>`;
+    }
+
+    window.reviewQuiz = function() {
+        showSection('review');
+        const container = document.getElementById('review-content');
+        if(!container) return;
+        let html = '';
+
+        currentQuestions.forEach((q) => {
+            if (q.type === 'single') {
+                let uAns = userAnswers[q.id];
+                let isUnanswered = (uAns === undefined);
+                let isCorrect = (uAns === q.correct);
+                let borderColor = isCorrect ? 'border-emerald-300 bg-emerald-50' : 'border-red-300 bg-red-50';
+                
+                html += `<div class="p-6 border-2 rounded-2xl shadow-sm mb-6 ${borderColor}">`;
+                html += `<div class="font-bold text-xl text-red-600 mb-5 leading-relaxed math-scroll">${q.question}</div>`;
+                html += `<div class="space-y-3">`;
+                
+                q.options.forEach((opt, i) => {
+                    let optBg = ''; let iconHtml = '';
+                    if (q.correct === i) {
+                        optBg = 'bg-emerald-100 text-emerald-900 border-emerald-400 border-2'; 
+                        iconHtml = '<div class="text-3xl drop-shadow-sm ml-auto pl-2 flex-shrink-0">✅</div>';
+                    } else if (uAns === i && !isCorrect) {
+                        optBg = 'bg-red-100 text-red-900 line-through border-red-400 border-2'; 
+                        iconHtml = '<div class="text-3xl drop-shadow-sm ml-auto pl-2 flex-shrink-0">❌</div>';
+                    } else { optBg = 'bg-white text-slate-700 border border-slate-200'; }
+
+                    html += `<div class="p-4 rounded-xl ${optBg} flex items-center gap-4"><div class="w-10 h-10 flex items-center justify-center rounded-lg bg-white/50 text-base font-black shadow-sm flex-shrink-0">${String.fromCharCode(65 + i)}</div><div class="${(q.correct === i || uAns === i) ? 'font-semibold' : 'font-medium'} flex-1 text-lg math-scroll">${opt}</div>${iconHtml}</div>`;
+                });
+                html += `</div>`;
+                
+                html += getStatusBadge(isCorrect, isUnanswered); 
+                
+                if (q.explanation) {
+                    html += `<div class="review-explanation mt-3 pt-3 border-t-2 border-gray-200"><p class="text-base font-black uppercase tracking-widest text-blue-600 mb-2">💡 Giải chi tiết:</p><p class="text-black font-medium text-lg leading-loose math-scroll">${q.explanation}</p></div>`;
+                }
+                html += `</div>`;
+            } 
+            else if (q.type === 'tf_cluster') {
+                html += `<div class="p-6 border-2 border-indigo-200 bg-indigo-50 rounded-2xl shadow-sm mb-6">`;
+                html += `<div class="font-bold text-xl text-indigo-800 mb-5 math-scroll">${q.context}</div>`;
+                html += `<div class="space-y-5">`;
+                q.items.forEach(item => {
+                    let uAns = userAnswers[q.id + '_' + item.id];
+                    let isUnanswered = (uAns === undefined);
+                    let isCorrect = (uAns === item.correct);
+                    let iconHtml = isCorrect ? '✅' : '❌';
+                    let ansText = item.correct ? 'ĐÚNG' : 'SAI';
+
+                    html += `<div class="p-5 bg-white border border-indigo-100 rounded-xl shadow-sm">
+                        <div class="font-bold text-gray-800 text-lg math-scroll">${item.text}</div>
+                        <div class="mt-3 flex items-center justify-between border-b border-gray-100 pb-3">
+                            <span class="text-base font-bold text-gray-500">Bạn chọn: <span class="${isUnanswered ? 'text-gray-400' : 'text-blue-600'} font-black uppercase">${isUnanswered ? 'Chưa trả lời' : (uAns?'Đúng':'Sai')}</span></span>
+                            <span class="font-black text-xl ${isCorrect ? 'text-emerald-500' : 'text-red-500'}">Đáp án: ${ansText} ${iconHtml}</span>
+                        </div>`;
+                        
+                    html += getStatusBadge(isCorrect, isUnanswered);
+                    if(item.expl) {
+                        html += `<div class="review-explanation mt-3 pt-3 text-lg text-gray-700 font-medium leading-relaxed math-scroll"><span class="text-indigo-500 font-bold uppercase">Giải chi tiết:</span><br> ${item.expl}</div>`;
+                    }
+                    html += `</div>`;
+                });
+                html += `</div></div>`;
+            }
+        });
+        container.innerHTML = html;
+    };
+
+    window.backToResult = function() { showSection('result'); };
+    
+    let isReviewingFromLeaderboard = false;
+    
+    window.backFromReview = function() {
+        if (isReviewingFromLeaderboard) {
+            showSection('scores');
+            isReviewingFromLeaderboard = false;
+        } else {
+            window.backToResult();
+        }
+    };
+
+    window.reviewStudentScore = function(scoreId) {
+        const record = allScores.find(x => x.id === scoreId);
+        if (!record) return;
+        
+        currentStudent = { hoTen: record.hoTen, lop: record.lop, tenDe: record.tenDe, maDe: record.maDe };
+        userAnswers = record.userAnswers || {}; 
+        
+        currentQuestions = JSON.parse(JSON.stringify(exam_data)); 
+        
+        isReviewingFromLeaderboard = true;
+        window.reviewQuiz();
+    };
+
+    window.renderScores = function() {
+        const tbody = document.getElementById('scores-tbody');
+        const noScore = document.getElementById('no-scores');
+        const myRankDisplay = document.getElementById('my-rank-display');
+        const paginationContainer = document.getElementById('pagination-controls');
+        
+        if(!tbody) return;
+
+        const sortedAll = [...allScores].sort((a, b) => (b.diem - a.diem) || (a.duration.localeCompare(b.duration)));
+        
+        sortedAll.forEach((s, i) => s.absoluteRank = i + 1);
+
+        const myRankIndex = sortedAll.findIndex(s => s.deviceId === deviceId);
+        if (myRankDisplay) {
+            if (myRankIndex !== -1) {
+                myRankDisplay.innerHTML = `🏆 Thứ hạng của bạn: <span class="text-red-600 font-black">#${sortedAll[myRankIndex].absoluteRank}</span>`;
+            } else {
+                myRankDisplay.innerHTML = `🏆 Thứ hạng của bạn: <span class="text-gray-400">Chưa thi</span>`;
+            }
+        }
+
+        const filteredScores = searchTerm ? sortedAll.filter(s => s.hoTen.toLowerCase().includes(searchTerm)) : sortedAll;
+
+        if (filteredScores.length === 0) {
+            tbody.innerHTML = ''; 
+            noScore.classList.remove('hidden'); 
+            paginationContainer.innerHTML = '';
+            return; 
+        }
+        
+        noScore.classList.add('hidden');
+
+        const totalPages = Math.ceil(filteredScores.length / itemsPerPage);
+        if (currentPage > totalPages) currentPage = totalPages;
+        if (currentPage < 1) currentPage = 1;
+
+        const startIndex = (currentPage - 1) * itemsPerPage;
+        const endIndex = startIndex + itemsPerPage;
+        const pageItems = filteredScores.slice(startIndex, endIndex);
+
+        tbody.innerHTML = pageItems.map((s) => {
+            const isMe = s.deviceId === deviceId;
+            return `<tr class="${isMe ? 'my-score-row' : 'hover:bg-slate-50'} transition-colors border-b border-slate-100">
+            <td class="px-4 py-5 font-black text-slate-500 text-base text-center">#${s.absoluteRank}</td>
+            <td class="px-4 py-5 font-extrabold text-slate-800 text-base">${s.hoTen} ${isMe ? '<span class="ml-2 bg-pink-500 text-white text-xs px-2 py-1 rounded-md shadow-sm">Bạn</span>' : ''}</td>
+            <td class="px-4 py-5 font-black text-blue-600 text-base text-center">${s.lop}</td>
+            <td class="px-4 py-5 text-center font-black text-orange-600 text-sm">${s.duration}</td>
+            <td class="px-4 py-5 text-center"><span class="font-black text-2xl ${s.diem >= 5 ? 'text-emerald-600' : 'text-red-500'}">${s.diem}</span></td>
+            <td class="px-4 py-5 text-center">
+                <button onclick="window.reviewStudentScore('${s.id}')" class="bg-indigo-100 text-indigo-700 hover:bg-indigo-200 px-4 py-2 rounded-lg font-bold text-sm transition-colors border border-indigo-200 shadow-sm cursor-pointer whitespace-nowrap">Xem lại</button>
+            </td>
+        </tr>`;
+        }).join('');
+
+        renderPagination(totalPages);
+    };
+
+    function renderPagination(totalPages) {
+        const container = document.getElementById('pagination-controls');
+        if (!container) return;
+        
+        if (totalPages <= 1) {
+            container.innerHTML = '';
+            return;
+        }
+
+        let html = '<div class="flex flex-wrap items-center justify-center gap-2">';
+        
+        html += `<button onclick="window.changePage(${currentPage - 1})" class="px-4 py-2 rounded-xl font-bold transition-colors ${currentPage === 1 ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 shadow-sm'}" ${currentPage === 1 ? 'disabled' : ''}>&laquo; Trước</button>`;
+
+        let startPage = Math.max(1, currentPage - 1);
+        let endPage = Math.min(totalPages, currentPage + 1);
+
+        if (startPage > 1) {
+            html += `<button onclick="window.changePage(1)" class="px-4 py-2 rounded-xl font-bold bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 shadow-sm">1</button>`;
+            if (startPage > 2) html += `<span class="px-2 text-gray-400 font-black">...</span>`;
+        }
+
+        for (let i = startPage; i <= endPage; i++) {
+            html += `<button onclick="window.changePage(${i})" class="px-4 py-2 rounded-xl font-bold transition-all ${i === currentPage ? 'bg-orange-500 text-white shadow-md border-orange-600' : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 shadow-sm'}">${i}</button>`;
+        }
+
+        if (endPage < totalPages) {
+            if (endPage < totalPages - 1) html += `<span class="px-2 text-gray-400 font-black">...</span>`;
+            html += `<button onclick="window.changePage(${totalPages})" class="px-4 py-2 rounded-xl font-bold bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 shadow-sm">${totalPages}</button>`;
+        }
+
+        html += `<button onclick="window.changePage(${currentPage + 1})" class="px-4 py-2 rounded-xl font-bold transition-colors ${currentPage === totalPages ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 shadow-sm'}" ${currentPage === totalPages ? 'disabled' : ''}>Sau &raquo;</button>`;
+        
+        html += '</div>';
+        container.innerHTML = html;
+    }
+
+    function showSection(id) {
+        ['login', 'quiz', 'scores', 'result', 'review'].forEach(s => {
+            const el = document.getElementById(s+'-section');
+            if(el) el.classList.add('hidden');
+        });
+        const tgt = document.getElementById(id+'-section');
+        if(tgt) tgt.classList.remove('hidden');
+    }
+
+    function startTimer(seconds) {
+        const display = document.getElementById('timer');
+        if(!display) return;
+        let remaining = seconds;
+        timerInterval = setInterval(() => {
+            remaining--;
+            const m = Math.floor(remaining / 60).toString().padStart(2, '0');
+            const s = (remaining % 60).toString().padStart(2, '0');
+            display.innerText = `${m}:${s}`;
+            if (remaining <= 0) window.submitQuiz();
+        }, 1000);
+    }
+
+    try {
+        if (!localStorage.getItem('deviceId')) localStorage.setItem('deviceId', 'dev_' + Math.random().toString(36).substr(2) + Date.now());
+        deviceId = localStorage.getItem('deviceId');
+    } catch (e) { deviceId = 'dev_temp_' + Math.random().toString(36).substr(2); }
+  </script>
+ </body>
+</html>
