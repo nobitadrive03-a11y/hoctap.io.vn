@@ -1,0 +1,812 @@
+<!doctype html>
+<html lang="vi" class="w-full h-full m-0 p-0">
+ <head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <title>Tin Học 11 - Bài 7</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+  <!-- 1. MÃ GA4 GỐC (Kết nối với Google Analytics) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-NSJCVSL9RM"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-NSJCVSL9RM'); 
+</script>
+
+<!-- 2. MÃ NHỊP TIM 30 GIÂY -->
+<script>
+  setInterval(function() {
+    if (!document.hidden) { 
+      gtag('event', 'keep_alive', {
+        'event_category': 'Engagement',
+        'event_label': 'Học sinh đang làm bài',
+        'non_interaction': false
+      });
+    }
+  }, 30000); 
+</script>
+
+  <style>
+    * { 
+        -webkit-tap-highlight-color: transparent; 
+        -webkit-touch-callout: none !important; 
+        touch-action: manipulation;
+    }
+    
+    html, body { width: 100%; min-height: 100vh; margin: 0; padding: 0; overflow-x: hidden; }
+    
+    body { 
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
+      background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+      background-size: 400% 400%;
+      animation: gradientBG 15s ease infinite;
+    }
+    
+    @keyframes gradientBG {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+
+    #app { width: 100%; min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden; }
+    
+    .glass-card {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    .option-label { transition: background-color 0.1s ease, border-color 0.1s ease; cursor: pointer; border-color: #e2e8f0; }
+    .option-label:hover { background-color: #f0fdfa; border-color: #38bdf8; }
+    
+    input[type="radio"].single-radio:checked + .option-label {
+      background: linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%);
+      color: white; border-color: transparent;
+      box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+    }
+    input[type="radio"].single-radio:checked + .option-label div:first-child { background-color: rgba(255,255,255,0.25); border-color: transparent; color: white; }
+    input[type="radio"].single-radio:checked + .option-label div:last-child { color: white; }
+    
+    .fade-in { animation: fadeIn 0.4s ease forwards; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    
+    .my-score-row {
+      background: linear-gradient(to right, #fdf4ff, #ffffff) !important;
+      border-left: 4px solid #db2777 !important; font-weight: 700 !important;
+      color: #9d174d !important; box-shadow: 0 2px 8px rgba(0,0,0,0.05); position: relative; z-index: 10;
+    }
+    .my-score-row td { padding-top: 16px; padding-bottom: 16px; }
+    
+    .btn-tf { transition: background-color 0.1s ease; border-width: 2px; }
+    .btn-tf.selected { background-color: #2563eb; color: white; border-color: #1d4ed8; }
+    .btn-tf:not(.selected) { background-color: white; color: #4b5563; border-color: #e5e7eb; }
+    .btn-tf:not(:disabled):active { transform: scale(0.95); }
+    
+    .math-scroll { overflow-x: auto; min-width: 0; padding-bottom: 4px; scrollbar-width: none; -ms-overflow-style: none; }
+    .math-scroll::-webkit-scrollbar { display: none; }
+  </style>
+
+ </head>
+ <body>
+  <div id="app" class="p-0 sm:p-4 md:p-8 transition-all">
+   
+   <div id="login-section" class="w-full max-w-md mx-auto fade-in flex flex-col justify-center flex-grow">
+    <div class="glass-card rounded-none sm:rounded-3xl p-6 sm:p-8 flex flex-col justify-start shadow-2xl border-t-8 border-indigo-600 bg-white">
+     <div class="text-center mb-6 pt-4 sm:pt-0">
+      <div class="flex items-center justify-center w-24 h-24 mx-auto mb-4 rounded-full border-4 border-yellow-400 bg-red-600 shadow-lg transform transition-transform hover:scale-105">
+          <span class="text-white font-black text-4xl tracking-tighter">HS</span>
+      </div>
+      <h1 class="text-2xl sm:text-3xl font-bold text-red-500 mb-3"> ĐỀ KIỂM TRA<br> BÀI 7: THỰC HÀNH TÌM KIẾM THÔNG TIN TRÊN INTERNET </h1>
+     </div>
+      <div id="login-form" class="space-y-4">
+      <div class="flex flex-col gap-4">
+          <div class="w-full">
+               <label class="block text-lg font-bold text-gray-700 mb-1">Họ và tên</label> 
+               <input type="text" id="hoTen" class="w-full px-4 py-4 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-100 outline-none transition-all font-semibold text-lg" placeholder="Nhập họ tên...">
+          </div>
+          <div class="w-full">
+               <label class="block text-lg font-bold text-gray-700 mb-1">Lớp</label> 
+               <input type="text" id="lop" class="w-full px-4 py-4 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-100 outline-none transition-all font-semibold text-lg" placeholder="11A1">
+          </div>
+      </div>
+
+      <div id="login-error" class="hidden bg-red-100 border border-red-300 text-red-700 font-bold text-base p-3 rounded-xl text-center shadow-sm"></div>
+
+      <button type="button" onclick="window.startQuizAction()" id="start-btn" class="w-full py-5 mt-6 bg-gradient-to-r from-blue-500 to-cyan-400 text-white font-extrabold rounded-2xl shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all text-2xl tracking-wide"> 🚀 BẮT ĐẦU THI </button>
+     </div>
+    </div>
+   </div>
+
+   <div id="quiz-section" class="w-full max-w-4xl mx-auto hidden flex-grow flex flex-col">
+    <div class="glass-card rounded-none sm:rounded-3xl p-4 sm:p-8 flex flex-col flex-grow relative border-t-8 border-blue-500 bg-white shadow-2xl">
+     <div class="flex items-center justify-between mb-4 sm:mb-6 pb-4 border-b-2 border-gray-100">
+      
+      <div class="flex items-center gap-3">
+       <div class="flex items-center justify-center w-12 h-12 rounded-full border-2 border-yellow-400 bg-red-600 shadow-sm flex-shrink-0">
+           <span class="text-white font-black text-xl tracking-tighter">HS</span>
+       </div>
+       <div>
+        <h2 id="quiz-title" class="text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">Đề Kiểm Tra</h2>
+        <p id="student-info" class="text-base font-bold text-gray-500 mt-1 uppercase tracking-wide"></p>
+       </div>
+      </div>
+
+      <div class="text-right bg-blue-50 px-4 py-2 rounded-xl border border-blue-100" id="progress-container">
+       <div class="text-sm text-blue-500 font-bold uppercase tracking-wider mb-1">Tiến độ (Câu)</div>
+       <div id="progress-text" class="text-2xl font-black text-blue-700">0/28</div>
+      </div>
+     </div>
+     
+     <div id="timer-banner" class="mb-6 p-4 bg-gradient-to-r from-orange-50 to-red-50 border-2 border-red-100 rounded-2xl flex items-center justify-between shadow-sm sticky top-2 z-40">
+        <span class="text-red-800 font-extrabold flex items-center gap-2 text-lg"><span class="text-2xl animate-pulse">⏰</span> THỜI GIAN:</span> 
+        <span id="timer" class="text-4xl font-black text-red-600 font-mono tracking-wider drop-shadow-sm">45:00</span>
+     </div>
+
+     <div id="question-container" class="mb-8 flex-grow w-full max-w-full"></div>
+     
+     <div id="network-error" class="hidden bg-red-100 text-red-700 p-4 rounded-xl mt-4 text-center font-bold text-sm border-2 border-red-300 mb-4 shadow-sm"></div>
+
+    <div class="flex pt-4 sm:pt-6 border-t-2 border-gray-100 mt-auto pb-4 sm:pb-0">
+        <button id="submit-btn" onclick="window.promptSubmit()" class="w-full py-5 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-bold text-2xl rounded-2xl shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1">✅ NỘP BÀI NGAY</button>
+     </div>
+    </div>
+   </div>
+
+   <div id="confirm-submit-modal" class="fixed inset-0 hidden flex items-center justify-center bg-black/60 backdrop-blur-sm z-50 transition-opacity">
+       <div class="bg-white rounded-3xl w-full max-w-sm shadow-2xl p-6 text-center transform transition-all scale-100 mx-4 border-2 border-gray-100">
+           <div class="text-yellow-400 mb-4 flex justify-center">
+               <svg xmlns="http://www.w3.org/2000/svg" class="h-24 w-24" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+               </svg>
+           </div>
+           <h3 class="text-3xl font-black text-gray-800 mb-2 uppercase tracking-wide">Xác nhận nộp</h3>
+           <p class="text-gray-600 mb-6 font-medium text-xl">Các em mới làm <span id="confirm-answered" class="text-red-600 font-black text-2xl">0</span>/<span id="confirm-total" class="font-black text-2xl">28</span> câu. Có chắc chắn muốn nộp bài không? Những câu chưa làm sẽ bị tính là sai.</p>
+           <div class="flex flex-col gap-3">
+               <button onclick="window.closeConfirmModal()" class="w-full py-4 bg-gray-100 text-gray-800 font-extrabold text-xl rounded-xl hover:bg-gray-200 border border-gray-200">Quay lại làm tiếp</button>
+               <button onclick="window.executeSubmit()" class="w-full py-4 bg-emerald-600 text-white font-extrabold text-xl rounded-xl hover:bg-emerald-700 shadow-md">Vẫn Nộp Luôn</button>
+           </div>
+       </div>
+   </div>
+
+   <div id="result-section" class="w-full max-w-2xl mx-auto hidden fade-in flex flex-col justify-center flex-grow pb-8">
+    <div class="glass-card rounded-none sm:rounded-3xl p-6 sm:p-8 flex flex-col justify-start border-t-8 border-green-500 bg-white shadow-2xl" id="result-content">
+    </div>
+   </div>
+
+   <div id="review-section" class="w-full max-w-4xl mx-auto hidden flex-grow flex flex-col">
+    <div class="glass-card rounded-none sm:rounded-3xl p-4 sm:p-8 flex flex-col flex-grow border-t-8 border-indigo-500 bg-white overflow-hidden shadow-2xl">
+     <div class="flex flex-col-reverse sm:flex-row items-start sm:items-center justify-between mb-6 pb-4 border-b-2 border-gray-100 gap-4">
+      <div class="flex flex-wrap gap-2">
+          <button onclick="window.goHome()" class="px-5 py-3 bg-gray-100 text-gray-700 rounded-xl font-bold hover:bg-gray-200 text-lg shadow-sm border border-gray-200">🏠 Trang chủ</button>
+          <button onclick="window.backFromReview()" class="px-5 py-3 bg-indigo-50 text-indigo-700 rounded-xl font-bold hover:bg-indigo-100 text-lg shadow-sm border border-indigo-200">🔙 Quay lại</button>
+          <button onclick="window.viewScoresAction()" class="px-5 py-3 bg-orange-50 text-orange-700 rounded-xl font-bold hover:bg-orange-100 text-lg shadow-sm border border-orange-200">🏆 Bảng điểm</button>
+      </div>
+      <h2 class="text-3xl sm:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">📝 Xem Lại Bài Làm</h2>
+     </div>
+     <div id="review-content" class="space-y-8 w-full max-w-full"></div>
+    </div>
+   </div>
+
+   <div id="scores-section" class="w-full max-w-6xl mx-auto hidden flex-grow flex flex-col">
+    <div class="glass-card rounded-none sm:rounded-3xl p-4 sm:p-8 flex flex-col flex-grow border-t-8 border-orange-500 bg-white w-full max-w-full shadow-2xl">
+     <div class="mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b-2 border-gray-100 pb-4">
+      <button onclick="window.goHome()" class="px-5 py-3 bg-gray-100 text-gray-700 rounded-xl font-bold hover:bg-gray-200 text-lg shadow-sm border border-gray-200 whitespace-nowrap">🏠 Trang chủ</button>
+      <h2 class="text-3xl sm:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-red-600 text-center flex-grow">🏆 BẢNG XẾP HẠNG</h2>
+     </div>
+     
+     <div class="flex flex-col sm:flex-row justify-between items-center mb-4 gap-4 bg-gray-50 p-4 rounded-xl border border-gray-200">
+         <div id="my-rank-display" class="text-xl font-bold text-gray-700">🏆 Thứ hạng của bạn: <span class="text-gray-400">--</span></div>
+         <div class="w-full sm:w-auto flex-grow max-w-sm">
+             <input type="text" id="search-student" oninput="window.searchStudent(this.value)" placeholder="🔍 Nhập tên học sinh để tìm..." class="w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm focus:border-orange-500 focus:ring-2 focus:ring-orange-200 outline-none transition-all font-medium">
+         </div>
+     </div>
+
+     <div class="overflow-x-auto rounded-xl border border-slate-200 flex-grow shadow-inner bg-white/50 w-full">
+      <table class="w-full text-sm sm:text-base whitespace-nowrap min-w-max">
+       <thead class="bg-gradient-to-r from-orange-500 to-red-500 text-white">
+        <tr>
+         <th class="px-3 sm:px-4 py-4 text-center font-extrabold w-16">Hạng</th>
+         <th class="px-3 sm:px-4 py-4 text-left font-extrabold">Họ tên</th>
+         <th class="px-3 sm:px-4 py-4 text-center font-extrabold">Lớp</th>
+         <th class="px-3 sm:px-4 py-4 text-center font-extrabold">Thời gian</th>
+         <th class="px-3 sm:px-4 py-4 text-center font-extrabold">Điểm</th>
+         <th class="px-2 sm:px-4 py-4 text-center font-extrabold">Xem lại</th>
+        </tr>
+       </thead>
+       <tbody id="scores-tbody" class="bg-white/80 divide-y divide-gray-100"></tbody>
+      </table>
+      <div id="no-scores" class="text-center py-12 hidden text-gray-500 font-bold text-xl">Không tìm thấy dữ liệu thi 🥲</div>
+     </div>
+     
+     <div id="pagination-controls" class="w-full flex justify-center mt-6"></div>
+    </div>
+  </div>
+
+  <script>
+    let database = null;
+    let scoresRef = null;
+
+    try {
+        const firebaseConfig = {
+            apiKey: "AIzaSyBQ9Pos8awlh9j041qDWTPFRsVIjF-kPnk",
+            authDomain: "hoctap-91691.firebaseapp.com",
+            databaseURL: "https://hoctap-91691-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "hoctap-91691",
+            storageBucket: "hoctap-91691.firebasestorage.app",
+            messagingSenderId: "1004553425319",
+            appId: "1:1004553425319:web:45d15cbae393f614c56682",
+            measurementId: "G-Q6X1TL9PRV"
+        };
+        if (typeof firebase !== 'undefined') {
+            if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+            database = firebase.database();
+            scoresRef = database.ref('bxh_tin_11_7'); 
+        }
+    } catch(err) { console.error("Lỗi Firebase:", err); }
+
+    let isQuizStarted = false; 
+    let currentQuestions = [];
+    let deviceId = '';
+    let allScores = [];
+    let currentStudent = {};
+    let userAnswers = {};
+    let timerInterval;
+    let quizStartTime, quizEndTime;
+    
+    let searchTerm = '';
+    let currentPage = 1;
+    const itemsPerPage = 10;
+
+    const exam_data = [
+        { id: "q1", type: "single", question: "Câu 1: Một trong những mục tiêu cốt lõi người học cần đạt được sau khi thực hành kĩ năng tìm kiếm thông tin trên Internet là gì?", options: ["Biết cài đặt thành thạo các hệ điều hành máy tính.", "Biết sử dụng máy tìm kiếm bằng phím hoặc tiếng nói.", "Biết lập trình phần mềm quản trị cơ sở dữ liệu số.", "Biết kết nối chia sẻ dữ liệu nội bộ qua cáp quang."], correct: 1, explanation: "Biết sử dụng máy tìm kiếm bằng phím hoặc tiếng nói là một kĩ năng cốt lõi khi thực hành tra cứu thông tin trên Internet." },
+        { id: "q2", type: "single", question: "Câu 2: Bước thao tác cơ bản đầu tiên bắt buộc phải làm khi người dùng muốn sử dụng công cụ tra cứu thông tin trên máy tính cá nhân là gì?", options: ["Tiến hành khởi động trình duyệt và gõ địa chỉ URL máy tìm kiếm.", "Tiến hành cài đặt phần mềm diệt vi rút cho toàn bộ hệ thống máy.", "Tiến hành nâng cấp hệ điều hành Windows lên phiên bản cao nhất.", "Tiến hành rút cáp kết nối mạng để khởi động lại bộ định tuyến web."], correct: 0, explanation: "Khởi động trình duyệt và truy cập địa chỉ URL máy tìm kiếm (như Google) là thao tác đầu tiên." },
+        { id: "q3", type: "single", question: "Câu 3: Trên giao diện của các máy tìm kiếm phổ biến như Google, biểu tượng đồ họa nào được sử dụng để kích hoạt tính năng nhận diện tiếng nói?", options: ["Biểu tượng đồ họa hình chiếc loa phát thanh thu nhỏ.", "Biểu tượng đồ họa hình chiếc kính lúp phóng to ảnh.", "Biểu tượng đồ họa hình chiếc micro thu nhận âm thanh.", "Biểu tượng đồ họa hình chiếc camera quay phim nét."], correct: 2, explanation: "Biểu tượng micro đại diện cho tính năng nhập liệu bằng tiếng nói trên thanh tìm kiếm." },
+        { id: "q4", type: "single", question: "Câu 4: Dựa vào các dạng phân loại kết quả tra cứu của Google, tùy chọn cơ bản nào sau đây thường xuất hiện trên thanh công cụ hỗ trợ người dùng?", options: ["Tùy chọn chuyên lọc các dòng mã lệnh lập trình web.", "Tùy chọn chuyên hiển thị kết quả phân loại dạng Video.", "Tùy chọn chuyên dùng để chặn mọi quảng cáo rác mạng.", "Tùy chọn chuyên quét phần mềm độc hại trên đám mây."], correct: 1, explanation: "Google cung cấp các thanh công cụ phân loại như Hình ảnh, Video, Tin tức để lọc kết quả." },
+        { id: "q5", type: "single", question: "Câu 5: Khi cần tìm kiếm các tệp tin chứa nội dung văn bản cố định trên Google, người dùng có thể thêm hậu tố từ khóa đặc biệt nào vào thanh tra cứu?", options: ["Có thể bổ sung thêm hậu tố cú pháp là filetype:pdf.", "Có thể bổ sung thêm hậu tố cú pháp là filetype:mp4.", "Có thể bổ sung thêm hậu tố cú pháp là filetype:mp3.", "Có thể bổ sung thêm hậu tố cú pháp là filetype:exe."], correct: 0, explanation: "Cú pháp filetype:pdf giúp người dùng thu hẹp kết quả về tệp văn bản PDF định dạng cố định." },
+        { id: "q6", type: "single", question: "Câu 6: Thiết bị linh kiện phần cứng nào sau đây là yêu cầu thiết yếu bắt buộc phải trang bị trên máy tính để thực hiện tra cứu bằng tiếng nói?", options: ["Máy tính bắt buộc phải kết nối với một chiếc máy in kim màu.", "Máy tính bắt buộc phải kết nối với một chiếc micro thu âm.", "Máy tính bắt buộc phải kết nối với một chiếc màn hình cảm ứng.", "Máy tính bắt buộc phải kết nối với một chiếc chuột quang học."], correct: 1, explanation: "Cần phải có thiết bị thu âm thanh (micro) để hệ thống nhận diện và chuyển đổi giọng nói." },
+        { id: "q7", type: "single", question: "Câu 7: Để thu hẹp phạm vi từ khóa và yêu cầu máy tìm kiếm trả về các kết quả có chứa chính xác cụm từ đã nhập, người dùng nên làm gì?", options: ["Người dùng nên đặt cụm từ khóa đó vào bên trong cặp dấu ngoặc đơn.", "Người dùng nên đặt cụm từ khóa đó vào bên trong cặp dấu nháy kép.", "Người dùng nên đặt cụm từ khóa đó vào bên trong cặp dấu ngoặc vuông.", "Người dùng nên đặt cụm từ khóa đó vào bên trong cặp dấu ngoặc nhọn."], correct: 1, explanation: "Đặt từ khóa vào trong cặp dấu nháy kép là phương pháp phổ biến để tìm kiếm chính xác nguyên văn cụm từ." },
+        { id: "q8", type: "single", question: "Câu 8: Theo tài liệu sách giáo khoa, việc sở hữu kỹ năng xây dựng từ khóa tra cứu chất lượng mang lại những lợi ích thiết thực to lớn nào cho người dùng?", options: ["Giúp tăng độ chính xác, mang lại hiệu quả cao và tiết kiệm thời gian.", "Giúp nâng cấp thẳng tốc độ băng thông của đường truyền mạng nội bộ.", "Giúp hệ thống máy tính tự động bảo vệ thông tin cá nhân trên mạng.", "Giúp chuyển đổi ngay lập tức mọi ngôn ngữ tiếng lóng sang tiếng Việt."], correct: 0, explanation: "Xây dựng từ khóa tốt giúp làm tăng độ chính xác, hiệu quả và tiết kiệm thời gian cho người tìm kiếm." },
+        { id: "q9", type: "single", question: "Câu 9: Vì sao cùng tra cứu về một chủ đề trên mạng Internet nhưng lại có người nhanh chóng tìm được thông tin đúng, trong khi người khác thì mất rất nhiều thời gian?", options: ["Do sự chênh lệch lớn về mức độ thành thạo kĩ năng xác lập tiêu chí và lựa chọn từ khóa.", "Do sự khác biệt về thương hiệu linh kiện vi xử lý trung tâm đang được sử dụng trên máy.", "Do các hãng sản xuất thiết bị phần cứng cung cấp các chuẩn kết nối mạng wifi hoàn toàn khác.", "Do nhà mạng phân biệt đối xử và giảm tốc độ đường truyền kết nối của một số dòng máy tính."], correct: 0, explanation: "Kĩ năng xây dựng từ khóa và xác lập các tiêu chí phân loại tạo nên sự chênh lệch về thời gian tra cứu." },
+        { id: "q10", type: "single", question: "Câu 10: Khi sử dụng công cụ tìm kiếm bằng tiếng nói, nếu hệ thống tự động điền cụm từ khóa trên màn hình không khớp hoàn toàn với lời đọc của bạn, bạn cần thực hiện thao tác xử lý nào?", options: ["Cần phải nhanh chóng cài đặt lại toàn bộ hệ điều hành đồ họa cho chiếc máy tính cá nhân.", "Cần phải khởi động lại máy để tải thêm gói ngôn ngữ lập trình đa phương tiện cấp tốc.", "Cần phải thực hiện nhấp chuột chọn lại biểu tượng micro để tiến hành đọc lại từ khóa đó.", "Cần phải rút ngay lập tức dây cáp mạng Internet để chặn máy chủ lưu trữ lại giọng nói lỗi."], correct: 2, explanation: "Nếu kết quả điền tự động không đúng ý định, người dùng nên thực hiện nhấp lại biểu tượng micro để đọc lại." },
+        { id: "q11", type: "single", question: "Câu 11: Mục đích lớn nhất của việc xác lập các tiêu chí phân loại dưới dạng 'Hình ảnh', 'Tin tức' hay 'Video' trên các thanh công cụ máy tìm kiếm trực tuyến là gì?", options: ["Nó giúp người dùng ép hệ thống tải xuống máy một phần mềm thiết kế đồ hoạ dung lượng lớn.", "Nó giúp người dùng loại bỏ các dạng kết quả không mong muốn nhằm nâng cao hiệu quả tìm kiếm.", "Nó giúp người dùng kích hoạt cơ chế khóa bảo mật tuyệt đối chống lại các rủi ro virus trên mạng.", "Nó giúp người dùng lập tức biến máy tính cá nhân thành một rạp chiếu phim với hình ảnh nổi 3D."], correct: 1, explanation: "Lựa chọn các loại hình trả về giúp thu hẹp phạm vi, loại bỏ dạng kết quả không mong muốn để tìm kiếm nhanh hơn." },
+        { id: "q12", type: "single", question: "Câu 12: Về mặt kĩ thuật truy xuất dữ liệu, sự khác biệt mấu chốt giữa việc gõ một cụm từ khóa tra cứu bình thường và việc bao bọc cụm từ khóa đó vào bên trong cặp dấu nháy kép là gì?", options: ["Dấu nháy kép yêu cầu cỗ máy tìm kiếm phải ưu tiên hiển thị những video quảng cáo đắt tiền.", "Dấu nháy kép yêu cầu cỗ máy tìm kiếm phải tự động sửa mọi lỗi chính tả mà người dùng đã gõ.", "Dấu nháy kép yêu cầu cỗ máy tìm kiếm chỉ xuất kết quả chứa chính xác cụm từ đó không sai lệch.", "Dấu nháy kép yêu cầu cỗ máy tìm kiếm tự động phiên dịch văn bản đó sang ngôn ngữ quốc tế."], correct: 2, explanation: "Dấu nháy kép là công cụ bắt buộc các cỗ máy tìm kiếm phải ưu tiên các văn bản chứa cụm từ đó theo đúng thứ tự gõ." },
+        { id: "q13", type: "single", question: "Câu 13: Khi muốn tra cứu nhanh và tải về những văn bản hành chính gốc (ví dụ: thông báo, quyết định, quy chế), tại sao các chuyên gia thường khuyến nghị người dùng kết hợp hậu tố filetype:pdf?", options: ["Bởi vì hậu tố này tự động biên dịch văn bản thô sơ thành một đoạn phim tài liệu vô cùng sinh động.", "Bởi vì hậu tố này giúp thu hẹp phạm vi tìm kiếm để chỉ hiển thị các tệp tin lưu trữ định dạng văn bản.", "Bởi vì hậu tố này nâng cấp toàn bộ hệ điều hành máy tính để hỗ trợ hiển thị các trang web đồ hoạ.", "Bởi vì hậu tố này cấp quyền quản trị viên cao cấp cho phép người dùng thay đổi dữ liệu của nhà mạng."], correct: 1, explanation: "Hậu tố filetype:pdf giúp người dùng dễ dàng tải được các tệp văn bản giữ nguyên định dạng, cực kì phù hợp cho văn bản hành chính." },
+        { id: "q14", type: "single", question: "Câu 14: Khi tiến hành trải nghiệm và so sánh giữa nhiều nền tảng máy tìm kiếm phổ biến khác nhau, tiêu chí cốt lõi nào sau đây mang tính quyết định để đánh giá năng lực thực tế của công cụ?", options: ["Khả năng cung cấp giao diện lập trình siêu việt và khả năng cài đặt lại cấu hình mạng diện rộng.", "Khả năng hỗ trợ người dùng tìm kiếm bằng giọng nói và khả năng phân loại các dạng tệp tin trả về.", "Khả năng nâng cấp tự động tốc độ đường truyền tín hiệu cáp quang quốc tế lên mức băng thông cao.", "Khả năng thiết kế đồ hoạ đa không gian và phát video tương tác ba chiều ngay trên màn hình nền."], correct: 1, explanation: "Hỗ trợ giọng nói và năng lực cung cấp bộ lọc phân loại là các tiêu chí thực tế quan trọng để đo lường công cụ tìm kiếm." },
+        { id: "q15", type: "single", question: "Câu 15: Trong chu trình 3 bước thực hành tra cứu văn bản, việc liên tục quay lại bước 2 để thay đổi, điều chỉnh cụm từ khóa sau khi đã quan sát, đọc thử các kết quả trả về mang ý nghĩa khoa học gì?", options: ["Thao tác này giúp người dùng khoanh vùng dần và tăng tỷ lệ chính xác để thông tin tìm được hiệu quả hơn.", "Thao tác này giúp hệ thống máy tính tự động dọn dẹp dung lượng của ổ đĩa cứng đang bị chiếm dụng.", "Thao tác này giúp tăng tốc độ xử lý đồng hồ xung nhịp của vi xử lý trên các hệ thống máy tính thông minh.", "Thao tác này giúp phá vỡ các rào cản ngăn chặn tải tệp dung lượng lớn do các nhà mạng viễn thông đặt ra."], correct: 0, explanation: "Quá trình này là một vòng lặp giúp khoanh vùng, tinh chỉnh từ khóa để tiếp cận được thông tin chính xác nhất." },
+        { id: "q16", type: "single", question: "Câu 16: Thuật ngữ 'xác lập tiêu chí tìm kiếm' trong các quy tắc ứng xử và tra cứu khai thác không gian mạng Internet được định nghĩa một cách cụ thể và chính xác nhất theo cách nào dưới đây?", options: ["Là thao tác mua bản quyền công cụ máy tìm kiếm trực tuyến của hãng Microsoft thông qua cửa hàng ứng dụng.", "Là việc sử dụng phối hợp các cấu trúc cú pháp và bộ lọc đặc biệt để khoanh vùng kết quả hiển thị mong muốn.", "Là thao tác tải xuống hàng loạt phần mềm chuyên dụng hỗ trợ thiết kế các mô hình bảng tính toán cơ sở dữ liệu.", "Là việc lập trình các phần mềm mã nguồn mở để điều khiển phần cứng của máy in và máy quét hoạt động."], correct: 1, explanation: "Sử dụng dấu nháy kép, filetype hay bộ lọc Hình ảnh/Video chính là quá trình xác lập tiêu chí nhằm khoanh vùng kết quả." },
+        { id: "q17", type: "single", question: "Câu 17: Bạn Trà đang vừa nấu ăn vừa muốn tra cứu nhanh thông tin về nhiệt độ lò nướng để làm bánh nhưng tay đang bị bám dính bột không thể chạm gõ bàn phím. Trà nên áp dụng biện pháp công nghệ tối ưu nào sau đây?", options: ["Trà nên nhấp chuột vào biểu tượng chiếc micro trên màn hình tra cứu và đọc to rõ ràng cụm từ khóa cần tìm.", "Trà nên khởi động tiện ích File Explorer để tự động phân tích và tra cứu dữ liệu sâu bên trong hệ thống đĩa.", "Trà nên chờ đến khi nấu xong mới rửa tay sạch sẽ rồi tiến hành đánh máy gõ tìm kiếm cẩn thận theo cách cũ.", "Trà nên nhờ nhà mạng viễn thông tự động phân tích bộ định tuyến mạng để trả về kết quả hướng dẫn làm bánh."], correct: 0, explanation: "Sử dụng biểu tượng micro để tra cứu bằng giọng nói là giải pháp tối ưu khi không tiện gõ phím." },
+        { id: "q18", type: "single", question: "Câu 18: Thầy Phong muốn chuẩn bị tài liệu hướng dẫn học thuật dạng sách điện tử cho lớp và thầy chỉ cần nguyên bản gốc để bảo toàn dàn ý chữ viết. Thầy Phong nên gõ từ khóa lên thanh tra cứu theo cấu trúc nào là hợp lí?", options: ["Thầy Phong nên sử dụng cấu trúc cú pháp: Tên sách hướng dẫn học thuật cần tra cứu kết hợp với lệnh 'filetype:mp4'.", "Thầy Phong nên sử dụng cấu trúc cú pháp: Tên sách hướng dẫn học thuật cần tra cứu kết hợp với lệnh 'filetype:pdf'.", "Thầy Phong nên sử dụng cấu trúc cú pháp: Tên sách hướng dẫn học thuật cần tra cứu kết hợp với lệnh 'filetype:exe'.", "Thầy Phong nên sử dụng cấu trúc cú pháp: Tên sách hướng dẫn học thuật cần tra cứu kết hợp với lệnh 'filetype:jpeg'."], correct: 1, explanation: "Hậu tố filetype:pdf giúp tải trực tiếp tài liệu nguyên bản định dạng văn bản điện tử." },
+        { id: "q19", type: "single", question: "Câu 19: Bạn Ngọc gõ cụm từ khoá tuyển sinh Đại học Quốc gia lên công cụ tìm kiếm và nhận được quá nhiều kết quả gây nhiễu từ các trang tin diễn đàn rác. Ngọc nên áp dụng ngay thao tác ký tự nào để cải thiện độ chuẩn xác?", options: ["Ngọc nên đặt toàn bộ cụm từ khóa tuyển sinh Đại học Quốc gia đó nằm kẹp chặt giữa hai biểu tượng dấu ngoặc đơn.", "Ngọc nên đặt toàn bộ cụm từ khóa tuyển sinh Đại học Quốc gia đó nằm kẹp chặt giữa hai biểu tượng dấu nháy kép.", "Ngọc nên đặt toàn bộ cụm từ khóa tuyển sinh Đại học Quốc gia đó nằm kẹp chặt giữa hai biểu tượng dấu ngoặc nhọn.", "Ngọc nên đặt toàn bộ cụm từ khóa tuyển sinh Đại học Quốc gia đó nằm kẹp chặt giữa hai biểu tượng dấu chấm than."], correct: 1, explanation: "Sử dụng dấu nháy kép sẽ chặn các kết quả gây nhiễu và yêu cầu chỉ hiển thị trang có chứa chính xác cụm từ khóa này." },
+        { id: "q20", type: "single", question: "Câu 20: Khang nhấp chuột vào biểu tượng micro trên trang Google và đọc to tên nhóm nhạc thần tượng. Tuy nhiên, màn hình giao diện công cụ lập tức báo lỗi đỏ không thể thu nhận bất cứ nguồn âm thanh đầu vào nào. Sự cố kĩ thuật này xuất phát từ lí do gì?", options: ["Hệ thống máy tính để bàn của Khang rất có thể đang thiếu thiết bị phần cứng linh kiện ghi âm micro chuyên dụng.", "Cỗ máy tìm kiếm Google đã ngừng cung cấp dịch vụ phân tích dữ liệu âm thanh đối với khu vực quốc gia nội địa.", "Khang đang vô tình đặt từ khóa nhóm nhạc vào giữa hai cặp dấu ngoặc kép khiến cho hệ thống cảm biến bị quá tải.", "Hệ điều hành máy tính cá nhân của Khang đang không được nâng cấp lên chuẩn mã nguồn mở Linux hiện đại nhất."], correct: 0, explanation: "Máy tính để bàn (desktop) cần phải trang bị kết nối với micro vật lý thì mới có thể sử dụng tính năng tra cứu bằng giọng nói." },
+        { id: "q21", type: "single", question: "Câu 21: Nhóm của Vy được giao một bài tập nhóm vô cùng thú vị là phải lập bảng so sánh năng lực vận hành giữa hai công cụ tìm kiếm Google và Bing. Nhóm nên ưu tiên đánh giá tiêu chí kĩ thuật mang tính cốt lõi nào?", options: ["Ưu tiên hàng đầu là đo lường khối lượng điện năng tiêu thụ và nhiệt độ trung bình của thiết bị khi đang lướt mạng.", "Ưu tiên hàng đầu là thống kê số lượng quảng cáo nhãn hàng đồ uống được xuất hiện ở khu vực góc bên phải màn hình.", "Ưu tiên hàng đầu là đánh giá khả năng hỗ trợ giọng nói, khả năng lọc ảnh, lọc phim và khả năng tra cứu định dạng tệp.", "Ưu tiên hàng đầu là thử nghiệm khả năng tự động viết lại hệ điều hành nội bộ của chiếc máy tính thành một bản cập nhật."], correct: 2, explanation: "Đánh giá các tính năng như hỗ trợ bằng tiếng nói, bộ lọc từ khóa nâng cao và định dạng file là tiêu chí cơ bản khi so sánh công cụ tìm kiếm." },
+        { id: "q22", type: "single", question: "Câu 22: Bạn Quân đang tham gia một câu lạc bộ ngoại khóa và được thầy giáo giao nhiệm vụ tra cứu về 'Bảo vệ môi trường biển', nhưng thầy đặc biệt dặn là chỉ cần tải các đoạn phim ngắn để làm trình chiếu. Quân nên làm gì ngay sau khi gõ phím từ khóa?", options: ["Quân bắt buộc phải di chuột và lựa chọn nhấp thẳng vào danh mục tùy chọn có tên là 'Video' trên giao diện bộ lọc hiển thị.", "Quân bắt buộc phải di chuột và lựa chọn nhấp thẳng vào danh mục tùy chọn có tên là 'Hình ảnh' trên giao diện bộ lọc hiển thị.", "Quân bắt buộc phải di chuột và lựa chọn nhấp thẳng vào danh mục tùy chọn có tên là 'Tin tức' trên giao diện bộ lọc hiển thị.", "Quân bắt buộc phải di chuột và lựa chọn nhấp thẳng vào danh mục tùy chọn có tên là 'Tài liệu' trên giao diện bộ lọc hiển thị."], correct: 0, explanation: "Chọn tùy chọn lọc 'Video' sẽ giúp bộ máy tìm kiếm chỉ xuất ra các đoạn phim ngắn thay vì văn bản chữ." },
+        { id: "q23", type: "single", question: "Câu 23: Phục vụ cho kỳ thi cuối năm, Đạt cần kiếm một bộ tài liệu PDF chính quy mang tên 'Đề cương Toán học lớp 11 phần lượng giác'. Cú pháp gõ tra cứu hoàn hảo và chuyên nghiệp nhất mà chuyên gia gợi ý Đạt sử dụng là gì?", options: ["Chuyên gia gợi ý Đạt nên sử dụng cách gõ: 'Đề cương Toán học lớp 11 phần lượng giác' kết hợp hậu tố lọc là filetype:mp4.", "Chuyên gia gợi ý Đạt nên sử dụng cách gõ: 'Đề cương Toán học lớp 11 phần lượng giác' kết hợp hậu tố lọc là filetype:pdf.", "Chuyên gia gợi ý Đạt nên sử dụng cách gõ: 'Đề cương Toán học lớp 11 phần lượng giác' kết hợp hậu tố lọc là filetype:jpg.", "Chuyên gia gợi ý Đạt nên sử dụng cách gõ: 'Đề cương Toán học lớp 11 phần lượng giác' kết hợp hậu tố lọc là filetype:exe."], correct: 1, explanation: "Kẹp từ khóa trong ngoặc kép kết hợp hậu tố filetype:pdf là cú pháp hoàn hảo để tra cứu chính xác tệp văn bản đề cương." },
+        { id: "q24", type: "single", question: "Câu 24: Một học sinh thường xuyên phàn nàn rằng khi tìm từ khóa 'Cách mạng công nghiệp 4.0', hệ thống trả về quá nhiều dòng bài viết tranh luận lộn xộn trên diễn đàn mạng thay vì các luận văn nghiên cứu sâu sắc. Bạn học sinh đó đang yếu kém ở kĩ năng khai thác không gian số nào?", options: ["Bạn học sinh đó đang yếu kém trong kỹ năng điều chỉnh nút độ sáng màn hình vật lí để hình ảnh bài viết hiển thị rõ ràng.", "Bạn học sinh đó đang yếu kém trong kỹ năng thiết lập tiêu chí nâng cao như dùng nháy kép và quy định đuôi tệp văn bản.", "Bạn học sinh đó đang yếu kém trong kỹ năng mua bản quyền sử dụng phần mềm duyệt web thương mại giá thành đắt đỏ.", "Bạn học sinh đó đang yếu kém trong kỹ năng rút kết nối dây cáp cáp quang nhằm tránh hệ thống hiển thị nhiều quảng cáo."], correct: 1, explanation: "Việc không biết sử dụng cú pháp dấu nháy kép hoặc lọc theo định dạng sẽ làm người dùng bị ngập lụt trong kết quả nhiễu." },
+
+        { id: "qII_1", type: "tf_cluster", context: "Câu 1: Bạn Trà đang hướng dẫn cho em trai cách sử dụng công cụ tìm kiếm trực tuyến và tính năng nhận diện giọng nói. Hãy xác định những quy tắc mà Trà nêu ra là Đúng hay Sai:", items: [
+            { id: "a", text: "a) Để bắt đầu công việc tìm kiếm thông tin trên một chiếc máy tính cá nhân, người dùng bắt buộc phải mua và sử dụng trình duyệt web bản quyền trả phí của Microsoft.", correct: false, expl: "Người dùng không bị bắt buộc phải sử dụng phần mềm trả phí của Microsoft, chỉ cần dùng trình duyệt web và kết nối Internet là có thể tra cứu thông tin." },
+            { id: "b", text: "b) Việc nhấp chuột vào biểu tượng hình chiếc micro tích hợp trên ô nhập liệu của máy tìm kiếm sẽ giúp hệ thống kích hoạt tính năng tra cứu thông tin bằng tiếng nói thay vì gõ chữ.", correct: true, expl: "Nháy chuột vào biểu tượng micro để tìm kiếm bằng từ khoá nhập bằng tiếng nói." },
+            { id: "c", text: "c) Tính năng nhận diện giọng nói của máy tìm kiếm luôn luôn nhận dạng hoàn hảo và chuyển đổi chính xác tuyệt đối 100% mọi từ ngữ địa phương mà người dùng vừa phát âm.", correct: false, expl: "Nhận dạng tiếng nói vẫn có rủi ro sai sót, do đó cần phải kiểm tra lại từ khóa điền tự động để chỉnh sửa nếu chưa khớp." },
+            { id: "d", text: "d) Do hệ thống loa có sẵn, để tìm kiếm thông tin bằng giọng nói trên máy tính để bàn không gắn thêm thiết bị ngoại vi nào, bạn Khang chỉ cần nhấp vào nút micro và đọc to vào màn hình.", correct: false, expl: "Máy tính để bàn cần phải trang bị riêng thiết bị đầu vào (micro thu âm) để tính năng nhận giọng nói có thể hoạt động." }
+        ]},
+        { id: "qII_2", type: "tf_cluster", context: "Câu 2: Khi nghiên cứu về các tiêu chí phân loại và kỹ thuật sử dụng cú pháp lọc kết quả tìm kiếm trên Internet, bạn Ngọc tổng hợp được những nhận định sau. Hãy kiểm tra tính Đúng/Sai của chúng:", items: [
+            { id: "a", text: "a) Để làm tăng hiệu suất tra cứu văn bản chuyên sâu, người dùng có thể yêu cầu công cụ tìm kiếm hiển thị nội dung theo đúng định dạng tệp tin xác định (ví dụ tệp văn bản .pdf).", correct: true, expl: "Có thể xác lập yêu cầu hệ thống trả về đúng định dạng tệp tin xác định như PDF để tăng hiệu suất." },
+            { id: "b", text: "b) Theo nguyên tắc xây dựng từ khóa do chuyên gia quy định, người dùng tuyệt đối không được phép kết hợp thao tác bọc dấu nháy kép cùng với cú pháp hậu tố định dạng tệp 'filetype:'.", correct: false, expl: "Hoàn toàn có thể kết hợp dấu nháy kép với hậu tố filetype:pdf để tối ưu hóa truy vấn tìm kiếm chuyên sâu." },
+            { id: "c", text: "c) Sử dụng thao tác đặt cụm từ khóa mục tiêu vào giữa cặp dấu nháy kép là một phương pháp kĩ thuật vô cùng thông dụng giúp thu hẹp phạm vi và mang lại kết quả có độ chuẩn xác rất cao.", correct: true, expl: "Dấu nháy kép là phương pháp vô cùng thông dụng để thu hẹp phạm vi tìm kiếm các văn bản chính xác." },
+            { id: "d", text: "d) Khi thầy Phong có nhu cầu tìm kiếm một bức ảnh phong cảnh đẹp định dạng '.jpg' để làm trình chiếu, thầy bắt buộc phải thêm hậu tố filetype:pdf vào từ khóa để hệ thống Google chịu phân loại hình ảnh.", correct: false, expl: "Cú pháp filetype:pdf chuyên dụng cho định dạng văn bản tĩnh, không được áp dụng khi người dùng có nhu cầu tìm hình ảnh JPG." }
+        ]},
+        { id: "qII_3", type: "tf_cluster", context: "Câu 3: Trong phần thực hành trải nghiệm và đánh giá chất lượng các cỗ máy tìm kiếm phổ biến trên mạng, tổ của bạn Khang đưa ra các kết luận bên dưới. Những kết luận này là Đúng hay Sai:", items: [
+            { id: "a", text: "a) Trên thanh công cụ giao diện hiển thị của tất cả các máy tìm kiếm, nhà phát triển chỉ cung cấp duy nhất hai danh mục tùy chọn kết quả phân loại là 'Tất cả' và danh mục 'Video'.", correct: false, expl: "Máy tìm kiếm có rất nhiều phân loại ngoài Video như Hình ảnh, Tin tức, Thêm...." },
+            { id: "b", text: "b) Khi so sánh đánh giá nhiều nền tảng tìm kiếm trực tuyến khác nhau, người dùng hoàn toàn có thể lập bảng kiểm tra các tiêu chí xem công cụ đó có hỗ trợ phân loại ảnh, tin tức hay không.", correct: true, expl: "Việc so sánh tính năng phân loại (hình ảnh, video, tin tức) là thao tác tiêu chuẩn khi đánh giá công cụ tìm kiếm." },
+            { id: "c", text: "c) Quy trình khai thác thông tin trên không gian mạng là một vòng lặp liên tục đòi hỏi người dùng phải đọc thử kết quả rồi chủ động thay đổi cụm từ khóa nhiều lần nếu chưa ra đúng thông tin mong muốn.", correct: true, expl: "Người dùng nên liên tục quan sát kết quả rồi quay lại tinh chỉnh từ khóa nhiều lần cho đến khi đạt yêu cầu." },
+            { id: "d", text: "d) Nhóm của Đạt đang nỗ lực tìm kiếm video hướng dẫn giải bài tập thực hành Toán học trên mạng; để hoàn thành tốt nhiệm vụ này, nhóm bắt buộc phải thêm hậu tố filetype:pdf vào từ khóa.", correct: false, expl: "Việc gán hậu tố filetype:pdf để tìm kiếm các đoạn video là hoàn toàn sai, hậu tố này chỉ trả về kết quả là tệp văn bản." }
+        ]},
+        { id: "qII_4", type: "tf_cluster", context: "Câu 4: Nhằm rèn luyện kỹ năng sinh tồn trong thế giới số, thầy giáo Tin học nhấn mạnh về tầm quan trọng của chiến lược xây dựng từ khóa tìm kiếm. Hãy xác định tính Đúng/Sai trong các luận điểm của bạn Vy:", items: [
+            { id: "a", text: "a) Trong giao diện máy tìm kiếm, khi người dùng thực hiện thao tác nhấp chuột trái thẳng vào biểu tượng chiếc micro, tính năng hỗ trợ nhập dữ liệu đầu vào bằng tiếng nói sẽ được kích hoạt.", correct: true, expl: "Thao tác nháy chuột vào biểu tượng micro kích hoạt ngay lập tức cơ chế nhập giọng nói." },
+            { id: "b", text: "b) Kỹ năng phân tích và xây dựng cấu trúc của cụm từ khóa tìm kiếm đóng vai trò cốt lõi trong việc giúp người dùng làm tăng độ chính xác, tăng hiệu suất trích xuất và tiết kiệm lượng lớn thời gian.", correct: true, expl: "Xây dựng từ khóa tìm kiếm tốt là kĩ năng quan trọng làm tăng độ chính xác, mang lại hiệu quả cao." },
+            { id: "c", text: "c) Các công cụ máy tìm kiếm trực tuyến được trang bị công nghệ trí tuệ nhân tạo mạnh mẽ đến mức nó có khả năng đọc được suy nghĩ người dùng ngay cả khi họ gõ sai toàn bộ các chữ cái trên bàn phím.", correct: false, expl: "Cỗ máy tìm kiếm xử lý dữ liệu thông qua cụm từ khóa người dùng nhập vào. Không thể đọc suy nghĩ và cũng dễ sai sót nếu người dùng gõ từ sai ngữ cảnh." },
+            { id: "d", text: "d) Bạn Vy đang có nhu cầu tra cứu và tải về nguyên bản một tài liệu hướng dẫn y tế được chia sẻ trên mạng Internet; hành động gõ 'Tài liệu y tế' kết hợp lệnh 'filetype:pdf' là một chiến lược rất chuẩn xác.", correct: true, expl: "Kết hợp từ khóa với hậu tố filetype:pdf là chiến lược lý tưởng để tìm tài liệu nguyên bản và chuyên sâu." }
+        ]}
+    ];
+
+    window.startQuizAction = function() {
+        try {
+            const errDiv = document.getElementById('login-error');
+            if(errDiv) errDiv.classList.add('hidden');
+            
+            const nameEl = document.getElementById('hoTen');
+            const lopEl = document.getElementById('lop');
+            
+            const name = nameEl.value.trim();
+            const lop = lopEl.value.trim();
+            
+            if (!name || !lop) {
+                if(errDiv) {
+                    errDiv.innerText = "⚠️ Vui lòng nhập đầy đủ Họ tên và Lớp!";
+                    errDiv.classList.remove('hidden');
+                } else {
+                    alert("⚠️ Vui lòng nhập đầy đủ Họ tên và Lớp!");
+                }
+                return;
+            }
+            
+            currentStudent = { hoTen: name, lop: lop, maDe: 'de7', tenDe: 'Đề Trắc Nghiệm Bài 7' };
+            currentQuestions = JSON.parse(JSON.stringify(exam_data));
+            quizStartTime = new Date();
+            
+            setTimeout(() => { isQuizStarted = true; }, 1000);
+            showSection('quiz');
+            
+            userAnswers = {};
+            window.renderAllQuestions();
+            startTimer(45 * 60); 
+            
+        } catch (error) {
+            alert("❌ Đã xảy ra lỗi khởi tạo bài thi: " + error.message + ".");
+            console.error(error);
+        }
+    };
+
+    window.viewScoresAction = function() {
+        searchTerm = ''; 
+        document.getElementById('search-student').value = '';
+        currentPage = 1;
+
+        if (database) {
+            scoresRef.once('value').then((snapshot) => {
+                const data = snapshot.val();
+                allScores = data ? Object.keys(data).map(key => ({...data[key], id: key})) : [];
+                window.renderScores();
+                showSection('scores');
+            });
+        }
+    };
+
+    window.searchStudent = function(val) {
+        searchTerm = val.toLowerCase();
+        currentPage = 1;
+        window.renderScores();
+    };
+
+    window.changePage = function(page) {
+        currentPage = page;
+        window.renderScores();
+    };
+
+    window.goHome = function() {
+        if(document.getElementById('hoTen')) document.getElementById('hoTen').value = ''; 
+        if(document.getElementById('lop')) document.getElementById('lop').value = ''; 
+        clearInterval(timerInterval);
+        showSection('login');
+    };
+
+    function getTotalScoreItems() { return currentQuestions.length; }
+
+    function getAnsweredCount() {
+        let count = 0;
+        currentQuestions.forEach(q => {
+            if (q.type === 'single') {
+                if (userAnswers[q.id] !== undefined) count++;
+            } else if (q.type === 'tf_cluster') {
+                let answeredItems = 0;
+                q.items.forEach(item => {
+                    if (userAnswers[q.id + '_' + item.id] !== undefined) answeredItems++;
+                });
+                if (answeredItems === 4) count++; 
+            }
+        });
+        return count;
+    }
+
+   window.selectAnswer = function(qId, val, type) {
+        if (type === 'tf') {
+            userAnswers[qId] = val;
+            const btnT = document.getElementById(`btnT_${qId}`);
+            const btnF = document.getElementById(`btnF_${qId}`);
+            if (val === true) {
+                btnT.classList.add('selected'); btnT.classList.remove('bg-white');
+                btnF.classList.remove('selected'); btnF.classList.add('bg-white');
+            } else {
+                btnF.classList.add('selected'); btnF.classList.remove('bg-white');
+                btnT.classList.remove('selected'); btnT.classList.add('bg-white');
+            }
+        } else if (type === 'single') {
+            userAnswers[qId] = val;
+        }
+        
+        requestAnimationFrame(() => {
+            const pgText = document.getElementById('progress-text');
+            if(pgText) pgText.innerText = `${getAnsweredCount()}/${getTotalScoreItems()}`;
+        });
+    };
+
+    window.renderAllQuestions = function() {
+        if (!currentQuestions || currentQuestions.length === 0) return;
+        const container = document.getElementById('question-container');
+        if(!container) return;
+
+        let html = '';
+        let currentType = '';
+
+        currentQuestions.forEach((q) => {
+            if (q.type !== currentType) {
+                currentType = q.type;
+                let headerText = ''; let roman = '';
+                if(currentType === 'single') { headerText = 'TRẮC NGHIỆM NHIỀU PHƯƠNG ÁN LỰA CHỌN'; roman = 'I'; }
+                if(currentType === 'tf_cluster') { headerText = 'TRẮC NGHIỆM ĐÚNG/SAI'; roman = 'II'; }
+                
+                html += `<div class="flex items-center gap-3 mt-8 mb-4 border-b-2 border-blue-100 pb-3"><span class="bg-gradient-to-br from-blue-500 to-indigo-600 text-white w-14 h-14 flex items-center justify-center rounded-xl font-black text-2xl shadow-md">${roman}</span><h3 class="text-2xl sm:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-700 to-indigo-700 tracking-wide uppercase">${headerText}</h3></div>`;
+            }
+
+            html += `<div class="fade-in w-full bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-blue-100 relative mb-6 hover:shadow-md transition-shadow">`;
+            
+            if (q.type === 'single') {
+                const uAns = userAnswers[q.id];
+                html += `<div class="flex gap-4 mb-5"><div class="w-full math-scroll"><p class="text-xl font-bold text-red-600 mt-1 leading-snug tracking-tight">${q.question}</p></div></div>`;
+                html += `<div class="space-y-4 md:pl-6 mt-6">`;
+                q.options.forEach((opt, i) => {
+                    const isChecked = (uAns === i) ? 'checked' : '';
+                    html += `<div class="flex items-center">
+                        <input type="radio" id="opt_${q.id}_${i}" name="q_${q.id}" value="${i}" class="hidden single-radio" ${isChecked} onchange="window.selectAnswer('${q.id}', ${i}, 'single')">
+                        <label for="opt_${q.id}_${i}" class="option-label w-full p-4 border-2 border-gray-200 rounded-2xl flex items-center gap-4 bg-white shadow-sm font-bold text-lg hover:border-blue-300">
+                            <div class="w-12 h-12 rounded-xl border-2 border-gray-300 flex items-center justify-center text-lg font-black text-gray-400 flex-shrink-0 bg-gray-50">${String.fromCharCode(65 + i)}</div>
+                            <div class="text-gray-700 leading-relaxed math-scroll flex-1">${opt}</div>
+                        </label>
+                    </div>`;
+                });
+                html += `</div>`;
+            } 
+            else if (q.type === 'tf_cluster') {
+                html += `<div class="bg-red-50 text-red-700 p-5 rounded-xl font-bold mb-4 border-2 border-red-100 text-xl leading-relaxed math-scroll">${q.context}</div>`;
+                html += `<div class="space-y-4 mt-6">`;
+                q.items.forEach((item) => {
+                    const combinedId = q.id + '_' + item.id;
+                    let ans = userAnswers[combinedId];
+                    let btnT = ans === true ? 'selected' : 'bg-white';
+                    let btnF = ans === false ? 'selected' : 'bg-white';
+
+                    html += `<div class="p-5 border-2 border-gray-100 rounded-2xl bg-white shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4 transition-all hover:border-blue-200">
+                        <div class="font-bold text-gray-800 flex-1 text-lg math-scroll">${item.text}</div>
+                        <div class="flex gap-3 shrink-0">
+                            <button id="btnT_${combinedId}" onclick="window.selectAnswer('${combinedId}', true, 'tf')" class="btn-tf w-24 sm:w-28 py-3 rounded-xl font-extrabold text-lg ${btnT}">ĐÚNG</button>
+                            <button id="btnF_${combinedId}" onclick="window.selectAnswer('${combinedId}', false, 'tf')" class="btn-tf w-24 sm:w-28 py-3 rounded-xl font-extrabold text-lg ${btnF}">SAI</button>
+                        </div>
+                    </div>`;
+                });
+                html += `</div>`;
+            } 
+            html += `</div>`;
+        });
+        
+        container.innerHTML = html;
+        const pgText = document.getElementById('progress-text');
+        if(pgText) pgText.innerText = `${getAnsweredCount()}/${getTotalScoreItems()}`;
+    };
+
+    function formatDuration(sec) {
+        const m = Math.floor(sec / 60); const s = sec % 60;
+        return `${m}p ${s}s`;
+    }
+
+    window.promptSubmit = function() {
+        if (!isQuizStarted) return;
+        const total = getTotalScoreItems();
+        const answered = getAnsweredCount();
+        
+        document.getElementById('confirm-answered').innerText = answered;
+        document.getElementById('confirm-total').innerText = total;
+        
+        const modal = document.getElementById('confirm-submit-modal');
+        modal.classList.remove('hidden');
+    };
+
+    window.closeConfirmModal = function() {
+        const modal = document.getElementById('confirm-submit-modal');
+        modal.classList.add('hidden');
+    };
+
+    window.executeSubmit = function() {
+        window.closeConfirmModal();
+        isQuizStarted = false; 
+        quizEndTime = new Date();
+        clearInterval(timerInterval);
+        
+        let score = 0;
+
+        currentQuestions.forEach(q => {
+            if (q.type === 'single') {
+                if (userAnswers[q.id] === q.correct) score += 0.25;
+            } else if (q.type === 'tf_cluster') {
+                let correctCount = 0;
+                q.items.forEach(item => { 
+                    if (userAnswers[q.id + '_' + item.id] === item.correct) {
+                        correctCount++;
+                    }
+                });
+                
+                // Áp dụng logic tính điểm
+                if (correctCount === 1) score += 0.1;
+                else if (correctCount === 2) score += 0.25;
+                else if (correctCount === 3) score += 0.5;
+                else if (correctCount === 4) score += 1.0;
+            }
+        });
+
+        score = score.toFixed(2); 
+
+        const record = {
+            hoTen: currentStudent.hoTen, lop: currentStudent.lop, tenDe: currentStudent.tenDe, maDe: currentStudent.maDe,
+            diem: parseFloat(score),
+            startTime: quizStartTime.toLocaleTimeString('vi-VN') + ' ' + quizStartTime.toLocaleDateString('vi-VN'),
+            endTime: quizEndTime.toLocaleTimeString('vi-VN') + ' ' + quizEndTime.toLocaleDateString('vi-VN'),
+            duration: formatDuration(Math.floor((quizEndTime - quizStartTime) / 1000)),
+            thoiGian: new Date().toISOString(), deviceId: deviceId,
+            userAnswers: userAnswers 
+        };
+        
+        if(database) {
+            scoresRef.push(record, () => { window.showModalResult(score, record.duration); });
+        } else {
+            window.showModalResult(score, record.duration);
+        }
+    };
+
+    window.showModalResult = function(score, dur) {
+        ['login', 'quiz', 'scores', 'review'].forEach(s => {
+            const el = document.getElementById(s+'-section');
+            if(el) el.classList.add('hidden');
+        });
+        const resEl = document.getElementById('result-section');
+        if(resEl) resEl.classList.remove('hidden');
+        const contentEl = document.getElementById('result-content');
+        if(contentEl) contentEl.innerHTML = `
+        <div class="flex justify-start mb-4">
+            <button onclick="window.goHome()" class="px-5 py-3 bg-gray-100 text-gray-700 rounded-xl font-bold hover:bg-gray-200 transition-colors shadow-sm border border-gray-200 text-lg">🏠 Trang chủ</button>
+        </div>
+        <div class="text-center">
+            <div class="text-7xl mb-4 animate-bounce">🎉</div>
+            <h3 class="text-3xl font-black text-emerald-600 mb-2">Hoàn thành bài thi!</h3>
+            <p class="text-gray-600 mb-6 mt-2"><span class="font-extrabold text-blue-700 text-xl uppercase tracking-wider">${currentStudent.hoTen} - Lớp ${currentStudent.lop}</span></p>
+        </div>
+        <div class="bg-blue-50 border-2 border-blue-100 rounded-3xl p-8 mb-6 shadow-inner relative text-center">
+            <div class="text-base text-blue-500 font-extrabold mb-2 uppercase tracking-widest">ĐIỂM SỐ CỦA BẠN</div>
+            <div class="text-7xl font-black text-blue-600 drop-shadow-sm">${score} <span class="text-3xl text-gray-400">/ 10</span></div>
+            <div class="text-lg font-extrabold text-indigo-600 mt-5 bg-white inline-block px-6 py-3 rounded-full shadow-sm border border-blue-100">Thời gian làm bài: ${dur}</div>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+            <button onclick="window.reviewQuiz()" class="w-full py-4 bg-gradient-to-r from-indigo-500 to-purple-500 text-white rounded-xl font-extrabold shadow-sm hover:shadow-md transition-colors text-xl">📝 Xem lại bài</button>
+            <button onclick="window.viewScoresAction()" class="w-full py-4 bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-xl font-extrabold shadow-sm hover:shadow-md transition-colors text-xl">🏆 Bảng điểm</button>
+        </div>`;
+    };
+
+    function getStatusBadge(isCorrect, isUnanswered) {
+        if (isUnanswered) return `<div class="mt-4 mb-2 inline-block px-4 py-2 bg-yellow-100 text-yellow-800 text-base font-black rounded-lg border border-yellow-300 shadow-sm">⚠️ BẠN CHƯA LÀM CÂU NÀY</div>`;
+        if (isCorrect) return `<div class="mt-4 mb-2 inline-block px-4 py-2 bg-emerald-100 text-emerald-800 text-base font-black rounded-lg border border-emerald-300 shadow-sm">✅ BẠN LÀM ĐÚNG RỒI</div>`;
+        return `<div class="mt-4 mb-2 inline-block px-4 py-2 bg-red-100 text-red-800 text-base font-black rounded-lg border border-red-300 shadow-sm">❌ BẠN LÀM SAI RỒI</div>`;
+    }
+
+    window.reviewQuiz = function() {
+        showSection('review');
+        const container = document.getElementById('review-content');
+        if(!container) return;
+        let html = '';
+
+        currentQuestions.forEach((q) => {
+            if (q.type === 'single') {
+                let uAns = userAnswers[q.id];
+                let isUnanswered = (uAns === undefined);
+                let isCorrect = (uAns === q.correct);
+                let borderColor = isCorrect ? 'border-emerald-300 bg-emerald-50' : 'border-red-300 bg-red-50';
+                
+                html += `<div class="p-6 border-2 rounded-2xl shadow-sm mb-6 ${borderColor}">`;
+                html += `<div class="font-bold text-xl text-red-600 mb-5 leading-relaxed math-scroll">${q.question}</div>`;
+                html += `<div class="space-y-3">`;
+                
+                q.options.forEach((opt, i) => {
+                    let optBg = ''; let iconHtml = '';
+                    if (q.correct === i) {
+                        optBg = 'bg-emerald-100 text-emerald-900 border-emerald-400 border-2'; 
+                        iconHtml = '<div class="text-3xl drop-shadow-sm ml-auto pl-2 flex-shrink-0">✅</div>';
+                    } else if (uAns === i && !isCorrect) {
+                        optBg = 'bg-red-100 text-red-900 line-through border-red-400 border-2'; 
+                        iconHtml = '<div class="text-3xl drop-shadow-sm ml-auto pl-2 flex-shrink-0">❌</div>';
+                    } else { optBg = 'bg-white text-slate-700 border border-slate-200'; }
+
+                    html += `<div class="p-4 rounded-xl ${optBg} flex items-center gap-4"><div class="w-10 h-10 flex items-center justify-center rounded-lg bg-white/50 text-base font-black shadow-sm flex-shrink-0">${String.fromCharCode(65 + i)}</div><div class="${(q.correct === i || uAns === i) ? 'font-semibold' : 'font-medium'} flex-1 text-lg math-scroll">${opt}</div>${iconHtml}</div>`;
+                });
+                html += `</div>`;
+                
+                html += getStatusBadge(isCorrect, isUnanswered); 
+                
+                if (q.explanation) {
+                    html += `<div class="review-explanation mt-3 pt-3 border-t-2 border-gray-200"><p class="text-base font-black uppercase tracking-widest text-blue-600 mb-2">💡 Giải chi tiết:</p><p class="text-black font-medium text-lg leading-loose math-scroll">${q.explanation}</p></div>`;
+                }
+                html += `</div>`;
+            } 
+            else if (q.type === 'tf_cluster') {
+                html += `<div class="p-6 border-2 border-indigo-200 bg-indigo-50 rounded-2xl shadow-sm mb-6">`;
+                html += `<div class="font-bold text-xl text-indigo-800 mb-5 math-scroll">${q.context}</div>`;
+                html += `<div class="space-y-5">`;
+                q.items.forEach(item => {
+                    let uAns = userAnswers[q.id + '_' + item.id];
+                    let isUnanswered = (uAns === undefined);
+                    let isCorrect = (uAns === item.correct);
+                    let iconHtml = isCorrect ? '✅' : '❌';
+                    let ansText = item.correct ? 'ĐÚNG' : 'SAI';
+
+                    html += `<div class="p-5 bg-white border border-indigo-100 rounded-xl shadow-sm">
+                        <div class="font-bold text-gray-800 text-lg math-scroll">${item.text}</div>
+                        <div class="mt-3 flex items-center justify-between border-b border-gray-100 pb-3">
+                            <span class="text-base font-bold text-gray-500">Bạn chọn: <span class="${isUnanswered ? 'text-gray-400' : 'text-blue-600'} font-black uppercase">${isUnanswered ? 'Chưa trả lời' : (uAns?'Đúng':'Sai')}</span></span>
+                            <span class="font-black text-xl ${isCorrect ? 'text-emerald-500' : 'text-red-500'}">Đáp án: ${ansText} ${iconHtml}</span>
+                        </div>`;
+                        
+                    html += getStatusBadge(isCorrect, isUnanswered);
+                    if(item.expl) {
+                        html += `<div class="review-explanation mt-3 pt-3 text-lg text-gray-700 font-medium leading-relaxed math-scroll"><span class="text-indigo-500 font-bold uppercase">Giải chi tiết:</span><br> ${item.expl}</div>`;
+                    }
+                    html += `</div>`;
+                });
+                html += `</div></div>`;
+            }
+        });
+        container.innerHTML = html;
+    };
+
+    window.backToResult = function() { showSection('result'); };
+    
+    let isReviewingFromLeaderboard = false;
+    
+    window.backFromReview = function() {
+        if (isReviewingFromLeaderboard) {
+            showSection('scores');
+            isReviewingFromLeaderboard = false;
+        } else {
+            window.backToResult();
+        }
+    };
+
+    window.reviewStudentScore = function(scoreId) {
+        const record = allScores.find(x => x.id === scoreId);
+        if (!record) return;
+        
+        currentStudent = { hoTen: record.hoTen, lop: record.lop, tenDe: record.tenDe, maDe: record.maDe };
+        userAnswers = record.userAnswers || {}; 
+        
+        currentQuestions = JSON.parse(JSON.stringify(exam_data)); 
+        
+        isReviewingFromLeaderboard = true;
+        window.reviewQuiz();
+    };
+
+    window.renderScores = function() {
+        const tbody = document.getElementById('scores-tbody');
+        const noScore = document.getElementById('no-scores');
+        const myRankDisplay = document.getElementById('my-rank-display');
+        const paginationContainer = document.getElementById('pagination-controls');
+        
+        if(!tbody) return;
+
+        const sortedAll = [...allScores].sort((a, b) => (b.diem - a.diem) || (a.duration.localeCompare(b.duration)));
+        
+        sortedAll.forEach((s, i) => s.absoluteRank = i + 1);
+
+        const myRankIndex = sortedAll.findIndex(s => s.deviceId === deviceId);
+        if (myRankDisplay) {
+            if (myRankIndex !== -1) {
+                myRankDisplay.innerHTML = `🏆 Thứ hạng của bạn: <span class="text-red-600 font-black">#${sortedAll[myRankIndex].absoluteRank}</span>`;
+            } else {
+                myRankDisplay.innerHTML = `🏆 Thứ hạng của bạn: <span class="text-gray-400">Chưa thi</span>`;
+            }
+        }
+
+        const filteredScores = searchTerm ? sortedAll.filter(s => s.hoTen.toLowerCase().includes(searchTerm)) : sortedAll;
+
+        if (filteredScores.length === 0) {
+            tbody.innerHTML = ''; 
+            noScore.classList.remove('hidden'); 
+            paginationContainer.innerHTML = '';
+            return; 
+        }
+        
+        noScore.classList.add('hidden');
+
+        const totalPages = Math.ceil(filteredScores.length / itemsPerPage);
+        if (currentPage > totalPages) currentPage = totalPages;
+        if (currentPage < 1) currentPage = 1;
+
+        const startIndex = (currentPage - 1) * itemsPerPage;
+        const endIndex = startIndex + itemsPerPage;
+        const pageItems = filteredScores.slice(startIndex, endIndex);
+
+        tbody.innerHTML = pageItems.map((s) => {
+            const isMe = s.deviceId === deviceId;
+            return `<tr class="${isMe ? 'my-score-row' : 'hover:bg-slate-50'} transition-colors border-b border-slate-100">
+            <td class="px-4 py-5 font-black text-slate-500 text-base text-center">#${s.absoluteRank}</td>
+            <td class="px-4 py-5 font-extrabold text-slate-800 text-base">${s.hoTen} ${isMe ? '<span class="ml-2 bg-pink-500 text-white text-xs px-2 py-1 rounded-md shadow-sm">Bạn</span>' : ''}</td>
+            <td class="px-4 py-5 font-black text-blue-600 text-base text-center">${s.lop}</td>
+            <td class="px-4 py-5 text-center font-black text-orange-600 text-sm">${s.duration}</td>
+            <td class="px-4 py-5 text-center"><span class="font-black text-2xl ${s.diem >= 5 ? 'text-emerald-600' : 'text-red-500'}">${s.diem}</span></td>
+            <td class="px-4 py-5 text-center">
+                <button onclick="window.reviewStudentScore('${s.id}')" class="bg-indigo-100 text-indigo-700 hover:bg-indigo-200 px-4 py-2 rounded-lg font-bold text-sm transition-colors border border-indigo-200 shadow-sm cursor-pointer whitespace-nowrap">Xem lại</button>
+            </td>
+        </tr>`;
+        }).join('');
+
+        renderPagination(totalPages);
+    };
+
+    function renderPagination(totalPages) {
+        const container = document.getElementById('pagination-controls');
+        if (!container) return;
+        
+        if (totalPages <= 1) {
+            container.innerHTML = '';
+            return;
+        }
+
+        let html = '<div class="flex flex-wrap items-center justify-center gap-2">';
+        
+        html += `<button onclick="window.changePage(${currentPage - 1})" class="px-4 py-2 rounded-xl font-bold transition-colors ${currentPage === 1 ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 shadow-sm'}" ${currentPage === 1 ? 'disabled' : ''}>&laquo; Trước</button>`;
+
+        let startPage = Math.max(1, currentPage - 1);
+        let endPage = Math.min(totalPages, currentPage + 1);
+
+        if (startPage > 1) {
+            html += `<button onclick="window.changePage(1)" class="px-4 py-2 rounded-xl font-bold bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 shadow-sm">1</button>`;
+            if (startPage > 2) html += `<span class="px-2 text-gray-400 font-black">...</span>`;
+        }
+
+        for (let i = startPage; i <= endPage; i++) {
+            html += `<button onclick="window.changePage(${i})" class="px-4 py-2 rounded-xl font-bold transition-all ${i === currentPage ? 'bg-orange-500 text-white shadow-md border-orange-600' : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 shadow-sm'}">${i}</button>`;
+        }
+
+        if (endPage < totalPages) {
+            if (endPage < totalPages - 1) html += `<span class="px-2 text-gray-400 font-black">...</span>`;
+            html += `<button onclick="window.changePage(${totalPages})" class="px-4 py-2 rounded-xl font-bold bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 shadow-sm">${totalPages}</button>`;
+        }
+
+        html += `<button onclick="window.changePage(${currentPage + 1})" class="px-4 py-2 rounded-xl font-bold transition-colors ${currentPage === totalPages ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 shadow-sm'}" ${currentPage === totalPages ? 'disabled' : ''}>Sau &raquo;</button>`;
+        
+        html += '</div>';
+        container.innerHTML = html;
+    }
+
+    function showSection(id) {
+        ['login', 'quiz', 'scores', 'result', 'review'].forEach(s => {
+            const el = document.getElementById(s+'-section');
+            if(el) el.classList.add('hidden');
+        });
+        const tgt = document.getElementById(id+'-section');
+        if(tgt) tgt.classList.remove('hidden');
+    }
+
+    function startTimer(seconds) {
+        const display = document.getElementById('timer');
+        if(!display) return;
+        let remaining = seconds;
+        timerInterval = setInterval(() => {
+            remaining--;
+            const m = Math.floor(remaining / 60).toString().padStart(2, '0');
+            const s = (remaining % 60).toString().padStart(2, '0');
+            display.innerText = `${m}:${s}`;
+            if (remaining <= 0) window.submitQuiz();
+        }, 1000);
+    }
+
+    try {
+        if (!localStorage.getItem('deviceId')) localStorage.setItem('deviceId', 'dev_' + Math.random().toString(36).substr(2) + Date.now());
+        deviceId = localStorage.getItem('deviceId');
+    } catch (e) { deviceId = 'dev_temp_' + Math.random().toString(36).substr(2); }
+  </script>
+ </body>
+</html>

@@ -1,0 +1,814 @@
+<!doctype html>
+<html lang="vi" class="w-full h-full m-0 p-0">
+ <head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <title>Tin Học 11 - Bài 6</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+  <!-- 1. MÃ GA4 GỐC (Kết nối với Google Analytics) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-NSJCVSL9RM"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-NSJCVSL9RM'); 
+</script>
+
+<!-- 2. MÃ NHỊP TIM 30 GIÂY -->
+<script>
+  setInterval(function() {
+    if (!document.hidden) { 
+      gtag('event', 'keep_alive', {
+        'event_category': 'Engagement',
+        'event_label': 'Học sinh đang làm bài',
+        'non_interaction': false
+      });
+    }
+  }, 30000); 
+</script>
+
+
+
+  <style>
+    * { 
+        -webkit-tap-highlight-color: transparent; 
+        -webkit-touch-callout: none !important; 
+        touch-action: manipulation;
+    }
+    
+    html, body { width: 100%; min-height: 100vh; margin: 0; padding: 0; overflow-x: hidden; }
+    
+    body { 
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
+      background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+      background-size: 400% 400%;
+      animation: gradientBG 15s ease infinite;
+    }
+    
+    @keyframes gradientBG {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+
+    #app { width: 100%; min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden; }
+    
+    .glass-card {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    .option-label { transition: background-color 0.1s ease, border-color 0.1s ease; cursor: pointer; border-color: #e2e8f0; }
+    .option-label:hover { background-color: #f0fdfa; border-color: #38bdf8; }
+    
+    input[type="radio"].single-radio:checked + .option-label {
+      background: linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%);
+      color: white; border-color: transparent;
+      box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+    }
+    input[type="radio"].single-radio:checked + .option-label div:first-child { background-color: rgba(255,255,255,0.25); border-color: transparent; color: white; }
+    input[type="radio"].single-radio:checked + .option-label div:last-child { color: white; }
+    
+    .fade-in { animation: fadeIn 0.4s ease forwards; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    
+    .my-score-row {
+      background: linear-gradient(to right, #fdf4ff, #ffffff) !important;
+      border-left: 4px solid #db2777 !important; font-weight: 700 !important;
+      color: #9d174d !important; box-shadow: 0 2px 8px rgba(0,0,0,0.05); position: relative; z-index: 10;
+    }
+    .my-score-row td { padding-top: 16px; padding-bottom: 16px; }
+    
+    .btn-tf { transition: background-color 0.1s ease; border-width: 2px; }
+    .btn-tf.selected { background-color: #2563eb; color: white; border-color: #1d4ed8; }
+    .btn-tf:not(.selected) { background-color: white; color: #4b5563; border-color: #e5e7eb; }
+    .btn-tf:not(:disabled):active { transform: scale(0.95); }
+    
+    .math-scroll { overflow-x: auto; min-width: 0; padding-bottom: 4px; scrollbar-width: none; -ms-overflow-style: none; }
+    .math-scroll::-webkit-scrollbar { display: none; }
+  </style>
+
+ </head>
+ <body>
+  <div id="app" class="p-0 sm:p-4 md:p-8 transition-all">
+   
+   <div id="login-section" class="w-full max-w-md mx-auto fade-in flex flex-col justify-center flex-grow">
+    <div class="glass-card rounded-none sm:rounded-3xl p-6 sm:p-8 flex flex-col justify-start shadow-2xl border-t-8 border-indigo-600 bg-white">
+     <div class="text-center mb-6 pt-4 sm:pt-0">
+      <div class="flex items-center justify-center w-24 h-24 mx-auto mb-4 rounded-full border-4 border-yellow-400 bg-red-600 shadow-lg transform transition-transform hover:scale-105">
+          <span class="text-white font-black text-4xl tracking-tighter">HS</span>
+      </div>
+      <h1 class="text-2xl sm:text-3xl font-bold text-red-500 mb-3"> ĐỀ KIỂM TRA<br> BÀI 6: LƯU TRỮ VÀ CHIA SẺ TỆP TIN TRÊN INTERNET </h1>
+     </div>
+      <div id="login-form" class="space-y-4">
+      <div class="flex flex-col gap-4">
+          <div class="w-full">
+               <label class="block text-lg font-bold text-gray-700 mb-1">Họ và tên</label> 
+               <input type="text" id="hoTen" class="w-full px-4 py-4 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-100 outline-none transition-all font-semibold text-lg" placeholder="Nhập họ tên...">
+          </div>
+          <div class="w-full">
+               <label class="block text-lg font-bold text-gray-700 mb-1">Lớp</label> 
+               <input type="text" id="lop" class="w-full px-4 py-4 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-100 outline-none transition-all font-semibold text-lg" placeholder="11A1">
+          </div>
+      </div>
+
+      <div id="login-error" class="hidden bg-red-100 border border-red-300 text-red-700 font-bold text-base p-3 rounded-xl text-center shadow-sm"></div>
+
+      <button type="button" onclick="window.startQuizAction()" id="start-btn" class="w-full py-5 mt-6 bg-gradient-to-r from-blue-500 to-cyan-400 text-white font-extrabold rounded-2xl shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all text-2xl tracking-wide"> 🚀 BẮT ĐẦU THI </button>
+     </div>
+    </div>
+   </div>
+
+   <div id="quiz-section" class="w-full max-w-4xl mx-auto hidden flex-grow flex flex-col">
+    <div class="glass-card rounded-none sm:rounded-3xl p-4 sm:p-8 flex flex-col flex-grow relative border-t-8 border-blue-500 bg-white shadow-2xl">
+     <div class="flex items-center justify-between mb-4 sm:mb-6 pb-4 border-b-2 border-gray-100">
+      
+      <div class="flex items-center gap-3">
+       <div class="flex items-center justify-center w-12 h-12 rounded-full border-2 border-yellow-400 bg-red-600 shadow-sm flex-shrink-0">
+           <span class="text-white font-black text-xl tracking-tighter">HS</span>
+       </div>
+       <div>
+        <h2 id="quiz-title" class="text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">Đề Kiểm Tra</h2>
+        <p id="student-info" class="text-base font-bold text-gray-500 mt-1 uppercase tracking-wide"></p>
+       </div>
+      </div>
+
+      <div class="text-right bg-blue-50 px-4 py-2 rounded-xl border border-blue-100" id="progress-container">
+       <div class="text-sm text-blue-500 font-bold uppercase tracking-wider mb-1">Tiến độ (Câu)</div>
+       <div id="progress-text" class="text-2xl font-black text-blue-700">0/28</div>
+      </div>
+     </div>
+     
+     <div id="timer-banner" class="mb-6 p-4 bg-gradient-to-r from-orange-50 to-red-50 border-2 border-red-100 rounded-2xl flex items-center justify-between shadow-sm sticky top-2 z-40">
+        <span class="text-red-800 font-extrabold flex items-center gap-2 text-lg"><span class="text-2xl animate-pulse">⏰</span> THỜI GIAN:</span> 
+        <span id="timer" class="text-4xl font-black text-red-600 font-mono tracking-wider drop-shadow-sm">45:00</span>
+     </div>
+
+     <div id="question-container" class="mb-8 flex-grow w-full max-w-full"></div>
+     
+     <div id="network-error" class="hidden bg-red-100 text-red-700 p-4 rounded-xl mt-4 text-center font-bold text-sm border-2 border-red-300 mb-4 shadow-sm"></div>
+
+    <div class="flex pt-4 sm:pt-6 border-t-2 border-gray-100 mt-auto pb-4 sm:pb-0">
+        <button id="submit-btn" onclick="window.promptSubmit()" class="w-full py-5 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-bold text-2xl rounded-2xl shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1">✅ NỘP BÀI NGAY</button>
+     </div>
+    </div>
+   </div>
+
+   <div id="confirm-submit-modal" class="fixed inset-0 hidden flex items-center justify-center bg-black/60 backdrop-blur-sm z-50 transition-opacity">
+       <div class="bg-white rounded-3xl w-full max-w-sm shadow-2xl p-6 text-center transform transition-all scale-100 mx-4 border-2 border-gray-100">
+           <div class="text-yellow-400 mb-4 flex justify-center">
+               <svg xmlns="http://www.w3.org/2000/svg" class="h-24 w-24" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+               </svg>
+           </div>
+           <h3 class="text-3xl font-black text-gray-800 mb-2 uppercase tracking-wide">Xác nhận nộp</h3>
+           <p class="text-gray-600 mb-6 font-medium text-xl">Các em mới làm <span id="confirm-answered" class="text-red-600 font-black text-2xl">0</span>/<span id="confirm-total" class="font-black text-2xl">28</span> câu. Có chắc chắn muốn nộp bài không? Những câu chưa làm sẽ bị tính là sai.</p>
+           <div class="flex flex-col gap-3">
+               <button onclick="window.closeConfirmModal()" class="w-full py-4 bg-gray-100 text-gray-800 font-extrabold text-xl rounded-xl hover:bg-gray-200 border border-gray-200">Quay lại làm tiếp</button>
+               <button onclick="window.executeSubmit()" class="w-full py-4 bg-emerald-600 text-white font-extrabold text-xl rounded-xl hover:bg-emerald-700 shadow-md">Vẫn Nộp Luôn</button>
+           </div>
+       </div>
+   </div>
+
+   <div id="result-section" class="w-full max-w-2xl mx-auto hidden fade-in flex flex-col justify-center flex-grow pb-8">
+    <div class="glass-card rounded-none sm:rounded-3xl p-6 sm:p-8 flex flex-col justify-start border-t-8 border-green-500 bg-white shadow-2xl" id="result-content">
+    </div>
+   </div>
+
+   <div id="review-section" class="w-full max-w-4xl mx-auto hidden flex-grow flex flex-col">
+    <div class="glass-card rounded-none sm:rounded-3xl p-4 sm:p-8 flex flex-col flex-grow border-t-8 border-indigo-500 bg-white overflow-hidden shadow-2xl">
+     <div class="flex flex-col-reverse sm:flex-row items-start sm:items-center justify-between mb-6 pb-4 border-b-2 border-gray-100 gap-4">
+      <div class="flex flex-wrap gap-2">
+          <button onclick="window.goHome()" class="px-5 py-3 bg-gray-100 text-gray-700 rounded-xl font-bold hover:bg-gray-200 text-lg shadow-sm border border-gray-200">🏠 Trang chủ</button>
+          <button onclick="window.backFromReview()" class="px-5 py-3 bg-indigo-50 text-indigo-700 rounded-xl font-bold hover:bg-indigo-100 text-lg shadow-sm border border-indigo-200">🔙 Quay lại</button>
+          <button onclick="window.viewScoresAction()" class="px-5 py-3 bg-orange-50 text-orange-700 rounded-xl font-bold hover:bg-orange-100 text-lg shadow-sm border border-orange-200">🏆 Bảng điểm</button>
+      </div>
+      <h2 class="text-3xl sm:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">📝 Xem Lại Bài Làm</h2>
+     </div>
+     <div id="review-content" class="space-y-8 w-full max-w-full"></div>
+    </div>
+   </div>
+
+   <div id="scores-section" class="w-full max-w-6xl mx-auto hidden flex-grow flex flex-col">
+    <div class="glass-card rounded-none sm:rounded-3xl p-4 sm:p-8 flex flex-col flex-grow border-t-8 border-orange-500 bg-white w-full max-w-full shadow-2xl">
+     <div class="mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b-2 border-gray-100 pb-4">
+      <button onclick="window.goHome()" class="px-5 py-3 bg-gray-100 text-gray-700 rounded-xl font-bold hover:bg-gray-200 text-lg shadow-sm border border-gray-200 whitespace-nowrap">🏠 Trang chủ</button>
+      <h2 class="text-3xl sm:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-red-600 text-center flex-grow">🏆 BẢNG XẾP HẠNG</h2>
+     </div>
+     
+     <div class="flex flex-col sm:flex-row justify-between items-center mb-4 gap-4 bg-gray-50 p-4 rounded-xl border border-gray-200">
+         <div id="my-rank-display" class="text-xl font-bold text-gray-700">🏆 Thứ hạng của bạn: <span class="text-gray-400">--</span></div>
+         <div class="w-full sm:w-auto flex-grow max-w-sm">
+             <input type="text" id="search-student" oninput="window.searchStudent(this.value)" placeholder="🔍 Nhập tên học sinh để tìm..." class="w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm focus:border-orange-500 focus:ring-2 focus:ring-orange-200 outline-none transition-all font-medium">
+         </div>
+     </div>
+
+     <div class="overflow-x-auto rounded-xl border border-slate-200 flex-grow shadow-inner bg-white/50 w-full">
+      <table class="w-full text-sm sm:text-base whitespace-nowrap min-w-max">
+       <thead class="bg-gradient-to-r from-orange-500 to-red-500 text-white">
+        <tr>
+         <th class="px-3 sm:px-4 py-4 text-center font-extrabold w-16">Hạng</th>
+         <th class="px-3 sm:px-4 py-4 text-left font-extrabold">Họ tên</th>
+         <th class="px-3 sm:px-4 py-4 text-center font-extrabold">Lớp</th>
+         <th class="px-3 sm:px-4 py-4 text-center font-extrabold">Thời gian</th>
+         <th class="px-3 sm:px-4 py-4 text-center font-extrabold">Điểm</th>
+         <th class="px-2 sm:px-4 py-4 text-center font-extrabold">Xem lại</th>
+        </tr>
+       </thead>
+       <tbody id="scores-tbody" class="bg-white/80 divide-y divide-gray-100"></tbody>
+      </table>
+      <div id="no-scores" class="text-center py-12 hidden text-gray-500 font-bold text-xl">Không tìm thấy dữ liệu thi 🥲</div>
+     </div>
+     
+     <div id="pagination-controls" class="w-full flex justify-center mt-6"></div>
+    </div>
+  </div>
+
+  <script>
+    let database = null;
+    let scoresRef = null;
+
+    try {
+        const firebaseConfig = {
+            apiKey: "AIzaSyBQ9Pos8awlh9j041qDWTPFRsVIjF-kPnk",
+            authDomain: "hoctap-91691.firebaseapp.com",
+            databaseURL: "https://hoctap-91691-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "hoctap-91691",
+            storageBucket: "hoctap-91691.firebasestorage.app",
+            messagingSenderId: "1004553425319",
+            appId: "1:1004553425319:web:45d15cbae393f614c56682",
+            measurementId: "G-Q6X1TL9PRV"
+        };
+        if (typeof firebase !== 'undefined') {
+            if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+            database = firebase.database();
+            scoresRef = database.ref('bxh_tin_11_6'); // Cập nhật tham chiếu DB Bài 6
+        }
+    } catch(err) { console.error("Lỗi Firebase:", err); }
+
+    let isQuizStarted = false; 
+    let currentQuestions = [];
+    let deviceId = '';
+    let allScores = [];
+    let currentStudent = {};
+    let userAnswers = {};
+    let timerInterval;
+    let quizStartTime, quizEndTime;
+    
+    let searchTerm = '';
+    let currentPage = 1;
+    const itemsPerPage = 10;
+
+    const exam_data = [
+        { id: "q1", type: "single", question: "Câu 1: Dịch vụ lưu trữ và chia sẻ tệp tin trên nền tảng mạng Internet còn được người dùng gọi bằng thuật ngữ phổ biến nào?", options: ["Dịch vụ này còn được chuyên gia gọi là dịch vụ mạng cục bộ hiện đại.", "Dịch vụ này còn được chuyên gia gọi là dịch vụ lưu trữ đám mây.", "Dịch vụ này còn được chuyên gia gọi là dịch vụ lưu trữ đĩa vật lý.", "Dịch vụ này còn được chuyên gia gọi là dịch vụ định tuyến web số."], correct: 1, explanation: "Dịch vụ lưu trữ và chia sẻ tệp tin trên Internet thường được biết đến với tên gọi phổ biến là dịch vụ lưu trữ đám mây." },
+        { id: "q2", type: "single", question: "Câu 2: Khi người dùng muốn truy cập và sử dụng dịch vụ Google Drive, yêu cầu cơ bản đầu tiên bắt buộc phải có là gì?", options: ["Người dùng bắt buộc phải sở hữu một tài khoản của Microsoft hợp lệ.", "Người dùng bắt buộc phải sở hữu một tài khoản của Facebook hợp lệ.", "Người dùng bắt buộc phải sở hữu một tài khoản của Google hợp lệ.", "Người dùng bắt buộc phải sở hữu một tài khoản của Apple ID hợp lệ."], correct: 2, explanation: "Vì Google Drive thuộc hệ sinh thái của Google, nên bắt buộc người dùng phải có tài khoản Google (Gmail) để đăng nhập và sử dụng." },
+        { id: "q3", type: "single", question: "Câu 3: Trong danh sách các nhà cung cấp nền tảng số hiện nay, dịch vụ lưu trữ có tên gọi iCloud được phát triển bởi tập đoàn công nghệ nào?", options: ["Dịch vụ lưu trữ iCloud được phát triển bởi tập đoàn công nghệ Google.", "Dịch vụ lưu trữ iCloud được phát triển bởi tập đoàn công nghệ Apple.", "Dịch vụ lưu trữ iCloud được phát triển bởi tập đoàn công nghệ Yahoo.", "Dịch vụ lưu trữ iCloud được phát triển bởi tập đoàn công nghệ Intel."], correct: 1, explanation: "iCloud là dịch vụ lưu trữ đám mây độc quyền do hãng Apple phát triển." },
+        { id: "q4", type: "single", question: "Câu 4: Theo thiết lập của các nền tảng đám mây, chế độ phân quyền mức độ cao nhất khi thực hiện chia sẻ một tệp tin là gì?", options: ["Chế độ phân quyền ở mức độ cao nhất được hệ thống gọi là quyền chỉnh sửa.", "Chế độ phân quyền ở mức độ cao nhất được hệ thống gọi là quyền chỉ nhận xét.", "Chế độ phân quyền ở mức độ cao nhất được hệ thống gọi là quyền xem tài liệu.", "Chế độ phân quyền ở mức độ cao nhất được hệ thống gọi là quyền chia sẻ tệp."], correct: 0, explanation: "Trong các tùy chọn chia sẻ, 'Quyền chỉnh sửa' là quyền hạn cao nhất, cho phép người nhận thay đổi, xoá hoặc tạo mới nội dung." },
+        { id: "q5", type: "single", question: "Câu 5: Khi tương tác với không gian ổ đĩa trực tuyến, tính năng quản lý nào cho phép người dùng đưa dữ liệu từ thiết bị cục bộ lên mạng?", options: ["Quá trình này được thực hiện thông qua tính năng tải các tệp tin lên.", "Quá trình này được thực hiện thông qua tính năng chia sẻ các tệp tin.", "Quá trình này được thực hiện thông qua tính năng tạo mới các tệp tin.", "Quá trình này được thực hiện thông qua tính năng tải các tệp tin xuống."], correct: 0, explanation: "Tải tệp tin lên (Upload) là tính năng đưa dữ liệu từ máy tính cá nhân lưu vào không gian lưu trữ đám mây." },
+        { id: "q6", type: "single", question: "Câu 6: Trong hệ thống chia sẻ, việc chủ sở hữu cấp 'Quyền chỉ xem' đối với một tài liệu trực tuyến mang lại khả năng cơ bản nào cho người nhận?", options: ["Người dùng được cấp quyền có khả năng đọc tài liệu nhưng không thể thay đổi nó.", "Người dùng được cấp quyền có khả năng đọc tài liệu và ghi chú trực tiếp vào tệp.", "Người dùng được cấp quyền có khả năng đọc tài liệu và xóa tệp tin khỏi hệ thống.", "Người dùng được cấp quyền có khả năng đọc tài liệu và thêm bảng tính vào tệp tin."], correct: 0, explanation: "'Quyền chỉ xem' (Viewer) chỉ cho phép người dùng đọc và xem tài liệu, tuyệt đối không được thêm bớt hay sửa đổi nội dung." },
+        { id: "q7", type: "single", question: "Câu 7: Dịch vụ lưu trữ và chia sẻ tệp tin trực tuyến có tên gọi là OneDrive là sản phẩm giải pháp phần mềm của thương hiệu công nghệ nào?", options: ["Dịch vụ lưu trữ và chia sẻ trực tuyến OneDrive là sản phẩm của tập đoàn Facebook.", "Dịch vụ lưu trữ và chia sẻ trực tuyến OneDrive là sản phẩm của tập đoàn Amazon.", "Dịch vụ lưu trữ và chia sẻ trực tuyến OneDrive là sản phẩm của tập đoàn Samsung.", "Dịch vụ lưu trữ và chia sẻ trực tuyến OneDrive là sản phẩm của tập đoàn Microsoft."], correct: 3, explanation: "OneDrive là giải pháp lưu trữ đám mây do tập đoàn Microsoft cung cấp." },
+        { id: "q8", type: "single", question: "Câu 8: Để tiến hành bước đầu tiên trong việc chia sẻ một tệp tin đang nằm trên không gian Google Drive, người dùng thường phải dùng thao tác nào?", options: ["Thao tác nhấp chuột phải vào tệp và chọn lệnh chia sẻ trong bảng menu.", "Thao tác nhấp đúp chuột vào tệp để kích hoạt giao diện soạn thảo tài liệu.", "Thao tác nhấp chuột trái vào tệp và nhấn nút Delete trên bàn phím máy.", "Thao tác kéo thả biểu tượng của tệp tin ra thẳng ngoài màn hình Desktop."], correct: 0, explanation: "Để chia sẻ một tệp trên Google Drive, người dùng nhấp chuột phải vào tệp đó và lựa chọn mục Share (Chia sẻ)." },
+        { id: "q9", type: "single", question: "Câu 9: Ưu điểm vĩ mô quan trọng nhất của việc ra đời dịch vụ lưu trữ dữ liệu trên nền tảng đám mây so với các giải pháp lưu trữ cổ điển là gì?", options: ["Giúp khắc phục hoàn toàn rào cản về giới hạn tài nguyên của các máy tính cá nhân.", "Giúp toàn bộ máy tính chạy nhanh hơn rất nhiều so với khi không kết nối Internet.", "Giúp hệ điều hành máy chặn đứng hoàn toàn mọi phần mềm độc hại đang lây lan.", "Giúp nâng cấp thẳng độ phân giải màn hình hiển thị lên chuẩn chất lượng cao nhất."], correct: 0, explanation: "Đám mây giải phóng giới hạn lưu trữ vật lý của máy tính cá nhân, cung cấp một không gian khổng lồ có thể mở rộng trên mạng." },
+        { id: "q10", type: "single", question: "Câu 10: Sự khác biệt cốt lõi về bản chất kỹ thuật giữa 'Quyền nhận xét' và 'Quyền chỉnh sửa' trong hệ thống chia sẻ tệp tin của đám mây là gì?", options: ["Quyền chỉnh sửa cho phép tải thẳng tệp tin xuống máy, quyền nhận xét chỉ xem ảnh.", "Quyền chỉnh sửa cho phép đổi định dạng tài liệu, quyền nhận xét mở phần mềm khác.", "Quyền chỉnh sửa cho phép thay đổi dữ liệu gốc, quyền nhận xét chỉ ghi chú đánh giá.", "Quyền chỉnh sửa cho phép chia sẻ mạng cục bộ, quyền nhận xét cho phép xóa tập tin."], correct: 2, explanation: "Quyền chỉnh sửa cho phép tác động trực tiếp vào nội dung gốc, trong khi quyền nhận xét chỉ cho phép để lại những chú thích, bình luận đánh giá bên lề tài liệu." },
+        { id: "q11", type: "single", question: "Câu 11: Trong hệ sinh thái đám mây của Google, thuật ngữ 'Ổ đĩa trực tuyến' mà mỗi người dùng được cấp phép sau khi đăng kí mang ý nghĩa gì?", options: ["Nó là một không gian lưu trữ do hệ thống máy chủ mạng cung cấp để người dùng cất tệp.", "Nó là một chiếc ổ đĩa cứng vật lý bằng kim loại được gắn trực tiếp vào trong máy tính.", "Nó là một chiếc đĩa quang học chuẩn DVD được nén lại bằng một phần mềm chuyên dụng.", "Nó là một trạm thu phát tín hiệu wifi giúp cho chiếc máy tính kết nối Internet tốc độ cao."], correct: 0, explanation: "Ổ đĩa trực tuyến là không gian lưu trữ ảo được cấp phát trên các hệ thống máy chủ của nhà cung cấp mạng." },
+        { id: "q12", type: "single", question: "Câu 12: Khi chủ sở hữu tệp tin quyết định hạ mức phân quyền của một người từ 'Quyền chỉnh sửa' xuống thành 'Quyền chỉ xem', cá nhân đó sẽ lập tức bị mất đi khả năng nào?", options: ["Người đó sẽ hoàn toàn không thể thực hiện các thao tác xóa, sửa, hoặc tạo mới nội dung.", "Người đó sẽ hoàn toàn không thể thực hiện các thao tác đọc hiểu tài liệu văn bản bằng chữ.", "Người đó sẽ hoàn toàn không thể thực hiện các thao tác mở trình duyệt web lên để tra cứu.", "Người đó sẽ hoàn toàn không thể thực hiện các thao tác lưu trữ tệp vào hệ thống ổ đĩa USB."], correct: 0, explanation: "Khi bị chuyển về Quyền chỉ xem, người đó chỉ đọc được văn bản, mất hoàn toàn khả năng xóa, sửa đổi hoặc thêm mới dữ liệu." },
+        { id: "q13", type: "single", question: "Câu 13: Một nhân sự được trao quyền cao nhất ('Quyền chỉnh sửa') đối với một thư mục được chia sẻ chung trong tổ chức thì có thể thực hiện những chuỗi hành động nào?", options: ["Có thể thực hiện gửi vô vàn thư rác tự động đến mọi hòm thư điện tử cá nhân của người quản trị.", "Có thể thực hiện xâm nhập và đánh sập toàn bộ hệ thống máy chủ của nhà mạng cung cấp dịch vụ.", "Có thể thực hiện tự nâng cấp tốc độ băng thông kết nối wifi của toàn bộ văn phòng làm việc công ty.", "Có thể thực hiện việc xem, nhận xét, chỉnh sửa, xóa bỏ, tạo mới và đổi tên đối với bất kỳ tệp tin nào."], correct: 3, explanation: "Quyền chỉnh sửa là phân cấp cao nhất, cho phép người dùng thực hiện toàn bộ mọi thao tác liên quan đến nội dung và tổ chức thư mục." },
+        { id: "q14", type: "single", question: "Câu 14: Việc một phần mềm điện toán đám mây cho phép người dùng mở và chỉnh sửa trực tiếp các tệp văn bản, bảng tính ngay trên trình duyệt mà không cần cài phần mềm phụ trợ nhằm mục đích gì?", options: ["Hỗ trợ người dùng thao tác tiện lợi và nâng cao hiệu quả làm việc nhóm ngay trên hệ thống web.", "Hỗ trợ người dùng đóng băng hoạt động của toàn bộ thiết bị phần cứng để tiết kiệm năng lượng.", "Hỗ trợ người dùng có khả năng lập trình và thiết kế lại hoàn toàn hệ điều hành của chiếc máy tính.", "Hỗ trợ người dùng ngăn chặn tuyệt đối tin tặc đánh cắp thông tin thẻ ngân hàng của họ trên mạng."], correct: 0, explanation: "Việc xử lý tài liệu trực tiếp trên web giúp tối giản hóa công cụ làm việc và hỗ trợ cộng tác nhóm hiệu quả theo thời gian thực." },
+        { id: "q15", type: "single", question: "Câu 15: Sau khi một tài liệu nghiên cứu trên máy tính cá nhân đã được người dùng tải thành công lên dịch vụ lưu trữ Google Drive, tài liệu đó sở hữu tính linh hoạt như thế nào?", options: ["Tài liệu đó sẽ tự động nhân bản thành hàng ngàn bản sao trong ổ cứng nội bộ của máy tính cá nhân.", "Tài liệu đó lập tức bị hệ thống khóa bảo mật vĩnh viễn và không một ai có thể can thiệp được thêm.", "Tài liệu đó chỉ có thể được truy xuất mở lại nếu người dùng cắm đúng chiếc USB vào máy tính bàn.", "Tài liệu đó có thể được đồng bộ và truy cập dễ dàng bằng các thiết bị khác ở bất cứ nơi đâu có mạng."], correct: 3, explanation: "Tính linh hoạt lớn nhất của đám mây là cho phép đồng bộ và truy cập dữ liệu mọi lúc mọi nơi chỉ cần có kết nối Internet." },
+        { id: "q16", type: "single", question: "Câu 16: Khi một tài liệu báo cáo đã được chia sẻ qua nền tảng Google Drive, người nắm giữ vai trò chủ sở hữu hoàn toàn có quyền thực hiện hành động kiểm soát nào sau đây vào bất cứ lúc nào?", options: ["Chủ sở hữu hoàn toàn có quyền thay thế hệ điều hành của máy người xem bằng một phần mềm mới.", "Chủ sở hữu hoàn toàn có quyền kích hoạt virus tự động tắt nguồn màn hình máy tính của người nhận.", "Chủ sở hữu hoàn toàn có quyền ra lệnh thu phí tự động hàng tháng từ thẻ ngân hàng của đối tác.", "Chủ sở hữu hoàn toàn có quyền hủy bỏ chức năng chia sẻ hoặc đổi lại chế độ phân quyền cho tệp đó."], correct: 3, explanation: "Chủ sở hữu của tài liệu là người nắm quyền quyết định cuối cùng, có thể thu hồi, hủy bỏ hoặc thay đổi quyền truy cập bất cứ khi nào." },
+        { id: "q17", type: "single", question: "Câu 17: Nhóm của An đang làm bài tập chung trên mạng. An muốn mọi người có thể tự do gõ thêm nội dung văn bản vào một bảng tính dùng chung để hoàn thành dự án. An bắt buộc phải thiết lập cấp quyền gì?", options: ["An bắt buộc phải thao tác thiết lập và cấp quyền chỉnh sửa cho tất cả các thành viên trong nhóm.", "An bắt buộc phải thao tác thiết lập và cấp quyền chỉ xem cho tất cả các thành viên trong nhóm.", "An bắt buộc phải thao tác thiết lập và cấp quyền nhận xét cho tất cả các thành viên trong nhóm.", "An bắt buộc phải thao tác thiết lập và cấp quyền từ chối cho tất cả các thành viên trong nhóm."], correct: 0, explanation: "Để người khác có thể thay đổi hoặc thêm mới nội dung trực tiếp vào file, họ cần được cấp 'Quyền chỉnh sửa' (Editor)." },
+        { id: "q18", type: "single", question: "Câu 18: Trong lúc sao lưu ảnh, Tuấn tải nhầm một tài liệu PDF không liên quan lên thư mục dùng chung của toàn lớp trên hệ thống Google Drive. Tuấn cần sử dụng lệnh nào trên hệ thống đám mây để dọn dẹp lỗi này?", options: ["Tuấn cần thao tác nhấp phải chuột vào tệp tin bị nhầm đó và lựa chọn dòng lệnh tải xuống thiết bị.", "Tuấn cần thao tác nhấp phải chuột vào tệp tin bị nhầm đó và lựa chọn dòng lệnh xóa bỏ khỏi ổ đĩa.", "Tuấn cần thao tác nhấp phải chuột vào tệp tin bị nhầm đó và lựa chọn dòng lệnh cấp quyền chỉ xem.", "Tuấn cần thao tác nhấp đúp chuột vào tệp tin bị nhầm đó và thay đổi hoàn toàn mã nguồn hệ thống."], correct: 1, explanation: "Nhấp chuột phải vào tệp và chọn lệnh 'Xóa' (Remove/Delete) là thao tác tiêu chuẩn để loại bỏ tệp thừa trên không gian đám mây." },
+        { id: "q19", type: "single", question: "Câu 19: Khi điền phiếu lấy ý kiến, thầy Nam chia sẻ một liên kết tài liệu quy chế phòng thi trên Google Drive và căn dặn tuyệt đối không bạn nào được sửa chữa hay tự ý thêm bớt từ ngữ gốc. thầy Nam chắc chắn phải đang cài đặt tệp ở chế độ nào?", options: ["thầy Nam chắc chắn phải đang cài đặt thiết lập chia sẻ tài liệu gốc tương ứng với quyền chỉ xem.", "thầy Nam chắc chắn phải đang cài đặt thiết lập chia sẻ tài liệu gốc tương ứng với quyền tự do sửa.", "thầy Nam chắc chắn phải đang cài đặt thiết lập chia sẻ tài liệu gốc tương ứng với quyền bình luận.", "thầy Nam chắc chắn phải đang cài đặt thiết lập chia sẻ tài liệu gốc tương ứng với quyền quản trị."], correct: 0, explanation: "Chế độ chia sẻ 'Quyền chỉ xem' bảo vệ nội dung tài liệu nguyên vẹn, người nhận không thể can thiệp vào văn bản." },
+        { id: "q20", type: "single", question: "Câu 20: Bình và Lan muốn soạn chung một bài thuyết trình cho ngày mai. Tuy nhiên, khi Bình gửi liên kết qua Zalo, Lan mở lên thì chỉ đọc được văn bản mà không tài nào gõ thêm được đoạn hội thoại. Nguyên nhân kĩ thuật trực tiếp cho sự cố này là gì?", options: ["Nguyên nhân kĩ thuật trực tiếp là do nhà cung cấp mạng khóa băng thông đường truyền internet.", "Nguyên nhân kĩ thuật trực tiếp là do bạn Bình mới chỉ thao tác cấp quyền chỉ xem cho bạn Lan.", "Nguyên nhân kĩ thuật trực tiếp là do bạn Bình đã thao tác cấp quyền chỉnh sửa toàn diện cho Lan.", "Nguyên nhân kĩ thuật trực tiếp là do màn hình bàn phím của chiếc máy tính mà Lan dùng bị hỏng."], correct: 1, explanation: "Vì Bình chưa cấp quyền Editor, Lan chỉ nhận được quyền mặc định là Viewer nên không thể thao tác gõ chữ chỉnh sửa." },
+        { id: "q21", type: "single", question: "Câu 21: Nhóm Dũng lập kế hoạch cho buổi sinh hoạt hè. Dũng đăng bản nháp kế hoạch lên đám mây và muốn các bạn bè gạch chân đóng góp ý kiến bên lề nhưng Dũng không muốn nội dung cấu trúc câu chữ gốc do mình soạn bị xóa nhầm. Dũng nên phân quyền gì cho các bạn?", options: ["Bạn Dũng nên thao tác thiết lập cài đặt phân quyền cho nhóm tính năng chuyên chỉ dùng để đọc chữ.", "Bạn Dũng nên thao tác thiết lập cài đặt phân quyền cho nhóm tính năng chuyên dùng để chỉnh sửa.", "Bạn Dũng nên thao tác thiết lập cài đặt phân quyền cho nhóm tính năng khóa mọi tương tác hệ thống.", "Bạn Dũng nên thao tác thiết lập cài đặt phân quyền cho nhóm tính năng chuyên dùng để nhận xét."], correct: 3, explanation: "Quyền nhận xét (Commenter) giúp bạn bè đóng góp ý kiến nhưng bảo toàn được văn bản gốc không bị xóa hay thay đổi sai lệch." },
+        { id: "q22", type: "single", question: "Câu 22: Để tổ chức kho tài liệu số ôn tập cho kỳ thi đại học gọn gàng, lớp phó Mai đã vào Google Drive và tạo riêng biệt các nhóm 'Toán học', 'Vật Lý', 'Hóa Học'. Thao tác tạo cấu trúc cây thư mục này tương ứng với tính năng nổi trội nào của nền tảng?", options: ["Thao tác này thể hiện tính năng khóa hệ thống bảo mật bằng vân tay phòng chống tin tặc mạng.", "Thao tác này thể hiện tính năng tự động dò tìm kiểm tra các lỗi điện tử của bảng mạch vi tính.", "Thao tác này thể hiện tính năng khởi tạo mới và quản lí sắp xếp thư mục trực tuyến vô cùng tiện lợi.", "Thao tác này thể hiện tính năng đồng bộ hóa toàn bộ danh bạ cuộc gọi từ điện thoại lên đám mây."], correct: 2, explanation: "Hệ thống đám mây cung cấp sẵn tính năng 'Thêm thư mục mới', giúp quản lý, phân loại và sắp xếp dữ liệu khoa học y như trên máy tính." },
+        { id: "q23", type: "single", question: "Câu 23: Khi dự thầu dự án, nhóm công nghệ của Hùng upload hàng trăm bản thiết kế 3D khổng lồ lên dịch vụ OneDrive để đối tác ở đầu cầu quốc tế có thể tham khảo từ xa. Ích lợi kinh tế và kĩ thuật lớn nhất trong phương án lưu trữ đám mây này là gì?", options: ["Giúp đối tác tiếp cận kho tài liệu cực kỳ dễ dàng mà không cần phải chờ chuyển phát USB hoặc ổ cứng.", "Giúp các bản thiết kế 3D tự động tăng cường độ nét hình ảnh lên mức tối đa mà không hề tốn điện.", "Giúp nhóm của Hùng được hệ thống máy tính chấm tự động giành điểm số cao nhất trong vòng sơ khảo.", "Giúp toàn bộ hệ thống máy tính làm việc của nhà trường được tăng gấp đôi tốc độ độ dung lượng RAM."], correct: 0, explanation: "Lưu trữ đám mây xóa bỏ hoàn toàn rào cản về khoảng cách địa lý, không cần các phương tiện chuyển phát vật lý đắt tiền, tốn thời gian." },
+        { id: "q24", type: "single", question: "Câu 24: Trong giao diện chia sẻ tài liệu Drive, Tuấn tiến hành thêm địa chỉ email cá nhân của Lan và cẩn thận đánh dấu vào khung kiểm 'Thông báo cho những người này' trước khi bấm Gửi. Việc đánh dấu kiểm này mang ý nghĩa thông tin kĩ thuật gì?", options: ["Đảm bảo rằng tài khoản email cá nhân của Lan sẽ lập tức nhận được một bức thư điện tử thông báo chia sẻ.", "Đảm bảo rằng tệp tin đó lập tức bị khóa bảo mật vĩnh viễn và không một ai có thể tự động mở nó lên được nữa.", "Đảm bảo bất cứ chuyên gia nào tình cờ lướt web thấy liên kết này đều có quyền truy cập vào phá hoại tài liệu.", "Đảm bảo hệ thống máy chủ tự động khởi chạy chuyển đổi định dạng tệp đó sang cấu trúc dạng video trình chiếu."], correct: 0, explanation: "Chức năng đánh dấu vào 'Notify people' (Thông báo) sẽ ra lệnh cho hệ thống gửi ngay một email thông báo đến địa chỉ hòm thư của người được nhận." },
+
+        { id: "qII_1", type: "tf_cluster", context: "Câu 1: thầy Nam đang giảng bài cho lớp về lợi ích của sự chuyển đổi số, tập trung vào việc quản trị tài nguyên qua các dịch vụ trực tuyến. Hãy xem xét các phát biểu sau của thầy Nam là Đúng hay Sai:", items: [
+            { id: "a", text: "a) Các dịch vụ cho phép tạo lập, lưu trữ và chia sẻ tệp tin qua mạng Internet được chuyên gia công nghệ gọi chung bằng thuật ngữ quen thuộc là dịch vụ 'Lưu trữ đám mây'.", correct: true, expl: "Dịch vụ lưu trữ và chia sẻ tệp tin trên Internet thường được biết đến với tên gọi là dịch vụ lưu trữ đám mây." },
+            { id: "b", text: "b) Về bản chất vật lí, không gian lưu trữ của các hệ thống như Google Drive, OneDrive và iCloud thực chất là những chiếc đĩa quang học chuẩn DVD cắm qua cổng USB.", correct: false, expl: "Không gian lưu trữ đám mây dựa trên các cụm máy chủ siêu lớn trên mạng Internet, không phải là ổ đĩa vật lý cắm vào máy tính." },
+            { id: "c", text: "c) Nhược điểm kỹ thuật duy nhất của không gian lưu trữ đám mây là hệ thống chỉ cho phép người dùng đăng tải các tệp tin dạng hình ảnh, cấm hoàn toàn việc tải các tệp văn bản.", correct: false, expl: "Hệ thống lưu trữ đám mây cho phép chứa mọi định dạng tệp và thư mục như hình ảnh, video, văn bản..." },
+            { id: "d", text: "d) Do ở nhà bị cắt kết nối mạng Internet nội bộ, bạn Lan vẫn có thể sử dụng điện thoại thông minh để tải ngay các bức ảnh tự sướng mới nhất lên đồng bộ thành công vào Google Drive.", correct: false, expl: "Dịch vụ lưu trữ đám mây bắt buộc phải có kết nối Internet để tải tệp tin lên hệ thống máy chủ." }
+        ]},
+        { id: "qII_2", type: "tf_cluster", context: "Câu 2: Bạn Tuấn đang nghiên cứu tài liệu hướng dẫn về cấu trúc cài đặt phân quyền khi quyết định đưa tài liệu học tập chung lên dịch vụ đám mây. Đánh giá tính Đúng/Sai của những quy tắc Tuấn tìm hiểu:", items: [
+            { id: "a", text: "a) Khi chia sẻ một thư mục trực tuyến, chủ sở hữu thường có thể lựa chọn cấp phép cho người khác một trong ba chế độ cơ bản là: quyền chỉ xem, quyền nhận xét và quyền chỉnh sửa.", correct: true, expl: "Chủ sở hữu có thể phân chia các mức độ là Quyền chỉ xem, Quyền nhận xét, hoặc Quyền chỉnh sửa." },
+            { id: "b", text: "b) Tính năng 'Quyền nhận xét' mang quyền lực cao hơn cả, cho phép người nhận thay đổi cấu trúc thiết kế và xóa bỏ hoàn toàn đoạn văn bản do tác giả viết ban đầu nếu thấy sai sót.", correct: false, expl: "Quyền nhận xét chỉ được xem và bình luận góp ý, không thể xóa hoặc sửa trực tiếp cấu trúc văn bản gốc." },
+            { id: "c", text: "c) Tại chế độ chia sẻ 'Quyền chỉnh sửa', người dùng ở mức phân quyền cao nhất có đầy đủ năng lực để xem, nhận xét, thực hiện thao tác xóa, thêm mới hoặc đổi tên tập tin hệ thống.", correct: true, expl: "Quyền chỉnh sửa là cấp cao nhất, cho phép thay đổi, xoá và cập nhật mọi nội dung trong thư mục/tệp." },
+            { id: "d", text: "d) Nếu An vô tình cấp nhầm 'Quyền chỉnh sửa' cho một người bạn lạ mặt qua nhóm chat đối với thư mục dự án lớp, An buộc phải cam chịu do cơ sở hạ tầng đám mây cấm chủ sở hữu thu hồi quyền.", correct: false, expl: "Chủ sở hữu hoàn toàn có quyền thu hồi, huỷ bỏ chia sẻ hoặc hạ cấp quyền bất cứ lúc nào." }
+        ]},
+        { id: "qII_3", type: "tf_cluster", context: "Câu 3: Nhằm đảm bảo an toàn phòng dịch, lớp trưởng Mai đề xuất sử dụng nền tảng Google Drive để tổ chức kho tiếp nhận các bài tiểu luận của toàn lớp. Hãy xác định tính Đúng/Sai của các lập luận khi Mai triển khai:", items: [
+            { id: "a", text: "a) Để kích hoạt và sử dụng hợp pháp không gian lưu trữ trên Google Drive, lớp trưởng Mai bắt buộc phải dùng thẻ tín dụng đóng một khoản chi phí cố định hàng tháng cho hãng Microsoft.", correct: false, expl: "Google Drive là dịch vụ của Google, cho phép dùng miễn phí gói dung lượng cơ bản, không bắt buộc đóng phí." },
+            { id: "b", text: "b) Sau khi truy cập vào giao diện web, Mai hoàn toàn có thể nhấn vào nút '+ Mới' (hoặc chọn Tải tệp lên) để điều chuyển trực tiếp các tệp bài tập lưu trong ổ đĩa cá nhân lên kho lưu trữ trực tuyến.", correct: true, expl: "Sử dụng tính năng 'Tải tệp lên' (hoặc +Mới) để chuyển tài liệu từ máy cục bộ lên lưu ở đám mây." },
+            { id: "c", text: "c) Một khi khối tài liệu điện tử đã được chuyển lên không gian Google Drive, toàn bộ hệ thống sẽ tự động vô hiệu hóa khóa chặn, khiến việc tạo thêm các thư mục con phân loại trở nên bất khả thi.", correct: false, expl: "Trên đám mây, bạn vẫn hoàn toàn tạo và cấu trúc được các thư mục con hệt như trong máy tính." },
+            { id: "d", text: "d) Trong giao diện chia sẻ tập tin, nếu Mai nhập địa chỉ email của thầy Nam và tích chọn vào ô lệnh 'Thông báo cho những người này', một tin nhắn tự động sẽ lập tức được hệ thống gửi thẳng đến hòm thư của thầy.", correct: true, expl: "Việc chọn ô 'Thông báo' sẽ ra lệnh cho hệ thống tự động gửi email báo tin cho người được mời." }
+        ]},
+        { id: "qII_4", type: "tf_cluster", context: "Câu 4: Bạn Bình đang tham gia vào vòng chung kết cuộc thi lập trình quốc gia và được ban tổ chức yêu cầu báo cáo tiến độ hoạt động nhóm qua hệ thống chia sẻ trực tuyến. Những phân tích nào của Bình là Đúng hay Sai:", items: [
+            { id: "a", text: "a) Cùng thuộc hệ sinh thái đám mây của nhà phát triển Google, các ứng dụng như Docs, Sheets và Slides là các giải pháp hoàn hảo có khả năng thay thế MS Office để soạn thảo và trình chiếu trực tuyến.", correct: true, expl: "Google Docs, Sheets, Slides là các bộ ứng dụng văn phòng trực tuyến thay thế tốt cho Word, Excel, PowerPoint." },
+            { id: "b", text: "b) Việc phát minh và ra đời của các nền tảng dịch vụ lưu trữ trực tuyến đã thực sự mang lại cuộc cách mạng vĩ đại, giúp người dùng bứt phá hoàn toàn rào cản giới hạn dung lượng phần cứng thiết bị cá nhân.", correct: true, expl: "Đám mây giải phóng giới hạn vật lý của ổ cứng cá nhân, mang đến không gian rộng lớn không biên giới." },
+            { id: "c", text: "c) Quản trị không gian lưu trữ trên đám mây thực chất là một lĩnh vực công nghệ thu hẹp, nó chỉ phát huy tác dụng độc quyền duy nhất đối với ngành khoa học máy tính mà không có ích lợi trong quản lý kinh tế.", correct: false, expl: "Việc lưu trữ trực tuyến hiện tại mang lại lợi ích to lớn bao trùm tất cả các lĩnh vực học tập, khoa học, và kinh tế xã hội." },
+            { id: "d", text: "d) Thay vì sao chép liên tục dự án qua thẻ nhớ, nếu Bình chủ động lưu bản thiết kế lên đám mây và chia sẻ đường liên kết với quyền 'Người xem', các giám khảo từ nước ngoài sẽ luôn truy cập được tài liệu mới nhất một cách đồng bộ.", correct: true, expl: "Lưu trên mạng và chia sẻ link giúp mọi đối tác luôn truy cập được tệp tin được cập nhật mới nhất ở mọi nơi." }
+        ]}
+    ];
+
+    window.startQuizAction = function() {
+        try {
+            const errDiv = document.getElementById('login-error');
+            if(errDiv) errDiv.classList.add('hidden');
+            
+            const nameEl = document.getElementById('hoTen');
+            const lopEl = document.getElementById('lop');
+            
+            const name = nameEl.value.trim();
+            const lop = lopEl.value.trim();
+            
+            if (!name || !lop) {
+                if(errDiv) {
+                    errDiv.innerText = "⚠️ Vui lòng nhập đầy đủ Họ tên và Lớp!";
+                    errDiv.classList.remove('hidden');
+                } else {
+                    alert("⚠️ Vui lòng nhập đầy đủ Họ tên và Lớp!");
+                }
+                return;
+            }
+            
+            currentStudent = { hoTen: name, lop: lop, maDe: 'de6', tenDe: 'Đề Trắc Nghiệm Bài 6' };
+            currentQuestions = JSON.parse(JSON.stringify(exam_data));
+            quizStartTime = new Date();
+            
+            setTimeout(() => { isQuizStarted = true; }, 1000);
+            showSection('quiz');
+            
+            userAnswers = {};
+            window.renderAllQuestions();
+            startTimer(45 * 60); 
+            
+        } catch (error) {
+            alert("❌ Đã xảy ra lỗi khởi tạo bài thi: " + error.message + ".");
+            console.error(error);
+        }
+    };
+
+    window.viewScoresAction = function() {
+        searchTerm = ''; 
+        document.getElementById('search-student').value = '';
+        currentPage = 1;
+
+        if (database) {
+            scoresRef.once('value').then((snapshot) => {
+                const data = snapshot.val();
+                allScores = data ? Object.keys(data).map(key => ({...data[key], id: key})) : [];
+                window.renderScores();
+                showSection('scores');
+            });
+        }
+    };
+
+    window.searchStudent = function(val) {
+        searchTerm = val.toLowerCase();
+        currentPage = 1;
+        window.renderScores();
+    };
+
+    window.changePage = function(page) {
+        currentPage = page;
+        window.renderScores();
+    };
+
+    window.goHome = function() {
+        if(document.getElementById('hoTen')) document.getElementById('hoTen').value = ''; 
+        if(document.getElementById('lop')) document.getElementById('lop').value = ''; 
+        clearInterval(timerInterval);
+        showSection('login');
+    };
+
+    function getTotalScoreItems() { return currentQuestions.length; }
+
+    function getAnsweredCount() {
+        let count = 0;
+        currentQuestions.forEach(q => {
+            if (q.type === 'single') {
+                if (userAnswers[q.id] !== undefined) count++;
+            } else if (q.type === 'tf_cluster') {
+                let answeredItems = 0;
+                q.items.forEach(item => {
+                    if (userAnswers[q.id + '_' + item.id] !== undefined) answeredItems++;
+                });
+                if (answeredItems === 4) count++; 
+            }
+        });
+        return count;
+    }
+
+   window.selectAnswer = function(qId, val, type) {
+        if (type === 'tf') {
+            userAnswers[qId] = val;
+            const btnT = document.getElementById(`btnT_${qId}`);
+            const btnF = document.getElementById(`btnF_${qId}`);
+            if (val === true) {
+                btnT.classList.add('selected'); btnT.classList.remove('bg-white');
+                btnF.classList.remove('selected'); btnF.classList.add('bg-white');
+            } else {
+                btnF.classList.add('selected'); btnF.classList.remove('bg-white');
+                btnT.classList.remove('selected'); btnT.classList.add('bg-white');
+            }
+        } else if (type === 'single') {
+            userAnswers[qId] = val;
+        }
+        
+        requestAnimationFrame(() => {
+            const pgText = document.getElementById('progress-text');
+            if(pgText) pgText.innerText = `${getAnsweredCount()}/${getTotalScoreItems()}`;
+        });
+    };
+
+    window.renderAllQuestions = function() {
+        if (!currentQuestions || currentQuestions.length === 0) return;
+        const container = document.getElementById('question-container');
+        if(!container) return;
+
+        let html = '';
+        let currentType = '';
+
+        currentQuestions.forEach((q) => {
+            if (q.type !== currentType) {
+                currentType = q.type;
+                let headerText = ''; let roman = '';
+                if(currentType === 'single') { headerText = 'TRẮC NGHIỆM NHIỀU PHƯƠNG ÁN LỰA CHỌN'; roman = 'I'; }
+                if(currentType === 'tf_cluster') { headerText = 'TRẮC NGHIỆM ĐÚNG/SAI'; roman = 'II'; }
+                
+                html += `<div class="flex items-center gap-3 mt-8 mb-4 border-b-2 border-blue-100 pb-3"><span class="bg-gradient-to-br from-blue-500 to-indigo-600 text-white w-14 h-14 flex items-center justify-center rounded-xl font-black text-2xl shadow-md">${roman}</span><h3 class="text-2xl sm:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-700 to-indigo-700 tracking-wide uppercase">${headerText}</h3></div>`;
+            }
+
+            html += `<div class="fade-in w-full bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-blue-100 relative mb-6 hover:shadow-md transition-shadow">`;
+            
+            if (q.type === 'single') {
+                const uAns = userAnswers[q.id];
+                html += `<div class="flex gap-4 mb-5"><div class="w-full math-scroll"><p class="text-xl font-bold text-red-600 mt-1 leading-snug tracking-tight">${q.question}</p></div></div>`;
+                html += `<div class="space-y-4 md:pl-6 mt-6">`;
+                q.options.forEach((opt, i) => {
+                    const isChecked = (uAns === i) ? 'checked' : '';
+                    html += `<div class="flex items-center">
+                        <input type="radio" id="opt_${q.id}_${i}" name="q_${q.id}" value="${i}" class="hidden single-radio" ${isChecked} onchange="window.selectAnswer('${q.id}', ${i}, 'single')">
+                        <label for="opt_${q.id}_${i}" class="option-label w-full p-4 border-2 border-gray-200 rounded-2xl flex items-center gap-4 bg-white shadow-sm font-bold text-lg hover:border-blue-300">
+                            <div class="w-12 h-12 rounded-xl border-2 border-gray-300 flex items-center justify-center text-lg font-black text-gray-400 flex-shrink-0 bg-gray-50">${String.fromCharCode(65 + i)}</div>
+                            <div class="text-gray-700 leading-relaxed math-scroll flex-1">${opt}</div>
+                        </label>
+                    </div>`;
+                });
+                html += `</div>`;
+            } 
+            else if (q.type === 'tf_cluster') {
+                html += `<div class="bg-red-50 text-red-700 p-5 rounded-xl font-bold mb-4 border-2 border-red-100 text-xl leading-relaxed math-scroll">${q.context}</div>`;
+                html += `<div class="space-y-4 mt-6">`;
+                q.items.forEach((item) => {
+                    const combinedId = q.id + '_' + item.id;
+                    let ans = userAnswers[combinedId];
+                    let btnT = ans === true ? 'selected' : 'bg-white';
+                    let btnF = ans === false ? 'selected' : 'bg-white';
+
+                    html += `<div class="p-5 border-2 border-gray-100 rounded-2xl bg-white shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4 transition-all hover:border-blue-200">
+                        <div class="font-bold text-gray-800 flex-1 text-lg math-scroll">${item.text}</div>
+                        <div class="flex gap-3 shrink-0">
+                            <button id="btnT_${combinedId}" onclick="window.selectAnswer('${combinedId}', true, 'tf')" class="btn-tf w-24 sm:w-28 py-3 rounded-xl font-extrabold text-lg ${btnT}">ĐÚNG</button>
+                            <button id="btnF_${combinedId}" onclick="window.selectAnswer('${combinedId}', false, 'tf')" class="btn-tf w-24 sm:w-28 py-3 rounded-xl font-extrabold text-lg ${btnF}">SAI</button>
+                        </div>
+                    </div>`;
+                });
+                html += `</div>`;
+            } 
+            html += `</div>`;
+        });
+        
+        container.innerHTML = html;
+        const pgText = document.getElementById('progress-text');
+        if(pgText) pgText.innerText = `${getAnsweredCount()}/${getTotalScoreItems()}`;
+    };
+
+    function formatDuration(sec) {
+        const m = Math.floor(sec / 60); const s = sec % 60;
+        return `${m}p ${s}s`;
+    }
+
+    window.promptSubmit = function() {
+        if (!isQuizStarted) return;
+        const total = getTotalScoreItems();
+        const answered = getAnsweredCount();
+        
+        document.getElementById('confirm-answered').innerText = answered;
+        document.getElementById('confirm-total').innerText = total;
+        
+        const modal = document.getElementById('confirm-submit-modal');
+        modal.classList.remove('hidden');
+    };
+
+    window.closeConfirmModal = function() {
+        const modal = document.getElementById('confirm-submit-modal');
+        modal.classList.add('hidden');
+    };
+
+    window.executeSubmit = function() {
+        window.closeConfirmModal();
+        isQuizStarted = false; 
+        quizEndTime = new Date();
+        clearInterval(timerInterval);
+        
+        let score = 0;
+
+        currentQuestions.forEach(q => {
+            if (q.type === 'single') {
+                if (userAnswers[q.id] === q.correct) score += 0.25;
+            } else if (q.type === 'tf_cluster') {
+                let correctCount = 0;
+                q.items.forEach(item => { 
+                    if (userAnswers[q.id + '_' + item.id] === item.correct) {
+                        correctCount++;
+                    }
+                });
+                
+                // Áp dụng logic tính điểm
+                if (correctCount === 1) score += 0.1;
+                else if (correctCount === 2) score += 0.25;
+                else if (correctCount === 3) score += 0.5;
+                else if (correctCount === 4) score += 1.0;
+            }
+        });
+
+        score = score.toFixed(2); 
+
+        const record = {
+            hoTen: currentStudent.hoTen, lop: currentStudent.lop, tenDe: currentStudent.tenDe, maDe: currentStudent.maDe,
+            diem: parseFloat(score),
+            startTime: quizStartTime.toLocaleTimeString('vi-VN') + ' ' + quizStartTime.toLocaleDateString('vi-VN'),
+            endTime: quizEndTime.toLocaleTimeString('vi-VN') + ' ' + quizEndTime.toLocaleDateString('vi-VN'),
+            duration: formatDuration(Math.floor((quizEndTime - quizStartTime) / 1000)),
+            thoiGian: new Date().toISOString(), deviceId: deviceId,
+            userAnswers: userAnswers 
+        };
+        
+        if(database) {
+            scoresRef.push(record, () => { window.showModalResult(score, record.duration); });
+        } else {
+            window.showModalResult(score, record.duration);
+        }
+    };
+
+    window.showModalResult = function(score, dur) {
+        ['login', 'quiz', 'scores', 'review'].forEach(s => {
+            const el = document.getElementById(s+'-section');
+            if(el) el.classList.add('hidden');
+        });
+        const resEl = document.getElementById('result-section');
+        if(resEl) resEl.classList.remove('hidden');
+        const contentEl = document.getElementById('result-content');
+        if(contentEl) contentEl.innerHTML = `
+        <div class="flex justify-start mb-4">
+            <button onclick="window.goHome()" class="px-5 py-3 bg-gray-100 text-gray-700 rounded-xl font-bold hover:bg-gray-200 transition-colors shadow-sm border border-gray-200 text-lg">🏠 Trang chủ</button>
+        </div>
+        <div class="text-center">
+            <div class="text-7xl mb-4 animate-bounce">🎉</div>
+            <h3 class="text-3xl font-black text-emerald-600 mb-2">Hoàn thành bài thi!</h3>
+            <p class="text-gray-600 mb-6 mt-2"><span class="font-extrabold text-blue-700 text-xl uppercase tracking-wider">${currentStudent.hoTen} - Lớp ${currentStudent.lop}</span></p>
+        </div>
+        <div class="bg-blue-50 border-2 border-blue-100 rounded-3xl p-8 mb-6 shadow-inner relative text-center">
+            <div class="text-base text-blue-500 font-extrabold mb-2 uppercase tracking-widest">ĐIỂM SỐ CỦA BẠN</div>
+            <div class="text-7xl font-black text-blue-600 drop-shadow-sm">${score} <span class="text-3xl text-gray-400">/ 10</span></div>
+            <div class="text-lg font-extrabold text-indigo-600 mt-5 bg-white inline-block px-6 py-3 rounded-full shadow-sm border border-blue-100">Thời gian làm bài: ${dur}</div>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+            <button onclick="window.reviewQuiz()" class="w-full py-4 bg-gradient-to-r from-indigo-500 to-purple-500 text-white rounded-xl font-extrabold shadow-sm hover:shadow-md transition-colors text-xl">📝 Xem lại bài</button>
+            <button onclick="window.viewScoresAction()" class="w-full py-4 bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-xl font-extrabold shadow-sm hover:shadow-md transition-colors text-xl">🏆 Bảng điểm</button>
+        </div>`;
+    };
+
+    function getStatusBadge(isCorrect, isUnanswered) {
+        if (isUnanswered) return `<div class="mt-4 mb-2 inline-block px-4 py-2 bg-yellow-100 text-yellow-800 text-base font-black rounded-lg border border-yellow-300 shadow-sm">⚠️ BẠN CHƯA LÀM CÂU NÀY</div>`;
+        if (isCorrect) return `<div class="mt-4 mb-2 inline-block px-4 py-2 bg-emerald-100 text-emerald-800 text-base font-black rounded-lg border border-emerald-300 shadow-sm">✅ BẠN LÀM ĐÚNG RỒI</div>`;
+        return `<div class="mt-4 mb-2 inline-block px-4 py-2 bg-red-100 text-red-800 text-base font-black rounded-lg border border-red-300 shadow-sm">❌ BẠN LÀM SAI RỒI</div>`;
+    }
+
+    window.reviewQuiz = function() {
+        showSection('review');
+        const container = document.getElementById('review-content');
+        if(!container) return;
+        let html = '';
+
+        currentQuestions.forEach((q) => {
+            if (q.type === 'single') {
+                let uAns = userAnswers[q.id];
+                let isUnanswered = (uAns === undefined);
+                let isCorrect = (uAns === q.correct);
+                let borderColor = isCorrect ? 'border-emerald-300 bg-emerald-50' : 'border-red-300 bg-red-50';
+                
+                html += `<div class="p-6 border-2 rounded-2xl shadow-sm mb-6 ${borderColor}">`;
+                html += `<div class="font-bold text-xl text-red-600 mb-5 leading-relaxed math-scroll">${q.question}</div>`;
+                html += `<div class="space-y-3">`;
+                
+                q.options.forEach((opt, i) => {
+                    let optBg = ''; let iconHtml = '';
+                    if (q.correct === i) {
+                        optBg = 'bg-emerald-100 text-emerald-900 border-emerald-400 border-2'; 
+                        iconHtml = '<div class="text-3xl drop-shadow-sm ml-auto pl-2 flex-shrink-0">✅</div>';
+                    } else if (uAns === i && !isCorrect) {
+                        optBg = 'bg-red-100 text-red-900 line-through border-red-400 border-2'; 
+                        iconHtml = '<div class="text-3xl drop-shadow-sm ml-auto pl-2 flex-shrink-0">❌</div>';
+                    } else { optBg = 'bg-white text-slate-700 border border-slate-200'; }
+
+                    html += `<div class="p-4 rounded-xl ${optBg} flex items-center gap-4"><div class="w-10 h-10 flex items-center justify-center rounded-lg bg-white/50 text-base font-black shadow-sm flex-shrink-0">${String.fromCharCode(65 + i)}</div><div class="${(q.correct === i || uAns === i) ? 'font-semibold' : 'font-medium'} flex-1 text-lg math-scroll">${opt}</div>${iconHtml}</div>`;
+                });
+                html += `</div>`;
+                
+                html += getStatusBadge(isCorrect, isUnanswered); 
+                
+                if (q.explanation) {
+                    html += `<div class="review-explanation mt-3 pt-3 border-t-2 border-gray-200"><p class="text-base font-black uppercase tracking-widest text-blue-600 mb-2">💡 Giải chi tiết:</p><p class="text-black font-medium text-lg leading-loose math-scroll">${q.explanation}</p></div>`;
+                }
+                html += `</div>`;
+            } 
+            else if (q.type === 'tf_cluster') {
+                html += `<div class="p-6 border-2 border-indigo-200 bg-indigo-50 rounded-2xl shadow-sm mb-6">`;
+                html += `<div class="font-bold text-xl text-indigo-800 mb-5 math-scroll">${q.context}</div>`;
+                html += `<div class="space-y-5">`;
+                q.items.forEach(item => {
+                    let uAns = userAnswers[q.id + '_' + item.id];
+                    let isUnanswered = (uAns === undefined);
+                    let isCorrect = (uAns === item.correct);
+                    let iconHtml = isCorrect ? '✅' : '❌';
+                    let ansText = item.correct ? 'ĐÚNG' : 'SAI';
+
+                    html += `<div class="p-5 bg-white border border-indigo-100 rounded-xl shadow-sm">
+                        <div class="font-bold text-gray-800 text-lg math-scroll">${item.text}</div>
+                        <div class="mt-3 flex items-center justify-between border-b border-gray-100 pb-3">
+                            <span class="text-base font-bold text-gray-500">Bạn chọn: <span class="${isUnanswered ? 'text-gray-400' : 'text-blue-600'} font-black uppercase">${isUnanswered ? 'Chưa trả lời' : (uAns?'Đúng':'Sai')}</span></span>
+                            <span class="font-black text-xl ${isCorrect ? 'text-emerald-500' : 'text-red-500'}">Đáp án: ${ansText} ${iconHtml}</span>
+                        </div>`;
+                        
+                    html += getStatusBadge(isCorrect, isUnanswered);
+                    if(item.expl) {
+                        html += `<div class="review-explanation mt-3 pt-3 text-lg text-gray-700 font-medium leading-relaxed math-scroll"><span class="text-indigo-500 font-bold uppercase">Giải chi tiết:</span><br> ${item.expl}</div>`;
+                    }
+                    html += `</div>`;
+                });
+                html += `</div></div>`;
+            }
+        });
+        container.innerHTML = html;
+    };
+
+    window.backToResult = function() { showSection('result'); };
+    
+    let isReviewingFromLeaderboard = false;
+    
+    window.backFromReview = function() {
+        if (isReviewingFromLeaderboard) {
+            showSection('scores');
+            isReviewingFromLeaderboard = false;
+        } else {
+            window.backToResult();
+        }
+    };
+
+    window.reviewStudentScore = function(scoreId) {
+        const record = allScores.find(x => x.id === scoreId);
+        if (!record) return;
+        
+        currentStudent = { hoTen: record.hoTen, lop: record.lop, tenDe: record.tenDe, maDe: record.maDe };
+        userAnswers = record.userAnswers || {}; 
+        
+        currentQuestions = JSON.parse(JSON.stringify(exam_data)); 
+        
+        isReviewingFromLeaderboard = true;
+        window.reviewQuiz();
+    };
+
+    window.renderScores = function() {
+        const tbody = document.getElementById('scores-tbody');
+        const noScore = document.getElementById('no-scores');
+        const myRankDisplay = document.getElementById('my-rank-display');
+        const paginationContainer = document.getElementById('pagination-controls');
+        
+        if(!tbody) return;
+
+        const sortedAll = [...allScores].sort((a, b) => (b.diem - a.diem) || (a.duration.localeCompare(b.duration)));
+        
+        sortedAll.forEach((s, i) => s.absoluteRank = i + 1);
+
+        const myRankIndex = sortedAll.findIndex(s => s.deviceId === deviceId);
+        if (myRankDisplay) {
+            if (myRankIndex !== -1) {
+                myRankDisplay.innerHTML = `🏆 Thứ hạng của bạn: <span class="text-red-600 font-black">#${sortedAll[myRankIndex].absoluteRank}</span>`;
+            } else {
+                myRankDisplay.innerHTML = `🏆 Thứ hạng của bạn: <span class="text-gray-400">Chưa thi</span>`;
+            }
+        }
+
+        const filteredScores = searchTerm ? sortedAll.filter(s => s.hoTen.toLowerCase().includes(searchTerm)) : sortedAll;
+
+        if (filteredScores.length === 0) {
+            tbody.innerHTML = ''; 
+            noScore.classList.remove('hidden'); 
+            paginationContainer.innerHTML = '';
+            return; 
+        }
+        
+        noScore.classList.add('hidden');
+
+        const totalPages = Math.ceil(filteredScores.length / itemsPerPage);
+        if (currentPage > totalPages) currentPage = totalPages;
+        if (currentPage < 1) currentPage = 1;
+
+        const startIndex = (currentPage - 1) * itemsPerPage;
+        const endIndex = startIndex + itemsPerPage;
+        const pageItems = filteredScores.slice(startIndex, endIndex);
+
+        tbody.innerHTML = pageItems.map((s) => {
+            const isMe = s.deviceId === deviceId;
+            return `<tr class="${isMe ? 'my-score-row' : 'hover:bg-slate-50'} transition-colors border-b border-slate-100">
+            <td class="px-4 py-5 font-black text-slate-500 text-base text-center">#${s.absoluteRank}</td>
+            <td class="px-4 py-5 font-extrabold text-slate-800 text-base">${s.hoTen} ${isMe ? '<span class="ml-2 bg-pink-500 text-white text-xs px-2 py-1 rounded-md shadow-sm">Bạn</span>' : ''}</td>
+            <td class="px-4 py-5 font-black text-blue-600 text-base text-center">${s.lop}</td>
+            <td class="px-4 py-5 text-center font-black text-orange-600 text-sm">${s.duration}</td>
+            <td class="px-4 py-5 text-center"><span class="font-black text-2xl ${s.diem >= 5 ? 'text-emerald-600' : 'text-red-500'}">${s.diem}</span></td>
+            <td class="px-4 py-5 text-center">
+                <button onclick="window.reviewStudentScore('${s.id}')" class="bg-indigo-100 text-indigo-700 hover:bg-indigo-200 px-4 py-2 rounded-lg font-bold text-sm transition-colors border border-indigo-200 shadow-sm cursor-pointer whitespace-nowrap">Xem lại</button>
+            </td>
+        </tr>`;
+        }).join('');
+
+        renderPagination(totalPages);
+    };
+
+    function renderPagination(totalPages) {
+        const container = document.getElementById('pagination-controls');
+        if (!container) return;
+        
+        if (totalPages <= 1) {
+            container.innerHTML = '';
+            return;
+        }
+
+        let html = '<div class="flex flex-wrap items-center justify-center gap-2">';
+        
+        html += `<button onclick="window.changePage(${currentPage - 1})" class="px-4 py-2 rounded-xl font-bold transition-colors ${currentPage === 1 ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 shadow-sm'}" ${currentPage === 1 ? 'disabled' : ''}>&laquo; Trước</button>`;
+
+        let startPage = Math.max(1, currentPage - 1);
+        let endPage = Math.min(totalPages, currentPage + 1);
+
+        if (startPage > 1) {
+            html += `<button onclick="window.changePage(1)" class="px-4 py-2 rounded-xl font-bold bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 shadow-sm">1</button>`;
+            if (startPage > 2) html += `<span class="px-2 text-gray-400 font-black">...</span>`;
+        }
+
+        for (let i = startPage; i <= endPage; i++) {
+            html += `<button onclick="window.changePage(${i})" class="px-4 py-2 rounded-xl font-bold transition-all ${i === currentPage ? 'bg-orange-500 text-white shadow-md border-orange-600' : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 shadow-sm'}">${i}</button>`;
+        }
+
+        if (endPage < totalPages) {
+            if (endPage < totalPages - 1) html += `<span class="px-2 text-gray-400 font-black">...</span>`;
+            html += `<button onclick="window.changePage(${totalPages})" class="px-4 py-2 rounded-xl font-bold bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 shadow-sm">${totalPages}</button>`;
+        }
+
+        html += `<button onclick="window.changePage(${currentPage + 1})" class="px-4 py-2 rounded-xl font-bold transition-colors ${currentPage === totalPages ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 shadow-sm'}" ${currentPage === totalPages ? 'disabled' : ''}>Sau &raquo;</button>`;
+        
+        html += '</div>';
+        container.innerHTML = html;
+    }
+
+    function showSection(id) {
+        ['login', 'quiz', 'scores', 'result', 'review'].forEach(s => {
+            const el = document.getElementById(s+'-section');
+            if(el) el.classList.add('hidden');
+        });
+        const tgt = document.getElementById(id+'-section');
+        if(tgt) tgt.classList.remove('hidden');
+    }
+
+    function startTimer(seconds) {
+        const display = document.getElementById('timer');
+        if(!display) return;
+        let remaining = seconds;
+        timerInterval = setInterval(() => {
+            remaining--;
+            const m = Math.floor(remaining / 60).toString().padStart(2, '0');
+            const s = (remaining % 60).toString().padStart(2, '0');
+            display.innerText = `${m}:${s}`;
+            if (remaining <= 0) window.submitQuiz();
+        }, 1000);
+    }
+
+    try {
+        if (!localStorage.getItem('deviceId')) localStorage.setItem('deviceId', 'dev_' + Math.random().toString(36).substr(2) + Date.now());
+        deviceId = localStorage.getItem('deviceId');
+    } catch (e) { deviceId = 'dev_temp_' + Math.random().toString(36).substr(2); }
+  </script>
+ </body>
+</html>

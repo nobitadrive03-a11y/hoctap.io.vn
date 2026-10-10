@@ -1,0 +1,812 @@
+<!doctype html>
+<html lang="vi" class="w-full h-full m-0 p-0">
+ <head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <title>Tin Học 11 - Bài 4</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+  <!-- 1. MÃ GA4 GỐC (Kết nối với Google Analytics) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-NSJCVSL9RM"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-NSJCVSL9RM'); 
+</script>
+
+<!-- 2. MÃ NHỊP TIM 30 GIÂY -->
+<script>
+  setInterval(function() {
+    if (!document.hidden) { 
+      gtag('event', 'keep_alive', {
+        'event_category': 'Engagement',
+        'event_label': 'Học sinh đang làm bài',
+        'non_interaction': false
+      });
+    }
+  }, 30000); 
+</script>
+
+  <style>
+    * { 
+        -webkit-tap-highlight-color: transparent; 
+        -webkit-touch-callout: none !important; 
+        touch-action: manipulation;
+    }
+    
+    html, body { width: 100%; min-height: 100vh; margin: 0; padding: 0; overflow-x: hidden; }
+    
+    body { 
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
+      background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+      background-size: 400% 400%;
+      animation: gradientBG 15s ease infinite;
+    }
+    
+    @keyframes gradientBG {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+
+    #app { width: 100%; min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden; }
+    
+    .glass-card {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    .option-label { transition: background-color 0.1s ease, border-color 0.1s ease; cursor: pointer; border-color: #e2e8f0; }
+    .option-label:hover { background-color: #f0fdfa; border-color: #38bdf8; }
+    
+    input[type="radio"].single-radio:checked + .option-label {
+      background: linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%);
+      color: white; border-color: transparent;
+      box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+    }
+    input[type="radio"].single-radio:checked + .option-label div:first-child { background-color: rgba(255,255,255,0.25); border-color: transparent; color: white; }
+    input[type="radio"].single-radio:checked + .option-label div:last-child { color: white; }
+    
+    .fade-in { animation: fadeIn 0.4s ease forwards; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    
+    .my-score-row {
+      background: linear-gradient(to right, #fdf4ff, #ffffff) !important;
+      border-left: 4px solid #db2777 !important; font-weight: 700 !important;
+      color: #9d174d !important; box-shadow: 0 2px 8px rgba(0,0,0,0.05); position: relative; z-index: 10;
+    }
+    .my-score-row td { padding-top: 16px; padding-bottom: 16px; }
+    
+    .btn-tf { transition: background-color 0.1s ease; border-width: 2px; }
+    .btn-tf.selected { background-color: #2563eb; color: white; border-color: #1d4ed8; }
+    .btn-tf:not(.selected) { background-color: white; color: #4b5563; border-color: #e5e7eb; }
+    .btn-tf:not(:disabled):active { transform: scale(0.95); }
+    
+    .math-scroll { overflow-x: auto; min-width: 0; padding-bottom: 4px; scrollbar-width: none; -ms-overflow-style: none; }
+    .math-scroll::-webkit-scrollbar { display: none; }
+  </style>
+
+ </head>
+ <body>
+  <div id="app" class="p-0 sm:p-4 md:p-8 transition-all">
+   
+   <div id="login-section" class="w-full max-w-md mx-auto fade-in flex flex-col justify-center flex-grow">
+    <div class="glass-card rounded-none sm:rounded-3xl p-6 sm:p-8 flex flex-col justify-start shadow-2xl border-t-8 border-indigo-600 bg-white">
+     <div class="text-center mb-6 pt-4 sm:pt-0">
+      <div class="flex items-center justify-center w-24 h-24 mx-auto mb-4 rounded-full border-4 border-yellow-400 bg-red-600 shadow-lg transform transition-transform hover:scale-105">
+          <span class="text-white font-black text-4xl tracking-tighter">HS</span>
+      </div>
+      <h1 class="text-2xl sm:text-3xl font-bold text-red-500 mb-3"> ĐỀ KIỂM TRA<br> BÀI 4: BÊN TRONG MÁY TÍNH </h1>
+     </div>
+      <div id="login-form" class="space-y-4">
+      <div class="flex flex-col gap-4">
+          <div class="w-full">
+               <label class="block text-lg font-bold text-gray-700 mb-1">Họ và tên</label> 
+               <input type="text" id="hoTen" class="w-full px-4 py-4 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-100 outline-none transition-all font-semibold text-lg" placeholder="Nhập họ tên...">
+          </div>
+          <div class="w-full">
+               <label class="block text-lg font-bold text-gray-700 mb-1">Lớp</label> 
+               <input type="text" id="lop" class="w-full px-4 py-4 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-100 outline-none transition-all font-semibold text-lg" placeholder="11A1">
+          </div>
+      </div>
+
+      <div id="login-error" class="hidden bg-red-100 border border-red-300 text-red-700 font-bold text-base p-3 rounded-xl text-center shadow-sm"></div>
+
+      <button type="button" onclick="window.startQuizAction()" id="start-btn" class="w-full py-5 mt-6 bg-gradient-to-r from-blue-500 to-cyan-400 text-white font-extrabold rounded-2xl shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all text-2xl tracking-wide"> 🚀 BẮT ĐẦU THI </button>
+     </div>
+    </div>
+   </div>
+
+   <div id="quiz-section" class="w-full max-w-4xl mx-auto hidden flex-grow flex flex-col">
+    <div class="glass-card rounded-none sm:rounded-3xl p-4 sm:p-8 flex flex-col flex-grow relative border-t-8 border-blue-500 bg-white shadow-2xl">
+     <div class="flex items-center justify-between mb-4 sm:mb-6 pb-4 border-b-2 border-gray-100">
+      
+      <div class="flex items-center gap-3">
+       <div class="flex items-center justify-center w-12 h-12 rounded-full border-2 border-yellow-400 bg-red-600 shadow-sm flex-shrink-0">
+           <span class="text-white font-black text-xl tracking-tighter">HS</span>
+       </div>
+       <div>
+        <h2 id="quiz-title" class="text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">Đề Kiểm Tra</h2>
+        <p id="student-info" class="text-base font-bold text-gray-500 mt-1 uppercase tracking-wide"></p>
+       </div>
+      </div>
+
+      <div class="text-right bg-blue-50 px-4 py-2 rounded-xl border border-blue-100" id="progress-container">
+       <div class="text-sm text-blue-500 font-bold uppercase tracking-wider mb-1">Tiến độ (Câu)</div>
+       <div id="progress-text" class="text-2xl font-black text-blue-700">0/28</div>
+      </div>
+     </div>
+     
+     <div id="timer-banner" class="mb-6 p-4 bg-gradient-to-r from-orange-50 to-red-50 border-2 border-red-100 rounded-2xl flex items-center justify-between shadow-sm sticky top-2 z-40">
+        <span class="text-red-800 font-extrabold flex items-center gap-2 text-lg"><span class="text-2xl animate-pulse">⏰</span> THỜI GIAN:</span> 
+        <span id="timer" class="text-4xl font-black text-red-600 font-mono tracking-wider drop-shadow-sm">45:00</span>
+     </div>
+
+     <div id="question-container" class="mb-8 flex-grow w-full max-w-full"></div>
+     
+     <div id="network-error" class="hidden bg-red-100 text-red-700 p-4 rounded-xl mt-4 text-center font-bold text-sm border-2 border-red-300 mb-4 shadow-sm"></div>
+
+    <div class="flex pt-4 sm:pt-6 border-t-2 border-gray-100 mt-auto pb-4 sm:pb-0">
+        <button id="submit-btn" onclick="window.promptSubmit()" class="w-full py-5 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-bold text-2xl rounded-2xl shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1">✅ NỘP BÀI NGAY</button>
+     </div>
+    </div>
+   </div>
+
+   <div id="confirm-submit-modal" class="fixed inset-0 hidden flex items-center justify-center bg-black/60 backdrop-blur-sm z-50 transition-opacity">
+       <div class="bg-white rounded-3xl w-full max-w-sm shadow-2xl p-6 text-center transform transition-all scale-100 mx-4 border-2 border-gray-100">
+           <div class="text-yellow-400 mb-4 flex justify-center">
+               <svg xmlns="http://www.w3.org/2000/svg" class="h-24 w-24" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+               </svg>
+           </div>
+           <h3 class="text-3xl font-black text-gray-800 mb-2 uppercase tracking-wide">Xác nhận nộp</h3>
+           <p class="text-gray-600 mb-6 font-medium text-xl">Các em mới làm <span id="confirm-answered" class="text-red-600 font-black text-2xl">0</span>/<span id="confirm-total" class="font-black text-2xl">28</span> câu. Có chắc chắn muốn nộp bài không? Những câu chưa làm sẽ bị tính là sai.</p>
+           <div class="flex flex-col gap-3">
+               <button onclick="window.closeConfirmModal()" class="w-full py-4 bg-gray-100 text-gray-800 font-extrabold text-xl rounded-xl hover:bg-gray-200 border border-gray-200">Quay lại làm tiếp</button>
+               <button onclick="window.executeSubmit()" class="w-full py-4 bg-emerald-600 text-white font-extrabold text-xl rounded-xl hover:bg-emerald-700 shadow-md">Vẫn Nộp Luôn</button>
+           </div>
+       </div>
+   </div>
+
+   <div id="result-section" class="w-full max-w-2xl mx-auto hidden fade-in flex flex-col justify-center flex-grow pb-8">
+    <div class="glass-card rounded-none sm:rounded-3xl p-6 sm:p-8 flex flex-col justify-start border-t-8 border-green-500 bg-white shadow-2xl" id="result-content">
+    </div>
+   </div>
+
+   <div id="review-section" class="w-full max-w-4xl mx-auto hidden flex-grow flex flex-col">
+    <div class="glass-card rounded-none sm:rounded-3xl p-4 sm:p-8 flex flex-col flex-grow border-t-8 border-indigo-500 bg-white overflow-hidden shadow-2xl">
+     <div class="flex flex-col-reverse sm:flex-row items-start sm:items-center justify-between mb-6 pb-4 border-b-2 border-gray-100 gap-4">
+      <div class="flex flex-wrap gap-2">
+          <button onclick="window.goHome()" class="px-5 py-3 bg-gray-100 text-gray-700 rounded-xl font-bold hover:bg-gray-200 text-lg shadow-sm border border-gray-200">🏠 Trang chủ</button>
+          <button onclick="window.backFromReview()" class="px-5 py-3 bg-indigo-50 text-indigo-700 rounded-xl font-bold hover:bg-indigo-100 text-lg shadow-sm border border-indigo-200">🔙 Quay lại</button>
+          <button onclick="window.viewScoresAction()" class="px-5 py-3 bg-orange-50 text-orange-700 rounded-xl font-bold hover:bg-orange-100 text-lg shadow-sm border border-orange-200">🏆 Bảng điểm</button>
+      </div>
+      <h2 class="text-3xl sm:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">📝 Xem Lại Bài Làm</h2>
+     </div>
+     <div id="review-content" class="space-y-8 w-full max-w-full"></div>
+    </div>
+   </div>
+
+   <div id="scores-section" class="w-full max-w-6xl mx-auto hidden flex-grow flex flex-col">
+    <div class="glass-card rounded-none sm:rounded-3xl p-4 sm:p-8 flex flex-col flex-grow border-t-8 border-orange-500 bg-white w-full max-w-full shadow-2xl">
+     <div class="mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b-2 border-gray-100 pb-4">
+      <button onclick="window.goHome()" class="px-5 py-3 bg-gray-100 text-gray-700 rounded-xl font-bold hover:bg-gray-200 text-lg shadow-sm border border-gray-200 whitespace-nowrap">🏠 Trang chủ</button>
+      <h2 class="text-3xl sm:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-red-600 text-center flex-grow">🏆 BẢNG XẾP HẠNG</h2>
+     </div>
+     
+     <div class="flex flex-col sm:flex-row justify-between items-center mb-4 gap-4 bg-gray-50 p-4 rounded-xl border border-gray-200">
+         <div id="my-rank-display" class="text-xl font-bold text-gray-700">🏆 Thứ hạng của bạn: <span class="text-gray-400">--</span></div>
+         <div class="w-full sm:w-auto flex-grow max-w-sm">
+             <input type="text" id="search-student" oninput="window.searchStudent(this.value)" placeholder="🔍 Nhập tên học sinh để tìm..." class="w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm focus:border-orange-500 focus:ring-2 focus:ring-orange-200 outline-none transition-all font-medium">
+         </div>
+     </div>
+
+     <div class="overflow-x-auto rounded-xl border border-slate-200 flex-grow shadow-inner bg-white/50 w-full">
+      <table class="w-full text-sm sm:text-base whitespace-nowrap min-w-max">
+       <thead class="bg-gradient-to-r from-orange-500 to-red-500 text-white">
+        <tr>
+         <th class="px-3 sm:px-4 py-4 text-center font-extrabold w-16">Hạng</th>
+         <th class="px-3 sm:px-4 py-4 text-left font-extrabold">Họ tên</th>
+         <th class="px-3 sm:px-4 py-4 text-center font-extrabold">Lớp</th>
+         <th class="px-3 sm:px-4 py-4 text-center font-extrabold">Thời gian</th>
+         <th class="px-3 sm:px-4 py-4 text-center font-extrabold">Điểm</th>
+         <th class="px-2 sm:px-4 py-4 text-center font-extrabold">Xem lại</th>
+        </tr>
+       </thead>
+       <tbody id="scores-tbody" class="bg-white/80 divide-y divide-gray-100"></tbody>
+      </table>
+      <div id="no-scores" class="text-center py-12 hidden text-gray-500 font-bold text-xl">Không tìm thấy dữ liệu thi 🥲</div>
+     </div>
+     
+     <div id="pagination-controls" class="w-full flex justify-center mt-6"></div>
+    </div>
+  </div>
+
+  <script>
+    let database = null;
+    let scoresRef = null;
+
+    try {
+        const firebaseConfig = {
+            apiKey: "AIzaSyBQ9Pos8awlh9j041qDWTPFRsVIjF-kPnk",
+            authDomain: "hoctap-91691.firebaseapp.com",
+            databaseURL: "https://hoctap-91691-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "hoctap-91691",
+            storageBucket: "hoctap-91691.firebasestorage.app",
+            messagingSenderId: "1004553425319",
+            appId: "1:1004553425319:web:45d15cbae393f614c56682",
+            measurementId: "G-Q6X1TL9PRV"
+        };
+        if (typeof firebase !== 'undefined') {
+            if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+            database = firebase.database();
+            scoresRef = database.ref('bxh_tin_11_4');
+        }
+    } catch(err) { console.error("Lỗi Firebase:", err); }
+
+    let isQuizStarted = false; 
+    let currentQuestions = [];
+    let deviceId = '';
+    let allScores = [];
+    let currentStudent = {};
+    let userAnswers = {};
+    let timerInterval;
+    let quizStartTime, quizEndTime;
+    
+    let searchTerm = '';
+    let currentPage = 1;
+    const itemsPerPage = 10;
+
+    const exam_data = [
+        { id: "q1", type: "single", question: "Câu 1: Thành phần nào được coi là quan trọng nhất bên trong máy tính, đảm nhận việc thực hiện trực tiếp các chương trình?", options: ["Thiết bị vi xử lí trung tâm viết tắt là bộ CPU.", "Thiết bị lưu trữ lâu dài mang tên ổ đĩa cứng.", "Bảng mạch chính kết nối các linh kiện nội bộ.", "Bộ nhớ truy cập ngẫu nhiên viết tắt là RAM."], correct: 0, explanation: "CPU (Central Processing Unit) là bộ vi xử lí trung tâm, đảm nhận thực hiện trực tiếp các chương trình." },
+        { id: "q2", type: "single", question: "Câu 2: Khái niệm cơ bản nhất dùng để mô tả đặc điểm của bộ nhớ RAM (Random Access Memory) trong máy tính là gì?", options: ["Là loại bộ nhớ chỉ có thể đọc chứ không thể ghi thêm dữ liệu mới vào hệ thống.", "Là loại bộ nhớ lưu trữ tạm thời và sẽ bị mất toàn bộ dữ liệu khi tắt nguồn điện.", "Là loại thiết bị lưu trữ ngoài có dung lượng lớn và không bao giờ mất dữ liệu.", "Là mạch điện tử chuyên thực hiện các phép tính số học và lôgic cơ bản nhất."], correct: 1, explanation: "RAM là bộ nhớ truy cập ngẫu nhiên, lưu trữ tạm thời và sẽ mất dữ liệu khi mất điện." },
+        { id: "q3", type: "single", question: "Câu 3: Người ta thường sử dụng đơn vị nào để đánh giá tốc độ làm việc (tần số đồng hồ xung) của vi xử lí CPU?", options: ["Thường được đo lường bằng đơn vị là Gigabyte (GB).", "Thường được đo lường bằng đơn vị là Gigahertz (GHz).", "Thường được đo lường bằng đơn vị là Megabyte (MB).", "Thường được đo lường bằng đơn vị là Terabyte (TB)."], correct: 1, explanation: "Tần số đồng hồ của CPU thường được đo bằng GHz (Gigahertz)." },
+        { id: "q4", type: "single", question: "Câu 4: Trong các phép toán lôgic cơ bản, kí hiệu được dùng để biểu diễn cho phép toán nhân lôgic (AND) là gì?", options: ["Kí hiệu của phép toán lôgic này là dấu nhân lôgic (∧).", "Kí hiệu của phép toán lôgic này là dấu cộng lôgic (∨).", "Kí hiệu của phép toán lôgic này là dấu gạch ngang đầu.", "Kí hiệu của phép toán lôgic này là dấu cộng vòng tròn (⊕)."], correct: 0, explanation: "Phép nhân lôgic (AND) thường được kí hiệu bằng kí tự ∧." },
+        { id: "q5", type: "single", question: "Câu 5: Đặc điểm kỹ thuật nào sau đây mô tả chính xác nhất về chức năng của bộ nhớ ROM (Read Only Memory)?", options: ["Là vùng nhớ đặc biệt dùng lưu trữ tạm thời mọi tài liệu đang được xử lí nhanh.", "Là vùng nhớ dùng để lưu các dữ liệu hệ thống cố định và chương trình khởi động.", "Là vùng nhớ chứa dữ liệu được nạp trước từ ổ cứng để CPU xử lý game mượt mà.", "Là vùng nhớ ngoài có khả năng ghi và đọc dữ liệu liên tục theo thời gian thực tế."], correct: 1, explanation: "ROM là bộ nhớ chỉ đọc, thường lưu trữ dữ liệu hệ thống cố định và chương trình khởi động." },
+        { id: "q6", type: "single", question: "Câu 6: Khi tính toán hệ nhị phân, phép toán lôgic hoặc loại trừ (XOR) sẽ trả về giá trị bằng 1 trong trường hợp nào?", options: ["Khi và chỉ khi hai đại lượng lôgic đem so sánh có giá trị hoàn toàn khác nhau.", "Khi và chỉ khi cả hai đại lượng lôgic đem so sánh đều cùng mang giá trị là 1.", "Khi và chỉ khi cả hai đại lượng lôgic đem so sánh đều cùng mang giá trị là 0.", "Khi và chỉ khi có ít nhất một trong hai đại lượng lôgic đem so sánh mang giá trị 0."], correct: 0, explanation: "Phép XOR (hoặc loại trừ) trả về 1 khi hai giá trị đầu vào khác nhau (1 và 0, hoặc 0 và 1)." },
+        { id: "q7", type: "single", question: "Câu 7: Tất cả các thiết bị bên trong thân máy tính (như CPU, RAM, ổ cứng) đều phải được kết nối với thành phần nào?", options: ["Tất cả đều phải được kết nối trực tiếp vào bộ phận tản nhiệt lõi.", "Tất cả đều phải được kết nối trực tiếp vào bảng mạch chính (mainboard).", "Tất cả đều phải được kết nối trực tiếp vào cổng USB mở rộng mạng.", "Tất cả đều phải được kết nối trực tiếp vào phần mềm ứng dụng máy."], correct: 1, explanation: "Mainboard (bảng mạch chính) là nơi kết nối tất cả các thiết bị bên trong máy tính." },
+        { id: "q8", type: "single", question: "Câu 8: Cấu tạo chính của bộ vi xử lí trung tâm (CPU) bao gồm hai bộ phận cốt lõi đảm nhận vai trò thực thi lệnh là gì?", options: ["Bộ nhớ truy cập ngẫu nhiên cùng với hệ thống tản nhiệt làm mát.", "Bộ số học và lôgic (ALU) kết hợp chặt chẽ cùng với bộ điều khiển.", "Bảng mạch mở rộng đồ họa kết hợp với cổng giao tiếp màn hình.", "Bộ thu phát tín hiệu mạng không dây và thiết bị lưu trữ đĩa quang."], correct: 1, explanation: "Bộ số học lôgic (ALU) và bộ điều khiển (Control Unit) là 2 thành phần cốt lõi của CPU." },
+        { id: "q9", type: "single", question: "Câu 9: Bên trong cấu trúc của CPU, bộ nhớ đệm (cache) được thiết kế nhằm mục đích giải quyết vấn đề kỹ thuật nào?", options: ["Mở rộng không gian lưu trữ các tệp tin hình ảnh lớn thay thế cho ổ đĩa cứng.", "Chứa dữ liệu nạp trước từ bộ nhớ trong nhằm giảm thời gian đọc chờ dữ liệu.", "Tạo ra các xung điện áp đồng bộ hoá hoạt động của toàn bộ bảng mạch chính.", "Giữ lại dữ liệu một cách an toàn và vĩnh viễn ngay cả khi máy tính bị mất điện."], correct: 1, explanation: "Bộ nhớ đệm Cache giúp lưu trữ dữ liệu nạp trước từ RAM để giảm thời gian chờ của vi xử lý." },
+        { id: "q10", type: "single", question: "Câu 10: Ý nghĩa thực tế của việc CPU được thiết kế dưới dạng đa lõi (nhiều nhân - core) bên trong một chíp là gì?", options: ["Cho phép CPU thực hiện song song nhiều công việc, giúp máy tính xử lí nhanh hơn.", "Cho phép CPU lưu trữ một lượng lớn phần mềm ứng dụng trực tiếp trên vi mạch.", "Cho phép CPU tiêu thụ cực kỳ ít điện năng so với thế hệ chip xử lý phiên bản cũ.", "Cho phép CPU phát tín hiệu không dây đến toàn bộ các thiết bị ngoại vi hiện đại."], correct: 0, explanation: "Thiết kế đa lõi giúp CPU có thể thực hiện song song nhiều công việc cùng lúc, tăng tốc độ xử lí." },
+        { id: "q11", type: "single", question: "Câu 11: Khi tiến hành so sánh giữa hai loại bộ nhớ trong là ROM và RAM, nhận định nào dưới đây phản ánh chính xác nhất?", options: ["ROM có dung lượng lưu trữ thường nhỏ hơn và thời gian truy cập chậm hơn RAM.", "ROM cho phép người dùng thoải mái ghi đè các dữ liệu cá nhân theo mong muốn.", "RAM chỉ chuyên dùng để lưu trữ các chương trình kiểm tra hệ thống lúc khởi động.", "RAM có khả năng duy trì thông tin không bao giờ bị xóa ngay cả khi ngắt điện lưới."], correct: 0, explanation: "ROM có dung lượng nhỏ hơn và không truy cập nhanh, linh hoạt bằng RAM." },
+        { id: "q12", type: "single", question: "Câu 12: Khi đánh giá hiệu năng hoạt động của bộ nhớ ngoài (như ổ đĩa cứng HDD, SSD), các tham số quan trọng nhất là gì?", options: ["Gồm số lượng cổng kết nối USB và khả năng phát sóng mạng không dây nội bộ.", "Gồm dung lượng lưu trữ khả dụng và thời gian trung bình cần để truy cập dữ liệu.", "Gồm tần số xung nhịp đồng hồ quét và số lượng nhân xử lí đồ hoạ độc lập trên đĩa.", "Gồm mức độ tương thích với hệ điều hành điện thoại và độ phân giải hình ảnh xuất."], correct: 1, explanation: "Với thiết bị lưu trữ ngoài, dung lượng và thời gian truy cập dữ liệu là tham số quan trọng nhất." },
+        { id: "q13", type: "single", question: "Câu 13: Trong việc mô phỏng mạch điện tử, một sơ đồ mạch điện được mắc nối tiếp hai rơ le thường mở thể hiện phép toán nào?", options: ["Sơ đồ mạch điện này mô phỏng tương đương với phép toán nhân lôgic (AND).", "Sơ đồ mạch điện này mô phỏng tương đương với phép toán cộng lôgic (OR).", "Sơ đồ mạch điện này mô phỏng tương đương với phép phủ định lôgic (NOT).", "Sơ đồ mạch điện này mô phỏng tương đương với phép hoặc loại trừ (XOR)."], correct: 0, explanation: "Mạch nối tiếp 2 rơ le thường mở tương đương với cổng AND (phép nhân lôgic)." },
+        { id: "q14", type: "single", question: "Câu 14: Khi thực hiện phép cộng toán học trong hệ nhị phân, quy tắc nào dưới đây sẽ làm phát sinh một số nhớ bằng 1 sang hàng bên trái?", options: ["Hiện tượng này chỉ xảy ra khi cả đại lượng x và đại lượng y đều nhận giá trị là 1.", "Hiện tượng này chỉ xảy ra khi đại lượng x bằng 1 trong khi đại lượng y bằng 0.", "Hiện tượng này chỉ xảy ra khi đại lượng x bằng 0 trong khi đại lượng y bằng 1.", "Hiện tượng này chỉ xảy ra khi cả đại lượng x và đại lượng y đều nhận giá trị là 0."], correct: 0, explanation: "Trong nhị phân, 1 + 1 = 10, sinh ra số nhớ 1 sang hàng bên trái." },
+        { id: "q15", type: "single", question: "Câu 15: Trong kiến trúc của bộ cộng nhị phân, để tạo ra bit kết quả tổng (t) khi cộng 2 bit x và y, người ta sử dụng cổng lôgic nào?", options: ["Bit kết quả này sẽ được tạo ra thông qua việc thực hiện phép nhân lôgic AND.", "Bit kết quả này sẽ được tạo ra thông qua việc thực hiện phép hoặc loại trừ XOR.", "Bit kết quả này sẽ được tạo ra thông qua việc thực hiện phép cộng lôgic thông thường OR.", "Bit kết quả này sẽ được tạo ra thông qua việc thực hiện phép phủ định độc lập lôgic NOT."], correct: 1, explanation: "Cổng XOR dùng để sinh ra bit kết quả tổng (t) trong mạch cộng." },
+        { id: "q16", type: "single", question: "Câu 16: Theo nguyên lý thiết kế hệ thống số, người ta có thể tổng hợp và xây dựng bất kỳ một mạch lôgic phức tạp nào từ nền tảng cơ bản nào?", options: ["Hoàn toàn có thể xây dựng dựa trên sự kết hợp của các thiết bị nhớ RAM và ROM.", "Hoàn toàn có thể xây dựng dựa trên sự kết hợp của các cổng cơ bản AND, OR, NOT.", "Hoàn toàn có thể xây dựng dựa trên sự kết hợp của các thanh ghi trong vi xử lý.", "Hoàn toàn có thể xây dựng dựa trên sự kết hợp của bảng mạch đồ hoạ và đĩa cứng."], correct: 1, explanation: "Mọi mạch lôgic phức tạp đều có thể được tổng hợp từ 3 cổng cơ bản: AND, OR, NOT." },
+        { id: "q17", type: "single", question: "Câu 17: Bạn An đang soạn thảo một bài báo cáo dài trên Microsoft Word thì khu vực bị mất điện đột ngột. Khi có điện lại và bật máy, An phát hiện toàn bộ dữ liệu vừa gõ đã biến mất. Hiện tượng mất dữ liệu này xuất phát từ nguyên lý của linh kiện nào?", options: ["Dữ liệu mất do bộ vi xử lí trung tâm (CPU) bị lỗi xung nhịp khi mất điện.", "Dữ liệu mất do bộ nhớ RAM không duy trì được dữ liệu khi ngắt nguồn điện.", "Dữ liệu mất do bộ nhớ ROM lập tức xoá trắng thông tin để khởi động lại.", "Dữ liệu mất do thiết bị đĩa cứng SSD tự động chuyển trạng thái đóng băng."], correct: 1, explanation: "RAM là bộ nhớ bay hơi, mọi dữ liệu lưu tạm thời trên đó sẽ biến mất hoàn toàn khi bị ngắt nguồn điện." },
+        { id: "q18", type: "single", question: "Câu 18: Khi mua máy tính, Tuấn thấy một chiếc có ổ cứng cơ học HDD 1TB và một chiếc dùng ổ thể rắn SSD 512GB với giá tương đương nhau. Dưới góc độ hiệu năng, tại sao ổ SSD tuy dung lượng nhỏ hơn nhưng lại mang đến tốc độ khởi động nhanh vượt trội?", options: ["Do SSD hoạt động như bộ phận RAM mở rộng tự động tối ưu hóa các phần mềm.", "Do SSD là linh kiện không sử dụng cơ cấu cơ học nên thời gian truy cập cực ngắn.", "Do SSD lưu trữ mọi dữ liệu dưới dạng đĩa quang học xoay với tốc độ hàng nghìn vòng.", "Do SSD được thiết kế dưới dạng bộ điều khiển đa lõi tăng gấp đôi tần số xung nhịp."], correct: 1, explanation: "Ổ SSD sử dụng chip nhớ thể rắn, không có các cơ cấu đọc cơ học như HDD nên truy xuất dữ liệu cực kỳ nhanh." },
+        { id: "q19", type: "single", question: "Câu 19: Bạn Lan muốn thiết kế một hệ thống đèn cầu thang thông minh: bóng đèn sẽ phát sáng khi có BẤT KỲ MỘT trong hai công tắc (ở tầng 1 hoặc tầng 2) được bật. Lan phải ứng dụng sơ đồ mạch điện tương ứng với phép toán lôgic nào?", options: ["Phải thiết kế sơ đồ mạch điện song song mô phỏng theo phép toán cộng lôgic (OR).", "Phải thiết kế sơ đồ mạch điện nối tiếp mô phỏng theo phép toán nhân lôgic (AND).", "Phải thiết kế sơ đồ mạch điện nối tiếp mô phỏng theo phép toán hoặc loại trừ (XOR).", "Phải thiết kế sơ đồ mạch điện song song mô phỏng theo phép toán phủ định (NOT)."], correct: 0, explanation: "Để mạch thông khi BẤT KỲ công tắc nào bật (1 OR 0 = 1, 0 OR 1 = 1), ta cần mạch mắc song song tương đương phép OR." },
+        { id: "q20", type: "single", question: "Câu 20: Giả sử có hai tín hiệu đầu vào với giá trị x = 0 và y = 1. Bạn Bình cần tính toán đầu ra của một cổng lôgic XOR giữa x và y. Theo quy tắc lôgic, mạch điện sẽ trả về mức tín hiệu điện áp (giá trị lôgic) cuối cùng là bao nhiêu?", options: ["Mức tín hiệu trả về của mạch điện lôgic ở trường hợp này chắc chắn sẽ là 0.", "Mức tín hiệu trả về của mạch điện lôgic ở trường hợp này chắc chắn sẽ là 1.", "Mức tín hiệu trả về của mạch điện lôgic ở trường hợp này sẽ báo lỗi ngắn mạch.", "Mức tín hiệu trả về của mạch điện lôgic ở trường hợp này không xác định được."], correct: 1, explanation: "Phép toán XOR trả về 1 khi hai tín hiệu đầu vào khác nhau (0 XOR 1 = 1)." },
+        { id: "q21", type: "single", question: "Câu 21: Trong giờ thực hành, bạn Minh tiến hành thao tác cộng hai dãy số nhị phân: 1010 + 101. Kết quả cuối cùng mà Minh thu được dưới định dạng hệ đếm nhị phân chuẩn xác là dãy số nào sau đây?", options: ["Kết quả của phép toán cộng hai số nhị phân này tạo ra dãy bit mang giá trị 1100.", "Kết quả của phép toán cộng hai số nhị phân này tạo ra dãy bit mang giá trị 1111.", "Kết quả của phép toán cộng hai số nhị phân này tạo ra dãy bit mang giá trị 1001.", "Kết quả của phép toán cộng hai số nhị phân này tạo ra dãy bit mang giá trị 1011."], correct: 1, explanation: "Thực hiện phép tính hệ nhị phân: 1010 + 0101 = 1111." },
+        { id: "q22", type: "single", question: "Câu 22: Để tạo ra một chốt an toàn điện tử chỉ tự động ngắt điện mạch (giá trị lôgic bằng 0) khi nhận được tín hiệu kích hoạt có dòng điện (giá trị lôgic bằng 1) từ hệ thống chống cháy, người thợ điện phải sử dụng thành phần linh kiện nào dưới đây?", options: ["Người thợ điện phải lắp ráp một rơ le loại thường mở để thực hiện chức năng cổng AND.", "Người thợ điện phải lắp ráp một rơ le loại thường mở để thực hiện chức năng cổng OR.", "Người thợ điện phải lắp ráp một rơ le loại thường đóng để thực hiện chức năng cổng NOT.", "Người thợ điện phải lắp ráp một rơ le kết hợp phức tạp để thực hiện chức năng cổng XOR."], correct: 2, explanation: "Cần đảo ngược tín hiệu (từ 1 thành 0), do đó phải dùng rơ le thường đóng, đại diện cho phép toán NOT." },
+        { id: "q23", type: "single", question: "Câu 23: Cho biểu thức biến đổi lôgic trên máy tính: (NOT x) AND y. Với bộ tín hiệu đầu vào x = 1, y = 1, một vi mạch điện tử thực thi chuỗi lệnh này sẽ cho ra tín hiệu kết quả cuối cùng bằng bao nhiêu?", options: ["Mạch điện tử sẽ xuất ra một tín hiệu kết quả cuối cùng mang giá trị lôgic bằng 1.", "Mạch điện tử sẽ xuất ra một tín hiệu kết quả cuối cùng mang giá trị lôgic bằng 0.", "Mạch điện tử sẽ xuất ra một tín hiệu lỗi do các giá trị nhập vào bị đảo ngược lại.", "Mạch điện tử sẽ tạo ra thêm một bit số nhớ mới chuyển sang linh kiện hàng bên trái."], correct: 1, explanation: "NOT(1) = 0. Sau đó 0 AND 1 = 0." },
+        { id: "q24", type: "single", question: "Câu 24: Một kỹ sư lập trình muốn lưu vĩnh viễn đoạn mã chương trình kiểm tra hệ thống cơ bản để đảm bảo máy tính luôn tự khởi động đúng cách mỗi khi bật nút nguồn. Kỹ sư này bắt buộc phải nạp đoạn mã đó vào linh kiện nhớ nào?", options: ["Bắt buộc phải nạp trực tiếp vào thanh ghi dung lượng nhỏ nằm ngay bên trong chip CPU.", "Bắt buộc phải nạp trực tiếp vào bộ nhớ chỉ đọc ROM do dữ liệu lưu ở đây không bị mất.", "Bắt buộc phải nạp trực tiếp vào thẻ nhớ cắm ngoài qua cổng USB thế hệ kết nối mới nhất.", "Bắt buộc phải nạp trực tiếp vào bộ nhớ đệm truy cập siêu nhanh Cache bên trong chip CPU."], correct: 1, explanation: "ROM là bộ nhớ lưu trữ các chương trình kiểm tra hệ thống và khởi động máy, dữ liệu sẽ không bị xóa khi tắt điện." },
+
+        { id: "qII_1", type: "tf_cluster", context: "Câu 1: Bạn Tuấn đang ôn tập kiến thức tổng quát về chức năng các thành phần cốt lõi bên trong hệ thống máy tính. Hãy phân tích tính Đúng/Sai trong các luận điểm của Tuấn:", items: [
+            { id: "a", text: "a) CPU là chữ viết tắt của Central Processing Unit, giữ vai trò quan trọng nhất trong máy tính, chuyên đảm nhận việc thực hiện các lệnh của chương trình.", correct: true, expl: "CPU (Central Processing Unit) là thành phần quan trọng nhất, đảm nhận việc thực hiện các chương trình." },
+            { id: "b", text: "b) Bộ nhớ truy cập ngẫu nhiên RAM (Random Access Memory) là linh kiện không cần nguồn điện nuôi dưỡng, có khả năng giữ lại mọi tài liệu làm việc vĩnh viễn dù cho người dùng có rút phích cắm máy tính.", correct: false, expl: "RAM ghi dữ liệu tạm thời và không giữ được lâu dài, khi tắt máy dữ liệu trong RAM sẽ bị xóa." },
+            { id: "c", text: "c) Khi so sánh giữa các loại bộ nhớ, tốc độ truy cập dữ liệu của bộ nhớ lưu trữ ngoài như đĩa cứng HDD hay thẻ nhớ di động thường nhanh hơn gấp nhiều lần so với bộ nhớ trong RAM.", correct: false, expl: "Đĩa cứng (bộ nhớ ngoài) là thiết bị điện cơ nên tốc độ truy cập chậm hơn nhiều so với bộ nhớ trong (như RAM)." },
+            { id: "d", text: "d) Để đáp ứng nhu cầu chỉnh sửa video độ phân giải cao một cách đồng bộ nhất, Tuấn có thể tùy ý điều chỉnh thông số xung nhịp đồng hồ của CPU lên một mức độ cao vô hạn mà không cần quan tâm đến thiết kế vật lí.", correct: false, expl: "Xung nhịp của CPU do nhà sản xuất quy định bằng một đồng hồ xung vật lý bên trong chip, không thể tùy ý điều chỉnh lên mức vô hạn một cách phi vật lý." }
+        ]},
+        { id: "qII_2", type: "tf_cluster", context: "Câu 2: Trong giờ thực hành mạch số điện tử, bạn An đang tìm hiểu về bảng tính toán số học nhị phân và các phép biến đổi lôgic cơ bản. Dựa trên sách giáo khoa, hãy xét tính Đúng/Sai của các phát biểu sau:", items: [
+            { id: "a", text: "a) Phép cộng hai đại lượng lôgic (được kí hiệu là OR hoặc ∨) chỉ trả về kết quả bằng 1 khi và chỉ khi có ít nhất một trong hai đại lượng đó đang mang giá trị là 1.", correct: true, expl: "Phép cộng lôgic OR chỉ bằng 1 khi ít nhất một trong hai đại lượng bằng 1." },
+            { id: "b", text: "b) Trong môn số học hệ đếm nhị phân, khi thực hiện thao tác cộng hai bit có giá trị x=1 và y=1, hệ thống sẽ trả về kết quả bằng 1 và hoàn toàn không phát sinh bất kỳ số nhớ nào chuyển sang hàng bên trái.", correct: false, expl: "Trong hệ nhị phân, 1 + 1 = 10, tức là kết quả là 0 và phát sinh số nhớ 1 sang hàng bên trái." },
+            { id: "c", text: "c) Về mặt cấu tạo vật lí, phép toán nhân lôgic (AND) có thể được minh họa trực quan thông qua một sơ đồ mạch điện, trong đó sử dụng hai rơ le điện từ được mắc nối tiếp với nhau.", correct: true, expl: "Mạch điện mắc nối tiếp hai rơ le thực hiện phép nhân lôgic AND." },
+            { id: "d", text: "d) Khi áp dụng biểu thức biến đổi x AND (NOT y) với bộ giá trị kiểm tra đầu vào là x=0 và y=1, do tính chất của phép phủ định nên kết quả cuối cùng chắc chắn sẽ nhận giá trị bằng 1.", correct: false, expl: "Kết quả của 0 AND (NOT 1) = 0 AND 0 = 0, không phải bằng 1." }
+        ]},
+        { id: "qII_3", type: "tf_cluster", context: "Câu 3: Bạn Lan đang thiết kế một biểu đồ thuyết trình cho nhóm về sơ đồ cấu trúc nội bộ của vi xử lý trung tâm và các loại bộ nhớ. Hãy đánh giá độ chính xác của các chi tiết mà Lan cung cấp:", items: [
+            { id: "a", text: "a) Nằm sâu bên trong kiến trúc CPU, Bộ điều khiển (Control Unit) chính là nơi trực tiếp thực hiện tất cả các phép tính toán số học cộng trừ nhân chia và xử lý thuật toán lôgic phức tạp của máy tính.", correct: false, expl: "Bộ điều khiển có vai trò phối hợp đồng bộ các thiết bị. Bộ số học và lôgic (ALU) mới là nơi thực hiện các phép tính số học và lôgic." },
+            { id: "b", text: "b) Trái ngược với phát biểu trên, chính Bộ số học và lôgic (ALU) mới thực sự là bộ phận chịu trách nhiệm thực thi các tính toán dữ liệu khô khan bên trong hệ thống xử lý.", correct: true, expl: "Bộ số học và lôgic (ALU) thực hiện tất cả các phép tính số học và lôgic." },
+            { id: "c", text: "c) Để tối ưu hoá hiệu suất, CPU được trang bị thêm một bộ nhớ đệm (cache), có vai trò chứa sẵn những khối dữ liệu được nạp trước từ RAM nhằm giúp hệ thống giảm thiểu tối đa thời gian chờ đọc.", correct: true, expl: "Bộ nhớ đệm (cache) chứa dữ liệu nạp trước từ bộ nhớ trong để giảm thời gian đọc." },
+            { id: "d", text: "d) Trong tình huống Lan mở liên tiếp hàng chục tab trình duyệt web khiến bộ nhớ RAM cạn kiệt, con chip CPU sẽ lập tức sử dụng các thanh ghi nội bộ (register) để thay thế hoàn toàn nhiệm vụ lưu trữ phần mềm thay cho thanh RAM.", correct: false, expl: "Thanh ghi (register) có dung lượng cực kỳ nhỏ chỉ để lưu trữ tạm thời các lệnh đang xử lý, không thể thay thế chức năng lưu trữ lượng lớn của RAM hay ổ đĩa." }
+        ]},
+        { id: "qII_4", type: "tf_cluster", context: "Câu 4: Thầy Hùng tiến hành thí nghiệm mô phỏng thiết kế mạch số trên phần mềm điện tử và hướng dẫn các học sinh lớp ứng dụng cộng hệ nhị phân. Hãy xác định những lập luận nào là Đúng hay Sai:", items: [
+            { id: "a", text: "a) Một sự thật công nghệ là tất cả các thiết bị số thông minh thời nay, từ máy tính bảng đến điện thoại di động, đều phải được vận hành và chế tạo dựa trên nền tảng của các mạch lôgic điện tử.", correct: true, expl: "Tất cả các thiết bị số đều phải dùng mạch lôgic và được chế tạo từ chúng." },
+            { id: "b", text: "b) Khi biểu diễn trong một sơ đồ mạch điện vật lý, việc người thợ sử dụng một chiếc rơ le loại thường đóng sẽ có tính năng hoàn toàn tương đương với một phép toán phủ định lôgic (cổng NOT).", correct: true, expl: "Rơ le thường đóng được dùng để thực hiện phép phủ định lôgic (mạch NOT)." },
+            { id: "c", text: "c) Dù cho một mạch điện lôgic tích hợp có thiết kế hiện đại và độ phức tạp cao đến đâu, các kỹ sư điện tử hoàn toàn có khả năng tổng hợp và xây dựng lại nó chỉ từ nền tảng ba cổng cơ bản là AND, OR và NOT.", correct: true, expl: "Mọi mạch lôgic đều có thể được tổng hợp và xây dựng từ các cổng AND, OR và NOT." },
+            { id: "d", text: "d) Giao bài tập về nhà, thầy Hùng yêu cầu tính tổng nhị phân của hai chuỗi '1001' và '1011'. Dựa vào quy tắc cộng có nhớ của hệ nhị phân, đáp án chuẩn xác học sinh cần ghi vào vở sẽ là dãy số '10010'.", correct: false, expl: "Kết quả của phép cộng nhị phân 1001 + 1011 = 10100, không phải 10010." }
+        ]}
+    ];
+
+    window.startQuizAction = function() {
+        try {
+            const errDiv = document.getElementById('login-error');
+            if(errDiv) errDiv.classList.add('hidden');
+            
+            const nameEl = document.getElementById('hoTen');
+            const lopEl = document.getElementById('lop');
+            
+            const name = nameEl.value.trim();
+            const lop = lopEl.value.trim();
+            
+            if (!name || !lop) {
+                if(errDiv) {
+                    errDiv.innerText = "⚠️ Vui lòng nhập đầy đủ Họ tên và Lớp!";
+                    errDiv.classList.remove('hidden');
+                } else {
+                    alert("⚠️ Vui lòng nhập đầy đủ Họ tên và Lớp!");
+                }
+                return;
+            }
+            
+            currentStudent = { hoTen: name, lop: lop, maDe: 'de4', tenDe: 'Đề Trắc Nghiệm Bài 4' };
+            currentQuestions = JSON.parse(JSON.stringify(exam_data));
+            quizStartTime = new Date();
+            
+            setTimeout(() => { isQuizStarted = true; }, 1000);
+            showSection('quiz');
+            
+            userAnswers = {};
+            window.renderAllQuestions();
+            startTimer(45 * 60); 
+            
+        } catch (error) {
+            alert("❌ Đã xảy ra lỗi khởi tạo bài thi: " + error.message + ".");
+            console.error(error);
+        }
+    };
+
+    window.viewScoresAction = function() {
+        searchTerm = ''; 
+        document.getElementById('search-student').value = '';
+        currentPage = 1;
+
+        if (database) {
+            scoresRef.once('value').then((snapshot) => {
+                const data = snapshot.val();
+                allScores = data ? Object.keys(data).map(key => ({...data[key], id: key})) : [];
+                window.renderScores();
+                showSection('scores');
+            });
+        }
+    };
+
+    window.searchStudent = function(val) {
+        searchTerm = val.toLowerCase();
+        currentPage = 1;
+        window.renderScores();
+    };
+
+    window.changePage = function(page) {
+        currentPage = page;
+        window.renderScores();
+    };
+
+    window.goHome = function() {
+        if(document.getElementById('hoTen')) document.getElementById('hoTen').value = ''; 
+        if(document.getElementById('lop')) document.getElementById('lop').value = ''; 
+        clearInterval(timerInterval);
+        showSection('login');
+    };
+
+    function getTotalScoreItems() { return currentQuestions.length; }
+
+    function getAnsweredCount() {
+        let count = 0;
+        currentQuestions.forEach(q => {
+            if (q.type === 'single') {
+                if (userAnswers[q.id] !== undefined) count++;
+            } else if (q.type === 'tf_cluster') {
+                let answeredItems = 0;
+                q.items.forEach(item => {
+                    if (userAnswers[q.id + '_' + item.id] !== undefined) answeredItems++;
+                });
+                if (answeredItems === 4) count++; 
+            }
+        });
+        return count;
+    }
+
+   window.selectAnswer = function(qId, val, type) {
+        if (type === 'tf') {
+            userAnswers[qId] = val;
+            const btnT = document.getElementById(`btnT_${qId}`);
+            const btnF = document.getElementById(`btnF_${qId}`);
+            if (val === true) {
+                btnT.classList.add('selected'); btnT.classList.remove('bg-white');
+                btnF.classList.remove('selected'); btnF.classList.add('bg-white');
+            } else {
+                btnF.classList.add('selected'); btnF.classList.remove('bg-white');
+                btnT.classList.remove('selected'); btnT.classList.add('bg-white');
+            }
+        } else if (type === 'single') {
+            userAnswers[qId] = val;
+        }
+        
+        requestAnimationFrame(() => {
+            const pgText = document.getElementById('progress-text');
+            if(pgText) pgText.innerText = `${getAnsweredCount()}/${getTotalScoreItems()}`;
+        });
+    };
+
+    window.renderAllQuestions = function() {
+        if (!currentQuestions || currentQuestions.length === 0) return;
+        const container = document.getElementById('question-container');
+        if(!container) return;
+
+        let html = '';
+        let currentType = '';
+
+        currentQuestions.forEach((q) => {
+            if (q.type !== currentType) {
+                currentType = q.type;
+                let headerText = ''; let roman = '';
+                if(currentType === 'single') { headerText = 'TRẮC NGHIỆM NHIỀU PHƯƠNG ÁN LỰA CHỌN'; roman = 'I'; }
+                if(currentType === 'tf_cluster') { headerText = 'TRẮC NGHIỆM ĐÚNG/SAI'; roman = 'II'; }
+                
+                html += `<div class="flex items-center gap-3 mt-8 mb-4 border-b-2 border-blue-100 pb-3"><span class="bg-gradient-to-br from-blue-500 to-indigo-600 text-white w-14 h-14 flex items-center justify-center rounded-xl font-black text-2xl shadow-md">${roman}</span><h3 class="text-2xl sm:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-700 to-indigo-700 tracking-wide uppercase">${headerText}</h3></div>`;
+            }
+
+            html += `<div class="fade-in w-full bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-blue-100 relative mb-6 hover:shadow-md transition-shadow">`;
+            
+            if (q.type === 'single') {
+                const uAns = userAnswers[q.id];
+                html += `<div class="flex gap-4 mb-5"><div class="w-full math-scroll"><p class="text-xl font-bold text-red-600 mt-1 leading-snug tracking-tight">${q.question}</p></div></div>`;
+                html += `<div class="space-y-4 md:pl-6 mt-6">`;
+                q.options.forEach((opt, i) => {
+                    const isChecked = (uAns === i) ? 'checked' : '';
+                    html += `<div class="flex items-center">
+                        <input type="radio" id="opt_${q.id}_${i}" name="q_${q.id}" value="${i}" class="hidden single-radio" ${isChecked} onchange="window.selectAnswer('${q.id}', ${i}, 'single')">
+                        <label for="opt_${q.id}_${i}" class="option-label w-full p-4 border-2 border-gray-200 rounded-2xl flex items-center gap-4 bg-white shadow-sm font-bold text-lg hover:border-blue-300">
+                            <div class="w-12 h-12 rounded-xl border-2 border-gray-300 flex items-center justify-center text-lg font-black text-gray-400 flex-shrink-0 bg-gray-50">${String.fromCharCode(65 + i)}</div>
+                            <div class="text-gray-700 leading-relaxed math-scroll flex-1">${opt}</div>
+                        </label>
+                    </div>`;
+                });
+                html += `</div>`;
+            } 
+            else if (q.type === 'tf_cluster') {
+                html += `<div class="bg-red-50 text-red-700 p-5 rounded-xl font-bold mb-4 border-2 border-red-100 text-xl leading-relaxed math-scroll">${q.context}</div>`;
+                html += `<div class="space-y-4 mt-6">`;
+                q.items.forEach((item) => {
+                    const combinedId = q.id + '_' + item.id;
+                    let ans = userAnswers[combinedId];
+                    let btnT = ans === true ? 'selected' : 'bg-white';
+                    let btnF = ans === false ? 'selected' : 'bg-white';
+
+                    html += `<div class="p-5 border-2 border-gray-100 rounded-2xl bg-white shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4 transition-all hover:border-blue-200">
+                        <div class="font-bold text-gray-800 flex-1 text-lg math-scroll">${item.text}</div>
+                        <div class="flex gap-3 shrink-0">
+                            <button id="btnT_${combinedId}" onclick="window.selectAnswer('${combinedId}', true, 'tf')" class="btn-tf w-24 sm:w-28 py-3 rounded-xl font-extrabold text-lg ${btnT}">ĐÚNG</button>
+                            <button id="btnF_${combinedId}" onclick="window.selectAnswer('${combinedId}', false, 'tf')" class="btn-tf w-24 sm:w-28 py-3 rounded-xl font-extrabold text-lg ${btnF}">SAI</button>
+                        </div>
+                    </div>`;
+                });
+                html += `</div>`;
+            } 
+            html += `</div>`;
+        });
+        
+        container.innerHTML = html;
+        const pgText = document.getElementById('progress-text');
+        if(pgText) pgText.innerText = `${getAnsweredCount()}/${getTotalScoreItems()}`;
+    };
+
+    function formatDuration(sec) {
+        const m = Math.floor(sec / 60); const s = sec % 60;
+        return `${m}p ${s}s`;
+    }
+
+    window.promptSubmit = function() {
+        if (!isQuizStarted) return;
+        const total = getTotalScoreItems();
+        const answered = getAnsweredCount();
+        
+        document.getElementById('confirm-answered').innerText = answered;
+        document.getElementById('confirm-total').innerText = total;
+        
+        const modal = document.getElementById('confirm-submit-modal');
+        modal.classList.remove('hidden');
+    };
+
+    window.closeConfirmModal = function() {
+        const modal = document.getElementById('confirm-submit-modal');
+        modal.classList.add('hidden');
+    };
+
+    window.executeSubmit = function() {
+        window.closeConfirmModal();
+        isQuizStarted = false; 
+        quizEndTime = new Date();
+        clearInterval(timerInterval);
+        
+        let score = 0;
+
+        currentQuestions.forEach(q => {
+            if (q.type === 'single') {
+                if (userAnswers[q.id] === q.correct) score += 0.25;
+            } else if (q.type === 'tf_cluster') {
+                let correctCount = 0;
+                q.items.forEach(item => { 
+                    if (userAnswers[q.id + '_' + item.id] === item.correct) {
+                        correctCount++;
+                    }
+                });
+                
+                // Áp dụng logic tính điểm
+                if (correctCount === 1) score += 0.1;
+                else if (correctCount === 2) score += 0.25;
+                else if (correctCount === 3) score += 0.5;
+                else if (correctCount === 4) score += 1.0;
+            }
+        });
+
+        score = score.toFixed(2); 
+
+        const record = {
+            hoTen: currentStudent.hoTen, lop: currentStudent.lop, tenDe: currentStudent.tenDe, maDe: currentStudent.maDe,
+            diem: parseFloat(score),
+            startTime: quizStartTime.toLocaleTimeString('vi-VN') + ' ' + quizStartTime.toLocaleDateString('vi-VN'),
+            endTime: quizEndTime.toLocaleTimeString('vi-VN') + ' ' + quizEndTime.toLocaleDateString('vi-VN'),
+            duration: formatDuration(Math.floor((quizEndTime - quizStartTime) / 1000)),
+            thoiGian: new Date().toISOString(), deviceId: deviceId,
+            userAnswers: userAnswers 
+        };
+        
+        if(database) {
+            scoresRef.push(record, () => { window.showModalResult(score, record.duration); });
+        } else {
+            window.showModalResult(score, record.duration);
+        }
+    };
+
+    window.showModalResult = function(score, dur) {
+        ['login', 'quiz', 'scores', 'review'].forEach(s => {
+            const el = document.getElementById(s+'-section');
+            if(el) el.classList.add('hidden');
+        });
+        const resEl = document.getElementById('result-section');
+        if(resEl) resEl.classList.remove('hidden');
+        const contentEl = document.getElementById('result-content');
+        if(contentEl) contentEl.innerHTML = `
+        <div class="flex justify-start mb-4">
+            <button onclick="window.goHome()" class="px-5 py-3 bg-gray-100 text-gray-700 rounded-xl font-bold hover:bg-gray-200 transition-colors shadow-sm border border-gray-200 text-lg">🏠 Trang chủ</button>
+        </div>
+        <div class="text-center">
+            <div class="text-7xl mb-4 animate-bounce">🎉</div>
+            <h3 class="text-3xl font-black text-emerald-600 mb-2">Hoàn thành bài thi!</h3>
+            <p class="text-gray-600 mb-6 mt-2"><span class="font-extrabold text-blue-700 text-xl uppercase tracking-wider">${currentStudent.hoTen} - Lớp ${currentStudent.lop}</span></p>
+        </div>
+        <div class="bg-blue-50 border-2 border-blue-100 rounded-3xl p-8 mb-6 shadow-inner relative text-center">
+            <div class="text-base text-blue-500 font-extrabold mb-2 uppercase tracking-widest">ĐIỂM SỐ CỦA BẠN</div>
+            <div class="text-7xl font-black text-blue-600 drop-shadow-sm">${score} <span class="text-3xl text-gray-400">/ 10</span></div>
+            <div class="text-lg font-extrabold text-indigo-600 mt-5 bg-white inline-block px-6 py-3 rounded-full shadow-sm border border-blue-100">Thời gian làm bài: ${dur}</div>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+            <button onclick="window.reviewQuiz()" class="w-full py-4 bg-gradient-to-r from-indigo-500 to-purple-500 text-white rounded-xl font-extrabold shadow-sm hover:shadow-md transition-colors text-xl">📝 Xem lại bài</button>
+            <button onclick="window.viewScoresAction()" class="w-full py-4 bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-xl font-extrabold shadow-sm hover:shadow-md transition-colors text-xl">🏆 Bảng điểm</button>
+        </div>`;
+    };
+
+    function getStatusBadge(isCorrect, isUnanswered) {
+        if (isUnanswered) return `<div class="mt-4 mb-2 inline-block px-4 py-2 bg-yellow-100 text-yellow-800 text-base font-black rounded-lg border border-yellow-300 shadow-sm">⚠️ BẠN CHƯA LÀM CÂU NÀY</div>`;
+        if (isCorrect) return `<div class="mt-4 mb-2 inline-block px-4 py-2 bg-emerald-100 text-emerald-800 text-base font-black rounded-lg border border-emerald-300 shadow-sm">✅ BẠN LÀM ĐÚNG RỒI</div>`;
+        return `<div class="mt-4 mb-2 inline-block px-4 py-2 bg-red-100 text-red-800 text-base font-black rounded-lg border border-red-300 shadow-sm">❌ BẠN LÀM SAI RỒI</div>`;
+    }
+
+    window.reviewQuiz = function() {
+        showSection('review');
+        const container = document.getElementById('review-content');
+        if(!container) return;
+        let html = '';
+
+        currentQuestions.forEach((q) => {
+            if (q.type === 'single') {
+                let uAns = userAnswers[q.id];
+                let isUnanswered = (uAns === undefined);
+                let isCorrect = (uAns === q.correct);
+                let borderColor = isCorrect ? 'border-emerald-300 bg-emerald-50' : 'border-red-300 bg-red-50';
+                
+                html += `<div class="p-6 border-2 rounded-2xl shadow-sm mb-6 ${borderColor}">`;
+                html += `<div class="font-bold text-xl text-red-600 mb-5 leading-relaxed math-scroll">${q.question}</div>`;
+                html += `<div class="space-y-3">`;
+                
+                q.options.forEach((opt, i) => {
+                    let optBg = ''; let iconHtml = '';
+                    if (q.correct === i) {
+                        optBg = 'bg-emerald-100 text-emerald-900 border-emerald-400 border-2'; 
+                        iconHtml = '<div class="text-3xl drop-shadow-sm ml-auto pl-2 flex-shrink-0">✅</div>';
+                    } else if (uAns === i && !isCorrect) {
+                        optBg = 'bg-red-100 text-red-900 line-through border-red-400 border-2'; 
+                        iconHtml = '<div class="text-3xl drop-shadow-sm ml-auto pl-2 flex-shrink-0">❌</div>';
+                    } else { optBg = 'bg-white text-slate-700 border border-slate-200'; }
+
+                    html += `<div class="p-4 rounded-xl ${optBg} flex items-center gap-4"><div class="w-10 h-10 flex items-center justify-center rounded-lg bg-white/50 text-base font-black shadow-sm flex-shrink-0">${String.fromCharCode(65 + i)}</div><div class="${(q.correct === i || uAns === i) ? 'font-semibold' : 'font-medium'} flex-1 text-lg math-scroll">${opt}</div>${iconHtml}</div>`;
+                });
+                html += `</div>`;
+                
+                html += getStatusBadge(isCorrect, isUnanswered); 
+                
+                if (q.explanation) {
+                    html += `<div class="review-explanation mt-3 pt-3 border-t-2 border-gray-200"><p class="text-base font-black uppercase tracking-widest text-blue-600 mb-2">💡 Giải chi tiết:</p><p class="text-black font-medium text-lg leading-loose math-scroll">${q.explanation}</p></div>`;
+                }
+                html += `</div>`;
+            } 
+            else if (q.type === 'tf_cluster') {
+                html += `<div class="p-6 border-2 border-indigo-200 bg-indigo-50 rounded-2xl shadow-sm mb-6">`;
+                html += `<div class="font-bold text-xl text-indigo-800 mb-5 math-scroll">${q.context}</div>`;
+                html += `<div class="space-y-5">`;
+                q.items.forEach(item => {
+                    let uAns = userAnswers[q.id + '_' + item.id];
+                    let isUnanswered = (uAns === undefined);
+                    let isCorrect = (uAns === item.correct);
+                    let iconHtml = isCorrect ? '✅' : '❌';
+                    let ansText = item.correct ? 'ĐÚNG' : 'SAI';
+
+                    html += `<div class="p-5 bg-white border border-indigo-100 rounded-xl shadow-sm">
+                        <div class="font-bold text-gray-800 text-lg math-scroll">${item.text}</div>
+                        <div class="mt-3 flex items-center justify-between border-b border-gray-100 pb-3">
+                            <span class="text-base font-bold text-gray-500">Bạn chọn: <span class="${isUnanswered ? 'text-gray-400' : 'text-blue-600'} font-black uppercase">${isUnanswered ? 'Chưa trả lời' : (uAns?'Đúng':'Sai')}</span></span>
+                            <span class="font-black text-xl ${isCorrect ? 'text-emerald-500' : 'text-red-500'}">Đáp án: ${ansText} ${iconHtml}</span>
+                        </div>`;
+                        
+                    html += getStatusBadge(isCorrect, isUnanswered);
+                    if(item.expl) {
+                        html += `<div class="review-explanation mt-3 pt-3 text-lg text-gray-700 font-medium leading-relaxed math-scroll"><span class="text-indigo-500 font-bold uppercase">Giải chi tiết:</span><br> ${item.expl}</div>`;
+                    }
+                    html += `</div>`;
+                });
+                html += `</div></div>`;
+            }
+        });
+        container.innerHTML = html;
+    };
+
+    window.backToResult = function() { showSection('result'); };
+    
+    let isReviewingFromLeaderboard = false;
+    
+    window.backFromReview = function() {
+        if (isReviewingFromLeaderboard) {
+            showSection('scores');
+            isReviewingFromLeaderboard = false;
+        } else {
+            window.backToResult();
+        }
+    };
+
+    window.reviewStudentScore = function(scoreId) {
+        const record = allScores.find(x => x.id === scoreId);
+        if (!record) return;
+        
+        currentStudent = { hoTen: record.hoTen, lop: record.lop, tenDe: record.tenDe, maDe: record.maDe };
+        userAnswers = record.userAnswers || {}; 
+        
+        currentQuestions = JSON.parse(JSON.stringify(exam_data)); 
+        
+        isReviewingFromLeaderboard = true;
+        window.reviewQuiz();
+    };
+
+    window.renderScores = function() {
+        const tbody = document.getElementById('scores-tbody');
+        const noScore = document.getElementById('no-scores');
+        const myRankDisplay = document.getElementById('my-rank-display');
+        const paginationContainer = document.getElementById('pagination-controls');
+        
+        if(!tbody) return;
+
+        const sortedAll = [...allScores].sort((a, b) => (b.diem - a.diem) || (a.duration.localeCompare(b.duration)));
+        
+        sortedAll.forEach((s, i) => s.absoluteRank = i + 1);
+
+        const myRankIndex = sortedAll.findIndex(s => s.deviceId === deviceId);
+        if (myRankDisplay) {
+            if (myRankIndex !== -1) {
+                myRankDisplay.innerHTML = `🏆 Thứ hạng của bạn: <span class="text-red-600 font-black">#${sortedAll[myRankIndex].absoluteRank}</span>`;
+            } else {
+                myRankDisplay.innerHTML = `🏆 Thứ hạng của bạn: <span class="text-gray-400">Chưa thi</span>`;
+            }
+        }
+
+        const filteredScores = searchTerm ? sortedAll.filter(s => s.hoTen.toLowerCase().includes(searchTerm)) : sortedAll;
+
+        if (filteredScores.length === 0) {
+            tbody.innerHTML = ''; 
+            noScore.classList.remove('hidden'); 
+            paginationContainer.innerHTML = '';
+            return; 
+        }
+        
+        noScore.classList.add('hidden');
+
+        const totalPages = Math.ceil(filteredScores.length / itemsPerPage);
+        if (currentPage > totalPages) currentPage = totalPages;
+        if (currentPage < 1) currentPage = 1;
+
+        const startIndex = (currentPage - 1) * itemsPerPage;
+        const endIndex = startIndex + itemsPerPage;
+        const pageItems = filteredScores.slice(startIndex, endIndex);
+
+        tbody.innerHTML = pageItems.map((s) => {
+            const isMe = s.deviceId === deviceId;
+            return `<tr class="${isMe ? 'my-score-row' : 'hover:bg-slate-50'} transition-colors border-b border-slate-100">
+            <td class="px-4 py-5 font-black text-slate-500 text-base text-center">#${s.absoluteRank}</td>
+            <td class="px-4 py-5 font-extrabold text-slate-800 text-base">${s.hoTen} ${isMe ? '<span class="ml-2 bg-pink-500 text-white text-xs px-2 py-1 rounded-md shadow-sm">Bạn</span>' : ''}</td>
+            <td class="px-4 py-5 font-black text-blue-600 text-base text-center">${s.lop}</td>
+            <td class="px-4 py-5 text-center font-black text-orange-600 text-sm">${s.duration}</td>
+            <td class="px-4 py-5 text-center"><span class="font-black text-2xl ${s.diem >= 5 ? 'text-emerald-600' : 'text-red-500'}">${s.diem}</span></td>
+            <td class="px-4 py-5 text-center">
+                <button onclick="window.reviewStudentScore('${s.id}')" class="bg-indigo-100 text-indigo-700 hover:bg-indigo-200 px-4 py-2 rounded-lg font-bold text-sm transition-colors border border-indigo-200 shadow-sm cursor-pointer whitespace-nowrap">Xem lại</button>
+            </td>
+        </tr>`;
+        }).join('');
+
+        renderPagination(totalPages);
+    };
+
+    function renderPagination(totalPages) {
+        const container = document.getElementById('pagination-controls');
+        if (!container) return;
+        
+        if (totalPages <= 1) {
+            container.innerHTML = '';
+            return;
+        }
+
+        let html = '<div class="flex flex-wrap items-center justify-center gap-2">';
+        
+        html += `<button onclick="window.changePage(${currentPage - 1})" class="px-4 py-2 rounded-xl font-bold transition-colors ${currentPage === 1 ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 shadow-sm'}" ${currentPage === 1 ? 'disabled' : ''}>&laquo; Trước</button>`;
+
+        let startPage = Math.max(1, currentPage - 1);
+        let endPage = Math.min(totalPages, currentPage + 1);
+
+        if (startPage > 1) {
+            html += `<button onclick="window.changePage(1)" class="px-4 py-2 rounded-xl font-bold bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 shadow-sm">1</button>`;
+            if (startPage > 2) html += `<span class="px-2 text-gray-400 font-black">...</span>`;
+        }
+
+        for (let i = startPage; i <= endPage; i++) {
+            html += `<button onclick="window.changePage(${i})" class="px-4 py-2 rounded-xl font-bold transition-all ${i === currentPage ? 'bg-orange-500 text-white shadow-md border-orange-600' : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 shadow-sm'}">${i}</button>`;
+        }
+
+        if (endPage < totalPages) {
+            if (endPage < totalPages - 1) html += `<span class="px-2 text-gray-400 font-black">...</span>`;
+            html += `<button onclick="window.changePage(${totalPages})" class="px-4 py-2 rounded-xl font-bold bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 shadow-sm">${totalPages}</button>`;
+        }
+
+        html += `<button onclick="window.changePage(${currentPage + 1})" class="px-4 py-2 rounded-xl font-bold transition-colors ${currentPage === totalPages ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 shadow-sm'}" ${currentPage === totalPages ? 'disabled' : ''}>Sau &raquo;</button>`;
+        
+        html += '</div>';
+        container.innerHTML = html;
+    }
+
+    function showSection(id) {
+        ['login', 'quiz', 'scores', 'result', 'review'].forEach(s => {
+            const el = document.getElementById(s+'-section');
+            if(el) el.classList.add('hidden');
+        });
+        const tgt = document.getElementById(id+'-section');
+        if(tgt) tgt.classList.remove('hidden');
+    }
+
+    function startTimer(seconds) {
+        const display = document.getElementById('timer');
+        if(!display) return;
+        let remaining = seconds;
+        timerInterval = setInterval(() => {
+            remaining--;
+            const m = Math.floor(remaining / 60).toString().padStart(2, '0');
+            const s = (remaining % 60).toString().padStart(2, '0');
+            display.innerText = `${m}:${s}`;
+            if (remaining <= 0) window.submitQuiz();
+        }, 1000);
+    }
+
+    try {
+        if (!localStorage.getItem('deviceId')) localStorage.setItem('deviceId', 'dev_' + Math.random().toString(36).substr(2) + Date.now());
+        deviceId = localStorage.getItem('deviceId');
+    } catch (e) { deviceId = 'dev_temp_' + Math.random().toString(36).substr(2); }
+  </script>
+ </body>
+</html>

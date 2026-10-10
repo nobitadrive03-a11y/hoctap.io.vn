@@ -1,0 +1,812 @@
+<!doctype html>
+<html lang="vi" class="w-full h-full m-0 p-0">
+ <head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <title>Tin Học 11 - Bài 2</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+  <!-- 1. MÃ GA4 GỐC (Kết nối với Google Analytics) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-NSJCVSL9RM"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-NSJCVSL9RM'); 
+</script>
+
+<!-- 2. MÃ NHỊP TIM 30 GIÂY -->
+<script>
+  setInterval(function() {
+    if (!document.hidden) { 
+      gtag('event', 'keep_alive', {
+        'event_category': 'Engagement',
+        'event_label': 'Học sinh đang làm bài',
+        'non_interaction': false
+      });
+    }
+  }, 30000); 
+</script>
+
+  <style>
+    * { 
+        -webkit-tap-highlight-color: transparent; 
+        -webkit-touch-callout: none !important; 
+        touch-action: manipulation;
+    }
+    
+    html, body { width: 100%; min-height: 100vh; margin: 0; padding: 0; overflow-x: hidden; }
+    
+    body { 
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
+      background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+      background-size: 400% 400%;
+      animation: gradientBG 15s ease infinite;
+    }
+    
+    @keyframes gradientBG {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+
+    #app { width: 100%; min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden; }
+    
+    .glass-card {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    .option-label { transition: background-color 0.1s ease, border-color 0.1s ease; cursor: pointer; border-color: #e2e8f0; }
+    .option-label:hover { background-color: #f0fdfa; border-color: #38bdf8; }
+    
+    input[type="radio"].single-radio:checked + .option-label {
+      background: linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%);
+      color: white; border-color: transparent;
+      box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+    }
+    input[type="radio"].single-radio:checked + .option-label div:first-child { background-color: rgba(255,255,255,0.25); border-color: transparent; color: white; }
+    input[type="radio"].single-radio:checked + .option-label div:last-child { color: white; }
+    
+    .fade-in { animation: fadeIn 0.4s ease forwards; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    
+    .my-score-row {
+      background: linear-gradient(to right, #fdf4ff, #ffffff) !important;
+      border-left: 4px solid #db2777 !important; font-weight: 700 !important;
+      color: #9d174d !important; box-shadow: 0 2px 8px rgba(0,0,0,0.05); position: relative; z-index: 10;
+    }
+    .my-score-row td { padding-top: 16px; padding-bottom: 16px; }
+    
+    .btn-tf { transition: background-color 0.1s ease; border-width: 2px; }
+    .btn-tf.selected { background-color: #2563eb; color: white; border-color: #1d4ed8; }
+    .btn-tf:not(.selected) { background-color: white; color: #4b5563; border-color: #e5e7eb; }
+    .btn-tf:not(:disabled):active { transform: scale(0.95); }
+    
+    .math-scroll { overflow-x: auto; min-width: 0; padding-bottom: 4px; scrollbar-width: none; -ms-overflow-style: none; }
+    .math-scroll::-webkit-scrollbar { display: none; }
+  </style>
+
+ </head>
+ <body>
+  <div id="app" class="p-0 sm:p-4 md:p-8 transition-all">
+   
+   <div id="login-section" class="w-full max-w-md mx-auto fade-in flex flex-col justify-center flex-grow">
+    <div class="glass-card rounded-none sm:rounded-3xl p-6 sm:p-8 flex flex-col justify-start shadow-2xl border-t-8 border-indigo-600 bg-white">
+     <div class="text-center mb-6 pt-4 sm:pt-0">
+      <div class="flex items-center justify-center w-24 h-24 mx-auto mb-4 rounded-full border-4 border-yellow-400 bg-red-600 shadow-lg transform transition-transform hover:scale-105">
+          <span class="text-white font-black text-4xl tracking-tighter">HS</span>
+      </div>
+      <h1 class="text-2xl sm:text-3xl font-bold text-red-500 mb-3"> ĐỀ KIỂM TRA<br> BÀI 2: THỰC HÀNH SỬ DỤNG HỆ ĐIỀU HÀNH </h1>
+     </div>
+      <div id="login-form" class="space-y-4">
+      <div class="flex flex-col gap-4">
+          <div class="w-full">
+               <label class="block text-lg font-bold text-gray-700 mb-1">Họ và tên</label> 
+               <input type="text" id="hoTen" class="w-full px-4 py-4 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-100 outline-none transition-all font-semibold text-lg" placeholder="Nhập họ tên...">
+          </div>
+          <div class="w-full">
+               <label class="block text-lg font-bold text-gray-700 mb-1">Lớp</label> 
+               <input type="text" id="lop" class="w-full px-4 py-4 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-100 outline-none transition-all font-semibold text-lg" placeholder="11A1">
+          </div>
+      </div>
+
+      <div id="login-error" class="hidden bg-red-100 border border-red-300 text-red-700 font-bold text-base p-3 rounded-xl text-center shadow-sm"></div>
+
+      <button type="button" onclick="window.startQuizAction()" id="start-btn" class="w-full py-5 mt-6 bg-gradient-to-r from-blue-500 to-cyan-400 text-white font-extrabold rounded-2xl shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all text-2xl tracking-wide"> 🚀 BẮT ĐẦU THI </button>
+     </div>
+    </div>
+   </div>
+
+   <div id="quiz-section" class="w-full max-w-4xl mx-auto hidden flex-grow flex flex-col">
+    <div class="glass-card rounded-none sm:rounded-3xl p-4 sm:p-8 flex flex-col flex-grow relative border-t-8 border-blue-500 bg-white shadow-2xl">
+     <div class="flex items-center justify-between mb-4 sm:mb-6 pb-4 border-b-2 border-gray-100">
+      
+      <div class="flex items-center gap-3">
+       <div class="flex items-center justify-center w-12 h-12 rounded-full border-2 border-yellow-400 bg-red-600 shadow-sm flex-shrink-0">
+           <span class="text-white font-black text-xl tracking-tighter">HS</span>
+       </div>
+       <div>
+        <h2 id="quiz-title" class="text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">Đề Kiểm Tra</h2>
+        <p id="student-info" class="text-base font-bold text-gray-500 mt-1 uppercase tracking-wide"></p>
+       </div>
+      </div>
+
+      <div class="text-right bg-blue-50 px-4 py-2 rounded-xl border border-blue-100" id="progress-container">
+       <div class="text-sm text-blue-500 font-bold uppercase tracking-wider mb-1">Tiến độ (Câu)</div>
+       <div id="progress-text" class="text-2xl font-black text-blue-700">0/28</div>
+      </div>
+     </div>
+     
+     <div id="timer-banner" class="mb-6 p-4 bg-gradient-to-r from-orange-50 to-red-50 border-2 border-red-100 rounded-2xl flex items-center justify-between shadow-sm sticky top-2 z-40">
+        <span class="text-red-800 font-extrabold flex items-center gap-2 text-lg"><span class="text-2xl animate-pulse">⏰</span> THỜI GIAN:</span> 
+        <span id="timer" class="text-4xl font-black text-red-600 font-mono tracking-wider drop-shadow-sm">45:00</span>
+     </div>
+
+     <div id="question-container" class="mb-8 flex-grow w-full max-w-full"></div>
+     
+     <div id="network-error" class="hidden bg-red-100 text-red-700 p-4 rounded-xl mt-4 text-center font-bold text-sm border-2 border-red-300 mb-4 shadow-sm"></div>
+
+    <div class="flex pt-4 sm:pt-6 border-t-2 border-gray-100 mt-auto pb-4 sm:pb-0">
+        <button id="submit-btn" onclick="window.promptSubmit()" class="w-full py-5 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-bold text-2xl rounded-2xl shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1">✅ NỘP BÀI NGAY</button>
+     </div>
+    </div>
+   </div>
+
+   <div id="confirm-submit-modal" class="fixed inset-0 hidden flex items-center justify-center bg-black/60 backdrop-blur-sm z-50 transition-opacity">
+       <div class="bg-white rounded-3xl w-full max-w-sm shadow-2xl p-6 text-center transform transition-all scale-100 mx-4 border-2 border-gray-100">
+           <div class="text-yellow-400 mb-4 flex justify-center">
+               <svg xmlns="http://www.w3.org/2000/svg" class="h-24 w-24" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+               </svg>
+           </div>
+           <h3 class="text-3xl font-black text-gray-800 mb-2 uppercase tracking-wide">Xác nhận nộp</h3>
+           <p class="text-gray-600 mb-6 font-medium text-xl">Các em mới làm <span id="confirm-answered" class="text-red-600 font-black text-2xl">0</span>/<span id="confirm-total" class="font-black text-2xl">28</span> câu. Có chắc chắn muốn nộp bài không? Những câu chưa làm sẽ bị tính là sai.</p>
+           <div class="flex flex-col gap-3">
+               <button onclick="window.closeConfirmModal()" class="w-full py-4 bg-gray-100 text-gray-800 font-extrabold text-xl rounded-xl hover:bg-gray-200 border border-gray-200">Quay lại làm tiếp</button>
+               <button onclick="window.executeSubmit()" class="w-full py-4 bg-emerald-600 text-white font-extrabold text-xl rounded-xl hover:bg-emerald-700 shadow-md">Vẫn Nộp Luôn</button>
+           </div>
+       </div>
+   </div>
+
+   <div id="result-section" class="w-full max-w-2xl mx-auto hidden fade-in flex flex-col justify-center flex-grow pb-8">
+    <div class="glass-card rounded-none sm:rounded-3xl p-6 sm:p-8 flex flex-col justify-start border-t-8 border-green-500 bg-white shadow-2xl" id="result-content">
+    </div>
+   </div>
+
+   <div id="review-section" class="w-full max-w-4xl mx-auto hidden flex-grow flex flex-col">
+    <div class="glass-card rounded-none sm:rounded-3xl p-4 sm:p-8 flex flex-col flex-grow border-t-8 border-indigo-500 bg-white overflow-hidden shadow-2xl">
+     <div class="flex flex-col-reverse sm:flex-row items-start sm:items-center justify-between mb-6 pb-4 border-b-2 border-gray-100 gap-4">
+      <div class="flex flex-wrap gap-2">
+          <button onclick="window.goHome()" class="px-5 py-3 bg-gray-100 text-gray-700 rounded-xl font-bold hover:bg-gray-200 text-lg shadow-sm border border-gray-200">🏠 Trang chủ</button>
+          <button onclick="window.backFromReview()" class="px-5 py-3 bg-indigo-50 text-indigo-700 rounded-xl font-bold hover:bg-indigo-100 text-lg shadow-sm border border-indigo-200">🔙 Quay lại</button>
+          <button onclick="window.viewScoresAction()" class="px-5 py-3 bg-orange-50 text-orange-700 rounded-xl font-bold hover:bg-orange-100 text-lg shadow-sm border border-orange-200">🏆 Bảng điểm</button>
+      </div>
+      <h2 class="text-3xl sm:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">📝 Xem Lại Bài Làm</h2>
+     </div>
+     <div id="review-content" class="space-y-8 w-full max-w-full"></div>
+    </div>
+   </div>
+
+   <div id="scores-section" class="w-full max-w-6xl mx-auto hidden flex-grow flex flex-col">
+    <div class="glass-card rounded-none sm:rounded-3xl p-4 sm:p-8 flex flex-col flex-grow border-t-8 border-orange-500 bg-white w-full max-w-full shadow-2xl">
+     <div class="mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b-2 border-gray-100 pb-4">
+      <button onclick="window.goHome()" class="px-5 py-3 bg-gray-100 text-gray-700 rounded-xl font-bold hover:bg-gray-200 text-lg shadow-sm border border-gray-200 whitespace-nowrap">🏠 Trang chủ</button>
+      <h2 class="text-3xl sm:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-red-600 text-center flex-grow">🏆 BẢNG XẾP HẠNG</h2>
+     </div>
+     
+     <div class="flex flex-col sm:flex-row justify-between items-center mb-4 gap-4 bg-gray-50 p-4 rounded-xl border border-gray-200">
+         <div id="my-rank-display" class="text-xl font-bold text-gray-700">🏆 Thứ hạng của bạn: <span class="text-gray-400">--</span></div>
+         <div class="w-full sm:w-auto flex-grow max-w-sm">
+             <input type="text" id="search-student" oninput="window.searchStudent(this.value)" placeholder="🔍 Nhập tên học sinh để tìm..." class="w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm focus:border-orange-500 focus:ring-2 focus:ring-orange-200 outline-none transition-all font-medium">
+         </div>
+     </div>
+
+     <div class="overflow-x-auto rounded-xl border border-slate-200 flex-grow shadow-inner bg-white/50 w-full">
+      <table class="w-full text-sm sm:text-base whitespace-nowrap min-w-max">
+       <thead class="bg-gradient-to-r from-orange-500 to-red-500 text-white">
+        <tr>
+         <th class="px-3 sm:px-4 py-4 text-center font-extrabold w-16">Hạng</th>
+         <th class="px-3 sm:px-4 py-4 text-left font-extrabold">Họ tên</th>
+         <th class="px-3 sm:px-4 py-4 text-center font-extrabold">Lớp</th>
+         <th class="px-3 sm:px-4 py-4 text-center font-extrabold">Thời gian</th>
+         <th class="px-3 sm:px-4 py-4 text-center font-extrabold">Điểm</th>
+         <th class="px-2 sm:px-4 py-4 text-center font-extrabold">Xem lại</th>
+        </tr>
+       </thead>
+       <tbody id="scores-tbody" class="bg-white/80 divide-y divide-gray-100"></tbody>
+      </table>
+      <div id="no-scores" class="text-center py-12 hidden text-gray-500 font-bold text-xl">Không tìm thấy dữ liệu thi 🥲</div>
+     </div>
+     
+     <div id="pagination-controls" class="w-full flex justify-center mt-6"></div>
+    </div>
+  </div>
+
+  <script>
+    let database = null;
+    let scoresRef = null;
+
+    try {
+        const firebaseConfig = {
+            apiKey: "AIzaSyBQ9Pos8awlh9j041qDWTPFRsVIjF-kPnk",
+            authDomain: "hoctap-91691.firebaseapp.com",
+            databaseURL: "https://hoctap-91691-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "hoctap-91691",
+            storageBucket: "hoctap-91691.firebasestorage.app",
+            messagingSenderId: "1004553425319",
+            appId: "1:1004553425319:web:45d15cbae393f614c56682",
+            measurementId: "G-Q6X1TL9PRV"
+        };
+        if (typeof firebase !== 'undefined') {
+            if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+            database = firebase.database();
+            scoresRef = database.ref('bxh_tin_11_2');
+        }
+    } catch(err) { console.error("Lỗi Firebase:", err); }
+
+    let isQuizStarted = false; 
+    let currentQuestions = [];
+    let deviceId = '';
+    let allScores = [];
+    let currentStudent = {};
+    let userAnswers = {};
+    let timerInterval;
+    let quizStartTime, quizEndTime;
+    
+    let searchTerm = '';
+    let currentPage = 1;
+    const itemsPerPage = 10;
+
+    const exam_data = [
+        { id: "q1", type: "single", question: "Câu 1: Đơn vị thực hiện thao tác đọc và ghi dữ liệu cơ bản trên đĩa cứng được gọi là gì?", options: ["Được gọi là một đường ghi dữ liệu tròn đồng tâm.", "Được gọi là một cung chứa dữ liệu năm trăm byte.", "Được gọi là một liên cung thường bao gồm tám cung.", "Được gọi là một tệp dữ liệu mồ côi trên đĩa cứng."], correct: 2, explanation: "Đơn vị thực hiện thao tác đọc và ghi cơ bản của hệ điều hành trên đĩa cứng là liên cung (cluster)." },
+        { id: "q2", type: "single", question: "Câu 2: Để thực hiện việc kiểm tra lỗi ổ đĩa trên Windows, ta cần truy cập vào thẻ nào trong hộp thoại Properties?", options: ["Cần nhấp chuột vào thẻ General để kiểm tra ổ đĩa.", "Cần nhấp chuột vào thẻ Sharing để kiểm tra ổ đĩa.", "Cần nhấp chuột vào thẻ Security để kiểm tra ổ đĩa.", "Cần nhấp chuột vào thẻ Tools để kiểm tra ổ đĩa."], correct: 3, explanation: "Trong hộp thoại Properties của ổ đĩa, thẻ Tools chứa các công cụ kiểm tra (Check) và tối ưu hóa đĩa." },
+        { id: "q3", type: "single", question: "Câu 3: Thao tác nào với chuột sẽ giúp mở ra một bảng chọn chứa các lệnh có thể thực hiện với đối tượng?", options: ["Thực hiện thao tác nháy đúp chuột vào biểu tượng.", "Thực hiện thao tác nháy nút phải chuột vào biểu tượng.", "Thực hiện thao tác nháy nút trái chuột vào biểu tượng.", "Thực hiện thao tác kéo thả chuột vào một biểu tượng."], correct: 1, explanation: "Thao tác nháy nút phải chuột (click chuột phải) sẽ mở ra một bảng chọn ngữ cảnh chứa các lệnh thao tác." },
+        { id: "q4", type: "single", question: "Câu 4: Trên hệ thống đĩa cứng, mỗi cung (sector) có khả năng lưu trữ lượng dữ liệu là bao nhiêu?", options: ["Mỗi cung lưu trữ được đúng năm trăm mười hai byte.", "Mỗi cung lưu trữ được đúng một nghìn không trăm byte.", "Mỗi cung lưu trữ được đúng hai nghìn không trăm byte.", "Mỗi cung lưu trữ được đúng tám trăm mười hai byte."], correct: 0, explanation: "Mỗi cung (sector) trên đĩa cứng thường lưu trữ được 512 byte dữ liệu." },
+        { id: "q5", type: "single", question: "Câu 5: Trên giao diện Windows, thanh công việc (Taskbar) đảm nhận chức năng chính là gì?", options: ["Hiển thị tình trạng pin và loa của hệ thống máy tính.", "Giúp truy cập nhanh các phần mềm ứng dụng trong máy.", "Cung cấp không gian để lưu trữ trực tiếp các tệp tin.", "Chỉ hiển thị tên của các thư mục đang mở trên màn hình."], correct: 1, explanation: "Thanh công việc (Taskbar) cho phép người dùng truy cập nhanh hoặc chuyển đổi qua lại giữa các phần mềm ứng dụng." },
+        { id: "q6", type: "single", question: "Câu 6: Tiện ích Check disk (Kiểm tra đĩa) trên hệ điều hành có chức năng chính là gì?", options: ["Sắp xếp lại các tệp tin để tránh hiện tượng phân mảnh.", "Xóa toàn bộ các tệp tin bị nhiễm vi-rút trên ổ đĩa từ.", "Tìm và khử các lỗi đĩa như liên cung mồ côi hoặc hỏng.", "Nén các tập tin lớn để tiết kiệm không gian lưu trữ đĩa."], correct: 2, explanation: "Tiện ích Check disk giúp tìm và khắc phục các lỗi logic của đĩa cứng như liên cung mồ côi, lỗi chồng chéo hoặc đánh dấu cung hỏng vật lý." },
+        { id: "q7", type: "single", question: "Câu 7: Tiện ích đồng hồ đếm thời gian trên thiết bị di động có thể đạt đến độ chính xác ở mức nào?", options: ["Đếm chính xác đến một phần mười của một giây đồng hồ.", "Đếm chính xác đến một phần trăm của một giây đồng hồ.", "Đếm chính xác đến một phần nghìn của một giây đồng hồ.", "Đếm chính xác đến một phần triệu của một giây đồng hồ."], correct: 1, explanation: "Tính năng bấm giờ (Stopwatch) trong Đồng hồ trên thiết bị di động có thể đếm chính xác đến 1/100 giây." },
+        { id: "q8", type: "single", question: "Câu 8: Tính năng hợp mảnh đĩa (Defragment/Optimize) chỉ thực sự có tác dụng đối với thiết bị nào?", options: ["Chỉ mang lại hiệu quả hoạt động đối với loại đĩa từ.", "Chỉ mang lại hiệu quả hoạt động đối với loại đĩa quang.", "Chỉ mang lại hiệu quả hoạt động đối với đĩa thể rắn SSD.", "Mang lại hiệu quả hoạt động tốt cho mọi loại ổ đĩa lưu trữ."], correct: 0, explanation: "Việc hợp mảnh dữ liệu (Defragment) thực sự mang lại ý nghĩa tối ưu tốc độ đọc ghi đối với ổ đĩa từ (HDD)." },
+        { id: "q9", type: "single", question: "Câu 9: Hiện tượng phân mảnh đĩa cứng xảy ra bắt nguồn từ nguyên nhân chủ yếu nào dưới đây?", options: ["Do hệ điều hành ghi dữ liệu vào các liên cung không nằm liên tục nhau.", "Do người dùng thường xuyên thay đổi tên của các tệp tin trong hệ thống.", "Do ổ đĩa từ đã hoạt động quá thời gian bảo hành và bị hỏng vật lý.", "Do thiết bị di động kết nối vào máy tính mang theo vi-rút phân mảnh."], correct: 0, explanation: "Phân mảnh đĩa xảy ra khi một tệp dữ liệu lớn bị hệ điều hành chia ra ghi vào các liên cung không nằm liên tiếp nhau." },
+        { id: "q10", type: "single", question: "Câu 10: Mục đích lớn nhất của việc sử dụng công cụ tối ưu hóa, hợp mảnh (Defragment) là gì?", options: ["Ghi lại toàn bộ dữ liệu vào một thư mục gốc để dễ dàng tìm kiếm.", "Tổ chức lại tệp sao cho liên tục để đầu đọc giảm di chuyển cơ học.", "Sao lưu các tệp tin quan trọng sang một ổ cứng dự phòng an toàn.", "Phát hiện và loại bỏ các liên cung đã bị hỏng hóc về mặt vật lý."], correct: 1, explanation: "Công cụ hợp mảnh gom các phần dữ liệu của tệp lại gần nhau, giúp giảm bớt thao tác dịch chuyển cơ học của đầu từ." },
+        { id: "q11", type: "single", question: "Câu 11: Trong hệ thống tệp của ổ cứng, liên cung 'mồ côi' là thuật ngữ dùng để chỉ hiện tượng gì?", options: ["Là phần dữ liệu bị ghi đè lên bởi nhiều tệp tin ở cùng một vị trí.", "Là một liên cung vật lý bị xước và hoàn toàn không thể đọc được.", "Là phần dữ liệu có trên đĩa nhưng đã bị mất liên kết với tệp tin.", "Là vùng dung lượng bị chiếm dụng bởi tiện ích hệ thống Windows."], correct: 2, explanation: "Liên cung mồ côi (lost cluster) chứa dữ liệu nhưng hệ điều hành không ghi nhận nó thuộc về bất kỳ tệp tin nào." },
+        { id: "q12", type: "single", question: "Câu 12: Thanh trạng thái (Status bar) trên hệ điều hành máy tính được sử dụng nhằm mục đích gì?", options: ["Chứa toàn bộ các biểu tượng đại diện cho tệp tin trên màn hình nền.", "Hiển thị thông tin trạng thái hoạt động như mạng, pin, hoặc mức loa.", "Đóng vai trò làm môi trường trung gian giữa ứng dụng và phần cứng.", "Cung cấp vùng nhập lệnh để người dùng tương tác với hệ điều hành."], correct: 1, explanation: "Thanh trạng thái thường nằm ở mép màn hình, hiển thị các icon như pin, loa, kết nối wifi..." },
+        { id: "q13", type: "single", question: "Câu 13: Tiện ích danh bạ trên thiết bị di động mang lại khả năng quản lý nâng cao nào cho người dùng?", options: ["Hỗ trợ tạo nhóm, xóa nhóm và chia sẻ thông tin người dùng dễ dàng.", "Khôi phục lại những số điện thoại đã bị xóa vĩnh viễn từ nhiều năm trước.", "Kiểm tra mức độ uy tín của số điện thoại dựa trên mạng xã hội Facebook.", "Tự động gọi điện cho danh sách khách hàng để thực hiện việc quảng cáo."], correct: 0, explanation: "Tiện ích danh bạ hỗ trợ thêm mới, chỉnh sửa, tạo nhóm hoặc chia sẻ thông tin liên lạc." },
+        { id: "q14", type: "single", question: "Câu 14: Các chương trình như bộ gõ tiếng Việt Unikey hay phần mềm nén tệp Zip thuộc nhóm nào?", options: ["Thuộc nhóm trình điều khiển thiết bị ngoại vi chuyên dụng.", "Thuộc nhóm tiện ích hỗ trợ nâng cao hiệu quả dùng máy.", "Thuộc nhóm tệp tin hệ thống không thể xóa bỏ hoặc sửa.", "Thuộc nhóm hệ điều hành di động mã nguồn mở miễn phí."], correct: 1, explanation: "Đây là các phần mềm tiện ích hỗ trợ, giúp người dùng làm việc hiệu quả hơn trên máy tính." },
+        { id: "q15", type: "single", question: "Câu 15: Trong công cụ File Explorer, việc nháy đúp chuột vào một tệp ứng dụng sẽ dẫn đến kết quả gì?", options: ["Mở ra một bảng chọn chứa các lệnh có thể thực hiện với tệp tin đó.", "Kích hoạt và đưa phần mềm ứng dụng tương ứng vào trạng thái hoạt động.", "Tạo ra một bản sao lưu an toàn của tệp tin tại chính thư mục hiện hành.", "Di chuyển tệp tin ứng dụng đó vào thùng rác của hệ điều hành Windows."], correct: 1, explanation: "Khi nháy đúp chuột vào một tệp ứng dụng (ví dụ .exe), hệ điều hành sẽ kích hoạt chạy phần mềm đó." },
+        { id: "q16", type: "single", question: "Câu 16: Tính năng Quản lý ứng dụng trên thiết bị di động cho phép người dùng thực hiện thao tác gì?", options: ["Cho phép xem danh sách ứng dụng đã cài đặt và xóa những ứng dụng thừa.", "Tự động lập trình và thay đổi mã nguồn của các ứng dụng trên điện thoại.", "Cấp phát thêm lượng lớn bộ nhớ RAM cho những ứng dụng đang chạy chậm.", "Đồng bộ hóa toàn bộ dữ liệu ứng dụng với máy tính để bàn qua đường mạng."], correct: 0, explanation: "Tính năng Quản lý ứng dụng (Apps) giúp theo dõi dung lượng và gỡ bỏ ứng dụng không cần thiết." },
+        { id: "q17", type: "single", question: "Câu 17: Máy tính của An hoạt động rất chậm, ổ cứng HDD phát ra tiếng kêu do đầu từ đọc/ghi phải di chuyển liên tục qua nhiều đường ghi. An nên sử dụng tiện ích nào để tối ưu hoá?", options: ["Bạn An nên sử dụng tiện ích Check disk để sửa lỗi liên cung mồ côi.", "Bạn An nên sử dụng tiện ích Optimize để hợp mảnh dữ liệu đĩa từ.", "Bạn An nên sử dụng tiện ích Disk Cleanup để xóa tệp tin hệ thống.", "Bạn An nên mở phần mềm trình duyệt web tải về bản cập nhật mới."], correct: 1, explanation: "Máy chạy chậm và ổ cứng HDD kêu do đầu từ dịch chuyển nhiều là biểu hiện của phân mảnh. Cần dùng Optimize để hợp mảnh." },
+        { id: "q18", type: "single", question: "Câu 18: Sau sự cố cúp điện đột ngột, một số dữ liệu trên ổ cứng của Tuấn bị báo lỗi 'chồng chéo' lên nhau. Tuấn cần thao tác với chức năng nào trong thẻ Tools để xử lý triệt để?", options: ["Bạn Tuấn cần nhấp vào nút Optimize để sắp xếp lại các phần mềm.", "Bạn Tuấn cần nhấp vào nút Check để tìm và khắc phục các lỗi ổ đĩa.", "Bạn Tuấn cần nhấp vào tab Security để cấp quyền truy cập tài liệu.", "Bạn Tuấn cần nhấp vào tab General để giải phóng dung lượng ổ đĩa."], correct: 1, explanation: "Lỗi chồng chéo (cross-linked) có thể được sửa chữa bằng tiện ích Check disk (nút Check trong thẻ Tools)." },
+        { id: "q19", type: "single", question: "Câu 19: Để tạo một thư mục mới chứa ảnh trên màn hình nền Windows một cách nhanh chóng nhất, quy trình chuẩn xác người dùng nên thao tác với chuột là gì?", options: ["Thực hiện nháy đúp chuột vào màn hình nền để gọi lệnh tạo thư mục mới.", "Thực hiện nháy phải chuột vào vùng trống để mở bảng chọn và nhấn tạo.", "Kéo thả một tệp văn bản bất kỳ ra màn hình nền để biến thành thư mục.", "Nhấn nút Start trên thanh công việc rồi tìm kiếm từ khóa tạo thư mục."], correct: 1, explanation: "Nháy nút phải chuột vào khoảng trống màn hình nền -> chọn New -> Folder là thao tác tạo thư mục nhanh nhất." },
+        { id: "q20", type: "single", question: "Câu 20: Thầy Hùng muốn tổ chức thi chạy 100 mét và cần thiết bị đếm giờ với độ chính xác cao nhất (đến phần trăm giây). Thầy nên ứng dụng tiện ích nào trên điện thoại thông minh?", options: ["Thầy nên mở ứng dụng Đồng hồ để dùng tính năng bấm giờ thể thao.", "Thầy nên mở ứng dụng Danh bạ để tạo một nhóm học sinh chạy nhanh.", "Thầy nên mở ứng dụng Máy tính để trừ đi thời gian xuất phát của trò.", "Thầy nên mở ứng dụng Lịch để ghi nhận lại ngày giờ hoàn thành bài thi."], correct: 0, explanation: "Ứng dụng Đồng hồ trên thiết bị di động có tích hợp tính năng Bấm giờ thể thao rất chính xác." },
+        { id: "q21", type: "single", question: "Câu 21: Bạn Lan mới mua một chiếc ổ cứng thể rắn SSD tốc độ cao và muốn thực hiện tính năng hợp mảnh (Defragment) mỗi ngày. Lời khuyên nào sau đây là chính xác dành cho Lan?", options: ["Rất tốt vì thao tác này giúp ổ cứng thể rắn SSD tăng gấp đôi tuổi thọ.", "Không tốt vì tiện ích hợp mảnh chỉ thực sự có tác dụng đối với đĩa từ.", "Không tốt vì ổ cứng SSD không bao giờ chứa các liên cung trống rỗng.", "Rất tốt vì Windows luôn yêu cầu phải hợp mảnh cho mọi loại thiết bị."], correct: 1, explanation: "Ổ cứng thể rắn SSD không sử dụng đầu đọc cơ học nên việc hợp mảnh là không cần thiết, thậm chí làm giảm tuổi thọ ổ SSD." },
+        { id: "q22", type: "single", question: "Câu 22: Điện thoại Android của Bình liên tục thông báo hết dung lượng lưu trữ do cài đặt quá nhiều trò chơi. Bình cần phải truy cập vào tiện ích nào trong hệ thống để giải quyết sự cố?", options: ["Vào tiện ích Đồng hồ báo thức để lên lịch tự động xóa tập tin hình ảnh.", "Vào mục Quản lý ứng dụng trong Cài đặt để gỡ bỏ phần mềm không dùng.", "Vào phần Danh bạ cá nhân để xóa những số điện thoại không hay liên lạc.", "Vào trình duyệt web để tải ngay một phần mềm tối ưu hóa ổ cứng cho máy."], correct: 1, explanation: "Bình cần gỡ bớt ứng dụng để giải phóng bộ nhớ lưu trữ thông qua mục Quản lý ứng dụng trong cài đặt." },
+        { id: "q23", type: "single", question: "Câu 23: Khi mở công cụ File Explorer tìm tài liệu, bạn Tuấn vô tình thực hiện thao tác nháy đúp chuột trái vào một tệp có tên 'BaiTap.docx'. Phản ứng tiếp theo của hệ điều hành là gì?", options: ["Máy tính sẽ tự động di chuyển tệp tin này vào thư mục thùng rác hệ thống.", "Hệ điều hành sẽ kích hoạt phần mềm soạn thảo văn bản để mở tệp tin đó.", "Màn hình sẽ xuất hiện một bảng thông báo lỗi do thao tác chuột chưa chuẩn.", "Tập tin đó sẽ tự động bị đổi tên ngẫu nhiên theo cấu trúc của hệ điều hành."], correct: 1, explanation: "Nháy đúp vào tệp tin tài liệu (.docx), hệ điều hành sẽ tự động gọi phần mềm soạn thảo tương ứng (như MS Word) để mở nó." },
+        { id: "q24", type: "single", question: "Câu 24: Lan đang mở máy tính để học trực tuyến nhưng biểu tượng loa bị đánh dấu gạch chéo khiến âm thanh bị tắt. Lan cần điều hướng chuột đến khu vực nào trên màn hình để bật lại?", options: ["Cần kiểm tra khu vực cửa sổ ứng dụng để điều chỉnh lại thông số âm thanh.", "Cần kiểm tra khu vực thanh trạng thái (Status bar) để thay đổi mức loa.", "Cần kiểm tra vùng lệnh trên công cụ File Explorer để kích hoạt hệ thống loa.", "Cần kiểm tra khu vực danh mục ứng dụng của Ubuntu để khởi động lại máy."], correct: 1, explanation: "Biểu tượng loa để điều chỉnh âm lượng luôn được đặt trên thanh trạng thái (Status bar / System tray)." },
+
+        { id: "qII_1", type: "tf_cluster", context: "Câu 1: Bạn An đang học cách thao tác cơ bản trên giao diện đồ họa và quản lý tệp tin của hệ điều hành Windows. Hãy xác định những nhận xét của An là Đúng hay Sai:", items: [
+            { id: "a", text: "a) Trên màn hình nền Windows, thanh trạng thái (Status bar) thường nằm ở phía góc dưới, đảm nhận việc hiển thị các thông tin như pin, kết nối mạng, mức loa.", correct: true, expl: "Thanh trạng thái hiển thị thông tin trạng thái hoạt động như pin, mạng, âm lượng." },
+            { id: "b", text: "b) Khi An muốn đổi tên một thư mục học tập, thao tác nháy đúp chuột vào biểu tượng thư mục đó sẽ làm xuất hiện bảng chọn lệnh đổi tên.", correct: false, expl: "Nháy đúp chuột là lệnh mở. Để đổi tên, cần nháy phải chuột chọn Rename hoặc nháy chuột 2 lần cách quãng." },
+            { id: "c", text: "c) Theo tổ chức cửa sổ của tiện ích File Explorer, vùng lệnh được bố trí ở cột dọc bên trái màn hình để hiển thị danh sách các tệp tin hiện hành.", correct: false, expl: "Trong File Explorer, vùng lệnh nằm ở thanh Ribbon phía trên, cột bên trái là Navigation Pane." },
+            { id: "d", text: "d) Để khắc phục hiện tượng dữ liệu bị mất liên kết (liên cung mồ côi) trong ổ đĩa D, An chỉ cần kích đúp chuột trái thẳng vào tệp tin bị lỗi đó để hệ thống tự động sửa.", correct: false, expl: "Lỗi liên cung mồ côi phải được khắc phục bằng công cụ chuyên dụng như Check Disk, không thể tự sửa bằng cách nháy đúp." }
+        ]},
+        { id: "qII_2", type: "tf_cluster", context: "Câu 2: Thầy Hùng hướng dẫn cả lớp thực hành sử dụng các tiện ích bảo trì, tối ưu hoá phần cứng (Check disk, Optimize) trên hệ điều hành máy tính cá nhân. Hãy xét tính Đúng/Sai trong các phát biểu sau:", items: [
+            { id: "a", text: "a) Tiện ích hợp mảnh (Defragment / Optimize) có tác dụng tổ chức lại tệp tin sao cho các liên cung của một tệp được ghi nối tiếp liên tục nhau.", correct: true, expl: "Hợp mảnh đĩa giúp sắp xếp các khối dữ liệu của tệp tin liên tục nhau trên bề mặt đĩa." },
+            { id: "b", text: "b) Trong ổ đĩa cứng, quá trình đọc/ghi dữ liệu của hệ điều hành luôn được thực hiện theo đơn vị tính nhỏ nhất là một cung (sector) tương đương 512 byte.", correct: false, expl: "Đơn vị đọc/ghi dữ liệu của hệ điều hành trên ổ đĩa cứng là Liên cung (Cluster), không phải Cung (Sector)." },
+            { id: "c", text: "c) Hiện tượng dữ liệu bị 'chồng chéo' xảy ra khi có tình trạng vài tệp tin hệ thống cùng liên kết đến chung một vị trí liên cung (cluster) duy nhất.", correct: true, expl: "Lỗi chồng chéo xảy ra khi nhiều tệp tin khác nhau cùng được hệ điều hành trỏ đến chung một liên cung." },
+            { id: "d", text: "d) Khi nhà trường trang bị loạt ổ cứng thể rắn SSD tốc độ siêu cao mới, thầy Hùng phải hướng dẫn học trò thường xuyên nhấn nút Optimize thay vì nút Check để nâng cao tuổi thọ linh kiện.", correct: false, expl: "Việc dùng Optimize (hợp mảnh) thường xuyên trên ổ SSD là không cần thiết và có thể làm giảm tuổi thọ ổ đĩa." }
+        ]},
+        { id: "qII_3", type: "tf_cluster", context: "Câu 3: Bạn Lan vừa được tặng một chiếc điện thoại thông minh và đang hào hứng khám phá các tiện ích cơ bản tích hợp sẵn trong hệ điều hành di động. Hãy đánh giá độ chính xác trong các lập luận của Lan:", items: [
+            { id: "a", text: "a) Tiện ích danh bạ trên hệ điều hành di động cho phép quản lý theo nhóm, nhưng mỗi số điện thoại cá nhân chỉ được phép thuộc về một nhóm duy nhất.", correct: false, expl: "Một liên hệ (số điện thoại) trong Danh bạ có thể được thêm vào nhiều nhóm khác nhau." },
+            { id: "b", text: "b) Tiện ích đồng hồ trên các thiết bị di động hiện đại có thể đếm thời gian với độ chính xác rất cao, cụ thể là lên đến 1% giây.", correct: true, expl: "Ứng dụng đồng hồ (tính năng Bấm giờ) đo chính xác đến hàng phần trăm giây." },
+            { id: "c", text: "c) Bằng cách truy cập vào tiện ích 'Quản lý ứng dụng', Lan có thể dễ dàng kiểm tra danh sách các phần mềm đã tải về và tiến hành gỡ bỏ những ứng dụng không dùng đến.", correct: true, expl: "Trình Quản lý ứng dụng cho phép xem danh sách, dung lượng và hỗ trợ gỡ cài đặt phần mềm." },
+            { id: "d", text: "d) Để chuẩn bị soạn một báo cáo bài tập lớn dài 30 trang gửi cô giáo, Lan nên mở ngay ứng dụng tiện ích 'Đặt lịch, nhắc việc' tích hợp sẵn trong điện thoại để soạn thảo.", correct: false, expl: "Tiện ích lịch/nhắc việc chỉ dành cho ghi chú ngắn. Để soạn báo cáo dài, cần dùng phần mềm soạn thảo văn bản chuyên dụng." }
+        ]},
+        { id: "qII_4", type: "tf_cluster", context: "Câu 4: Bạn Tuấn được phân công hỗ trợ phòng tin học xử lý các sự cố về ổ đĩa. Tuấn đang rà soát lại lý thuyết về cấu trúc đĩa và các tiện ích bảo trì. Hãy xác định tính Đúng/Sai của các nhận định sau:", items: [
+            { id: "a", text: "a) Về mặt vật lý, bề mặt ghi dữ liệu của đĩa từ được chia thành các đường tròn đồng tâm và chúng được gọi là các đường ghi (track).", correct: true, expl: "Bề mặt đĩa từ chia thành các đường ghi dữ liệu tròn đồng tâm gọi là track." },
+            { id: "b", text: "b) Sự phân mảnh dữ liệu trên đĩa cứng xảy ra do hệ điều hành phải tìm kiếm các vùng trống rải rác trên nhiều đường ghi khác nhau để lưu tệp tin.", correct: true, expl: "Khi tệp lớn được ghi vào các vùng trống rải rác, đó chính là hiện tượng phân mảnh." },
+            { id: "c", text: "c) Việc sử dụng tiện ích hợp mảnh (Optimize) cho đĩa từ sẽ khiến đầu đọc di chuyển cơ học liên tục nhiều hơn, do đó làm chậm đáng kể tốc độ máy tính.", correct: false, expl: "Hợp mảnh đĩa từ giúp tệp nằm liên tục, làm GIẢM sự di chuyển cơ học của đầu đọc, TĂNG tốc máy tính." },
+            { id: "d", text: "d) Khi phát hiện một ổ đĩa thường xuyên báo lỗi không thể đọc/ghi dữ liệu do hỏng vật lí (bad sector), Tuấn cần thao tác nhấp phải chuột vào ổ đĩa, chọn Properties, mở thẻ Tools và chọn chức năng 'Check'.", correct: true, expl: "Lỗi hỏng vật lí (bad sector) có thể được cô lập bằng cách dùng tính năng Check trong thẻ Tools." }
+        ]}
+    ];
+
+    window.startQuizAction = function() {
+        try {
+            const errDiv = document.getElementById('login-error');
+            if(errDiv) errDiv.classList.add('hidden');
+            
+            const nameEl = document.getElementById('hoTen');
+            const lopEl = document.getElementById('lop');
+            
+            const name = nameEl.value.trim();
+            const lop = lopEl.value.trim();
+            
+            if (!name || !lop) {
+                if(errDiv) {
+                    errDiv.innerText = "⚠️ Vui lòng nhập đầy đủ Họ tên và Lớp!";
+                    errDiv.classList.remove('hidden');
+                } else {
+                    alert("⚠️ Vui lòng nhập đầy đủ Họ tên và Lớp!");
+                }
+                return;
+            }
+            
+            currentStudent = { hoTen: name, lop: lop, maDe: 'de2', tenDe: 'Đề Trắc Nghiệm Bài 2' };
+            currentQuestions = JSON.parse(JSON.stringify(exam_data));
+            quizStartTime = new Date();
+            
+            setTimeout(() => { isQuizStarted = true; }, 1000);
+            showSection('quiz');
+            
+            userAnswers = {};
+            window.renderAllQuestions();
+            startTimer(45 * 60); 
+            
+        } catch (error) {
+            alert("❌ Đã xảy ra lỗi khởi tạo bài thi: " + error.message + ".");
+            console.error(error);
+        }
+    };
+
+    window.viewScoresAction = function() {
+        searchTerm = ''; 
+        document.getElementById('search-student').value = '';
+        currentPage = 1;
+
+        if (database) {
+            scoresRef.once('value').then((snapshot) => {
+                const data = snapshot.val();
+                allScores = data ? Object.keys(data).map(key => ({...data[key], id: key})) : [];
+                window.renderScores();
+                showSection('scores');
+            });
+        }
+    };
+
+    window.searchStudent = function(val) {
+        searchTerm = val.toLowerCase();
+        currentPage = 1;
+        window.renderScores();
+    };
+
+    window.changePage = function(page) {
+        currentPage = page;
+        window.renderScores();
+    };
+
+    window.goHome = function() {
+        if(document.getElementById('hoTen')) document.getElementById('hoTen').value = ''; 
+        if(document.getElementById('lop')) document.getElementById('lop').value = ''; 
+        clearInterval(timerInterval);
+        showSection('login');
+    };
+
+    function getTotalScoreItems() { return currentQuestions.length; }
+
+    function getAnsweredCount() {
+        let count = 0;
+        currentQuestions.forEach(q => {
+            if (q.type === 'single') {
+                if (userAnswers[q.id] !== undefined) count++;
+            } else if (q.type === 'tf_cluster') {
+                let answeredItems = 0;
+                q.items.forEach(item => {
+                    if (userAnswers[q.id + '_' + item.id] !== undefined) answeredItems++;
+                });
+                if (answeredItems === 4) count++; 
+            }
+        });
+        return count;
+    }
+
+   window.selectAnswer = function(qId, val, type) {
+        if (type === 'tf') {
+            userAnswers[qId] = val;
+            const btnT = document.getElementById(`btnT_${qId}`);
+            const btnF = document.getElementById(`btnF_${qId}`);
+            if (val === true) {
+                btnT.classList.add('selected'); btnT.classList.remove('bg-white');
+                btnF.classList.remove('selected'); btnF.classList.add('bg-white');
+            } else {
+                btnF.classList.add('selected'); btnF.classList.remove('bg-white');
+                btnT.classList.remove('selected'); btnT.classList.add('bg-white');
+            }
+        } else if (type === 'single') {
+            userAnswers[qId] = val;
+        }
+        
+        requestAnimationFrame(() => {
+            const pgText = document.getElementById('progress-text');
+            if(pgText) pgText.innerText = `${getAnsweredCount()}/${getTotalScoreItems()}`;
+        });
+    };
+
+    window.renderAllQuestions = function() {
+        if (!currentQuestions || currentQuestions.length === 0) return;
+        const container = document.getElementById('question-container');
+        if(!container) return;
+
+        let html = '';
+        let currentType = '';
+
+        currentQuestions.forEach((q) => {
+            if (q.type !== currentType) {
+                currentType = q.type;
+                let headerText = ''; let roman = '';
+                if(currentType === 'single') { headerText = 'TRẮC NGHIỆM NHIỀU PHƯƠNG ÁN LỰA CHỌN'; roman = 'I'; }
+                if(currentType === 'tf_cluster') { headerText = 'TRẮC NGHIỆM ĐÚNG/SAI'; roman = 'II'; }
+                
+                html += `<div class="flex items-center gap-3 mt-8 mb-4 border-b-2 border-blue-100 pb-3"><span class="bg-gradient-to-br from-blue-500 to-indigo-600 text-white w-14 h-14 flex items-center justify-center rounded-xl font-black text-2xl shadow-md">${roman}</span><h3 class="text-2xl sm:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-700 to-indigo-700 tracking-wide uppercase">${headerText}</h3></div>`;
+            }
+
+            html += `<div class="fade-in w-full bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-blue-100 relative mb-6 hover:shadow-md transition-shadow">`;
+            
+            if (q.type === 'single') {
+                const uAns = userAnswers[q.id];
+                html += `<div class="flex gap-4 mb-5"><div class="w-full math-scroll"><p class="text-xl font-bold text-red-600 mt-1 leading-snug tracking-tight">${q.question}</p></div></div>`;
+                html += `<div class="space-y-4 md:pl-6 mt-6">`;
+                q.options.forEach((opt, i) => {
+                    const isChecked = (uAns === i) ? 'checked' : '';
+                    html += `<div class="flex items-center">
+                        <input type="radio" id="opt_${q.id}_${i}" name="q_${q.id}" value="${i}" class="hidden single-radio" ${isChecked} onchange="window.selectAnswer('${q.id}', ${i}, 'single')">
+                        <label for="opt_${q.id}_${i}" class="option-label w-full p-4 border-2 border-gray-200 rounded-2xl flex items-center gap-4 bg-white shadow-sm font-bold text-lg hover:border-blue-300">
+                            <div class="w-12 h-12 rounded-xl border-2 border-gray-300 flex items-center justify-center text-lg font-black text-gray-400 flex-shrink-0 bg-gray-50">${String.fromCharCode(65 + i)}</div>
+                            <div class="text-gray-700 leading-relaxed math-scroll flex-1">${opt}</div>
+                        </label>
+                    </div>`;
+                });
+                html += `</div>`;
+            } 
+            else if (q.type === 'tf_cluster') {
+                html += `<div class="bg-red-50 text-red-700 p-5 rounded-xl font-bold mb-4 border-2 border-red-100 text-xl leading-relaxed math-scroll">${q.context}</div>`;
+                html += `<div class="space-y-4 mt-6">`;
+                q.items.forEach((item) => {
+                    const combinedId = q.id + '_' + item.id;
+                    let ans = userAnswers[combinedId];
+                    let btnT = ans === true ? 'selected' : 'bg-white';
+                    let btnF = ans === false ? 'selected' : 'bg-white';
+
+                    html += `<div class="p-5 border-2 border-gray-100 rounded-2xl bg-white shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4 transition-all hover:border-blue-200">
+                        <div class="font-bold text-gray-800 flex-1 text-lg math-scroll">${item.text}</div>
+                        <div class="flex gap-3 shrink-0">
+                            <button id="btnT_${combinedId}" onclick="window.selectAnswer('${combinedId}', true, 'tf')" class="btn-tf w-24 sm:w-28 py-3 rounded-xl font-extrabold text-lg ${btnT}">ĐÚNG</button>
+                            <button id="btnF_${combinedId}" onclick="window.selectAnswer('${combinedId}', false, 'tf')" class="btn-tf w-24 sm:w-28 py-3 rounded-xl font-extrabold text-lg ${btnF}">SAI</button>
+                        </div>
+                    </div>`;
+                });
+                html += `</div>`;
+            } 
+            html += `</div>`;
+        });
+        
+        container.innerHTML = html;
+        const pgText = document.getElementById('progress-text');
+        if(pgText) pgText.innerText = `${getAnsweredCount()}/${getTotalScoreItems()}`;
+    };
+
+    function formatDuration(sec) {
+        const m = Math.floor(sec / 60); const s = sec % 60;
+        return `${m}p ${s}s`;
+    }
+
+    window.promptSubmit = function() {
+        if (!isQuizStarted) return;
+        const total = getTotalScoreItems();
+        const answered = getAnsweredCount();
+        
+        document.getElementById('confirm-answered').innerText = answered;
+        document.getElementById('confirm-total').innerText = total;
+        
+        const modal = document.getElementById('confirm-submit-modal');
+        modal.classList.remove('hidden');
+    };
+
+    window.closeConfirmModal = function() {
+        const modal = document.getElementById('confirm-submit-modal');
+        modal.classList.add('hidden');
+    };
+
+    window.executeSubmit = function() {
+        window.closeConfirmModal();
+        isQuizStarted = false; 
+        quizEndTime = new Date();
+        clearInterval(timerInterval);
+        
+        let score = 0;
+
+        currentQuestions.forEach(q => {
+            if (q.type === 'single') {
+                if (userAnswers[q.id] === q.correct) score += 0.25;
+            } else if (q.type === 'tf_cluster') {
+                let correctCount = 0;
+                q.items.forEach(item => { 
+                    if (userAnswers[q.id + '_' + item.id] === item.correct) {
+                        correctCount++;
+                    }
+                });
+                
+                // Áp dụng logic tính điểm mới cho phần trắc nghiệm đúng/sai
+                if (correctCount === 1) score += 0.1;
+                else if (correctCount === 2) score += 0.25;
+                else if (correctCount === 3) score += 0.5;
+                else if (correctCount === 4) score += 1.0;
+            }
+        });
+
+        score = score.toFixed(2); 
+
+        const record = {
+            hoTen: currentStudent.hoTen, lop: currentStudent.lop, tenDe: currentStudent.tenDe, maDe: currentStudent.maDe,
+            diem: parseFloat(score),
+            startTime: quizStartTime.toLocaleTimeString('vi-VN') + ' ' + quizStartTime.toLocaleDateString('vi-VN'),
+            endTime: quizEndTime.toLocaleTimeString('vi-VN') + ' ' + quizEndTime.toLocaleDateString('vi-VN'),
+            duration: formatDuration(Math.floor((quizEndTime - quizStartTime) / 1000)),
+            thoiGian: new Date().toISOString(), deviceId: deviceId,
+            userAnswers: userAnswers 
+        };
+        
+        if(database) {
+            scoresRef.push(record, () => { window.showModalResult(score, record.duration); });
+        } else {
+            window.showModalResult(score, record.duration);
+        }
+    };
+
+    window.showModalResult = function(score, dur) {
+        ['login', 'quiz', 'scores', 'review'].forEach(s => {
+            const el = document.getElementById(s+'-section');
+            if(el) el.classList.add('hidden');
+        });
+        const resEl = document.getElementById('result-section');
+        if(resEl) resEl.classList.remove('hidden');
+        const contentEl = document.getElementById('result-content');
+        if(contentEl) contentEl.innerHTML = `
+        <div class="flex justify-start mb-4">
+            <button onclick="window.goHome()" class="px-5 py-3 bg-gray-100 text-gray-700 rounded-xl font-bold hover:bg-gray-200 transition-colors shadow-sm border border-gray-200 text-lg">🏠 Trang chủ</button>
+        </div>
+        <div class="text-center">
+            <div class="text-7xl mb-4 animate-bounce">🎉</div>
+            <h3 class="text-3xl font-black text-emerald-600 mb-2">Hoàn thành bài thi!</h3>
+            <p class="text-gray-600 mb-6 mt-2"><span class="font-extrabold text-blue-700 text-xl uppercase tracking-wider">${currentStudent.hoTen} - Lớp ${currentStudent.lop}</span></p>
+        </div>
+        <div class="bg-blue-50 border-2 border-blue-100 rounded-3xl p-8 mb-6 shadow-inner relative text-center">
+            <div class="text-base text-blue-500 font-extrabold mb-2 uppercase tracking-widest">ĐIỂM SỐ CỦA BẠN</div>
+            <div class="text-7xl font-black text-blue-600 drop-shadow-sm">${score} <span class="text-3xl text-gray-400">/ 10</span></div>
+            <div class="text-lg font-extrabold text-indigo-600 mt-5 bg-white inline-block px-6 py-3 rounded-full shadow-sm border border-blue-100">Thời gian làm bài: ${dur}</div>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+            <button onclick="window.reviewQuiz()" class="w-full py-4 bg-gradient-to-r from-indigo-500 to-purple-500 text-white rounded-xl font-extrabold shadow-sm hover:shadow-md transition-colors text-xl">📝 Xem lại bài</button>
+            <button onclick="window.viewScoresAction()" class="w-full py-4 bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-xl font-extrabold shadow-sm hover:shadow-md transition-colors text-xl">🏆 Bảng điểm</button>
+        </div>`;
+    };
+
+    function getStatusBadge(isCorrect, isUnanswered) {
+        if (isUnanswered) return `<div class="mt-4 mb-2 inline-block px-4 py-2 bg-yellow-100 text-yellow-800 text-base font-black rounded-lg border border-yellow-300 shadow-sm">⚠️ BẠN CHƯA LÀM CÂU NÀY</div>`;
+        if (isCorrect) return `<div class="mt-4 mb-2 inline-block px-4 py-2 bg-emerald-100 text-emerald-800 text-base font-black rounded-lg border border-emerald-300 shadow-sm">✅ BẠN LÀM ĐÚNG RỒI</div>`;
+        return `<div class="mt-4 mb-2 inline-block px-4 py-2 bg-red-100 text-red-800 text-base font-black rounded-lg border border-red-300 shadow-sm">❌ BẠN LÀM SAI RỒI</div>`;
+    }
+
+    window.reviewQuiz = function() {
+        showSection('review');
+        const container = document.getElementById('review-content');
+        if(!container) return;
+        let html = '';
+
+        currentQuestions.forEach((q) => {
+            if (q.type === 'single') {
+                let uAns = userAnswers[q.id];
+                let isUnanswered = (uAns === undefined);
+                let isCorrect = (uAns === q.correct);
+                let borderColor = isCorrect ? 'border-emerald-300 bg-emerald-50' : 'border-red-300 bg-red-50';
+                
+                html += `<div class="p-6 border-2 rounded-2xl shadow-sm mb-6 ${borderColor}">`;
+                html += `<div class="font-bold text-xl text-red-600 mb-5 leading-relaxed math-scroll">${q.question}</div>`;
+                html += `<div class="space-y-3">`;
+                
+                q.options.forEach((opt, i) => {
+                    let optBg = ''; let iconHtml = '';
+                    if (q.correct === i) {
+                        optBg = 'bg-emerald-100 text-emerald-900 border-emerald-400 border-2'; 
+                        iconHtml = '<div class="text-3xl drop-shadow-sm ml-auto pl-2 flex-shrink-0">✅</div>';
+                    } else if (uAns === i && !isCorrect) {
+                        optBg = 'bg-red-100 text-red-900 line-through border-red-400 border-2'; 
+                        iconHtml = '<div class="text-3xl drop-shadow-sm ml-auto pl-2 flex-shrink-0">❌</div>';
+                    } else { optBg = 'bg-white text-slate-700 border border-slate-200'; }
+
+                    html += `<div class="p-4 rounded-xl ${optBg} flex items-center gap-4"><div class="w-10 h-10 flex items-center justify-center rounded-lg bg-white/50 text-base font-black shadow-sm flex-shrink-0">${String.fromCharCode(65 + i)}</div><div class="${(q.correct === i || uAns === i) ? 'font-semibold' : 'font-medium'} flex-1 text-lg math-scroll">${opt}</div>${iconHtml}</div>`;
+                });
+                html += `</div>`;
+                
+                html += getStatusBadge(isCorrect, isUnanswered); 
+                
+                if (q.explanation) {
+                    html += `<div class="review-explanation mt-3 pt-3 border-t-2 border-gray-200"><p class="text-base font-black uppercase tracking-widest text-blue-600 mb-2">💡 Giải chi tiết:</p><p class="text-black font-medium text-lg leading-loose math-scroll">${q.explanation}</p></div>`;
+                }
+                html += `</div>`;
+            } 
+            else if (q.type === 'tf_cluster') {
+                html += `<div class="p-6 border-2 border-indigo-200 bg-indigo-50 rounded-2xl shadow-sm mb-6">`;
+                html += `<div class="font-bold text-xl text-indigo-800 mb-5 math-scroll">${q.context}</div>`;
+                html += `<div class="space-y-5">`;
+                q.items.forEach(item => {
+                    let uAns = userAnswers[q.id + '_' + item.id];
+                    let isUnanswered = (uAns === undefined);
+                    let isCorrect = (uAns === item.correct);
+                    let iconHtml = isCorrect ? '✅' : '❌';
+                    let ansText = item.correct ? 'ĐÚNG' : 'SAI';
+
+                    html += `<div class="p-5 bg-white border border-indigo-100 rounded-xl shadow-sm">
+                        <div class="font-bold text-gray-800 text-lg math-scroll">${item.text}</div>
+                        <div class="mt-3 flex items-center justify-between border-b border-gray-100 pb-3">
+                            <span class="text-base font-bold text-gray-500">Bạn chọn: <span class="${isUnanswered ? 'text-gray-400' : 'text-blue-600'} font-black uppercase">${isUnanswered ? 'Chưa trả lời' : (uAns?'Đúng':'Sai')}</span></span>
+                            <span class="font-black text-xl ${isCorrect ? 'text-emerald-500' : 'text-red-500'}">Đáp án: ${ansText} ${iconHtml}</span>
+                        </div>`;
+                        
+                    html += getStatusBadge(isCorrect, isUnanswered);
+                    if(item.expl) {
+                        html += `<div class="review-explanation mt-3 pt-3 text-lg text-gray-700 font-medium leading-relaxed math-scroll"><span class="text-indigo-500 font-bold uppercase">Giải chi tiết:</span><br> ${item.expl}</div>`;
+                    }
+                    html += `</div>`;
+                });
+                html += `</div></div>`;
+            }
+        });
+        container.innerHTML = html;
+    };
+
+    window.backToResult = function() { showSection('result'); };
+    
+    let isReviewingFromLeaderboard = false;
+    
+    window.backFromReview = function() {
+        if (isReviewingFromLeaderboard) {
+            showSection('scores');
+            isReviewingFromLeaderboard = false;
+        } else {
+            window.backToResult();
+        }
+    };
+
+    window.reviewStudentScore = function(scoreId) {
+        const record = allScores.find(x => x.id === scoreId);
+        if (!record) return;
+        
+        currentStudent = { hoTen: record.hoTen, lop: record.lop, tenDe: record.tenDe, maDe: record.maDe };
+        userAnswers = record.userAnswers || {}; 
+        
+        currentQuestions = JSON.parse(JSON.stringify(exam_data)); 
+        
+        isReviewingFromLeaderboard = true;
+        window.reviewQuiz();
+    };
+
+    window.renderScores = function() {
+        const tbody = document.getElementById('scores-tbody');
+        const noScore = document.getElementById('no-scores');
+        const myRankDisplay = document.getElementById('my-rank-display');
+        const paginationContainer = document.getElementById('pagination-controls');
+        
+        if(!tbody) return;
+
+        const sortedAll = [...allScores].sort((a, b) => (b.diem - a.diem) || (a.duration.localeCompare(b.duration)));
+        
+        sortedAll.forEach((s, i) => s.absoluteRank = i + 1);
+
+        const myRankIndex = sortedAll.findIndex(s => s.deviceId === deviceId);
+        if (myRankDisplay) {
+            if (myRankIndex !== -1) {
+                myRankDisplay.innerHTML = `🏆 Thứ hạng của bạn: <span class="text-red-600 font-black">#${sortedAll[myRankIndex].absoluteRank}</span>`;
+            } else {
+                myRankDisplay.innerHTML = `🏆 Thứ hạng của bạn: <span class="text-gray-400">Chưa thi</span>`;
+            }
+        }
+
+        const filteredScores = searchTerm ? sortedAll.filter(s => s.hoTen.toLowerCase().includes(searchTerm)) : sortedAll;
+
+        if (filteredScores.length === 0) {
+            tbody.innerHTML = ''; 
+            noScore.classList.remove('hidden'); 
+            paginationContainer.innerHTML = '';
+            return; 
+        }
+        
+        noScore.classList.add('hidden');
+
+        const totalPages = Math.ceil(filteredScores.length / itemsPerPage);
+        if (currentPage > totalPages) currentPage = totalPages;
+        if (currentPage < 1) currentPage = 1;
+
+        const startIndex = (currentPage - 1) * itemsPerPage;
+        const endIndex = startIndex + itemsPerPage;
+        const pageItems = filteredScores.slice(startIndex, endIndex);
+
+        tbody.innerHTML = pageItems.map((s) => {
+            const isMe = s.deviceId === deviceId;
+            return `<tr class="${isMe ? 'my-score-row' : 'hover:bg-slate-50'} transition-colors border-b border-slate-100">
+            <td class="px-4 py-5 font-black text-slate-500 text-base text-center">#${s.absoluteRank}</td>
+            <td class="px-4 py-5 font-extrabold text-slate-800 text-base">${s.hoTen} ${isMe ? '<span class="ml-2 bg-pink-500 text-white text-xs px-2 py-1 rounded-md shadow-sm">Bạn</span>' : ''}</td>
+            <td class="px-4 py-5 font-black text-blue-600 text-base text-center">${s.lop}</td>
+            <td class="px-4 py-5 text-center font-black text-orange-600 text-sm">${s.duration}</td>
+            <td class="px-4 py-5 text-center"><span class="font-black text-2xl ${s.diem >= 5 ? 'text-emerald-600' : 'text-red-500'}">${s.diem}</span></td>
+            <td class="px-4 py-5 text-center">
+                <button onclick="window.reviewStudentScore('${s.id}')" class="bg-indigo-100 text-indigo-700 hover:bg-indigo-200 px-4 py-2 rounded-lg font-bold text-sm transition-colors border border-indigo-200 shadow-sm cursor-pointer whitespace-nowrap">Xem lại</button>
+            </td>
+        </tr>`;
+        }).join('');
+
+        renderPagination(totalPages);
+    };
+
+    function renderPagination(totalPages) {
+        const container = document.getElementById('pagination-controls');
+        if (!container) return;
+        
+        if (totalPages <= 1) {
+            container.innerHTML = '';
+            return;
+        }
+
+        let html = '<div class="flex flex-wrap items-center justify-center gap-2">';
+        
+        html += `<button onclick="window.changePage(${currentPage - 1})" class="px-4 py-2 rounded-xl font-bold transition-colors ${currentPage === 1 ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 shadow-sm'}" ${currentPage === 1 ? 'disabled' : ''}>&laquo; Trước</button>`;
+
+        let startPage = Math.max(1, currentPage - 1);
+        let endPage = Math.min(totalPages, currentPage + 1);
+
+        if (startPage > 1) {
+            html += `<button onclick="window.changePage(1)" class="px-4 py-2 rounded-xl font-bold bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 shadow-sm">1</button>`;
+            if (startPage > 2) html += `<span class="px-2 text-gray-400 font-black">...</span>`;
+        }
+
+        for (let i = startPage; i <= endPage; i++) {
+            html += `<button onclick="window.changePage(${i})" class="px-4 py-2 rounded-xl font-bold transition-all ${i === currentPage ? 'bg-orange-500 text-white shadow-md border-orange-600' : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 shadow-sm'}">${i}</button>`;
+        }
+
+        if (endPage < totalPages) {
+            if (endPage < totalPages - 1) html += `<span class="px-2 text-gray-400 font-black">...</span>`;
+            html += `<button onclick="window.changePage(${totalPages})" class="px-4 py-2 rounded-xl font-bold bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 shadow-sm">${totalPages}</button>`;
+        }
+
+        html += `<button onclick="window.changePage(${currentPage + 1})" class="px-4 py-2 rounded-xl font-bold transition-colors ${currentPage === totalPages ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 shadow-sm'}" ${currentPage === totalPages ? 'disabled' : ''}>Sau &raquo;</button>`;
+        
+        html += '</div>';
+        container.innerHTML = html;
+    }
+
+    function showSection(id) {
+        ['login', 'quiz', 'scores', 'result', 'review'].forEach(s => {
+            const el = document.getElementById(s+'-section');
+            if(el) el.classList.add('hidden');
+        });
+        const tgt = document.getElementById(id+'-section');
+        if(tgt) tgt.classList.remove('hidden');
+    }
+
+    function startTimer(seconds) {
+        const display = document.getElementById('timer');
+        if(!display) return;
+        let remaining = seconds;
+        timerInterval = setInterval(() => {
+            remaining--;
+            const m = Math.floor(remaining / 60).toString().padStart(2, '0');
+            const s = (remaining % 60).toString().padStart(2, '0');
+            display.innerText = `${m}:${s}`;
+            if (remaining <= 0) window.submitQuiz();
+        }, 1000);
+    }
+
+    try {
+        if (!localStorage.getItem('deviceId')) localStorage.setItem('deviceId', 'dev_' + Math.random().toString(36).substr(2) + Date.now());
+        deviceId = localStorage.getItem('deviceId');
+    } catch (e) { deviceId = 'dev_temp_' + Math.random().toString(36).substr(2); }
+  </script>
+ </body>
+</html>

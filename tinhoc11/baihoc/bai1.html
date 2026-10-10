@@ -1,1 +1,812 @@
+<!doctype html>
+<html lang="vi" class="w-full h-full m-0 p-0">
+ <head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <title>Tin Học 11 - Bài 1</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
+  <!-- 1. MÃ GA4 GỐC (Kết nối với Google Analytics) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-NSJCVSL9RM"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-NSJCVSL9RM'); 
+</script>
+
+<!-- 2. MÃ NHỊP TIM 30 GIÂY -->
+<script>
+  setInterval(function() {
+    if (!document.hidden) { 
+      gtag('event', 'keep_alive', {
+        'event_category': 'Engagement',
+        'event_label': 'Học sinh đang làm bài',
+        'non_interaction': false
+      });
+    }
+  }, 30000); 
+</script>
+
+  <style>
+    * { 
+        -webkit-tap-highlight-color: transparent; 
+        -webkit-touch-callout: none !important; 
+        touch-action: manipulation;
+    }
+    
+    html, body { width: 100%; min-height: 100vh; margin: 0; padding: 0; overflow-x: hidden; }
+    
+    body { 
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
+      background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+      background-size: 400% 400%;
+      animation: gradientBG 15s ease infinite;
+    }
+    
+    @keyframes gradientBG {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+
+    #app { width: 100%; min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden; }
+    
+    .glass-card {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    .option-label { transition: background-color 0.1s ease, border-color 0.1s ease; cursor: pointer; border-color: #e2e8f0; }
+    .option-label:hover { background-color: #f0fdfa; border-color: #38bdf8; }
+    
+    input[type="radio"].single-radio:checked + .option-label {
+      background: linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%);
+      color: white; border-color: transparent;
+      box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+    }
+    input[type="radio"].single-radio:checked + .option-label div:first-child { background-color: rgba(255,255,255,0.25); border-color: transparent; color: white; }
+    input[type="radio"].single-radio:checked + .option-label div:last-child { color: white; }
+    
+    .fade-in { animation: fadeIn 0.4s ease forwards; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    
+    .my-score-row {
+      background: linear-gradient(to right, #fdf4ff, #ffffff) !important;
+      border-left: 4px solid #db2777 !important; font-weight: 700 !important;
+      color: #9d174d !important; box-shadow: 0 2px 8px rgba(0,0,0,0.05); position: relative; z-index: 10;
+    }
+    .my-score-row td { padding-top: 16px; padding-bottom: 16px; }
+    
+    .btn-tf { transition: background-color 0.1s ease; border-width: 2px; }
+    .btn-tf.selected { background-color: #2563eb; color: white; border-color: #1d4ed8; }
+    .btn-tf:not(.selected) { background-color: white; color: #4b5563; border-color: #e5e7eb; }
+    .btn-tf:not(:disabled):active { transform: scale(0.95); }
+    
+    .math-scroll { overflow-x: auto; min-width: 0; padding-bottom: 4px; scrollbar-width: none; -ms-overflow-style: none; }
+    .math-scroll::-webkit-scrollbar { display: none; }
+  </style>
+
+ </head>
+ <body>
+  <div id="app" class="p-0 sm:p-4 md:p-8 transition-all">
+   
+   <div id="login-section" class="w-full max-w-md mx-auto fade-in flex flex-col justify-center flex-grow">
+    <div class="glass-card rounded-none sm:rounded-3xl p-6 sm:p-8 flex flex-col justify-start shadow-2xl border-t-8 border-indigo-600 bg-white">
+     <div class="text-center mb-6 pt-4 sm:pt-0">
+      <div class="flex items-center justify-center w-24 h-24 mx-auto mb-4 rounded-full border-4 border-yellow-400 bg-red-600 shadow-lg transform transition-transform hover:scale-105">
+          <span class="text-white font-black text-4xl tracking-tighter">HS</span>
+      </div>
+      <h1 class="text-2xl sm:text-3xl font-bold text-red-500 mb-3"> ĐỀ KIỂM TRA<br> BÀI 1:  HỆ ĐIỀU HÀNH </h1>
+     </div>
+      <div id="login-form" class="space-y-4">
+      <div class="flex flex-col gap-4">
+          <div class="w-full">
+               <label class="block text-lg font-bold text-gray-700 mb-1">Họ và tên</label> 
+               <input type="text" id="hoTen" class="w-full px-4 py-4 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-100 outline-none transition-all font-semibold text-lg" placeholder="Nhập họ tên...">
+          </div>
+          <div class="w-full">
+               <label class="block text-lg font-bold text-gray-700 mb-1">Lớp</label> 
+               <input type="text" id="lop" class="w-full px-4 py-4 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-100 outline-none transition-all font-semibold text-lg" placeholder="11A1">
+          </div>
+      </div>
+
+      <div id="login-error" class="hidden bg-red-100 border border-red-300 text-red-700 font-bold text-base p-3 rounded-xl text-center shadow-sm"></div>
+
+      <button type="button" onclick="window.startQuizAction()" id="start-btn" class="w-full py-5 mt-6 bg-gradient-to-r from-blue-500 to-cyan-400 text-white font-extrabold rounded-2xl shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all text-2xl tracking-wide"> 🚀 BẮT ĐẦU THI </button>
+     </div>
+    </div>
+   </div>
+
+   <div id="quiz-section" class="w-full max-w-4xl mx-auto hidden flex-grow flex flex-col">
+    <div class="glass-card rounded-none sm:rounded-3xl p-4 sm:p-8 flex flex-col flex-grow relative border-t-8 border-blue-500 bg-white shadow-2xl">
+     <div class="flex items-center justify-between mb-4 sm:mb-6 pb-4 border-b-2 border-gray-100">
+      
+      <div class="flex items-center gap-3">
+       <div class="flex items-center justify-center w-12 h-12 rounded-full border-2 border-yellow-400 bg-red-600 shadow-sm flex-shrink-0">
+           <span class="text-white font-black text-xl tracking-tighter">HS</span>
+       </div>
+       <div>
+        <h2 id="quiz-title" class="text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">Đề Kiểm Tra</h2>
+        <p id="student-info" class="text-base font-bold text-gray-500 mt-1 uppercase tracking-wide"></p>
+       </div>
+      </div>
+
+      <div class="text-right bg-blue-50 px-4 py-2 rounded-xl border border-blue-100" id="progress-container">
+       <div class="text-sm text-blue-500 font-bold uppercase tracking-wider mb-1">Tiến độ (Câu)</div>
+       <div id="progress-text" class="text-2xl font-black text-blue-700">0/28</div>
+      </div>
+     </div>
+     
+     <div id="timer-banner" class="mb-6 p-4 bg-gradient-to-r from-orange-50 to-red-50 border-2 border-red-100 rounded-2xl flex items-center justify-between shadow-sm sticky top-2 z-40">
+        <span class="text-red-800 font-extrabold flex items-center gap-2 text-lg"><span class="text-2xl animate-pulse">⏰</span> THỜI GIAN:</span> 
+        <span id="timer" class="text-4xl font-black text-red-600 font-mono tracking-wider drop-shadow-sm">45:00</span>
+     </div>
+
+     <div id="question-container" class="mb-8 flex-grow w-full max-w-full"></div>
+     
+     <div id="network-error" class="hidden bg-red-100 text-red-700 p-4 rounded-xl mt-4 text-center font-bold text-sm border-2 border-red-300 mb-4 shadow-sm"></div>
+
+    <div class="flex pt-4 sm:pt-6 border-t-2 border-gray-100 mt-auto pb-4 sm:pb-0">
+        <button id="submit-btn" onclick="window.promptSubmit()" class="w-full py-5 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-bold text-2xl rounded-2xl shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1">✅ NỘP BÀI NGAY</button>
+     </div>
+    </div>
+   </div>
+
+   <div id="confirm-submit-modal" class="fixed inset-0 hidden flex items-center justify-center bg-black/60 backdrop-blur-sm z-50 transition-opacity">
+       <div class="bg-white rounded-3xl w-full max-w-sm shadow-2xl p-6 text-center transform transition-all scale-100 mx-4 border-2 border-gray-100">
+           <div class="text-yellow-400 mb-4 flex justify-center">
+               <svg xmlns="http://www.w3.org/2000/svg" class="h-24 w-24" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+               </svg>
+           </div>
+           <h3 class="text-3xl font-black text-gray-800 mb-2 uppercase tracking-wide">Xác nhận nộp</h3>
+           <p class="text-gray-600 mb-6 font-medium text-xl">Các em mới làm <span id="confirm-answered" class="text-red-600 font-black text-2xl">0</span>/<span id="confirm-total" class="font-black text-2xl">28</span> câu. Có chắc chắn muốn nộp bài không? Những câu chưa làm sẽ bị tính là sai.</p>
+           <div class="flex flex-col gap-3">
+               <button onclick="window.closeConfirmModal()" class="w-full py-4 bg-gray-100 text-gray-800 font-extrabold text-xl rounded-xl hover:bg-gray-200 border border-gray-200">Quay lại làm tiếp</button>
+               <button onclick="window.executeSubmit()" class="w-full py-4 bg-emerald-600 text-white font-extrabold text-xl rounded-xl hover:bg-emerald-700 shadow-md">Vẫn Nộp Luôn</button>
+           </div>
+       </div>
+   </div>
+
+   <div id="result-section" class="w-full max-w-2xl mx-auto hidden fade-in flex flex-col justify-center flex-grow pb-8">
+    <div class="glass-card rounded-none sm:rounded-3xl p-6 sm:p-8 flex flex-col justify-start border-t-8 border-green-500 bg-white shadow-2xl" id="result-content">
+    </div>
+   </div>
+
+   <div id="review-section" class="w-full max-w-4xl mx-auto hidden flex-grow flex flex-col">
+    <div class="glass-card rounded-none sm:rounded-3xl p-4 sm:p-8 flex flex-col flex-grow border-t-8 border-indigo-500 bg-white overflow-hidden shadow-2xl">
+     <div class="flex flex-col-reverse sm:flex-row items-start sm:items-center justify-between mb-6 pb-4 border-b-2 border-gray-100 gap-4">
+      <div class="flex flex-wrap gap-2">
+          <button onclick="window.goHome()" class="px-5 py-3 bg-gray-100 text-gray-700 rounded-xl font-bold hover:bg-gray-200 text-lg shadow-sm border border-gray-200">🏠 Trang chủ</button>
+          <button onclick="window.backFromReview()" class="px-5 py-3 bg-indigo-50 text-indigo-700 rounded-xl font-bold hover:bg-indigo-100 text-lg shadow-sm border border-indigo-200">🔙 Quay lại</button>
+          <button onclick="window.viewScoresAction()" class="px-5 py-3 bg-orange-50 text-orange-700 rounded-xl font-bold hover:bg-orange-100 text-lg shadow-sm border border-orange-200">🏆 Bảng điểm</button>
+      </div>
+      <h2 class="text-3xl sm:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">📝 Xem Lại Bài Làm</h2>
+     </div>
+     <div id="review-content" class="space-y-8 w-full max-w-full"></div>
+    </div>
+   </div>
+
+   <div id="scores-section" class="w-full max-w-6xl mx-auto hidden flex-grow flex flex-col">
+    <div class="glass-card rounded-none sm:rounded-3xl p-4 sm:p-8 flex flex-col flex-grow border-t-8 border-orange-500 bg-white w-full max-w-full shadow-2xl">
+     <div class="mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b-2 border-gray-100 pb-4">
+      <button onclick="window.goHome()" class="px-5 py-3 bg-gray-100 text-gray-700 rounded-xl font-bold hover:bg-gray-200 text-lg shadow-sm border border-gray-200 whitespace-nowrap">🏠 Trang chủ</button>
+      <h2 class="text-3xl sm:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-red-600 text-center flex-grow">🏆 BẢNG XẾP HẠNG</h2>
+     </div>
+     
+     <div class="flex flex-col sm:flex-row justify-between items-center mb-4 gap-4 bg-gray-50 p-4 rounded-xl border border-gray-200">
+         <div id="my-rank-display" class="text-xl font-bold text-gray-700">🏆 Thứ hạng của bạn: <span class="text-gray-400">--</span></div>
+         <div class="w-full sm:w-auto flex-grow max-w-sm">
+             <input type="text" id="search-student" oninput="window.searchStudent(this.value)" placeholder="🔍 Nhập tên học sinh để tìm..." class="w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm focus:border-orange-500 focus:ring-2 focus:ring-orange-200 outline-none transition-all font-medium">
+         </div>
+     </div>
+
+     <div class="overflow-x-auto rounded-xl border border-slate-200 flex-grow shadow-inner bg-white/50 w-full">
+      <table class="w-full text-sm sm:text-base whitespace-nowrap min-w-max">
+       <thead class="bg-gradient-to-r from-orange-500 to-red-500 text-white">
+        <tr>
+         <th class="px-3 sm:px-4 py-4 text-center font-extrabold w-16">Hạng</th>
+         <th class="px-3 sm:px-4 py-4 text-left font-extrabold">Họ tên</th>
+         <th class="px-3 sm:px-4 py-4 text-center font-extrabold">Lớp</th>
+         <th class="px-3 sm:px-4 py-4 text-center font-extrabold">Thời gian</th>
+         <th class="px-3 sm:px-4 py-4 text-center font-extrabold">Điểm</th>
+         <th class="px-2 sm:px-4 py-4 text-center font-extrabold">Xem lại</th>
+        </tr>
+       </thead>
+       <tbody id="scores-tbody" class="bg-white/80 divide-y divide-gray-100"></tbody>
+      </table>
+      <div id="no-scores" class="text-center py-12 hidden text-gray-500 font-bold text-xl">Không tìm thấy dữ liệu thi 🥲</div>
+     </div>
+     
+     <div id="pagination-controls" class="w-full flex justify-center mt-6"></div>
+    </div>
+  </div>
+
+  <script>
+    let database = null;
+    let scoresRef = null;
+
+    try {
+        const firebaseConfig = {
+            apiKey: "AIzaSyBQ9Pos8awlh9j041qDWTPFRsVIjF-kPnk",
+            authDomain: "hoctap-91691.firebaseapp.com",
+            databaseURL: "https://hoctap-91691-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "hoctap-91691",
+            storageBucket: "hoctap-91691.firebasestorage.app",
+            messagingSenderId: "1004553425319",
+            appId: "1:1004553425319:web:45d15cbae393f614c56682",
+            measurementId: "G-Q6X1TL9PRV"
+        };
+        if (typeof firebase !== 'undefined') {
+            if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+            database = firebase.database();
+            scoresRef = database.ref('bxh_tin_11_1');
+        }
+    } catch(err) { console.error("Lỗi Firebase:", err); }
+
+    let isQuizStarted = false; 
+    let currentQuestions = [];
+    let deviceId = '';
+    let allScores = [];
+    let currentStudent = {};
+    let userAnswers = {};
+    let timerInterval;
+    let quizStartTime, quizEndTime;
+    
+    let searchTerm = '';
+    let currentPage = 1;
+    const itemsPerPage = 10;
+
+    const exam_data = [
+        { id: "q1", type: "single", question: "Câu 1: Hệ điều hành của các loại máy tính nói chung có tất cả mấy nhóm chức năng chính?", options: ["Hệ điều hành có tổng cộng ba nhóm chức năng.", "Hệ điều hành có tổng cộng bốn nhóm chức năng.", "Hệ điều hành có tổng cộng năm nhóm chức năng.", "Hệ điều hành có tổng cộng sáu nhóm chức năng."], correct: 2, explanation: "Hệ điều hành có 5 nhóm chức năng chính." },
+        { id: "q2", type: "single", question: "Câu 2: Tiêu chí quan trọng nhất của hệ điều hành máy tính cá nhân dành cho người dùng phổ thông là gì?", options: ["Tính năng xử lí dữ liệu với tốc độ siêu việt.", "Khả năng bảo mật tuyệt đối an toàn thông tin.", "Sự thân thiện và dễ dàng cho người sử dụng.", "Khả năng kết nối đa dạng với nhiều mạng LAN."], correct: 2, explanation: "Tiêu chí quan trọng nhất cho người dùng phổ thông là sự thân thiện và dễ sử dụng." },
+        { id: "q3", type: "single", question: "Câu 3: Cơ chế 'plug & play' (cắm và chạy) lần đầu tiên được sử dụng trên phiên bản hệ điều hành Windows nào?", options: ["Tính năng này có mặt từ bản Windows 1.0.", "Tính năng này có mặt từ bản Windows 3.1.", "Tính năng này có mặt từ bản Windows 95.", "Tính năng này có mặt từ bản Windows XP."], correct: 2, explanation: "Cơ chế 'plug & play' lần đầu được tích hợp trên Windows 95." },
+        { id: "q4", type: "single", question: "Câu 4: Hệ điều hành LINUX có nguồn gốc phát triển từ hệ điều hành nào dưới đây?", options: ["Được phát triển dựa trên hệ điều hành Windows.", "Được phát triển dựa trên hệ điều hành macOS.", "Được phát triển dựa trên hệ điều hành UNIX.", "Được phát triển dựa trên hệ điều hành MS-DOS."], correct: 2, explanation: "LINUX được phát triển dựa trên hệ điều hành UNIX." },
+        { id: "q5", type: "single", question: "Câu 5: Những hệ điều hành nào phổ biến nhất dành cho các thiết bị di động hiện nay?", options: ["Windows và hệ điều hành macOS của hãng Apple.", "iOS của hãng Apple và Android của hãng Google.", "Linux và hệ điều hành thương mại đóng gói UNIX.", "Ubuntu và hệ điều hành nguồn mở Suse, RedHat."], correct: 1, explanation: "iOS và Android là hai hệ điều hành phổ biến nhất cho thiết bị di động." },
+        { id: "q6", type: "single", question: "Câu 6: Trong hệ thống máy tính, thành phần nào đóng vai trò là môi trường trung gian giúp phần mềm ứng dụng khai thác phần cứng?", options: ["Thiết bị lưu trữ ngoài kết nối với máy tính.", "Hệ điều hành được cài đặt trên máy tính.", "Bộ vi xử lí trung tâm CPU của máy tính.", "Các thiết bị ngoại vi dùng để nhập xuất."], correct: 1, explanation: "Hệ điều hành là môi trường trung gian giữa phần cứng và phần mềm." },
+        { id: "q7", type: "single", question: "Câu 7: Hệ điều hành Ubuntu là một biến thể được phát triển dựa trên nền tảng của hệ điều hành nào?", options: ["Hệ điều hành mã nguồn đóng của Microsoft.", "Hệ điều hành di động được dùng cho iPhone.", "Hệ điều hành mã nguồn mở nổi tiếng LINUX.", "Hệ điều hành máy tính cá nhân dòng máy Mac."], correct: 2, explanation: "Ubuntu là một bản phân phối dựa trên nền tảng LINUX." },
+        { id: "q8", type: "single", question: "Câu 8: Cửa sổ, biểu tượng dễ gợi nhớ và con trỏ chuột là những thành phần thuộc về loại giao diện nào?", options: ["Thuộc loại giao diện dòng lệnh cơ bản truyền thống.", "Thuộc loại giao diện đồ hoạ trực quan, thân thiện.", "Thuộc loại giao diện văn bản không chứa hình ảnh.", "Thuộc loại giao diện lập trình chuyên biệt hệ thống."], correct: 1, explanation: "Đây là các thành phần của giao diện người dùng đồ hoạ." },
+        { id: "q9", type: "single", question: "Câu 9: Cơ chế 'plug & play' trên hệ điều hành máy tính cá nhân đem lại chức năng chính nào?", options: ["Tự động sao lưu dữ liệu quan trọng ra bộ nhớ ngoài.", "Tự nhận biết thiết bị ngoại vi để hỗ trợ cài đặt.", "Tự động quét và tiêu diệt các loại vi-rút độc hại.", "Tự động chạy phần mềm văn phòng khi khởi động."], correct: 1, explanation: "Cơ chế 'plug & play' giúp máy tính tự động nhận biết và hỗ trợ cài đặt thiết bị mới." },
+        { id: "q10", type: "single", question: "Câu 10: Tại sao các thiết bị đa năng như máy tính bắt buộc phải được cài đặt hệ điều hành?", options: ["Giúp giảm trọng lượng thiết bị và tiết kiệm điện năng.", "Giúp tổ chức dữ liệu và điều phối tài nguyên hệ thống.", "Giúp hệ thống phần cứng chạy không cần mạng Internet.", "Giúp ghi cố định phần mềm vào bộ nhớ ROM của máy."], correct: 1, explanation: "Hệ điều hành giúp tổ chức dữ liệu và điều phối tài nguyên hệ thống." },
+        { id: "q11", type: "single", question: "Câu 11: Khác biệt nổi bật của hệ điều hành trên thiết bị di động so với trên máy tính cá nhân là gì?", options: ["Luôn sử dụng giao diện dòng lệnh thay cho đồ hoạ.", "Rất chú trọng đến các kết nối mạng kiểu không dây.", "Hoàn toàn không hỗ trợ chia sẻ thông tin mạng LAN.", "Không có khả năng chạy đa nhiệm nhiều chương trình."], correct: 1, explanation: "Thiết bị di động đặc biệt chú trọng đến các kết nối không dây." },
+        { id: "q12", type: "single", question: "Câu 12: Nhược điểm lớn nhất của các hệ điều hành sử dụng giao diện dòng lệnh (như DOS) là gì?", options: ["Đòi hỏi người dùng phải ghi nhớ chính xác cú pháp lệnh.", "Không thể sử dụng để thao tác quản lí tệp và thư mục.", "Chỉ có khả năng hoạt động tốt trên các máy chủ cỡ lớn.", "Tiêu tốn quá nhiều tài nguyên phần cứng để hoạt động."], correct: 0, explanation: "Giao diện dòng lệnh yêu cầu người dùng phải ghi nhớ chính xác cú pháp các lệnh." },
+        { id: "q13", type: "single", question: "Câu 13: Trong 5 nhóm chức năng của hệ điều hành, nhóm 'Tổ chức thực hiện các chương trình' có nghĩa là gì?", options: ["Tạo ra các văn bản và bảng tính trên máy tính cá nhân.", "Cung cấp tiện ích định dạng đĩa cứng và nén tập tin.", "Điều phối tài nguyên cho các tiến trình xử lí trên máy.", "Giúp người dùng quản lí hệ thống các tệp và thư mục."], correct: 2, explanation: "Tổ chức thực hiện các chương trình đồng nghĩa với việc điều phối tài nguyên cho các tiến trình." },
+        { id: "q14", type: "single", question: "Câu 14: Khi phần mềm ứng dụng muốn lưu dữ liệu vào ổ đĩa, phần mềm này thực hiện công việc đó theo cách nào?", options: ["Tự động điều khiển trực tiếp phần cứng máy tính để ghi.", "Phải gọi các dịch vụ do hệ điều hành cung cấp để ghi.", "Yêu cầu người dùng gõ lệnh thủ công để lưu trữ tệp.", "Thay thế hoàn toàn chức năng của hệ điều hành máy."], correct: 1, explanation: "Phần mềm phải gọi các dịch vụ của hệ điều hành để tương tác với phần cứng." },
+        { id: "q15", type: "single", question: "Câu 15: Vì sao sự ra đời của hệ điều hành LINUX lại có ảnh hưởng rất lớn đến nền công nghệ thông tin?", options: ["Là hệ điều hành thương mại có giá thành đắt đỏ nhất.", "Được công bố mở cho mọi người sử dụng và phát triển.", "Là hệ điều hành chỉ hoạt động trên điện thoại thông minh.", "Là hệ điều hành đầu tiên sử dụng giao diện đồ hoạ PC."], correct: 1, explanation: "LINUX được công bố dưới dạng mã nguồn mở, cho phép cộng đồng cùng phát triển." },
+        { id: "q16", type: "single", question: "Câu 16: Bước cải tiến nào giúp hệ điều hành Windows phiên bản 3 nâng cao hiệu quả hoạt động so với phiên bản 1?", options: ["Đánh dấu bước chuyển hoàn toàn sang giao diện dòng lệnh.", "Tích hợp trực tiếp hệ thống mã nguồn mở UNIX hiện đại.", "Cung cấp khả năng đa nhiệm chạy nhiều phần mềm cùng lúc.", "Cung cấp khả năng nhận diện tiếng nói của người sử dụng."], correct: 2, explanation: "Windows 3 mang đến khả năng đa nhiệm, cho phép chạy nhiều phần mềm cùng lúc." },
+        { id: "q17", type: "single", question: "Câu 17: Bạn Bình kết nối thành công tai nghe không dây với điện thoại để nghe nhạc trong khi đang di chuyển. Thiết bị của Bình đang tận dụng ưu điểm đặc trưng nào của hệ điều hành di động?", options: ["Giao diện người dùng đồ hoạ đặc biệt và thân thiện.", "Tính năng sắp xếp, quản lí hệ thống tệp và thư mục.", "Ưu tiên khả năng kết nối không dây như Bluetooth.", "Tiện ích định dạng đĩa và nén dữ liệu dung lượng lớn."], correct: 2, explanation: "Tai nghe Bluetooth là minh chứng cho việc HĐH di động ưu tiên kết nối không dây." },
+        { id: "q18", type: "single", question: "Câu 18: Thay vì phải gõ lệnh xoá tệp phức tạp, Tuấn chỉ cần nhấp chuột phải vào biểu tượng tài liệu và chọn nút 'Delete'. Sự thuận tiện này xuất phát từ đặc điểm nào của hệ điều hành máy cá nhân?", options: ["Thuộc về cơ chế cắm và chạy của các thiết bị ngoại vi.", "Thuộc về giao diện đồ hoạ mang tính trực quan cao.", "Thuộc về khả năng nhận dạng hành vi qua các cảm biến.", "Thuộc về nâng cấp xử lí hệ thống lên phiên bản 64-bit."], correct: 1, explanation: "Thao tác chuột trên biểu tượng là tiện ích của giao diện đồ hoạ." },
+        { id: "q19", type: "single", question: "Câu 19: Doanh nghiệp A cần hệ điều hành máy chủ ổn định, tin cậy cao và muốn tiết kiệm chi phí bản quyền ở mức thấp nhất. Chuyên gia IT nên tư vấn doanh nghiệp cài đặt hệ điều hành nào?", options: ["Đề xuất cài đặt hệ điều hành bản quyền Windows XP.", "Đề xuất cài đặt hệ điều hành dùng dòng lệnh MS-DOS.", "Đề xuất cài đặt hệ điều hành mã nguồn mở như LINUX.", "Đề xuất cài đặt hệ điều hành điện thoại di động iOS."], correct: 2, explanation: "LINUX là hệ điều hành mã nguồn mở miễn phí và rất ổn định, tin cậy cho máy chủ." },
+        { id: "q20", type: "single", question: "Câu 20: Khi bạn đang xem video trên điện thoại và xoay ngang máy, hệ điều hành lập tức xoay khung hình video theo. Hoạt động này thể hiện rõ nhất đặc điểm giao diện nào của hệ điều hành di động?", options: ["Chú trọng ưu tiên cao cho khả năng kết nối mạng 5G.", "Nhận dạng hành vi người dùng thông qua các cảm biến.", "Cung cấp các tiện ích định vị toàn cầu GPS chuẩn xác.", "Tự động nhận diện thiết bị ngoại vi qua cổng USB type-C."], correct: 1, explanation: "Tính năng này dựa trên cảm biến con quay hồi chuyển để nhận diện thao tác xoay." },
+        { id: "q21", type: "single", question: "Câu 21: Lò vi sóng cho phép chọn các chế độ nấu chín nhưng không thể cài thêm phần mềm mới. Vì sao các thiết bị chuyên dụng như vậy không cần sử dụng hệ điều hành phức tạp như máy tính?", options: ["Thiết bị này được điều khiển toàn bộ bằng phần mềm nguồn mở.", "Thiết bị này chỉ làm một việc với phần mềm ghi sẵn trong ROM.", "Thiết bị này không được trang bị màn hình màu độ phân giải cao.", "Thiết bị này là phần cứng đặc biệt không bao giờ sử dụng vi xử lí."], correct: 1, explanation: "Các thiết bị chuyên dụng chỉ chạy một phần mềm cố định trong ROM, không cần hệ điều hành phức tạp." },
+        { id: "q22", type: "single", question: "Câu 22: Khi dung lượng máy tính báo đầy, người dùng quyết định bật chức năng 'kiểm tra lỗi đĩa cứng' để dọn dẹp hệ thống. Công việc này thuộc nhóm chức năng nào của hệ điều hành?", options: ["Nhóm chức năng tổ chức thực hiện các chương trình ứng dụng.", "Nhóm chức năng cung cấp môi trường giao tiếp đồ hoạ người dùng.", "Nhóm chức năng cung cấp tiện ích nâng cao hiệu quả sử dụng máy.", "Nhóm chức năng hỗ trợ thiết lập hệ thống kết nối mạng không dây."], correct: 2, explanation: "Các công cụ dọn dẹp, kiểm tra đĩa là các tiện ích nâng cao hiệu quả sử dụng máy tính." },
+        { id: "q23", type: "single", question: "Câu 23: Ứng dụng Zalo trên máy tính của bạn không thể sử dụng micro để ghi âm dù kiểm tra linh kiện phần cứng micro vẫn tốt. Sự cố này liên quan trực tiếp đến mối quan hệ nào trong hệ thống?", options: ["Mối quan hệ tương tác giữa bộ nhớ RAM và thiết bị lưu trữ ngoài.", "Mối quan hệ tương tác giữa phần cứng, hệ điều hành và ứng dụng.", "Mối quan hệ tương tác giữa máy tính cá nhân và mạng Internet.", "Mối quan hệ tương tác giữa phần mềm văn phòng và màn hình máy."], correct: 1, explanation: "Phần mềm (Zalo) phải thông qua HĐH để tương tác với phần cứng (Micro)." },
+        { id: "q24", type: "single", question: "Câu 24: Mặc dù ra mắt từ năm 2001, tại sao phiên bản Windows XP lại được đánh giá là một trong những hệ điều hành thành công nhất có lượng người sử dụng rất lớn của Microsoft?", options: ["Đây là hệ điều hành mã nguồn mở đầu tiên của hãng Microsoft.", "Đây là hệ điều hành hỗ trợ tốt nhất cho thiết bị điện thoại di động.", "Có cải tiến lớn về giao diện, hiệu suất và chạy trên nền tảng 64 bit.", "Đã loại bỏ hoàn toàn cơ chế chạy đa nhiệm để tăng tốc độ xử lí."], correct: 2, explanation: "Windows XP mang lại cải tiến lớn về giao diện, độ ổn định và hiệu suất." },
+        
+        { id: "qII_1", type: "tf_cluster", context: "Câu 1: Bạn An đang đọc tài liệu và ghi chú lại các sự kiện liên quan đến lịch sử phát triển của hệ điều hành cho máy tính cá nhân. Hãy xác định các phát biểu của An là Đúng hay Sai:", items: [
+            { id: "a", text: "a) Phiên bản 1 của Windows phát hành vào năm 1985 đã được trang bị giao diện đồ hoạ.", correct: true, expl: "Windows 1 phát hành năm 1985 với giao diện đồ hoạ." },
+            { id: "b", text: "b) Hệ điều hành Linux được xây dựng và phát triển trực tiếp dựa trên lõi của hệ điều hành Android.", correct: false, expl: "Thực tế Android được xây dựng trên lõi của LINUX chứ không phải ngược lại." },
+            { id: "c", text: "c) Cơ chế nhận diện thiết bị ngoại vi 'plug & play' bắt đầu có mặt trên hệ điều hành Windows từ phiên bản Windows 3.1.", correct: false, expl: "Cơ chế 'plug & play' lần đầu tiên được tích hợp trên phiên bản Windows 95." },
+            { id: "d", text: "d) Do phần mềm ứng dụng luôn giao tiếp trực tiếp với CPU, nên khi An muốn cài đặt Zalo, bạn ấy không cần quan tâm đến máy tính đang dùng hệ điều hành gì.", correct: false, expl: "Hệ điều hành là môi trường trung gian, ứng dụng phải tương thích với HĐH." }
+        ]},
+        { id: "qII_2", type: "tf_cluster", context: "Câu 2: Trong buổi thuyết trình lớp, bạn Lan trình bày về đặc thù và tính năng của hệ điều hành dành cho các thiết bị di động thông minh. Những đánh giá sau đây của Lan là Đúng hay Sai:", items: [
+            { id: "a", text: "a) Trên thị trường hiện nay, hai hệ điều hành phổ biến nhất dùng cho thiết bị di động là iOS và Android.", correct: true, expl: "iOS và Android là phổ biến nhất cho thiết bị di động." },
+            { id: "b", text: "b) Thiết bị di động không cần chú trọng đến khả năng kết nối mạng không dây vì chúng chỉ hoạt động dựa trên mạng di động cáp quang nội bộ.", correct: false, expl: "Hệ điều hành di động rất chú trọng kết nối không dây như wifi, 3G, bluetooth." },
+            { id: "c", text: "c) Giao diện của hệ điều hành di động trở nên đặc biệt thân thiện vì nó có khả năng nhận dạng hành vi của người dùng thông qua các cảm biến.", correct: true, expl: "Giao diện thân thiện nhờ nhận dạng hành vi qua cảm biến là đặc điểm của HĐH di động." },
+            { id: "d", text: "d) Vì điện thoại thông minh là thiết bị dùng để nghe gọi cơ bản, Lan khuyên chỉ cần cài đặt chương trình ghi sẵn trong ROM giống như lò vi sóng mà không cần hệ điều hành.", correct: false, expl: "Điện thoại thông minh là thiết bị đa năng, cần cài đặt hệ điều hành." }
+        ]},
+        { id: "qII_3", type: "tf_cluster", context: "Câu 3: Thầy Hùng hướng dẫn học sinh tìm hiểu về mối quan hệ không thể tách rời giữa phần cứng, hệ điều hành và phần mềm ứng dụng. Hãy xét tính Đúng/Sai trong các nhận định sau:", items: [
+            { id: "a", text: "a) Việc quản lí dữ liệu lưu trữ, cụ thể là quản lí tệp và thư mục, hoàn toàn không thuộc nhóm chức năng của hệ điều hành.", correct: false, expl: "Quản lí việc lưu trữ dữ liệu là một trong năm nhóm chức năng của HĐH." },
+            { id: "b", text: "b) Hệ điều hành hoạt động như một môi trường trung gian, giúp các phần mềm ứng dụng có thể khai thác và điều khiển phần cứng hiệu quả.", correct: true, expl: "Hệ điều hành là môi trường trung gian giúp khai thác phần cứng." },
+            { id: "c", text: "c) Trong thời kì chưa có hệ điều hành, con người phải can thiệp thủ công vào hầu hết các quá trình hoạt động của máy tính khiến hiệu quả khai thác rất thấp.", correct: true, expl: "Đúng, trước đây phải can thiệp thủ công làm hiệu suất thấp." },
+            { id: "d", text: "d) Khi bạn đánh máy xong và nhấn nút 'In' trên phần mềm Word, phần mềm Word sẽ tự mình điều khiển máy in hoạt động mà không cần gọi dịch vụ của hệ điều hành.", correct: false, expl: "Ứng dụng muốn in phải gọi dịch vụ của hệ điều hành cung cấp." }
+        ]},
+        { id: "qII_4", type: "tf_cluster", context: "Câu 4: Bạn Tuấn nghiên cứu tài liệu hướng dẫn và đúc kết lại các tính năng, giao diện của hệ điều hành trên máy tính cá nhân. Hãy xác định những kết luận của Tuấn là Đúng hay Sai:", items: [
+            { id: "a", text: "a) Một trong những nhóm chức năng cốt lõi của hệ điều hành là cung cấp môi trường giao tiếp với người sử dụng.", correct: true, expl: "Cung cấp môi trường giao tiếp là chức năng quan trọng của HĐH." },
+            { id: "b", text: "b) So với giao diện đồ hoạ, giao diện dòng lệnh như DOS được đánh giá là thiếu tính trực quan vì người dùng bắt buộc phải ghi nhớ cú pháp từng câu lệnh.", correct: true, expl: "Giao diện dòng lệnh đòi hỏi nhớ cú pháp, thiếu trực quan." },
+            { id: "c", text: "c) Để tập trung cho tốc độ xử lý, các hệ điều hành máy tính cá nhân hiện đại ngày nay đã loại bỏ hoàn toàn chức năng chạy đa nhiệm.", correct: false, expl: "Các hệ điều hành ngày nay phát triển mạnh đa nhiệm để chạy nhiều app." },
+            { id: "d", text: "d) Khi máy tính báo lỗi đầy dung lượng lưu trữ, Tuấn có thể dựa vào các tiện ích có sẵn của hệ điều hành để thực hiện nén tệp nhằm tối ưu hoá ổ đĩa.", correct: true, expl: "Hệ điều hành cung cấp tiện ích như nén tệp, kiểm tra ổ đĩa." }
+        ]}
+    ];
+
+    window.startQuizAction = function() {
+        try {
+            const errDiv = document.getElementById('login-error');
+            if(errDiv) errDiv.classList.add('hidden');
+            
+            const nameEl = document.getElementById('hoTen');
+            const lopEl = document.getElementById('lop');
+            
+            const name = nameEl.value.trim();
+            const lop = lopEl.value.trim();
+            
+            if (!name || !lop) {
+                if(errDiv) {
+                    errDiv.innerText = "⚠️ Vui lòng nhập đầy đủ Họ tên và Lớp!";
+                    errDiv.classList.remove('hidden');
+                } else {
+                    alert("⚠️ Vui lòng nhập đầy đủ Họ tên và Lớp!");
+                }
+                return;
+            }
+            
+            currentStudent = { hoTen: name, lop: lop, maDe: 'de1', tenDe: 'Đề Trắc Nghiệm Bài 1' };
+            currentQuestions = JSON.parse(JSON.stringify(exam_data));
+            quizStartTime = new Date();
+            
+            setTimeout(() => { isQuizStarted = true; }, 1000);
+            showSection('quiz');
+            
+            userAnswers = {};
+            window.renderAllQuestions();
+            startTimer(45 * 60); 
+            
+        } catch (error) {
+            alert("❌ Đã xảy ra lỗi khởi tạo bài thi: " + error.message + ".");
+            console.error(error);
+        }
+    };
+
+    window.viewScoresAction = function() {
+        searchTerm = ''; 
+        document.getElementById('search-student').value = '';
+        currentPage = 1;
+
+        if (database) {
+            scoresRef.once('value').then((snapshot) => {
+                const data = snapshot.val();
+                allScores = data ? Object.keys(data).map(key => ({...data[key], id: key})) : [];
+                window.renderScores();
+                showSection('scores');
+            });
+        }
+    };
+
+    window.searchStudent = function(val) {
+        searchTerm = val.toLowerCase();
+        currentPage = 1;
+        window.renderScores();
+    };
+
+    window.changePage = function(page) {
+        currentPage = page;
+        window.renderScores();
+    };
+
+    window.goHome = function() {
+        if(document.getElementById('hoTen')) document.getElementById('hoTen').value = ''; 
+        if(document.getElementById('lop')) document.getElementById('lop').value = ''; 
+        clearInterval(timerInterval);
+        showSection('login');
+    };
+
+    function getTotalScoreItems() { return currentQuestions.length; }
+
+    function getAnsweredCount() {
+        let count = 0;
+        currentQuestions.forEach(q => {
+            if (q.type === 'single') {
+                if (userAnswers[q.id] !== undefined) count++;
+            } else if (q.type === 'tf_cluster') {
+                let answeredItems = 0;
+                q.items.forEach(item => {
+                    if (userAnswers[q.id + '_' + item.id] !== undefined) answeredItems++;
+                });
+                if (answeredItems === 4) count++; 
+            }
+        });
+        return count;
+    }
+
+   window.selectAnswer = function(qId, val, type) {
+        if (type === 'tf') {
+            userAnswers[qId] = val;
+            const btnT = document.getElementById(`btnT_${qId}`);
+            const btnF = document.getElementById(`btnF_${qId}`);
+            if (val === true) {
+                btnT.classList.add('selected'); btnT.classList.remove('bg-white');
+                btnF.classList.remove('selected'); btnF.classList.add('bg-white');
+            } else {
+                btnF.classList.add('selected'); btnF.classList.remove('bg-white');
+                btnT.classList.remove('selected'); btnT.classList.add('bg-white');
+            }
+        } else if (type === 'single') {
+            userAnswers[qId] = val;
+        }
+        
+        requestAnimationFrame(() => {
+            const pgText = document.getElementById('progress-text');
+            if(pgText) pgText.innerText = `${getAnsweredCount()}/${getTotalScoreItems()}`;
+        });
+    };
+
+    window.renderAllQuestions = function() {
+        if (!currentQuestions || currentQuestions.length === 0) return;
+        const container = document.getElementById('question-container');
+        if(!container) return;
+
+        let html = '';
+        let currentType = '';
+
+        currentQuestions.forEach((q) => {
+            if (q.type !== currentType) {
+                currentType = q.type;
+                let headerText = ''; let roman = '';
+                if(currentType === 'single') { headerText = 'TRẮC NGHIỆM NHIỀU PHƯƠNG ÁN LỰA CHỌN'; roman = 'I'; }
+                if(currentType === 'tf_cluster') { headerText = 'TRẮC NGHIỆM ĐÚNG/SAI'; roman = 'II'; }
+                
+                html += `<div class="flex items-center gap-3 mt-8 mb-4 border-b-2 border-blue-100 pb-3"><span class="bg-gradient-to-br from-blue-500 to-indigo-600 text-white w-14 h-14 flex items-center justify-center rounded-xl font-black text-2xl shadow-md">${roman}</span><h3 class="text-2xl sm:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-700 to-indigo-700 tracking-wide uppercase">${headerText}</h3></div>`;
+            }
+
+            html += `<div class="fade-in w-full bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-blue-100 relative mb-6 hover:shadow-md transition-shadow">`;
+            
+            if (q.type === 'single') {
+                const uAns = userAnswers[q.id];
+                html += `<div class="flex gap-4 mb-5"><div class="w-full math-scroll"><p class="text-xl font-bold text-red-600 mt-1 leading-snug tracking-tight">${q.question}</p></div></div>`;
+                html += `<div class="space-y-4 md:pl-6 mt-6">`;
+                q.options.forEach((opt, i) => {
+                    const isChecked = (uAns === i) ? 'checked' : '';
+                    html += `<div class="flex items-center">
+                        <input type="radio" id="opt_${q.id}_${i}" name="q_${q.id}" value="${i}" class="hidden single-radio" ${isChecked} onchange="window.selectAnswer('${q.id}', ${i}, 'single')">
+                        <label for="opt_${q.id}_${i}" class="option-label w-full p-4 border-2 border-gray-200 rounded-2xl flex items-center gap-4 bg-white shadow-sm font-bold text-lg hover:border-blue-300">
+                            <div class="w-12 h-12 rounded-xl border-2 border-gray-300 flex items-center justify-center text-lg font-black text-gray-400 flex-shrink-0 bg-gray-50">${String.fromCharCode(65 + i)}</div>
+                            <div class="text-gray-700 leading-relaxed math-scroll flex-1">${opt}</div>
+                        </label>
+                    </div>`;
+                });
+                html += `</div>`;
+            } 
+            else if (q.type === 'tf_cluster') {
+                html += `<div class="bg-red-50 text-red-700 p-5 rounded-xl font-bold mb-4 border-2 border-red-100 text-xl leading-relaxed math-scroll">${q.context}</div>`;
+                html += `<div class="space-y-4 mt-6">`;
+                q.items.forEach((item) => {
+                    const combinedId = q.id + '_' + item.id;
+                    let ans = userAnswers[combinedId];
+                    let btnT = ans === true ? 'selected' : 'bg-white';
+                    let btnF = ans === false ? 'selected' : 'bg-white';
+
+                    html += `<div class="p-5 border-2 border-gray-100 rounded-2xl bg-white shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4 transition-all hover:border-blue-200">
+                        <div class="font-bold text-gray-800 flex-1 text-lg math-scroll">${item.text}</div>
+                        <div class="flex gap-3 shrink-0">
+                            <button id="btnT_${combinedId}" onclick="window.selectAnswer('${combinedId}', true, 'tf')" class="btn-tf w-24 sm:w-28 py-3 rounded-xl font-extrabold text-lg ${btnT}">ĐÚNG</button>
+                            <button id="btnF_${combinedId}" onclick="window.selectAnswer('${combinedId}', false, 'tf')" class="btn-tf w-24 sm:w-28 py-3 rounded-xl font-extrabold text-lg ${btnF}">SAI</button>
+                        </div>
+                    </div>`;
+                });
+                html += `</div>`;
+            } 
+            html += `</div>`;
+        });
+        
+        container.innerHTML = html;
+        const pgText = document.getElementById('progress-text');
+        if(pgText) pgText.innerText = `${getAnsweredCount()}/${getTotalScoreItems()}`;
+    };
+
+    function formatDuration(sec) {
+        const m = Math.floor(sec / 60); const s = sec % 60;
+        return `${m}p ${s}s`;
+    }
+
+    window.promptSubmit = function() {
+        if (!isQuizStarted) return;
+        const total = getTotalScoreItems();
+        const answered = getAnsweredCount();
+        
+        document.getElementById('confirm-answered').innerText = answered;
+        document.getElementById('confirm-total').innerText = total;
+        
+        const modal = document.getElementById('confirm-submit-modal');
+        modal.classList.remove('hidden');
+    };
+
+    window.closeConfirmModal = function() {
+        const modal = document.getElementById('confirm-submit-modal');
+        modal.classList.add('hidden');
+    };
+
+    window.executeSubmit = function() {
+        window.closeConfirmModal();
+        isQuizStarted = false; 
+        quizEndTime = new Date();
+        clearInterval(timerInterval);
+        
+        let score = 0;
+
+        currentQuestions.forEach(q => {
+            if (q.type === 'single') {
+                if (userAnswers[q.id] === q.correct) score += 0.25;
+            } else if (q.type === 'tf_cluster') {
+                let correctCount = 0;
+                q.items.forEach(item => { 
+                    if (userAnswers[q.id + '_' + item.id] === item.correct) {
+                        correctCount++;
+                    }
+                });
+                
+                // Áp dụng logic tính điểm mới cho phần trắc nghiệm đúng/sai
+                if (correctCount === 1) score += 0.1;
+                else if (correctCount === 2) score += 0.25;
+                else if (correctCount === 3) score += 0.5;
+                else if (correctCount === 4) score += 1.0;
+            }
+        });
+
+        score = score.toFixed(2); 
+
+        const record = {
+            hoTen: currentStudent.hoTen, lop: currentStudent.lop, tenDe: currentStudent.tenDe, maDe: currentStudent.maDe,
+            diem: parseFloat(score),
+            startTime: quizStartTime.toLocaleTimeString('vi-VN') + ' ' + quizStartTime.toLocaleDateString('vi-VN'),
+            endTime: quizEndTime.toLocaleTimeString('vi-VN') + ' ' + quizEndTime.toLocaleDateString('vi-VN'),
+            duration: formatDuration(Math.floor((quizEndTime - quizStartTime) / 1000)),
+            thoiGian: new Date().toISOString(), deviceId: deviceId,
+            userAnswers: userAnswers 
+        };
+        
+        if(database) {
+            scoresRef.push(record, () => { window.showModalResult(score, record.duration); });
+        } else {
+            window.showModalResult(score, record.duration);
+        }
+    };
+
+    window.showModalResult = function(score, dur) {
+        ['login', 'quiz', 'scores', 'review'].forEach(s => {
+            const el = document.getElementById(s+'-section');
+            if(el) el.classList.add('hidden');
+        });
+        const resEl = document.getElementById('result-section');
+        if(resEl) resEl.classList.remove('hidden');
+        const contentEl = document.getElementById('result-content');
+        if(contentEl) contentEl.innerHTML = `
+        <div class="flex justify-start mb-4">
+            <button onclick="window.goHome()" class="px-5 py-3 bg-gray-100 text-gray-700 rounded-xl font-bold hover:bg-gray-200 transition-colors shadow-sm border border-gray-200 text-lg">🏠 Trang chủ</button>
+        </div>
+        <div class="text-center">
+            <div class="text-7xl mb-4 animate-bounce">🎉</div>
+            <h3 class="text-3xl font-black text-emerald-600 mb-2">Hoàn thành bài thi!</h3>
+            <p class="text-gray-600 mb-6 mt-2"><span class="font-extrabold text-blue-700 text-xl uppercase tracking-wider">${currentStudent.hoTen} - Lớp ${currentStudent.lop}</span></p>
+        </div>
+        <div class="bg-blue-50 border-2 border-blue-100 rounded-3xl p-8 mb-6 shadow-inner relative text-center">
+            <div class="text-base text-blue-500 font-extrabold mb-2 uppercase tracking-widest">ĐIỂM SỐ CỦA BẠN</div>
+            <div class="text-7xl font-black text-blue-600 drop-shadow-sm">${score} <span class="text-3xl text-gray-400">/ 10</span></div>
+            <div class="text-lg font-extrabold text-indigo-600 mt-5 bg-white inline-block px-6 py-3 rounded-full shadow-sm border border-blue-100">Thời gian làm bài: ${dur}</div>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+            <button onclick="window.reviewQuiz()" class="w-full py-4 bg-gradient-to-r from-indigo-500 to-purple-500 text-white rounded-xl font-extrabold shadow-sm hover:shadow-md transition-colors text-xl">📝 Xem lại bài</button>
+            <button onclick="window.viewScoresAction()" class="w-full py-4 bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-xl font-extrabold shadow-sm hover:shadow-md transition-colors text-xl">🏆 Bảng điểm</button>
+        </div>`;
+    };
+
+    function getStatusBadge(isCorrect, isUnanswered) {
+        if (isUnanswered) return `<div class="mt-4 mb-2 inline-block px-4 py-2 bg-yellow-100 text-yellow-800 text-base font-black rounded-lg border border-yellow-300 shadow-sm">⚠️ BẠN CHƯA LÀM CÂU NÀY</div>`;
+        if (isCorrect) return `<div class="mt-4 mb-2 inline-block px-4 py-2 bg-emerald-100 text-emerald-800 text-base font-black rounded-lg border border-emerald-300 shadow-sm">✅ BẠN LÀM ĐÚNG RỒI</div>`;
+        return `<div class="mt-4 mb-2 inline-block px-4 py-2 bg-red-100 text-red-800 text-base font-black rounded-lg border border-red-300 shadow-sm">❌ BẠN LÀM SAI RỒI</div>`;
+    }
+
+    window.reviewQuiz = function() {
+        showSection('review');
+        const container = document.getElementById('review-content');
+        if(!container) return;
+        let html = '';
+
+        currentQuestions.forEach((q) => {
+            if (q.type === 'single') {
+                let uAns = userAnswers[q.id];
+                let isUnanswered = (uAns === undefined);
+                let isCorrect = (uAns === q.correct);
+                let borderColor = isCorrect ? 'border-emerald-300 bg-emerald-50' : 'border-red-300 bg-red-50';
+                
+                html += `<div class="p-6 border-2 rounded-2xl shadow-sm mb-6 ${borderColor}">`;
+                html += `<div class="font-bold text-xl text-red-600 mb-5 leading-relaxed math-scroll">${q.question}</div>`;
+                html += `<div class="space-y-3">`;
+                
+                q.options.forEach((opt, i) => {
+                    let optBg = ''; let iconHtml = '';
+                    if (q.correct === i) {
+                        optBg = 'bg-emerald-100 text-emerald-900 border-emerald-400 border-2'; 
+                        iconHtml = '<div class="text-3xl drop-shadow-sm ml-auto pl-2 flex-shrink-0">✅</div>';
+                    } else if (uAns === i && !isCorrect) {
+                        optBg = 'bg-red-100 text-red-900 line-through border-red-400 border-2'; 
+                        iconHtml = '<div class="text-3xl drop-shadow-sm ml-auto pl-2 flex-shrink-0">❌</div>';
+                    } else { optBg = 'bg-white text-slate-700 border border-slate-200'; }
+
+                    html += `<div class="p-4 rounded-xl ${optBg} flex items-center gap-4"><div class="w-10 h-10 flex items-center justify-center rounded-lg bg-white/50 text-base font-black shadow-sm flex-shrink-0">${String.fromCharCode(65 + i)}</div><div class="${(q.correct === i || uAns === i) ? 'font-semibold' : 'font-medium'} flex-1 text-lg math-scroll">${opt}</div>${iconHtml}</div>`;
+                });
+                html += `</div>`;
+                
+                html += getStatusBadge(isCorrect, isUnanswered); 
+                
+                if (q.explanation) {
+                    html += `<div class="review-explanation mt-3 pt-3 border-t-2 border-gray-200"><p class="text-base font-black uppercase tracking-widest text-blue-600 mb-2">💡 Giải chi tiết:</p><p class="text-black font-medium text-lg leading-loose math-scroll">${q.explanation}</p></div>`;
+                }
+                html += `</div>`;
+            } 
+            else if (q.type === 'tf_cluster') {
+                html += `<div class="p-6 border-2 border-indigo-200 bg-indigo-50 rounded-2xl shadow-sm mb-6">`;
+                html += `<div class="font-bold text-xl text-indigo-800 mb-5 math-scroll">${q.context}</div>`;
+                html += `<div class="space-y-5">`;
+                q.items.forEach(item => {
+                    let uAns = userAnswers[q.id + '_' + item.id];
+                    let isUnanswered = (uAns === undefined);
+                    let isCorrect = (uAns === item.correct);
+                    let iconHtml = isCorrect ? '✅' : '❌';
+                    let ansText = item.correct ? 'ĐÚNG' : 'SAI';
+
+                    html += `<div class="p-5 bg-white border border-indigo-100 rounded-xl shadow-sm">
+                        <div class="font-bold text-gray-800 text-lg math-scroll">${item.text}</div>
+                        <div class="mt-3 flex items-center justify-between border-b border-gray-100 pb-3">
+                            <span class="text-base font-bold text-gray-500">Bạn chọn: <span class="${isUnanswered ? 'text-gray-400' : 'text-blue-600'} font-black uppercase">${isUnanswered ? 'Chưa trả lời' : (uAns?'Đúng':'Sai')}</span></span>
+                            <span class="font-black text-xl ${isCorrect ? 'text-emerald-500' : 'text-red-500'}">Đáp án: ${ansText} ${iconHtml}</span>
+                        </div>`;
+                        
+                    html += getStatusBadge(isCorrect, isUnanswered);
+                    if(item.expl) {
+                        html += `<div class="review-explanation mt-3 pt-3 text-lg text-gray-700 font-medium leading-relaxed math-scroll"><span class="text-indigo-500 font-bold uppercase">Giải chi tiết:</span><br> ${item.expl}</div>`;
+                    }
+                    html += `</div>`;
+                });
+                html += `</div></div>`;
+            }
+        });
+        container.innerHTML = html;
+    };
+
+    window.backToResult = function() { showSection('result'); };
+    
+    let isReviewingFromLeaderboard = false;
+    
+    window.backFromReview = function() {
+        if (isReviewingFromLeaderboard) {
+            showSection('scores');
+            isReviewingFromLeaderboard = false;
+        } else {
+            window.backToResult();
+        }
+    };
+
+    window.reviewStudentScore = function(scoreId) {
+        const record = allScores.find(x => x.id === scoreId);
+        if (!record) return;
+        
+        currentStudent = { hoTen: record.hoTen, lop: record.lop, tenDe: record.tenDe, maDe: record.maDe };
+        userAnswers = record.userAnswers || {}; 
+        
+        currentQuestions = JSON.parse(JSON.stringify(exam_data)); 
+        
+        isReviewingFromLeaderboard = true;
+        window.reviewQuiz();
+    };
+
+    window.renderScores = function() {
+        const tbody = document.getElementById('scores-tbody');
+        const noScore = document.getElementById('no-scores');
+        const myRankDisplay = document.getElementById('my-rank-display');
+        const paginationContainer = document.getElementById('pagination-controls');
+        
+        if(!tbody) return;
+
+        const sortedAll = [...allScores].sort((a, b) => (b.diem - a.diem) || (a.duration.localeCompare(b.duration)));
+        
+        sortedAll.forEach((s, i) => s.absoluteRank = i + 1);
+
+        const myRankIndex = sortedAll.findIndex(s => s.deviceId === deviceId);
+        if (myRankDisplay) {
+            if (myRankIndex !== -1) {
+                myRankDisplay.innerHTML = `🏆 Thứ hạng của bạn: <span class="text-red-600 font-black">#${sortedAll[myRankIndex].absoluteRank}</span>`;
+            } else {
+                myRankDisplay.innerHTML = `🏆 Thứ hạng của bạn: <span class="text-gray-400">Chưa thi</span>`;
+            }
+        }
+
+        const filteredScores = searchTerm ? sortedAll.filter(s => s.hoTen.toLowerCase().includes(searchTerm)) : sortedAll;
+
+        if (filteredScores.length === 0) {
+            tbody.innerHTML = ''; 
+            noScore.classList.remove('hidden'); 
+            paginationContainer.innerHTML = '';
+            return; 
+        }
+        
+        noScore.classList.add('hidden');
+
+        const totalPages = Math.ceil(filteredScores.length / itemsPerPage);
+        if (currentPage > totalPages) currentPage = totalPages;
+        if (currentPage < 1) currentPage = 1;
+
+        const startIndex = (currentPage - 1) * itemsPerPage;
+        const endIndex = startIndex + itemsPerPage;
+        const pageItems = filteredScores.slice(startIndex, endIndex);
+
+        tbody.innerHTML = pageItems.map((s) => {
+            const isMe = s.deviceId === deviceId;
+            return `<tr class="${isMe ? 'my-score-row' : 'hover:bg-slate-50'} transition-colors border-b border-slate-100">
+            <td class="px-4 py-5 font-black text-slate-500 text-base text-center">#${s.absoluteRank}</td>
+            <td class="px-4 py-5 font-extrabold text-slate-800 text-base">${s.hoTen} ${isMe ? '<span class="ml-2 bg-pink-500 text-white text-xs px-2 py-1 rounded-md shadow-sm">Bạn</span>' : ''}</td>
+            <td class="px-4 py-5 font-black text-blue-600 text-base text-center">${s.lop}</td>
+            <td class="px-4 py-5 text-center font-black text-orange-600 text-sm">${s.duration}</td>
+            <td class="px-4 py-5 text-center"><span class="font-black text-2xl ${s.diem >= 5 ? 'text-emerald-600' : 'text-red-500'}">${s.diem}</span></td>
+            <td class="px-4 py-5 text-center">
+                <button onclick="window.reviewStudentScore('${s.id}')" class="bg-indigo-100 text-indigo-700 hover:bg-indigo-200 px-4 py-2 rounded-lg font-bold text-sm transition-colors border border-indigo-200 shadow-sm cursor-pointer whitespace-nowrap">Xem lại</button>
+            </td>
+        </tr>`;
+        }).join('');
+
+        renderPagination(totalPages);
+    };
+
+    function renderPagination(totalPages) {
+        const container = document.getElementById('pagination-controls');
+        if (!container) return;
+        
+        if (totalPages <= 1) {
+            container.innerHTML = '';
+            return;
+        }
+
+        let html = '<div class="flex flex-wrap items-center justify-center gap-2">';
+        
+        html += `<button onclick="window.changePage(${currentPage - 1})" class="px-4 py-2 rounded-xl font-bold transition-colors ${currentPage === 1 ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 shadow-sm'}" ${currentPage === 1 ? 'disabled' : ''}>&laquo; Trước</button>`;
+
+        let startPage = Math.max(1, currentPage - 1);
+        let endPage = Math.min(totalPages, currentPage + 1);
+
+        if (startPage > 1) {
+            html += `<button onclick="window.changePage(1)" class="px-4 py-2 rounded-xl font-bold bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 shadow-sm">1</button>`;
+            if (startPage > 2) html += `<span class="px-2 text-gray-400 font-black">...</span>`;
+        }
+
+        for (let i = startPage; i <= endPage; i++) {
+            html += `<button onclick="window.changePage(${i})" class="px-4 py-2 rounded-xl font-bold transition-all ${i === currentPage ? 'bg-orange-500 text-white shadow-md border-orange-600' : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 shadow-sm'}">${i}</button>`;
+        }
+
+        if (endPage < totalPages) {
+            if (endPage < totalPages - 1) html += `<span class="px-2 text-gray-400 font-black">...</span>`;
+            html += `<button onclick="window.changePage(${totalPages})" class="px-4 py-2 rounded-xl font-bold bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 shadow-sm">${totalPages}</button>`;
+        }
+
+        html += `<button onclick="window.changePage(${currentPage + 1})" class="px-4 py-2 rounded-xl font-bold transition-colors ${currentPage === totalPages ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 shadow-sm'}" ${currentPage === totalPages ? 'disabled' : ''}>Sau &raquo;</button>`;
+        
+        html += '</div>';
+        container.innerHTML = html;
+    }
+
+    function showSection(id) {
+        ['login', 'quiz', 'scores', 'result', 'review'].forEach(s => {
+            const el = document.getElementById(s+'-section');
+            if(el) el.classList.add('hidden');
+        });
+        const tgt = document.getElementById(id+'-section');
+        if(tgt) tgt.classList.remove('hidden');
+    }
+
+    function startTimer(seconds) {
+        const display = document.getElementById('timer');
+        if(!display) return;
+        let remaining = seconds;
+        timerInterval = setInterval(() => {
+            remaining--;
+            const m = Math.floor(remaining / 60).toString().padStart(2, '0');
+            const s = (remaining % 60).toString().padStart(2, '0');
+            display.innerText = `${m}:${s}`;
+            if (remaining <= 0) window.submitQuiz();
+        }, 1000);
+    }
+
+    try {
+        if (!localStorage.getItem('deviceId')) localStorage.setItem('deviceId', 'dev_' + Math.random().toString(36).substr(2) + Date.now());
+        deviceId = localStorage.getItem('deviceId');
+    } catch (e) { deviceId = 'dev_temp_' + Math.random().toString(36).substr(2); }
+  </script>
+ </body>
+</html>
