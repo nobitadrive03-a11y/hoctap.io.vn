@@ -5,45 +5,37 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Trường THPT Phan Đình Phùng | Hành Trình Số </title>
     <meta name="description" content="Hành Trình Số - Nền tảng học Tin học trực tuyến của cô Lê Huyền Sinh. Cung cấp bài giảng, đề thi trắc nghiệm, lập trình Python và trợ lý AI cho học sinh THPT.">
-<meta name="keywords" content="lê huyền sinh, Hành Trình Số,đề kiểm tra trắc nghiệm, đề kiểm tra trắc nghiệm tin học 10, đề kiểm tra trắc nghiệm tin học 11, đề kiểm tra trắc nghiệm tin học 12, Tin học 10, Tin học 11, Tin học 12, Trường THPT Phan Đình Phùng,  THPT Phan Đình Phùng, học lập trình Python, trắc nghiệm Tin học, Lê Huyền Sinh">
-<meta name="author" content="Lê Huyền Sinh">
+    <meta name="keywords" content="lê huyền sinh, Hành Trình Số,đề kiểm tra trắc nghiệm, đề kiểm tra trắc nghiệm tin học 10, đề kiểm tra trắc nghiệm tin học 11, đề kiểm tra trắc nghiệm tin học 12, Tin học 10, Tin học 11, Tin học 12, Trường THPT Phan Đình Phùng,  THPT Phan Đình Phùng, học lập trình Python, trắc nghiệm Tin học, Lê Huyền Sinh">
+    <meta name="author" content="Lê Huyền Sinh">
     
-
     <meta name="google-site-verification" content="Cw9RiI8exDEqFFkd9MNsxkjt-8HFgVPuS32BR8kD5Sc" />
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    
-<!-- 1. MÃ GA4 GỐC (Kết nối với Google Analytics) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-NSJCVSL9RM"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+    <!-- 1. MÃ GA4 GỐC (Kết nối với Google Analytics) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-NSJCVSL9RM"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-NSJCVSL9RM'); 
+    </script>
 
-  gtag('config', 'G-NSJCVSL9RM'); 
-</script>
-
-<!-- 2. MÃ NHỊP TIM 30 GIÂY -->
-<script>
-  setInterval(function() {
-    if (!document.hidden) { 
-      gtag('event', 'keep_alive', {
-        'event_category': 'Engagement',
-        'event_label': 'Học sinh đang làm bài',
-        'non_interaction': false
-      });
-    }
-  }, 30000); 
-</script>
-
-
-
+    <!-- 2. MÃ NHỊP TIM 30 GIÂY -->
+    <script>
+      setInterval(function() {
+        if (!document.hidden) { 
+          gtag('event', 'keep_alive', {
+            'event_category': 'Engagement',
+            'event_label': 'Học sinh đang làm bài',
+            'non_interaction': false
+          });
+        }
+      }, 30000); 
+    </script>
 
     <style>
-
-
         body {
             font-family: 'Inter', 'Segoe UI', sans-serif;
             background-color: #f8fafc; 
@@ -119,7 +111,7 @@
                 <a href="javascript:void(0)" onclick="toggleMobileMenu(this)" class="nav-item block px-2 md:px-4 py-2 md:py-4">TIN HỌC 10</a>
                 <div class="dropdown-menu absolute left-1/2 -translate-x-1/2 md:translate-x-0 md:left-0 top-full hidden md:group-hover:flex flex-col bg-white shadow-2xl rounded-xl border border-gray-100 w-56 p-3 gap-2 z-[100] mt-1 md:mt-0">
                     <button onclick="showLessons('Tài liệu Tin học 10', duLieuTin10)" class="w-full bg-[#f97316] text-white font-bold py-3 px-4 rounded-lg hover:brightness-110 shadow-sm transition-all text-sm text-left"><i class="fa-solid fa-folder-open mr-2"></i> TÀI LIỆU</button>
-                    <button onclick="showLessons('Bài kiểm tra Tin học 10', kiemTraTin10)" class="w-full bg-[#22c55e] text-white font-bold py-3 px-4 rounded-lg hover:brightness-110 shadow-sm transition-all text-sm text-left"><i class="fa-solid fa-pen-to-square mr-2"></i> BÀI KIỂM TRA</button>
+                    <button onclick="showTestBlocks('Bài kiểm tra Tin học 10', kiemTraTin10)" class="w-full bg-[#22c55e] text-white font-bold py-3 px-4 rounded-lg hover:brightness-110 shadow-sm transition-all text-sm text-left"><i class="fa-solid fa-pen-to-square mr-2"></i> BÀI KIỂM TRA</button>
                 </div>
             </li>
 
@@ -128,7 +120,7 @@
                 <a href="javascript:void(0)" onclick="toggleMobileMenu(this)" class="nav-item block px-2 md:px-4 py-2 md:py-4">TIN HỌC 11</a>
                 <div class="dropdown-menu absolute left-1/2 -translate-x-1/2 md:translate-x-0 md:left-0 top-full hidden md:group-hover:flex flex-col bg-white shadow-2xl rounded-xl border border-gray-100 w-56 p-3 gap-2 z-[100] mt-1 md:mt-0">
                     <button onclick="showLessons('Tài liệu Tin học 11', duLieuTin11)" class="w-full bg-[#8b5cf6] text-white font-bold py-3 px-4 rounded-lg hover:brightness-110 shadow-sm transition-all text-sm text-left"><i class="fa-solid fa-folder-open mr-2"></i> TÀI LIỆU</button>
-                    <button onclick="showLessons('Bài kiểm tra Tin học 11', kiemTraTin11)" class="w-full bg-[#eab308] text-white font-bold py-3 px-4 rounded-lg hover:brightness-110 shadow-sm transition-all text-sm text-left"><i class="fa-solid fa-pen-to-square mr-2"></i> BÀI KIỂM TRA</button>
+                    <button onclick="showTestBlocks('Bài kiểm tra Tin học 11', kiemTraTin11)" class="w-full bg-[#eab308] text-white font-bold py-3 px-4 rounded-lg hover:brightness-110 shadow-sm transition-all text-sm text-left"><i class="fa-solid fa-pen-to-square mr-2"></i> BÀI KIỂM TRA</button>
                 </div>
             </li>
 
@@ -137,7 +129,7 @@
                 <a href="javascript:void(0)" onclick="toggleMobileMenu(this)" class="nav-item block px-2 md:px-4 py-2 md:py-4">TIN HỌC 12</a>
                 <div class="dropdown-menu absolute left-1/2 -translate-x-1/2 md:translate-x-0 md:left-0 top-full hidden md:group-hover:flex flex-col bg-white shadow-2xl rounded-xl border border-gray-100 w-56 p-3 gap-2 z-[100] mt-1 md:mt-0">
                     <button onclick="showLessons('Tài liệu Tin học 12', duLieuTin12)" class="w-full bg-[#0ea5e9] text-white font-bold py-3 px-4 rounded-lg hover:brightness-110 shadow-sm transition-all text-sm text-left"><i class="fa-solid fa-folder-open mr-2"></i> TÀI LIỆU</button>
-                    <button onclick="showLessons('Bài kiểm tra Tin học 12', kiemTraTin12)" class="w-full bg-[#ef4444] text-white font-bold py-3 px-4 rounded-lg hover:brightness-110 shadow-sm transition-all text-sm text-left"><i class="fa-solid fa-pen-to-square mr-2"></i> BÀI KIỂM TRA</button>
+                    <button onclick="showTestBlocks('Bài kiểm tra Tin học 12', kiemTraTin12)" class="w-full bg-[#ef4444] text-white font-bold py-3 px-4 rounded-lg hover:brightness-110 shadow-sm transition-all text-sm text-left"><i class="fa-solid fa-pen-to-square mr-2"></i> BÀI KIỂM TRA</button>
                 </div>
             </li>
 
@@ -262,14 +254,41 @@
                 </div>
             </div>
 
-           <!-- KHUNG LƯỚI KHỐI MÀU BÀI HỌC / KIỂM TRA -->
+           <!-- KHUNG LƯỚI KHỐI MÀU BÀI HỌC / KIỂM TRA (ĐÃ CẬP NHẬT TÌM KIẾM VÀ PHÂN TRANG) -->
             <div id="grid-view" class="hidden bg-white rounded-xl shadow-md border border-gray-100 p-4 md:p-8 min-h-[400px]">
                 <h2 id="grid-title" class="text-center font-extrabold text-xl md:text-3xl uppercase mb-6 md:mb-8 text-gray-800 drop-shadow-sm">TIÊU ĐỀ MỤC</h2>
                 
+                <!-- BẮT ĐẦU: THANH TÌM KIẾM -->
+               <!-- BẮT ĐẦU: THANH TÌM KIẾM -->
+                <div class="max-w-md mx-auto mb-8">
+                    <!-- Hộp nền xanh blue bao bọc bên ngoài -->
+                    <div class="bg-blue-600 p-1.5 rounded-full shadow-md hover:shadow-lg focus-within:shadow-xl focus-within:ring-4 focus-within:ring-blue-300/50 transition-all duration-300">
+                        <!-- Ô nhập liệu nền trắng bên trong -->
+                        <div class="relative flex items-center w-full h-11 rounded-full bg-white overflow-hidden">
+                            <div class="grid place-items-center h-full w-12 text-blue-600">
+                                <i class="fa-solid fa-magnifying-glass text-lg"></i>
+                            </div>
+                            <input class="peer h-full w-full outline-none text-sm md:text-base text-gray-800 pr-4 bg-transparent font-medium placeholder-gray-400" 
+                                   type="text" 
+                                   id="searchInput" 
+                                   placeholder="Nhập nội dung cần tìm..." 
+                                   oninput="handleSearch()" />
+                        </div>
+                    </div>
+                </div>
+                <!-- KẾT THÚC: THANH TÌM KIẾM -->
+                <!-- KẾT THÚC: THANH TÌM KIẾM -->
+
                 <div id="grid-container" class="grid grid-cols-1 md:grid-cols-2 gap-12 max-w-5xl mx-auto">
                     <!-- Các thẻ bài học sẽ tự động được Javascript vẽ vào đây -->
                 </div>
                 
+                <!-- BẮT ĐẦU: THANH CHUYỂN TRANG -->
+                <div id="pagination-controls" class="flex justify-center items-center mt-10 gap-2 flex-wrap">
+                    <!-- Các nút phân trang sẽ xuất hiện tại đây -->
+                </div>
+                <!-- KẾT THÚC: THANH CHUYỂN TRANG -->
+
                 <div class="mt-12 flex justify-center border-t border-gray-200 pt-8">
                     <button onclick="showDefault()" class="bg-gradient-to-r from-blue-600 to-indigo-700 text-white font-bold py-3 px-8 rounded-full shadow-lg hover:shadow-xl hover:-translate-y-1 hover:from-blue-500 hover:to-indigo-600 transition-all duration-300 flex items-center gap-3 drop-shadow-md border border-white/20 text-sm md:text-base">
                         <i class="fa-solid fa-arrow-left-long text-lg"></i> 
@@ -334,10 +353,9 @@
     const colorClasses = ['bg-[#dc2626]', 'bg-[#2563eb]', 'bg-[#16a34a]', 'bg-[#f97316]', 'bg-[#9333ea]', 'bg-[#eab308]', 'bg-[#0d9488]', 'bg-[#1e293b]', 'bg-[#be123c]', 'bg-[#0284c7]'];
 
     // =========================================================================
-    // KHU VỰC NHẬP DỮ LIỆU TÀI LIỆU
+    // KHU VỰC DỮ LIỆU TÀI LIỆU
     // =========================================================================
 
-    // TÀI LIỆU TIN HỌC
     const duLieuTin10 = [
         { title: "Sách giáo khoa Tin học 10. Định hướng tin học ứng dụng", link: "https://books.fliphtml5.com/lmpyl/occo/#p=1", image: "https://placehold.co/600x300/0d9488/ffffff?text=Tin+10+Bai+1", icon: "fa-book" },
         { title: "Sách bài tập Tin học 10. Định hướng tin học ứng dụng", link: "https://books.fliphtml5.com/jaooym/SBT-TIN-HOC-10/#p=1", image: "https://placehold.co/600x300/0d9488/ffffff?text=Tin+10+Bai+1", icon: "fa-book" },
@@ -360,9 +378,6 @@
         { title: "Bài 3. Thực hành quản trị CSDL", link: "lop12/tin12bai3.html", image: "https://placehold.co/600x300/16a34a/ffffff?text=Tin+12+Bai+3", icon: "fa-server" }
     ];
 
-    // =========================================================================
-    // DỮ LIỆU CÁC ĐỀ KIỂM TRA TIN HỌC 10 (Sửa LINK_CUA_BAN_O_DAY.html thành link thật)
-    // =========================================================================
     const tin10_tx1 = [
         { title: "Bài kiểm tra TX 1 - Đề số 1", link: "LINK_CUA_BAN_O_DAY.html", icon: "fa-file-signature" },
         { title: "Bài kiểm tra TX 1 - Đề số 2", link: "LINK_CUA_BAN_O_DAY.html", icon: "fa-file-signature" },
@@ -399,9 +414,6 @@
         { title: "Trắc nghiệm - Bài 7, 8, 9", link: "LINK_CUA_BAN_O_DAY.html", icon: "fa-list-check" }
     ];
 
-    // =========================================================================
-    // DỮ LIỆU CÁC ĐỀ KIỂM TRA TIN HỌC 11 (Sửa LINK_CUA_BAN_O_DAY.html thành link thật)
-    // =========================================================================
     const tin11_tx1 = [
         { title: "Bài kiểm tra TX 1 - Đề số 1", link: "LINK_CUA_BAN_O_DAY.html", icon: "fa-file-signature" },
         { title: "Bài kiểm tra TX 1 - Đề số 2", link: "LINK_CUA_BAN_O_DAY.html", icon: "fa-file-signature" },
@@ -442,9 +454,6 @@
         { title: "🏫 Bài 7. Thực hành tìm kiếm thông tin trên Internet ", link: "tinhoc11/baihoc/bai7.html", icon: "fa-list-check" }
     ];
 
-    // =========================================================================
-    // DỮ LIỆU CÁC ĐỀ KIỂM TRA TIN HỌC 12 (Sửa LINK_CUA_BAN_O_DAY.html thành link thật)
-    // =========================================================================
     const tin12_tx1 = [
         { title: "Bài kiểm tra TX 1 - Đề số 1", link: "LINK_CUA_BAN_O_DAY.html", icon: "fa-file-signature" },
         { title: "Bài kiểm tra TX 1 - Đề số 2", link: "LINK_CUA_BAN_O_DAY.html", icon: "fa-file-signature" },
@@ -482,13 +491,40 @@
         { title: "💻 Bài 1. Làm quen với trí tuệ nhân tạo", link: "tinhoc12/baihoc/bai4.html", icon: "fa-list-check" },
         { title: "🏅 Bài 4. Giao thức mạng", link: "tinhoc12/baihoc/bai5.html", icon: "fa-list-check" },
         { title: "👨‍🏫 Bài 5. Thực hành chia sẻ tài nguyên trên mạng", link: "tinhoc12/baihoc/bai6.html", icon: "fa-list-check" },
+         { title: "🎓 Bài 1. Làm quen với trí tuệ nhân tạo", link: "tinhoc12/baihoc/bai1.html", icon: "fa-list-check" },
+        { title: "✍️ Bài 2. Trí tuệ nhân tạo trong khoa học và đời sống", link: "tinhoc12/baihoc/bai2.html", icon: "fa-list-check" },
+        { title: "💡  Bài 3. Một số thiết bị mạng thông dụng", link: "tinhoc12/baihoc/bai3.html", icon: "fa-list-check" },
+        { title: "💻 Bài 1. Làm quen với trí tuệ nhân tạo", link: "tinhoc12/baihoc/bai4.html", icon: "fa-list-check" },
+        { title: "🏅 Bài 4. Giao thức mạng", link: "tinhoc12/baihoc/bai5.html", icon: "fa-list-check" },
+        { title: "👨‍🏫 Bài 5. Thực hành chia sẻ tài nguyên trên mạng", link: "tinhoc12/baihoc/bai6.html", icon: "fa-list-check" }, { title: "🎓 Bài 1. Làm quen với trí tuệ nhân tạo", link: "tinhoc12/baihoc/bai1.html", icon: "fa-list-check" },
+        { title: "✍️ Bài 2. Trí tuệ nhân tạo trong khoa học và đời sống", link: "tinhoc12/baihoc/bai2.html", icon: "fa-list-check" },
+        { title: "💡  Bài 3. Một số thiết bị mạng thông dụng", link: "tinhoc12/baihoc/bai3.html", icon: "fa-list-check" },
+        { title: "💻 Bài 1. Làm quen với trí tuệ nhân tạo", link: "tinhoc12/baihoc/bai4.html", icon: "fa-list-check" },
+        { title: "🏅 Bài 4. Giao thức mạng", link: "tinhoc12/baihoc/bai5.html", icon: "fa-list-check" },
+        { title: "👨‍🏫 Bài 5. Thực hành chia sẻ tài nguyên trên mạng", link: "tinhoc12/baihoc/bai6.html", icon: "fa-list-check" }, { title: "🎓 Bài 1. Làm quen với trí tuệ nhân tạo", link: "tinhoc12/baihoc/bai1.html", icon: "fa-list-check" },
+        { title: "✍️ Bài 2. Trí tuệ nhân tạo trong khoa học và đời sống", link: "tinhoc12/baihoc/bai2.html", icon: "fa-list-check" },
+        { title: "💡  Bài 3. Một số thiết bị mạng thông dụng", link: "tinhoc12/baihoc/bai3.html", icon: "fa-list-check" },
+        { title: "💻 Bài 1. Làm quen với trí tuệ nhân tạo", link: "tinhoc12/baihoc/bai4.html", icon: "fa-list-check" },
+        { title: "🏅 Bài 4. Giao thức mạng", link: "tinhoc12/baihoc/bai5.html", icon: "fa-list-check" },
+        { title: "👨‍🏫 Bài 5. Thực hành chia sẻ tài nguyên trên mạng", link: "tinhoc12/baihoc/bai6.html", icon: "fa-list-check" }, { title: "🎓 Bài 1. Làm quen với trí tuệ nhân tạo", link: "tinhoc12/baihoc/bai1.html", icon: "fa-list-check" },
+        { title: "✍️ Bài 2. Trí tuệ nhân tạo trong khoa học và đời sống", link: "tinhoc12/baihoc/bai2.html", icon: "fa-list-check" },
+        { title: "💡  Bài 3. Một số thiết bị mạng thông dụng", link: "tinhoc12/baihoc/bai3.html", icon: "fa-list-check" },
+        { title: "💻 Bài 1. Làm quen với trí tuệ nhân tạo", link: "tinhoc12/baihoc/bai4.html", icon: "fa-list-check" },
+        { title: "🏅 Bài 4. Giao thức mạng", link: "tinhoc12/baihoc/bai5.html", icon: "fa-list-check" },
+        { title: "👨‍🏫 Bài 5. Thực hành chia sẻ tài nguyên trên mạng", link: "tinhoc12/baihoc/bai6.html", icon: "fa-list-check" }, { title: "🎓 Bài 1. Làm quen với trí tuệ nhân tạo", link: "tinhoc12/baihoc/bai1.html", icon: "fa-list-check" },
+        { title: "✍️ Bài 2. Trí tuệ nhân tạo trong khoa học và đời sống", link: "tinhoc12/baihoc/bai2.html", icon: "fa-list-check" },
+        { title: "💡  Bài 3. Một số thiết bị mạng thông dụng", link: "tinhoc12/baihoc/bai3.html", icon: "fa-list-check" },
+        { title: "💻 Bài 1. Làm quen với trí tuệ nhân tạo", link: "tinhoc12/baihoc/bai4.html", icon: "fa-list-check" },
+        { title: "🏅 Bài 4. Giao thức mạng", link: "tinhoc12/baihoc/bai5.html", icon: "fa-list-check" },
+        { title: "👨‍🏫 Bài 5. Thực hành chia sẻ tài nguyên trên mạng", link: "tinhoc12/baihoc/bai6.html", icon: "fa-list-check" }, { title: "🎓 Bài 1. Làm quen với trí tuệ nhân tạo", link: "tinhoc12/baihoc/bai1.html", icon: "fa-list-check" },
+        { title: "✍️ Bài 2. Trí tuệ nhân tạo trong khoa học và đời sống", link: "tinhoc12/baihoc/bai2.html", icon: "fa-list-check" },
+        { title: "💡  Bài 3. Một số thiết bị mạng thông dụng", link: "tinhoc12/baihoc/bai3.html", icon: "fa-list-check" },
+        { title: "💻 Bài 1. Làm quen với trí tuệ nhân tạo", link: "tinhoc12/baihoc/bai4.html", icon: "fa-list-check" },
+        { title: "🏅 Bài 4. Giao thức mạng", link: "tinhoc12/baihoc/bai5.html", icon: "fa-list-check" },
+        { title: "👨‍🏫 Bài 5. Thực hành chia sẻ tài nguyên trên mạng", link: "tinhoc12/baihoc/bai6.html", icon: "fa-list-check" },
         { title: "🏫 Bài 6. Giao tiếp và ứng xử trong không gian mạng", link: "tinhoc12/baihoc/bai7.html", icon: "fa-list-check" }
-    
-        
     ];
 
-
-    // CẤU TRÚC DANH MỤC 7 THƯ MỤC KIỂM TRA ĐƯỢC GỌI RA Ở MENU
     const kiemTraTin10 = [
         { title: "Kiểm tra thường xuyên học kỳ 1", link: "javascript:showTestBlocks('Kiểm tra thường xuyên HK1 - Tin 10', tin10_tx1)", image: "https://placehold.co/600x300/3b82f6/ffffff?text=KTTX+HK1", icon: "fa-folder-open" },
         { title: "Kiểm tra giữa kỳ 1", link: "javascript:showTestBlocks('Kiểm tra giữa kỳ 1 - Tin 10', tin10_gk1)", image: "https://placehold.co/600x300/10b981/ffffff?text=KTGK+1", icon: "fa-folder-open" },
@@ -519,7 +555,6 @@
         { title: "Đề thi trắc nghiệm qua các bài học", link: "javascript:showTestBlocks('Đề thi trắc nghiệm - Tin 12', tin12_tn)", image: "https://placehold.co/600x300/6366f1/ffffff?text=Trac+Nghiem", icon: "fa-folder-open" }
     ];
 
-    // CÁC MỤC GIẢI TRÍ VÀ TRÒ CHƠI BÊN TRÁI 
     const giaiTriAmNhac = [
         { title: "Mùa thu vẫn gọi những bước chân", link: "https://www.youtube.com/watch?v=i1jEP6P7Sqc", image: "https://img.youtube.com/vi/i1jEP6P7Sqc/hqdefault.jpg", icon: "fa-music" },
         { title: "Vui đến trường", link: "https://www.youtube.com/watch?v=nBslIBnqOUM&list=RDnBslIBnqOUM&start_radio=1", image: "https://img.youtube.com/vi/nBslIBnqOUM/hqdefault.jpg", icon: "fa-headphones" },
@@ -538,18 +573,6 @@
         { title: "Câu chuyện: Ánh sáng từ một bàn tay.", link: "sachlat/chuyen4/chuyen4.html", image: "sachlat/chuyen4/anh-bia.jpg", icon: "fa-puzzle-piece" }
     ];
 
-    const giaiTriAnh = [
-        { title: "Album Hoạt động Đoàn", link: "#", image: "https://placehold.co/600x300/fb923c/ffffff?text=Album+1", icon: "fa-images" },
-        { title: "Album Cuộc thi Sáng tạo", link: "#", image: "https://placehold.co/600x300/38bdf8/ffffff?text=Album+2", icon: "fa-image" },
-        { title: "Album Vinh danh", link: "#", image: "https://placehold.co/600x300/fcd34d/ffffff?text=Album+3", icon: "fa-medal" }
-    ];
-
-    const giaiTriTapChi = [
-        { title: "Tạp chí Tháng 9/2026", link: "#", image: "https://placehold.co/600x300/94a3b8/ffffff?text=Tap+Chi+1", icon: "fa-book-open" },
-        { title: "Tạp chí Tháng 10/2026", link: "#", image: "https://placehold.co/600x300/64748b/ffffff?text=Tap+Chi+2", icon: "fa-book-open" },
-        { title: "Tạp chí Tháng 11/2026", link: "#", image: "https://placehold.co/600x300/475569/ffffff?text=Tap+Chi+3", icon: "fa-book-open" }
-    ];
-
     const troChoiOChu = [
         { title: "Trò chơi khám phá các đảo. Tin học 11. Bài 1.Hệ điều hành", link: "trochoi/tin11_bai1/bai1tin11.html", image: "trochoi/tin11_bai1/anhbai1_11.png", icon: "fa-border-all" },
         { title: "Trò chơi đi tìm ô chử. Tin học 11. Bài 6.Lưu trữ và chia sẽ tập tin trên Internet", link: "trochoi/tin11_bai6/bai6tin11.html", image: "trochoi/tin11_bai6/anhbai6_11.png", icon: "fa-border-all" },
@@ -558,18 +581,6 @@
         { title: "Trò chơi giải mã mật thư. Tin học 12. Bài 3: Một số thiết bị mạng thông dụng", link: "trochoi/tin12_bai3/bai3tin12.html", image: "trochoi/tin12_bai3/anhbai3_12.png", icon: "fa-border-all" },
         { title: "Trò chơi Mario. Tin học 12. Bài 6: Giao tiếp và ứng xử trên không gian mạng", link: "trochoi/tin12_bai6/bai6_tin12.html", image: "trochoi/tin12_bai6/anhbai6_12.png", icon: "fa-border-all" },
         { title: "Trò chơi khám phá hệ mặt trời. Tin học 12. BÀI 7: HTML VÀ CẤU TRÚC TRANG WEB", link: "trochoi/tin12_bai7/bai7tin12.html", image: "trochoi/tin12_bai7/anhbai7_12.png", icon: "fa-border-all" }
-    ];
-
-    const tracNghiemMario = [
-        { title: "Trò chơi Mario. Tin học 12. Bài 6: Giao tiếp và ứng xử trên không gian mạng", link: "trochoi/tin12_bai6/bai6_tin12.html", image: "trochoi/tin12_bai6/anhbai6_12.png", icon: "fa-border-all" },
-        { title: "Trò chơi đi tìm ô chử. Tin học 11. Bài 6.Lưu trữ và chia sẽ tập tin trên Internet", link: "trochoi/tin11_bai6/bai6tin11.html", image: "trochoi/tin11_bai6/anhbai6_11.png", icon: "fa-border-all" },
-        { title: "Cửa ải 3: Đánh trùm", link: "#", image: "https://placehold.co/600x300/dc2626/ffffff?text=Mario+3", icon: "fa-trophy" }
-    ];
-
-    const gocSangTao = [
-        { title: "Dự án Thiết kế Poster (Canva)", link: "#", image: "https://placehold.co/600x300/06b6d4/ffffff?text=Du+An+1", icon: "fa-brush" },
-        { title: "Dự án Chỉnh sửa ảnh (GIMP)", link: "#", image: "https://placehold.co/600x300/8b5cf6/ffffff?text=Du+An+2", icon: "fa-crop-simple" },
-        { title: "Thư viện mẫu đồ họa", link: "#", image: "https://placehold.co/600x300/ec4899/ffffff?text=Du+An+3", icon: "fa-swatchbook" }
     ];
 
     const lienHeHoTro = [
@@ -588,55 +599,52 @@
         { title: "Nhóm Zalo Hỗ trợ", link: "#", image: "https://placehold.co/600x300/3b82f6/ffffff?text=Zalo", icon: "fa-comments" }
     ];
 
+
     // =========================================================================
-    // HÀM XỬ LÝ GIAO DIỆN HIỂN THỊ
+    // HÀM XỬ LÝ GIAO DIỆN HIỂN THỊ CÓ TÌM KIẾM VÀ PHÂN TRANG
     // =========================================================================
-    
-    // 1. Hàm hiển thị các mục Tài liệu, Trò chơi (Có ảnh đại diện to, chia 2 cột)
-    function showLessons(title, lessonsArray) {
-        hideDropdowns();
-        
-        document.getElementById('default-view').style.display = 'none';
-        document.getElementById('grid-view').style.display = 'block';
-        document.getElementById('grid-title').innerText = title.toUpperCase();
 
-        document.getElementById('sidebar').style.display = 'none';
-        const contentArea = document.getElementById('content-area');
-        contentArea.classList.remove('lg:col-span-3');
-        contentArea.classList.add('lg:col-span-4');
+    // Các biến toàn cục quản lý trạng thái hiển thị
+    let currentData = [];
+    let currentViewType = 'lesson'; // 'lesson' (tài liệu/có ảnh) hoặc 'test' (bài kiểm tra/không ảnh)
+    let currentPage = 1;
+    const itemsPerPage = 20; // Giới hạn 20 file/thư mục mỗi trang
+    let searchQuery = '';
 
-        const container = document.getElementById('grid-container');
-        // Sử dụng lưới 2 cột cho các mục có ảnh lớn
-        container.className = 'grid grid-cols-1 md:grid-cols-2 gap-12 max-w-5xl mx-auto';
-        container.innerHTML = ''; 
+    // 1. Hàm xử lý khi người dùng gõ vào ô tìm kiếm
+    function handleSearch() {
+        searchQuery = document.getElementById('searchInput').value.toLowerCase();
+        currentPage = 1; // Luôn quay về trang 1 mỗi khi gõ từ khóa mới
+        renderGrid();
+    }
 
-        lessonsArray.forEach((lesson, index) => {
-            const color = colorClasses[index % colorClasses.length];
-            const icon = lesson.icon || 'fa-book';
-            
-            const card = document.createElement('a');
-            card.href = lesson.link;
-            card.className = `${color} text-white p-4 md:p-5 rounded-2xl shadow-md hover:-translate-y-1 hover:shadow-xl transition-all duration-300 flex flex-col items-start border border-black/10`;
-            
-            card.innerHTML = `
-                <div class="w-full h-44 md:h-52 bg-white rounded-xl mb-4 overflow-hidden shadow-inner">
-                    <img src="${lesson.image}" alt="${lesson.title}" onerror="this.src='https://placehold.co/600x300/ffffff/555555?text=Hinh+Anh'" class="w-full h-full object-cover hover:scale-110 transition-all duration-500">
-                </div>
-                <div class="flex items-center gap-3 w-full px-2">
-                    <i class="fa-solid ${icon} text-xl opacity-90 drop-shadow-sm"></i>
-                    <span class="font-bold text-base md:text-lg leading-tight drop-shadow-sm flex-1">${lesson.title}</span>
-                </div>
-            `;
-            container.appendChild(card);
-        });
-        
+    // 2. Hàm chuyển trang
+    function changePage(page) {
+        currentPage = page;
+        renderGrid();
         document.getElementById('grid-view').scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 
-    // 2. Hàm: Hiển thị giao diện bài tập trắc nghiệm chi tiết (Khối màu không ảnh, chia 4 cột)
+    // 3. Hàm kích hoạt dữ liệu mảng Tài liệu/Trò chơi
+    function showLessons(title, lessonsArray) {
+        hideDropdowns();
+        prepareGrid(title);
+        currentData = lessonsArray;
+        currentViewType = 'lesson';
+        renderGrid();
+    }
+
+    // 4. Hàm kích hoạt dữ liệu mảng Đề kiểm tra
     function showTestBlocks(title, testsArray) {
         hideDropdowns();
-        
+        prepareGrid(title);
+        currentData = testsArray;
+        currentViewType = 'test';
+        renderGrid();
+    }
+
+    // 5. Hàm chuẩn bị giao diện chung trước khi vẽ
+    function prepareGrid(title) {
         document.getElementById('default-view').style.display = 'none';
         document.getElementById('grid-view').style.display = 'block';
         document.getElementById('grid-title').innerText = title.toUpperCase();
@@ -646,27 +654,89 @@
         contentArea.classList.remove('lg:col-span-3');
         contentArea.classList.add('lg:col-span-4');
 
-        const container = document.getElementById('grid-container');
-        // Đổi sang cấu trúc lưới 4 cột trải rộng trên màn hình lớn, 2 cột trên ipad
-        container.className = 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 w-full';
-        container.innerHTML = ''; 
+        // Khôi phục bộ tìm kiếm và số trang về mặc định ban đầu
+        document.getElementById('searchInput').value = '';
+        searchQuery = '';
+        currentPage = 1;
 
-        testsArray.forEach((test, index) => {
+        document.getElementById('grid-view').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    // 6. Hàm Render trung tâm: Lọc dữ liệu, phân trang và vẽ HTML
+    function renderGrid() {
+        const container = document.getElementById('grid-container');
+        const paginationControls = document.getElementById('pagination-controls');
+        
+        container.innerHTML = '';
+        paginationControls.innerHTML = '';
+
+        // Thuật toán lọc theo từ khóa tìm kiếm
+        const filteredData = currentData.filter(item => item.title.toLowerCase().includes(searchQuery));
+
+        // Tùy chỉnh cột lưới theo dạng thẻ hiển thị
+        if (currentViewType === 'lesson') {
+            container.className = 'grid grid-cols-1 md:grid-cols-2 gap-12 max-w-5xl mx-auto';
+        } else {
+            container.className = 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 w-full';
+        }
+
+        // Báo lỗi nếu tìm không thấy nội dung
+        if (filteredData.length === 0) {
+            container.innerHTML = '<div class="col-span-full text-center text-gray-500 py-12 text-lg"><i class="fa-solid fa-folder-open mb-3 text-3xl"></i><br>Không tìm thấy nội dung phù hợp.</div>';
+            return;
+        }
+
+        // Thuật toán cắt mảng dựa trên số trang
+        const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+        const startIndex = (currentPage - 1) * itemsPerPage;
+        const endIndex = startIndex + itemsPerPage;
+        const pageData = filteredData.slice(startIndex, endIndex);
+
+        // Vẽ các thẻ nội dung của trang hiện tại
+        pageData.forEach((item, index) => {
             const color = colorClasses[index % colorClasses.length];
-            const icon = test.icon || 'fa-file-lines';
-            
             const card = document.createElement('a');
-            card.href = test.link;
-            card.className = `${color} text-white p-4 md:p-5 rounded-xl shadow-md hover:brightness-110 hover:-translate-y-1 hover:shadow-xl transition-all duration-300 flex items-center gap-3 border border-black/10`;
-            
-            card.innerHTML = `
-                <i class="fa-solid ${icon} text-xl md:text-2xl opacity-90 drop-shadow-sm w-8 text-center"></i>
-                <span class="font-bold text-lg md:text-xl leading-tight drop-shadow-sm flex-1">${test.title}</span>
-            `;
+            card.href = item.link;
+
+            if (currentViewType === 'lesson') {
+                const icon = item.icon || 'fa-book';
+                card.className = `${color} text-white p-4 md:p-5 rounded-2xl shadow-md hover:-translate-y-1 hover:shadow-xl transition-all duration-300 flex flex-col items-start border border-black/10`;
+                card.innerHTML = `
+                    <div class="w-full h-44 md:h-52 bg-white rounded-xl mb-4 overflow-hidden shadow-inner">
+                        <img src="${item.image}" alt="${item.title}" onerror="this.src='https://placehold.co/600x300/ffffff/555555?text=Hinh+Anh'" class="w-full h-full object-cover hover:scale-110 transition-all duration-500">
+                    </div>
+                    <div class="flex items-center gap-3 w-full px-2">
+                        <i class="fa-solid ${icon} text-xl opacity-90 drop-shadow-sm"></i>
+                        <span class="font-bold text-base md:text-lg leading-tight drop-shadow-sm flex-1">${item.title}</span>
+                    </div>
+                `;
+            } else {
+                const icon = item.icon || 'fa-file-lines';
+                card.className = `${color} text-white p-4 md:p-5 rounded-xl shadow-md hover:brightness-110 hover:-translate-y-1 hover:shadow-xl transition-all duration-300 flex items-center gap-3 border border-black/10`;
+                card.innerHTML = `
+                    <i class="fa-solid ${icon} text-xl md:text-2xl opacity-90 drop-shadow-sm w-8 text-center"></i>
+                    <span class="font-bold text-lg md:text-xl leading-tight drop-shadow-sm flex-1">${item.title}</span>
+                `;
+            }
             container.appendChild(card);
         });
-        
-        document.getElementById('grid-view').scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+        // Vẽ các nút nhảy trang nếu số lượng bài vượt quá giới hạn 1 trang
+        if (totalPages > 1) {
+            for (let i = 1; i <= totalPages; i++) {
+                const btn = document.createElement('button');
+                btn.innerText = i;
+                btn.onclick = () => changePage(i);
+                
+                // Tô màu đậm cho trang hiện hành để làm điểm nhấn
+                if (currentPage === i) {
+                    btn.className = 'w-10 h-10 flex items-center justify-center bg-[#0f766e] text-white rounded-lg shadow-md font-bold transition-all duration-300 cursor-default';
+                } else {
+                    btn.className = 'w-10 h-10 flex items-center justify-center bg-gray-100 text-gray-700 hover:bg-gray-200 hover:text-gray-900 rounded-lg font-bold transition-all duration-300 border border-gray-200 shadow-sm';
+                }
+                paginationControls.appendChild(btn);
+            }
+        }
     }
 
     function toggleMobileMenu(element) {
