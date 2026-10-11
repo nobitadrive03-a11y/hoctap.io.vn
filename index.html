@@ -660,54 +660,7 @@
     }
 
     // 6. Hàm Render trung tâm: Lọc dữ liệu, phân trang và vẽ HTML
-    function renderGrid() {
-        const container = document.getElementById('grid-container');
-        const paginationControls = document.getElementById('pagination-controls');
-        
-        container.innerHTML = '';
-        paginationControls.innerHTML = '';
-
-        // Thuật toán lọc theo từ khóa tìm kiếm
-        const filteredData = currentData.filter(item => item.title.toLowerCase().includes(searchQuery));
-
-        // Tùy chỉnh cột lưới theo dạng thẻ hiển thị
-        if (currentViewType === 'lesson') {
-            container.className = 'grid grid-cols-1 md:grid-cols-2 gap-12 max-w-5xl mx-auto';
-        } else {
-            container.className = 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 w-full';
-        }
-
-        // Báo lỗi nếu tìm không thấy nội dung
-        if (filteredData.length === 0) {
-            container.innerHTML = '<div class="col-span-full text-center text-gray-500 py-12 text-lg"><i class="fa-solid fa-folder-open mb-3 text-3xl"></i><br>Không tìm thấy nội dung phù hợp.</div>';
-            return;
-        }
-
-        // Thuật toán cắt mảng dựa trên số trang
-        const totalPages = Math.ceil(filteredData.length / itemsPerPage);
-        const startIndex = (currentPage - 1) * itemsPerPage;
-        const endIndex = startIndex + itemsPerPage;
-        const pageData = filteredData.slice(startIndex, endIndex);
-
-        // Vẽ các thẻ nội dung của trang hiện tại
-        pageData.forEach((item, index) => {
-            const color = colorClasses[index % colorClasses.length];
-            const card = document.createElement('a');
-            card.href = item.link;
-
-            if (currentViewType === 'lesson') {
-                const icon = item.icon || 'fa-book';
-                card.className = `${color} text-white p-4 md:p-5 rounded-2xl shadow-md hover:-translate-y-1 hover:shadow-xl transition-all duration-300 flex flex-col items-start border border-black/10`;
-                card.innerHTML = `
-                    <div class="w-full h-44 md:h-52 bg-white rounded-xl mb-4 overflow-hidden shadow-inner">
-                        <img src="${item.image}" alt="${item.title}" onerror="this.src='https://placehold.co/600x300/ffffff/555555?text=Hinh+Anh'" class="w-full h-full object-cover hover:scale-110 transition-all duration-500">
-                    </div>
-                    <div class="flex items-center gap-3 w-full px-2">
-                        <i class="fa-solid ${icon} text-xl opacity-90 drop-shadow-sm"></i>
-                        <span class="font-bold text-base md:text-lg leading-tight drop-shadow-sm flex-1">${item.title}</span>
-                    </div>
-                `;
-            } else {
+      else {
                 const icon = item.icon || 'fa-file-lines';
                 card.className = `${color} text-white p-4 md:p-5 rounded-xl shadow-md hover:brightness-110 hover:-translate-y-1 hover:shadow-xl transition-all duration-300 flex items-center gap-3 border border-black/10`;
                 card.innerHTML = `
@@ -715,6 +668,7 @@
                     <span class="font-bold text-lg md:text-xl leading-tight drop-shadow-sm flex-1">${item.title}</span>
                 `;
             }
+            
             container.appendChild(card);
         });
 
@@ -725,7 +679,6 @@
                 btn.innerText = i;
                 btn.onclick = () => changePage(i);
                 
-                // Tô màu đậm cho trang hiện hành để làm điểm nhấn
                 if (currentPage === i) {
                     btn.className = 'w-10 h-10 flex items-center justify-center bg-[#0f766e] text-white rounded-lg shadow-md font-bold transition-all duration-300 cursor-default';
                 } else {
@@ -735,7 +688,6 @@
             }
         }
     }
-
     function toggleMobileMenu(element) {
         const dropdown = element.nextElementSibling;
         document.querySelectorAll('.dropdown-menu').forEach(menu => {
