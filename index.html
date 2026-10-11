@@ -576,7 +576,7 @@
     function changePage(page) {
         currentPage = page;
         renderGrid();
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        setTimeout(() => { window.scrollTo({ top: 0, behavior: 'smooth' }); }, 100);
     }
 
     function showLessons(title, lessonsArray) {
@@ -585,6 +585,7 @@
         currentData = lessonsArray;
         currentViewType = 'lesson';
         renderGrid();
+        setTimeout(() => { window.scrollTo({ top: 0, behavior: 'smooth' }); }, 100);
     }
 
     function showTestBlocks(title, testsArray) {
@@ -593,6 +594,7 @@
         currentData = testsArray;
         currentViewType = 'test';
         renderGrid();
+        setTimeout(() => { window.scrollTo({ top: 0, behavior: 'smooth' }); }, 100);
     }
 
     function prepareGrid(title) {
@@ -608,8 +610,6 @@
         document.getElementById('searchInput').value = '';
         searchQuery = '';
         currentPage = 1;
-
-        window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     function renderGrid() {
@@ -640,11 +640,19 @@
         pageData.forEach((item, index) => {
             const color = colorClasses[index % colorClasses.length];
             const card = document.createElement('a');
-            card.href = item.link;
+            
+            // XỬ LÝ ĐẶC BIỆT CHO ĐIỆN THOẠI TRÁNH BỊ GIẬT XUỐNG CHÂN TRANG
+            if (item.link.startsWith("javascript:")) {
+                card.href = "javascript:void(0)";
+                // Tách đoạn code javascript ra và gán vào sự kiện click
+                card.setAttribute("onclick", item.link.replace("javascript:", ""));
+            } else {
+                card.href = item.link;
+            }
 
             if (currentViewType === 'lesson') {
                 const icon = item.icon || 'fa-book';
-                card.className = `${color} text-white p-4 md:p-5 rounded-2xl shadow-md hover:-translate-y-1 hover:shadow-xl transition-all duration-300 flex flex-col items-start border border-black/10`;
+                card.className = `${color} text-white p-4 md:p-5 rounded-2xl shadow-md hover:-translate-y-1 hover:shadow-xl transition-all duration-300 flex flex-col items-start border border-black/10 cursor-pointer`;
                 card.innerHTML = `
                     <div class="w-full h-44 md:h-52 bg-white rounded-xl mb-4 overflow-hidden shadow-inner">
                         <img src="${item.image}" alt="${item.title}" onerror="this.src='https://placehold.co/600x300/ffffff/555555?text=Hinh+Anh'" class="w-full h-full object-cover hover:scale-110 transition-all duration-500">
@@ -656,7 +664,7 @@
                 `;
             } else {
                 const icon = item.icon || 'fa-file-lines';
-                card.className = `${color} text-white p-4 md:p-5 rounded-xl shadow-md hover:brightness-110 hover:-translate-y-1 hover:shadow-xl transition-all duration-300 flex items-center gap-3 border border-black/10`;
+                card.className = `${color} text-white p-4 md:p-5 rounded-xl shadow-md hover:brightness-110 hover:-translate-y-1 hover:shadow-xl transition-all duration-300 flex items-center gap-3 border border-black/10 cursor-pointer`;
                 card.innerHTML = `
                     <i class="fa-solid ${icon} text-xl md:text-2xl opacity-90 drop-shadow-sm w-8 text-center"></i>
                     <span class="font-bold text-lg md:text-xl leading-tight drop-shadow-sm flex-1">${item.title}</span>
@@ -681,28 +689,23 @@
         }
     }
 
-    // ĐÃ NÂNG CẤP LẠI HÀM NÀY ĐỂ TRÁNH LỖI ĐÈ NHAU
     function toggleMobileMenu(element) {
         const dropdown = element.nextElementSibling;
         const isCurrentlyHidden = dropdown.classList.contains('hidden');
 
-        // Bắt buộc đóng hết tất cả menu khác trước
         document.querySelectorAll('.dropdown-menu').forEach(menu => {
             menu.classList.add('hidden');
             menu.classList.remove('flex');
         });
 
-        // Chỉ mở ra nếu menu đó chưa mở
         if (isCurrentlyHidden) {
             dropdown.classList.remove('hidden');
             dropdown.classList.add('flex');
         }
     }
 
-    // ĐÃ THÊM SỰ KIỆN MỚI NÀY ĐỂ XỬ LÝ LỖI TRÊN MÁY TÍNH
     document.querySelectorAll('.nav-menu-group').forEach(item => {
         item.addEventListener('mouseenter', function() {
-            // Khi rê chuột (hover) vào 1 danh mục trên máy tính, sẽ dọn dẹp các menu đang mở kẹt do click
             if (window.innerWidth >= 768) {
                 document.querySelectorAll('.dropdown-menu').forEach(menu => {
                     menu.classList.add('hidden');
@@ -741,7 +744,7 @@
         contentArea.classList.remove('lg:col-span-4');
         contentArea.classList.add('lg:col-span-3');
 
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        setTimeout(() => { window.scrollTo({ top: 0, behavior: 'smooth' }); }, 100);
     }
 </script>
 
