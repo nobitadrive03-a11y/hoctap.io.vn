@@ -107,7 +107,7 @@
             <li><a href="javascript:void(0)" onclick="showDefault()" class="nav-item block px-2 md:px-4 py-2 md:py-4 cursor-pointer">GIỚI THIỆU</a></li>
             
             <!-- TIN HỌC 10 -->
-            <li class="group relative">
+            <li class="group relative nav-menu-group">
                 <a href="javascript:void(0)" onclick="toggleMobileMenu(this)" class="nav-item block px-2 md:px-4 py-2 md:py-4">TIN HỌC 10</a>
                 <div class="dropdown-menu absolute left-1/2 -translate-x-1/2 md:translate-x-0 md:left-0 top-full hidden md:group-hover:flex flex-col bg-white shadow-2xl rounded-xl border border-gray-100 w-56 p-3 gap-2 z-[100] mt-1 md:mt-0">
                     <button onclick="showLessons('Tài liệu Tin học 10', duLieuTin10)" class="w-full bg-[#f97316] text-white font-bold py-3 px-4 rounded-lg hover:brightness-110 shadow-sm transition-all text-sm text-left"><i class="fa-solid fa-folder-open mr-2"></i> TÀI LIỆU</button>
@@ -116,7 +116,7 @@
             </li>
 
             <!-- TIN HỌC 11 -->
-            <li class="group relative">
+            <li class="group relative nav-menu-group">
                 <a href="javascript:void(0)" onclick="toggleMobileMenu(this)" class="nav-item block px-2 md:px-4 py-2 md:py-4">TIN HỌC 11</a>
                 <div class="dropdown-menu absolute left-1/2 -translate-x-1/2 md:translate-x-0 md:left-0 top-full hidden md:group-hover:flex flex-col bg-white shadow-2xl rounded-xl border border-gray-100 w-56 p-3 gap-2 z-[100] mt-1 md:mt-0">
                     <button onclick="showLessons('Tài liệu Tin học 11', duLieuTin11)" class="w-full bg-[#8b5cf6] text-white font-bold py-3 px-4 rounded-lg hover:brightness-110 shadow-sm transition-all text-sm text-left"><i class="fa-solid fa-folder-open mr-2"></i> TÀI LIỆU</button>
@@ -125,7 +125,7 @@
             </li>
 
             <!-- TIN HỌC 12 -->
-            <li class="group relative">
+            <li class="group relative nav-menu-group">
                 <a href="javascript:void(0)" onclick="toggleMobileMenu(this)" class="nav-item block px-2 md:px-4 py-2 md:py-4">TIN HỌC 12</a>
                 <div class="dropdown-menu absolute left-1/2 -translate-x-1/2 md:translate-x-0 md:left-0 top-full hidden md:group-hover:flex flex-col bg-white shadow-2xl rounded-xl border border-gray-100 w-56 p-3 gap-2 z-[100] mt-1 md:mt-0">
                     <button onclick="showLessons('Tài liệu Tin học 12', duLieuTin12)" class="w-full bg-[#0ea5e9] text-white font-bold py-3 px-4 rounded-lg hover:brightness-110 shadow-sm transition-all text-sm text-left"><i class="fa-solid fa-folder-open mr-2"></i> TÀI LIỆU</button>
@@ -134,7 +134,7 @@
             </li>
 
             <!-- GIẢI TRÍ -->
-            <li class="group relative">
+            <li class="group relative nav-menu-group">
                 <a href="javascript:void(0)" onclick="toggleMobileMenu(this)" class="nav-item block px-2 md:px-4 py-2 md:py-4">GIẢI TRÍ</a>
                 <div class="dropdown-menu absolute left-1/2 -translate-x-1/2 md:translate-x-0 md:left-0 top-full hidden md:group-hover:flex flex-col bg-white shadow-2xl rounded-xl border border-gray-100 w-56 p-3 gap-2 z-[100] mt-1 md:mt-0">
                     <button onclick="showLessons('Âm nhạc học đường', giaiTriAmNhac)" class="w-full bg-[#f97316] text-white font-bold py-2 px-4 rounded-lg hover:brightness-110 shadow-sm transition-all text-sm text-left">ÂM NHẠC</button>
@@ -149,7 +149,7 @@
             </li>
 
             <!-- LIÊN HỆ -->
-            <li class="group relative">
+            <li class="group relative nav-menu-group">
                 <a href="javascript:void(0)" onclick="toggleMobileMenu(this)" class="nav-item block px-2 md:px-4 py-2 md:py-4">LIÊN HỆ</a>
                 <div class="dropdown-menu absolute right-1/2 translate-x-1/2 md:translate-x-0 md:right-0 top-full hidden md:group-hover:flex flex-col bg-white shadow-2xl rounded-xl border border-gray-100 w-56 p-3 gap-2 z-[100] mt-1 md:mt-0">
                     <button onclick="showLessons('Hỗ trợ hệ thống', lienHeHoTro)" class="w-full bg-[#64748b] text-white font-bold py-2 px-4 rounded-lg hover:brightness-110 shadow-sm transition-all text-sm text-left">HỖ TRỢ TRỰC TUYẾN</button>
@@ -254,16 +254,13 @@
                 </div>
             </div>
 
-           <!-- KHUNG LƯỚI KHỐI MÀU BÀI HỌC / KIỂM TRA (ĐÃ CẬP NHẬT TÌM KIẾM VÀ PHÂN TRANG) -->
+           <!-- KHUNG LƯỚI KHỐI MÀU BÀI HỌC / KIỂM TRA -->
             <div id="grid-view" class="hidden bg-white rounded-xl shadow-md border border-gray-100 p-4 md:p-8 min-h-[400px]">
                 <h2 id="grid-title" class="text-center font-extrabold text-xl md:text-3xl uppercase mb-6 md:mb-8 text-gray-800 drop-shadow-sm">TIÊU ĐỀ MỤC</h2>
                 
-                <!-- BẮT ĐẦU: THANH TÌM KIẾM -->
-               <!-- BẮT ĐẦU: THANH TÌM KIẾM -->
+                <!-- THANH TÌM KIẾM -->
                 <div class="max-w-md mx-auto mb-8">
-                    <!-- Hộp nền xanh blue bao bọc bên ngoài -->
                     <div class="bg-blue-600 p-1.5 rounded-full shadow-md hover:shadow-lg focus-within:shadow-xl focus-within:ring-4 focus-within:ring-blue-300/50 transition-all duration-300">
-                        <!-- Ô nhập liệu nền trắng bên trong -->
                         <div class="relative flex items-center w-full h-11 rounded-full bg-white overflow-hidden">
                             <div class="grid place-items-center h-full w-12 text-blue-600">
                                 <i class="fa-solid fa-magnifying-glass text-lg"></i>
@@ -276,18 +273,15 @@
                         </div>
                     </div>
                 </div>
-                <!-- KẾT THÚC: THANH TÌM KIẾM -->
-                <!-- KẾT THÚC: THANH TÌM KIẾM -->
 
                 <div id="grid-container" class="grid grid-cols-1 md:grid-cols-2 gap-12 max-w-5xl mx-auto">
                     <!-- Các thẻ bài học sẽ tự động được Javascript vẽ vào đây -->
                 </div>
                 
-                <!-- BẮT ĐẦU: THANH CHUYỂN TRANG -->
+                <!-- THANH CHUYỂN TRANG -->
                 <div id="pagination-controls" class="flex justify-center items-center mt-10 gap-2 flex-wrap">
                     <!-- Các nút phân trang sẽ xuất hiện tại đây -->
                 </div>
-                <!-- KẾT THÚC: THANH CHUYỂN TRANG -->
 
                 <div class="mt-12 flex justify-center border-t border-gray-200 pt-8">
                     <button onclick="showDefault()" class="bg-gradient-to-r from-blue-600 to-indigo-700 text-white font-bold py-3 px-8 rounded-full shadow-lg hover:shadow-xl hover:-translate-y-1 hover:from-blue-500 hover:to-indigo-600 transition-all duration-300 flex items-center gap-3 drop-shadow-md border border-white/20 text-sm md:text-base">
@@ -352,10 +346,7 @@
 <script>
     const colorClasses = ['bg-[#dc2626]', 'bg-[#2563eb]', 'bg-[#16a34a]', 'bg-[#f97316]', 'bg-[#9333ea]', 'bg-[#eab308]', 'bg-[#0d9488]', 'bg-[#1e293b]', 'bg-[#be123c]', 'bg-[#0284c7]'];
 
-    // =========================================================================
-    // KHU VỰC DỮ LIỆU TÀI LIỆU
-    // =========================================================================
-
+    // DỮ LIỆU TÀI LIỆU
     const duLieuTin10 = [
         { title: "Sách giáo khoa Tin học 10. Định hướng tin học ứng dụng", link: "https://books.fliphtml5.com/lmpyl/occo/#p=1", image: "https://placehold.co/600x300/0d9488/ffffff?text=Tin+10+Bai+1", icon: "fa-book" },
         { title: "Sách bài tập Tin học 10. Định hướng tin học ứng dụng", link: "https://books.fliphtml5.com/jaooym/SBT-TIN-HOC-10/#p=1", image: "https://placehold.co/600x300/0d9488/ffffff?text=Tin+10+Bai+1", icon: "fa-book" },
@@ -492,27 +483,38 @@
         { title: "🏅 Bài 5. Thực hành chia sẻ tài nguyên trên mạng", link: "tinhoc12/baihoc/bai5.html", icon: "fa-list-check" },
         { title: "👨‍🏫 Bài 6. Giao tiếp và ứng xử trong không gian mạng", link: "tinhoc12/baihoc/bai6.html", icon: "fa-list-check" },
         { title: "🏫 Bài 7. HTML và cấu trúc trang web", link: "tinhoc12/baihoc/bai7.html", icon: "fa-list-check" }
-    
-        
     ];
 
+  const kiemTraTin10 = [
+        { title: "Kiểm tra thường xuyên học kỳ 1", link: "javascript:showTestBlocks('Kiểm tra thường xuyên HK1 - Tin 10', tin10_tx1)", image: "anh/tin10/tx1.jpg", icon: "fa-folder-open" },
+        { title: "Kiểm tra giữa kỳ 1", link: "javascript:showTestBlocks('Kiểm tra giữa kỳ 1 - Tin 10', tin10_gk1)", image: "anh/tin10/gk1.jpg", icon: "fa-folder-open" },
+        { title: "Kiểm tra cuối kỳ 1", link: "javascript:showTestBlocks('Kiểm tra cuối kỳ 1 - Tin 10', tin10_ck1)", image: "anh/tin10/hk1.jpg", icon: "fa-folder-open" },
+        { title: "Kiểm tra thường xuyên học kỳ 2", link: "javascript:showTestBlocks('Kiểm tra thường xuyên HK2 - Tin 10', tin10_tx2)", image: "anh/tin10/tx2.jpg", icon: "fa-folder-open" },
+        { title: "Kiểm tra giữa kỳ 2", link: "javascript:showTestBlocks('Kiểm tra giữa kỳ 2 - Tin 10', tin10_gk2)", image: "anh/tin10/gk2.jpg", icon: "fa-folder-open" },
+        { title: "Kiểm tra cuối kỳ 2", link: "javascript:showTestBlocks('Kiểm tra cuối kỳ 2 - Tin 10', tin10_ck2)", image: "anh/tin10/hk2.jpg", icon: "fa-folder-open" },
+        { title: "Đề thi trắc nghiệm qua các bài học", link: "javascript:showTestBlocks('Đề thi trắc nghiệm - Tin 10', tin10_tn)", image: "anh/tin10/detin10.jpg", icon: "fa-folder-open" }
+    ];
 
-const kiemTraTin10 = [
-    { title: "Kiểm tra thường xuyên học kỳ 1", 
-      link: "javascript:showTestBlocks('Kiểm tra thường xuyên HK1 - Tin 10', 'tin10_tx1')", 
-      image: "anh/tin10/tx1.jpg",
-      icon: "fa-folder-open" },
-    { title: "Kiểm tra giữa kỳ 1", 
-      link: "javascript:showTestBlocks('Kiểm tra giữa kỳ 1 - Tin 10', 'tin10_gk1')", 
-      image: "anh/tin10/gk1.jpg", 
-      icon: "fa-folder-open" },
-    { title: "Kiểm tra cuối kỳ 1",
-      link: "javascript:showTestBlocks('Kiểm tra cuối kỳ 1 - Tin 10', 'tin10_ck1')", 
-      image: "anh/tin10/hk1.jpg", 
-      icon: "fa-folder-open" }
-    // Tương tự, thêm dấu nháy đơn ' ' cho tất cả các link còn lại ở Tin 11, Tin 12
-];
-    
+    const kiemTraTin11 = [
+       { title: "Kiểm tra thường xuyên học kỳ 1", link: "javascript:showTestBlocks('Kiểm tra thường xuyên HK1 - Tin 11', tin11_tx1)", image: "anh/tin11/tx1.jpg", icon: "fa-folder-open" },
+        { title: "Kiểm tra giữa kỳ 1", link: "javascript:showTestBlocks('Kiểm tra giữa kỳ 1 - Tin 11', tin11_gk1)", image: "anh/tin11/gk1.jpg", icon: "fa-folder-open" },
+        { title: "Kiểm tra cuối kỳ 1", link: "javascript:showTestBlocks('Kiểm tra cuối kỳ 1 - Tin 11', tin11_ck1)", image: "anh/tin11/hk1.jpg", icon: "fa-folder-open" },
+        { title: "Kiểm tra thường xuyên học kỳ 2", link: "javascript:showTestBlocks('Kiểm tra thường xuyên HK2 - Tin 11', tin11_tx2)", image: "anh/tin11/tx2.jpg", icon: "fa-folder-open" },
+        { title: "Kiểm tra giữa kỳ 2", link: "javascript:showTestBlocks('Kiểm tra giữa kỳ 2 - Tin 11', tin11_gk2)", image: "anh/tin11/gk2.jpg", icon: "fa-folder-open" },
+        { title: "Kiểm tra cuối kỳ 2", link: "javascript:showTestBlocks('Kiểm tra cuối kỳ 2 - Tin 11', tin11_ck2)", image: "anh/tin11/hk2.jpg", icon: "fa-folder-open" },
+        { title: "Đề thi trắc nghiệm qua các bài học", link: "javascript:showTestBlocks('Đề thi trắc nghiệm - Tin 11', tin11_tn)", image: "anh/tin11/detin11.jpg", icon: "fa-folder-open" }
+    ];
+
+    const kiemTraTin12 = [
+        { title: "Kiểm tra thường xuyên học kỳ 1", link: "javascript:showTestBlocks('Kiểm tra thường xuyên HK1 - Tin 12', tin12_tx1)", image: "anh/tin12/tx1.jpg", icon: "fa-folder-open" },
+        { title: "Kiểm tra giữa kỳ 1", link: "javascript:showTestBlocks('Kiểm tra giữa kỳ 1 - Tin 12', tin12_gk1)", image: "anh/tin12/gk1.jpg", icon: "fa-folder-open" },
+        { title: "Kiểm tra cuối kỳ 1", link: "javascript:showTestBlocks('Kiểm tra cuối kỳ 1 - Tin 12', tin12_ck1)", image: "anh/tin12/hk1.jpg", icon: "fa-folder-open" },
+        { title: "Kiểm tra thường xuyên học kỳ 2", link: "javascript:showTestBlocks('Kiểm tra thường xuyên HK2 - Tin 12', tin12_tx2)", image: "anh/tin12/tx2.jpg", icon: "fa-folder-open" },
+        { title: "Kiểm tra giữa kỳ 2", link: "javascript:showTestBlocks('Kiểm tra giữa kỳ 2 - Tin 12', tin12_gk2)", image: "anh/tin12/gk2.jpg", icon: "fa-folder-open" },
+        { title: "Kiểm tra cuối kỳ 2", link: "javascript:showTestBlocks('Kiểm tra cuối kỳ 2 - Tin 12', tin12_ck2)", image: "anh/tin12/hk2.jpg", icon: "fa-folder-open" },
+        { title: "Đề thi trắc nghiệm qua các bài học", link: "javascript:showTestBlocks('Đề thi trắc nghiệm - Tin 12', tin12_tn)", image: "anh/tin12/detin12.jpg", icon: "fa-folder-open" }
+    ];
+
     const giaiTriAmNhac = [
         { title: "Mùa thu vẫn gọi những bước chân", link: "https://www.youtube.com/watch?v=i1jEP6P7Sqc", image: "https://img.youtube.com/vi/i1jEP6P7Sqc/hqdefault.jpg", icon: "fa-music" },
         { title: "Vui đến trường", link: "https://www.youtube.com/watch?v=nBslIBnqOUM&list=RDnBslIBnqOUM&start_radio=1", image: "https://img.youtube.com/vi/nBslIBnqOUM/hqdefault.jpg", icon: "fa-headphones" },
@@ -558,32 +560,25 @@ const kiemTraTin10 = [
     ];
 
 
-    // =========================================================================
-    // HÀM XỬ LÝ GIAO DIỆN HIỂN THỊ CÓ TÌM KIẾM VÀ PHÂN TRANG
-    // =========================================================================
-
-    // Các biến toàn cục quản lý trạng thái hiển thị
+    // HÀM XỬ LÝ GIAO DIỆN
     let currentData = [];
-    let currentViewType = 'lesson'; // 'lesson' (tài liệu/có ảnh) hoặc 'test' (bài kiểm tra/không ảnh)
+    let currentViewType = 'lesson'; 
     let currentPage = 1;
-    const itemsPerPage = 20; // Giới hạn 20 file/thư mục mỗi trang
+    const itemsPerPage = 20; 
     let searchQuery = '';
 
-    // 1. Hàm xử lý khi người dùng gõ vào ô tìm kiếm
     function handleSearch() {
         searchQuery = document.getElementById('searchInput').value.toLowerCase();
-        currentPage = 1; // Luôn quay về trang 1 mỗi khi gõ từ khóa mới
+        currentPage = 1; 
         renderGrid();
     }
 
-    // 2. Hàm chuyển trang
     function changePage(page) {
         currentPage = page;
         renderGrid();
         document.getElementById('grid-view').scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 
-    // 3. Hàm kích hoạt dữ liệu mảng Tài liệu/Trò chơi
     function showLessons(title, lessonsArray) {
         hideDropdowns();
         prepareGrid(title);
@@ -592,7 +587,6 @@ const kiemTraTin10 = [
         renderGrid();
     }
 
-    // 4. Hàm kích hoạt dữ liệu mảng Đề kiểm tra
     function showTestBlocks(title, testsArray) {
         hideDropdowns();
         prepareGrid(title);
@@ -601,7 +595,6 @@ const kiemTraTin10 = [
         renderGrid();
     }
 
-    // 5. Hàm chuẩn bị giao diện chung trước khi vẽ
     function prepareGrid(title) {
         document.getElementById('default-view').style.display = 'none';
         document.getElementById('grid-view').style.display = 'block';
@@ -612,7 +605,6 @@ const kiemTraTin10 = [
         contentArea.classList.remove('lg:col-span-3');
         contentArea.classList.add('lg:col-span-4');
 
-        // Khôi phục bộ tìm kiếm và số trang về mặc định ban đầu
         document.getElementById('searchInput').value = '';
         searchQuery = '';
         currentPage = 1;
@@ -620,7 +612,6 @@ const kiemTraTin10 = [
         document.getElementById('grid-view').scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 
-    // 6. Hàm Render trung tâm: Lọc dữ liệu, phân trang và vẽ HTML
     function renderGrid() {
         const container = document.getElementById('grid-container');
         const paginationControls = document.getElementById('pagination-controls');
@@ -628,29 +619,24 @@ const kiemTraTin10 = [
         container.innerHTML = '';
         paginationControls.innerHTML = '';
 
-        // Thuật toán lọc theo từ khóa tìm kiếm
         const filteredData = currentData.filter(item => item.title.toLowerCase().includes(searchQuery));
 
-        // Tùy chỉnh cột lưới theo dạng thẻ hiển thị
         if (currentViewType === 'lesson') {
             container.className = 'grid grid-cols-1 md:grid-cols-2 gap-12 max-w-5xl mx-auto';
         } else {
             container.className = 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 w-full';
         }
 
-        // Báo lỗi nếu tìm không thấy nội dung
         if (filteredData.length === 0) {
             container.innerHTML = '<div class="col-span-full text-center text-gray-500 py-12 text-lg"><i class="fa-solid fa-folder-open mb-3 text-3xl"></i><br>Không tìm thấy nội dung phù hợp.</div>';
             return;
         }
 
-        // Thuật toán cắt mảng dựa trên số trang
         const totalPages = Math.ceil(filteredData.length / itemsPerPage);
         const startIndex = (currentPage - 1) * itemsPerPage;
         const endIndex = startIndex + itemsPerPage;
         const pageData = filteredData.slice(startIndex, endIndex);
 
-        // Vẽ các thẻ nội dung của trang hiện tại
         pageData.forEach((item, index) => {
             const color = colorClasses[index % colorClasses.length];
             const card = document.createElement('a');
@@ -679,14 +665,12 @@ const kiemTraTin10 = [
             container.appendChild(card);
         });
 
-        // Vẽ các nút nhảy trang nếu số lượng bài vượt quá giới hạn 1 trang
         if (totalPages > 1) {
             for (let i = 1; i <= totalPages; i++) {
                 const btn = document.createElement('button');
                 btn.innerText = i;
                 btn.onclick = () => changePage(i);
                 
-                // Tô màu đậm cho trang hiện hành để làm điểm nhấn
                 if (currentPage === i) {
                     btn.className = 'w-10 h-10 flex items-center justify-center bg-[#0f766e] text-white rounded-lg shadow-md font-bold transition-all duration-300 cursor-default';
                 } else {
@@ -697,23 +681,36 @@ const kiemTraTin10 = [
         }
     }
 
+    // ĐÃ NÂNG CẤP LẠI HÀM NÀY ĐỂ TRÁNH LỖI ĐÈ NHAU
     function toggleMobileMenu(element) {
         const dropdown = element.nextElementSibling;
+        const isCurrentlyHidden = dropdown.classList.contains('hidden');
+
+        // Bắt buộc đóng hết tất cả menu khác trước
         document.querySelectorAll('.dropdown-menu').forEach(menu => {
-            if (menu !== dropdown) {
-                menu.classList.add('hidden');
-                menu.classList.remove('flex');
-            }
+            menu.classList.add('hidden');
+            menu.classList.remove('flex');
         });
 
-        if (dropdown.classList.contains('hidden')) {
+        // Chỉ mở ra nếu menu đó chưa mở
+        if (isCurrentlyHidden) {
             dropdown.classList.remove('hidden');
             dropdown.classList.add('flex');
-        } else {
-            dropdown.classList.add('hidden');
-            dropdown.classList.remove('flex');
         }
     }
+
+    // ĐÃ THÊM SỰ KIỆN MỚI NÀY ĐỂ XỬ LÝ LỖI TRÊN MÁY TÍNH
+    document.querySelectorAll('.nav-menu-group').forEach(item => {
+        item.addEventListener('mouseenter', function() {
+            // Khi rê chuột (hover) vào 1 danh mục trên máy tính, sẽ dọn dẹp các menu đang mở kẹt do click
+            if (window.innerWidth >= 768) {
+                document.querySelectorAll('.dropdown-menu').forEach(menu => {
+                    menu.classList.add('hidden');
+                    menu.classList.remove('flex');
+                });
+            }
+        });
+    });
 
     document.addEventListener('click', function(event) {
         const isClickInsideNav = event.target.closest('nav');
@@ -738,10 +735,8 @@ const kiemTraTin10 = [
         document.getElementById('grid-view').style.display = 'none';
         document.getElementById('default-view').style.display = 'grid'; 
         
-        // Hiện lại Danh mục học tập bên trái khi về trang chủ
         document.getElementById('sidebar').style.display = 'block';
 
-        // Thu khung nội dung về lại 3 cột để nhường 1 cột cho Danh mục học tập
         const contentArea = document.getElementById('content-area');
         contentArea.classList.remove('lg:col-span-4');
         contentArea.classList.add('lg:col-span-3');
