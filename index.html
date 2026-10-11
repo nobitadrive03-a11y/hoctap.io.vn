@@ -660,7 +660,67 @@
     }
 
     // 6. Hàm Render trung tâm: Lọc dữ liệu, phân trang và vẽ HTML
-      else {
+
+// 6. Hàm Render trung tâm: Lọc dữ liệu, phân trang và vẽ HTML (Đã sửa để tự động hiện ảnh)
+    function renderGrid() {
+        const container = document.getElementById('grid-container');
+        const paginationControls = document.getElementById('pagination-controls');
+        
+        container.innerHTML = '';
+        paginationControls.innerHTML = '';
+
+        // Thuật toán lọc theo từ khóa tìm kiếm
+        const filteredData = currentData.filter(item => item.title.toLowerCase().includes(searchQuery));
+
+        // Báo lỗi nếu tìm không thấy nội dung
+        if (filteredData.length === 0) {
+            container.innerHTML = '<div class="col-span-full text-center text-gray-500 py-12 text-lg"><i class="fa-solid fa-folder-open mb-3 text-3xl"></i><br>Không tìm thấy nội dung phù hợp.</div>';
+            return;
+        }
+
+        // Thuật toán cắt mảng dựa trên số trang
+        const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+        const startIndex = (currentPage - 1) * itemsPerPage;
+        const endIndex = startIndex + itemsPerPage;
+        const pageData = filteredData.slice(startIndex, endIndex);
+
+        // Kiểm tra xem dữ liệu trang hiện tại có chứa ảnh không để định dạng cột lưới
+        const hasImage = pageData.length > 0 && pageData[0].image;
+        if (hasImage) {
+            container.className = 'grid grid-cols-1 md:grid-cols-2 gap-12 max-w-5xl mx-auto';
+        } else {
+            container.className = 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 w-full';
+        }
+
+        // Vẽ các thẻ nội dung của trang hiện tại
+        pageData.forEach((item, index) => {
+            const color = colorClasses[index % colorClasses.length];
+            const card = document.createElement('a');
+            
+            // Xử lý link (nếu là gọi hàm javascript thì gán thuộc tính onclick hoặc href)
+            if(item.link.startsWith('javascript:')) {
+                card.href = "javascript:void(0)";
+                card.setAttribute('onclick', item.link.replace('javascript:', ''));
+            } else {
+                card.href = item.link;
+            }
+
+            // Nếu dữ liệu CÓ ẢNH -> Hiển thị khung lớn chứa ảnh
+            if (item.image) {
+                const icon = item.icon || 'fa-book';
+                card.className = `${color} text-white p-4 md:p-5 rounded-2xl shadow-md hover:-translate-y-1 hover:shadow-xl transition-all duration-300 flex flex-col items-start border border-black/10`;
+                card.innerHTML = `
+                    <div class="w-full h-44 md:h-52 bg-white rounded-xl mb-4 overflow-hidden shadow-inner">
+                        <img src="${item.image}" alt="${item.title}" onerror="this.src='https://placehold.co/600x300/ffffff/555555?text=Hinh+Anh'" class="w-full h-full object-cover hover:scale-110 transition-all duration-500">
+                    </div>
+                    <div class="flex items-center gap-3 w-full px-2">
+                        <i class="fa-solid ${icon} text-xl opacity-90 drop-shadow-sm"></i>
+                        <span class="font-bold text-base md:text-lg leading-tight drop-shadow-sm flex-1">${item.title}</span>
+                    </div>
+                `;
+            } 
+            // Nếu dữ liệu KHÔNG CÓ ẢNH -> Hiển thị khung nhỏ dạng nút
+            else {
                 const icon = item.icon || 'fa-file-lines';
                 card.className = `${color} text-white p-4 md:p-5 rounded-xl shadow-md hover:brightness-110 hover:-translate-y-1 hover:shadow-xl transition-all duration-300 flex items-center gap-3 border border-black/10`;
                 card.innerHTML = `
@@ -688,42 +748,8 @@
             }
         }
     }
-    function toggleMobileMenu(element) {
-        const dropdown = element.nextElementSibling;
-        document.querySelectorAll('.dropdown-menu').forEach(menu => {
-            if (menu !== dropdown) {
-                menu.classList.add('hidden');
-                menu.classList.remove('flex');
-            }
-        });
 
-        if (dropdown.classList.contains('hidden')) {
-            dropdown.classList.remove('hidden');
-            dropdown.classList.add('flex');
-        } else {
-            dropdown.classList.add('hidden');
-            dropdown.classList.remove('flex');
-        }
-    }
-
-    document.addEventListener('click', function(event) {
-        const isClickInsideNav = event.target.closest('nav');
-        if (!isClickInsideNav) {
-            document.querySelectorAll('.dropdown-menu').forEach(menu => {
-                menu.classList.add('hidden');
-                menu.classList.remove('flex');
-            });
-        }
-    });
-
-    function hideDropdowns() {
-        document.querySelectorAll('.dropdown-menu').forEach(menu => {
-            menu.classList.add('hidden');
-            menu.classList.remove('flex');
-            menu.style.display = 'none';
-            setTimeout(() => { menu.style.display = ''; }, 100);
-        });
-    }
+    
 
     function showDefault() {
         document.getElementById('grid-view').style.display = 'none';
