@@ -1,1 +1,812 @@
+<!doctype html>
+<html lang="vi" class="w-full h-full m-0 p-0">
+ <head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <title>Tin Học 10 - Bài 1</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
+  <!-- 1. MÃ GA4 GỐC (Kết nối với Google Analytics) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-NSJCVSL9RM"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-NSJCVSL9RM'); 
+</script>
+
+<!-- 2. MÃ NHỊP TIM 30 GIÂY -->
+<script>
+  setInterval(function() {
+    if (!document.hidden) { 
+      gtag('event', 'keep_alive', {
+        'event_category': 'Engagement',
+        'event_label': 'Học sinh đang làm bài',
+        'non_interaction': false
+      });
+    }
+  }, 30000); 
+</script>
+
+  <style>
+    * { 
+        -webkit-tap-highlight-color: transparent; 
+        -webkit-touch-callout: none !important; 
+        touch-action: manipulation;
+    }
+    
+    html, body { width: 100%; min-height: 100vh; margin: 0; padding: 0; overflow-x: hidden; }
+    
+    body { 
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
+      background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+      background-size: 400% 400%;
+      animation: gradientBG 15s ease infinite;
+    }
+    
+    @keyframes gradientBG {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+
+    #app { width: 100%; min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden; }
+    
+    .glass-card {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    .option-label { transition: background-color 0.1s ease, border-color 0.1s ease; cursor: pointer; border-color: #e2e8f0; }
+    .option-label:hover { background-color: #f0fdfa; border-color: #38bdf8; }
+    
+    input[type="radio"].single-radio:checked + .option-label {
+      background: linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%);
+      color: white; border-color: transparent;
+      box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+    }
+    input[type="radio"].single-radio:checked + .option-label div:first-child { background-color: rgba(255,255,255,0.25); border-color: transparent; color: white; }
+    input[type="radio"].single-radio:checked + .option-label div:last-child { color: white; }
+    
+    .fade-in { animation: fadeIn 0.4s ease forwards; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    
+    .my-score-row {
+      background: linear-gradient(to right, #fdf4ff, #ffffff) !important;
+      border-left: 4px solid #db2777 !important; font-weight: 700 !important;
+      color: #9d174d !important; box-shadow: 0 2px 8px rgba(0,0,0,0.05); position: relative; z-index: 10;
+    }
+    .my-score-row td { padding-top: 16px; padding-bottom: 16px; }
+    
+    .btn-tf { transition: background-color 0.1s ease; border-width: 2px; }
+    .btn-tf.selected { background-color: #2563eb; color: white; border-color: #1d4ed8; }
+    .btn-tf:not(.selected) { background-color: white; color: #4b5563; border-color: #e5e7eb; }
+    .btn-tf:not(:disabled):active { transform: scale(0.95); }
+    
+    .math-scroll { overflow-x: auto; min-width: 0; padding-bottom: 4px; scrollbar-width: none; -ms-overflow-style: none; }
+    .math-scroll::-webkit-scrollbar { display: none; }
+  </style>
+
+ </head>
+ <body>
+  <div id="app" class="p-0 sm:p-4 md:p-8 transition-all">
+   
+   <div id="login-section" class="w-full max-w-md mx-auto fade-in flex flex-col justify-center flex-grow">
+    <div class="glass-card rounded-none sm:rounded-3xl p-6 sm:p-8 flex flex-col justify-start shadow-2xl border-t-8 border-indigo-600 bg-white">
+     <div class="text-center mb-6 pt-4 sm:pt-0">
+      <div class="flex items-center justify-center w-24 h-24 mx-auto mb-4 rounded-full border-4 border-yellow-400 bg-red-600 shadow-lg transform transition-transform hover:scale-105">
+          <span class="text-white font-black text-4xl tracking-tighter">HS</span>
+      </div>
+      <h1 class="text-2xl sm:text-3xl font-bold text-red-500 mb-3"> ĐỀ KIỂM TRA<br> BÀI 1: THÔNG TIN VÀ XỬ LÍ THÔNG TIN </h1>
+     </div>
+      <div id="login-form" class="space-y-4">
+      <div class="flex flex-col gap-4">
+          <div class="w-full">
+               <label class="block text-lg font-bold text-gray-700 mb-1">Họ và tên</label> 
+               <input type="text" id="hoTen" class="w-full px-4 py-4 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-100 outline-none transition-all font-semibold text-lg" placeholder="Nhập họ tên...">
+          </div>
+          <div class="w-full">
+               <label class="block text-lg font-bold text-gray-700 mb-1">Lớp</label> 
+               <input type="text" id="lop" class="w-full px-4 py-4 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-100 outline-none transition-all font-semibold text-lg" placeholder="10A1">
+          </div>
+      </div>
+
+      <div id="login-error" class="hidden bg-red-100 border border-red-300 text-red-700 font-bold text-base p-3 rounded-xl text-center shadow-sm"></div>
+
+      <button type="button" onclick="window.startQuizAction()" id="start-btn" class="w-full py-5 mt-6 bg-gradient-to-r from-blue-500 to-cyan-400 text-white font-extrabold rounded-2xl shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all text-2xl tracking-wide"> 🚀 BẮT ĐẦU THI </button>
+     </div>
+    </div>
+   </div>
+
+   <div id="quiz-section" class="w-full max-w-4xl mx-auto hidden flex-grow flex flex-col">
+    <div class="glass-card rounded-none sm:rounded-3xl p-4 sm:p-8 flex flex-col flex-grow relative border-t-8 border-blue-500 bg-white shadow-2xl">
+     <div class="flex items-center justify-between mb-4 sm:mb-6 pb-4 border-b-2 border-gray-100">
+      
+      <div class="flex items-center gap-3">
+       <div class="flex items-center justify-center w-12 h-12 rounded-full border-2 border-yellow-400 bg-red-600 shadow-sm flex-shrink-0">
+           <span class="text-white font-black text-xl tracking-tighter">HS</span>
+       </div>
+       <div>
+        <h2 id="quiz-title" class="text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">Đề Kiểm Tra</h2>
+        <p id="student-info" class="text-base font-bold text-gray-500 mt-1 uppercase tracking-wide"></p>
+       </div>
+      </div>
+
+      <div class="text-right bg-blue-50 px-4 py-2 rounded-xl border border-blue-100" id="progress-container">
+       <div class="text-sm text-blue-500 font-bold uppercase tracking-wider mb-1">Tiến độ (Câu)</div>
+       <div id="progress-text" class="text-2xl font-black text-blue-700">0/28</div>
+      </div>
+     </div>
+     
+     <div id="timer-banner" class="mb-6 p-4 bg-gradient-to-r from-orange-50 to-red-50 border-2 border-red-100 rounded-2xl flex items-center justify-between shadow-sm sticky top-2 z-40">
+        <span class="text-red-800 font-extrabold flex items-center gap-2 text-lg"><span class="text-2xl animate-pulse">⏰</span> THỜI GIAN:</span> 
+        <span id="timer" class="text-4xl font-black text-red-600 font-mono tracking-wider drop-shadow-sm">45:00</span>
+     </div>
+
+     <div id="question-container" class="mb-8 flex-grow w-full max-w-full"></div>
+     
+     <div id="network-error" class="hidden bg-red-100 text-red-700 p-4 rounded-xl mt-4 text-center font-bold text-sm border-2 border-red-300 mb-4 shadow-sm"></div>
+
+    <div class="flex pt-4 sm:pt-6 border-t-2 border-gray-100 mt-auto pb-4 sm:pb-0">
+        <button id="submit-btn" onclick="window.promptSubmit()" class="w-full py-5 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-bold text-2xl rounded-2xl shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1">✅ NỘP BÀI NGAY</button>
+     </div>
+    </div>
+   </div>
+
+   <div id="confirm-submit-modal" class="fixed inset-0 hidden flex items-center justify-center bg-black/60 backdrop-blur-sm z-50 transition-opacity">
+       <div class="bg-white rounded-3xl w-full max-w-sm shadow-2xl p-6 text-center transform transition-all scale-100 mx-4 border-2 border-gray-100">
+           <div class="text-yellow-400 mb-4 flex justify-center">
+               <svg xmlns="http://www.w3.org/2000/svg" class="h-24 w-24" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+               </svg>
+           </div>
+           <h3 class="text-3xl font-black text-gray-800 mb-2 uppercase tracking-wide">Xác nhận nộp</h3>
+           <p class="text-gray-600 mb-6 font-medium text-xl">Các em mới làm <span id="confirm-answered" class="text-red-600 font-black text-2xl">0</span>/<span id="confirm-total" class="font-black text-2xl">28</span> câu. Có chắc chắn muốn nộp bài không? Những câu chưa làm sẽ bị tính là sai.</p>
+           <div class="flex flex-col gap-3">
+               <button onclick="window.closeConfirmModal()" class="w-full py-4 bg-gray-100 text-gray-800 font-extrabold text-xl rounded-xl hover:bg-gray-200 border border-gray-200">Quay lại làm tiếp</button>
+               <button onclick="window.executeSubmit()" class="w-full py-4 bg-emerald-600 text-white font-extrabold text-xl rounded-xl hover:bg-emerald-700 shadow-md">Vẫn Nộp Luôn</button>
+           </div>
+       </div>
+   </div>
+
+   <div id="result-section" class="w-full max-w-2xl mx-auto hidden fade-in flex flex-col justify-center flex-grow pb-8">
+    <div class="glass-card rounded-none sm:rounded-3xl p-6 sm:p-8 flex flex-col justify-start border-t-8 border-green-500 bg-white shadow-2xl" id="result-content">
+    </div>
+   </div>
+
+   <div id="review-section" class="w-full max-w-4xl mx-auto hidden flex-grow flex flex-col">
+    <div class="glass-card rounded-none sm:rounded-3xl p-4 sm:p-8 flex flex-col flex-grow border-t-8 border-indigo-500 bg-white overflow-hidden shadow-2xl">
+     <div class="flex flex-col-reverse sm:flex-row items-start sm:items-center justify-between mb-6 pb-4 border-b-2 border-gray-100 gap-4">
+      <div class="flex flex-wrap gap-2">
+          <button onclick="window.goHome()" class="px-5 py-3 bg-gray-100 text-gray-700 rounded-xl font-bold hover:bg-gray-200 text-lg shadow-sm border border-gray-200">🏠 Trang chủ</button>
+          <button onclick="window.backFromReview()" class="px-5 py-3 bg-indigo-50 text-indigo-700 rounded-xl font-bold hover:bg-indigo-100 text-lg shadow-sm border border-indigo-200">🔙 Quay lại</button>
+          <button onclick="window.viewScoresAction()" class="px-5 py-3 bg-orange-50 text-orange-700 rounded-xl font-bold hover:bg-orange-100 text-lg shadow-sm border border-orange-200">🏆 Bảng điểm</button>
+      </div>
+      <h2 class="text-3xl sm:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">📝 Xem Lại Bài Làm</h2>
+     </div>
+     <div id="review-content" class="space-y-8 w-full max-w-full"></div>
+    </div>
+   </div>
+
+   <div id="scores-section" class="w-full max-w-6xl mx-auto hidden flex-grow flex flex-col">
+    <div class="glass-card rounded-none sm:rounded-3xl p-4 sm:p-8 flex flex-col flex-grow border-t-8 border-orange-500 bg-white w-full max-w-full shadow-2xl">
+     <div class="mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b-2 border-gray-100 pb-4">
+      <button onclick="window.goHome()" class="px-5 py-3 bg-gray-100 text-gray-700 rounded-xl font-bold hover:bg-gray-200 text-lg shadow-sm border border-gray-200 whitespace-nowrap">🏠 Trang chủ</button>
+      <h2 class="text-3xl sm:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-red-600 text-center flex-grow">🏆 BẢNG XẾP HẠNG</h2>
+     </div>
+     
+     <div class="flex flex-col sm:flex-row justify-between items-center mb-4 gap-4 bg-gray-50 p-4 rounded-xl border border-gray-200">
+         <div id="my-rank-display" class="text-xl font-bold text-gray-700">🏆 Thứ hạng của bạn: <span class="text-gray-400">--</span></div>
+         <div class="w-full sm:w-auto flex-grow max-w-sm">
+             <input type="text" id="search-student" oninput="window.searchStudent(this.value)" placeholder="🔍 Nhập tên học sinh để tìm..." class="w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm focus:border-orange-500 focus:ring-2 focus:ring-orange-200 outline-none transition-all font-medium">
+         </div>
+     </div>
+
+     <div class="overflow-x-auto rounded-xl border border-slate-200 flex-grow shadow-inner bg-white/50 w-full">
+      <table class="w-full text-sm sm:text-base whitespace-nowrap min-w-max">
+       <thead class="bg-gradient-to-r from-orange-500 to-red-500 text-white">
+        <tr>
+         <th class="px-3 sm:px-4 py-4 text-center font-extrabold w-16">Hạng</th>
+         <th class="px-3 sm:px-4 py-4 text-left font-extrabold">Họ tên</th>
+         <th class="px-3 sm:px-4 py-4 text-center font-extrabold">Lớp</th>
+         <th class="px-3 sm:px-4 py-4 text-center font-extrabold">Thời gian</th>
+         <th class="px-3 sm:px-4 py-4 text-center font-extrabold">Điểm</th>
+         <th class="px-2 sm:px-4 py-4 text-center font-extrabold">Xem lại</th>
+        </tr>
+       </thead>
+       <tbody id="scores-tbody" class="bg-white/80 divide-y divide-gray-100"></tbody>
+      </table>
+      <div id="no-scores" class="text-center py-12 hidden text-gray-500 font-bold text-xl">Không tìm thấy dữ liệu thi 🥲</div>
+     </div>
+     
+     <div id="pagination-controls" class="w-full flex justify-center mt-6"></div>
+    </div>
+  </div>
+
+  <script>
+    let database = null;
+    let scoresRef = null;
+
+    try {
+        const firebaseConfig = {
+            apiKey: "AIzaSyBQ9Pos8awlh9j041qDWTPFRsVIjF-kPnk",
+            authDomain: "hoctap-91691.firebaseapp.com",
+            databaseURL: "https://hoctap-91691-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "hoctap-91691",
+            storageBucket: "hoctap-91691.firebasestorage.app",
+            messagingSenderId: "1004553425319",
+            appId: "1:1004553425319:web:45d15cbae393f614c56682",
+            measurementId: "G-Q6X1TL9PRV"
+        };
+        if (typeof firebase !== 'undefined') {
+            if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+            database = firebase.database();
+            scoresRef = database.ref('bxh_tin_10_1');
+        }
+    } catch(err) { console.error("Lỗi Firebase:", err); }
+
+    let isQuizStarted = false; 
+    let currentQuestions = [];
+    let deviceId = '';
+    let allScores = [];
+    let currentStudent = {};
+    let userAnswers = {};
+    let timerInterval;
+    let quizStartTime, quizEndTime;
+    
+    let searchTerm = '';
+    let currentPage = 1;
+    const itemsPerPage = 10;
+
+    const exam_data = [
+        { id: "q1", type: "single", question: "Câu 1: Khái niệm \"Thông tin\" trong đời sống và khoa học máy tính được định nghĩa chuẩn xác nhất là gì?", options: ["A. Thông tin là các phần mềm chuyên dùng để tính toán và xử lí dữ liệu trên máy.", "B. Thông tin là tất cả những gì mang lại cho chúng ta sự hiểu biết về thế giới.", "C. Thông tin là các thiết bị phần cứng giúp con người quan sát được các hình ảnh.", "D. Thông tin là những dòng điện tín hiệu lan truyền trực tiếp bên trong bo mạch."], correct: 1, explanation: "Đúng. Thông tin là tất cả những gì mang lại cho chúng ta sự hiểu biết về thế giới." },
+        { id: "q2", type: "single", question: "Câu 2: Máy tính thực hiện quá trình tiếp nhận dữ liệu đầu vào thông qua các phương thức kĩ thuật cơ bản nào?", options: ["A. Thông qua màn hình hiển thị trực tiếp và bộ phận lưu trữ ổ cứng của hệ thống.", "B. Thông qua bộ vi xử lí trung tâm CPU và hệ thống tản nhiệt làm mát trên máy.", "C. Thông qua các thiết bị máy quét, camera hoặc dữ liệu do con người tự nhập.", "D. Thông qua bộ thu phát sóng mạng không dây và cáp tín hiệu quang viễn thông."], correct: 2, explanation: "Đúng. Máy tính tiếp nhận thông tin vào bằng các thiết bị tiếp nhận dữ liệu (máy quét, camera...) hoặc con người nhập vào." },
+        { id: "q3", type: "single", question: "Câu 3: Khái niệm \"Dữ liệu\" trong môi trường tin học và máy tính điện tử mang ý nghĩa cốt lõi là gì?", options: ["A. Là hệ điều hành nền tảng giúp máy tính kết nối với các mạng Internet cục bộ.", "B. Là các ứng dụng giải trí đa phương tiện do con người lập trình cài đặt vào máy.", "C. Là quá trình con người tự mình học hỏi để tiếp thu thêm các kiến thức mới lạ.", "D. Là thông tin (âm thanh, hình ảnh, văn bản...) đã được đưa vào trong máy tính."], correct: 3, explanation: "Đúng. Dữ liệu là thông tin (âm thanh, hình ảnh, văn bản...) đã được đưa vào trong máy tính." },
+        { id: "q4", type: "single", question: "Câu 4: Trên hệ thống máy tính, đơn vị tổ chức đo lường lượng dữ liệu lưu trữ nhỏ nhất mà máy tính truy cập được gọi là gì?", options: ["A. Đơn vị tổ chức lưu trữ lượng dữ liệu này được các nhà khoa học gọi là Bit.", "B. Đơn vị tổ chức lưu trữ lượng dữ liệu này được các nhà khoa học gọi là Byte.", "C. Đơn vị tổ chức lưu trữ lượng dữ liệu này được các nhà khoa học gọi là Kilobyte.", "D. Đơn vị tổ chức lưu trữ lượng dữ liệu này được các nhà khoa học gọi là Megabyte."], correct: 1, explanation: "Đúng. Đơn vị dữ liệu nhỏ nhất mà máy tính truy cập được là Byte." },
+        { id: "q5", type: "single", question: "Câu 5: Theo chuẩn quy đổi dung lượng lưu trữ quốc tế, một Kilobyte (KB) có độ lớn bằng bao nhiêu Byte (B)?", options: ["A. Theo chuẩn quy đổi dung lượng, một Kilobyte (KB) có độ lớn bằng chính xác 512 Byte.", "B. Theo chuẩn quy đổi dung lượng, một Kilobyte (KB) có độ lớn bằng chính xác 1000 Byte.", "C. Theo chuẩn quy đổi dung lượng, một Kilobyte (KB) có độ lớn bằng chính xác 1024 Byte.", "D. Theo chuẩn quy đổi dung lượng, một Kilobyte (KB) có độ lớn bằng chính xác 2048 Byte."], correct: 2, explanation: "Đúng. 1 KB bằng 1024 Byte." },
+        { id: "q6", type: "single", question: "Câu 6: Trong danh sách các thiết bị công nghệ dưới đây, thiết bị nào KHÔNG được phân loại là một thiết bị số?", options: ["A. Một chiếc máy tính xách tay cấu hình cao chuyên dùng cho việc thiết kế đồ hoạ.", "B. Một chiếc thẻ nhớ SD dùng để lưu trữ ảnh chụp gắn trên máy ảnh chuyên nghiệp.", "C. Một bộ thiết bị thu phát tín hiệu mạng Wi-Fi không dây lắp đặt tại góc gia đình.", "D. Một chiếc đồng hồ cơ học truyền thống dùng kim chỉ giờ không có tính năng mạng."], correct: 3, explanation: "Đúng. Đồng hồ cơ học không phải là thiết bị số." },
+        { id: "q7", type: "single", question: "Câu 7: Một siêu máy tính trên thế giới hiện nay có thể đạt tốc độ tính toán tối đa lên tới con số khủng khiếp nào?", options: ["A. Đạt tốc độ tính toán khổng lồ lên tới mức hàng ngàn phép tính số học trong một giây.", "B. Đạt tốc độ tính toán khổng lồ lên tới mức hàng triệu phép tính số học trong một giây.", "C. Đạt tốc độ tính toán khổng lồ lên tới mức hàng tỉ phép tính số học trong một giây.", "D. Đạt tốc độ tính toán khổng lồ lên tới mức hàng trăm triệu tỉ phép tính trong một giây."], correct: 3, explanation: "Đúng. Siêu máy tính đạt hàng trăm triệu tỉ phép tính trong một giây." },
+        { id: "q8", type: "single", question: "Câu 8: Công nghệ truyền thông và thiết bị số hiện đại mang lại ưu điểm tuyệt đối nào sau đây so với trước đây?", options: ["A. Mang lại khả năng kết nối không dây bluetooth để tự động sao chép ổ cứng.", "B. Mang lại khả năng tự động viết lại mọi loại phần mềm bằng trí tuệ nhân tạo.", "C. Mang lại khả năng xử lí thông tin rất nhanh với độ chính xác cao và liên tục.", "D. Mang lại khả năng tiêu diệt toàn bộ mã độc gây hại trên thế giới trong một giây."], correct: 2, explanation: "Đúng. Ưu điểm tuyệt đối là xử lí thông tin rất nhanh với độ chính xác cao." },
+        { id: "q9", type: "single", question: "Câu 9: Vì sao máy tính không được coi là một chủ thể có khả năng tự nhận thức độc lập giống như não bộ của con người?", options: ["A. Vì máy tính không có đủ dung lượng bộ nhớ ổ cứng để tự lưu trữ dữ liệu lịch sử.", "B. Vì máy tính không được kết nối với hệ thống điện toán đám mây toàn cầu liên tục.", "C. Vì máy tính chỉ là công cụ cơ học hỗ trợ con người xử lí dữ liệu trong quá trình nhận thức.", "D. Vì máy tính luôn luôn tiêu tốn quá nhiều lượng điện năng để xử lý các phép toán."], correct: 2, explanation: "Đúng. Máy tính chỉ hỗ trợ quá trình nhận thức, không tự nhận thức." },
+        { id: "q10", type: "single", question: "Câu 10: Quá trình \"Xử lí dữ liệu\" bên trong bộ nhớ của máy tính (Bước 2 trong quy trình xử lí thông tin) mang lại kết quả trực tiếp gì?", options: ["A. Nhận diện ngay lập tức tất cả các khuôn mặt của người đang sử dụng màn hình.", "B. Biến đổi dữ liệu hiện có trong bộ nhớ máy tính để tạo ra những dữ liệu mới hơn.", "C. Tự động chia sẻ toàn bộ hình ảnh cá nhân lên các trang mạng xã hội trên Internet.", "D. Mã hóa mọi tài liệu văn bản thành các dải âm thanh siêu tần số không thể nghe."], correct: 1, explanation: "Đúng. Xử lí dữ liệu biến đổi dữ liệu có trong máy tính thành dữ liệu mới." },
+        { id: "q11", type: "single", question: "Câu 11: Nếu một bộ dữ liệu thông tin về y tế bệnh án bị ghi nhận thiếu sót hoặc không đầy đủ, hậu quả nghiêm trọng nhất là gì?", options: ["A. Hệ thống máy chủ bệnh viện sẽ tự động khởi động lại nhiều lần làm gián đoạn việc khám chữa bệnh.", "B. Máy in tại phòng thu ngân sẽ tự động in ra sai toàn bộ thông tin mã vạch của các đơn thuốc bác sĩ.", "C. Dữ liệu sẽ mất đi tính toàn vẹn, làm cho thông tin có thể bị sai lệch hoặc hoàn toàn không xác định được.", "D. Bệnh nhân sẽ tự động bị hệ thống từ chối cấp phát thẻ bảo hiểm y tế mới trong vòng ba năm liên tiếp."], correct: 2, explanation: "Đúng. Mất đi tính toàn vẹn làm sai lệch thông tin." },
+        { id: "q12", type: "single", question: "Câu 12: Mối quan hệ tương hỗ giữa \"Thông tin\" và \"Dữ liệu\" được diễn giải một cách khoa học và chính xác nhất như thế nào?", options: ["A. Thông tin là ý nghĩa của dữ liệu, còn dữ liệu là các yếu tố dùng để thể hiện, xác định nên thông tin.", "B. Dữ liệu là ý nghĩa của thông tin, còn thông tin là những đoạn mã nhị phân lưu ở thiết bị ổ đĩa cứng.", "C. Cả hai khái niệm này hoàn toàn giống hệt nhau về bản chất và luôn dùng thay thế cho nhau ở mọi nơi.", "D. Thông tin luôn luôn bao gồm một lượng dữ liệu lớn hơn rất nhiều so với dung lượng lưu trữ của máy."], correct: 0, explanation: "Đúng. Thông tin là ý nghĩa của dữ liệu." },
+        { id: "q13", type: "single", question: "Câu 13: Tại sao cấu trúc một Byte lại bao gồm đúng 8 bit dữ liệu mà không phải là một con số bất kì khác (ví dụ 7 hoặc 9)?", options: ["A. Vì 8 bit là lượng dữ liệu lớn nhất mà một chiếc ổ cứng máy tính thời cổ đại có thể lưu trữ được an toàn.", "B. Vì 8 bit là lượng tài nguyên tối thiểu cần thiết để cấu hình một trạm phát sóng wifi tại môi trường mạng gia đình.", "C. Vì các máy tính ngày nay đều được thiết kế tổ chức bộ nhớ trong thành những đơn vị lưu trữ bằng bội của byte.", "D. Vì 8 bit tương ứng chính xác với khối lượng dữ liệu của một đoạn video trình chiếu có thời lượng dài một giây."], correct: 2, explanation: "Đúng. Các máy tính tổ chức lưu trữ bằng bội của byte." },
+        { id: "q14", type: "single", question: "Câu 14: Khi xem xét về phương diện kĩ thuật, đơn vị Gigabyte (GB) và Megabyte (MB) có mối tương quan chênh lệch dung lượng cụ thể ra sao?", options: ["A. Một đơn vị Gigabyte (GB) có dung lượng lưu trữ lớn gấp đúng 1024 lần so với một Megabyte (MB).", "B. Một đơn vị Gigabyte (GB) có dung lượng lưu trữ lớn gấp đúng 1000 lần so với một Megabyte (MB).", "C. Một đơn vị Megabyte (MB) có dung lượng lưu trữ lớn gấp đúng 1024 lần so với một Gigabyte (GB).", "D. Cả hai đơn vị Gigabyte (GB) và Megabyte (MB) đều có chung một mức sức chứa lưu trữ dữ liệu y hệt nhau."], correct: 0, explanation: "Đúng. 1 GB = 1024 MB." },
+        { id: "q15", type: "single", question: "Câu 15: Việc ứng dụng các thiết bị số để xử lí dự báo thời tiết đòi hỏi hệ thống siêu máy tính phải giải quyết bài toán phức tạp nào?", options: ["A. Phải xử lí các dữ liệu khí hậu được lưu trữ từ nhiều năm trước cùng hàng trăm tỉ phép tính trong một giây.", "B. Phải tự động điều khiển vô số vệ tinh nhân tạo xoay quanh quỹ đạo Trái Đất nhằm bắn phá mọi đám mây bão.", "C. Phải tự động phát ra hệ thống sóng siêu âm để ngăn chặn tình trạng biến đổi khí hậu đang diễn ra rất tiêu cực.", "D. Phải dịch thuật toàn bộ các cuốn sách khoa học khí tượng trên thế giới sang một ngôn ngữ lập trình thống nhất."], correct: 0, explanation: "Đúng. Cần năng lực tính toán cực lớn để giải quyết các bài toán thời tiết, khí hậu." },
+        { id: "q16", type: "single", question: "Câu 16: Sự phát triển đột phá của công nghệ truyền thông và các thiết bị số hiện đại đã đem lại thành tựu rõ rệt nào trong đời sống xã hội?", options: ["A. Làm cho các phương pháp lưu trữ dữ liệu trên đĩa quang học chuẩn DVD trở nên cực kỳ đắt đỏ.", "B. Cho phép người dùng xem phim qua mạng Internet và tương tác trên mạng xã hội một cách tức thời.", "C. Loại bỏ hoàn toàn sự cần thiết của các ngành nghề liên quan đến in ấn xuất bản sách giấy truyền thống.", "D. Chấm dứt triệt để mọi tình trạng lây nhiễm virus và mã độc trên tất cả các mạng nội bộ doanh nghiệp."], correct: 1, explanation: "Đúng. Nhờ thiết bị số và đường truyền tốt, chúng ta có thể xem phim HD trên internet." },
+        { id: "q17", type: "single", question: "Câu 17: Bạn An ghi chép điểm môn Toán của lớp vào vở, trong khi cô giáo nhập bảng điểm đó vào một tệp Excel trên máy tính. Dựa trên khái niệm tin học, hai hình thức ghi chép này được phân loại thế nào?", options: ["A. Bài ghi trong vở của An là thông tin chuẩn xác, còn tệp Excel của cô giáo chỉ là các dữ liệu giả lập.", "B. Cả bài ghi trong vở của học sinh An và tệp Excel lưu trên máy của cô giáo đều được coi là các dữ liệu.", "C. Bài ghi trong vở của An là dữ liệu khô khan, còn tệp Excel của cô giáo là phần mềm mã nguồn mở.", "D. Cả hai hình thức ghi chép này đều không thể được coi là dữ liệu vì chúng chưa được in ra giấy."], correct: 1, explanation: "Đúng. Cả vở ghi và tệp Excel đều được xem là dữ liệu." },
+        { id: "q18", type: "single", question: "Câu 18: Một tệp âm thanh bài hát có kích thước là 5 MB. Một chiếc thẻ nhớ USB có dung lượng trống chính xác là 1 GB. Thẻ nhớ này có thể chứa tối đa bao nhiêu tệp bài hát như vậy? (Giả sử 1 GB ≈ 1024 MB).", options: ["A. Chiếc thẻ nhớ USB này có thể chứa tối đa được khoảng chừng 100 tệp bài hát.", "B. Chiếc thẻ nhớ USB này có thể chứa tối đa được khoảng chừng 500 tệp bài hát.", "C. Chiếc thẻ nhớ USB này có thể chứa tối đa được khoảng chừng 204 tệp bài hát.", "D. Chiếc thẻ nhớ USB này có thể chứa tối đa được khoảng chừng 1024 tệp bài hát."], correct: 2, explanation: "Đúng. 1024 MB / 5 MB = 204.8 tệp, nên chứa được tối đa 204 tệp." },
+        { id: "q19", type: "single", question: "Câu 19: Khi đi du lịch nước ngoài, Tuấn thấy biểu tượng 39°C nhấp nháy trên một bảng đèn giao thông. Cùng lúc đó, nhiệt kế điện tử đo thân nhiệt của bạn Lan cũng hiện 39°C. Tính toàn vẹn thông tin ở đây thể hiện điều gì?", options: ["A. Dữ liệu 39°C luôn luôn chỉ có một ý nghĩa duy nhất trên toàn thế giới là nhiệt độ cơ thể người đang rất cao.", "B. Dữ liệu 39°C mang các thông tin hoàn toàn khác nhau tuỳ thuộc vào ngữ cảnh thời tiết hay bệnh án cụ thể.", "C. Dữ liệu 39°C ở bảng đèn giao thông là sai lệch do máy tính bị lỗi, chỉ có nhiệt kế của Lan là đo chính xác.", "D. Dữ liệu 39°C bị vi rút máy tính tấn công làm sai lệch nghiêm trọng thông số hiển thị đo lường của thiết bị."], correct: 1, explanation: "Đúng. Cùng một dữ liệu nhưng ở ngữ cảnh khác nhau có thể mang lại các thông tin khác nhau." },
+        { id: "q20", type: "single", question: "Câu 20: Dũng có một đoạn video quay cảnh sinh hoạt lớp với dung lượng 2.5 GB. Dũng muốn lưu trữ video này vào một ổ cứng di động. Ổ cứng cần có mức dung lượng trống tối thiểu là bao nhiêu Megabyte (MB) để chứa được video? (Quy đổi 1 GB = 1024 MB).", options: ["A. Ổ cứng di động này cần có mức dung lượng trống tối thiểu đạt chuẩn xác là 2500 MB.", "B. Ổ cứng di động này cần có mức dung lượng trống tối thiểu đạt chuẩn xác là 2560 MB.", "C. Ổ cứng di động này cần có mức dung lượng trống tối thiểu đạt chuẩn xác là 2048 MB.", "D. Ổ cứng di động này cần có mức dung lượng trống tối thiểu đạt chuẩn xác là 1024 MB."], correct: 1, explanation: "Đúng. 2.5 x 1024 = 2560 MB." },
+        { id: "q21", type: "single", question: "Câu 21: Việc gắn chip điện tử tích hợp mã QR code lên Thẻ Căn cước công dân hiện đại mang lại lợi ích kĩ thuật ứng dụng thực tế nào to lớn nhất cho hoạt động quản lý hành chính nhà nước?", options: ["A. Lợi ích to lớn nhất là giúp các thiết bị số có thể tự động đọc và tra cứu thông tin nhanh chóng, chính xác.", "B. Lợi ích to lớn nhất là giúp thẻ căn cước có thể tự động phát tín hiệu Wi-Fi kết nối trực tiếp với điện thoại.", "C. Lợi ích to lớn nhất là giúp hệ điều hành Windows nhận dạng người dùng để mở khóa các máy tính bảo mật.", "D. Lợi ích to lớn nhất là giúp công dân có thể dùng thẻ để thanh toán mua sắm hàng hóa tại tất cả siêu thị."], correct: 0, explanation: "Đúng. Giúp các thiết bị số tự động đọc, tra cứu thông tin chính xác, nhanh chóng." },
+        { id: "q22", type: "single", question: "Câu 22: Cơ quan khí tượng đo được lượng mưa rất lớn, máy chủ tiếp nhận dữ liệu này rồi đưa ra hai biểu đồ: một biểu đồ thể hiện phân bố mưa trong ngày, một biểu đồ dự báo bão cho ngày mai. Hành động này phản ánh tính chất nào của xử lý dữ liệu?", options: ["A. Phản ánh rằng với cùng một bộ dữ liệu, các cách xử lí khác nhau sẽ đem lại những thông tin ứng dụng khác nhau.", "B. Phản ánh rằng thiết bị đo lường khí tượng đã bị hỏng khiến cho hệ thống tự động sinh ra những biểu đồ sai lệch.", "C. Phản ánh rằng máy tính luôn luôn mất rất nhiều thời gian để chuyển đổi dữ liệu thời tiết sang dạng đồ hoạ.", "D. Phản ánh rằng thông tin khí tượng luôn luôn yêu cầu phải có một con người trực tiếp vẽ lại bằng các phần mềm."], correct: 0, explanation: "Đúng. Cùng một dữ liệu, cách xử lý khác nhau sẽ mang lại các thông tin khác nhau." },
+        { id: "q23", type: "single", question: "Câu 23: Nhằm số hoá toàn bộ tài liệu lịch sử, trường học dự tính cần dung lượng 50 MB để lưu trữ bản kỹ thuật số cho mỗi một cuốn sách. Nếu thư viện có 2000 cuốn sách, trường học cần chuẩn bị một ổ cứng lưu trữ có dung lượng khoảng bao nhiêu Gigabyte (GB)? (Quy đổi 1 GB ≈ 1000 MB để ước tính nhanh).", options: ["A. Ngôi trường này cần chuẩn bị một chiếc ổ cứng lưu trữ có dung lượng trống khoảng 10 GB.", "B. Ngôi trường này cần chuẩn bị một chiếc ổ cứng lưu trữ có dung lượng trống khoảng 50 GB.", "C. Ngôi trường này cần chuẩn bị một chiếc ổ cứng lưu trữ có dung lượng trống khoảng 100 GB.", "D. Ngôi trường này cần chuẩn bị một chiếc ổ cứng lưu trữ có dung lượng trống khoảng 200 GB."], correct: 2, explanation: "Đúng. 50MB * 2000 = 100,000 MB ≈ 100 GB." },
+        { id: "q24", type: "single", question: "Câu 24: Một nhóm học sinh thảo luận về máy tính lượng tử. Dù máy tính lượng tử có sức mạnh khủng khiếp, nhưng một chuyên gia khẳng định: \"Máy tính vẫn chỉ là công cụ\". Lời khẳng định này muốn nhấn mạnh vào bản chất cốt lõi nào của quá trình xử lí thông tin?", options: ["A. Nhấn mạnh rằng máy tính luôn phụ thuộc vào nguồn cung cấp điện năng liên tục.", "B. Nhấn mạnh rằng máy tính không tự nhận thức được mà chỉ hỗ trợ quá trình nhận thức của con người.", "C. Nhấn mạnh rằng máy tính luôn bị các phần mềm gián điệp cài đặt sẵn làm chậm tốc độ xử lý mạng.", "D. Nhấn mạnh rằng máy tính không thể kết nối vào hệ thống điện toán đám mây nếu thiếu bộ định tuyến."], correct: 1, explanation: "Đúng. Máy tính không tự nhận thức được, nó chỉ là công cụ." },
+        
+        { id: "qII_1", type: "tf_cluster", context: "Câu 1: Bạn An đang chuẩn bị tài liệu thuyết trình về quá trình xử lí thông tin và mối quan hệ giữa thông tin và dữ liệu trong máy tính. Hãy đánh giá tính Đúng/Sai của các phát biểu do An biên soạn:", items: [
+            { id: "a", text: "a) Bước đầu tiên trong quy trình xử lí thông tin của máy tính là \"Đưa ra kết quả\", sau đó mới đến bước \"Tiếp nhận dữ liệu\" và cuối cùng là \"Xử lí dữ liệu\".", correct: false, expl: "SAI. Quá trình xử lí thông tin của máy tính gồm các bước theo thứ tự: Bước 1: Tiếp nhận dữ liệu -> Bước 2: Xử lí dữ liệu -> Bước 3: Đưa ra kết quả." },
+            { id: "b", text: "b) Các thiết bị như máy quét ảnh hay bàn phím cơ đều được phân loại là những công cụ phần cứng giữ vai trò chủ chốt trong bước \"Xử lí dữ liệu\" của máy tính.", correct: false, expl: "SAI. Máy quét và bàn phím là các thiết bị dùng ở bước \"Tiếp nhận dữ liệu\", không phải bước xử lí." },
+            { id: "c", text: "c) Trong môi trường tin học, khái niệm \"dữ liệu\" chính là thông tin (dưới dạng âm thanh, hình ảnh, văn bản...) đã được đưa vào hệ thống để máy tính có thể nhận biết và xử lí.", correct: true, expl: "ĐÚNG. Dữ liệu là thông tin đã được đưa vào máy tính để máy tính có thể nhận biết và xử lí được." },
+            { id: "d", text: "d) Khi An soạn thảo một đoạn văn bản trên phần mềm Word, đoạn văn bản đó chưa thể được coi là dữ liệu cho đến khi An thao tác in nó ra một tờ giấy trắng thông thường.", correct: false, expl: "SAI. Khi soạn một văn bản trên máy, thông tin của người nhập chuyển thành dữ liệu ngay lúc đó trong máy tính." }
+        ]},
+        { id: "qII_2", type: "tf_cluster", context: "Câu 2: Trong tiết học Tin học, thầy Hùng hướng dẫn học sinh tìm hiểu về tính chất của thông tin và các đơn vị đo lượng dữ liệu. Hãy xác định những lập luận sau của học sinh là Đúng hay Sai:", items: [
+            { id: "a", text: "a) Đơn vị dữ liệu nhỏ nhất mà máy tính điện tử có thể tiến hành truy cập và xử lý trực tiếp trên hệ thống được gọi là Byte (1 Byte bao gồm 8 bit liên tiếp).", correct: true, expl: "ĐÚNG. Byte là đơn vị dữ liệu nhỏ nhất mà máy tính truy cập được. Một byte gồm 8 bit." },
+            { id: "b", text: "b) Dữ liệu luôn luôn có tính toàn vẹn tuyệt đối; điều này có nghĩa là ngay cả khi thu thập dữ liệu bị thiếu hụt nghiêm trọng thì thông tin phản ánh vẫn không bao giờ bị sai lệch.", correct: false, expl: "SAI. Thông tin có tính toàn vẹn, được hiểu đúng khi có đầy đủ dữ liệu, nếu thiếu có thể làm thông tin sai lệch." },
+            { id: "c", text: "c) Cùng một bộ dữ liệu giống hệt nhau, nếu các nhà khoa học áp dụng những thuật toán xử lí khác nhau thì hoàn toàn có thể đem lại những thông tin kết luận khác nhau.", correct: true, expl: "ĐÚNG. Với cùng một bộ dữ liệu, cách xử lí khác nhau có thể đem lại những thông tin khác nhau." },
+            { id: "d", text: "d) Vì 1 Kilobyte (KB) = 1000 Byte, nên một tệp tin hình ảnh có kích thước 2 KB sẽ chiếm chính xác một khoảng không gian dung lượng là 2000 Byte trên ổ đĩa cứng.", correct: false, expl: "SAI. Các đơn vị đo dữ liệu hơn kém nhau 1024 lần. Vậy 1 KB = 1024 B, tệp 2 KB sẽ chiếm 2048 Byte." }
+        ]},
+        { id: "qII_3", type: "tf_cluster", context: "Câu 3: Bạn Lan thiết kế một bảng so sánh về thiết bị số và những ưu điểm vượt trội mà thiết bị số mang lại cho hoạt động truyền thông và xử lí thông tin. Đánh giá tính Đúng/Sai của các ghi chú sau:", items: [
+            { id: "a", text: "a) Một chiếc đĩa hát truyền thống dùng để ghi âm các bản nhạc bằng rãnh vật lý cơ học được các nhà nghiên cứu phân loại chính thức là một thiết bị số cao cấp.", correct: false, expl: "SAI. Đĩa hát ghi âm bằng rãnh cơ học không dùng dữ liệu số, nên không phải là thiết bị số." },
+            { id: "b", text: "b) Máy tính điện tử sở hữu khả năng thực hiện tính toán với tốc độ cực nhanh, cho kết quả chính xác tuyệt đối và hoạt động vô cùng ổn định liên tục trong nhiều tháng.", correct: true, expl: "ĐÚNG. Tính toán nhanh, chính xác và ổn định là các ưu điểm tuyệt đối của máy tính." },
+            { id: "c", text: "c) Khả năng lưu trữ thông tin cực kỳ khổng lồ của các thiết bị số hiện đại khiến cho quá trình tìm kiếm dữ liệu trở nên cực kỳ khó khăn, chậm chạp và tốn nhiều công sức.", correct: false, expl: "SAI. Lưu trữ thông tin trên thiết bị số còn giúp cho việc tìm kiếm thông tin trở nên vô cùng dễ dàng và nhanh chóng." },
+            { id: "d", text: "d) Khi hệ thống mạng cáp quang được kéo đến từng gia đình, nhờ ưu điểm truyền tin tốc độ lớn của thiết bị số, người dùng có thể thoải mái xem phim trực tuyến độ phân giải cao mà không bị giật lag.", correct: true, expl: "ĐÚNG. Nhờ tốc độ truyền tin lớn qua cáp quang, người dùng có thể thoải mái xem phim qua Internet." }
+        ]},
+        { id: "qII_4", type: "tf_cluster", context: "Câu 4: Trong nhóm học tập, bạn Dũng đúc kết lại các đặc tính cốt lõi của thông tin, quy đổi dung lượng bộ nhớ và ứng dụng máy tính. Những luận điểm nào dưới đây là Đúng hay Sai:", items: [
+            { id: "a", text: "a) Bội số quy đổi đơn vị đo lượng dữ liệu lưu trữ theo chuẩn quốc tế tuân theo lũy thừa cơ số 2, cụ thể là các đơn vị liền kề thường hơn kém nhau chính xác 2^10 (tức 1024) lần.", correct: true, expl: "ĐÚNG. Các đơn vị đo dữ liệu liền kề hơn kém nhau 1024 lần." },
+            { id: "b", text: "b) Dữ liệu và thông tin là hai khái niệm độc lập tương đối với nhau; một thông tin có thể được thể hiện thông qua nhiều dạng dữ liệu khác nhau (như tệp video, bài soạn Word, trang vở ghi).", correct: true, expl: "ĐÚNG. Thông tin và dữ liệu độc lập tương đối với nhau, một thông tin có thể hiện qua nhiều dạng dữ liệu." },
+            { id: "c", text: "c) Siêu máy tính là những cỗ máy khổng lồ được chế tạo ra với mục đích duy nhất là để thiết lập và khởi chạy các trò chơi điện tử trực tuyến nhiều người chơi trên không gian ảo mạng Internet.", correct: false, expl: "SAI. Siêu máy tính được sử dụng để giải quyết các bài toán khoa học có khối lượng tính toán khổng lồ." },
+            { id: "d", text: "d) Đối với việc tra cứu một kho tài liệu bách khoa toàn thư đồ sộ, việc số hoá nội dung và lưu trữ chúng vào một ổ cứng di động kích thước nhỏ gọn sẽ giúp Dũng tiết kiệm được cả về chi phí lẫn thời gian tìm kiếm.", correct: true, expl: "ĐÚNG. Lưu trữ kĩ thuật số cho phép chứa lượng thông tin lớn trong thiết bị nhỏ gọn và tìm kiếm nhanh chóng." }
+        ]}
+    ];
+
+    window.startQuizAction = function() {
+        try {
+            const errDiv = document.getElementById('login-error');
+            if(errDiv) errDiv.classList.add('hidden');
+            
+            const nameEl = document.getElementById('hoTen');
+            const lopEl = document.getElementById('lop');
+            
+            const name = nameEl.value.trim();
+            const lop = lopEl.value.trim();
+            
+            if (!name || !lop) {
+                if(errDiv) {
+                    errDiv.innerText = "⚠️ Vui lòng nhập đầy đủ Họ tên và Lớp!";
+                    errDiv.classList.remove('hidden');
+                } else {
+                    alert("⚠️ Vui lòng nhập đầy đủ Họ tên và Lớp!");
+                }
+                return;
+            }
+            
+            currentStudent = { hoTen: name, lop: lop, maDe: 'de1', tenDe: 'Đề Trắc Nghiệm Bài 1' };
+            currentQuestions = JSON.parse(JSON.stringify(exam_data));
+            quizStartTime = new Date();
+            
+            setTimeout(() => { isQuizStarted = true; }, 1000);
+            showSection('quiz');
+            
+            userAnswers = {};
+            window.renderAllQuestions();
+            startTimer(45 * 60); 
+            
+        } catch (error) {
+            alert("❌ Đã xảy ra lỗi khởi tạo bài thi: " + error.message + ".");
+            console.error(error);
+        }
+    };
+
+    window.viewScoresAction = function() {
+        searchTerm = ''; 
+        document.getElementById('search-student').value = '';
+        currentPage = 1;
+
+        if (database) {
+            scoresRef.once('value').then((snapshot) => {
+                const data = snapshot.val();
+                allScores = data ? Object.keys(data).map(key => ({...data[key], id: key})) : [];
+                window.renderScores();
+                showSection('scores');
+            });
+        }
+    };
+
+    window.searchStudent = function(val) {
+        searchTerm = val.toLowerCase();
+        currentPage = 1;
+        window.renderScores();
+    };
+
+    window.changePage = function(page) {
+        currentPage = page;
+        window.renderScores();
+    };
+
+    window.goHome = function() {
+        if(document.getElementById('hoTen')) document.getElementById('hoTen').value = ''; 
+        if(document.getElementById('lop')) document.getElementById('lop').value = ''; 
+        clearInterval(timerInterval);
+        showSection('login');
+    };
+
+    function getTotalScoreItems() { return currentQuestions.length; }
+
+    function getAnsweredCount() {
+        let count = 0;
+        currentQuestions.forEach(q => {
+            if (q.type === 'single') {
+                if (userAnswers[q.id] !== undefined) count++;
+            } else if (q.type === 'tf_cluster') {
+                let answeredItems = 0;
+                q.items.forEach(item => {
+                    if (userAnswers[q.id + '_' + item.id] !== undefined) answeredItems++;
+                });
+                if (answeredItems === 4) count++; 
+            }
+        });
+        return count;
+    }
+
+   window.selectAnswer = function(qId, val, type) {
+        if (type === 'tf') {
+            userAnswers[qId] = val;
+            const btnT = document.getElementById(`btnT_${qId}`);
+            const btnF = document.getElementById(`btnF_${qId}`);
+            if (val === true) {
+                btnT.classList.add('selected'); btnT.classList.remove('bg-white');
+                btnF.classList.remove('selected'); btnF.classList.add('bg-white');
+            } else {
+                btnF.classList.add('selected'); btnF.classList.remove('bg-white');
+                btnT.classList.remove('selected'); btnT.classList.add('bg-white');
+            }
+        } else if (type === 'single') {
+            userAnswers[qId] = val;
+        }
+        
+        requestAnimationFrame(() => {
+            const pgText = document.getElementById('progress-text');
+            if(pgText) pgText.innerText = `${getAnsweredCount()}/${getTotalScoreItems()}`;
+        });
+    };
+
+    window.renderAllQuestions = function() {
+        if (!currentQuestions || currentQuestions.length === 0) return;
+        const container = document.getElementById('question-container');
+        if(!container) return;
+
+        let html = '';
+        let currentType = '';
+
+        currentQuestions.forEach((q) => {
+            if (q.type !== currentType) {
+                currentType = q.type;
+                let headerText = ''; let roman = '';
+                if(currentType === 'single') { headerText = 'TRẮC NGHIỆM NHIỀU PHƯƠNG ÁN LỰA CHỌN'; roman = 'I'; }
+                if(currentType === 'tf_cluster') { headerText = 'TRẮC NGHIỆM ĐÚNG/SAI'; roman = 'II'; }
+                
+                html += `<div class="flex items-center gap-3 mt-8 mb-4 border-b-2 border-blue-100 pb-3"><span class="bg-gradient-to-br from-blue-500 to-indigo-600 text-white w-14 h-14 flex items-center justify-center rounded-xl font-black text-2xl shadow-md">${roman}</span><h3 class="text-2xl sm:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-700 to-indigo-700 tracking-wide uppercase">${headerText}</h3></div>`;
+            }
+
+            html += `<div class="fade-in w-full bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-blue-100 relative mb-6 hover:shadow-md transition-shadow">`;
+            
+            if (q.type === 'single') {
+                const uAns = userAnswers[q.id];
+                html += `<div class="flex gap-4 mb-5"><div class="w-full math-scroll"><p class="text-xl font-bold text-red-600 mt-1 leading-snug tracking-tight">${q.question}</p></div></div>`;
+                html += `<div class="space-y-4 md:pl-6 mt-6">`;
+                q.options.forEach((opt, i) => {
+                    const isChecked = (uAns === i) ? 'checked' : '';
+                    html += `<div class="flex items-center">
+                        <input type="radio" id="opt_${q.id}_${i}" name="q_${q.id}" value="${i}" class="hidden single-radio" ${isChecked} onchange="window.selectAnswer('${q.id}', ${i}, 'single')">
+                        <label for="opt_${q.id}_${i}" class="option-label w-full p-4 border-2 border-gray-200 rounded-2xl flex items-center gap-4 bg-white shadow-sm font-bold text-lg hover:border-blue-300">
+                            <div class="w-12 h-12 rounded-xl border-2 border-gray-300 flex items-center justify-center text-lg font-black text-gray-400 flex-shrink-0 bg-gray-50">${String.fromCharCode(65 + i)}</div>
+                            <div class="text-gray-700 leading-relaxed math-scroll flex-1">${opt}</div>
+                        </label>
+                    </div>`;
+                });
+                html += `</div>`;
+            } 
+            else if (q.type === 'tf_cluster') {
+                html += `<div class="bg-red-50 text-red-700 p-5 rounded-xl font-bold mb-4 border-2 border-red-100 text-xl leading-relaxed math-scroll">${q.context}</div>`;
+                html += `<div class="space-y-4 mt-6">`;
+                q.items.forEach((item) => {
+                    const combinedId = q.id + '_' + item.id;
+                    let ans = userAnswers[combinedId];
+                    let btnT = ans === true ? 'selected' : 'bg-white';
+                    let btnF = ans === false ? 'selected' : 'bg-white';
+
+                    html += `<div class="p-5 border-2 border-gray-100 rounded-2xl bg-white shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4 transition-all hover:border-blue-200">
+                        <div class="font-bold text-gray-800 flex-1 text-lg math-scroll">${item.text}</div>
+                        <div class="flex gap-3 shrink-0">
+                            <button id="btnT_${combinedId}" onclick="window.selectAnswer('${combinedId}', true, 'tf')" class="btn-tf w-24 sm:w-28 py-3 rounded-xl font-extrabold text-lg ${btnT}">ĐÚNG</button>
+                            <button id="btnF_${combinedId}" onclick="window.selectAnswer('${combinedId}', false, 'tf')" class="btn-tf w-24 sm:w-28 py-3 rounded-xl font-extrabold text-lg ${btnF}">SAI</button>
+                        </div>
+                    </div>`;
+                });
+                html += `</div>`;
+            } 
+            html += `</div>`;
+        });
+        
+        container.innerHTML = html;
+        const pgText = document.getElementById('progress-text');
+        if(pgText) pgText.innerText = `${getAnsweredCount()}/${getTotalScoreItems()}`;
+    };
+
+    function formatDuration(sec) {
+        const m = Math.floor(sec / 60); const s = sec % 60;
+        return `${m}p ${s}s`;
+    }
+
+    window.promptSubmit = function() {
+        if (!isQuizStarted) return;
+        const total = getTotalScoreItems();
+        const answered = getAnsweredCount();
+        
+        document.getElementById('confirm-answered').innerText = answered;
+        document.getElementById('confirm-total').innerText = total;
+        
+        const modal = document.getElementById('confirm-submit-modal');
+        modal.classList.remove('hidden');
+    };
+
+    window.closeConfirmModal = function() {
+        const modal = document.getElementById('confirm-submit-modal');
+        modal.classList.add('hidden');
+    };
+
+    window.executeSubmit = function() {
+        window.closeConfirmModal();
+        isQuizStarted = false; 
+        quizEndTime = new Date();
+        clearInterval(timerInterval);
+        
+        let score = 0;
+
+        currentQuestions.forEach(q => {
+            if (q.type === 'single') {
+                if (userAnswers[q.id] === q.correct) score += 0.25;
+            } else if (q.type === 'tf_cluster') {
+                let correctCount = 0;
+                q.items.forEach(item => { 
+                    if (userAnswers[q.id + '_' + item.id] === item.correct) {
+                        correctCount++;
+                    }
+                });
+                
+                // Áp dụng logic tính điểm mới cho phần trắc nghiệm đúng/sai
+                if (correctCount === 1) score += 0.1;
+                else if (correctCount === 2) score += 0.25;
+                else if (correctCount === 3) score += 0.5;
+                else if (correctCount === 4) score += 1.0;
+            }
+        });
+
+        score = score.toFixed(2); 
+
+        const record = {
+            hoTen: currentStudent.hoTen, lop: currentStudent.lop, tenDe: currentStudent.tenDe, maDe: currentStudent.maDe,
+            diem: parseFloat(score),
+            startTime: quizStartTime.toLocaleTimeString('vi-VN') + ' ' + quizStartTime.toLocaleDateString('vi-VN'),
+            endTime: quizEndTime.toLocaleTimeString('vi-VN') + ' ' + quizEndTime.toLocaleDateString('vi-VN'),
+            duration: formatDuration(Math.floor((quizEndTime - quizStartTime) / 1000)),
+            thoiGian: new Date().toISOString(), deviceId: deviceId,
+            userAnswers: userAnswers 
+        };
+        
+        if(database) {
+            scoresRef.push(record, () => { window.showModalResult(score, record.duration); });
+        } else {
+            window.showModalResult(score, record.duration);
+        }
+    };
+
+    window.showModalResult = function(score, dur) {
+        ['login', 'quiz', 'scores', 'review'].forEach(s => {
+            const el = document.getElementById(s+'-section');
+            if(el) el.classList.add('hidden');
+        });
+        const resEl = document.getElementById('result-section');
+        if(resEl) resEl.classList.remove('hidden');
+        const contentEl = document.getElementById('result-content');
+        if(contentEl) contentEl.innerHTML = `
+        <div class="flex justify-start mb-4">
+            <button onclick="window.goHome()" class="px-5 py-3 bg-gray-100 text-gray-700 rounded-xl font-bold hover:bg-gray-200 transition-colors shadow-sm border border-gray-200 text-lg">🏠 Trang chủ</button>
+        </div>
+        <div class="text-center">
+            <div class="text-7xl mb-4 animate-bounce">🎉</div>
+            <h3 class="text-3xl font-black text-emerald-600 mb-2">Hoàn thành bài thi!</h3>
+            <p class="text-gray-600 mb-6 mt-2"><span class="font-extrabold text-blue-700 text-xl uppercase tracking-wider">${currentStudent.hoTen} - Lớp ${currentStudent.lop}</span></p>
+        </div>
+        <div class="bg-blue-50 border-2 border-blue-100 rounded-3xl p-8 mb-6 shadow-inner relative text-center">
+            <div class="text-base text-blue-500 font-extrabold mb-2 uppercase tracking-widest">ĐIỂM SỐ CỦA BẠN</div>
+            <div class="text-7xl font-black text-blue-600 drop-shadow-sm">${score} <span class="text-3xl text-gray-400">/ 10</span></div>
+            <div class="text-lg font-extrabold text-indigo-600 mt-5 bg-white inline-block px-6 py-3 rounded-full shadow-sm border border-blue-100">Thời gian làm bài: ${dur}</div>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+            <button onclick="window.reviewQuiz()" class="w-full py-4 bg-gradient-to-r from-indigo-500 to-purple-500 text-white rounded-xl font-extrabold shadow-sm hover:shadow-md transition-colors text-xl">📝 Xem lại bài</button>
+            <button onclick="window.viewScoresAction()" class="w-full py-4 bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-xl font-extrabold shadow-sm hover:shadow-md transition-colors text-xl">🏆 Bảng điểm</button>
+        </div>`;
+    };
+
+    function getStatusBadge(isCorrect, isUnanswered) {
+        if (isUnanswered) return `<div class="mt-4 mb-2 inline-block px-4 py-2 bg-yellow-100 text-yellow-800 text-base font-black rounded-lg border border-yellow-300 shadow-sm">⚠️ BẠN CHƯA LÀM CÂU NÀY</div>`;
+        if (isCorrect) return `<div class="mt-4 mb-2 inline-block px-4 py-2 bg-emerald-100 text-emerald-800 text-base font-black rounded-lg border border-emerald-300 shadow-sm">✅ BẠN LÀM ĐÚNG RỒI</div>`;
+        return `<div class="mt-4 mb-2 inline-block px-4 py-2 bg-red-100 text-red-800 text-base font-black rounded-lg border border-red-300 shadow-sm">❌ BẠN LÀM SAI RỒI</div>`;
+    }
+
+    window.reviewQuiz = function() {
+        showSection('review');
+        const container = document.getElementById('review-content');
+        if(!container) return;
+        let html = '';
+
+        currentQuestions.forEach((q) => {
+            if (q.type === 'single') {
+                let uAns = userAnswers[q.id];
+                let isUnanswered = (uAns === undefined);
+                let isCorrect = (uAns === q.correct);
+                let borderColor = isCorrect ? 'border-emerald-300 bg-emerald-50' : 'border-red-300 bg-red-50';
+                
+                html += `<div class="p-6 border-2 rounded-2xl shadow-sm mb-6 ${borderColor}">`;
+                html += `<div class="font-bold text-xl text-red-600 mb-5 leading-relaxed math-scroll">${q.question}</div>`;
+                html += `<div class="space-y-3">`;
+                
+                q.options.forEach((opt, i) => {
+                    let optBg = ''; let iconHtml = '';
+                    if (q.correct === i) {
+                        optBg = 'bg-emerald-100 text-emerald-900 border-emerald-400 border-2'; 
+                        iconHtml = '<div class="text-3xl drop-shadow-sm ml-auto pl-2 flex-shrink-0">✅</div>';
+                    } else if (uAns === i && !isCorrect) {
+                        optBg = 'bg-red-100 text-red-900 line-through border-red-400 border-2'; 
+                        iconHtml = '<div class="text-3xl drop-shadow-sm ml-auto pl-2 flex-shrink-0">❌</div>';
+                    } else { optBg = 'bg-white text-slate-700 border border-slate-200'; }
+
+                    html += `<div class="p-4 rounded-xl ${optBg} flex items-center gap-4"><div class="w-10 h-10 flex items-center justify-center rounded-lg bg-white/50 text-base font-black shadow-sm flex-shrink-0">${String.fromCharCode(65 + i)}</div><div class="${(q.correct === i || uAns === i) ? 'font-semibold' : 'font-medium'} flex-1 text-lg math-scroll">${opt}</div>${iconHtml}</div>`;
+                });
+                html += `</div>`;
+                
+                html += getStatusBadge(isCorrect, isUnanswered); 
+                
+                if (q.explanation) {
+                    html += `<div class="review-explanation mt-3 pt-3 border-t-2 border-gray-200"><p class="text-base font-black uppercase tracking-widest text-blue-600 mb-2">💡 Giải chi tiết:</p><p class="text-black font-medium text-lg leading-loose math-scroll">${q.explanation}</p></div>`;
+                }
+                html += `</div>`;
+            } 
+            else if (q.type === 'tf_cluster') {
+                html += `<div class="p-6 border-2 border-indigo-200 bg-indigo-50 rounded-2xl shadow-sm mb-6">`;
+                html += `<div class="font-bold text-xl text-indigo-800 mb-5 math-scroll">${q.context}</div>`;
+                html += `<div class="space-y-5">`;
+                q.items.forEach(item => {
+                    let uAns = userAnswers[q.id + '_' + item.id];
+                    let isUnanswered = (uAns === undefined);
+                    let isCorrect = (uAns === item.correct);
+                    let iconHtml = isCorrect ? '✅' : '❌';
+                    let ansText = item.correct ? 'ĐÚNG' : 'SAI';
+
+                    html += `<div class="p-5 bg-white border border-indigo-100 rounded-xl shadow-sm">
+                        <div class="font-bold text-gray-800 text-lg math-scroll">${item.text}</div>
+                        <div class="mt-3 flex items-center justify-between border-b border-gray-100 pb-3">
+                            <span class="text-base font-bold text-gray-500">Bạn chọn: <span class="${isUnanswered ? 'text-gray-400' : 'text-blue-600'} font-black uppercase">${isUnanswered ? 'Chưa trả lời' : (uAns?'Đúng':'Sai')}</span></span>
+                            <span class="font-black text-xl ${isCorrect ? 'text-emerald-500' : 'text-red-500'}">Đáp án: ${ansText} ${iconHtml}</span>
+                        </div>`;
+                        
+                    html += getStatusBadge(isCorrect, isUnanswered);
+                    if(item.expl) {
+                        html += `<div class="review-explanation mt-3 pt-3 text-lg text-gray-700 font-medium leading-relaxed math-scroll"><span class="text-indigo-500 font-bold uppercase">Giải chi tiết:</span><br> ${item.expl}</div>`;
+                    }
+                    html += `</div>`;
+                });
+                html += `</div></div>`;
+            }
+        });
+        container.innerHTML = html;
+    };
+
+    window.backToResult = function() { showSection('result'); };
+    
+    let isReviewingFromLeaderboard = false;
+    
+    window.backFromReview = function() {
+        if (isReviewingFromLeaderboard) {
+            showSection('scores');
+            isReviewingFromLeaderboard = false;
+        } else {
+            window.backToResult();
+        }
+    };
+
+    window.reviewStudentScore = function(scoreId) {
+        const record = allScores.find(x => x.id === scoreId);
+        if (!record) return;
+        
+        currentStudent = { hoTen: record.hoTen, lop: record.lop, tenDe: record.tenDe, maDe: record.maDe };
+        userAnswers = record.userAnswers || {}; 
+        
+        currentQuestions = JSON.parse(JSON.stringify(exam_data)); 
+        
+        isReviewingFromLeaderboard = true;
+        window.reviewQuiz();
+    };
+
+    window.renderScores = function() {
+        const tbody = document.getElementById('scores-tbody');
+        const noScore = document.getElementById('no-scores');
+        const myRankDisplay = document.getElementById('my-rank-display');
+        const paginationContainer = document.getElementById('pagination-controls');
+        
+        if(!tbody) return;
+
+        const sortedAll = [...allScores].sort((a, b) => (b.diem - a.diem) || (a.duration.localeCompare(b.duration)));
+        
+        sortedAll.forEach((s, i) => s.absoluteRank = i + 1);
+
+        const myRankIndex = sortedAll.findIndex(s => s.deviceId === deviceId);
+        if (myRankDisplay) {
+            if (myRankIndex !== -1) {
+                myRankDisplay.innerHTML = `🏆 Thứ hạng của bạn: <span class="text-red-600 font-black">#${sortedAll[myRankIndex].absoluteRank}</span>`;
+            } else {
+                myRankDisplay.innerHTML = `🏆 Thứ hạng của bạn: <span class="text-gray-400">Chưa thi</span>`;
+            }
+        }
+
+        const filteredScores = searchTerm ? sortedAll.filter(s => s.hoTen.toLowerCase().includes(searchTerm)) : sortedAll;
+
+        if (filteredScores.length === 0) {
+            tbody.innerHTML = ''; 
+            noScore.classList.remove('hidden'); 
+            paginationContainer.innerHTML = '';
+            return; 
+        }
+        
+        noScore.classList.add('hidden');
+
+        const totalPages = Math.ceil(filteredScores.length / itemsPerPage);
+        if (currentPage > totalPages) currentPage = totalPages;
+        if (currentPage < 1) currentPage = 1;
+
+        const startIndex = (currentPage - 1) * itemsPerPage;
+        const endIndex = startIndex + itemsPerPage;
+        const pageItems = filteredScores.slice(startIndex, endIndex);
+
+        tbody.innerHTML = pageItems.map((s) => {
+            const isMe = s.deviceId === deviceId;
+            return `<tr class="${isMe ? 'my-score-row' : 'hover:bg-slate-50'} transition-colors border-b border-slate-100">
+            <td class="px-4 py-5 font-black text-slate-500 text-base text-center">#${s.absoluteRank}</td>
+            <td class="px-4 py-5 font-extrabold text-slate-800 text-base">${s.hoTen} ${isMe ? '<span class="ml-2 bg-pink-500 text-white text-xs px-2 py-1 rounded-md shadow-sm">Bạn</span>' : ''}</td>
+            <td class="px-4 py-5 font-black text-blue-600 text-base text-center">${s.lop}</td>
+            <td class="px-4 py-5 text-center font-black text-orange-600 text-sm">${s.duration}</td>
+            <td class="px-4 py-5 text-center"><span class="font-black text-2xl ${s.diem >= 5 ? 'text-emerald-600' : 'text-red-500'}">${s.diem}</span></td>
+            <td class="px-4 py-5 text-center">
+                <button onclick="window.reviewStudentScore('${s.id}')" class="bg-indigo-100 text-indigo-700 hover:bg-indigo-200 px-4 py-2 rounded-lg font-bold text-sm transition-colors border border-indigo-200 shadow-sm cursor-pointer whitespace-nowrap">Xem lại</button>
+            </td>
+        </tr>`;
+        }).join('');
+
+        renderPagination(totalPages);
+    };
+
+    function renderPagination(totalPages) {
+        const container = document.getElementById('pagination-controls');
+        if (!container) return;
+        
+        if (totalPages <= 1) {
+            container.innerHTML = '';
+            return;
+        }
+
+        let html = '<div class="flex flex-wrap items-center justify-center gap-2">';
+        
+        html += `<button onclick="window.changePage(${currentPage - 1})" class="px-4 py-2 rounded-xl font-bold transition-colors ${currentPage === 1 ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 shadow-sm'}" ${currentPage === 1 ? 'disabled' : ''}>&laquo; Trước</button>`;
+
+        let startPage = Math.max(1, currentPage - 1);
+        let endPage = Math.min(totalPages, currentPage + 1);
+
+        if (startPage > 1) {
+            html += `<button onclick="window.changePage(1)" class="px-4 py-2 rounded-xl font-bold bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 shadow-sm">1</button>`;
+            if (startPage > 2) html += `<span class="px-2 text-gray-400 font-black">...</span>`;
+        }
+
+        for (let i = startPage; i <= endPage; i++) {
+            html += `<button onclick="window.changePage(${i})" class="px-4 py-2 rounded-xl font-bold transition-all ${i === currentPage ? 'bg-orange-500 text-white shadow-md border-orange-600' : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 shadow-sm'}">${i}</button>`;
+        }
+
+        if (endPage < totalPages) {
+            if (endPage < totalPages - 1) html += `<span class="px-2 text-gray-400 font-black">...</span>`;
+            html += `<button onclick="window.changePage(${totalPages})" class="px-4 py-2 rounded-xl font-bold bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 shadow-sm">${totalPages}</button>`;
+        }
+
+        html += `<button onclick="window.changePage(${currentPage + 1})" class="px-4 py-2 rounded-xl font-bold transition-colors ${currentPage === totalPages ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 shadow-sm'}" ${currentPage === totalPages ? 'disabled' : ''}>Sau &raquo;</button>`;
+        
+        html += '</div>';
+        container.innerHTML = html;
+    }
+
+    function showSection(id) {
+        ['login', 'quiz', 'scores', 'result', 'review'].forEach(s => {
+            const el = document.getElementById(s+'-section');
+            if(el) el.classList.add('hidden');
+        });
+        const tgt = document.getElementById(id+'-section');
+        if(tgt) tgt.classList.remove('hidden');
+    }
+
+    function startTimer(seconds) {
+        const display = document.getElementById('timer');
+        if(!display) return;
+        let remaining = seconds;
+        timerInterval = setInterval(() => {
+            remaining--;
+            const m = Math.floor(remaining / 60).toString().padStart(2, '0');
+            const s = (remaining % 60).toString().padStart(2, '0');
+            display.innerText = `${m}:${s}`;
+            if (remaining <= 0) window.submitQuiz();
+        }, 1000);
+    }
+
+    try {
+        if (!localStorage.getItem('deviceId')) localStorage.setItem('deviceId', 'dev_' + Math.random().toString(36).substr(2) + Date.now());
+        deviceId = localStorage.getItem('deviceId');
+    } catch (e) { deviceId = 'dev_temp_' + Math.random().toString(36).substr(2); }
+  </script>
+ </body>
+</html>

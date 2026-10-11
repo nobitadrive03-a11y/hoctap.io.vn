@@ -1,0 +1,817 @@
+<!doctype html>
+<html lang="vi" class="w-full h-full m-0 p-0">
+ <head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <title>Tin Học 10 - Bài 7</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+  <!-- 1. MÃ GA4 GỐC (Kết nối với Google Analytics) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-NSJCVSL9RM"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-NSJCVSL9RM'); 
+</script>
+
+<!-- 2. MÃ NHỊP TIM 30 GIÂY -->
+<script>
+  setInterval(function() {
+    if (!document.hidden) { 
+      gtag('event', 'keep_alive', {
+        'event_category': 'Engagement',
+        'event_label': 'Học sinh đang làm bài',
+        'non_interaction': false
+      });
+    }
+  }, 30000); 
+</script>
+
+  <style>
+    * { 
+        -webkit-tap-highlight-color: transparent; 
+        -webkit-touch-callout: none !important; 
+        touch-action: manipulation;
+    }
+    
+    html, body { width: 100%; min-height: 100vh; margin: 0; padding: 0; overflow-x: hidden; }
+    
+    body { 
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
+      background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+      background-size: 400% 400%;
+      animation: gradientBG 15s ease infinite;
+    }
+    
+    @keyframes gradientBG {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+
+    #app { width: 100%; min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden; }
+    
+    .glass-card {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    .option-label { transition: background-color 0.1s ease, border-color 0.1s ease; cursor: pointer; border-color: #e2e8f0; }
+    .option-label:hover { background-color: #f0fdfa; border-color: #38bdf8; }
+    
+    input[type="radio"].single-radio:checked + .option-label {
+      background: linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%);
+      color: white; border-color: transparent;
+      box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+    }
+    input[type="radio"].single-radio:checked + .option-label div:first-child { background-color: rgba(255,255,255,0.25); border-color: transparent; color: white; }
+    input[type="radio"].single-radio:checked + .option-label div:last-child { color: white; }
+    
+    .fade-in { animation: fadeIn 0.4s ease forwards; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    
+    .my-score-row {
+      background: linear-gradient(to right, #fdf4ff, #ffffff) !important;
+      border-left: 4px solid #db2777 !important; font-weight: 700 !important;
+      color: #9d174d !important; box-shadow: 0 2px 8px rgba(0,0,0,0.05); position: relative; z-index: 10;
+    }
+    .my-score-row td { padding-top: 16px; padding-bottom: 16px; }
+    
+    .btn-tf { transition: background-color 0.1s ease; border-width: 2px; }
+    .btn-tf.selected { background-color: #2563eb; color: white; border-color: #1d4ed8; }
+    .btn-tf:not(.selected) { background-color: white; color: #4b5563; border-color: #e5e7eb; }
+    .btn-tf:not(:disabled):active { transform: scale(0.95); }
+    
+    .math-scroll { overflow-x: auto; min-width: 0; padding-bottom: 4px; scrollbar-width: none; -ms-overflow-style: none; }
+    .math-scroll::-webkit-scrollbar { display: none; }
+  </style>
+
+ </head>
+ <body>
+  <div id="app" class="p-0 sm:p-4 md:p-8 transition-all">
+   
+   <div id="login-section" class="w-full max-w-md mx-auto fade-in flex flex-col justify-center flex-grow">
+    <div class="glass-card rounded-none sm:rounded-3xl p-6 sm:p-8 flex flex-col justify-start shadow-2xl border-t-8 border-indigo-600 bg-white">
+     <div class="text-center mb-6 pt-4 sm:pt-0">
+      <div class="flex items-center justify-center w-24 h-24 mx-auto mb-4 rounded-full border-4 border-yellow-400 bg-red-600 shadow-lg transform transition-transform hover:scale-105">
+          <span class="text-white font-black text-4xl tracking-tighter">HS</span>
+      </div>
+      <h1 class="text-2xl sm:text-3xl font-bold text-red-500 mb-3"> ĐỀ KIỂM TRA<br> BÀI 7: THIẾT BỊ THÔNG MINH VÀ INTERNET VẠN VẬT </h1>
+     </div>
+      <div id="login-form" class="space-y-4">
+      <div class="flex flex-col gap-4">
+          <div class="w-full">
+               <label class="block text-lg font-bold text-gray-700 mb-1">Họ và tên</label> 
+               <input type="text" id="hoTen" class="w-full px-4 py-4 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-100 outline-none transition-all font-semibold text-lg" placeholder="Nhập họ tên...">
+          </div>
+          <div class="w-full">
+               <label class="block text-lg font-bold text-gray-700 mb-1">Lớp</label> 
+               <input type="text" id="lop" class="w-full px-4 py-4 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-100 outline-none transition-all font-semibold text-lg" placeholder="10A1">
+          </div>
+      </div>
+
+      <div id="login-error" class="hidden bg-red-100 border border-red-300 text-red-700 font-bold text-base p-3 rounded-xl text-center shadow-sm"></div>
+
+      <button type="button" onclick="window.startQuizAction()" id="start-btn" class="w-full py-5 mt-6 bg-gradient-to-r from-blue-500 to-cyan-400 text-white font-extrabold rounded-2xl shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all text-2xl tracking-wide"> 🚀 BẮT ĐẦU THI </button>
+     </div>
+    </div>
+   </div>
+
+   <div id="quiz-section" class="w-full max-w-4xl mx-auto hidden flex-grow flex flex-col">
+    <div class="glass-card rounded-none sm:rounded-3xl p-4 sm:p-8 flex flex-col flex-grow relative border-t-8 border-blue-500 bg-white shadow-2xl">
+     <div class="flex items-center justify-between mb-4 sm:mb-6 pb-4 border-b-2 border-gray-100">
+      
+      <div class="flex items-center gap-3">
+       <div class="flex items-center justify-center w-12 h-12 rounded-full border-2 border-yellow-400 bg-red-600 shadow-sm flex-shrink-0">
+           <span class="text-white font-black text-xl tracking-tighter">HS</span>
+       </div>
+       <div>
+        <h2 id="quiz-title" class="text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">Đề Kiểm Tra</h2>
+        <p id="student-info" class="text-base font-bold text-gray-500 mt-1 uppercase tracking-wide"></p>
+       </div>
+      </div>
+
+      <div class="text-right bg-blue-50 px-4 py-2 rounded-xl border border-blue-100" id="progress-container">
+       <div class="text-sm text-blue-500 font-bold uppercase tracking-wider mb-1">Tiến độ (Câu)</div>
+       <div id="progress-text" class="text-2xl font-black text-blue-700">0/28</div>
+      </div>
+     </div>
+     
+     <div id="timer-banner" class="mb-6 p-4 bg-gradient-to-r from-orange-50 to-red-50 border-2 border-red-100 rounded-2xl flex items-center justify-between shadow-sm sticky top-2 z-40">
+        <span class="text-red-800 font-extrabold flex items-center gap-2 text-lg"><span class="text-2xl animate-pulse">⏰</span> THỜI GIAN:</span> 
+        <span id="timer" class="text-4xl font-black text-red-600 font-mono tracking-wider drop-shadow-sm">45:00</span>
+     </div>
+
+     <div id="question-container" class="mb-8 flex-grow w-full max-w-full"></div>
+     
+     <div id="network-error" class="hidden bg-red-100 text-red-700 p-4 rounded-xl mt-4 text-center font-bold text-sm border-2 border-red-300 mb-4 shadow-sm"></div>
+
+    <div class="flex pt-4 sm:pt-6 border-t-2 border-gray-100 mt-auto pb-4 sm:pb-0">
+        <button id="submit-btn" onclick="window.promptSubmit()" class="w-full py-5 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-bold text-2xl rounded-2xl shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1">✅ NỘP BÀI NGAY</button>
+     </div>
+    </div>
+   </div>
+
+   <div id="confirm-submit-modal" class="fixed inset-0 hidden flex items-center justify-center bg-black/60 backdrop-blur-sm z-50 transition-opacity">
+       <div class="bg-white rounded-3xl w-full max-w-sm shadow-2xl p-6 text-center transform transition-all scale-100 mx-4 border-2 border-gray-100">
+           <div class="text-yellow-400 mb-4 flex justify-center">
+               <svg xmlns="http://www.w3.org/2000/svg" class="h-24 w-24" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+               </svg>
+           </div>
+           <h3 class="text-3xl font-black text-gray-800 mb-2 uppercase tracking-wide">Xác nhận nộp</h3>
+           <p class="text-gray-600 mb-6 font-medium text-xl">Các em mới làm <span id="confirm-answered" class="text-red-600 font-black text-2xl">0</span>/<span id="confirm-total" class="font-black text-2xl">28</span> câu. Có chắc chắn muốn nộp bài không? Những câu chưa làm sẽ bị tính là sai.</p>
+           <div class="flex flex-col gap-3">
+               <button onclick="window.closeConfirmModal()" class="w-full py-4 bg-gray-100 text-gray-800 font-extrabold text-xl rounded-xl hover:bg-gray-200 border border-gray-200">Quay lại làm tiếp</button>
+               <button onclick="window.executeSubmit()" class="w-full py-4 bg-emerald-600 text-white font-extrabold text-xl rounded-xl hover:bg-emerald-700 shadow-md">Vẫn Nộp Luôn</button>
+           </div>
+       </div>
+   </div>
+
+   <div id="result-section" class="w-full max-w-2xl mx-auto hidden fade-in flex flex-col justify-center flex-grow pb-8">
+    <div class="glass-card rounded-none sm:rounded-3xl p-6 sm:p-8 flex flex-col justify-start border-t-8 border-green-500 bg-white shadow-2xl" id="result-content">
+    </div>
+   </div>
+
+   <div id="review-section" class="w-full max-w-4xl mx-auto hidden flex-grow flex flex-col">
+    <div class="glass-card rounded-none sm:rounded-3xl p-4 sm:p-8 flex flex-col flex-grow border-t-8 border-indigo-500 bg-white overflow-hidden shadow-2xl">
+     <div class="flex flex-col-reverse sm:flex-row items-start sm:items-center justify-between mb-6 pb-4 border-b-2 border-gray-100 gap-4">
+      <div class="flex flex-wrap gap-2">
+          <button onclick="window.goHome()" class="px-5 py-3 bg-gray-100 text-gray-700 rounded-xl font-bold hover:bg-gray-200 text-lg shadow-sm border border-gray-200">🏠 Trang chủ</button>
+          <button onclick="window.backFromReview()" class="px-5 py-3 bg-indigo-50 text-indigo-700 rounded-xl font-bold hover:bg-indigo-100 text-lg shadow-sm border border-indigo-200">🔙 Quay lại</button>
+          <button onclick="window.viewScoresAction()" class="px-5 py-3 bg-orange-50 text-orange-700 rounded-xl font-bold hover:bg-orange-100 text-lg shadow-sm border border-orange-200">🏆 Bảng điểm</button>
+      </div>
+      <h2 class="text-3xl sm:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">📝 Xem Lại Bài Làm</h2>
+     </div>
+     <div id="review-content" class="space-y-8 w-full max-w-full"></div>
+    </div>
+   </div>
+
+   <div id="scores-section" class="w-full max-w-6xl mx-auto hidden flex-grow flex flex-col">
+    <div class="glass-card rounded-none sm:rounded-3xl p-4 sm:p-8 flex flex-col flex-grow border-t-8 border-orange-500 bg-white w-full max-w-full shadow-2xl">
+     <div class="mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b-2 border-gray-100 pb-4">
+      <button onclick="window.goHome()" class="px-5 py-3 bg-gray-100 text-gray-700 rounded-xl font-bold hover:bg-gray-200 text-lg shadow-sm border border-gray-200 whitespace-nowrap">🏠 Trang chủ</button>
+      <h2 class="text-3xl sm:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-red-600 text-center flex-grow">🏆 BẢNG XẾP HẠNG</h2>
+     </div>
+     
+     <div class="flex flex-col sm:flex-row justify-between items-center mb-4 gap-4 bg-gray-50 p-4 rounded-xl border border-gray-200">
+         <div id="my-rank-display" class="text-xl font-bold text-gray-700">🏆 Thứ hạng của bạn: <span class="text-gray-400">--</span></div>
+         <div class="w-full sm:w-auto flex-grow max-w-sm">
+             <input type="text" id="search-student" oninput="window.searchStudent(this.value)" placeholder="🔍 Nhập tên học sinh để tìm..." class="w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm focus:border-orange-500 focus:ring-2 focus:ring-orange-200 outline-none transition-all font-medium">
+         </div>
+     </div>
+
+     <div class="overflow-x-auto rounded-xl border border-slate-200 flex-grow shadow-inner bg-white/50 w-full">
+      <table class="w-full text-sm sm:text-base whitespace-nowrap min-w-max">
+       <thead class="bg-gradient-to-r from-orange-500 to-red-500 text-white">
+        <tr>
+         <th class="px-3 sm:px-4 py-4 text-center font-extrabold w-16">Hạng</th>
+         <th class="px-3 sm:px-4 py-4 text-left font-extrabold">Họ tên</th>
+         <th class="px-3 sm:px-4 py-4 text-center font-extrabold">Lớp</th>
+         <th class="px-3 sm:px-4 py-4 text-center font-extrabold">Thời gian</th>
+         <th class="px-3 sm:px-4 py-4 text-center font-extrabold">Điểm</th>
+         <th class="px-2 sm:px-4 py-4 text-center font-extrabold">Xem lại</th>
+        </tr>
+       </thead>
+       <tbody id="scores-tbody" class="bg-white/80 divide-y divide-gray-100"></tbody>
+      </table>
+      <div id="no-scores" class="text-center py-12 hidden text-gray-500 font-bold text-xl">Không tìm thấy dữ liệu thi 🥲</div>
+     </div>
+     
+     <div id="pagination-controls" class="w-full flex justify-center mt-6"></div>
+    </div>
+  </div>
+  <!-- Thêm Footer thương hiệu cá nhân -->
+  <footer class="text-center py-6 mt-auto text-white drop-shadow-md">
+      <p class="font-bold">Được phát triển bởi Lê Huyền Sinh (Cỏ Dại)</p>
+      <p class="text-sm">"Mang công nghệ vào mọi chuyến đi"</p>
+  </footer>
+
+  <script>
+    let database = null;
+    let scoresRef = null;
+
+    try {
+        const firebaseConfig = {
+            apiKey: "AIzaSyBQ9Pos8awlh9j041qDWTPFRsVIjF-kPnk",
+            authDomain: "hoctap-91691.firebaseapp.com",
+            databaseURL: "https://hoctap-91691-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "hoctap-91691",
+            storageBucket: "hoctap-91691.firebasestorage.app",
+            messagingSenderId: "1004553425319",
+            appId: "1:1004553425319:web:45d15cbae393f614c56682",
+            measurementId: "G-Q6X1TL9PRV"
+        };
+        if (typeof firebase !== 'undefined') {
+            if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+            database = firebase.database();
+            scoresRef = database.ref('bxh_tin_10_7');
+        }
+    } catch(err) { console.error("Lỗi Firebase:", err); }
+
+    let isQuizStarted = false; 
+    let currentQuestions = [];
+    let deviceId = '';
+    let allScores = [];
+    let currentStudent = {};
+    let userAnswers = {};
+    let timerInterval;
+    let quizStartTime, quizEndTime;
+    
+    let searchTerm = '';
+    let currentPage = 1;
+    const itemsPerPage = 10;
+
+    const exam_data = [
+        { id: "q1", type: "single", question: "Câu 1: Theo tài liệu tin học, khái niệm \"thiết bị thông minh\" được các chuyên gia định nghĩa tập trung vào đặc tính cốt lõi nào sau đây?", options: ["A. Là những thiết bị luôn yêu cầu con người phải điều khiển mọi thao tác thủ công từ lúc khởi động đến khi tắt.", "B. Là những thiết bị cơ khí truyền thống chỉ chạy bằng năng lượng điện và không bao giờ kết nối sóng vô tuyến.", "C. Là những thiết bị điện tử có thể hoạt động tự chủ ở mức độ nhất định nhờ phần mềm điều khiển cài đặt sẵn.", "D. Là những thiết bị luôn luôn phải sử dụng giao diện dòng lệnh văn bản để nhập dữ liệu thay cho màn hình màu."], correct: 2, explanation: "Đúng. Thiết bị thông minh là thiết bị điện tử có thể hoạt động tự chủ ở mức độ nhất định nhờ phần mềm điều khiển cài đặt sẵn." },
+        { id: "q2", type: "single", question: "Câu 2: Thuật ngữ \"Trí tuệ nhân tạo\" (viết tắt là AI) được tích hợp trong các thiết bị thông minh hiện đại nhằm mục đích mang lại khả năng gì?", options: ["A. Nhằm cung cấp khả năng tự động sao chép mọi tài liệu cá nhân của người dùng sang các thiết bị ổ cứng khác.", "B. Nhằm cung cấp khả năng bắt chước một vài hành vi hay cách thức tư duy của con người ở các mức độ khác nhau.", "C. Nhằm cung cấp khả năng phá hủy hoàn toàn mọi hệ thống tường lửa bảo vệ máy tính khi bị tấn công mạng.", "D. Nhằm cung cấp khả năng thay thế triệt để vai trò của bộ vi xử lí trung tâm bên trong tất cả các dòng máy tính."], correct: 1, explanation: "Đúng. Trí tuệ nhân tạo có khả năng bắt chước một vài hành vi hay cách thức tư duy của con người." },
+        { id: "q3", type: "single", question: "Câu 3: Cuộc cách mạng công nghiệp lần thứ tư (thường được gọi tắt là CMCN 4.0) được xây dựng chủ yếu dựa trên nền tảng công nghệ gì?", options: ["A. Xây dựng dựa trên nền tảng công nghệ cơ giới hoá máy móc kết hợp sức kéo động cơ hơi nước nhiệt độ cao.", "B. Xây dựng dựa trên nền tảng công nghệ phát triển mạnh mẽ điện năng và các dây chuyền sản xuất tập trung.", "C. Xây dựng dựa trên nền tảng công nghệ chế tạo động cơ đốt trong kết hợp hệ thống khung gầm thép vững chắc.", "D. Xây dựng dựa trên nền tảng công nghệ số và tích hợp chặt chẽ với các công nghệ thông minh trên diện rộng."], correct: 3, explanation: "Đúng. Cuộc cách mạng công nghiệp 4.0 được xây dựng dựa trên nền tảng công nghệ số và công nghệ thông minh." },
+        { id: "q4", type: "single", question: "Câu 4: Giao thức kết nối truyền thông mạng mang tên TCP/IP được thiết lập chính thức trên phạm vi toàn cầu vào khoảng thời gian nào?", options: ["A. Chuẩn giao thức kết nối mạng lưới máy tính TCP/IP được chính thức đưa vào sử dụng từ những năm 1957.", "B. Chuẩn giao thức kết nối mạng lưới máy tính TCP/IP được chính thức đưa vào sử dụng từ những năm 1964.", "C. Chuẩn giao thức kết nối mạng lưới máy tính TCP/IP được chính thức đưa vào sử dụng từ những năm 1983.", "D. Chuẩn giao thức kết nối mạng lưới máy tính TCP/IP được chính thức đưa vào sử dụng từ những năm 1992."], correct: 2, explanation: "Đúng. Giao thức truyền thông mạng TCP/IP được thiết lập chính thức vào năm 1983." },
+        { id: "q5", type: "single", question: "Câu 5: Theo lịch sử khoa học máy tính, ngôn ngữ lập trình bậc cao đầu tiên được công bố chính thức dành cho giới khoa học là ngôn ngữ nào?", options: ["A. Ngôn ngữ lập trình bậc cao đầu tiên được nhân loại công bố sử dụng chính là ngôn ngữ lập trình FORTRAN.", "B. Ngôn ngữ lập trình bậc cao đầu tiên được nhân loại công bố sử dụng chính là ngôn ngữ lập trình Python.", "C. Ngôn ngữ lập trình bậc cao đầu tiên được nhân loại công bố sử dụng chính là ngôn ngữ lập trình Pascal.", "D. Ngôn ngữ lập trình bậc cao đầu tiên được nhân loại công bố sử dụng chính là ngôn ngữ lập trình Cobol."], correct: 0, explanation: "Đúng. Ngôn ngữ lập trình bậc cao đầu tiên được công bố chính thức là FORTRAN." },
+        { id: "q6", type: "single", question: "Câu 6: Hệ điều hành máy tính đầu tiên đưa ra hầu hết các nguyên lí nền tảng cho các hệ điều hành hiện đại ra đời năm 1964 có tên là gì?", options: ["A. Hệ điều hành tiên phong mang tính chất nền tảng này được các chuyên gia gọi tên chính thức là hệ MS-DOS.", "B. Hệ điều hành tiên phong mang tính chất nền tảng này được các chuyên gia gọi tên chính thức là Windows 95.", "C. Hệ điều hành tiên phong mang tính chất nền tảng này được các chuyên gia gọi tên chính thức là OS/360.", "D. Hệ điều hành tiên phong mang tính chất nền tảng này được các chuyên gia gọi tên chính thức là macOS X."], correct: 2, explanation: "Đúng. Hệ điều hành máy tính đầu tiên mang tính nền tảng ra đời năm 1964 là OS/360." },
+        { id: "q7", type: "single", question: "Câu 7: Mô hình \"nền kinh tế tri thức\" mà cuộc cách mạng công nghiệp 4.0 đang thúc đẩy mạnh mẽ lấy yếu tố then chốt nào làm động lực chính?", options: ["A. Lấy sự dồi dào của các nguồn tài nguyên khoáng sản thiên nhiên làm động lực chủ yếu để tăng trưởng nền kinh tế.", "B. Lấy yếu tố tri thức trên cơ sở phát triển bền vững khoa học và công nghệ cao làm động lực chủ yếu tăng trưởng.", "C. Lấy nguồn lao động thủ công giá rẻ và các khu công nghiệp chế xuất truyền thống làm động lực chính yếu phát triển.", "D. Lấy sản lượng nông nghiệp và kĩ thuật chăn nuôi gia súc theo phương pháp cổ điển làm động lực cốt lõi gia tăng."], correct: 1, explanation: "Đúng. Nền kinh tế tri thức lấy tri thức dựa trên khoa học công nghệ làm động lực tăng trưởng." },
+        { id: "q8", type: "single", question: "Câu 8: Dịch vụ mạng toàn cầu World Wide Web (viết tắt là WWW) được phát minh và chính thức cung cấp tạo ra phương tiện truy cập vào năm nào?", options: ["A. Hệ thống dịch vụ truy cập mạng lưới web này đã được phát minh và ứng dụng thành công vào khoảng năm 1970.", "B. Hệ thống dịch vụ truy cập mạng lưới web này đã được phát minh và ứng dụng thành công vào khoảng năm 1983.", "C. Hệ thống dịch vụ truy cập mạng lưới web này đã được phát minh và ứng dụng thành công vào khoảng năm 1992.", "D. Hệ thống dịch vụ truy cập mạng lưới web này đã được phát minh và ứng dụng thành công vào khoảng năm 2000."], correct: 2, explanation: "Đúng. WWW được phát minh và ứng dụng thành công vào khoảng năm 1992." },
+        { id: "q9", type: "single", question: "Câu 9: Nhờ vào những khả năng kĩ thuật đặc thù nào mà một chiếc camera kết nối Internet được giới công nghệ phân loại là một thiết bị thông minh?", options: ["A. Nhờ vào khả năng tự động in ra giấy các bức ảnh sắc nét ngay sau khi người dùng thực hiện thao tác chụp hình.", "B. Nhờ vào khả năng truyền dữ liệu tự động, tương tác qua mạng và chọn lọc chỉ ghi hình khi phát hiện chuyển động.", "C. Nhờ vào khả năng lập tức mã hoá toàn bộ đoạn phim và tự động khoá máy quay khi có hiện tượng rung lắc mạnh.", "D. Nhờ vào khả năng nhận diện tuyệt đối mọi ngôn ngữ giao tiếp của con người và phiên dịch tức thời sang tiếng Anh."], correct: 1, explanation: "Đúng. Camera kết nối Internet phân loại thiết bị thông minh nhờ vào khả năng truyền, lưu trữ dữ liệu tự động, tương tác qua mạng và chọn lọc." },
+        { id: "q10", type: "single", question: "Câu 10: Ứng dụng nền tảng của mạng lưới \"Internet vạn vật\" (IoT) mang lại tác dụng vô cùng to lớn nào đối với hệ thống giao thông tại các đô thị?", options: ["A. Liên kết mạng lưới thiết bị thông minh nhằm tự động hóa việc thu thập dữ liệu giám sát và cảnh báo giao thông.", "B. Thiết lập các rào chắn cảm ứng từ trường nhằm ngăn chặn triệt để mọi phương tiện di chuyển vào giờ cao điểm.", "C. Loại bỏ hoàn toàn sự tồn tại của các loại xe chạy bằng năng lượng xăng dầu và thay thế bằng tàu ngầm siêu tốc.", "D. Tự động hóa toàn bộ hệ thống thu phí bằng cách lấy thẳng nguồn tài chính từ tài khoản mạng xã hội người dùng."], correct: 0, explanation: "Đúng. Internet vạn vật (IoT) giúp thu thập dữ liệu, giám sát và cảnh báo giao thông tự động." },
+        { id: "q11", type: "single", question: "Câu 11: Tại sao một chiếc máy ảnh kĩ thuật số thông thường (chỉ dùng thẻ nhớ) lại không được các nhà thiết kế xếp vào danh sách thiết bị thông minh?", options: ["A. Do máy ảnh này sử dụng loại ống kính thấu kính cơ học quá lỗi thời và không có chế độ tự động làm đẹp ảnh.", "B. Do máy ảnh này luôn luôn yêu cầu phải có một sợi dây cáp cắm thẳng vào màn hình ti vi mới xem được hình.", "C. Do máy ảnh này không hoạt động tự chủ theo phần mềm riêng và hoàn toàn thiếu đi tính năng tương tác mạng.", "D. Do máy ảnh này lưu trữ các điểm ảnh bằng định dạng đồ hoạ không tương thích với bất kỳ hệ điều hành nào."], correct: 2, explanation: "Đúng. Máy ảnh kĩ thuật số thông thường không được xem là thông minh do thiếu khả năng hoạt động tự chủ cao và tương tác mạng." },
+        { id: "q12", type: "single", question: "Câu 12: Sự phát minh và ứng dụng mạnh mẽ các ngôn ngữ lập trình bậc cao đã đem lại lợi ích kĩ thuật cốt lõi nào cho lĩnh vực phát triển phần mềm?", options: ["A. Hỗ trợ lập trình viên giấu đi mọi thuật toán cốt lõi để các nhà khoa học khác không bao giờ có thể sao chép được.", "B. Giúp người lập trình chỉ cần tập trung thể hiện cách giải quyết thuật toán mà không cần phải biết đến các lệnh máy.", "C. Tự động chuyển đổi các hệ máy tính chạy hệ điều hành Windows thành các cỗ máy chủ vận hành hệ thống UNIX.", "D. Yêu cầu lập trình viên phải ghi nhớ một cách cực kỳ tỉ mỉ mọi mã nhị phân nhằm đảm bảo độ bảo mật hệ thống."], correct: 1, explanation: "Đúng. Ngôn ngữ bậc cao giúp người lập trình tập trung vào thuật toán mà không cần biết lệnh máy." },
+        { id: "q13", type: "single", question: "Câu 13: Dựa theo lược đồ tiến trình phát triển, sự khác biệt mang tính nền tảng giữa cuộc Cách mạng công nghiệp lần thứ ba và lần thứ tư là gì?", options: ["A. Lần thứ 3 dựa vào điện năng sản xuất dây chuyền; lần thứ 4 chuyển hoàn toàn sang dùng sức kéo của cơ khí.", "B. Lần thứ 3 dựa vào lao động thủ công nghiệp; lần thứ 4 dựa vào hệ thống mạng điện thoại di động cầm tay sóng 3G.", "C. Lần thứ 3 dùng máy tính hỗ trợ hoạt động trí tuệ; lần thứ 4 dùng hệ thống IoT làm mờ ranh giới không gian thực-ảo.", "D. Lần thứ 3 tập trung phát triển các phương tiện tự lái; lần thứ 4 dùng máy hơi nước để chế tạo các vệ tinh vũ trụ."], correct: 2, explanation: "Đúng. Khác biệt lớn nhất là CMCN 4.0 dùng hệ thống IoT tích hợp vật lí số sinh học." },
+        { id: "q14", type: "single", question: "Câu 14: Đối với những người trực tiếp lập trình ứng dụng, các hệ quản trị cơ sở dữ liệu (như MySQL, Oracle) đóng vai trò hỗ trợ thiết yếu như thế nào?", options: ["A. Cung cấp sẵn công cụ tổ chức dữ liệu độc lập giúp người phát triển tập trung viết phần mềm cho hoạt động nghiệp vụ.", "B. Cung cấp sẵn một hệ điều hành đồ họa 3D riêng biệt giúp các dòng mã lệnh tự động biến thành giao diện hình ảnh.", "C. Tự động mã hóa tất cả các ứng dụng trên điện thoại thông minh thành một định dạng không thể bị tin tặc phá vỡ.", "D. Xóa bỏ hoàn toàn công đoạn kiểm thử phần mềm do hệ thống dữ liệu tự động sửa chữa mọi lỗi cú pháp lập trình."], correct: 0, explanation: "Đúng. Cung cấp sẵn công cụ tổ chức dữ liệu độc lập, giúp lập trình viên tập trung phần mềm nghiệp vụ." },
+        { id: "q15", type: "single", question: "Câu 15: Trong nguyên lý vận hành của các loại xe tự hành (ô tô tự lái) hiện đại, quá trình thiết bị tính toán tốc độ và hướng đi tối ưu được diễn ra ở đâu?", options: ["A. Quá trình tính toán chiến lược này được xử lý hoàn toàn bởi tổng đài trực tuyến do hàng ngàn nhân viên điều khiển.", "B. Quá trình tính toán chiến lược này được xử lý thông qua việc in các biểu đồ dữ liệu ra màn hình rồi quét chụp lại.", "C. Quá trình tính toán chiến lược này được thực hiện trong không gian thế giới ảo dựa trên dữ liệu thu từ các cảm biến.", "D. Quá trình tính toán chiến lược này được thực hiện ngẫu nhiên thông qua hệ thống động cơ cơ khí đốt trong của xe."], correct: 2, explanation: "Đúng. Quá trình được tính toán bằng cách tạo ra bản sao không gian số (không gian ảo)." },
+        { id: "q16", type: "single", question: "Câu 16: Sự bùng nổ của mạng lưới \"Internet vạn vật\" (IoT) đã và đang tạo ra những tác động cách mạng mang tính cốt lõi nào trong môi trường xã hội?", options: ["A. Xây dựng nên những phòng thí nghiệm hóa học khổng lồ nằm sâu dưới lòng đại dương và không cần dùng đến điện.", "B. Liên kết các thiết bị thông minh để xử lý tức thời trên diện rộng, tự động hóa như quá trình giám sát giao thông.", "C. Tiêu diệt triệt để tất cả các loại ngôn ngữ lập trình truyền thống và thay thế hoàn toàn bằng tín hiệu sóng siêu âm.", "D. Biến toàn bộ hệ thống máy tính cá nhân ở các gia đình thành các cỗ máy đúc linh kiện phần cứng robot công nghiệp."], correct: 1, explanation: "Đúng. IoT liên kết xử lý tức thời và giúp tự động hóa như lĩnh vực giao thông." },
+        { id: "q17", type: "single", question: "Câu 17: Bạn Tuấn mới mua một chiếc đồng hồ lịch vạn niên gắn trên tường, hiển thị số LED đỏ rất đẹp nhưng không có kết nối Wi-Fi hay Bluetooth. Dựa trên phân tích thuộc tính công nghệ, thiết bị này được xếp vào nhóm nào?", options: ["A. Thiết bị này chắc chắn được xếp vào nhóm thiết bị số thông minh do nó sở hữu hệ thống phần cứng hiển thị đèn LED.", "B. Thiết bị này được xếp vào nhóm thiết bị điện tử thông thường do nó thiếu đi khả năng tương tác tự động mạng không dây.", "C. Thiết bị này được phân loại vào nhóm robot tự hành vì nó có năng lực tự thay đổi các múi giờ quốc tế vô cùng linh hoạt.", "D. Thiết bị này được phân loại vào nhóm trợ lý ảo cá nhân vì nó sở hữu tính năng nhận diện tiếng nói con người tự động."], correct: 1, explanation: "Đúng. Thiết bị thông thường nếu thiếu kết nối, khả năng tương tác và phần mềm điều khiển." },
+        { id: "q18", type: "single", question: "Câu 18: Nhà máy hoá chất X quyết định đầu tư một dây chuyền robot có gắn trí tuệ nhân tạo để hàn các ống kim loại dưới hầm sâu thiếu dưỡng khí. Quyết định đầu tư trang thiết bị này chứng minh rõ rệt cho ưu điểm ứng dụng nào của ngành Tin học?", options: ["A. Minh chứng cho ưu điểm công nghệ giúp giải quyết những bài toán quản lí trường học và kết nối đa mạng xã hội.", "B. Minh chứng cho ưu điểm công nghệ hỗ trợ con người dự báo thời tiết khí hậu một cách nhanh chóng và chính xác.", "C. Minh chứng cho ưu điểm ứng dụng hệ thống tự động hóa làm thay con người tại những nơi có môi trường độc nguy hiểm.", "D. Minh chứng cho ưu điểm ứng dụng siêu máy tính nhằm tăng cường trải nghiệm mua sắm trực tuyến cho khách hàng."], correct: 2, explanation: "Đúng. Robot có thể làm việc hiệu quả và an toàn ở nơi nguy hiểm độc hại." },
+        { id: "q19", type: "single", question: "Câu 19: Khi Lan đọc báo cáo tài chính của tập đoàn sản xuất điện thoại thông minh lớn, Lan thấy chi phí nhân công và nguyên liệu chỉ chiếm dưới 40%, phần 60% còn lại đổ vào thiết kế và trả phí bản quyền. Hiện tượng này minh hoạ sinh động cho quy luật kinh tế nào?", options: ["A. Minh họa sinh động cho nền kinh tế tiểu thủ công nghiệp dựa dẫm nhiều vào lực lượng lao động chân tay giá cực kì rẻ.", "B. Minh họa sinh động cho nền kinh tế thương mại hàng hải chuyên tập trung vào việc trung chuyển khối lượng hàng hoá lớn.", "C. Minh họa sinh động cho nền kinh tế tri thức hiện đại, trong đó chất xám và công nghệ cao là động lực chủ yếu tăng trưởng.", "D. Minh họa sinh động cho nền kinh tế bao cấp nhà nước, nơi mọi nguyên vật liệu đều được phân bổ theo chỉ tiêu sản lượng."], correct: 2, explanation: "Đúng. Đây là ví dụ trực quan về vai trò của tri thức trong nền kinh tế." },
+        { id: "q20", type: "single", question: "Câu 20: Dũng sử dụng một ứng dụng trợ lí ảo trên điện thoại, đọc một câu tiếng Việt và ứng dụng lập tức phát ra âm thanh dịch bằng tiếng Pháp cực kì tự nhiên. Tính năng phần mềm xuất sắc này đại diện cho khả năng gì của thiết bị thông minh hiện nay?", options: ["A. Đại diện cho khả năng máy móc tự động sao chép hoàn toàn mọi thông tin từ các loại từ điển bách khoa toàn thư thế giới.", "B. Đại diện cho khả năng \"bắt chước\" một phần hành vi hiểu và giao tiếp bằng ngôn ngữ tự nhiên của não bộ con người.", "C. Đại diện cho khả năng hệ điều hành chủ động khóa mọi ngôn ngữ không mong muốn để bảo vệ quyền riêng tư người dùng.", "D. Đại diện cho khả năng phần cứng máy tính tạo ra một trường lực từ tính nhằm nhận diện sóng âm thanh từ ngoài môi trường."], correct: 1, explanation: "Đúng. Đó là thành tựu của AI bắt chước hiểu và giao tiếp như con người." },
+        { id: "q21", type: "single", question: "Câu 21: Chuỗi siêu thị A vừa lắp đặt hệ thống máy tính trung tâm đồng bộ với máy quét mã vạch ở 500 cửa hàng, giúp cập nhật doanh thu và lượng hàng tồn kho theo thời gian thực mỗi giây. Hệ thống này thể hiện sức mạnh của Tin học trong lĩnh vực ứng dụng nào?", options: ["A. Thể hiện sức mạnh vô song của việc tự động hóa chế bản máy in màu chuyên dùng để sản xuất các ấn phẩm tạp chí thời trang.", "B. Thể hiện sức mạnh vô song của các ứng dụng mạng xã hội trực tuyến giúp kết nối bạn bè thông qua hệ thống gửi thư điện tử.", "C. Thể hiện sức mạnh vô song trong lĩnh vực quản lí điều hành quy trình nghiệp vụ giúp xử lí công việc nhanh, chính xác, hiệu quả.", "D. Thể hiện sức mạnh vô song trong lĩnh vực mô phỏng các thí nghiệm vật lý lượng tử phức tạp nhất tại trung tâm hạt nhân vũ trụ."], correct: 2, explanation: "Đúng. Đây là ví dụ điển hình cho ứng dụng quản lí điều hành." },
+        { id: "q22", type: "single", question: "Câu 22: Để cảnh báo chính xác quỹ đạo của siêu bão Y, đài khí tượng phải nạp dữ liệu nhiệt độ và khí áp từ hàng trăm trạm thu phát vào một hệ thống siêu máy tính để thực hiện hàng trăm tỉ phép tính. Thao tác phức tạp này phản ánh chức năng cốt lõi nào của máy tính?", options: ["A. Phản ánh chức năng ứng dụng máy tính vào việc thiết kế và in ấn các bộ lịch vạn niên điện tử dành cho dân cư.", "B. Phản ánh chức năng giải quyết các bài toán khoa học kĩ thuật đòi hỏi khả năng tính toán cực kỳ nhanh và chuẩn xác.", "C. Phản ánh chức năng dùng công nghệ thông tin để hỗ trợ việc giao tiếp cộng đồng thông qua các diễn đàn trên mạng.", "D. Phản ánh chức năng sử dụng bộ vi xử lý để thay đổi cách thức sắp chữ máy in truyền thống thành chế bản đồ họa."], correct: 1, explanation: "Đúng. Ứng dụng giải quyết bài toán khoa học." },
+        { id: "q23", type: "single", question: "Câu 23: Cô Mai từng là thợ chụp ảnh dùng phim âm bản phải ngâm hóa chất để rửa, nay cô chuyển sang chụp ảnh kỹ thuật số và dùng Photoshop chỉnh sửa trên máy tính xách tay với chi phí rẻ hơn nhiều. Sự thay đổi công cụ này chứng minh cho điều gì về vai trò của Tin học?", options: ["A. Chứng minh Tin học đã tạo ra những con robot sinh học nhằm thay thế toàn bộ giới nhiếp ảnh gia truyền thống.", "B. Chứng minh Tin học đã thay đổi hoàn toàn cách thức làm việc và tạo ra quy trình tác nghiệp mới cho nhiều ngành nghề.", "C. Chứng minh Tin học đã loại bỏ hoàn toàn khả năng lưu trữ hình ảnh vật lí khiến mọi tác phẩm nghệ thuật bị xóa.", "D. Chứng minh Tin học đã vô hiệu hoá mọi giao thức kết nối mạng Internet làm cản trở việc gửi thư điện tử quảng cáo."], correct: 1, explanation: "Đúng. Tin học thay đổi cách thức làm việc nghề nhiếp ảnh." },
+        { id: "q24", type: "single", question: "Câu 24: Một khu nông nghiệp công nghệ cao lắp đặt hàng trăm trạm cảm biến không dây; cứ mỗi khi phát hiện đất trồng bị khô, các cảm biến tự gửi tín hiệu về trạm chủ để kích hoạt vòi phun sương. Mô hình tưới tiêu tự động này chính là ứng dụng đỉnh cao của công nghệ nào?", options: ["A. Đây là ứng dụng đỉnh cao của các ngôn ngữ lập trình hợp ngữ cơ sở chuyên điều khiển màn hình máy tính cá nhân.", "B. Đây là ứng dụng đỉnh cao của hệ thống máy chủ mạng xã hội chuyên đăng tải các đoạn video canh tác nông nghiệp.", "C. Đây là ứng dụng đỉnh cao của mạng lưới kết nối vạn vật (IoT) - thành phần chủ chốt của cuộc cách mạng công nghiệp 4.0.", "D. Đây là ứng dụng đỉnh cao của hệ thống dịch vụ điện toán đám mây chuyên phân tích các chỉ số tài chính của ngân hàng."], correct: 2, explanation: "Đúng. Ứng dụng IoT tự động trong nông nghiệp." },
+        
+        { id: "qII_1", type: "tf_cluster", context: "Câu 1: Bạn An đang chuẩn bị tài liệu thuyết trình về khái niệm thiết bị thông minh và Internet vạn vật (IoT). Dựa trên kiến thức bài học, hãy kiểm tra tính Đúng/Sai đối với các nhận định của An:", items: [
+            { id: "a", text: "a) Thiết bị thông minh được định nghĩa chuyên ngành là các thiết bị điện tử có thể hoạt động hoàn toàn tự chủ ở một mức độ nhất định nhờ vào các phần mềm điều khiển được cài đặt sẵn.", correct: true, expl: "ĐÚNG. Thiết bị thông minh là thiết bị điện tử có thể hoạt động tự chủ ở mức độ nhất định nhờ phần mềm cài sẵn." },
+            { id: "b", text: "b) Theo bản chất kĩ thuật, một chiếc máy ảnh kĩ thuật số đời mới nhất dù không có kết nối mạng vẫn được phân loại chắc chắn là thiết bị thông minh vì nó có khả năng chụp hàng ngàn bức ảnh nét.", correct: false, expl: "SAI. Máy ảnh số thông thường không hoạt động tự chủ nên các thiết bị này không phải thiết bị thông minh." },
+            { id: "c", text: "c) Trong hệ thống Internet vạn vật (IoT), các thiết bị thông minh luôn luôn bị giới hạn và cấm kết nối với nhau để đề phòng sự cố quá tải đường truyền tín hiệu mạng viễn thông quốc gia.", correct: false, expl: "SAI. IoT chính là việc kết nối các thiết bị thông minh với nhau nhằm thu thập và xử lí thông tin." },
+            { id: "d", text: "d) Do chiếc điện thoại thông minh của Tuấn sở hữu khả năng nhận diện khuôn mặt và tương tác qua giọng nói, Tuấn kết luận rằng chiếc máy này đã đạt được trình độ tư duy siêu việt vượt qua cả con người.", correct: false, expl: "SAI. Khả năng bắt chước một vài hành vi hay cách tư duy của con người trên thiết bị thông minh hiện tại tuy còn hạn chế, không thể nói là vượt qua con người." }
+        ]},
+        { id: "qII_2", type: "tf_cluster", context: "Câu 2: Nhóm thảo luận của bạn Lan đang phân tích về các cuộc cách mạng công nghiệp và sự dịch chuyển sang nền kinh tế tri thức. Hãy xác định những phát biểu sau của nhóm là Đúng hay Sai:", items: [
+            { id: "a", text: "a) Cuộc cách mạng công nghiệp lần thứ tư (còn gọi là CMCN 4.0) là cuộc cách mạng dựa trên nền tảng công nghệ số và sự tích hợp sâu rộng với các công nghệ thông minh trên toàn cầu.", correct: true, expl: "ĐÚNG. Cách mạng công nghiệp 4.0 dựa trên nền tảng công nghệ số và tích hợp với các công nghệ thông minh." },
+            { id: "b", text: "b) Nền kinh tế tri thức được định nghĩa là một nền kinh tế chủ yếu lấy yếu tố sức lao động chân tay và hoạt động sản xuất nông nghiệp truyền thống làm động lực chính yếu để tăng trưởng.", correct: false, expl: "SAI. Nền kinh tế tri thức là nền kinh tế chủ yếu dựa vào tri thức, trên cơ sở phát triển khoa học và công nghệ cao." },
+            { id: "c", text: "c) Trong nền sản xuất thông minh thời đại 4.0, các quy trình thiết kế kĩ thuật, tính toán mô phỏng và tạo khuôn mẫu cho sản phẩm hoàn toàn có thể được thực hiện trên không gian số (thế giới ảo).", correct: true, expl: "ĐÚNG. Trong sản xuất thông minh 4.0, quá trình tính toán, thiết kế, tạo mẫu,... được thực hiện trên không gian số." },
+            { id: "d", text: "d) Khi Bình phân tích giá thành sản xuất của một chiếc điện thoại, việc chi phí linh kiện nguyên vật liệu vật lí chiếm đến 90% tổng giá trị đã phản ánh bức tranh tiêu biểu của nền kinh tế tri thức.", correct: false, expl: "SAI. Giá trị nguyên vật liệu, nhân công chỉ chiếm chưa đến một nửa; phần còn lại là chi phí thiết kế... đó chính là giá trị của tri thức." }
+        ]},
+        { id: "qII_3", type: "tf_cluster", context: "Câu 3: Trong giờ học Lịch sử công nghệ, thầy Hùng giới thiệu về các thành tựu vĩ đại của ngành Tin học. Học sinh ghi chép lại các nội dung sau, hãy đánh giá tính Đúng/Sai của từng ý:", items: [
+            { id: "a", text: "a) Sự ra mắt của hệ điều hành OS/360 vào năm 1964 được coi là một cột mốc vĩ đại vì nó là hệ điều hành đầu tiên đưa ra hầu hết các nguyên lí nền tảng cho các hệ điều hành hiện đại.", correct: true, expl: "ĐÚNG. Hệ điều hành OS/360 (1964) đã đưa ra hầu hết các nguyên lí của các hệ điều hành hiện đại." },
+            { id: "b", text: "b) Ngôn ngữ lập trình bậc cao được các kĩ sư phát minh ra nhằm mục đích duy nhất là buộc mọi lập trình viên trên thế giới phải ghi nhớ và học thuộc lòng tất cả các dãy mã máy nhị phân.", correct: false, expl: "SAI. Ngôn ngữ bậc cao ra đời giúp người lập trình chỉ cần thể hiện thuật toán mà không cần biết đến mã máy." },
+            { id: "c", text: "c) Hệ thống giao thức truyền thông mạng TCP/IP được thiết lập vào năm 1983 đóng vai trò là quy tắc tiêu chuẩn giúp mạng lưới Internet có thể kết nối các máy tính trên phạm vi toàn cầu.", correct: true, expl: "ĐÚNG. Giao thức TCP/IP (1983) là quy tắc trao đổi dữ liệu cho phép kết nối toàn cầu." },
+            { id: "d", text: "d) Để phát triển một ứng dụng phần mềm quản lí nhân sự cỡ lớn thật nhanh chóng, bạn Dũng quyết định sử dụng hợp ngữ Assembly thuần túy nhằm làm tăng tối đa hiệu quả phát triển phần mềm.", correct: false, expl: "SAI. Dùng mã máy hay hợp ngữ rất khó kiểm soát dẫn đến hiệu quả phát triển phần mềm thấp." }
+        ]},
+        { id: "qII_4", type: "tf_cluster", context: "Câu 4: Bạn Minh tóm tắt những ứng dụng nổi bật của máy tính và thiết bị số trong việc làm thay đổi các lĩnh vực của đời sống xã hội. Những luận điểm nào của Minh là Đúng hay Sai:", items: [
+            { id: "a", text: "a) Đối với các công tác hành chính và giáo dục, việc ứng dụng các phần mềm tin học văn phòng đã góp phần quan trọng vào việc làm tăng cường chất lượng và hiệu quả hoạt động làm việc.", correct: true, expl: "ĐÚNG. Các ứng dụng tin học văn phòng đã góp phần tăng chất lượng và hiệu quả hoạt động hành chính." },
+            { id: "b", text: "b) Nhờ sở hữu năng lực tính toán cực kì nhanh và chuẩn xác, hệ thống các siêu máy tính hoàn toàn có thể hỗ trợ con người dự báo thời tiết bằng cách phân tích khối lượng dữ liệu khổng lồ.", correct: true, expl: "ĐÚNG. Siêu máy tính hỗ trợ dự báo thời tiết bằng cách xử lí dữ liệu lưu trữ từ nhiều năm với hàng trăm tỉ phép tính." },
+            { id: "c", text: "c) Các mẫu Robot công nghiệp thông minh là một sản phẩm thành công rực rỡ của ngành tự động hoá, có thể thay thế con người làm việc an toàn tại những khu vực có môi trường cực kì nguy hiểm.", correct: true, expl: "ĐÚNG. Robot là thành công của tự động hóa, làm việc ở những nơi môi trường nguy hiểm." },
+            { id: "d", text: "d) Thầy Hùng khuyên học sinh nên tích cực ứng dụng mạng xã hội trực tuyến để làm bài tập nhóm, nhưng nhấn mạnh rằng hình thức kết nối này sẽ làm giảm triệt để sự tương tác và cắt đứt hoàn toàn giao tiếp cộng đồng.", correct: false, expl: "SAI. Tin học và các diễn đàn mạng xã hội giúp trao đổi thông tin nhanh chóng và trực quan, không hề làm cắt đứt giao tiếp cộng đồng." }
+        ]}
+    ];
+
+    window.startQuizAction = function() {
+        try {
+            const errDiv = document.getElementById('login-error');
+            if(errDiv) errDiv.classList.add('hidden');
+            
+            const nameEl = document.getElementById('hoTen');
+            const lopEl = document.getElementById('lop');
+            
+            const name = nameEl.value.trim();
+            const lop = lopEl.value.trim();
+            
+            if (!name || !lop) {
+                if(errDiv) {
+                    errDiv.innerText = "⚠️ Vui lòng nhập đầy đủ Họ tên và Lớp!";
+                    errDiv.classList.remove('hidden');
+                } else {
+                    alert("⚠️ Vui lòng nhập đầy đủ Họ tên và Lớp!");
+                }
+                return;
+            }
+            
+            currentStudent = { hoTen: name, lop: lop, maDe: 'de7', tenDe: 'Đề Trắc Nghiệm Bài 7' };
+            currentQuestions = JSON.parse(JSON.stringify(exam_data));
+            quizStartTime = new Date();
+            
+            setTimeout(() => { isQuizStarted = true; }, 1000);
+            showSection('quiz');
+            
+            userAnswers = {};
+            window.renderAllQuestions();
+            startTimer(45 * 60); 
+            
+        } catch (error) {
+            alert("❌ Đã xảy ra lỗi khởi tạo bài thi: " + error.message + ".");
+            console.error(error);
+        }
+    };
+
+    window.viewScoresAction = function() {
+        searchTerm = ''; 
+        document.getElementById('search-student').value = '';
+        currentPage = 1;
+
+        if (database) {
+            scoresRef.once('value').then((snapshot) => {
+                const data = snapshot.val();
+                allScores = data ? Object.keys(data).map(key => ({...data[key], id: key})) : [];
+                window.renderScores();
+                showSection('scores');
+            });
+        }
+    };
+
+    window.searchStudent = function(val) {
+        searchTerm = val.toLowerCase();
+        currentPage = 1;
+        window.renderScores();
+    };
+
+    window.changePage = function(page) {
+        currentPage = page;
+        window.renderScores();
+    };
+
+    window.goHome = function() {
+        if(document.getElementById('hoTen')) document.getElementById('hoTen').value = ''; 
+        if(document.getElementById('lop')) document.getElementById('lop').value = ''; 
+        clearInterval(timerInterval);
+        showSection('login');
+    };
+
+    function getTotalScoreItems() { return currentQuestions.length; }
+
+    function getAnsweredCount() {
+        let count = 0;
+        currentQuestions.forEach(q => {
+            if (q.type === 'single') {
+                if (userAnswers[q.id] !== undefined) count++;
+            } else if (q.type === 'tf_cluster') {
+                let answeredItems = 0;
+                q.items.forEach(item => {
+                    if (userAnswers[q.id + '_' + item.id] !== undefined) answeredItems++;
+                });
+                if (answeredItems === 4) count++; 
+            }
+        });
+        return count;
+    }
+
+   window.selectAnswer = function(qId, val, type) {
+        if (type === 'tf') {
+            userAnswers[qId] = val;
+            const btnT = document.getElementById(`btnT_${qId}`);
+            const btnF = document.getElementById(`btnF_${qId}`);
+            if (val === true) {
+                btnT.classList.add('selected'); btnT.classList.remove('bg-white');
+                btnF.classList.remove('selected'); btnF.classList.add('bg-white');
+            } else {
+                btnF.classList.add('selected'); btnF.classList.remove('bg-white');
+                btnT.classList.remove('selected'); btnT.classList.add('bg-white');
+            }
+        } else if (type === 'single') {
+            userAnswers[qId] = val;
+        }
+        
+        requestAnimationFrame(() => {
+            const pgText = document.getElementById('progress-text');
+            if(pgText) pgText.innerText = `${getAnsweredCount()}/${getTotalScoreItems()}`;
+        });
+    };
+
+    window.renderAllQuestions = function() {
+        if (!currentQuestions || currentQuestions.length === 0) return;
+        const container = document.getElementById('question-container');
+        if(!container) return;
+
+        let html = '';
+        let currentType = '';
+
+        currentQuestions.forEach((q) => {
+            if (q.type !== currentType) {
+                currentType = q.type;
+                let headerText = ''; let roman = '';
+                if(currentType === 'single') { headerText = 'TRẮC NGHIỆM NHIỀU PHƯƠNG ÁN LỰA CHỌN'; roman = 'I'; }
+                if(currentType === 'tf_cluster') { headerText = 'TRẮC NGHIỆM ĐÚNG/SAI'; roman = 'II'; }
+                
+                html += `<div class="flex items-center gap-3 mt-8 mb-4 border-b-2 border-blue-100 pb-3"><span class="bg-gradient-to-br from-blue-500 to-indigo-600 text-white w-14 h-14 flex items-center justify-center rounded-xl font-black text-2xl shadow-md">${roman}</span><h3 class="text-2xl sm:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-700 to-indigo-700 tracking-wide uppercase">${headerText}</h3></div>`;
+            }
+
+            html += `<div class="fade-in w-full bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-blue-100 relative mb-6 hover:shadow-md transition-shadow">`;
+            
+            if (q.type === 'single') {
+                const uAns = userAnswers[q.id];
+                html += `<div class="flex gap-4 mb-5"><div class="w-full math-scroll"><p class="text-xl font-bold text-red-600 mt-1 leading-snug tracking-tight">${q.question}</p></div></div>`;
+                html += `<div class="space-y-4 md:pl-6 mt-6">`;
+                q.options.forEach((opt, i) => {
+                    const isChecked = (uAns === i) ? 'checked' : '';
+                    html += `<div class="flex items-center">
+                        <input type="radio" id="opt_${q.id}_${i}" name="q_${q.id}" value="${i}" class="hidden single-radio" ${isChecked} onchange="window.selectAnswer('${q.id}', ${i}, 'single')">
+                        <label for="opt_${q.id}_${i}" class="option-label w-full p-4 border-2 border-gray-200 rounded-2xl flex items-center gap-4 bg-white shadow-sm font-bold text-lg hover:border-blue-300">
+                            <div class="w-12 h-12 rounded-xl border-2 border-gray-300 flex items-center justify-center text-lg font-black text-gray-400 flex-shrink-0 bg-gray-50">${String.fromCharCode(65 + i)}</div>
+                            <div class="text-gray-700 leading-relaxed math-scroll flex-1">${opt}</div>
+                        </label>
+                    </div>`;
+                });
+                html += `</div>`;
+            } 
+            else if (q.type === 'tf_cluster') {
+                html += `<div class="bg-red-50 text-red-700 p-5 rounded-xl font-bold mb-4 border-2 border-red-100 text-xl leading-relaxed math-scroll">${q.context}</div>`;
+                html += `<div class="space-y-4 mt-6">`;
+                q.items.forEach((item) => {
+                    const combinedId = q.id + '_' + item.id;
+                    let ans = userAnswers[combinedId];
+                    let btnT = ans === true ? 'selected' : 'bg-white';
+                    let btnF = ans === false ? 'selected' : 'bg-white';
+
+                    html += `<div class="p-5 border-2 border-gray-100 rounded-2xl bg-white shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4 transition-all hover:border-blue-200">
+                        <div class="font-bold text-gray-800 flex-1 text-lg math-scroll">${item.text}</div>
+                        <div class="flex gap-3 shrink-0">
+                            <button id="btnT_${combinedId}" onclick="window.selectAnswer('${combinedId}', true, 'tf')" class="btn-tf w-24 sm:w-28 py-3 rounded-xl font-extrabold text-lg ${btnT}">ĐÚNG</button>
+                            <button id="btnF_${combinedId}" onclick="window.selectAnswer('${combinedId}', false, 'tf')" class="btn-tf w-24 sm:w-28 py-3 rounded-xl font-extrabold text-lg ${btnF}">SAI</button>
+                        </div>
+                    </div>`;
+                });
+                html += `</div>`;
+            } 
+            html += `</div>`;
+        });
+        
+        container.innerHTML = html;
+        const pgText = document.getElementById('progress-text');
+        if(pgText) pgText.innerText = `${getAnsweredCount()}/${getTotalScoreItems()}`;
+    };
+
+    function formatDuration(sec) {
+        const m = Math.floor(sec / 60); const s = sec % 60;
+        return `${m}p ${s}s`;
+    }
+
+    window.promptSubmit = function() {
+        if (!isQuizStarted) return;
+        const total = getTotalScoreItems();
+        const answered = getAnsweredCount();
+        
+        document.getElementById('confirm-answered').innerText = answered;
+        document.getElementById('confirm-total').innerText = total;
+        
+        const modal = document.getElementById('confirm-submit-modal');
+        modal.classList.remove('hidden');
+    };
+
+    window.closeConfirmModal = function() {
+        const modal = document.getElementById('confirm-submit-modal');
+        modal.classList.add('hidden');
+    };
+
+    window.executeSubmit = function() {
+        window.closeConfirmModal();
+        isQuizStarted = false; 
+        quizEndTime = new Date();
+        clearInterval(timerInterval);
+        
+        let score = 0;
+
+        currentQuestions.forEach(q => {
+            if (q.type === 'single') {
+                if (userAnswers[q.id] === q.correct) score += 0.25;
+            } else if (q.type === 'tf_cluster') {
+                let correctCount = 0;
+                q.items.forEach(item => { 
+                    if (userAnswers[q.id + '_' + item.id] === item.correct) {
+                        correctCount++;
+                    }
+                });
+                
+                // Áp dụng logic tính điểm mới cho phần trắc nghiệm đúng/sai
+                if (correctCount === 1) score += 0.1;
+                else if (correctCount === 2) score += 0.25;
+                else if (correctCount === 3) score += 0.5;
+                else if (correctCount === 4) score += 1.0;
+            }
+        });
+
+        score = score.toFixed(2); 
+
+        const record = {
+            hoTen: currentStudent.hoTen, lop: currentStudent.lop, tenDe: currentStudent.tenDe, maDe: currentStudent.maDe,
+            diem: parseFloat(score),
+            startTime: quizStartTime.toLocaleTimeString('vi-VN') + ' ' + quizStartTime.toLocaleDateString('vi-VN'),
+            endTime: quizEndTime.toLocaleTimeString('vi-VN') + ' ' + quizEndTime.toLocaleDateString('vi-VN'),
+            duration: formatDuration(Math.floor((quizEndTime - quizStartTime) / 1000)),
+            thoiGian: new Date().toISOString(), deviceId: deviceId,
+            userAnswers: userAnswers 
+        };
+        
+        if(database) {
+            scoresRef.push(record, () => { window.showModalResult(score, record.duration); });
+        } else {
+            window.showModalResult(score, record.duration);
+        }
+    };
+
+    window.showModalResult = function(score, dur) {
+        ['login', 'quiz', 'scores', 'review'].forEach(s => {
+            const el = document.getElementById(s+'-section');
+            if(el) el.classList.add('hidden');
+        });
+        const resEl = document.getElementById('result-section');
+        if(resEl) resEl.classList.remove('hidden');
+        const contentEl = document.getElementById('result-content');
+        if(contentEl) contentEl.innerHTML = `
+        <div class="flex justify-start mb-4">
+            <button onclick="window.goHome()" class="px-5 py-3 bg-gray-100 text-gray-700 rounded-xl font-bold hover:bg-gray-200 transition-colors shadow-sm border border-gray-200 text-lg">🏠 Trang chủ</button>
+        </div>
+        <div class="text-center">
+            <div class="text-7xl mb-4 animate-bounce">🎉</div>
+            <h3 class="text-3xl font-black text-emerald-600 mb-2">Hoàn thành bài thi!</h3>
+            <p class="text-gray-600 mb-6 mt-2"><span class="font-extrabold text-blue-700 text-xl uppercase tracking-wider">${currentStudent.hoTen} - Lớp ${currentStudent.lop}</span></p>
+        </div>
+        <div class="bg-blue-50 border-2 border-blue-100 rounded-3xl p-8 mb-6 shadow-inner relative text-center">
+            <div class="text-base text-blue-500 font-extrabold mb-2 uppercase tracking-widest">ĐIỂM SỐ CỦA BẠN</div>
+            <div class="text-7xl font-black text-blue-600 drop-shadow-sm">${score} <span class="text-3xl text-gray-400">/ 10</span></div>
+            <div class="text-lg font-extrabold text-indigo-600 mt-5 bg-white inline-block px-6 py-3 rounded-full shadow-sm border border-blue-100">Thời gian làm bài: ${dur}</div>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+            <button onclick="window.reviewQuiz()" class="w-full py-4 bg-gradient-to-r from-indigo-500 to-purple-500 text-white rounded-xl font-extrabold shadow-sm hover:shadow-md transition-colors text-xl">📝 Xem lại bài</button>
+            <button onclick="window.viewScoresAction()" class="w-full py-4 bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-xl font-extrabold shadow-sm hover:shadow-md transition-colors text-xl">🏆 Bảng điểm</button>
+        </div>`;
+    };
+
+    function getStatusBadge(isCorrect, isUnanswered) {
+        if (isUnanswered) return `<div class="mt-4 mb-2 inline-block px-4 py-2 bg-yellow-100 text-yellow-800 text-base font-black rounded-lg border border-yellow-300 shadow-sm">⚠️ BẠN CHƯA LÀM CÂU NÀY</div>`;
+        if (isCorrect) return `<div class="mt-4 mb-2 inline-block px-4 py-2 bg-emerald-100 text-emerald-800 text-base font-black rounded-lg border border-emerald-300 shadow-sm">✅ BẠN LÀM ĐÚNG RỒI</div>`;
+        return `<div class="mt-4 mb-2 inline-block px-4 py-2 bg-red-100 text-red-800 text-base font-black rounded-lg border border-red-300 shadow-sm">❌ BẠN LÀM SAI RỒI</div>`;
+    }
+
+    window.reviewQuiz = function() {
+        showSection('review');
+        const container = document.getElementById('review-content');
+        if(!container) return;
+        let html = '';
+
+        currentQuestions.forEach((q) => {
+            if (q.type === 'single') {
+                let uAns = userAnswers[q.id];
+                let isUnanswered = (uAns === undefined);
+                let isCorrect = (uAns === q.correct);
+                let borderColor = isCorrect ? 'border-emerald-300 bg-emerald-50' : 'border-red-300 bg-red-50';
+                
+                html += `<div class="p-6 border-2 rounded-2xl shadow-sm mb-6 ${borderColor}">`;
+                html += `<div class="font-bold text-xl text-red-600 mb-5 leading-relaxed math-scroll">${q.question}</div>`;
+                html += `<div class="space-y-3">`;
+                
+                q.options.forEach((opt, i) => {
+                    let optBg = ''; let iconHtml = '';
+                    if (q.correct === i) {
+                        optBg = 'bg-emerald-100 text-emerald-900 border-emerald-400 border-2'; 
+                        iconHtml = '<div class="text-3xl drop-shadow-sm ml-auto pl-2 flex-shrink-0">✅</div>';
+                    } else if (uAns === i && !isCorrect) {
+                        optBg = 'bg-red-100 text-red-900 line-through border-red-400 border-2'; 
+                        iconHtml = '<div class="text-3xl drop-shadow-sm ml-auto pl-2 flex-shrink-0">❌</div>';
+                    } else { optBg = 'bg-white text-slate-700 border border-slate-200'; }
+
+                    html += `<div class="p-4 rounded-xl ${optBg} flex items-center gap-4"><div class="w-10 h-10 flex items-center justify-center rounded-lg bg-white/50 text-base font-black shadow-sm flex-shrink-0">${String.fromCharCode(65 + i)}</div><div class="${(q.correct === i || uAns === i) ? 'font-semibold' : 'font-medium'} flex-1 text-lg math-scroll">${opt}</div>${iconHtml}</div>`;
+                });
+                html += `</div>`;
+                
+                html += getStatusBadge(isCorrect, isUnanswered); 
+                
+                if (q.explanation) {
+                    html += `<div class="review-explanation mt-3 pt-3 border-t-2 border-gray-200"><p class="text-base font-black uppercase tracking-widest text-blue-600 mb-2">💡 Giải chi tiết:</p><p class="text-black font-medium text-lg leading-loose math-scroll">${q.explanation}</p></div>`;
+                }
+                html += `</div>`;
+            } 
+            else if (q.type === 'tf_cluster') {
+                html += `<div class="p-6 border-2 border-indigo-200 bg-indigo-50 rounded-2xl shadow-sm mb-6">`;
+                html += `<div class="font-bold text-xl text-indigo-800 mb-5 math-scroll">${q.context}</div>`;
+                html += `<div class="space-y-5">`;
+                q.items.forEach(item => {
+                    let uAns = userAnswers[q.id + '_' + item.id];
+                    let isUnanswered = (uAns === undefined);
+                    let isCorrect = (uAns === item.correct);
+                    let iconHtml = isCorrect ? '✅' : '❌';
+                    let ansText = item.correct ? 'ĐÚNG' : 'SAI';
+
+                    html += `<div class="p-5 bg-white border border-indigo-100 rounded-xl shadow-sm">
+                        <div class="font-bold text-gray-800 text-lg math-scroll">${item.text}</div>
+                        <div class="mt-3 flex items-center justify-between border-b border-gray-100 pb-3">
+                            <span class="text-base font-bold text-gray-500">Bạn chọn: <span class="${isUnanswered ? 'text-gray-400' : 'text-blue-600'} font-black uppercase">${isUnanswered ? 'Chưa trả lời' : (uAns?'Đúng':'Sai')}</span></span>
+                            <span class="font-black text-xl ${isCorrect ? 'text-emerald-500' : 'text-red-500'}">Đáp án: ${ansText} ${iconHtml}</span>
+                        </div>`;
+                        
+                    html += getStatusBadge(isCorrect, isUnanswered);
+                    if(item.expl) {
+                        html += `<div class="review-explanation mt-3 pt-3 text-lg text-gray-700 font-medium leading-relaxed math-scroll"><span class="text-indigo-500 font-bold uppercase">Giải chi tiết:</span><br> ${item.expl}</div>`;
+                    }
+                    html += `</div>`;
+                });
+                html += `</div></div>`;
+            }
+        });
+        container.innerHTML = html;
+    };
+
+    window.backToResult = function() { showSection('result'); };
+    
+    let isReviewingFromLeaderboard = false;
+    
+    window.backFromReview = function() {
+        if (isReviewingFromLeaderboard) {
+            showSection('scores');
+            isReviewingFromLeaderboard = false;
+        } else {
+            window.backToResult();
+        }
+    };
+
+    window.reviewStudentScore = function(scoreId) {
+        const record = allScores.find(x => x.id === scoreId);
+        if (!record) return;
+        
+        currentStudent = { hoTen: record.hoTen, lop: record.lop, tenDe: record.tenDe, maDe: record.maDe };
+        userAnswers = record.userAnswers || {}; 
+        
+        currentQuestions = JSON.parse(JSON.stringify(exam_data)); 
+        
+        isReviewingFromLeaderboard = true;
+        window.reviewQuiz();
+    };
+
+    window.renderScores = function() {
+        const tbody = document.getElementById('scores-tbody');
+        const noScore = document.getElementById('no-scores');
+        const myRankDisplay = document.getElementById('my-rank-display');
+        const paginationContainer = document.getElementById('pagination-controls');
+        
+        if(!tbody) return;
+
+        const sortedAll = [...allScores].sort((a, b) => (b.diem - a.diem) || (a.duration.localeCompare(b.duration)));
+        
+        sortedAll.forEach((s, i) => s.absoluteRank = i + 1);
+
+        const myRankIndex = sortedAll.findIndex(s => s.deviceId === deviceId);
+        if (myRankDisplay) {
+            if (myRankIndex !== -1) {
+                myRankDisplay.innerHTML = `🏆 Thứ hạng của bạn: <span class="text-red-600 font-black">#${sortedAll[myRankIndex].absoluteRank}</span>`;
+            } else {
+                myRankDisplay.innerHTML = `🏆 Thứ hạng của bạn: <span class="text-gray-400">Chưa thi</span>`;
+            }
+        }
+
+        const filteredScores = searchTerm ? sortedAll.filter(s => s.hoTen.toLowerCase().includes(searchTerm)) : sortedAll;
+
+        if (filteredScores.length === 0) {
+            tbody.innerHTML = ''; 
+            noScore.classList.remove('hidden'); 
+            paginationContainer.innerHTML = '';
+            return; 
+        }
+        
+        noScore.classList.add('hidden');
+
+        const totalPages = Math.ceil(filteredScores.length / itemsPerPage);
+        if (currentPage > totalPages) currentPage = totalPages;
+        if (currentPage < 1) currentPage = 1;
+
+        const startIndex = (currentPage - 1) * itemsPerPage;
+        const endIndex = startIndex + itemsPerPage;
+        const pageItems = filteredScores.slice(startIndex, endIndex);
+
+        tbody.innerHTML = pageItems.map((s) => {
+            const isMe = s.deviceId === deviceId;
+            return `<tr class="${isMe ? 'my-score-row' : 'hover:bg-slate-50'} transition-colors border-b border-slate-100">
+            <td class="px-4 py-5 font-black text-slate-500 text-base text-center">#${s.absoluteRank}</td>
+            <td class="px-4 py-5 font-extrabold text-slate-800 text-base">${s.hoTen} ${isMe ? '<span class="ml-2 bg-pink-500 text-white text-xs px-2 py-1 rounded-md shadow-sm">Bạn</span>' : ''}</td>
+            <td class="px-4 py-5 font-black text-blue-600 text-base text-center">${s.lop}</td>
+            <td class="px-4 py-5 text-center font-black text-orange-600 text-sm">${s.duration}</td>
+            <td class="px-4 py-5 text-center"><span class="font-black text-2xl ${s.diem >= 5 ? 'text-emerald-600' : 'text-red-500'}">${s.diem}</span></td>
+            <td class="px-4 py-5 text-center">
+                <button onclick="window.reviewStudentScore('${s.id}')" class="bg-indigo-100 text-indigo-700 hover:bg-indigo-200 px-4 py-2 rounded-lg font-bold text-sm transition-colors border border-indigo-200 shadow-sm cursor-pointer whitespace-nowrap">Xem lại</button>
+            </td>
+        </tr>`;
+        }).join('');
+
+        renderPagination(totalPages);
+    };
+
+    function renderPagination(totalPages) {
+        const container = document.getElementById('pagination-controls');
+        if (!container) return;
+        
+        if (totalPages <= 1) {
+            container.innerHTML = '';
+            return;
+        }
+
+        let html = '<div class="flex flex-wrap items-center justify-center gap-2">';
+        
+        html += `<button onclick="window.changePage(${currentPage - 1})" class="px-4 py-2 rounded-xl font-bold transition-colors ${currentPage === 1 ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 shadow-sm'}" ${currentPage === 1 ? 'disabled' : ''}>&laquo; Trước</button>`;
+
+        let startPage = Math.max(1, currentPage - 1);
+        let endPage = Math.min(totalPages, currentPage + 1);
+
+        if (startPage > 1) {
+            html += `<button onclick="window.changePage(1)" class="px-4 py-2 rounded-xl font-bold bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 shadow-sm">1</button>`;
+            if (startPage > 2) html += `<span class="px-2 text-gray-400 font-black">...</span>`;
+        }
+
+        for (let i = startPage; i <= endPage; i++) {
+            html += `<button onclick="window.changePage(${i})" class="px-4 py-2 rounded-xl font-bold transition-all ${i === currentPage ? 'bg-orange-500 text-white shadow-md border-orange-600' : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 shadow-sm'}">${i}</button>`;
+        }
+
+        if (endPage < totalPages) {
+            if (endPage < totalPages - 1) html += `<span class="px-2 text-gray-400 font-black">...</span>`;
+            html += `<button onclick="window.changePage(${totalPages})" class="px-4 py-2 rounded-xl font-bold bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 shadow-sm">${totalPages}</button>`;
+        }
+
+        html += `<button onclick="window.changePage(${currentPage + 1})" class="px-4 py-2 rounded-xl font-bold transition-colors ${currentPage === totalPages ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 shadow-sm'}" ${currentPage === totalPages ? 'disabled' : ''}>Sau &raquo;</button>`;
+        
+        html += '</div>';
+        container.innerHTML = html;
+    }
+
+    function showSection(id) {
+        ['login', 'quiz', 'scores', 'result', 'review'].forEach(s => {
+            const el = document.getElementById(s+'-section');
+            if(el) el.classList.add('hidden');
+        });
+        const tgt = document.getElementById(id+'-section');
+        if(tgt) tgt.classList.remove('hidden');
+    }
+
+    function startTimer(seconds) {
+        const display = document.getElementById('timer');
+        if(!display) return;
+        let remaining = seconds;
+        timerInterval = setInterval(() => {
+            remaining--;
+            const m = Math.floor(remaining / 60).toString().padStart(2, '0');
+            const s = (remaining % 60).toString().padStart(2, '0');
+            display.innerText = `${m}:${s}`;
+            if (remaining <= 0) window.submitQuiz();
+        }, 1000);
+    }
+
+    try {
+        if (!localStorage.getItem('deviceId')) localStorage.setItem('deviceId', 'dev_' + Math.random().toString(36).substr(2) + Date.now());
+        deviceId = localStorage.getItem('deviceId');
+    } catch (e) { deviceId = 'dev_temp_' + Math.random().toString(36).substr(2); }
+  </script>
+ </body>
+</html>

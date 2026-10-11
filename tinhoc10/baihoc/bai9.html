@@ -1,0 +1,817 @@
+<!doctype html>
+<html lang="vi" class="w-full h-full m-0 p-0">
+ <head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <title>Tin Học 10 - Bài 9</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+  <!-- 1. MÃ GA4 GỐC (Kết nối với Google Analytics) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-NSJCVSL9RM"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-NSJCVSL9RM'); 
+</script>
+
+<!-- 2. MÃ NHỊP TIM 30 GIÂY -->
+<script>
+  setInterval(function() {
+    if (!document.hidden) { 
+      gtag('event', 'keep_alive', {
+        'event_category': 'Engagement',
+        'event_label': 'Học sinh đang làm bài',
+        'non_interaction': false
+      });
+    }
+  }, 30000); 
+</script>
+
+  <style>
+    * { 
+        -webkit-tap-highlight-color: transparent; 
+        -webkit-touch-callout: none !important; 
+        touch-action: manipulation;
+    }
+    
+    html, body { width: 100%; min-height: 100vh; margin: 0; padding: 0; overflow-x: hidden; }
+    
+    body { 
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
+      background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+      background-size: 400% 400%;
+      animation: gradientBG 15s ease infinite;
+    }
+    
+    @keyframes gradientBG {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+
+    #app { width: 100%; min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden; }
+    
+    .glass-card {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    .option-label { transition: background-color 0.1s ease, border-color 0.1s ease; cursor: pointer; border-color: #e2e8f0; }
+    .option-label:hover { background-color: #f0fdfa; border-color: #38bdf8; }
+    
+    input[type="radio"].single-radio:checked + .option-label {
+      background: linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%);
+      color: white; border-color: transparent;
+      box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+    }
+    input[type="radio"].single-radio:checked + .option-label div:first-child { background-color: rgba(255,255,255,0.25); border-color: transparent; color: white; }
+    input[type="radio"].single-radio:checked + .option-label div:last-child { color: white; }
+    
+    .fade-in { animation: fadeIn 0.4s ease forwards; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    
+    .my-score-row {
+      background: linear-gradient(to right, #fdf4ff, #ffffff) !important;
+      border-left: 4px solid #db2777 !important; font-weight: 700 !important;
+      color: #9d174d !important; box-shadow: 0 2px 8px rgba(0,0,0,0.05); position: relative; z-index: 10;
+    }
+    .my-score-row td { padding-top: 16px; padding-bottom: 16px; }
+    
+    .btn-tf { transition: background-color 0.1s ease; border-width: 2px; }
+    .btn-tf.selected { background-color: #2563eb; color: white; border-color: #1d4ed8; }
+    .btn-tf:not(.selected) { background-color: white; color: #4b5563; border-color: #e5e7eb; }
+    .btn-tf:not(:disabled):active { transform: scale(0.95); }
+    
+    .math-scroll { overflow-x: auto; min-width: 0; padding-bottom: 4px; scrollbar-width: none; -ms-overflow-style: none; }
+    .math-scroll::-webkit-scrollbar { display: none; }
+  </style>
+
+ </head>
+ <body>
+  <div id="app" class="p-0 sm:p-4 md:p-8 transition-all">
+   
+   <div id="login-section" class="w-full max-w-md mx-auto fade-in flex flex-col justify-center flex-grow">
+    <div class="glass-card rounded-none sm:rounded-3xl p-6 sm:p-8 flex flex-col justify-start shadow-2xl border-t-8 border-indigo-600 bg-white">
+     <div class="text-center mb-6 pt-4 sm:pt-0">
+      <div class="flex items-center justify-center w-24 h-24 mx-auto mb-4 rounded-full border-4 border-yellow-400 bg-red-600 shadow-lg transform transition-transform hover:scale-105">
+          <span class="text-white font-black text-4xl tracking-tighter">HS</span>
+      </div>
+      <h1 class="text-2xl sm:text-3xl font-bold text-red-500 mb-3"> ĐỀ KIỂM TRA<br> BÀI 9: AN TOÀN TRÊN KHÔNG GIAN MẠNG </h1>
+     </div>
+      <div id="login-form" class="space-y-4">
+      <div class="flex flex-col gap-4">
+          <div class="w-full">
+               <label class="block text-lg font-bold text-gray-700 mb-1">Họ và tên</label> 
+               <input type="text" id="hoTen" class="w-full px-4 py-4 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-100 outline-none transition-all font-semibold text-lg" placeholder="Nhập họ tên...">
+          </div>
+          <div class="w-full">
+               <label class="block text-lg font-bold text-gray-700 mb-1">Lớp</label> 
+               <input type="text" id="lop" class="w-full px-4 py-4 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-100 outline-none transition-all font-semibold text-lg" placeholder="10A1">
+          </div>
+      </div>
+
+      <div id="login-error" class="hidden bg-red-100 border border-red-300 text-red-700 font-bold text-base p-3 rounded-xl text-center shadow-sm"></div>
+
+      <button type="button" onclick="window.startQuizAction()" id="start-btn" class="w-full py-5 mt-6 bg-gradient-to-r from-blue-500 to-cyan-400 text-white font-extrabold rounded-2xl shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all text-2xl tracking-wide"> 🚀 BẮT ĐẦU THI </button>
+     </div>
+    </div>
+   </div>
+
+   <div id="quiz-section" class="w-full max-w-4xl mx-auto hidden flex-grow flex flex-col">
+    <div class="glass-card rounded-none sm:rounded-3xl p-4 sm:p-8 flex flex-col flex-grow relative border-t-8 border-blue-500 bg-white shadow-2xl">
+     <div class="flex items-center justify-between mb-4 sm:mb-6 pb-4 border-b-2 border-gray-100">
+      
+      <div class="flex items-center gap-3">
+       <div class="flex items-center justify-center w-12 h-12 rounded-full border-2 border-yellow-400 bg-red-600 shadow-sm flex-shrink-0">
+           <span class="text-white font-black text-xl tracking-tighter">HS</span>
+       </div>
+       <div>
+        <h2 id="quiz-title" class="text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">Đề Kiểm Tra</h2>
+        <p id="student-info" class="text-base font-bold text-gray-500 mt-1 uppercase tracking-wide"></p>
+       </div>
+      </div>
+
+      <div class="text-right bg-blue-50 px-4 py-2 rounded-xl border border-blue-100" id="progress-container">
+       <div class="text-sm text-blue-500 font-bold uppercase tracking-wider mb-1">Tiến độ (Câu)</div>
+       <div id="progress-text" class="text-2xl font-black text-blue-700">0/28</div>
+      </div>
+     </div>
+     
+     <div id="timer-banner" class="mb-6 p-4 bg-gradient-to-r from-orange-50 to-red-50 border-2 border-red-100 rounded-2xl flex items-center justify-between shadow-sm sticky top-2 z-40">
+        <span class="text-red-800 font-extrabold flex items-center gap-2 text-lg"><span class="text-2xl animate-pulse">⏰</span> THỜI GIAN:</span> 
+        <span id="timer" class="text-4xl font-black text-red-600 font-mono tracking-wider drop-shadow-sm">45:00</span>
+     </div>
+
+     <div id="question-container" class="mb-8 flex-grow w-full max-w-full"></div>
+     
+     <div id="network-error" class="hidden bg-red-100 text-red-700 p-4 rounded-xl mt-4 text-center font-bold text-sm border-2 border-red-300 mb-4 shadow-sm"></div>
+
+    <div class="flex pt-4 sm:pt-6 border-t-2 border-gray-100 mt-auto pb-4 sm:pb-0">
+        <button id="submit-btn" onclick="window.promptSubmit()" class="w-full py-5 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-bold text-2xl rounded-2xl shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1">✅ NỘP BÀI NGAY</button>
+     </div>
+    </div>
+   </div>
+
+   <div id="confirm-submit-modal" class="fixed inset-0 hidden flex items-center justify-center bg-black/60 backdrop-blur-sm z-50 transition-opacity">
+       <div class="bg-white rounded-3xl w-full max-w-sm shadow-2xl p-6 text-center transform transition-all scale-100 mx-4 border-2 border-gray-100">
+           <div class="text-yellow-400 mb-4 flex justify-center">
+               <svg xmlns="http://www.w3.org/2000/svg" class="h-24 w-24" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+               </svg>
+           </div>
+           <h3 class="text-3xl font-black text-gray-800 mb-2 uppercase tracking-wide">Xác nhận nộp</h3>
+           <p class="text-gray-600 mb-6 font-medium text-xl">Các em mới làm <span id="confirm-answered" class="text-red-600 font-black text-2xl">0</span>/<span id="confirm-total" class="font-black text-2xl">28</span> câu. Có chắc chắn muốn nộp bài không? Những câu chưa làm sẽ bị tính là sai.</p>
+           <div class="flex flex-col gap-3">
+               <button onclick="window.closeConfirmModal()" class="w-full py-4 bg-gray-100 text-gray-800 font-extrabold text-xl rounded-xl hover:bg-gray-200 border border-gray-200">Quay lại làm tiếp</button>
+               <button onclick="window.executeSubmit()" class="w-full py-4 bg-emerald-600 text-white font-extrabold text-xl rounded-xl hover:bg-emerald-700 shadow-md">Vẫn Nộp Luôn</button>
+           </div>
+       </div>
+   </div>
+
+   <div id="result-section" class="w-full max-w-2xl mx-auto hidden fade-in flex flex-col justify-center flex-grow pb-8">
+    <div class="glass-card rounded-none sm:rounded-3xl p-6 sm:p-8 flex flex-col justify-start border-t-8 border-green-500 bg-white shadow-2xl" id="result-content">
+    </div>
+   </div>
+
+   <div id="review-section" class="w-full max-w-4xl mx-auto hidden flex-grow flex flex-col">
+    <div class="glass-card rounded-none sm:rounded-3xl p-4 sm:p-8 flex flex-col flex-grow border-t-8 border-indigo-500 bg-white overflow-hidden shadow-2xl">
+     <div class="flex flex-col-reverse sm:flex-row items-start sm:items-center justify-between mb-6 pb-4 border-b-2 border-gray-100 gap-4">
+      <div class="flex flex-wrap gap-2">
+          <button onclick="window.goHome()" class="px-5 py-3 bg-gray-100 text-gray-700 rounded-xl font-bold hover:bg-gray-200 text-lg shadow-sm border border-gray-200">🏠 Trang chủ</button>
+          <button onclick="window.backFromReview()" class="px-5 py-3 bg-indigo-50 text-indigo-700 rounded-xl font-bold hover:bg-indigo-100 text-lg shadow-sm border border-indigo-200">🔙 Quay lại</button>
+          <button onclick="window.viewScoresAction()" class="px-5 py-3 bg-orange-50 text-orange-700 rounded-xl font-bold hover:bg-orange-100 text-lg shadow-sm border border-orange-200">🏆 Bảng điểm</button>
+      </div>
+      <h2 class="text-3xl sm:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">📝 Xem Lại Bài Làm</h2>
+     </div>
+     <div id="review-content" class="space-y-8 w-full max-w-full"></div>
+    </div>
+   </div>
+
+   <div id="scores-section" class="w-full max-w-6xl mx-auto hidden flex-grow flex flex-col">
+    <div class="glass-card rounded-none sm:rounded-3xl p-4 sm:p-8 flex flex-col flex-grow border-t-8 border-orange-500 bg-white w-full max-w-full shadow-2xl">
+     <div class="mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b-2 border-gray-100 pb-4">
+      <button onclick="window.goHome()" class="px-5 py-3 bg-gray-100 text-gray-700 rounded-xl font-bold hover:bg-gray-200 text-lg shadow-sm border border-gray-200 whitespace-nowrap">🏠 Trang chủ</button>
+      <h2 class="text-3xl sm:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-red-600 text-center flex-grow">🏆 BẢNG XẾP HẠNG</h2>
+     </div>
+     
+     <div class="flex flex-col sm:flex-row justify-between items-center mb-4 gap-4 bg-gray-50 p-4 rounded-xl border border-gray-200">
+         <div id="my-rank-display" class="text-xl font-bold text-gray-700">🏆 Thứ hạng của bạn: <span class="text-gray-400">--</span></div>
+         <div class="w-full sm:w-auto flex-grow max-w-sm">
+             <input type="text" id="search-student" oninput="window.searchStudent(this.value)" placeholder="🔍 Nhập tên học sinh để tìm..." class="w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm focus:border-orange-500 focus:ring-2 focus:ring-orange-200 outline-none transition-all font-medium">
+         </div>
+     </div>
+
+     <div class="overflow-x-auto rounded-xl border border-slate-200 flex-grow shadow-inner bg-white/50 w-full">
+      <table class="w-full text-sm sm:text-base whitespace-nowrap min-w-max">
+       <thead class="bg-gradient-to-r from-orange-500 to-red-500 text-white">
+        <tr>
+         <th class="px-3 sm:px-4 py-4 text-center font-extrabold w-16">Hạng</th>
+         <th class="px-3 sm:px-4 py-4 text-left font-extrabold">Họ tên</th>
+         <th class="px-3 sm:px-4 py-4 text-center font-extrabold">Lớp</th>
+         <th class="px-3 sm:px-4 py-4 text-center font-extrabold">Thời gian</th>
+         <th class="px-3 sm:px-4 py-4 text-center font-extrabold">Điểm</th>
+         <th class="px-2 sm:px-4 py-4 text-center font-extrabold">Xem lại</th>
+        </tr>
+       </thead>
+       <tbody id="scores-tbody" class="bg-white/80 divide-y divide-gray-100"></tbody>
+      </table>
+      <div id="no-scores" class="text-center py-12 hidden text-gray-500 font-bold text-xl">Không tìm thấy dữ liệu thi 🥲</div>
+     </div>
+     
+     <div id="pagination-controls" class="w-full flex justify-center mt-6"></div>
+    </div>
+  </div>
+  <!-- Thêm Footer thương hiệu cá nhân -->
+  <footer class="text-center py-6 mt-auto text-white drop-shadow-md">
+      <p class="font-bold">Được phát triển bởi Lê Huyền Sinh (Cỏ Dại)</p>
+      <p class="text-sm">"Mang công nghệ vào mọi chuyến đi"</p>
+  </footer>
+
+  <script>
+    let database = null;
+    let scoresRef = null;
+
+    try {
+        const firebaseConfig = {
+            apiKey: "AIzaSyBQ9Pos8awlh9j041qDWTPFRsVIjF-kPnk",
+            authDomain: "hoctap-91691.firebaseapp.com",
+            databaseURL: "https://hoctap-91691-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "hoctap-91691",
+            storageBucket: "hoctap-91691.firebasestorage.app",
+            messagingSenderId: "1004553425319",
+            appId: "1:1004553425319:web:45d15cbae393f614c56682",
+            measurementId: "G-Q6X1TL9PRV"
+        };
+        if (typeof firebase !== 'undefined') {
+            if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+            database = firebase.database();
+            scoresRef = database.ref('bxh_tin_10_9');
+        }
+    } catch(err) { console.error("Lỗi Firebase:", err); }
+
+    let isQuizStarted = false; 
+    let currentQuestions = [];
+    let deviceId = '';
+    let allScores = [];
+    let currentStudent = {};
+    let userAnswers = {};
+    let timerInterval;
+    let quizStartTime, quizEndTime;
+    
+    let searchTerm = '';
+    let currentPage = 1;
+    const itemsPerPage = 10;
+
+    const exam_data = [
+        { id: "q1", type: "single", question: "Câu 1: Trong lĩnh vực an toàn thông tin, khái niệm \"Phần mềm độc hại\" (viết tắt là malware) được định nghĩa chuẩn xác nhất là gì?", options: ["A. Là những ứng dụng mã nguồn mở miễn phí chuyên dùng để tối ưu hóa hiệu suất hoạt động mạng cục bộ.", "B. Là những chương trình tiện ích hệ thống được cài đặt sẵn giúp gia tăng bộ nhớ RAM cho các máy tính.", "C. Là những công cụ bảo mật đa lớp được viết ra nhằm mục đích mã hóa hoàn toàn các thư tín điện tử.", "D. Là những phần mềm được cố tình viết ra với ý đồ xấu, nhằm mục đích gây hại cho người sử dụng máy."], correct: 3, explanation: "Đúng. Phần mềm độc hại (malware) là những phần mềm được viết ra với ý đồ xấu nhằm mục đích gây hại cho hệ thống và người dùng máy tính." },
+        { id: "q2", type: "single", question: "Câu 2: Loại mã độc nào dưới đây bản chất KHÔNG phải là một phần mềm hoàn chỉnh mà bắt buộc phải gắn vào một phần mềm khác để phát tác?", options: ["A. Loại mã độc này được các chuyên gia an ninh mạng phân loại chính thức và gọi tên là Sâu máy tính.", "B. Loại mã độc này được các chuyên gia an ninh mạng phân loại chính thức và gọi tên là Phần mềm Virus.", "C. Loại mã độc này được các chuyên gia an ninh mạng phân loại chính thức và gọi tên là Mã nội gián Trojan.", "D. Loại mã độc này được các chuyên gia an ninh mạng phân loại chính thức và gọi tên là Ứng dụng Spyware."], correct: 1, explanation: "Đúng. Virus không phải là một phần mềm hoàn chỉnh, nó là các đoạn mã độc và phải gắn với một phần mềm khác để phát tác." },
+        { id: "q3", type: "single", question: "Câu 3: Trong nhóm phần mềm nội gián (Trojan), chương trình mang tên \"Keylogger\" được tin tặc thiết kế ra nhằm mục đích cốt lõi gì?", options: ["A. Nhằm mục đích vô hiệu hóa hệ thống bức tường lửa bảo vệ máy tính và tắt toàn bộ phần mềm chống vi rút.", "B. Nhằm mục đích ngầm ghi lại mọi hoạt động của bàn phím và chuột để tìm hiểu người sử dụng đang làm gì.", "C. Nhằm mục đích tạo ra một tài khoản bí mật có quyền lực cao nhất để chiếm đoạt hoàn toàn bộ nhớ máy.", "D. Nhằm mục đích mã hóa tất cả các tệp tin lưu trữ trên đĩa cứng để ép buộc nạn nhân phải nộp tiền chuộc."], correct: 1, explanation: "Đúng. Keylogger là chương trình ngầm ghi lại mọi hoạt động của bàn phím và chuột để đánh cắp thông tin." },
+        { id: "q4", type: "single", question: "Câu 4: Khi người dùng tham gia giao tiếp trên không gian mạng, thuật ngữ \"Bắt nạt qua mạng\" được đánh giá và phân loại là hành vi như thế nào?", options: ["A. Được phân loại là hành vi quảng cáo các sản phẩm công nghệ hoàn toàn hợp pháp và không gây hại cho ai.", "B. Được phân loại là một kiểu khủng bố tinh thần trên không gian mạng gây ảnh hưởng tâm lý cực kì nghiêm trọng.", "C. Được phân loại là hình thức kết bạn xã giao rất an toàn nhằm mở rộng thêm nhiều mối quan hệ cộng đồng tốt.", "D. Được phân loại là hành động chia sẻ tin tức cảnh báo tình hình thời tiết và bão lũ hữu ích đến người thân."], correct: 1, explanation: "Đúng. Bắt nạt qua mạng là một kiểu khủng bố tinh thần trên không gian mạng." },
+        { id: "q5", type: "single", question: "Câu 5: Tiện ích bảo mật \"Windows Defender\" được tích hợp sẵn bên trong hệ điều hành Windows 10 đảm nhận chức năng kĩ thuật quan trọng nào?", options: ["A. Chức năng kĩ thuật quan trọng nhất là gia tăng tốc độ đường truyền tải cáp quang lên mức tối đa cho máy.", "B. Chức năng kĩ thuật quan trọng nhất là sửa chữa các bảng mạch vật lí bị hỏng bên trong CPU của hệ thống.", "C. Chức năng kĩ thuật quan trọng nhất là phòng chống virus, cảnh báo mã độc và bảo vệ thiết bị máy tính.", "D. Chức năng kĩ thuật quan trọng nhất là tự động dọn dẹp các thùng rác điện tử và nén tất cả các tập tin."], correct: 2, explanation: "Đúng. Windows Defender đảm nhận chức năng phòng chống virus, cảnh báo mã độc và bảo vệ thiết bị máy tính." },
+        { id: "q6", type: "single", question: "Câu 6: Trong các lựa chọn quét (Scan options) của phần mềm Windows Defender, chế độ \"Quick scan\" (Quét nhanh) sẽ thực hiện thao tác kiểm tra ở đâu?", options: ["A. Chế độ này sẽ thực hiện thao tác kiểm tra tất cả các tệp chương trình đang nằm trên mọi phân vùng đĩa cứng.", "B. Chế độ này sẽ thực hiện thao tác kiểm tra một cách vô cùng ngẫu nhiên các tập tin đa phương tiện tải về.", "C. Chế độ này sẽ thực hiện thao tác kiểm tra toàn bộ các thiết bị USB lưu trữ ngoại vi đang được cắm vào máy.", "D. Chế độ này sẽ thực hiện thao tác kiểm tra các tệp ở những thư mục mà virus máy tính thường hay lây nhiễm."], correct: 3, explanation: "Đúng. Quick scan thực hiện thao tác kiểm tra các tệp ở những thư mục mà virus thường hay lây nhiễm." },
+        { id: "q7", type: "single", question: "Câu 7: Một trong những biểu hiện rõ rệt nhất của vấn nạn \"Nghiện mạng\" gây hậu quả tiêu cực cho người dùng máy tính là gì?", options: ["A. Là tình trạng người dùng dành quá nhiều thời gian chơi trò chơi điện tử liên tục dẫn đến kiệt sức đột quỵ.", "B. Là tình trạng người dùng liên tục sử dụng phần mềm đồ họa thiết kế ra các bộ tài liệu báo cáo cực đẹp.", "C. Là tình trạng người dùng cố gắng học hỏi ngôn ngữ lập trình Python hàng ngày để nâng cao kỹ năng code.", "D. Là tình trạng người dùng thường xuyên tham gia hội thảo khoa học trực tuyến để mở rộng kiến thức mới."], correct: 0, explanation: "Đúng. Dành quá nhiều thời gian cho trò chơi điện tử liên tục dẫn đến kiệt sức là biểu hiện tiêu cực của nghiện mạng." },
+        { id: "q8", type: "single", question: "Câu 8: Đối tượng phần mềm độc hại nào lợi dụng các lỗ hổng bảo mật của hệ điều hành hoặc lừa người dùng tải về để tự cài đặt lây lan?", options: ["A. Đối tượng phần mềm độc hại hoạt động theo cơ chế này được chuyên gia gọi là Sâu máy tính (Worm).", "B. Đối tượng phần mềm độc hại hoạt động theo cơ chế này được chuyên gia gọi là Bức tường lửa (Firewall).", "C. Đối tượng phần mềm độc hại hoạt động theo cơ chế này được chuyên gia gọi là Phần mềm tống tiền (DOS).", "D. Đối tượng phần mềm độc hại hoạt động theo cơ chế này được chuyên gia gọi là Trợ lý kĩ thuật ảo (Botnet)."], correct: 0, explanation: "Đúng. Sâu máy tính (Worm) lợi dụng lỗ hổng bảo mật hoặc lừa người dùng tải về để tự cài đặt lây lan." },
+        { id: "q9", type: "single", question: "Câu 9: Về mặt cơ chế lây lan và tính hoàn chỉnh của phần mềm, sự khác biệt lớn nhất giữa Sâu máy tính (Worm) và Virus là gì?", options: ["A. Virus là phần mềm độc lập tự hoạt động, trong khi Worm phải bám vào một đoạn mã hệ thống của Windows.", "B. Virus không lây lan qua mạng Internet, trong khi Worm chỉ lây lan thông qua việc chia sẻ các đĩa quang học.", "C. Virus cần gắn vào một phần mềm khác để phát tác, trong khi Worm là một phần mềm tự thân vô cùng hoàn chỉnh.", "D. Virus chỉ chuyên dùng để mã hóa thông tin tài liệu, trong khi Worm chỉ ăn cắp hình ảnh trên trang Facebook."], correct: 2, explanation: "Đúng. Khác biệt lớn nhất là Virus cần gắn vào một phần mềm khác, trong khi Worm là một phần mềm hoàn chỉnh." },
+        { id: "q10", type: "single", question: "Câu 10: Tại sao các chuyên gia an ninh mạng thường xuyên khuyến cáo người dùng không nên sử dụng các điểm phát Wi-Fi công cộng không có mật khẩu để giao dịch ngân hàng?", options: ["A. Bởi vì mạng Wi-Fi công cộng thường có băng thông rất yếu khiến ứng dụng ngân hàng liên tục báo lỗi hệ thống.", "B. Bởi vì hầu hết những trạm Wi-Fi công cộng đều không mã hoá thông tin khi truyền, dễ làm lộ lọt thông tin cá nhân.", "C. Bởi vì nhà cung cấp mạng Wi-Fi công cộng luôn yêu cầu khách hàng phải nộp mức phí giao dịch cực kỳ đắt đỏ.", "D. Bởi vì hệ thống Wi-Fi công cộng sẽ ngay lập tức tự động định dạng lại ổ cứng thiết bị điện thoại của người dùng."], correct: 1, explanation: "Đúng. Hầu hết mạng Wi-Fi công cộng không mã hoá thông tin khi truyền, dễ làm lộ lọt thông tin." },
+        { id: "q11", type: "single", question: "Câu 11: Trong các phân loại mã độc nội gián (Trojan), phần mềm \"Rootkit\" sở hữu đặc tính xâm nhập hệ thống đặc biệt nguy hiểm nào?", options: ["A. Sở hữu khả năng chiếm quyền cao nhất của máy tính, thực hiện mọi hoạt động ngầm và tự động xóa mọi dấu vết.", "B. Sở hữu khả năng biến máy tính thành một cỗ máy đào tiền ảo chuyên dụng khiến phần cứng bị cháy nổ liên tục.", "C. Sở hữu khả năng liên tục bật mở hàng nghìn đoạn video quảng cáo trên màn hình khiến người dùng không thể tắt.", "D. Sở hữu khả năng tự động gửi đi các gói tin rác đến mọi địa chỉ thư điện tử trên toàn thế giới trong vài giây."], correct: 0, explanation: "Đúng. Rootkit có đặc tính chiếm quyền cao nhất, thực hiện mọi hoạt động ngầm và xóa dấu vết." },
+        { id: "q12", type: "single", question: "Câu 12: Vấn nạn bắt nạt trên không gian mạng (cyberbullying) mang lại ảnh hưởng tâm lý trầm trọng và đáng sợ hơn nhiều so với bắt nạt truyền thống do nguyên nhân nào?", options: ["A. Do người bắt nạt luôn luôn phải công khai rõ ràng danh tính thật của mình trên các diễn đàn trực tuyến quốc tế.", "B. Do sự việc có thể xảy ra dai dẳng bất cứ lúc nào, người bắt nạt ẩn danh và số lượng người bình luận theo dõi rất đông.", "C. Do nền tảng mạng xã hội luôn tự động chặn ngay lập tức bất kỳ từ ngữ thô tục nào ngay khi vừa được gõ ra bàn phím.", "D. Do pháp luật quốc tế đã có những hình phạt cực kỳ nghiêm khắc cho tội bắt nạt trên mạng từ hàng chục năm trước."], correct: 1, explanation: "Đúng. Sự việc có thể xảy ra dai dẳng, người bắt nạt ẩn danh khiến nạn nhân bị ảnh hưởng trầm trọng." },
+        { id: "q13", type: "single", question: "Câu 13: Phương thức Tấn công từ chối dịch vụ (Denial of Service - DOS) đánh sập các máy chủ mạng thường được tin tặc thực hiện thông qua kịch bản nào?", options: ["A. Tin tặc lợi dụng sơ hở tự tay cắt đứt đường cáp quang viễn thông truyền tải tín hiệu kết nối tới máy chủ đó.", "B. Tin tặc cử các phần mềm gián điệp vào hệ thống để ăn cắp từng đoạn mã nguồn gốc của giao diện website.", "C. Tin tặc điều khiển hàng vạn mã độc truy cập đồng thời vào một máy chủ định trước gây quá tải làm tê liệt hệ thống.", "D. Tin tặc đóng giả làm những nhân viên bảo trì mạng lưới đến tận cơ sở để rút nguồn điện cung cấp cho máy chủ."], correct: 2, explanation: "Đúng. DOS được thực hiện bằng cách điều khiển hàng vạn mã độc truy cập đồng thời vào máy chủ gây quá tải." },
+        { id: "q14", type: "single", question: "Câu 14: Khi vô tình nhận được một thư điện tử có chứa đường liên kết thông báo trúng phần thưởng từ một người bạn thân quen trong danh bạ, phản ứng an toàn chuẩn mực nhất là gì?", options: ["A. Cần phải nhanh tay nhấp ngay vào đường liên kết đó để xem phần thưởng là gì trước khi hệ thống báo hết hạn.", "B. Cần phải lập tức chuyển tiếp bức thư điện tử đó cho toàn bộ người thân gia đình để cùng nhận phần thưởng lớn.", "C. Cần phải tắt ngay thiết bị máy tính cá nhân bằng cách nhấn giữ nút nguồn vật lí trong vòng mười lăm giây đồng hồ.", "D. Cần phải không mở vội, hãy liên lạc qua phương tiện khác (ví dụ gọi điện) để xác minh với bạn trước khi tải xuống."], correct: 3, explanation: "Đúng. Phản ứng chuẩn mực là liên lạc qua phương tiện khác để xác minh." },
+        { id: "q15", type: "single", question: "Câu 15: Mã độc tống tiền WannaCry (xuất hiện năm 2017) đã gây ra thảm họa công nghệ và thiệt hại vô cùng nặng nề cho người dùng trên toàn cầu bằng thủ đoạn khét tiếng nào?", options: ["A. Thủ đoạn tự động mã hoá toàn bộ thông tin có trên đĩa cứng và công khai đòi tiền chuộc mới cho phần mềm hoá giải.", "B. Thủ đoạn âm thầm ghi lại tất cả các thao tác gõ bàn phím để đánh cắp mật khẩu đăng nhập của mạng xã hội lớn.", "C. Thủ đoạn điều hướng toàn bộ máy tính truy cập vào một trang web đánh bạc trực tuyến nhằm thu tiền phí bất chính.", "D. Thủ đoạn tạo ra một tài khoản bí mật ở cửa sau để sao chép hàng loạt các tấm hình riêng tư rồi tung lên báo chí."], correct: 0, explanation: "Đúng. Thủ đoạn của WannaCry là mã hoá toàn bộ thông tin trên đĩa cứng và đòi tiền chuộc." },
+        { id: "q16", type: "single", question: "Câu 16: Tại sao các chuyên gia an ninh mạng đặc biệt khuyến cáo người dùng phải vô cùng thận trọng đối với các phần mềm bẻ khoá (crack) đang được phát tán tự do trên Internet?", options: ["A. Bởi vì các phần mềm bẻ khóa này thường xuyên yêu cầu người dùng phải trả một mức phí kích hoạt vô cùng đắt đỏ.", "B. Bởi vì rất nhiều phần mềm bẻ khoá cho tải lấy tự do trên mạng đều là các phần mềm bị kẻ xấu cố ý gắn thêm mã độc.", "C. Bởi vì các phần mềm bẻ khóa này sẽ lập tức làm hệ điều hành máy tính bị đổi hoàn toàn sang một ngôn ngữ lạ lẫm.", "D. Bởi vì nhà cung cấp dịch vụ mạng viễn thông sẽ tự động ngắt đường truyền cáp quang nếu phát hiện có người bẻ khóa."], correct: 1, explanation: "Đúng. Nhiều phần mềm bẻ khoá bị kẻ xấu cố ý gắn thêm mã độc." },
+        { id: "q17", type: "single", question: "Câu 17: Bạn Tuấn thường hay có thói quen lên mạng tìm kiếm và tải về các bộ phần mềm đồ họa đã được những tin tặc bẻ khóa (crack) sẵn để dùng miễn phí. Theo bài học, hành động này của Tuấn tiềm ẩn nguy cơ thực tế nào lớn nhất?", options: ["A. Tuấn có nguy cơ rất cao bị hỏng hóc các bộ phận cơ học bên trong ổ đĩa quang DVD do phần cứng quá tải nhiệt độ.", "B. Tuấn có nguy cơ rất cao bị lây nhiễm các loại phần mềm độc hại mã độc do kẻ xấu cố ý cài cắm ngầm vào trong tệp tải.", "C. Tuấn có nguy cơ rất cao bị hệ thống định vị toàn cầu khóa chặt địa chỉ IP mạng khiến máy tính không thể khởi động lại.", "D. Tuấn có nguy cơ rất cao bị nhà mạng viễn thông tự động xóa bỏ mọi ứng dụng hợp pháp đang chạy trên hệ điều hành."], correct: 1, explanation: "Đúng. Cài đặt các phần mềm bẻ khóa (crack) tiềm ẩn nguy cơ rất cao bị lây nhiễm phần mềm độc hại mã độc." },
+        { id: "q18", type: "single", question: "Câu 18: Khi đang ngồi ở quán cà phê, điện thoại của Lan tự động kết nối vào một mạng Wi-Fi công cộng không có mật khẩu. Lan định mở ứng dụng ngân hàng để chuyển tiền thanh toán mua hàng. Xét về nguyên tắc bảo mật, Lan nên đưa ra quyết định nào?", options: ["A. Lan nên thực hiện chuyển tiền ngay lập tức vì mạng Wi-Fi công cộng tại quán cà phê luôn luôn có tường lửa bảo mật.", "B. Lan nên gọi điện nhờ nhân viên quán pha thêm một cốc nước trước khi thong thả tiến hành xác nhận mã chuyển tiền.", "C. Lan không nên thực hiện chuyển tiền lúc này vì Wi-Fi công cộng thường không mã hóa thông tin, dễ làm lộ dữ liệu cá nhân.", "D. Lan nên tải ngay một phần mềm diệt vi-rút miễn phí trên chợ ứng dụng rồi mới vô tư mở app ngân hàng lên để chuyển."], correct: 2, explanation: "Đúng. Lan không nên chuyển tiền vì Wi-Fi công cộng thường không mã hóa thông tin." },
+        { id: "q19", type: "single", question: "Câu 19: Bạn Bình bị một đối tượng nặc danh trên diễn đàn mạng liên tục gửi tin nhắn xỉ vả, đe dọa tung thông tin cá nhân và bịa đặt vu khống nhằm mục đích tống tiền. Để bảo vệ bản thân trước nạn bắt nạt mạng, Bình tuyệt đối KHÔNG nên làm hành động gì?", options: ["A. Bình tuyệt đối không nên chụp ảnh lại màn hình các tin nhắn để lưu giữ làm bằng chứng giao nộp cơ quan công an.", "B. Bình tuyệt đối không nên chia sẻ sự việc nghiêm trọng này cho bố mẹ, thầy cô giáo hoặc người thân lớn tuổi biết.", "C. Bình tuyệt đối không nên hoảng sợ xóa tài khoản mà phải chủ động báo cáo với cơ quan công quyền để tìm hướng xử lý.", "D. Bình tuyệt đối không nên trả lời thư từ hay nhắn tin đôi co tranh luận lại với kẻ bắt nạt nặc danh trên diễn đàn mạng."], correct: 3, explanation: "Đúng. Cách ứng xử an toàn là tuyệt đối không nên trả lời tin nhắn hay tranh luận lại với kẻ bắt nạt." },
+        { id: "q20", type: "single", question: "Câu 20: Dũng nhận được một email từ \"Hệ thống quản trị mạng\" yêu cầu click vào liên kết đính kèm để thay đổi mật khẩu email nếu không tài khoản sẽ bị xóa sau 24h. Dũng bấm vào và nhập mật khẩu cũ. Ngày hôm sau Dũng bị mất tài khoản. Kẻ xấu đã dùng thủ đoạn gì?", options: ["A. Kẻ xấu đã ứng dụng công cụ tấn công từ chối dịch vụ (DOS) làm tràn bộ nhớ đệm RAM khiến mật khẩu máy bị vô hiệu.", "B. Kẻ xấu đã lợi dụng phương thức lừa đảo phishing dẫn dụ Dũng nhấp liên kết giả mạo nhằm ăn cắp thông tin tài khoản.", "C. Kẻ xấu đã điều khiển một phần mềm Sâu máy tính cực mạnh tự động bẻ khóa hệ thống bảo mật sinh trắc học của máy.", "D. Kẻ xấu đã gửi một mã độc tống tiền mã hóa toàn bộ dữ liệu ổ đĩa nhằm ép buộc Dũng nhượng lại quyền sở hữu email."], correct: 1, explanation: "Đúng. Đây là thủ đoạn lừa đảo phishing dẫn dụ người dùng nhấp vào liên kết giả mạo nhằm ăn cắp thông tin." },
+        { id: "q21", type: "single", question: "Câu 21: Thầy Hùng muốn sử dụng tính năng của Windows Defender để quét sạch và kiểm tra kĩ lưỡng toàn bộ các tệp tin cũng như chương trình đang chạy ngầm trên tất cả các phân vùng đĩa cứng. Thầy Hùng bắt buộc phải lựa chọn chế độ quét nào?", options: ["A. Thầy Hùng bắt buộc phải nhấp chuột chọn chế độ Quick scan (Quét nhanh) để kiểm tra các tệp tin trong hệ điều hành.", "B. Thầy Hùng bắt buộc phải nhấp chuột chọn chế độ Custom scan (Quét theo yêu cầu) để tự chọn một số thư mục ổ đĩa.", "C. Thầy Hùng bắt buộc phải nhấp chuột chọn chế độ Offline scan (Quét ngoại tuyến) để gỡ bỏ toàn bộ các mã độc cứng đầu.", "D. Thầy Hùng bắt buộc phải nhấp chuột chọn chế độ Full scan (Quét hết) để hệ thống kiểm tra toàn bộ tệp tin trên ổ cứng."], correct: 3, explanation: "Đúng. Chế độ Full scan (Quét hết) sẽ kiểm tra toàn bộ tệp tin trên ổ cứng." },
+        { id: "q22", type: "single", question: "Câu 22: Trong một cuộc trò chuyện trên nhóm Zalo, một người bạn mà Mai rất tin tưởng đột nhiên nhắn tin nhờ Mai mượn số tiền 5 triệu đồng và yêu cầu chuyển gấp vào một số tài khoản ngân hàng lạ hoắc. Theo kỹ năng ứng phó lừa đảo mạng, Mai phải xử lí tình huống này ra sao?", options: ["A. Mai phải ngay lập tức chuyển đủ số tiền 5 triệu đồng đó vào tài khoản lạ để thể hiện tình bạn khăng khít chân thành nhất.", "B. Mai phải tiến hành gọi điện thoại bằng số điện thoại thật trực tiếp cho người bạn đó để xác minh thông tin trước khi chuyển.", "C. Mai phải nhắn tin chửi mắng người bạn đó ngay trên nhóm chat chung vì dám ngang nhiên mượn tiền của mình lúc khó khăn.", "D. Mai phải xóa ngay ứng dụng Zalo trên điện thoại di động vì lo sợ rằng hệ thống ngân hàng của mình đã bị vi rút xâm nhập."], correct: 1, explanation: "Đúng. Cách xử lí đúng là gọi điện thoại bằng số điện thoại thật trực tiếp cho bạn để xác minh thông tin." },
+        { id: "q23", type: "single", question: "Câu 23: Cửa hàng internet của anh Minh hôm nay đột ngột không thể truy cập vào một trang báo điện tử nổi tiếng, hệ thống liên tục báo lỗi quá hạn thời gian phản hồi máy chủ. Khi đọc tin tức, Minh mới biết trang báo đó đang bị hàng vạn mã độc truy cập đồng loạt gây quá tải. Trang web này đang là nạn nhân của hình thức tấn công nào?", options: ["A. Trang web này đang là nạn nhân của hình thức lây nhiễm phần mềm nội gián Rootkit chuyên đánh cắp quyền truy cập.", "B. Trang web này đang là nạn nhân của hình thức tấn công từ chối dịch vụ phân tán (DOS) khiến cho máy chủ bị tê liệt.", "C. Trang web này đang là nạn nhân của hình thức phát tán mã độc tống tiền WannaCry đòi nộp tiền ảo mới cho mở khóa.", "D. Trang web này đang là nạn nhân của hình thức mã hóa phần mềm gián điệp Keylogger theo dõi bàn phím của khách hàng."], correct: 1, explanation: "Đúng. Hình thức hàng vạn mã độc truy cập đồng loạt gây quá tải là Tấn công từ chối dịch vụ (DOS)." },
+        { id: "q24", type: "single", question: "Câu 24: Một đối tượng nặc danh đã lợi dụng những tính năng mở của mạng xã hội Facebook để lấy cắp hình ảnh của cô Lan, sau đó lập ra một trang cá nhân y hệt, kết bạn với tất cả học sinh của cô và nhắn tin xin thẻ nạp điện thoại. Hành vi đê hèn này được liệt kê vào nhóm nguy cơ mất an toàn nào?", options: ["A. Hành vi này được phân loại vào nhóm nguy cơ phát tán virus máy tính phá hủy các phần cứng vi mạch của thiết bị di động.", "B. Hành vi này được phân loại vào nhóm nguy cơ chia sẻ các thông tin phản văn hóa và bạo lực học đường lên trên mạng xã hội.", "C. Hành vi này được phân loại vào nhóm nguy cơ cố ý tạo ra phần mềm tống tiền mã hóa toàn bộ dữ liệu cá nhân của người dùng.", "D. Hành vi này được phân loại vào nhóm nguy cơ lừa đảo mạo danh trên mạng nhằm mục đích chiếm đoạt tài sản của nạn nhân."], correct: 3, explanation: "Đúng. Hành vi lấy cắp hình ảnh, lập trang giả và nhắn tin xin tiền thuộc nhóm nguy cơ lừa đảo mạo danh trên mạng." },
+        
+        { id: "qII_1", type: "tf_cluster", context: "Câu 1: Bạn An tham gia một khóa học về an toàn thông tin và đang làm bài tập tìm hiểu về các nguy cơ tiềm ẩn khi sử dụng Internet. Hãy xác định những kết luận của An là Đúng hay Sai:", items: [
+            { id: "a", text: "a) Khái niệm lộ thông tin cá nhân bao gồm việc vô tình hoặc cố ý để lộ các dữ liệu nhạy cảm như tên tuổi, số điện thoại, tài khoản email và các tài khoản ứng dụng mạng.", correct: true, expl: "ĐÚNG. Thông tin cá nhân bao gồm tên tuổi, số điện thoại, tài khoản email... Khi lộ tài khoản, ta có thể bị mạo danh hoặc mất tiền." },
+            { id: "b", text: "b) Việc kết nối thiết bị với các hệ thống wifi công cộng tại nhà ga, sân bay luôn luôn đảm bảo an toàn tuyệt đối vì chúng được trang bị hệ thống mã hóa đường truyền quân sự.", correct: false, expl: "SAI. Hầu hết những trạm wifi công cộng không mã hoá thông tin khi truyền, do đó sử dụng wifi công cộng tiềm ẩn rất nhiều rủi ro lộ thông tin cá nhân." },
+            { id: "c", text: "c) Việc xuất hiện các tin giả, tin phản văn hóa trên Internet hoàn toàn không gây ra bất cứ tác hại thực tế nào đối với nhận thức hay tâm lý của cộng đồng cư dân mạng.", correct: false, expl: "SAI. Tin giả, tin bài phản cảm có thể dẫn đến các nhận thức lệch lạc và gây hoang mang, ảnh hưởng rất xấu đến cộng đồng." },
+            { id: "d", text: "d) Khi thấy bạn học bị một nhóm người đánh hội đồng và quay video tung lên mạng, An nên nhiệt tình chia sẻ đoạn video đó rộng rãi để giúp cơ quan công an nhanh chóng vào cuộc điều tra phá án.", correct: false, expl: "SAI. Việc đưa hoặc chia sẻ video có nội dung bạo lực học đường lên mạng là hành vi vi phạm đạo đức, An tuyệt đối không nên chia sẻ." }
+        ]},
+        { id: "qII_2", type: "tf_cluster", context: "Câu 2: Nhóm kĩ thuật của bạn Tuấn nghiên cứu về cấu trúc hoạt động của các loại phần mềm độc hại (malware) để chuẩn bị cho buổi báo cáo. Hãy đánh giá tính Đúng/Sai của các luận điểm sau:", items: [
+            { id: "a", text: "a) Phần mềm độc hại (malware) là danh từ chung để chỉ những phần mềm được viết ra với ý đồ xấu, nhằm mục đích gây hại cho hệ thống và người dùng máy tính.", correct: true, expl: "ĐÚNG. Phần mềm độc hại (malware) là những phần mềm được viết ra với ý đồ xấu, gây hại cho người dùng." },
+            { id: "b", text: "b) Trái ngược hoàn toàn với virus, sâu máy tính (Worm) là một loại phần mềm hoàn chỉnh và có khả năng độc lập tự lây lan thông qua việc lừa người dùng nhấp vào các liên kết độc hại.", correct: true, expl: "ĐÚNG. Khác với virus, worm là một phần mềm hoàn chỉnh. Nó lợi dụng lỗ hổng hoặc dẫn dụ, lừa người dùng cài đặt để lây lan." },
+            { id: "c", text: "c) Đặc trưng cơ bản của các phần mềm gián điệp thuộc nhóm Trojan là chúng luôn cảnh báo rõ ràng bằng âm thanh cho nạn nhân biết trước khi bắt đầu quá trình mã hóa dữ liệu ổ cứng.", correct: false, expl: "SAI. Nhóm Trojan thực hiện các hoạt động nội gián, ăn trộm thông tin hoặc chiếm quyền ngầm (spyware, keylogger, backdoor), không hề có cảnh báo âm thanh hay công khai hành động mã hóa." },
+            { id: "d", text: "d) Do máy tính của mình đang chạy hệ điều hành Windows 10 vốn dĩ đã vô cùng hiện đại, Tuấn quyết định vô hiệu hóa phần mềm bảo mật Windows Defender để cài đặt các tựa game bị bẻ khóa (crack) cho máy nhẹ hơn.", correct: false, expl: "SAI. Việc tắt Defender để cài đặt game bẻ khóa (crack) là hành động cực kỳ nguy hiểm, vì rất nhiều phần mềm bẻ khoá cho lấy tự do trên mạng là các phần mềm bị gắn mã độc một cách cố ý." }
+        ]},
+        { id: "qII_3", type: "tf_cluster", context: "Câu 3: Trong giờ học chuyên đề về phòng chống bạo lực và các vấn nạn trên môi trường số, cô giáo đã liệt kê một số nhận định. Hãy xét tính Đúng/Sai của các đánh giá sau:", items: [
+            { id: "a", text: "a) Tình trạng nghiện mạng xảy ra khi một người dành quá nhiều thời gian liên tục cho mạng Internet hoặc chơi game đến mức gây ảnh hưởng nghiêm trọng tới sức khoẻ vật lý và tinh thần.", correct: true, expl: "ĐÚNG. Nghiện mạng là dành rất nhiều thời gian cho mạng, chơi game đến mức ảnh hưởng nghiêm trọng tới sức khoẻ." },
+            { id: "b", text: "b) Vấn nạn bắt nạt trên không gian mạng mang tính chất như một kiểu khủng bố tinh thần, người bắt nạt có thể dễ dàng ẩn danh để buông lời đe doạ khiến nạn nhân rất khó đối phó.", correct: true, expl: "ĐÚNG. Bắt nạt mạng là kiểu khủng bố trên không gian mạng, người bắt nạt ẩn danh, sự việc xảy ra dai dẳng gây áp lực nặng nề." },
+            { id: "c", text: "c) Khi không may trở thành nạn nhân của bạo lực mạng, giải pháp ứng xử khôn ngoan nhất là người dùng phải chủ động lập các chủ đề tranh luận nảy lửa trên diễn đàn để bảo vệ quan điểm cá nhân đến cùng.", correct: false, expl: "SAI. Biện pháp phòng chống hành vi bắt nạt được khuyên là: Không trả lời thư từ hay tin nhắn, không tranh luận với kẻ bắt nạt trên diễn đàn." },
+            { id: "d", text: "d) Nếu nhận được những tin nhắn tống tiền từ một kẻ lạ mặt trên Zalo kèm theo hình ảnh cắt ghép đe dọa, bạn Mai nên ngoan ngoãn chuyển tiền ngay lập tức để mua sự bình yên tạm thời cho bản thân.", correct: false, expl: "SAI. Khi sự việc nghiêm trọng (bị tống tiền), Mai hãy chia sẻ với bố mẹ hoặc thầy cô và báo cho cơ quan công an kèm theo bằng chứng chứ tuyệt đối không được chuyển tiền nghe theo yêu cầu kẻ xấu." }
+        ]},
+        { id: "qII_4", type: "tf_cluster", context: "Câu 4: Bạn Bình đang soạn thảo tài liệu hướng dẫn sử dụng tính năng an toàn của Windows Defender cho câu lạc bộ Tin học. Những hướng dẫn nào do Bình viết là Đúng hay Sai:", items: [
+            { id: "a", text: "a) Hệ điều hành Windows phiên bản 10 đã được tích hợp sẵn một phần mềm bảo vệ tự động chạy ngầm có tên gọi là Defender Firewall nhằm phòng chống các nguy cơ làm mất an toàn máy tính.", correct: true, expl: "ĐÚNG. Phần mềm Defender Firewall được tích hợp sẵn trong hệ điều hành Windows phiên bản 10, tự động chạy ngầm để bảo vệ các máy tính." },
+            { id: "b", text: "b) Để thao tác thực hiện lệnh quét toàn bộ các thư mục có nguy cơ cao trên hệ thống máy tính một cách nhanh chóng, người dùng cần điều hướng chuột nhấp chọn vào nút lệnh \"Quick scan\".", correct: true, expl: "ĐÚNG. Chế độ Quick scan giúp máy tính quét nhanh các thư mục ở những nơi virus thường hay lây nhiễm (nguy cơ cao)." },
+            { id: "c", text: "c) Trong giao diện phần mềm Windows Security, mục \"Current threats\" đảm nhận chức năng hiển thị lịch sử mua sắm trực tuyến của người dùng tại các trang web thương mại điện tử lớn.", correct: false, expl: "SAI. Mục Current threats dùng để thống kê những nguy cơ tìm thấy trong thời gian gần nhất khi các tệp được quét kiểm tra, không liên quan đến lịch sử mua sắm thương mại điện tử." },
+            { id: "d", text: "d) Khi Bình cắm một chiếc USB chứa tài liệu lấy từ tiệm photocopy vào máy tính, thay vì mở trực tiếp, Bình nên nhấp phải chuột vào biểu tượng ổ đĩa USB và chọn lệnh \"Scan with Microsoft Defender\" để kiểm tra trước.", correct: true, expl: "ĐÚNG. Nháy nút phải chuột vào tên thư mục/ổ đĩa để xuất hiện bảng chọn tắt, chọn lệnh Scan with Microsoft Defender là cách quét virus nhanh cục bộ rất an toàn khi cắm thiết bị ngoại vi." }
+        ]}
+    ];
+
+    window.startQuizAction = function() {
+        try {
+            const errDiv = document.getElementById('login-error');
+            if(errDiv) errDiv.classList.add('hidden');
+            
+            const nameEl = document.getElementById('hoTen');
+            const lopEl = document.getElementById('lop');
+            
+            const name = nameEl.value.trim();
+            const lop = lopEl.value.trim();
+            
+            if (!name || !lop) {
+                if(errDiv) {
+                    errDiv.innerText = "⚠️ Vui lòng nhập đầy đủ Họ tên và Lớp!";
+                    errDiv.classList.remove('hidden');
+                } else {
+                    alert("⚠️ Vui lòng nhập đầy đủ Họ tên và Lớp!");
+                }
+                return;
+            }
+            
+            currentStudent = { hoTen: name, lop: lop, maDe: 'de9', tenDe: 'Đề Trắc Nghiệm Bài 9' };
+            currentQuestions = JSON.parse(JSON.stringify(exam_data));
+            quizStartTime = new Date();
+            
+            setTimeout(() => { isQuizStarted = true; }, 1000);
+            showSection('quiz');
+            
+            userAnswers = {};
+            window.renderAllQuestions();
+            startTimer(45 * 60); 
+            
+        } catch (error) {
+            alert("❌ Đã xảy ra lỗi khởi tạo bài thi: " + error.message + ".");
+            console.error(error);
+        }
+    };
+
+    window.viewScoresAction = function() {
+        searchTerm = ''; 
+        document.getElementById('search-student').value = '';
+        currentPage = 1;
+
+        if (database) {
+            scoresRef.once('value').then((snapshot) => {
+                const data = snapshot.val();
+                allScores = data ? Object.keys(data).map(key => ({...data[key], id: key})) : [];
+                window.renderScores();
+                showSection('scores');
+            });
+        }
+    };
+
+    window.searchStudent = function(val) {
+        searchTerm = val.toLowerCase();
+        currentPage = 1;
+        window.renderScores();
+    };
+
+    window.changePage = function(page) {
+        currentPage = page;
+        window.renderScores();
+    };
+
+    window.goHome = function() {
+        if(document.getElementById('hoTen')) document.getElementById('hoTen').value = ''; 
+        if(document.getElementById('lop')) document.getElementById('lop').value = ''; 
+        clearInterval(timerInterval);
+        showSection('login');
+    };
+
+    function getTotalScoreItems() { return currentQuestions.length; }
+
+    function getAnsweredCount() {
+        let count = 0;
+        currentQuestions.forEach(q => {
+            if (q.type === 'single') {
+                if (userAnswers[q.id] !== undefined) count++;
+            } else if (q.type === 'tf_cluster') {
+                let answeredItems = 0;
+                q.items.forEach(item => {
+                    if (userAnswers[q.id + '_' + item.id] !== undefined) answeredItems++;
+                });
+                if (answeredItems === 4) count++; 
+            }
+        });
+        return count;
+    }
+
+   window.selectAnswer = function(qId, val, type) {
+        if (type === 'tf') {
+            userAnswers[qId] = val;
+            const btnT = document.getElementById(`btnT_${qId}`);
+            const btnF = document.getElementById(`btnF_${qId}`);
+            if (val === true) {
+                btnT.classList.add('selected'); btnT.classList.remove('bg-white');
+                btnF.classList.remove('selected'); btnF.classList.add('bg-white');
+            } else {
+                btnF.classList.add('selected'); btnF.classList.remove('bg-white');
+                btnT.classList.remove('selected'); btnT.classList.add('bg-white');
+            }
+        } else if (type === 'single') {
+            userAnswers[qId] = val;
+        }
+        
+        requestAnimationFrame(() => {
+            const pgText = document.getElementById('progress-text');
+            if(pgText) pgText.innerText = `${getAnsweredCount()}/${getTotalScoreItems()}`;
+        });
+    };
+
+    window.renderAllQuestions = function() {
+        if (!currentQuestions || currentQuestions.length === 0) return;
+        const container = document.getElementById('question-container');
+        if(!container) return;
+
+        let html = '';
+        let currentType = '';
+
+        currentQuestions.forEach((q) => {
+            if (q.type !== currentType) {
+                currentType = q.type;
+                let headerText = ''; let roman = '';
+                if(currentType === 'single') { headerText = 'TRẮC NGHIỆM NHIỀU PHƯƠNG ÁN LỰA CHỌN'; roman = 'I'; }
+                if(currentType === 'tf_cluster') { headerText = 'TRẮC NGHIỆM ĐÚNG/SAI'; roman = 'II'; }
+                
+                html += `<div class="flex items-center gap-3 mt-8 mb-4 border-b-2 border-blue-100 pb-3"><span class="bg-gradient-to-br from-blue-500 to-indigo-600 text-white w-14 h-14 flex items-center justify-center rounded-xl font-black text-2xl shadow-md">${roman}</span><h3 class="text-2xl sm:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-700 to-indigo-700 tracking-wide uppercase">${headerText}</h3></div>`;
+            }
+
+            html += `<div class="fade-in w-full bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-blue-100 relative mb-6 hover:shadow-md transition-shadow">`;
+            
+            if (q.type === 'single') {
+                const uAns = userAnswers[q.id];
+                html += `<div class="flex gap-4 mb-5"><div class="w-full math-scroll"><p class="text-xl font-bold text-red-600 mt-1 leading-snug tracking-tight">${q.question}</p></div></div>`;
+                html += `<div class="space-y-4 md:pl-6 mt-6">`;
+                q.options.forEach((opt, i) => {
+                    const isChecked = (uAns === i) ? 'checked' : '';
+                    html += `<div class="flex items-center">
+                        <input type="radio" id="opt_${q.id}_${i}" name="q_${q.id}" value="${i}" class="hidden single-radio" ${isChecked} onchange="window.selectAnswer('${q.id}', ${i}, 'single')">
+                        <label for="opt_${q.id}_${i}" class="option-label w-full p-4 border-2 border-gray-200 rounded-2xl flex items-center gap-4 bg-white shadow-sm font-bold text-lg hover:border-blue-300">
+                            <div class="w-12 h-12 rounded-xl border-2 border-gray-300 flex items-center justify-center text-lg font-black text-gray-400 flex-shrink-0 bg-gray-50">${String.fromCharCode(65 + i)}</div>
+                            <div class="text-gray-700 leading-relaxed math-scroll flex-1">${opt}</div>
+                        </label>
+                    </div>`;
+                });
+                html += `</div>`;
+            } 
+            else if (q.type === 'tf_cluster') {
+                html += `<div class="bg-red-50 text-red-700 p-5 rounded-xl font-bold mb-4 border-2 border-red-100 text-xl leading-relaxed math-scroll">${q.context}</div>`;
+                html += `<div class="space-y-4 mt-6">`;
+                q.items.forEach((item) => {
+                    const combinedId = q.id + '_' + item.id;
+                    let ans = userAnswers[combinedId];
+                    let btnT = ans === true ? 'selected' : 'bg-white';
+                    let btnF = ans === false ? 'selected' : 'bg-white';
+
+                    html += `<div class="p-5 border-2 border-gray-100 rounded-2xl bg-white shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4 transition-all hover:border-blue-200">
+                        <div class="font-bold text-gray-800 flex-1 text-lg math-scroll">${item.text}</div>
+                        <div class="flex gap-3 shrink-0">
+                            <button id="btnT_${combinedId}" onclick="window.selectAnswer('${combinedId}', true, 'tf')" class="btn-tf w-24 sm:w-28 py-3 rounded-xl font-extrabold text-lg ${btnT}">ĐÚNG</button>
+                            <button id="btnF_${combinedId}" onclick="window.selectAnswer('${combinedId}', false, 'tf')" class="btn-tf w-24 sm:w-28 py-3 rounded-xl font-extrabold text-lg ${btnF}">SAI</button>
+                        </div>
+                    </div>`;
+                });
+                html += `</div>`;
+            } 
+            html += `</div>`;
+        });
+        
+        container.innerHTML = html;
+        const pgText = document.getElementById('progress-text');
+        if(pgText) pgText.innerText = `${getAnsweredCount()}/${getTotalScoreItems()}`;
+    };
+
+    function formatDuration(sec) {
+        const m = Math.floor(sec / 60); const s = sec % 60;
+        return `${m}p ${s}s`;
+    }
+
+    window.promptSubmit = function() {
+        if (!isQuizStarted) return;
+        const total = getTotalScoreItems();
+        const answered = getAnsweredCount();
+        
+        document.getElementById('confirm-answered').innerText = answered;
+        document.getElementById('confirm-total').innerText = total;
+        
+        const modal = document.getElementById('confirm-submit-modal');
+        modal.classList.remove('hidden');
+    };
+
+    window.closeConfirmModal = function() {
+        const modal = document.getElementById('confirm-submit-modal');
+        modal.classList.add('hidden');
+    };
+
+    window.executeSubmit = function() {
+        window.closeConfirmModal();
+        isQuizStarted = false; 
+        quizEndTime = new Date();
+        clearInterval(timerInterval);
+        
+        let score = 0;
+
+        currentQuestions.forEach(q => {
+            if (q.type === 'single') {
+                if (userAnswers[q.id] === q.correct) score += 0.25;
+            } else if (q.type === 'tf_cluster') {
+                let correctCount = 0;
+                q.items.forEach(item => { 
+                    if (userAnswers[q.id + '_' + item.id] === item.correct) {
+                        correctCount++;
+                    }
+                });
+                
+                // Áp dụng logic tính điểm mới cho phần trắc nghiệm đúng/sai
+                if (correctCount === 1) score += 0.1;
+                else if (correctCount === 2) score += 0.25;
+                else if (correctCount === 3) score += 0.5;
+                else if (correctCount === 4) score += 1.0;
+            }
+        });
+
+        score = score.toFixed(2); 
+
+        const record = {
+            hoTen: currentStudent.hoTen, lop: currentStudent.lop, tenDe: currentStudent.tenDe, maDe: currentStudent.maDe,
+            diem: parseFloat(score),
+            startTime: quizStartTime.toLocaleTimeString('vi-VN') + ' ' + quizStartTime.toLocaleDateString('vi-VN'),
+            endTime: quizEndTime.toLocaleTimeString('vi-VN') + ' ' + quizEndTime.toLocaleDateString('vi-VN'),
+            duration: formatDuration(Math.floor((quizEndTime - quizStartTime) / 1000)),
+            thoiGian: new Date().toISOString(), deviceId: deviceId,
+            userAnswers: userAnswers 
+        };
+        
+        if(database) {
+            scoresRef.push(record, () => { window.showModalResult(score, record.duration); });
+        } else {
+            window.showModalResult(score, record.duration);
+        }
+    };
+
+    window.showModalResult = function(score, dur) {
+        ['login', 'quiz', 'scores', 'review'].forEach(s => {
+            const el = document.getElementById(s+'-section');
+            if(el) el.classList.add('hidden');
+        });
+        const resEl = document.getElementById('result-section');
+        if(resEl) resEl.classList.remove('hidden');
+        const contentEl = document.getElementById('result-content');
+        if(contentEl) contentEl.innerHTML = `
+        <div class="flex justify-start mb-4">
+            <button onclick="window.goHome()" class="px-5 py-3 bg-gray-100 text-gray-700 rounded-xl font-bold hover:bg-gray-200 transition-colors shadow-sm border border-gray-200 text-lg">🏠 Trang chủ</button>
+        </div>
+        <div class="text-center">
+            <div class="text-7xl mb-4 animate-bounce">🎉</div>
+            <h3 class="text-3xl font-black text-emerald-600 mb-2">Hoàn thành bài thi!</h3>
+            <p class="text-gray-600 mb-6 mt-2"><span class="font-extrabold text-blue-700 text-xl uppercase tracking-wider">${currentStudent.hoTen} - Lớp ${currentStudent.lop}</span></p>
+        </div>
+        <div class="bg-blue-50 border-2 border-blue-100 rounded-3xl p-8 mb-6 shadow-inner relative text-center">
+            <div class="text-base text-blue-500 font-extrabold mb-2 uppercase tracking-widest">ĐIỂM SỐ CỦA BẠN</div>
+            <div class="text-7xl font-black text-blue-600 drop-shadow-sm">${score} <span class="text-3xl text-gray-400">/ 10</span></div>
+            <div class="text-lg font-extrabold text-indigo-600 mt-5 bg-white inline-block px-6 py-3 rounded-full shadow-sm border border-blue-100">Thời gian làm bài: ${dur}</div>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+            <button onclick="window.reviewQuiz()" class="w-full py-4 bg-gradient-to-r from-indigo-500 to-purple-500 text-white rounded-xl font-extrabold shadow-sm hover:shadow-md transition-colors text-xl">📝 Xem lại bài</button>
+            <button onclick="window.viewScoresAction()" class="w-full py-4 bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-xl font-extrabold shadow-sm hover:shadow-md transition-colors text-xl">🏆 Bảng điểm</button>
+        </div>`;
+    };
+
+    function getStatusBadge(isCorrect, isUnanswered) {
+        if (isUnanswered) return `<div class="mt-4 mb-2 inline-block px-4 py-2 bg-yellow-100 text-yellow-800 text-base font-black rounded-lg border border-yellow-300 shadow-sm">⚠️ BẠN CHƯA LÀM CÂU NÀY</div>`;
+        if (isCorrect) return `<div class="mt-4 mb-2 inline-block px-4 py-2 bg-emerald-100 text-emerald-800 text-base font-black rounded-lg border border-emerald-300 shadow-sm">✅ BẠN LÀM ĐÚNG RỒI</div>`;
+        return `<div class="mt-4 mb-2 inline-block px-4 py-2 bg-red-100 text-red-800 text-base font-black rounded-lg border border-red-300 shadow-sm">❌ BẠN LÀM SAI RỒI</div>`;
+    }
+
+    window.reviewQuiz = function() {
+        showSection('review');
+        const container = document.getElementById('review-content');
+        if(!container) return;
+        let html = '';
+
+        currentQuestions.forEach((q) => {
+            if (q.type === 'single') {
+                let uAns = userAnswers[q.id];
+                let isUnanswered = (uAns === undefined);
+                let isCorrect = (uAns === q.correct);
+                let borderColor = isCorrect ? 'border-emerald-300 bg-emerald-50' : 'border-red-300 bg-red-50';
+                
+                html += `<div class="p-6 border-2 rounded-2xl shadow-sm mb-6 ${borderColor}">`;
+                html += `<div class="font-bold text-xl text-red-600 mb-5 leading-relaxed math-scroll">${q.question}</div>`;
+                html += `<div class="space-y-3">`;
+                
+                q.options.forEach((opt, i) => {
+                    let optBg = ''; let iconHtml = '';
+                    if (q.correct === i) {
+                        optBg = 'bg-emerald-100 text-emerald-900 border-emerald-400 border-2'; 
+                        iconHtml = '<div class="text-3xl drop-shadow-sm ml-auto pl-2 flex-shrink-0">✅</div>';
+                    } else if (uAns === i && !isCorrect) {
+                        optBg = 'bg-red-100 text-red-900 line-through border-red-400 border-2'; 
+                        iconHtml = '<div class="text-3xl drop-shadow-sm ml-auto pl-2 flex-shrink-0">❌</div>';
+                    } else { optBg = 'bg-white text-slate-700 border border-slate-200'; }
+
+                    html += `<div class="p-4 rounded-xl ${optBg} flex items-center gap-4"><div class="w-10 h-10 flex items-center justify-center rounded-lg bg-white/50 text-base font-black shadow-sm flex-shrink-0">${String.fromCharCode(65 + i)}</div><div class="${(q.correct === i || uAns === i) ? 'font-semibold' : 'font-medium'} flex-1 text-lg math-scroll">${opt}</div>${iconHtml}</div>`;
+                });
+                html += `</div>`;
+                
+                html += getStatusBadge(isCorrect, isUnanswered); 
+                
+                if (q.explanation) {
+                    html += `<div class="review-explanation mt-3 pt-3 border-t-2 border-gray-200"><p class="text-base font-black uppercase tracking-widest text-blue-600 mb-2">💡 Giải chi tiết:</p><p class="text-black font-medium text-lg leading-loose math-scroll">${q.explanation}</p></div>`;
+                }
+                html += `</div>`;
+            } 
+            else if (q.type === 'tf_cluster') {
+                html += `<div class="p-6 border-2 border-indigo-200 bg-indigo-50 rounded-2xl shadow-sm mb-6">`;
+                html += `<div class="font-bold text-xl text-indigo-800 mb-5 math-scroll">${q.context}</div>`;
+                html += `<div class="space-y-5">`;
+                q.items.forEach(item => {
+                    let uAns = userAnswers[q.id + '_' + item.id];
+                    let isUnanswered = (uAns === undefined);
+                    let isCorrect = (uAns === item.correct);
+                    let iconHtml = isCorrect ? '✅' : '❌';
+                    let ansText = item.correct ? 'ĐÚNG' : 'SAI';
+
+                    html += `<div class="p-5 bg-white border border-indigo-100 rounded-xl shadow-sm">
+                        <div class="font-bold text-gray-800 text-lg math-scroll">${item.text}</div>
+                        <div class="mt-3 flex items-center justify-between border-b border-gray-100 pb-3">
+                            <span class="text-base font-bold text-gray-500">Bạn chọn: <span class="${isUnanswered ? 'text-gray-400' : 'text-blue-600'} font-black uppercase">${isUnanswered ? 'Chưa trả lời' : (uAns?'Đúng':'Sai')}</span></span>
+                            <span class="font-black text-xl ${isCorrect ? 'text-emerald-500' : 'text-red-500'}">Đáp án: ${ansText} ${iconHtml}</span>
+                        </div>`;
+                        
+                    html += getStatusBadge(isCorrect, isUnanswered);
+                    if(item.expl) {
+                        html += `<div class="review-explanation mt-3 pt-3 text-lg text-gray-700 font-medium leading-relaxed math-scroll"><span class="text-indigo-500 font-bold uppercase">Giải chi tiết:</span><br> ${item.expl}</div>`;
+                    }
+                    html += `</div>`;
+                });
+                html += `</div></div>`;
+            }
+        });
+        container.innerHTML = html;
+    };
+
+    window.backToResult = function() { showSection('result'); };
+    
+    let isReviewingFromLeaderboard = false;
+    
+    window.backFromReview = function() {
+        if (isReviewingFromLeaderboard) {
+            showSection('scores');
+            isReviewingFromLeaderboard = false;
+        } else {
+            window.backToResult();
+        }
+    };
+
+    window.reviewStudentScore = function(scoreId) {
+        const record = allScores.find(x => x.id === scoreId);
+        if (!record) return;
+        
+        currentStudent = { hoTen: record.hoTen, lop: record.lop, tenDe: record.tenDe, maDe: record.maDe };
+        userAnswers = record.userAnswers || {}; 
+        
+        currentQuestions = JSON.parse(JSON.stringify(exam_data)); 
+        
+        isReviewingFromLeaderboard = true;
+        window.reviewQuiz();
+    };
+
+    window.renderScores = function() {
+        const tbody = document.getElementById('scores-tbody');
+        const noScore = document.getElementById('no-scores');
+        const myRankDisplay = document.getElementById('my-rank-display');
+        const paginationContainer = document.getElementById('pagination-controls');
+        
+        if(!tbody) return;
+
+        const sortedAll = [...allScores].sort((a, b) => (b.diem - a.diem) || (a.duration.localeCompare(b.duration)));
+        
+        sortedAll.forEach((s, i) => s.absoluteRank = i + 1);
+
+        const myRankIndex = sortedAll.findIndex(s => s.deviceId === deviceId);
+        if (myRankDisplay) {
+            if (myRankIndex !== -1) {
+                myRankDisplay.innerHTML = `🏆 Thứ hạng của bạn: <span class="text-red-600 font-black">#${sortedAll[myRankIndex].absoluteRank}</span>`;
+            } else {
+                myRankDisplay.innerHTML = `🏆 Thứ hạng của bạn: <span class="text-gray-400">Chưa thi</span>`;
+            }
+        }
+
+        const filteredScores = searchTerm ? sortedAll.filter(s => s.hoTen.toLowerCase().includes(searchTerm)) : sortedAll;
+
+        if (filteredScores.length === 0) {
+            tbody.innerHTML = ''; 
+            noScore.classList.remove('hidden'); 
+            paginationContainer.innerHTML = '';
+            return; 
+        }
+        
+        noScore.classList.add('hidden');
+
+        const totalPages = Math.ceil(filteredScores.length / itemsPerPage);
+        if (currentPage > totalPages) currentPage = totalPages;
+        if (currentPage < 1) currentPage = 1;
+
+        const startIndex = (currentPage - 1) * itemsPerPage;
+        const endIndex = startIndex + itemsPerPage;
+        const pageItems = filteredScores.slice(startIndex, endIndex);
+
+        tbody.innerHTML = pageItems.map((s) => {
+            const isMe = s.deviceId === deviceId;
+            return `<tr class="${isMe ? 'my-score-row' : 'hover:bg-slate-50'} transition-colors border-b border-slate-100">
+            <td class="px-4 py-5 font-black text-slate-500 text-base text-center">#${s.absoluteRank}</td>
+            <td class="px-4 py-5 font-extrabold text-slate-800 text-base">${s.hoTen} ${isMe ? '<span class="ml-2 bg-pink-500 text-white text-xs px-2 py-1 rounded-md shadow-sm">Bạn</span>' : ''}</td>
+            <td class="px-4 py-5 font-black text-blue-600 text-base text-center">${s.lop}</td>
+            <td class="px-4 py-5 text-center font-black text-orange-600 text-sm">${s.duration}</td>
+            <td class="px-4 py-5 text-center"><span class="font-black text-2xl ${s.diem >= 5 ? 'text-emerald-600' : 'text-red-500'}">${s.diem}</span></td>
+            <td class="px-4 py-5 text-center">
+                <button onclick="window.reviewStudentScore('${s.id}')" class="bg-indigo-100 text-indigo-700 hover:bg-indigo-200 px-4 py-2 rounded-lg font-bold text-sm transition-colors border border-indigo-200 shadow-sm cursor-pointer whitespace-nowrap">Xem lại</button>
+            </td>
+        </tr>`;
+        }).join('');
+
+        renderPagination(totalPages);
+    };
+
+    function renderPagination(totalPages) {
+        const container = document.getElementById('pagination-controls');
+        if (!container) return;
+        
+        if (totalPages <= 1) {
+            container.innerHTML = '';
+            return;
+        }
+
+        let html = '<div class="flex flex-wrap items-center justify-center gap-2">';
+        
+        html += `<button onclick="window.changePage(${currentPage - 1})" class="px-4 py-2 rounded-xl font-bold transition-colors ${currentPage === 1 ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 shadow-sm'}" ${currentPage === 1 ? 'disabled' : ''}>&laquo; Trước</button>`;
+
+        let startPage = Math.max(1, currentPage - 1);
+        let endPage = Math.min(totalPages, currentPage + 1);
+
+        if (startPage > 1) {
+            html += `<button onclick="window.changePage(1)" class="px-4 py-2 rounded-xl font-bold bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 shadow-sm">1</button>`;
+            if (startPage > 2) html += `<span class="px-2 text-gray-400 font-black">...</span>`;
+        }
+
+        for (let i = startPage; i <= endPage; i++) {
+            html += `<button onclick="window.changePage(${i})" class="px-4 py-2 rounded-xl font-bold transition-all ${i === currentPage ? 'bg-orange-500 text-white shadow-md border-orange-600' : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 shadow-sm'}">${i}</button>`;
+        }
+
+        if (endPage < totalPages) {
+            if (endPage < totalPages - 1) html += `<span class="px-2 text-gray-400 font-black">...</span>`;
+            html += `<button onclick="window.changePage(${totalPages})" class="px-4 py-2 rounded-xl font-bold bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 shadow-sm">${totalPages}</button>`;
+        }
+
+        html += `<button onclick="window.changePage(${currentPage + 1})" class="px-4 py-2 rounded-xl font-bold transition-colors ${currentPage === totalPages ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 shadow-sm'}" ${currentPage === totalPages ? 'disabled' : ''}>Sau &raquo;</button>`;
+        
+        html += '</div>';
+        container.innerHTML = html;
+    }
+
+    function showSection(id) {
+        ['login', 'quiz', 'scores', 'result', 'review'].forEach(s => {
+            const el = document.getElementById(s+'-section');
+            if(el) el.classList.add('hidden');
+        });
+        const tgt = document.getElementById(id+'-section');
+        if(tgt) tgt.classList.remove('hidden');
+    }
+
+    function startTimer(seconds) {
+        const display = document.getElementById('timer');
+        if(!display) return;
+        let remaining = seconds;
+        timerInterval = setInterval(() => {
+            remaining--;
+            const m = Math.floor(remaining / 60).toString().padStart(2, '0');
+            const s = (remaining % 60).toString().padStart(2, '0');
+            display.innerText = `${m}:${s}`;
+            if (remaining <= 0) window.submitQuiz();
+        }, 1000);
+    }
+
+    try {
+        if (!localStorage.getItem('deviceId')) localStorage.setItem('deviceId', 'dev_' + Math.random().toString(36).substr(2) + Date.now());
+        deviceId = localStorage.getItem('deviceId');
+    } catch (e) { deviceId = 'dev_temp_' + Math.random().toString(36).substr(2); }
+  </script>
+ </body>
+</html>
