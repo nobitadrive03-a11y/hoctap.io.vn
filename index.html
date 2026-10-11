@@ -111,7 +111,7 @@
                 <a href="javascript:void(0)" onclick="toggleMobileMenu(this)" class="nav-item block px-2 md:px-4 py-2 md:py-4">TIN HỌC 10</a>
                 <div class="dropdown-menu absolute left-1/2 -translate-x-1/2 md:translate-x-0 md:left-0 top-full hidden md:group-hover:flex flex-col bg-white shadow-2xl rounded-xl border border-gray-100 w-56 p-3 gap-2 z-[100] mt-1 md:mt-0">
                     <button onclick="showLessons('Tài liệu Tin học 10', duLieuTin10)" class="w-full bg-[#f97316] text-white font-bold py-3 px-4 rounded-lg hover:brightness-110 shadow-sm transition-all text-sm text-left"><i class="fa-solid fa-folder-open mr-2"></i> TÀI LIỆU</button>
-                    <button onclick="showTestBlocks('Bài kiểm tra Tin học 10', kiemTraTin10)" class="w-full bg-[#22c55e] text-white font-bold py-3 px-4 rounded-lg hover:brightness-110 shadow-sm transition-all text-sm text-left"><i class="fa-solid fa-pen-to-square mr-2"></i> BÀI KIỂM TRA</button>
+                    <button onclick="showLessons('Bài kiểm tra Tin học 10', kiemTraTin10)" class="w-full bg-[#22c55e] text-white font-bold py-3 px-4 rounded-lg hover:brightness-110 shadow-sm transition-all text-sm text-left"><i class="fa-solid fa-pen-to-square mr-2"></i> BÀI KIỂM TRA</button>
                 </div>
             </li>
 
@@ -120,7 +120,7 @@
                 <a href="javascript:void(0)" onclick="toggleMobileMenu(this)" class="nav-item block px-2 md:px-4 py-2 md:py-4">TIN HỌC 11</a>
                 <div class="dropdown-menu absolute left-1/2 -translate-x-1/2 md:translate-x-0 md:left-0 top-full hidden md:group-hover:flex flex-col bg-white shadow-2xl rounded-xl border border-gray-100 w-56 p-3 gap-2 z-[100] mt-1 md:mt-0">
                     <button onclick="showLessons('Tài liệu Tin học 11', duLieuTin11)" class="w-full bg-[#8b5cf6] text-white font-bold py-3 px-4 rounded-lg hover:brightness-110 shadow-sm transition-all text-sm text-left"><i class="fa-solid fa-folder-open mr-2"></i> TÀI LIỆU</button>
-                    <button onclick="showTestBlocks('Bài kiểm tra Tin học 11', kiemTraTin11)" class="w-full bg-[#eab308] text-white font-bold py-3 px-4 rounded-lg hover:brightness-110 shadow-sm transition-all text-sm text-left"><i class="fa-solid fa-pen-to-square mr-2"></i> BÀI KIỂM TRA</button>
+                    <button onclick="showLessons('Bài kiểm tra Tin học 11', kiemTraTin11)" class="w-full bg-[#eab308] text-white font-bold py-3 px-4 rounded-lg hover:brightness-110 shadow-sm transition-all text-sm text-left"><i class="fa-solid fa-pen-to-square mr-2"></i> BÀI KIỂM TRA</button>
                 </div>
             </li>
 
@@ -129,7 +129,7 @@
                 <a href="javascript:void(0)" onclick="toggleMobileMenu(this)" class="nav-item block px-2 md:px-4 py-2 md:py-4">TIN HỌC 12</a>
                 <div class="dropdown-menu absolute left-1/2 -translate-x-1/2 md:translate-x-0 md:left-0 top-full hidden md:group-hover:flex flex-col bg-white shadow-2xl rounded-xl border border-gray-100 w-56 p-3 gap-2 z-[100] mt-1 md:mt-0">
                     <button onclick="showLessons('Tài liệu Tin học 12', duLieuTin12)" class="w-full bg-[#0ea5e9] text-white font-bold py-3 px-4 rounded-lg hover:brightness-110 shadow-sm transition-all text-sm text-left"><i class="fa-solid fa-folder-open mr-2"></i> TÀI LIỆU</button>
-                    <button onclick="showTestBlocks('Bài kiểm tra Tin học 12', kiemTraTin12)" class="w-full bg-[#ef4444] text-white font-bold py-3 px-4 rounded-lg hover:brightness-110 shadow-sm transition-all text-sm text-left"><i class="fa-solid fa-pen-to-square mr-2"></i> BÀI KIỂM TRA</button>
+                    <button onclick="showLessons('Bài kiểm tra Tin học 12', kiemTraTin12)" class="w-full bg-[#ef4444] text-white font-bold py-3 px-4 rounded-lg hover:brightness-110 shadow-sm transition-all text-sm text-left"><i class="fa-solid fa-pen-to-square mr-2"></i> BÀI KIỂM TRA</button>
                 </div>
             </li>
 
@@ -660,9 +660,6 @@
     }
 
     // 6. Hàm Render trung tâm: Lọc dữ liệu, phân trang và vẽ HTML
-
-// 6. Hàm Render trung tâm: Lọc dữ liệu, phân trang và vẽ HTML (Đã sửa để tự động hiện ảnh)
-  // 6. Hàm Render trung tâm: Lọc dữ liệu, phân trang và vẽ HTML
     function renderGrid() {
         const container = document.getElementById('grid-container');
         const paginationControls = document.getElementById('pagination-controls');
@@ -673,18 +670,17 @@
         // Thuật toán lọc theo từ khóa tìm kiếm
         const filteredData = currentData.filter(item => item.title.toLowerCase().includes(searchQuery));
 
+        // Tùy chỉnh cột lưới theo dạng thẻ hiển thị
+        if (currentViewType === 'lesson') {
+            container.className = 'grid grid-cols-1 md:grid-cols-2 gap-12 max-w-5xl mx-auto';
+        } else {
+            container.className = 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 w-full';
+        }
+
         // Báo lỗi nếu tìm không thấy nội dung
         if (filteredData.length === 0) {
             container.innerHTML = '<div class="col-span-full text-center text-gray-500 py-12 text-lg"><i class="fa-solid fa-folder-open mb-3 text-3xl"></i><br>Không tìm thấy nội dung phù hợp.</div>';
             return;
-        }
-
-        // Tùy chỉnh cột lưới theo dạng thẻ hiển thị (Kiểm tra xem dữ liệu có ảnh không)
-        const hasImage = filteredData.length > 0 && filteredData[0].image !== undefined;
-        if (hasImage) {
-            container.className = 'grid grid-cols-1 md:grid-cols-2 gap-12 max-w-5xl mx-auto';
-        } else {
-            container.className = 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 w-full';
         }
 
         // Thuật toán cắt mảng dựa trên số trang
@@ -697,12 +693,9 @@
         pageData.forEach((item, index) => {
             const color = colorClasses[index % colorClasses.length];
             const card = document.createElement('a');
-            
-            // Trả lại cách gán link nguyên bản, cực kỳ an toàn
-            card.href = item.link; 
+            card.href = item.link;
 
-            // Nếu dữ liệu CÓ ẢNH -> Hiển thị khung lớn chứa ảnh
-            if (item.image) {
+            if (currentViewType === 'lesson') {
                 const icon = item.icon || 'fa-book';
                 card.className = `${color} text-white p-4 md:p-5 rounded-2xl shadow-md hover:-translate-y-1 hover:shadow-xl transition-all duration-300 flex flex-col items-start border border-black/10`;
                 card.innerHTML = `
@@ -714,9 +707,7 @@
                         <span class="font-bold text-base md:text-lg leading-tight drop-shadow-sm flex-1">${item.title}</span>
                     </div>
                 `;
-            } 
-            // Nếu dữ liệu KHÔNG CÓ ẢNH -> Hiển thị khung nhỏ dạng nút
-            else {
+            } else {
                 const icon = item.icon || 'fa-file-lines';
                 card.className = `${color} text-white p-4 md:p-5 rounded-xl shadow-md hover:brightness-110 hover:-translate-y-1 hover:shadow-xl transition-all duration-300 flex items-center gap-3 border border-black/10`;
                 card.innerHTML = `
@@ -724,7 +715,6 @@
                     <span class="font-bold text-lg md:text-xl leading-tight drop-shadow-sm flex-1">${item.title}</span>
                 `;
             }
-            
             container.appendChild(card);
         });
 
@@ -735,6 +725,7 @@
                 btn.innerText = i;
                 btn.onclick = () => changePage(i);
                 
+                // Tô màu đậm cho trang hiện hành để làm điểm nhấn
                 if (currentPage === i) {
                     btn.className = 'w-10 h-10 flex items-center justify-center bg-[#0f766e] text-white rounded-lg shadow-md font-bold transition-all duration-300 cursor-default';
                 } else {
@@ -743,6 +734,43 @@
                 paginationControls.appendChild(btn);
             }
         }
+    }
+
+    function toggleMobileMenu(element) {
+        const dropdown = element.nextElementSibling;
+        document.querySelectorAll('.dropdown-menu').forEach(menu => {
+            if (menu !== dropdown) {
+                menu.classList.add('hidden');
+                menu.classList.remove('flex');
+            }
+        });
+
+        if (dropdown.classList.contains('hidden')) {
+            dropdown.classList.remove('hidden');
+            dropdown.classList.add('flex');
+        } else {
+            dropdown.classList.add('hidden');
+            dropdown.classList.remove('flex');
+        }
+    }
+
+    document.addEventListener('click', function(event) {
+        const isClickInsideNav = event.target.closest('nav');
+        if (!isClickInsideNav) {
+            document.querySelectorAll('.dropdown-menu').forEach(menu => {
+                menu.classList.add('hidden');
+                menu.classList.remove('flex');
+            });
+        }
+    });
+
+    function hideDropdowns() {
+        document.querySelectorAll('.dropdown-menu').forEach(menu => {
+            menu.classList.add('hidden');
+            menu.classList.remove('flex');
+            menu.style.display = 'none';
+            setTimeout(() => { menu.style.display = ''; }, 100);
+        });
     }
 
     function showDefault() {
