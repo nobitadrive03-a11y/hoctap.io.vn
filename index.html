@@ -662,6 +662,7 @@
     // 6. Hàm Render trung tâm: Lọc dữ liệu, phân trang và vẽ HTML
 
 // 6. Hàm Render trung tâm: Lọc dữ liệu, phân trang và vẽ HTML (Đã sửa để tự động hiện ảnh)
+  // 6. Hàm Render trung tâm: Lọc dữ liệu, phân trang và vẽ HTML
     function renderGrid() {
         const container = document.getElementById('grid-container');
         const paginationControls = document.getElementById('pagination-controls');
@@ -678,32 +679,27 @@
             return;
         }
 
-        // Thuật toán cắt mảng dựa trên số trang
-        const totalPages = Math.ceil(filteredData.length / itemsPerPage);
-        const startIndex = (currentPage - 1) * itemsPerPage;
-        const endIndex = startIndex + itemsPerPage;
-        const pageData = filteredData.slice(startIndex, endIndex);
-
-        // Kiểm tra xem dữ liệu trang hiện tại có chứa ảnh không để định dạng cột lưới
-        const hasImage = pageData.length > 0 && pageData[0].image;
+        // Tùy chỉnh cột lưới theo dạng thẻ hiển thị (Kiểm tra xem dữ liệu có ảnh không)
+        const hasImage = filteredData.length > 0 && filteredData[0].image !== undefined;
         if (hasImage) {
             container.className = 'grid grid-cols-1 md:grid-cols-2 gap-12 max-w-5xl mx-auto';
         } else {
             container.className = 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 w-full';
         }
 
+        // Thuật toán cắt mảng dựa trên số trang
+        const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+        const startIndex = (currentPage - 1) * itemsPerPage;
+        const endIndex = startIndex + itemsPerPage;
+        const pageData = filteredData.slice(startIndex, endIndex);
+
         // Vẽ các thẻ nội dung của trang hiện tại
         pageData.forEach((item, index) => {
             const color = colorClasses[index % colorClasses.length];
             const card = document.createElement('a');
             
-            // Xử lý link (nếu là gọi hàm javascript thì gán thuộc tính onclick hoặc href)
-            if(item.link.startsWith('javascript:')) {
-                card.href = "javascript:void(0)";
-                card.setAttribute('onclick', item.link.replace('javascript:', ''));
-            } else {
-                card.href = item.link;
-            }
+            // Trả lại cách gán link nguyên bản, cực kỳ an toàn
+            card.href = item.link; 
 
             // Nếu dữ liệu CÓ ẢNH -> Hiển thị khung lớn chứa ảnh
             if (item.image) {
@@ -748,8 +744,6 @@
             }
         }
     }
-
-    
 
     function showDefault() {
         document.getElementById('grid-view').style.display = 'none';
