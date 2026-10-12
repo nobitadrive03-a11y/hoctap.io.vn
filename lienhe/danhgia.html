@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Hệ Thống Khảo Sát - hoctap.io.vn</title>
+    
+    <!-- Thư viện vẽ biểu đồ -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+    
+    <!-- Thư viện Firebase v8 -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+    <style>
+        /* ================= CÀI ĐẶT CHUNG & MOBILE ================= */
+        * { box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #eef2f6; margin: 0; padding: 15px; color: #333;
+            font-size: 17px; 
+        }
+        .container {
+            max-width: 950px; margin: 0 auto; background: white;
+            border-radius: 12px; box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+            padding: 25px;
+        }
+        h2 { color: #1a73e8; font-size: 24px; margin: 0; flex: 1; text-align: center; }
+        
+        /* Nút bấm chung */
+        .btn {
+            padding: 10px 18px; border: none; border-radius: 8px;
+            font-weight: 600; font-size: 16px; cursor: pointer;
+            transition: all 0.2s ease; display: inline-flex; align-items: center; justify-content: center;
+        }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 4px 10px rgba(0,0,0,0.15); }
+        .btn-primary { background: linear-gradient(135deg, #1a73e8, #4285f4); color: white; }
+        .btn-secondary { background: #e0e0e0; color: #333; }
+        .btn-success { background: linear-gradient(135deg, #34a853, #2b8c46); color: white; width: 100%; padding: 14px; font-size: 19px; margin-top: 20px;}
+        .btn-danger { background: #ea4335; color: white; }
+
+        /* Bố cục header */
+        .header-actions {
+            display: flex; justify-content: space-between; align-items: center; 
+            margin-bottom: 15px; 
+            border-bottom: 4px solid #ff0000;
+            padding-bottom: 15px; gap: 10px;
+        }
+
+        /* ================= BẢNG DỮ LIỆU & PHÂN TRANG ================= */
+        .chart-box { max-width: 530px; margin: 10px auto 20px; } 
+        
+        .accordion-header {
+            background: linear-gradient(135deg, #1a73e8, #4285f4); 
+            border: none; border-radius: 8px;
+            padding: 15px; cursor: pointer; display: flex; justify-content: space-between;
+            align-items: center; font-weight: bold; color: white; font-size: 18px;
+            transition: background 0.3s; box-shadow: 0 4px 6px rgba(26,115,232,0.2);
+            margin-top: 15px;
+        }
+        .accordion-header:hover { background: linear-gradient(135deg, #1557b0, #3367d6); }
+        
+        .table-responsive {
+            width: 100%; overflow-x: auto; display: none;
+            border: 1px solid #ddd; border-top: none; border-radius: 0 0 8px 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+        table { width: 100%; border-collapse: collapse; font-size: 17px; min-width: 500px;}
+        
+        th { background-color: #ff5722; color: white; padding: 12px; text-align: left; }
+        td { padding: 12px; border-bottom: 1px solid #eee; }
+        tr:nth-child(even) { background-color: #f8f9fa; }
+        tr:hover { background-color: #e8f0fe; }
+        
+        .pagination { display: flex; justify-content: center; align-items: center; padding: 15px; gap: 15px; background: #fff; border-top: 1px solid #eee; }
+        .page-info { font-weight: bold; color: #5f6368; }
+
+        /* ================= HỘP THOẠI (MODALS) ================= */
+        .modal-overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6); z-index: 1000; justify-content: center; align-items: center;
+            backdrop-filter: blur(4px); padding: 15px;
+        }
+        .modal-box {
+            background: white; width: 100%; max-width: 420px; padding: 30px 25px;
+            border-radius: 16px; box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            text-align: center; animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        @keyframes popIn { 0% { transform: scale(0.8); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+        
+        .form-group { text-align: left; margin-bottom: 15px; }
+        .form-group label { display: block; font-weight: 600; margin-bottom: 6px; color: #5f6368; font-size: 15px;}
+        .form-control {
+            width: 100%; padding: 12px; border: 1px solid #dadce0; border-radius: 8px; 
+            font-size: 17px; transition: all 0.3s;
+        }
+        .form-control:focus { border-color: #1a73e8; outline: none; box-shadow: 0 0 0 3px rgba(26,115,232,0.2); }
+
+        .modal-icon { font-size: 55px; margin-bottom: 10px; }
+        .icon-success { color: #34a853; }
+        .icon-warning { color: #fbbc05; }
+        .icon-info { color: #1a73e8; font-size: 60px; margin-bottom: 15px;}
+
+        /* CSS TÙY CHỈNH CHO MÀN HÌNH ĐĂNG NHẬP MỚI */
+        .login-box {
+            border-top: 6px solid #4285f4; 
+            max-width: 450px; 
+            padding: 35px 25px;
+        }
+        .logo-hs-red {
+            width: 75px; height: 75px; background: #e53935;
+            border: 4px solid #ffca28; color: white; font-size: 30px; font-weight: bold; 
+            display: flex; align-items: center; justify-content: center; 
+            border-radius: 50%; margin: 0 auto 15px; box-shadow: 0 4px 10px rgba(229, 57, 53, 0.3);
+        }
+        .form-row { display: flex; gap: 15px; margin-bottom: 20px; }
+        .form-row .form-group { margin-bottom: 0; flex: 1; }
+        
+        .btn-gradient-blue {
+            background: linear-gradient(to right, #1a73e8, #00bcd4);
+            color: white; width: 100%; padding: 14px; font-size: 18px; border-radius: 8px;
+            border: none; cursor: pointer; font-weight: bold; transition: 0.3s;
+        }
+        .btn-gradient-blue:hover { opacity: 0.9; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0, 188, 212, 0.4); }
+
+        /* ================= MÀN HÌNH KHẢO SÁT ================= */
+        #surveyView { display: none; }
+        .question-block { 
+            background: #fff; padding: 18px; border-radius: 10px; margin-bottom: 15px; 
+            border: 1px solid #e0e0e0; border-left: 5px solid #1a73e8; box-shadow: 0 2px 5px rgba(0,0,0,0.03);
+        }
+        .question-block p { font-weight: 600; font-size: 18px; margin-top: 0; color: #d32f2f; line-height: 1.5; }
+        .radio-group { margin: 10px 0; font-size: 17px; }
+        .radio-group label { cursor: pointer; display: flex; align-items: flex-start; gap: 8px; padding: 5px 0; line-height: 1.4;}
+        .radio-group input[type="radio"] { transform: scale(1.3); margin-top: 4px; flex-shrink: 0;}
+
+        /* TỐI ƯU GIAO DIỆN DI ĐỘNG (MOBILE) */
+        @media (max-width: 650px) {
+            .container { padding: 15px; }
+            .header-actions { flex-direction: column; }
+            .header-actions h2 { order: -1; margin-bottom: 15px; font-size: 20px;}
+            .header-actions button { width: 100%; margin-bottom: 5px; }
+            .hide-on-mobile { display: none; } 
+            .chart-box { max-width: 100%; margin: 5px auto 15px;}
+        }
+        @media (max-width: 480px) {
+            /* Xếp dọc 2 ô nhập liệu nếu màn hình điện thoại quá nhỏ */
+            .form-row { flex-direction: column; gap: 15px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- ================= VIEW 1: BẢNG THỐNG KÊ ================= -->
+    <div id="dashboardView">
+        <div class="header-actions">
+            <button class="btn btn-secondary" onclick="goHome()">🏠 Trở về</button>
+            <h2>PHIẾU KHẢO SÁT TRẢI NGHIỆM HỌC TẬP TRÊN HOCTAP.IO.VN</h2>
+            <button class="btn btn-primary" onclick="openLoginModal()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16" style="margin-right: 8px; margin-bottom: 2px;">
+                    <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0Zm4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4Zm-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10Z"/>
+                </svg>
+                Đăng nhập
+            </button>
+        </div>
+
+         <p style="text-align: center; color: #d32f2f; font-size: 20px; font-weight: bold; margin-bottom: 25px;">
+            Tổng số học sinh đã đánh giá: <strong id="totalCount" style="font-size: 24px; color: #1a73e8;">0</strong>
+        </p>
+
+        
+        <div class="chart-box">
+            <canvas id="resultChart"></canvas>
+        </div>
+
+      
+        <div class="accordion-header" onclick="toggleTable()">
+            <span>📋 Bảng dữ liệu ý kiến học sinh</span>
+            <span id="toggleIcon">▼</span>
+        </div>
+        
+        <div class="table-responsive" id="studentTableWrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 50px;">STT</th>
+                        <th style="width: 80px;">Lớp</th>
+                        <th style="width: 160px;">Họ tên</th>
+                        <th>Ý kiến của học sinh (Góp ý)</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                    <!-- Dữ liệu sẽ đổ vào đây -->
+                </tbody>
+            </table>
+            <div class="pagination">
+                <button class="btn btn-secondary" onclick="prevPage()">◀ Trước</button>
+                <span class="page-info" id="pageInfo">Trang 1 / 1</span>
+                <button class="btn btn-secondary" onclick="nextPage()">Sau ▶</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= VIEW 2: KHUNG ĐĂNG NHẬP (GIAO DIỆN MỚI NÂNG CẤP) ================= -->
+    <div id="loginModal" class="modal-overlay">
+        <div class="modal-box login-box">
+            <!-- Logo Đỏ - Viền Vàng -->
+            <div class="logo-hs-red">HS</div>
+            
+            <!-- Tiêu đề In hoa, màu đỏ -->
+            <h3 style="margin-top:0; margin-bottom: 5px; color: #d32f2f; font-size: 24px; text-transform: uppercase;">Đăng Nhập Khảo Sát</h3>
+            <p style="color: #d32f2f; font-weight: bold; font-size: 17px; margin-top: 0; margin-bottom: 25px;">Hệ thống hoctap.io.vn</p>
+            
+            <!-- Hai ô nhập liệu ngang hàng -->
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Họ và tên</label>
+                    <input type="text" id="hsName" class="form-control" placeholder="Nhập họ tên...">
+                </div>
+                <div class="form-group" style="flex: 0.6;">
+                    <label>Lớp</label>
+                    <input type="text" id="hsClass" class="form-control" placeholder="Ví dụ: 10A1">
+                </div>
+            </div>
+            
+            <!-- Nút bấm Gradient Xanh -->
+            <button class="btn-gradient-blue" onclick="startSurvey()">🚀 VÀO LÀM KHẢO SÁT</button>
+            <!-- Nút trở về thu gọn -->
+            <button class="btn" style="background: transparent; color: #7f8c8d; width: 100%; padding: 10px; font-weight: normal; margin-top: 5px; text-decoration: underline;" onclick="closeLoginModal()">Trở về màn hình chính</button>
+        </div>
+    </div>
+
+    <!-- ================= VIEW 3: CẢNH BÁO LỖI ================= -->
+    <div id="warningModal" class="modal-overlay" style="z-index: 1001;">
+        <div class="modal-box">
+            <div class="modal-icon icon-warning">⚠️</div>
+            <h3 style="color: #202124; margin-top: 0;">Thiếu thông tin!</h3>
+            <p id="warningMsg" style="color: #5f6368; font-size: 18px;">Vui lòng nhập đầy đủ thông tin.</p>
+            <button class="btn btn-danger" style="width:100%; padding:12px; margin-top: 10px;" onclick="closeWarning()">Đã hiểu</button>
+        </div>
+    </div>
+
+    <!-- ================= VIEW 4: THÔNG BÁO XÁC NHẬN LÀM LẠI KHẢO SÁT ================= -->
+    <div id="retakeModal" class="modal-overlay" style="z-index: 1002;">
+        <div class="modal-box">
+            <div class="modal-icon icon-info">🔄</div>
+            <h3 style="color: #1a73e8; margin-top: 0;">Bạn đã khảo sát rồi!</h3>
+            <p style="color: #5f6368; font-size: 17px; line-height: 1.5; margin-bottom: 25px;">
+                Hệ thống ghi nhận bạn đã từng làm khảo sát trước đó. Bạn có muốn <strong>cập nhật lại</strong> ý kiến đánh giá của mình không?
+            </p>
+            <div style="display: flex; gap: 10px;">
+                <button class="btn btn-secondary" style="flex: 1; padding:12px;" onclick="cancelRetake()">Không, quay lại</button>
+                <button class="btn btn-primary" style="flex: 1; padding:12px;" onclick="proceedToSurvey()">Có, làm lại</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= VIEW 5: THÔNG BÁO THÀNH CÔNG ================= -->
+    <div id="successModal" class="modal-overlay" style="z-index: 1005;">
+        <div class="modal-box">
+            <div class="modal-icon icon-success">✔️</div>
+            <h3 style="color: #202124; margin-top: 0;">Tuyệt vời!</h3>
+            <p style="color: #5f6368; font-size: 18px;">Hệ thống đã ghi nhận đánh giá của em. Cảm ơn em đã góp ý!</p>
+            <button class="btn btn-primary" style="width:100%; padding:12px; margin-top: 10px;" onclick="closeSuccess()">Về Bảng Thống Kê</button>
+        </div>
+    </div>
+
+    <!-- ================= VIEW 6: KHUNG KHẢO SÁT CHÍNH THỨC ================= -->
+    <div id="surveyView">
+        <div class="header-actions" style="border-bottom: none;">
+            <button class="btn btn-secondary" onclick="showDashboard()">🏠 Trở về</button>
+            <h2>Phiếu Khảo Sát Trải Nghiệm Học Tập</h2>
+            <button class="btn hide-on-mobile" style="visibility: hidden;">🏠 Trở về</button>
+        </div>
+        <p style="font-size: 18px;">Xin chào <strong><span id="displayHsName" style="color:#1a73e8;"></span></strong> (Lớp <strong id="displayHsClass"></strong>), em hãy đánh giá các tiêu chí sau:</p>
+        
+        <form id="surveyFormElement">
+            <div class="question-block">
+                <p>Câu 1: Em đánh giá thế nào về giao diện và cách sắp xếp danh mục học tập (Tin học 10, Tin học 11, Tin học 12) trên trang web?</p>
+                <div class="radio-group"><label><input type="radio" name="q1" value="Rất trực quan"> Rất trực quan, em dễ dàng tìm thấy bài học mình cần ngay lập tức.</label></div>
+                <div class="radio-group"><label><input type="radio" name="q1" value="Khá dễ nhìn"> Khá dễ nhìn và tương đối dễ thao tác.</label></div>
+                <div class="radio-group"><label><input type="radio" name="q1" value="Hơi rối mắt"> Hơi rối mắt, em cần thời gian để tìm kiếm bài học.</label></div>
+                <div class="radio-group"><label><input type="radio" name="q1" value="Ý kiến khác"> Ý kiến khác.</label></div>
+            </div>
+
+            <div class="question-block">
+                <p>Câu 2: Các tính năng "Trợ lý AI Hỗ trợ giải đáp" và "Chat cùng AI giải mã code" có giúp ích cho em khi tự học ở nhà không?</p>
+                <div class="radio-group"><label><input type="radio" name="q2" value="Rất hữu ích"> Rất hữu ích, AI giải thích dễ hiểu và giúp em gỡ rối khi gặp bài tập khó.</label></div>
+                <div class="radio-group"><label><input type="radio" name="q2" value="Hữu ích"> Hữu ích, nhưng em cần thêm thời gian để làm quen cách đặt câu hỏi.</label></div>
+                <div class="radio-group"><label><input type="radio" name="q2" value="Bình thường"> Bình thường, em ít khi sử dụng tính năng này.</label></div>
+                <div class="radio-group"><label><input type="radio" name="q2" value="Ý kiến khác"> Ý kiến khác.</label></div>
+            </div>
+
+            <div class="question-block">
+                <p>Câu 3: Hệ thống "Bài kiểm tra" (Thường xuyên, Giữa kỳ, Học kỳ) và "Trắc nghiệm tương tác" giúp em ôn tập như thế nào?</p>
+                <div class="radio-group"><label><input type="radio" name="q3" value="Rất tiện lợi"> Rất tiện lợi, giúp em chủ động làm bài và biết ngay kết quả để rút kinh nghiệm.</label></div>
+                <div class="radio-group"><label><input type="radio" name="q3" value="Khá tốt"> Khá tốt, nội dung bám sát chương trình học trên lớp.</label></div>
+                <div class="radio-group"><label><input type="radio" name="q3" value="Bình thường"> Bình thường, em thích ôn tập trên giấy hơn.</label></div>
+                <div class="radio-group"><label><input type="radio" name="q3" value="Ý kiến khác"> Ý kiến khác.</label></div>
+            </div>
+
+            <div class="question-block">
+                <p>Câu 4: Em cảm thấy thế nào khi vừa học vừa chơi qua các hoạt động như: "Trò chơi khám phá các đảo", "Đi tìm ô chữ", hay "Vòng quay"……?</p>
+                <div class="radio-group"><label><input type="radio" name="q4" value="Rất hứng thú"> Rất hứng thú, trò chơi giúp em nhớ bài lâu hơn mà không bị nhàm chán.</label></div>
+                <div class="radio-group"><label><input type="radio" name="q4" value="Khá vui"> Khá vui, làm cho giờ tự học trở nên nhẹ nhàng hơn.</label></div>
+                <div class="radio-group"><label><input type="radio" name="q4" value="Bình thường"> Bình thường, em chỉ vào chơi cho biết chứ chưa thấy hỗ trợ nhớ kiến thức.</label></div>
+                <div class="radio-group"><label><input type="radio" name="q4" value="Ý kiến khác"> Ý kiến khác.</label></div>
+            </div>
+
+            <div class="question-block">
+                <p>Câu 5: Ngoài góc học tập, trang web còn có góc "Giải trí" (Âm nhạc, Sách lật, Kỉ niệm). Em có mong muốn thầy/cô bổ sung hoặc cải thiện thêm điều gì để trang web hoàn hảo hơn không?</p>
+                <textarea id="q5" class="form-control" rows="4" placeholder="Nhập câu trả lời tự do của em vào đây..."></textarea>
+            </div>
+
+            <button type="button" class="btn btn-success" onclick="submitSurvey()">Gửi Khảo Sát & Xem Kết Quả</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    // ================= 1. CẤU HÌNH FIREBASE =================
+    let database, surveyRef;
+    let dbSurvey = []; 
+    let existingRecordId = null; 
+
+    try {
+        const firebaseConfig = {
+            apiKey: "AIzaSyBQ9Pos8awlh9j041qDWTPFRsVIjF-kPnk",
+            authDomain: "hoctap-91691.firebaseapp.com",
+            databaseURL: "https://hoctap-91691-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "hoctap-91691",
+            storageBucket: "hoctap-91691.firebasestorage.app",
+            messagingSenderId: "1004553425319",
+            appId: "1:1004553425319:web:45d15cbae393f614c56682",
+            measurementId: "G-Q6X1TL9PRV"
+        };
+        
+        if (typeof firebase !== 'undefined') {
+            if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+            database = firebase.database();
+            surveyRef = database.ref('khao_sat_he_thong');
+
+            surveyRef.on('value', (snapshot) => {
+                dbSurvey = [];
+                snapshot.forEach((child) => {
+                    let data = child.val();
+                    data.id = child.key; 
+                    dbSurvey.push(data);
+                });
+                updateDashboard(); 
+            });
+        }
+    } catch(err) { console.error("Lỗi cấu hình Firebase:", err); }
+
+    // ================= 2. KHỞI TẠO BIỂU ĐỒ =================
+    Chart.register(ChartDataLabels);
+    const ctx = document.getElementById('resultChart').getContext('2d');
+    
+    let legendPos = window.innerWidth < 650 ? 'bottom' : 'right';
+
+    let myChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Rất hữu ích', 'Hữu ích', 'Bình thường', 'Ý kiến khác'],
+            datasets: [{
+                data: [0, 0, 0, 0],
+                backgroundColor: ['#34a853', '#4285f4', '#fbbc05', '#ea4335'],
+                borderWidth: 0, hoverOffset: 4
+            }]
+        },
+        options: { 
+            responsive: true, 
+            plugins: { 
+                legend: { 
+                    position: legendPos, 
+                    align: 'center',
+                    labels: { 
+                        font: { size: 15 },
+                        boxWidth: 16,
+                        padding: 15 
+                    } 
+                },
+                datalabels: {
+                    color: '#ffffff', font: { weight: 'bold', size: 15 },
+                    formatter: (value, ctx) => {
+                        let sum = ctx.chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
+                        if(sum === 0) return '';
+                        return value > 0 ? (value * 100 / sum).toFixed(1) + "%" : '';
+                    }
+                }
+            } 
+        }
+    });
+
+    // ================= 3. ĐIỀU HƯỚNG & HỘP THOẠI =================
+    let currentStudent = { name: '', class: '' };
+
+    function goHome() { alert("Nút này liên kết về trang chủ."); }
+    function showDashboard() {
+        document.getElementById('dashboardView').style.display = 'block';
+        document.getElementById('surveyView').style.display = 'none';
+        updateDashboard();
+    }
+    
+    function openLoginModal() {
+        document.getElementById('loginModal').style.display = 'flex';
+        document.getElementById('hsName').value = ''; document.getElementById('hsClass').value = '';
+    }
+    function closeLoginModal() { document.getElementById('loginModal').style.display = 'none'; }
+    
+    function showWarning(msg) {
+        document.getElementById('warningMsg').innerText = msg;
+        document.getElementById('warningModal').style.display = 'flex';
+    }
+    function closeWarning() { document.getElementById('warningModal').style.display = 'none'; }
+    
+    function closeSuccess() {
+        document.getElementById('successModal').style.display = 'none';
+        showDashboard();
+    }
+    
+    function toggleTable() {
+        const wrapper = document.getElementById('studentTableWrapper');
+        const icon = document.getElementById('toggleIcon');
+        if(wrapper.style.display === 'block') {
+            wrapper.style.display = 'none'; icon.innerText = '▼';
+        } else {
+            wrapper.style.display = 'block'; icon.innerText = '▲';
+        }
+    }
+
+    // ================= 4. XỬ LÝ KHẢO SÁT =================
+    function startSurvey() {
+        const name = document.getElementById('hsName').value.trim();
+        const lop = document.getElementById('hsClass').value.trim();
+        if(!name || !lop) { 
+            showWarning("Em vui lòng nhập đầy đủ Họ tên và Lớp nhé!"); return; 
+        }
+
+        currentStudent = { name: name, class: lop };
+        existingRecordId = null;
+
+        const existingStudent = dbSurvey.find(s => 
+            s.name.toLowerCase() === name.toLowerCase() && 
+            s.class.toLowerCase() === lop.toLowerCase()
+        );
+
+        if(existingStudent) {
+            existingRecordId = existingStudent.id; 
+            closeLoginModal();
+            document.getElementById('retakeModal').style.display = 'flex'; 
+        } else {
+            proceedToSurvey(); 
+        }
+    }
+
+    function cancelRetake() {
+        document.getElementById('retakeModal').style.display = 'none';
+        showDashboard();
+    }
+
+    function proceedToSurvey() {
+        document.getElementById('displayHsName').innerText = currentStudent.name;
+        document.getElementById('displayHsClass').innerText = currentStudent.class;
+        
+        document.getElementById('retakeModal').style.display = 'none';
+        closeLoginModal();
+
+        document.getElementById('dashboardView').style.display = 'none';
+        document.getElementById('surveyView').style.display = 'block';
+        document.getElementById('surveyFormElement').reset();
+    }
+
+    function submitSurvey() {
+        const q1 = document.querySelector('input[name="q1"]:checked');
+        const q2 = document.querySelector('input[name="q2"]:checked');
+        const q3 = document.querySelector('input[name="q3"]:checked');
+        const q4 = document.querySelector('input[name="q4"]:checked');
+        const q5 = document.getElementById('q5').value.trim();
+
+        if(!q1 || !q2 || !q3 || !q4) {
+            showWarning("Em vui lòng trả lời đầy đủ các câu hỏi trắc nghiệm nhé!"); return;
+        }
+
+        const newRecord = {
+            name: currentStudent.name, class: currentStudent.class,
+            a1: q1.value, a2: q2.value, a3: q3.value, a4: q4.value,
+            a5: q5 || "Không có ý kiến", timestamp: Date.now()
+        };
+
+        if(surveyRef) {
+            if(existingRecordId) {
+                surveyRef.child(existingRecordId).update(newRecord);
+            } else {
+                surveyRef.push(newRecord);
+            }
+        } else {
+            if(existingRecordId) {
+                const idx = dbSurvey.findIndex(s => s.id === existingRecordId);
+                if(idx !== -1) dbSurvey[idx] = {id: existingRecordId, ...newRecord};
+            } else {
+                newRecord.id = Date.now().toString();
+                dbSurvey.push(newRecord); 
+            }
+        }
+        
+        document.getElementById('surveyView').style.display = 'none';
+        document.getElementById('successModal').style.display = 'flex';
+    }
+
+    // ================= 5. HIỂN THỊ =================
+    let currentPage = 1;
+    const rowsPerPage = 5;
+
+    function updateDashboard() {
+        document.getElementById('totalCount').innerText = dbSurvey.length;
+        
+        let c1 = 0, c2 = 0, c3 = 0, c4 = 0;
+        dbSurvey.forEach((row) => {
+            if(row.a2 === 'Rất hữu ích') c1++; 
+            else if(row.a2 === 'Hữu ích') c2++; 
+            else if(row.a2 === 'Bình thường') c3++;
+            else c4++; 
+        });
+        myChart.data.datasets[0].data = [c1, c2, c3, c4];
+        myChart.update();
+
+        renderTable();
+    }
+
+    function renderTable() {
+        const totalRows = dbSurvey.length;
+        const totalPages = Math.ceil(totalRows / rowsPerPage) || 1;
+        if(currentPage > totalPages) currentPage = totalPages;
+
+        const reversedData = [...dbSurvey].reverse(); 
+        const startIndex = (currentPage - 1) * rowsPerPage;
+        const paginatedData = reversedData.slice(startIndex, startIndex + rowsPerPage);
+
+        let tbodyHTML = '';
+        paginatedData.forEach((row, idx) => {
+            const realSTT = startIndex + idx + 1;
+            tbodyHTML += `
+                <tr>
+                    <td style="font-weight:bold; color:#ff5722;">${realSTT}</td>
+                    <td style="color:#1a73e8; font-weight:bold;">${row.class}</td>
+                    <td style="font-weight: 500;">${row.name}</td>
+                    <td style="font-style:italic; color:#444; white-space: normal; line-height: 1.4;">${row.a5}</td>
+                </tr>
+            `;
+        });
+
+        document.getElementById('tableBody').innerHTML = tbodyHTML || '<tr><td colspan="4" style="text-align:center;">Chưa có dữ liệu khảo sát.</td></tr>';
+        document.getElementById('pageInfo').innerText = `Trang ${currentPage} / ${totalPages}`;
+    }
+
+    function prevPage() {
+        if(currentPage > 1) { currentPage--; renderTable(); }
+    }
+    function nextPage() {
+        const totalPages = Math.ceil(dbSurvey.length / rowsPerPage);
+        if(currentPage < totalPages) { currentPage++; renderTable(); }
+    }
+</script>
+
+</body>
+</html>

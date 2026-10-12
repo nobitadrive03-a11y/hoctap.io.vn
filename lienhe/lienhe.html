@@ -1,1 +1,386 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Liên Hệ Hỗ Trợ - hoctap.io.vn</title>
+    
+    <!-- Thư viện Firebase v8 -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
+    <!-- Font chữ hiện đại -->
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        /* ================= CÀI ĐẶT CHUNG ================= */
+        * { box-sizing: border-box; }
+        body {
+            font-family: 'Nunito', 'Segoe UI', Tahoma, sans-serif; 
+            background-color: #f4f7f9; 
+            margin: 0; padding: 0; color: #333;
+            font-size: 17px; line-height: 1.6;
+        }
+
+        /* ================= HEADER BANNER (PHẦN MÀU XANH TRÊN CÙNG) ================= */
+        .header-banner {
+            background: linear-gradient(135deg, #00c6ff 0%, #0072ff 100%);
+            /* Đã thu gọn chiều cao padding phía dưới để vừa vặn với khung chữ */
+            padding: 40px 20px 50px 20px; 
+            text-align: center; color: white;
+            border-radius: 0 0 30px 30px;
+            position: relative;
+            box-shadow: 0 10px 25px rgba(0, 114, 255, 0.15);
+        }
+        .header-banner h2 {
+            margin: 0; font-size: 30px; font-weight: 800; text-transform: uppercase;
+            letter-spacing: 1px; text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+        .header-banner p {
+            margin-top: 10px; font-size: 18px; opacity: 0.9;
+        }
+        .btn-back {
+            position: absolute; top: 20px; left: 20px;
+            background: rgba(255,255,255,0.2); color: white;
+            border: 1px solid rgba(255,255,255,0.4); border-radius: 30px;
+            padding: 8px 20px; font-weight: 700; cursor: pointer;
+            backdrop-filter: blur(5px); transition: 0.3s;
+            display: flex; align-items: center; gap: 5px;
+            font-family: 'Nunito', 'Segoe UI', Tahoma, sans-serif;
+        }
+        .btn-back:hover { background: white; color: #0072ff; transform: scale(1.05); }
+
+        /* ================= CONTAINER & CARDS ================= */
+        .container {
+            max-width: 850px; 
+            /* Căn chỉnh lại khoảng cách đè lên banner cho hợp lý */
+            margin: -25px auto 40px; 
+            padding: 0 15px; position: relative; z-index: 10;
+        }
+        
+        .card {
+            background: white; border-radius: 24px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.08);
+            padding: 40px; margin-bottom: 30px;
+            animation: slideUp 0.6s ease-out forwards; 
+            opacity: 0; transform: translateY(30px);
+        }
+        .card:nth-child(2) { animation-delay: 0.2s; } 
+
+        @keyframes slideUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Đã đổi màu chữ sang ĐỎ và làm gạch chân DÀY, DÀI hơn */
+        .section-title {
+            color: #d32f2f; font-size: 26px; margin-top: 0; margin-bottom: 35px;
+            text-align: center; font-weight: 800; position: relative;
+        }
+        .section-title::after {
+            content: ''; display: block; 
+            width: 140px; /* Làm đường gạch dài ra */
+            height: 6px;  /* Làm đường gạch dày lên */
+            background: #d32f2f; /* Màu gạch chân đồng bộ màu đỏ */
+            border-radius: 3px; margin: 12px auto 0;
+        }
+
+        /* ================= PHẦN 1: THÔNG TIN LIÊN HỆ ================= */
+        .info-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px;
+        }
+        .info-item {
+            display: flex; align-items: center; gap: 20px;
+            padding: 20px; border-radius: 20px; background: #ffffff;
+            border: 2px solid #f1f5f9; transition: 0.3s;
+        }
+        .info-item:hover {
+            border-color: #00c6ff; transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 198, 255, 0.15);
+        }
+        
+        .icon-box {
+            width: 65px; height: 65px; min-width: 65px; border-radius: 20px;
+            display: flex; align-items: center; justify-content: center; font-size: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+        .bg-pink { background: linear-gradient(135deg, #ff9a9e, #fecfef); }
+        .bg-blue { background: linear-gradient(135deg, #a1c4fd, #c2e9fb); }
+        .bg-orange { background: linear-gradient(135deg, #f6d365, #fda085); }
+        .bg-purple { background: linear-gradient(135deg, #e0c3fc, #8ec5fc); }
+        
+        .info-text h4 { margin: 0 0 5px 0; color: #64748b; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; font-weight: 700;}
+        .info-text p { margin: 0; font-weight: 800; color: #0f172a; font-size: 18px;}
+        
+        .tip-box {
+            background: linear-gradient(to right, #fff7ed, #ffedd5);
+            border-left: 5px solid #f97316; padding: 20px; border-radius: 12px; 
+            margin-top: 30px; font-size: 16px; color: #c2410c; font-weight: 600;
+            display: flex; align-items: center; gap: 15px;
+        }
+        .tip-box span { font-size: 24px; }
+
+        /* ================= PHẦN 2: FORM GỬI TIN NHẮN ================= */
+        .form-row { display: flex; gap: 20px; margin-bottom: 25px; }
+        .form-group { flex: 1; text-align: left; }
+        .form-group.full-width { margin-bottom: 25px; }
+        
+        .form-group label { 
+            display: block; font-weight: 700; margin-bottom: 10px; 
+            color: #334155; font-size: 16px;
+        }
+        .form-control {
+            width: 100%; padding: 16px 20px; border: 2px solid #e2e8f0; border-radius: 16px; 
+            font-size: 17px; transition: all 0.3s; font-family: inherit;
+            background: #f8fafc; color: #0f172a; font-weight: 600;
+        }
+        .form-control::placeholder { color: #94a3b8; font-weight: 400; }
+        .form-control:focus { 
+            border-color: #0072ff; background: white; outline: none;
+            box-shadow: 0 0 0 4px rgba(0, 114, 255, 0.15); 
+        }
+        textarea.form-control { resize: vertical; min-height: 150px; }
+
+        /* Đã ép lại đúng font chữ chuẩn để nút không bị lỗi font */
+        .btn-submit {
+            background: linear-gradient(135deg, #0072ff, #00c6ff);
+            color: white; width: 100%; padding: 18px; font-size: 19px; border-radius: 16px;
+            border: none; cursor: pointer; font-weight: 800; transition: 0.3s;
+            box-shadow: 0 10px 25px rgba(0, 114, 255, 0.3); text-transform: uppercase;
+            display: flex; justify-content: center; align-items: center; gap: 10px;
+            font-family: 'Nunito', 'Segoe UI', Tahoma, sans-serif;
+        }
+        .btn-submit:hover { 
+            transform: translateY(-3px) scale(1.01); 
+            box-shadow: 0 15px 35px rgba(0, 114, 255, 0.4); 
+        }
+
+        /* ================= HỘP THOẠI (MODALS) ================= */
+        .modal-overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(15, 23, 42, 0.6); z-index: 1000; justify-content: center; align-items: center;
+            backdrop-filter: blur(6px); padding: 15px;
+        }
+        .modal-box {
+            background: white; width: 100%; max-width: 420px; padding: 40px 30px;
+            border-radius: 24px; box-shadow: 0 25px 50px rgba(0,0,0,0.25);
+            text-align: center; animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        @keyframes popIn { 0% { transform: scale(0.5); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+        
+        .modal-icon { font-size: 70px; margin-bottom: 20px; line-height: 1;}
+        .icon-success { color: #10b981; }
+        .icon-warning { color: #f59e0b; }
+
+        .btn-modal {
+            width: 100%; padding: 15px; border-radius: 14px; border: none;
+            font-size: 18px; font-weight: 700; cursor: pointer; margin-top: 15px; transition: 0.3s;
+            font-family: 'Nunito', 'Segoe UI', Tahoma, sans-serif;
+        }
+        .btn-modal-success { background: #10b981; color: white; box-shadow: 0 8px 20px rgba(16,185,129,0.3); }
+        .btn-modal-warning { background: #ef4444; color: white; box-shadow: 0 8px 20px rgba(239,68,68,0.3); }
+        .btn-modal:hover { transform: translateY(-2px); filter: brightness(1.1); }
+
+        /* ================= MOBILE RESPONSIVE ================= */
+        @media (max-width: 650px) {
+            .header-banner { padding: 70px 20px 50px; border-radius: 0 0 25px 25px; }
+            .header-banner h2 { font-size: 24px; }
+            .btn-back { top: 15px; left: 15px; font-size: 15px; padding: 6px 15px; }
+            .container { margin-top: -20px; }
+            .card { padding: 30px 20px; border-radius: 20px; }
+            .form-row { flex-direction: column; gap: 25px; margin-bottom: 25px; }
+            .info-item { flex-direction: column; text-align: center; gap: 15px; }
+            .info-text h4 { font-size: 13px; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- HEADER BANNER -->
+<div class="header-banner">
+    <button class="btn-back" onclick="goHome()">🏠 Trở về</button>
+    <h2>HỔ TRỢ VÀ LIÊN HỆ</h2>
+    <p>Xin chào! Cô có thể giúp gì cho em hôm nay?</p>
+</div>
+
+<div class="container">
+    
+    <!-- KHỐI 1: THÔNG TIN LIÊN HỆ -->
+    <div class="card">
+        <h3 class="section-title">Kênh Thông Tin Nhanh</h3>
+        
+        <div class="info-grid">
+            <div class="info-item">
+                <div class="icon-box bg-pink">👩‍🏫</div>
+                <div class="info-text">
+                    <h4>Giáo viên phụ trách</h4>
+                    <p>Cô Lê Huyền Sinh</p>
+                </div>
+            </div>
+            
+            <div class="info-item">
+                <div class="icon-box bg-blue">🏫</div>
+                <div class="info-text">
+                    <h4>Đơn vị công tác</h4>
+                    <p>THPT Phan Đình Phùng</p>
+                </div>
+            </div>
+
+            <div class="info-item">
+                <div class="icon-box bg-orange">📧</div>
+                <div class="info-text">
+                    <h4>Email liên hệ</h4>
+                    <p><a href="huyensinh.mwg1977@gmail.com" style="color: inherit; text-decoration: none;">(Điền Email của cô vào đây)</a></p>
+                </div>
+            </div>
+
+            <div class="info-item">
+                <div class="icon-box bg-purple">⏱️</div>
+                <div class="info-text">
+                    <h4>Khung giờ online</h4>
+                    <p>19:00 - 21:30 hàng ngày</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="tip-box">
+            <span>💡</span>
+            <div>
+                <strong>Mẹo nhỏ:</strong> Em có thể chọn <strong> Chat cùng AI giải mã code hoặc Trợ lý AI </strong> ở trang Web để được giải đáp lỗi code ngay lập tức nhé!
+            </div>
+        </div>
+    </div>
+
+    <!-- KHỐI 2: FORM GỬI TIN NHẮN -->
+    <div class="card">
+        <h3 class="section-title">Gửi Lời Nhắn Trực Tuyến</h3>
+        
+        <form id="contactFormElement">
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Họ và tên của em <span style="color:#ef4444">*</span></label>
+                    <input type="text" id="txtName" class="form-control" placeholder="Nhập họ và tên...">
+                </div>
+                <div class="form-group">
+                    <label>Lớp <span style="color:#ef4444">*</span></label>
+                    <input type="text" id="txtClass" class="form-control" placeholder="Ví dụ: 11A2">
+                </div>
+            </div>
+
+            <div class="form-group full-width">
+                <label>Chủ đề cần hỗ trợ <span style="color:#ef4444">*</span></label>
+                <select id="selSubject" class="form-control">
+                    <option value="" disabled selected>-- Vui lòng chọn một chủ đề --</option>
+                    <option value="Hỏi đáp bài tập (Python, CSDL,...)">Hỏi đáp bài tập (Python, Cơ sở dữ liệu,...)</option>
+                    <option value="Báo lỗi hệ thống web/Bài kiểm tra">Báo lỗi hệ thống web hoặc Bài kiểm tra</option>
+                    <option value="Góp ý phát triển Hành Trình Số">Góp ý phát triển web Hành Trình Số</option>
+                    <option value="Vấn đề khác">Vấn đề khác</option>
+                </select>
+            </div>
+
+            <div class="form-group full-width">
+                <label>Nội dung chi tiết <span style="color:#ef4444">*</span></label>
+                <textarea id="txtMessage" class="form-control" placeholder="Trình bày rõ vấn đề em đang gặp phải. Em có thể dán trực tiếp đoạn code bị lỗi vào đây để cô xem giúp nhé..."></textarea>
+            </div>
+
+            <button type="button" class="btn-submit" onclick="submitContact()">
+                🚀 GỬI TIN NHẮN CHO CÔ
+            </button>
+        </form>
+    </div>
+
+</div>
+
+<!-- ================= CẢNH BÁO LỖI ================= -->
+<div id="warningModal" class="modal-overlay">
+    <div class="modal-box">
+        <div class="modal-icon icon-warning">⚠️</div>
+        <h3 style="color: #0f172a; margin-top: 0; font-size: 24px; font-weight: 800;">Thiếu thông tin!</h3>
+        <p id="warningMsg" style="color: #64748b; font-size: 17px; margin-bottom: 25px; font-weight: 600;">Vui lòng điền đầy đủ các thông tin có dấu *</p>
+        <button class="btn-modal btn-modal-warning" onclick="closeWarning()">Đã hiểu</button>
+    </div>
+</div>
+
+<!-- ================= THÔNG BÁO THÀNH CÔNG ================= -->
+<div id="successModal" class="modal-overlay">
+    <div class="modal-box">
+        <div class="modal-icon icon-success">✔️</div>
+        <h3 style="color: #0f172a; margin-top: 0; font-size: 24px; font-weight: 800;">Gửi thành công!</h3>
+        <p style="color: #64748b; font-size: 17px; margin-bottom: 25px; font-weight: 600;">Tin nhắn của em đã được gửi đi. Cô sẽ xem và phản hồi sớm nhất nhé!</p>
+        <button class="btn-modal btn-modal-success" onclick="closeSuccess()">Tuyệt vời</button>
+    </div>
+</div>
+
+<script>
+    // ================= 1. CẤU HÌNH FIREBASE =================
+    let database, contactRef;
+
+    try {
+        const firebaseConfig = {
+            apiKey: "AIzaSyBQ9Pos8awlh9j041qDWTPFRsVIjF-kPnk",
+            authDomain: "hoctap-91691.firebaseapp.com",
+            databaseURL: "https://hoctap-91691-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "hoctap-91691",
+            storageBucket: "hoctap-91691.firebasestorage.app",
+            messagingSenderId: "1004553425319",
+            appId: "1:1004553425319:web:45d15cbae393f614c56682",
+            measurementId: "G-Q6X1TL9PRV"
+        };
+        
+        if (typeof firebase !== 'undefined') {
+            if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+            database = firebase.database();
+            contactRef = database.ref('lien_he_ho_tro'); 
+        }
+    } catch(err) { console.error("Lỗi cấu hình Firebase:", err); }
+
+    // ================= 2. CÁC HÀM XỬ LÝ =================
+    function goHome() { alert("Nút này liên kết về trang chủ."); }
+    
+    function showWarning(msg) {
+        document.getElementById('warningMsg').innerText = msg;
+        document.getElementById('warningModal').style.display = 'flex';
+    }
+    function closeWarning() { document.getElementById('warningModal').style.display = 'none'; }
+    
+    function closeSuccess() {
+        document.getElementById('successModal').style.display = 'none';
+        document.getElementById('contactFormElement').reset(); 
+    }
+
+    function submitContact() {
+        const name = document.getElementById('txtName').value.trim();
+        const lop = document.getElementById('txtClass').value.trim();
+        const subject = document.getElementById('selSubject').value;
+        const message = document.getElementById('txtMessage').value.trim();
+
+        if(!name || !lop || !subject || !message) {
+            showWarning("Em vui lòng điền đầy đủ Họ tên, Lớp, Chủ đề và Nội dung nhé!");
+            return;
+        }
+
+        const newContact = {
+            name: name,
+            class: lop,
+            subject: subject,
+            message: message,
+            timestamp: Date.now(),
+            status: "Chưa đọc" 
+        };
+
+        if(contactRef) {
+            contactRef.push(newContact)
+            .then(() => {
+                document.getElementById('successModal').style.display = 'flex';
+            })
+            .catch((error) => {
+                alert("Có lỗi xảy ra khi gửi tin nhắn: " + error.message);
+            });
+        } else {
+            console.log("Dữ liệu liên hệ: ", newContact);
+            document.getElementById('successModal').style.display = 'flex';
+        }
+    }
+</script>
+
+</body>
+</html>s
