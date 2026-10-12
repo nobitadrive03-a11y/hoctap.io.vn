@@ -149,13 +149,8 @@
             </li>
 
             <!-- LIÊN HỆ -->
-            <li class="group relative nav-menu-group">
-                <a href="javascript:void(0)" onclick="toggleMobileMenu(this)" class="nav-item block px-2 md:px-4 py-2 md:py-4">LIÊN HỆ</a>
-                <div class="dropdown-menu absolute right-1/2 translate-x-1/2 md:translate-x-0 md:right-0 top-full hidden md:group-hover:flex flex-col bg-white shadow-2xl rounded-xl border border-gray-100 w-56 p-3 gap-2 z-[100] mt-1 md:mt-0">
-                    <button onclick="showLessons('Hỗ trợ hệ thống', lienHeHoTro)" class="w-full bg-[#64748b] text-white font-bold py-2 px-4 rounded-lg hover:brightness-110 shadow-sm transition-all text-sm text-left">HỖ TRỢ TRỰC TUYẾN</button>
-                    <button onclick="showLessons('Thông tin liên hệ', lienHeEmail)" class="w-full bg-[#0f766e] text-white font-bold py-2 px-4 rounded-lg hover:brightness-110 shadow-sm transition-all text-sm text-left">GỬI EMAIL</button>
-                    <button onclick="showLessons('Mạng xã hội', lienHeFanpage)" class="w-full bg-[#0284c7] text-white font-bold py-2 px-4 rounded-lg hover:brightness-110 shadow-sm transition-all text-sm text-left">FANPAGE</button>
-                </div>
+            <li>
+                <a href="javascript:void(0)" onclick="showLessons('CÁC TỆP LIÊN HỆ', tepLienHe)" class="nav-item block px-2 md:px-4 py-2 md:py-4">LIÊN HỆ</a>
             </li>
         </ul>
     </div>
@@ -547,21 +542,16 @@
         { title: "Trò chơi khám phá hệ mặt trời. Tin học 12. BÀI 7: HTML VÀ CẤU TRÚC TRANG WEB", link: "trochoi/tin12_bai7/bai7tin12.html", image: "trochoi/tin12_bai7/anhbai7_12.png", icon: "fa-border-all" }
     ];
 
-    const lienHeHoTro = [
-        { title: "Hướng dẫn sử dụng Web", link: "#", image: "https://placehold.co/600x300/64748b/ffffff?text=Ho+Tro+1", icon: "fa-circle-question" },
-        { title: "Báo lỗi tài liệu", link: "#", image: "https://placehold.co/600x300/64748b/ffffff?text=Ho+Tro+2", icon: "fa-triangle-exclamation" },
-        { title: "Yêu cầu cấp lại mật khẩu", link: "#", image: "https://placehold.co/600x300/64748b/ffffff?text=Ho+Tro+3", icon: "fa-key" }
+   // Dữ liệu hiển thị 4 tệp khi bấm vào chữ LIÊN HỆ
+  // Dữ liệu 4 tệp hiển thị khi bấm vào LIÊN HỆ
+    const tepLienHe = [
+        { title: "Tệp liên hệ 1", link: "file1.html", image: "https://placehold.co/600x300/0d9488/ffffff?text=Tep+1", icon: "fa-address-card" },
+        { title: "Tệp liên hệ 2", link: "file2.html", image: "https://placehold.co/600x300/2563eb/ffffff?text=Tep+2", icon: "fa-envelope" },
+        { title: "Tệp liên hệ 3", link: "file3.html", image: "https://placehold.co/600x300/eab308/ffffff?text=Tep+3", icon: "fa-share-nodes" },
+        { title: "Tệp liên hệ 4", link: "file4.html", image: "https://placehold.co/600x300/dc2626/ffffff?text=Tep+4", icon: "fa-headset" }
+
     ];
-    const lienHeEmail = [
-        { title: "Email Giáo viên", link: "mailto:abc@example.com", image: "https://placehold.co/600x300/0f766e/ffffff?text=Email+GV", icon: "fa-envelope" },
-        { title: "Email Báo lỗi kỹ thuật", link: "mailto:abc@example.com", image: "https://placehold.co/600x300/0f766e/ffffff?text=Email+KT", icon: "fa-wrench" },
-        { title: "Email Đóng góp ý kiến", link: "mailto:abc@example.com", image: "https://placehold.co/600x300/0f766e/ffffff?text=Gop+Y", icon: "fa-lightbulb" }
-    ];
-    const lienHeFanpage = [
-        { title: "Fanpage Hành Trình Số", link: "#", image: "https://placehold.co/600x300/0284c7/ffffff?text=Fanpage", icon: "fa-facebook" },
-        { title: "Kênh YouTube Bài Giảng", link: "#", image: "https://placehold.co/600x300/ef4444/ffffff?text=YouTube", icon: "fa-youtube" },
-        { title: "Nhóm Zalo Hỗ trợ", link: "#", image: "https://placehold.co/600x300/3b82f6/ffffff?text=Zalo", icon: "fa-comments" }
-    ];
+
 
 
     // HÀM XỬ LÝ GIAO DIỆN
