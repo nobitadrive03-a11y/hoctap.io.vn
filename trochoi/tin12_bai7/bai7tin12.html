@@ -186,7 +186,7 @@
       backdrop-filter: blur(8px);
     }
     
-    /* === QUIZ MODAL (MỞ RỘNG TRÊN PC & TRÀN KHUNG TRÊN ĐIỆN THOẠI) === */
+    /* === QUIZ MODAL === */
     #quiz-modal {
         position: fixed !important; inset: 0;
         width: 100vw; height: 100vh;
@@ -204,7 +204,6 @@
       box-shadow: 0 20px 50px rgba(0,0,0,0.7);
     }
 
-    /* Hộp câu hỏi nền trắng, chữ màu đỏ nổi bật */
     .question-box {
         background: #ffffff; border: 3px solid #ef4444; border-radius: 14px;
         padding: 16px 20px; margin-bottom: 16px; 
@@ -212,13 +211,12 @@
     }
 
     .question-text { 
-        color: #d90429; /* MÀU ĐỎ NỔI BẬT */
+        color: #d90429;
         font-weight: 800; font-size: 1.25rem; line-height: 1.45;
         word-break: break-word;
         white-space: pre-wrap;
     }
 
-    /* Hộp hiển thị code mẫu trong câu hỏi (nếu có) */
     .code-snippet-box {
         display: inline-block;
         text-align: left;
@@ -242,7 +240,6 @@
         width: 100%;
     }
 
-    /* Các ô đáp án nền trắng tinh (#ffffff) dễ nhìn */
     .answer-btn-modern {
       width: 100%; text-align: left; padding: 15px 18px;
       background: #ffffff; color: #0f172a; 
@@ -294,7 +291,7 @@
     #stars-in-universe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
 
     /* ========================================================= */
-    /* --- BẢNG XẾP HẠNG THỜI GIAN THỰC (8 CỘT KHÔNG GIỚI HẠN) --- */
+    /* --- BẢNG XẾP HẠNG THỜI GIAN THỰC ĐÃ TINH GỌN --- */
     /* ========================================================= */
     #end-screen {
         display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -358,7 +355,7 @@
         border: 1px solid #e2e8f0; max-height: 55vh; overflow-y: auto;
     }
     .lb-table {
-        width: 100%; border-collapse: collapse; min-width: 720px;
+        width: 100%; border-collapse: collapse; min-width: 600px;
         text-align: center; font-size: 14.5px;
     }
     .lb-table thead tr {
@@ -382,11 +379,6 @@
         background: #fef2f2; color: #dc2626; padding: 4px 12px;
         border-radius: 20px; font-weight: 800; border: 1px solid #fecaca;
     }
-    .btn-detail {
-        background: #3b82f6; color: white; border: none;
-        padding: 5px 12px; border-radius: 6px; cursor: pointer;
-        font-weight: 700; font-size: 13px;
-    }
 
     .pagination-bar {
         display: flex; justify-content: space-between; align-items: center;
@@ -403,30 +395,6 @@
         padding: 5px 8px; border-radius: 6px; border: 1px solid #cbd5e1;
         font-weight: 700; background: white;
     }
-
-    /* Modal Xem Chi Tiết Bài Làm */
-    #detail-modal {
-        display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-        background: rgba(0,0,0,0.7); z-index: 20000; color: #1e293b;
-        justify-content: center; align-items: center; padding: 12px;
-    }
-    .detail-card {
-        background: white; width: 100%; max-width: 720px; max-height: 85vh;
-        border-radius: 16px; display: flex; flex-direction: column; overflow: hidden;
-    }
-    .detail-header {
-        background: linear-gradient(90deg, #ff6b00, #e63946); color: white;
-        padding: 14px 18px; display: flex; justify-content: space-between; align-items: center;
-        font-weight: 700; font-size: 16px;
-    }
-    .detail-body { padding: 15px; overflow-y: auto; flex: 1; font-size: 14.5px; }
-    .detail-item {
-        padding: 10px; border-radius: 8px; margin-bottom: 8px;
-        border: 1px solid #e2e8f0; background: #f8fafc;
-        white-space: pre-wrap;
-    }
-    .detail-item.correct { border-left: 4px solid #22c55e; background: #f0fdf4; }
-    .detail-item.wrong { border-left: 4px solid #ef4444; background: #fef2f2; }
 
     /* === TỐI ƯU HIỂN THỊ TRÀN KHUNG TRÊN ĐIỆN THOẠI === */
     @media (max-width: 768px) {
@@ -453,12 +421,10 @@
  </head>
  <body class="text-white">
 
-  <!-- MÀN HÌNH ĐĂNG NHẬP CÓ HỌ TÊN & LỚP -->
+  <!-- MÀN HÌNH ĐĂNG NHẬP -->
   <div id="login-screen">
-      <div class="text-yellow-400 font-extrabold text-sm tracking-widest uppercase mb-2">🚀  KHÁM PHÁ HỆ MẶT TRỜI</div>
-      <h1 class="text-3xl md:text-4xl text-white font-extrabold mb-5 text-center drop-shadow-[0_0_20px_rgba(59,130,246,0.9)]">
-         
-      </h1>
+      <div class="text-yellow-400 font-extrabold text-sm tracking-widest uppercase mb-2">🚀 KHÁM PHÁ HỆ MẶT TRỜI</div>
+      <h1 class="text-3xl md:text-4xl text-white font-extrabold mb-5 text-center drop-shadow-[0_0_20px_rgba(59,130,246,0.9)]"></h1>
       <div class="login-card">
           <div class="text-red-600 font-extrabold text-lg mb-1">BÀI 7: HTML VÀ CẤU TRÚC TRANG WEB</div>
           <p class="text-slate-500 text-xs font-semibold mb-4">Chạm vào hành tinh có mũi tên nhấp nháy để giải mã tín hiệu!</p>
@@ -512,9 +478,7 @@
                   </button>
               </div>
 
-              <!-- Thông báo hoàn thành hiện ngay trên màn hình Hệ Mặt Trời -->
-              <div id="victory-toast" class="hidden glass-panel px-3.5 py-2 rounded-xl border-2 border-yellow-400 text-xs font-bold text-yellow-300 shadow-lg">
-                           </div>
+              <div id="victory-toast" class="hidden glass-panel px-3.5 py-2 rounded-xl border-2 border-yellow-400 text-xs font-bold text-yellow-300 shadow-lg"></div>
           </div>
           
           <div id="instruction-box" class="glass-panel px-3.5 py-2 rounded-full hidden pointer-events-auto border-2 border-yellow-400 shadow-lg cursor-pointer">
@@ -553,7 +517,7 @@
       </div>
   </div>
 
-  <!-- MÀN HÌNH BẢNG XẾP HẠNG TOÀN BỘ HỌC SINH (CHỈ MỞ KHI HỌC SINH BẤM NÚT) -->
+  <!-- MÀN HÌNH BẢNG XẾP HẠNG TOÀN BỘ HỌC SINH -->
   <div id="end-screen">
       <div class="lb-container">
           <div class="lb-top-bar">
@@ -572,7 +536,7 @@
 
           <div class="my-result-banner">
               <div class="my-result-info">
-                  🎉 Phi hành gia: <span id="end-player-info">...</span> | Thời gian: <span id="end-time-spent">0s</span> | Thứ hạng: <span id="my-rank-badge" style="color:#d90429;">Đang tính...</span>
+                  🎉 Phi hành gia: <span id="end-player-info">...</span> | Thứ hạng: <span id="my-rank-badge" style="color:#d90429;">Đang tính...</span>
               </div>
               <div class="my-result-score">
                   ĐIỂM: <span id="final-score">0</span> / 100
@@ -596,14 +560,12 @@
                           <th style="text-align: left;">Họ tên</th>
                           <th>Đề thi</th>
                           <th>Điểm</th>
-                          <th>Ngày/Giờ làm bài</th>
-                          <th>Tổng TG</th>
-                          <th>Chi tiết</th>
+                          <th>Ngày tham gia</th>
                       </tr>
                   </thead>
                   <tbody id="final-leaderboard-list">
                       <tr>
-                          <td colspan="8" style="padding: 35px; color: #64748b; font-weight: bold;">
+                          <td colspan="6" style="padding: 35px; color: #64748b; font-weight: bold;">
                               Đang tải dữ liệu bảng xếp hạng thời gian thực... ⏳
                           </td>
                       </tr>
@@ -634,17 +596,6 @@
       </div>
   </div>
 
-  <!-- MODAL XEM CHI TIẾT ĐÁP ÁN ĐÃ CHỌN -->
-  <div id="detail-modal">
-      <div class="detail-card">
-          <div class="detail-header">
-              <span id="detail-modal-title">Chi tiết bài làm</span>
-              <button type="button" id="close-detail-btn" style="background:none; border:none; color:white; font-size:22px; cursor:pointer;">✖</button>
-          </div>
-          <div class="detail-body" id="detail-modal-body"></div>
-      </div>
-  </div>
-
   <!-- 3. TÍCH HỢP FIREBASE REALTIME DATABASE & LOGIC HỆ MẶT TRỜI -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
@@ -668,7 +619,7 @@
     const LEADERBOARD_PATH = 'leaderboard_bai7_html_v1';
     const QUIZ_TITLE = 'Bài 7 - HTML & Cấu trúc Web';
 
-    // BỘ 10 CÂU HỎI BÀI 7: TRÌNH BÀY CẶP THẺ RÕ RÀNG NHƯ CHƯƠNG TRÌNH MẪU
+    // BỘ 10 CÂU HỎI BÀI 7
     const questions = [
       { 
         id: 'mercury', name: 'Sao Thủy', 
@@ -832,11 +783,13 @@
     let currentPage = 1;
     let pageSize = 50;
 
-    function formatDuration(sec) {
-        if (!sec || sec < 0) return "0s";
-        const m = Math.floor(sec / 60);
-        const s = sec % 60;
-        return m > 0 ? `${m}p ${s}s` : `${s}s`;
+    function formatDateOnly(timestamp) {
+        if (!timestamp) return "--/--/----";
+        const d = new Date(timestamp);
+        const day = d.getDate().toString().padStart(2, '0');
+        const month = (d.getMonth() + 1).toString().padStart(2, '0');
+        const year = d.getFullYear();
+        return `${day}/${month}/${year}`;
     }
 
     function escapeHTML(str) {
@@ -1136,7 +1089,7 @@
 
         const durationSec = Math.max(1, Math.round((Date.now() - state.startTime) / 1000));
         const now = new Date();
-        const dateTimeStr = now.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit', second: '2-digit' }) + ' ' + now.toLocaleDateString('vi-VN');
+        const dateOnlyStr = formatDateOnly(now.getTime());
 
         const resultData = {
             id: state.sessionID,
@@ -1144,15 +1097,13 @@
             className: state.playerClass,
             quizName: QUIZ_TITLE,
             score: state.score,
-            dateTime: dateTimeStr,
+            dateTime: dateOnlyStr,
             duration: durationSec,
-            details: state.userAnswers,
             timestamp: Date.now()
         };
 
         document.getElementById('final-score').innerText = state.score;
         document.getElementById('end-player-info').innerText = `${state.playerName} (${state.playerClass})`;
-        document.getElementById('end-time-spent').innerText = formatDuration(durationSec);
 
         try {
             const playerRef = ref(db, `${LEADERBOARD_PATH}/${resultData.id}`);
@@ -1169,9 +1120,6 @@
         }
     }
 
-    // =========================================================================
-    // KHI LÀM XONG: Ở LẠI NGẮM HỆ MẶT TRỜI (KHÔNG TỰ CHUYỂN QUA BẢNG XẾP HẠNG)
-    // =========================================================================
     async function endGame() {
         document.getElementById('instruction-box').classList.add('hidden');
         document.getElementById('hud-progress').textContent = '10/10 (Hoàn thành)';
@@ -1179,19 +1127,14 @@
         document.getElementById('victory-toast').classList.remove('hidden');
         document.getElementById('replay-hud-btn').classList.remove('hidden');
 
-        // Đưa góc nhìn về ngay chính giữa Mặt Trời để học sinh chiêm ngưỡng thành quả
         centerSunView();
-
-        // Lưu điểm ngầm lên Firebase
         await submitScoreToFirebase();
     }
 
     function openLeaderboardScreen() {
         if (!state.hasSubmitted && state.currentQ > 0) {
-            const curDur = Math.max(1, Math.round((Date.now() - state.startTime) / 1000));
             document.getElementById('final-score').innerText = state.score;
             document.getElementById('end-player-info').innerText = `${state.playerName} (${state.playerClass}) - Đang làm (${state.currentQ}/10)`;
-            document.getElementById('end-time-spent').innerText = formatDuration(curDur);
         }
         document.getElementById('end-screen').style.display = 'flex';
         if (state.hasSubmitted) {
@@ -1271,7 +1214,7 @@
         if (pageItems.length === 0) {
             listDiv.innerHTML = `
                 <tr>
-                    <td colspan="8" style="padding: 35px; color: #64748b; font-weight: bold;">
+                    <td colspan="6" style="padding: 35px; color: #64748b; font-weight: bold;">
                         Chưa có dữ liệu nộp bài 📭
                     </td>
                 </tr>`;
@@ -1290,27 +1233,22 @@
             else if (p.rank === 2) rankDisplay = '🥈 2';
             else if (p.rank === 3) rankDisplay = '🥉 3';
 
+            const displayDate = p.dateTime && p.dateTime.includes('/') && !p.dateTime.includes(':') 
+                ? p.dateTime 
+                : formatDateOnly(p.timestamp);
+
             tr.innerHTML = `
                 <td style="font-weight: bold;">${rankDisplay}</td>
                 <td><span class="badge-class">${escapeHTML(p.className || '---')}</span></td>
                 <td style="text-align: left; font-weight: bold; color: #1e293b;">${escapeHTML(p.name)}</td>
                 <td>${escapeHTML(p.quizName || QUIZ_TITLE)}</td>
                 <td><span class="badge-score">${p.score}</span></td>
-                <td style="font-size: 13px; color: #64748b;">${escapeHTML(p.dateTime || '')}</td>
-                <td style="font-weight: bold; color: #0f766e;">${formatDuration(p.duration)}</td>
-                <td><button type="button" class="btn-detail" data-id="${p.id}">Xem</button></td>
+                <td style="font-size: 13.5px; color: #15803d; font-weight: 700;">${escapeHTML(displayDate)}</td>
             `;
             fragment.appendChild(tr);
         });
 
         listDiv.appendChild(fragment);
-
-        listDiv.querySelectorAll('.btn-detail').forEach(btn => {
-            btn.addEventListener('click', () => {
-                const id = btn.getAttribute('data-id');
-                showPlayerDetail(id);
-            });
-        });
     }
 
     function jumpToMyRank() {
@@ -1330,34 +1268,6 @@
                 myRow.scrollIntoView({ behavior: 'smooth', block: 'center' });
             }
         }, 100);
-    }
-
-    function showPlayerDetail(playerId) {
-        const player = allPlayersRanked.find(p => p.id === playerId);
-        if (!player) return;
-
-        document.getElementById('detail-modal-title').innerText = `Hạng #${player.rank}: ${player.name} (${player.className}) - ${player.score} điểm`;
-        const body = document.getElementById('detail-modal-body');
-        body.innerHTML = '';
-
-        const details = player.details || [];
-        if (details.length === 0) {
-            body.innerHTML = '<p style="text-align:center; color:#64748b;">Không có dữ liệu chi tiết cho lượt chơi này.</p>';
-        } else {
-            details.forEach((d) => {
-                const div = document.createElement('div');
-                div.className = `detail-item ${d.isCorrect ? 'correct' : 'wrong'}`;
-                div.innerHTML = `
-                    <div style="font-weight:bold; color:#1e293b; margin-bottom:6px;">${escapeHTML(d.q)}</div>
-                    <div style="font-family: Consolas, monospace; font-size: 13.5px;">
-                        👉 Đã chọn:\n<strong style="color:${d.isCorrect ? '#16a34a' : '#dc2626'}">${escapeHTML(d.chosen)}</strong> 
-                        ${d.isCorrect ? '✅' : `\n\n✔️ Đáp án đúng:\n<strong style="color:#16a34a">${escapeHTML(d.correctAns)}</strong>`}
-                    </div>
-                `;
-                body.appendChild(div);
-            });
-        }
-        document.getElementById('detail-modal').style.display = 'flex';
     }
 
     function restartGame() {
@@ -1410,10 +1320,6 @@
     document.getElementById('last-page-btn').addEventListener('click', () => { 
         currentPage = Math.max(1, Math.ceil(filteredPlayers.length / pageSize)); 
         renderCurrentPage(); 
-    });
-
-    document.getElementById('close-detail-btn').addEventListener('click', () => {
-        document.getElementById('detail-modal').style.display = 'none';
     });
 
     init();
