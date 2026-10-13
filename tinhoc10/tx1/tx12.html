@@ -1,0 +1,738 @@
+<!doctype html>
+<html lang="vi" class="w-full h-full m-0 p-0">
+ <head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <title>Kiểm Tra Thường Xuyên - Đề Số 2 - Tin học 10</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+<!-- MÃ GA4 -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-NSJCVSL9RM"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-NSJCVSL9RM'); 
+</script>
+
+<script>
+  setInterval(function() {
+    if (!document.hidden) { 
+      gtag('event', 'keep_alive', {
+        'event_category': 'Engagement',
+        'event_label': 'Học sinh đang làm bài',
+        'non_interaction': false
+      });
+    }
+  }, 30000); 
+</script>
+
+  <style>
+    * { -webkit-tap-highlight-color: transparent; }
+    html, body { width: 100%; min-height: 100vh; margin: 0; padding: 0; overflow-x: hidden; overflow-y: auto; }
+    
+    body { 
+      font-family: 'Be Vietnam Pro', sans-serif; 
+      background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+      background-size: 400% 400%;
+      animation: gradientBG 15s ease infinite;
+    }
+    
+    @keyframes gradientBG {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+    
+    #app { width: 100%; min-height: 100vh; display: flex; flex-direction: column; padding-bottom: 50px; }
+    
+    .glass-card {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    .option-label { transition: transform 0.15s ease, background-color 0.2s ease; cursor: pointer; border-color: #e2e8f0; }
+    .option-label:hover { background-color: #f0fdfa; border-color: #38bdf8; box-shadow: 0 4px 6px -1px rgba(56, 189, 248, 0.1); }
+    
+    input[type="radio"].single-radio:checked + .option-label {
+      background: linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%);
+      color: white; border-color: transparent;
+      box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+    }
+    input[type="radio"].single-radio:checked + .option-label span:first-child { background-color: rgba(255,255,255,0.25); border-color: transparent; color: white; }
+    input[type="radio"].single-radio:checked + .option-label span:last-child { color: white; }
+    
+    .tf-radio-T:checked + .tf-label-T, .tf-radio-S:checked + .tf-label-S {
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important; 
+        border-color: transparent !important; color: white !important;
+        box-shadow: 0 4px 10px rgba(16, 185, 129, 0.4);
+    }
+
+    .fade-in { animation: fadeIn 0.4s ease forwards; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+    
+    .my-score-row {
+      background: linear-gradient(to right, #fdf4ff, #ffffff) !important;
+      border-left: 4px solid #db2777 !important; font-weight: 700 !important;
+      color: #9d174d !important; box-shadow: 0 2px 8px rgba(0,0,0,0.05); position: relative; z-index: 10;
+    }
+    .my-score-row td { padding-top: 16px; padding-bottom: 16px; }
+    button:disabled { opacity: 0.5; cursor: not-allowed; transform: none !important; }
+  </style>
+ </head>
+ <body oncopy="return false" oncut="return false" onpaste="return false">
+  <div id="app" class="p-0 sm:p-4 md:p-8 transition-all">
+   
+   <!-- SECTION: ĐĂNG NHẬP -->
+   <div id="login-section" class="w-full max-w-md mx-auto fade-in flex flex-col justify-center flex-grow">
+    <div class="glass-card rounded-none sm:rounded-3xl p-6 sm:p-8 flex flex-col justify-start shadow-2xl border-t-8 border-indigo-600 bg-white">
+     <div class="text-center mb-6 pt-4 sm:pt-0">
+      <div class="flex items-center justify-center w-20 h-20 mx-auto mb-4 rounded-full border-4 border-yellow-400 bg-red-600 shadow-lg transform transition-transform hover:scale-105">
+          <span class="text-white font-bold text-3xl tracking-tighter">HS</span>
+      </div>
+      <h1 class="text-1xl sm:text-3xl font-bold text-red-600 mb-1 leading-tight tracking-tight">KIỂM TRA THƯỜNG XUYÊN</h1>
+      <h2 class="text-xl font-bold text-red-500 mb-2">Tin Học 10 - Đề Số 2</h2>
+     </div>
+     
+     <div id="login-form" class="space-y-4">
+      <div class="flex flex-col sm:flex-row gap-4">
+          <div class="w-full sm:flex-1">
+               <label class="block text-sm font-bold text-gray-700 mb-1">Họ và tên</label> 
+               <input type="text" id="hoTen" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-100 outline-none transition-all text-base touch-manipulation" placeholder="Nhập họ tên...">
+          </div>
+          <div class="w-full sm:w-1/3">
+               <label class="block text-sm font-bold text-gray-700 mb-1">Lớp</label> 
+               <input type="text" id="lop" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-100 outline-none transition-all text-base touch-manipulation" placeholder="Ví dụ: 10A1">
+          </div>
+      </div>
+      
+      <div id="login-error" class="hidden bg-red-100 border border-red-300 text-red-700 font-bold text-sm p-3 rounded-xl text-center shadow-sm"></div>
+
+      <button type="button" onclick="window.startQuizAction()" id="start-btn" class="w-full py-3 mt-4 bg-gradient-to-r from-blue-600 to-cyan-500 text-white font-bold rounded-xl shadow-lg hover:shadow-xl transform transition-transform active:scale-95 touch-manipulation text-lg tracking-wide"> 🚀 BẮT ĐẦU THI </button>
+     </div>
+    </div>
+   </div>
+
+   <!-- SECTION: LÀM BÀI THI -->
+   <div id="quiz-section" class="w-full max-w-4xl mx-auto hidden flex-grow flex flex-col">
+    <div class="glass-card rounded-none sm:rounded-3xl p-4 sm:p-8 flex flex-col flex-grow relative border-t-8 border-blue-500 bg-white">
+     <div class="flex items-center justify-between mb-4 sm:mb-6 pb-4 border-b-2 border-gray-100">
+      <div>
+       <h2 id="quiz-title" class="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">Đề Kiểm Tra</h2>
+       <p id="student-info" class="text-sm font-semibold text-gray-500 mt-1 uppercase tracking-wide"></p>
+      </div>
+      <div class="text-right bg-blue-50 px-4 py-2 rounded-xl border border-blue-100" id="progress-container">
+       <div class="text-xs text-blue-500 font-bold uppercase tracking-wider mb-1">Tiến độ</div>
+       <div id="progress-text" class="text-xl font-bold text-blue-700">0/0</div>
+      </div>
+     </div>
+     
+     <div id="timer-banner" class="mb-6 p-4 bg-gradient-to-r from-orange-50 to-red-50 border-2 border-red-100 rounded-2xl flex items-center justify-between shadow-sm">
+        <span class="text-red-800 font-bold flex items-center gap-2"><span class="text-2xl animate-pulse">⏰</span> THỜI GIAN CÒN LẠI:</span> 
+        <span id="timer" class="text-3xl font-bold text-red-600 font-mono tracking-wider drop-shadow-sm">45:00</span>
+     </div>
+
+     <div id="question-container" class="mb-8 flex-grow"></div>
+     
+     <div id="network-error" class="hidden bg-red-100 text-red-700 p-4 rounded-xl mt-4 text-center font-bold text-sm border-2 border-red-300 mb-4 shadow-sm"></div>
+
+    <div id="nav-buttons" class="flex gap-4 pt-4 sm:pt-6 border-t-2 border-gray-100 mt-auto pb-4 sm:pb-0">
+        <button id="next-btn" onclick="window.nextQuestion()" class="flex-1 py-4 bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-bold text-xl rounded-2xl shadow-lg hover:shadow-xl transition-transform active:scale-95 touch-manipulation">Chọn đáp án & Tiếp theo ➔</button> 
+        <button id="submit-btn" onclick="window.submitQuiz()" class="flex-1 py-4 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-bold text-xl rounded-2xl shadow-lg hover:shadow-xl hidden transition-transform active:scale-95 touch-manipulation">✅ NỘP BÀI NGAY</button>
+     </div>
+    </div>
+   </div>
+
+   <!-- SECTION: KẾT QUẢ CÁ NHÂN -->
+   <div id="result-section" class="w-full max-w-md mx-auto hidden fade-in flex flex-col justify-center my-auto pb-8">
+    <div class="glass-card rounded-none sm:rounded-3xl p-6 sm:p-8 flex flex-col justify-start border-t-8 border-green-500 bg-white shadow-2xl" id="result-content"></div>
+   </div>
+
+   <!-- SECTION: BẢNG XẾP HẠNG -->
+   <div id="scores-section" class="w-full max-w-6xl mx-auto hidden flex-grow flex flex-col">
+    <div class="glass-card rounded-none sm:rounded-3xl p-4 sm:p-8 flex flex-col flex-grow border-t-8 border-orange-500 bg-white">
+     <div class="mb-6 flex items-center justify-between">
+      <h2 class="text-2xl sm:text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-red-600">🏆 BẢNG XẾP HẠNG</h2>
+      <button onclick="window.goHome()" class="px-5 py-2.5 bg-gray-100 text-gray-700 rounded-xl font-bold hover:bg-gray-200 transition-transform active:scale-95 shadow-sm border border-gray-200 touch-manipulation">🏠 Về trang chủ</button>
+     </div>
+     
+     <div id="my-score-summary" class="hidden bg-gradient-to-r from-blue-50 to-indigo-50 border-2 border-blue-200 rounded-2xl p-4 sm:p-6 mb-6 flex items-center justify-between shadow-md">
+         <div>
+             <div class="text-sm text-blue-500 font-extrabold uppercase tracking-wider mb-1">Thành tích của bạn</div>
+             <div class="font-black text-gray-800 text-xl sm:text-1xl" id="my-summary-name"></div>
+             <div class="text-base font-bold text-indigo-600 mt-1" id="my-summary-rank">Hạng: --</div>
+         </div>
+         <div class="text-right">
+             <div class="text-xs text-gray-500 font-bold uppercase mb-1">Điểm số</div>
+             <div class="text-4xl sm:text-3xl font-black text-blue-600 drop-shadow-sm" id="my-summary-score">0</div>
+         </div>
+     </div>
+
+     <div class="overflow-x-auto rounded-2xl border-2 border-gray-100 flex-grow shadow-lg bg-white/50 mb-4 min-h-[300px]">
+      <table class="w-full text-xs sm:text-sm whitespace-nowrap">
+       <thead class="bg-gradient-to-r from-orange-500 to-red-500 text-white">
+        <tr>
+         <th class="px-3 sm:px-4 py-4 text-center font-bold">#</th>
+         <th class="px-3 sm:px-4 py-4 text-center font-bold">Lớp</th>
+         <th class="px-3 sm:px-4 py-4 text-left font-bold w-full">Họ tên</th>
+         <th class="px-3 sm:px-4 py-4 text-center font-bold">Điểm</th>
+         <th class="px-3 sm:px-4 py-4 text-center font-bold">Thời gian</th>
+     
+        </tr>
+       </thead>
+       <tbody id="scores-tbody" class="bg-white/80 divide-y divide-gray-100"></tbody>
+      </table>
+      <div id="no-scores" class="text-center py-12 hidden text-gray-500 font-bold text-lg">Chưa có dữ liệu nộp bài 🥲</div>
+     </div>
+
+     <!-- Phân trang -->
+     <div id="pagination-controls" class="flex justify-between items-center mb-6 hidden">
+        <button id="prev-page-btn" onclick="window.prevPage()" class="px-4 py-3 bg-gray-100 text-gray-700 rounded-xl font-bold hover:bg-gray-200 transition-transform active:scale-95 shadow-sm border border-gray-200 touch-manipulation">⬅️ Trang trước</button>
+        <span id="page-info" class="font-bold text-gray-500 text-sm">Trang 1 / 1</span>
+        <button id="next-page-btn" onclick="window.nextPage()" class="px-4 py-3 bg-gray-100 text-gray-700 rounded-xl font-bold hover:bg-gray-200 transition-transform active:scale-95 shadow-sm border border-gray-200 touch-manipulation">Trang sau ➡️</button>
+     </div>
+    </div>
+   </div>
+
+   <!-- MODAL CẢNH BÁO GIAN LẬN -->
+   <div id="cheat-modal" data-nosnippet class="fixed inset-0 bg-red-900/95 backdrop-blur-sm flex items-center justify-center p-4 hidden z-[9999]">
+      <div class="bg-white rounded-[2rem] shadow-2xl p-6 max-w-sm w-full text-center flex flex-col border-t-8 border-red-600 transform transition-all scale-100 max-h-[90vh] overflow-y-auto">
+        <div class="text-5xl mb-3 animate-bounce">🚨</div>
+        <h3 class="text-2xl sm:text-3xl font-black text-red-600 mb-2 uppercase tracking-wide">THÔNG BÁO!</h3>
+        <p class="text-gray-700 font-bold mb-4 text-sm sm:text-base leading-relaxed" id="cheat-message"></p>
+        <div class="bg-red-50 text-red-700 font-extrabold p-3 rounded-2xl border-2 border-red-100 mb-5">
+            Vi phạm làm bài lần thứ <span id="cheat-count-display" class="text-4xl font-black mx-1">1</span>
+        </div>
+        <button id="cheat-continue-btn" class="w-full py-4 bg-gradient-to-r from-red-600 to-red-800 text-white font-extrabold rounded-xl shadow-lg hover:shadow-xl transition-transform active:scale-95 touch-manipulation text-base tracking-wide uppercase shrink-0">TÔI ĐÃ HIỂU & TIẾP TỤC</button>
+      </div>
+   </div>
+
+  </div>
+
+  <script>
+    let database = null;
+    let scoresRef = null;
+    let currentIdx = 0;
+
+    try {
+        const firebaseConfig = {
+            apiKey: "AIzaSyBQ9Pos8awlh9j041qDWTPFRsVIjF-kPnk",
+            authDomain: "hoctap-91691.firebaseapp.com",
+            databaseURL: "https://hoctap-91691-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "hoctap-91691",
+            storageBucket: "hoctap-91691.firebasestorage.app",
+            messagingSenderId: "1004553425319",
+            appId: "1:1004553425319:web:45d15cbae393f614c56682",
+            measurementId: "G-Q6X1TL9PRV"
+        };
+        if (typeof firebase !== 'undefined') {
+            if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+            database = firebase.database();
+            // Đã đổi đường dẫn lưu trữ sang Đề 2 Tin 10
+            scoresRef = database.ref('TinHoc10/KiemTraThuongXuyen_De2');
+        }
+    } catch(err) { console.error("Lỗi Firebase:", err); }
+
+    let cheatCount = 0;
+    let isQuizStarted = false; 
+    let isPenalizing = false; 
+    let isSubmitting = false;
+
+    window.handleCheatAction = function(reason) {
+        if (!isQuizStarted || isPenalizing || isSubmitting) return; 
+        const isQuizActive = !document.getElementById('quiz-section').classList.contains('hidden');
+        
+        if (isQuizActive) {
+            isPenalizing = true;
+            cheatCount++;
+            document.getElementById('cheat-count-display').innerText = cheatCount;
+            const modal = document.getElementById('cheat-modal');
+            const msg = document.getElementById('cheat-message');
+            const btn = document.getElementById('cheat-continue-btn');
+            modal.classList.remove('hidden');
+            
+            const currentQ = currentQuestions[currentIdx];
+            if (currentQ) {
+                if (currentQ.type === 'tf_cluster') {
+                    currentQ.subQuestions.forEach(sub => {
+                        if (!userAnswers[sub.id]) userAnswers[sub.id] = "Gian lận"; 
+                    });
+                } else {
+                    if (userAnswers[currentQ.id] === undefined) userAnswers[currentQ.id] = -1; 
+                }
+                updateProgress();
+            }
+
+            if (cheatCount >= 2) {
+                msg.innerHTML = "Bạn đã vi phạm quy chế (Rời khỏi màn hình/Dùng phím cấm/Copy) quá 2 lần.<br>Hệ thống bắt buộc <b>TỰ ĐỘNG THU BÀI</b>!";
+                btn.innerText = "NỘP BÀI NGAY";
+                btn.onclick = () => {
+                    modal.classList.add('hidden');
+                    isPenalizing = false;
+                    window.submitQuiz();
+                };
+            } else {
+                msg.innerHTML = `Hệ thống phát hiện bạn vừa sử dụng thao tác : <b>${reason}</b>.<br><br><span class='text-red-600 font-black bg-red-50 px-3 py-1 rounded-lg border border-red-200 inline-block mt-2 mb-2'>Câu hỏi này bị bỏ qua (0 điểm).</span><br><br><i class='text-sm text-gray-500'>Vui lòng bấm nút bên dưới để tiếp tục.</i>`;
+                btn.innerText = "TÔI ĐÃ HIỂU & TIẾP TỤC";
+                btn.onclick = () => {
+                    modal.classList.add('hidden');
+                    if (currentIdx < currentQuestions.length - 1) {
+                        currentIdx++;
+                        window.renderQuestion();
+                    } else { window.submitQuiz(); }
+                    isPenalizing = false;
+                };
+            }
+        }
+    };
+
+    document.addEventListener("visibilitychange", () => {
+        if (document.visibilityState === 'hidden') {
+            window.handleCheatAction('Chuyển tab hoặc thu nhỏ trình duyệt');
+        }
+    });
+
+    window.addEventListener('keydown', (e) => {
+        const forbiddenKeys = ['PrintScreen', 'F12'];
+        if (forbiddenKeys.includes(e.key)) {
+            e.preventDefault();
+            window.handleCheatAction('Nhấn phím ' + e.key);
+        }
+        if (e.ctrlKey && (e.key === 'c' || e.key === 'v' || e.key === 'p' || e.key === 's')) {
+            e.preventDefault();
+            window.handleCheatAction('Dùng tổ hợp phím Ctrl + ' + e.key.toUpperCase());
+        }
+    });
+    window.addEventListener('keyup', (e) => {
+        if (e.key === 'PrintScreen') window.handleCheatAction('Chụp màn hình');
+    });
+
+    document.addEventListener('contextmenu', event => event.preventDefault()); 
+    document.addEventListener('selectstart', event => {
+        if (event.target.tagName !== 'INPUT' && event.target.tagName !== 'SELECT') { event.preventDefault(); }
+    });
+    document.addEventListener('dragstart', event => event.preventDefault()); 
+    document.addEventListener('copy', event => {
+        event.clipboardData.setData('text/plain', 'Tài liệu đã được bảo vệ!');
+        event.preventDefault();
+        window.handleCheatAction('Sao chép (Copy) văn bản');
+    });
+
+    // NGÂN HÀNG CÂU HỎI MỚI (TIN HỌC 10 - ĐỀ SỐ 2)
+    const de_data = [
+        { id: "1_1", type: "single", question: "Máy tính điện tử thường thực hiện bước \"tiếp nhận dữ liệu\" đầu vào thông qua các phương thức kĩ thuật nào?", options: ["Từ hệ thống bàn phím do người dùng gõ vào hoặc thông qua các thiết bị thu nhận (máy quét, camera).", "Từ bộ vi xử lí trung tâm tự động sinh ra các chuỗi mã nhị phân trong quá trình hệ thống đang chạy.", "Từ màn hình hiển thị kết quả sau khi bộ nhớ thiết bị hoàn tất quy trình xử lí dữ liệu đồ họa đầu ra.", "Từ các bộ loa âm thanh đa chiều tự động phát ra tín hiệu cảnh báo người dùng khi gặp sự cố phần mềm."], correct: 0 },
+        { id: "1_2", type: "single", question: "Theo bảng chuẩn đo lường dữ liệu quốc tế, một Terabyte (TB) có mức dung lượng tương đương với bao nhiêu?", options: ["Mức dung lượng này tương đương với chính xác 1024 đơn vị Gigabyte (GB).", "Mức dung lượng này tương đương với chính xác 1000 đơn vị Gigabyte (GB).", "Mức dung lượng này tương đương với chính xác 1024 đơn vị Megabyte (MB).", "Mức dung lượng này tương đương với chính xác 1000 đơn vị Megabyte (MB)."], correct: 0 },
+        { id: "1_3", type: "single", question: "Tại sao các máy tính điện tử hiện nay đều tổ chức bộ nhớ thành những đơn vị lưu trữ là bội số của Byte?", options: ["Vì cách thức tổ chức cấu trúc như vậy rất thuận tiện cho việc lưu trữ và truy cập dữ liệu của hệ thống.", "Vì một Byte là dung lượng lưu trữ tối đa mà một ổ đĩa cứng máy tính cá nhân truyền thống có thể chứa.", "Vì các kĩ sư thiết kế máy tính chưa phát minh ra bất kì đơn vị đo lường kĩ thuật nào nhỏ hơn một Byte.", "Vì việc tổ chức bộ nhớ theo Byte sẽ giúp thiết bị máy tính không bao giờ bị nhiễm các loại vi-rút độc hại."], correct: 0 },
+        { id: "1_4", type: "single", question: "Điểm khác biệt bản chất giữa khái niệm \"Thông tin\" và \"Dữ liệu\" trong ngữ cảnh Tin học là gì?", options: ["Thông tin là ý nghĩa của dữ liệu, còn dữ liệu là các yếu tố kí hiệu dùng để thể hiện nên thông tin.", "Thông tin là các dải âm thanh truyền đi, còn dữ liệu chỉ là những bức ảnh chụp bằng máy kĩ thuật số.", "Dữ liệu là ý nghĩa của thông tin, còn thông tin là những đoạn mã nhị phân được lưu ở trên đĩa cứng.", "Hai khái niệm kĩ thuật này hoàn toàn giống hệt nhau về bản chất và có thể dùng thay thế cho nhau."], correct: 0 },
+        { id: "1_5", type: "single", question: "Thiết bị điện tử nào dưới đây được các chuyên gia công nghệ xếp vào nhóm các \"Thiết bị số\"?", options: ["Một chiếc máy tính xách tay với cấu hình cao chuyên dùng cho việc xử lí và thiết kế đồ họa hình ảnh.", "Một chiếc đồng hồ cơ học truyền thống dùng hệ thống bánh răng phức tạp để lên dây cót bằng tay.", "Một chiếc đĩa hát ghi âm bằng các rãnh vật lí cơ học do các nhà khoa học chế tạo từ hàng chục năm trước.", "Một tấm bản đồ giấy được in màu sắc nét bằng kĩ thuật tiên tiến dùng để hướng dẫn cho khách du lịch."], correct: 0 },
+        { id: "1_6", type: "single", question: "Để giải quyết các bài toán khoa học có khối lượng tính toán khổng lồ như dự báo thời tiết, người ta sử dụng thiết bị nào?", options: ["Sử dụng hệ thống các siêu máy tính có tốc độ tính toán đạt đến hàng trăm triệu tỉ phép tính mỗi giây.", "Sử dụng một chiếc điện thoại di động thông minh đời mới nhất có kết nối với mạng viễn thông tốc độ 5G.", "Sử dụng một chiếc máy tính xách tay mỏng nhẹ phổ thông chuyên dành cho nhân viên làm việc văn phòng.", "Sử dụng thiết bị máy tính bảng có màn hình cảm ứng độ phân giải siêu nét để tự tay vẽ các bản biểu đồ."], correct: 0 },
+        { id: "1_7", type: "single", question: "Việc trang bị \"Trí tuệ nhân tạo\" (AI) trên các thiết bị thông minh hiện nay mang lại năng lực kĩ thuật cốt lõi gì?", options: ["Giúp các máy móc có thể \"bắt chước\" một vài hành vi giao tiếp hay cách tư duy của con người ở nhiều mức độ.", "Giúp thiết bị tự động dịch toàn bộ các loại mã nguồn phần mềm phức tạp sang ngôn ngữ giao tiếp tiếng Việt.", "Giúp máy tính có khả năng tự sản xuất ra nguồn điện năng vật lí vô tận để duy trì quá trình hoạt động liên tục.", "Giúp toàn bộ mạng kết nối Internet miễn nhiễm hoàn toàn với mọi cuộc tấn công có chủ đích của tin tặc mạng."], correct: 0 },
+        { id: "1_8", type: "single", question: "Trong số các công cụ công nghệ dưới đây, thiết bị nào là ví dụ điển hình và phổ biến nhất của thiết bị thông minh?", options: ["Chiếc điện thoại di động thông minh (Smartphone) có thể hoạt động hoàn toàn tự chủ và cài sẵn đa ứng dụng.", "Một chiếc máy tính cầm tay điện tử (casio) chuyên dùng để thực hiện các phép toán cộng trừ nhân chia số học.", "Một cái nhiệt kế thủy ngân vật lí chuyên dùng để đo lường mức độ thân nhiệt của người bệnh trong phòng khám.", "Một chiếc máy ảnh quang học dùng cuộn phim nhựa để lưu trữ hình ảnh thông qua kĩ thuật phòng tối rửa ảnh."], correct: 0 },
+        { id: "1_9", type: "single", question: "Cuộc Cách mạng công nghiệp lần thứ tư (4.0) tạo ra quy trình nền sản xuất thông minh bằng phương thức nào?", options: ["Bằng việc làm mờ ranh giới kĩ thuật giữa các hệ thống thực (thế giới vật lí) và các hệ thống ảo (không gian số).", "Bằng việc loại bỏ hoàn toàn mọi sự tham gia của các thiết bị máy tính điện tử ra khỏi dây chuyền trong nhà máy.", "Bằng việc thay thế toàn bộ nguồn năng lượng điện bằng các động cơ đốt trong khổng lồ sử dụng nhiên liệu than.", "Bằng việc tập trung mọi nguồn lực xã hội vào sản xuất thủ công nghiệp để cố gắng duy trì nét đẹp văn hóa truyền thống."], correct: 0 },
+        { id: "1_10", type: "single", question: "Ứng dụng \"Thu phí không dừng\" trên các trạm đường bộ cao tốc là minh chứng ứng dụng rõ nhất cho nền tảng công nghệ nào?", options: ["Công nghệ mạng lưới Internet vạn vật (IoT) giúp máy quét thu thập dữ liệu tự động, tức thời trên diện rộng.", "Công nghệ hệ thống Điện toán đám mây trung tâm chuyên phục vụ việc lưu trữ các tệp văn bản giấy tờ cá nhân.", "Công nghệ phần mềm Chế bản điện tử đồ họa giúp in ấn hàng vạn tờ rơi quảng cáo cho nhân viên trạm thu phí.", "Công nghệ mô phỏng Thực tế ảo ba chiều giúp các tài xế lái xe quan sát đường đi qua kính viễn vọng không gian."], correct: 0 },
+        { id: "1_11", type: "single", question: "Theo lịch sử khoa học máy tính, ngôn ngữ lập trình bậc cao đầu tiên được công bố chính thức vào năm 1957 có tên là gì?", options: ["Là ngôn ngữ lập trình FORTRAN, được các chuyên gia thiết kế chuyên biệt cho việc tính toán khoa học kĩ thuật.", "Là ngôn ngữ lập trình Python, được các chuyên gia thiết kế với cú pháp vô cùng đơn giản dễ học cho học sinh.", "Là ngôn ngữ lập trình Pascal, được các chuyên gia sử dụng rộng rãi trong các hệ thống giáo dục đại học quốc tế.", "Là ngôn ngữ lập trình C++, được các chuyên gia dùng để thiết kế và biên dịch toàn bộ hệ điều hành Windows ngày nay."], correct: 0 },
+        { id: "1_12", type: "single", question: "Các hệ quản trị cơ sở dữ liệu hiện đại đóng vai trò kĩ thuật quan trọng như thế nào đối với ngành Tin học quản lí?", options: ["Cung cấp sẵn các công cụ tổ chức dữ liệu độc lập, giúp nhà phát triển phần mềm chỉ cần tập trung viết mã nghiệp vụ.", "Tự động mã hóa tất cả các đoạn video dung lượng lớn trên đĩa cứng máy tính thành một định dạng nén siêu nhỏ gọn.", "Xóa bỏ hoàn toàn mọi loại vi-rút độc hại có khả năng xâm nhập lây nhiễm vào hệ thống thư mục của máy tính chủ.", "Giúp thiết lập nên các giao diện đồ họa 3D vô cùng sinh động cho mọi trang web đang hoạt động trên mạng lưới."], correct: 0 },
+        { id: "1_13", type: "single", question: "Sự xuất hiện của mạng Internet toàn cầu đã làm thay đổi sâu sắc lĩnh vực giao tiếp cộng đồng theo hướng nào?", options: ["Cho phép mọi người liên lạc với nhau, kết nối chia sẻ kiến thức, nhận phản hồi ngay lập tức ở bất cứ nơi đâu.", "Bắt buộc tất cả mọi người phải di chuyển hàng ngàn dặm đến gặp mặt trực tiếp mới có thể kí kết được các hợp đồng.", "Xóa bỏ hoàn toàn chức năng tồn tại của các hãng dịch vụ chuyển phát nhanh bưu kiện và phân phối hàng hóa quốc tế.", "Ngăn chặn triệt để mọi hình thức đăng tải các quảng cáo thương mại điện tử trên không gian mạng truyền thông."], correct: 0 },
+        { id: "1_14", type: "single", question: "Khi mới ra đời, thiết bị Trợ thủ số cá nhân (PDA) được các kĩ sư thiết kế chủ yếu để thực hiện những công việc cơ bản gì?", options: ["Dùng làm các sổ lịch ghi công tác, đồng hồ báo thức thời gian, sổ danh bạ liên lạc và lưu trữ danh sách việc cần làm.", "Dùng làm các cỗ siêu máy tính chuyên dụng để giải quyết các bài toán vật lí lượng tử vô cùng phức tạp trong quân sự.", "Dùng phục vụ chuyên biệt cho việc thiết kế các bản vẽ đồ họa kiến trúc nhà ở ba chiều với độ phân giải siêu sắc nét.", "Dùng để thay thế hoàn toàn hệ thống thu phát sóng vô tuyến truyền hình cáp tại các đài phát thanh truyền hình quốc gia."], correct: 0 },
+        { id: "1_15", type: "single", question: "Các dịch vụ trực tuyến như Google Drive, OneDrive được tích hợp phổ biến trên điện thoại thông minh dùng để làm gì?", options: ["Dùng cung cấp dịch vụ lưu trữ dữ liệu cá nhân trên nền tảng điện toán đám mây cho người sử dụng thiết bị mạng.", "Dùng làm phần mềm chuyên biệt chống mã độc và tự động tiêu diệt mọi loại vi-rút xâm nhập vào trong bộ nhớ đệm.", "Dùng làm công cụ xử lí và chỉnh sửa hình ảnh kĩ thuật số chuyên nghiệp tương tự như ứng dụng Adobe Photoshop.", "Dùng thiết lập môi trường ảo hóa phần cứng để cài đặt thêm hệ điều hành Windows độc lập vào bên trong máy tính."], correct: 0 },
+        { id: "1_16", type: "single", question: "Thao tác vật lí \"Vuốt màn hình cảm ứng theo các chiều trái, phải, lên\" trên giao diện điện thoại giúp người dùng thực hiện việc gì?", options: ["Giúp người sử dụng chuyển qua lại giữa các trang màn hình chính hoặc tiến hành xem xét danh sách thông báo tin nhắn.", "Giúp thiết bị tự động nâng cấp cấu hình linh kiện phần cứng bên trong để chạy các phần mềm ứng dụng mượt mà hơn.", "Sẽ lập tức tiến hành định dạng lại toàn bộ bộ nhớ gốc của hệ thống và khôi phục chiếc máy về trạng thái xuất xưởng.", "Sẽ tự động khóa vĩnh viễn thẻ SIM của nhà cung cấp mạng để ngăn chặn triệt để các cuộc gọi điện thoại quảng cáo làm phiền."], correct: 0 },
+        { id: "1_17", type: "single", question: "Trong môi trường máy tính, mọi loại thông tin (như hình ảnh, âm thanh, văn bản) đều được hệ thống mã hóa dưới định dạng cơ sở nào?", options: ["Đều được mã hóa thành các dãy bit (chỉ bao gồm hai loại kí hiệu là 0 và 1) để bộ nhớ máy tính có thể ghi nhận và xử lí được.", "Đều được mã hóa thành các văn bản ngôn ngữ tiếng Anh chuẩn mực để bộ vi xử lí máy tính có thể phân tích đọc hiểu được.", "Đều được mã hóa thành các loại sóng siêu âm có tần số cao để có thể dễ dàng truyền dẫn qua các lớp bo mạch chủ điện tử.", "Đều được mã hóa thành các đoạn video clip ngắn có độ phân giải siêu nét để lưu trữ nén vĩnh viễn vào trong ổ cứng vật lí."], correct: 0 },
+        { id: "1_18", type: "single", question: "Ứng dụng thực tế \"dự báo thời tiết cho ngày mai dựa trên các dữ liệu đo đạc khí hậu của hôm nay\" phản ánh nguyên lí cốt lõi nào của Tin học?", options: ["Nguyên lí quá trình xử lí dữ liệu sẽ tiến hành biến đổi các dữ liệu hiện có trong bộ nhớ máy tính để tạo ra những thông tin mới.", "Nguyên lí máy tính điện tử có khả năng tự động điều khiển sự biến đổi khí hậu và ngăn chặn triệt để các cơn bão nhiệt đới.", "Nguyên lí việc nhập các dữ liệu thô vào máy tính luôn luôn mất rất nhiều khoảng thời gian và tự động làm sai lệch thông tin gốc.", "Nguyên lí hệ thống phần mềm sẽ tự động vẽ ra các bản đồ kĩ thuật số chuẩn xác mà hoàn toàn không cần bất kì dữ liệu đầu vào nào."], correct: 0 },
+        { id: "1_19", type: "single", question: "Thực tế việc công nghệ in sắp chữ bằng chì thủ công bị thay thế hoàn toàn bằng công nghệ chế bản trên máy tính cho thấy sức ảnh hưởng gì của Tin học?", options: ["Cho thấy Tin học và thiết bị số hiện đại đã làm thay đổi hoàn toàn phương thức, cách thức làm việc của rất nhiều ngành nghề truyền thống.", "Cho thấy con người đang dần dần bị suy thoái và đánh mất đi khả năng sáng tạo nghệ thuật văn học tinh tế của chính bản thân mình.", "Cho thấy máy tính điện tử chỉ được ứng dụng duy nhất vào mục đích thiết kế mĩ thuật và in ấn các loại tờ rơi quảng cáo thương mại.", "Cho thấy mọi nhà xuất bản in ấn sách giấy truyền thống trên toàn thế giới đều đã bị phá sản do không thể cạnh tranh được chi phí."], correct: 0 },
+        { id: "1_20", type: "single", question: "Nhờ có hệ thống máy tính, bộ phận quản lí học vụ của một trường học sẽ nhận được lợi ích cốt lõi nào trong quy trình làm việc?", options: ["Giúp nhà trường xử lí khối lượng lớn công việc quản lí hồ sơ dữ liệu học sinh một cách vô cùng nhanh chóng, chính xác và hiệu quả.", "Hệ thống siêu máy tính sẽ tự động chấm điểm cực chuẩn tất cả các bài thi tự luận văn học mà hoàn toàn không cần giáo viên đọc lại.", "Xóa bỏ hoàn toàn mọi nhu cầu cần thiết phải giao tiếp trực tiếp giữa giáo viên bộ môn giảng dạy và tập thể phụ huynh học sinh của lớp.", "Ngăn chặn triệt để 100% mọi hành vi gian lận và quay cóp của học sinh trong các kì kiểm tra học kì tập trung diễn ra tại hội trường lớn."], correct: 0 },
+        { id: "1_21", type: "single", question: "Cùng với chiếc điện thoại thông minh, loại thiết bị nào dưới đây cũng được giới kĩ thuật xếp vào nhóm thiết bị số cá nhân (PDA) phổ biến nhất hiện nay?", options: ["Các loại máy tính bảng (Tablet) có màn hình cảm ứng rộng và được cài đặt hệ điều hành di động nền tảng iOS hoặc Android.", "Các hệ thống máy tính để bàn cá nhân (Desktop) với thùng máy tính khổng lồ thường được đặt cố định tại góc học tập ở nhà.", "Các loại máy in laser mực đen trắng chuyên dụng dùng để xuất các bản thảo tài liệu chữ kĩ thuật số ra mặt giấy A4 vật lí.", "Cụm các bộ định tuyến mạng viễn thông (Router) chuyên dùng để chia sẻ kết nối phát sóng wifi nội bộ cho cả một công ty."], correct: 0 },
+        { id: "1_22", type: "single", question: "Trên màn hình chính của giao diện điện thoại thông minh, \"thanh truy cập nhanh\" (dock) có đặc điểm nhận dạng vị trí nào?", options: ["Là thanh chứa các biểu tượng ứng dụng thường dùng nhất và luôn luôn xuất hiện nằm cố định lặp lại ở cuối của mọi trang màn hình.", "Là một dải cụm đèn LED vật lí nằm ở dọc theo cạnh viền của thiết bị máy sẽ chớp nháy ánh sáng liên tục khi có thông báo tin nhắn mới.", "Là nơi duy nhất trên thiết bị hiển thị bằng số liệu phần trăm dung lượng pin còn lại và số vạch cột sóng của nhà mạng viễn thông.", "Là thanh công cụ chứa toàn bộ kho tài liệu định dạng văn bản PDF mà người dùng đã tải về từ các tệp đính kèm trong hộp thư điện tử."], correct: 0 },
+        { id: "1_23", type: "single", question: "Các phím bấm vật lí Tăng/Giảm âm lượng nằm ở hai bên thân của những chiếc điện thoại thông minh được phân loại là bộ phận gì?", options: ["Chúng là các phím bấm vật lí cơ học được nhà sản xuất điện tử trang bị sẵn ở ngay mép viền phần thân kim loại của thiết bị.", "Chúng là các ứng dụng phần mềm độc lập được lập trình sẵn chỉ xuất hiện khi người dùng tiến hành mở các trình phát nghe nhạc.", "Chúng là các biểu tượng đồ họa kĩ thuật số nằm ẩn giấu sâu bên trong mục cài đặt quyền bảo mật dữ liệu riêng tư của thiết bị.", "Chúng là một phần của hệ thống màn hình cảm ứng phụ được các kĩ sư thiết kế uốn làm cong tràn xuống cạnh bên của thiết bị."], correct: 0 },
+        { id: "1_24", type: "single", question: "Các mẫu điện thoại thông minh hiện đại thường được trang bị chuẩn kết nối không dây nào để truyền tệp tin tầm gần thay thế cho việc cắm cáp USB phức tạp?", options: ["Trang bị kết nối sóng vô tuyến tầm gần Bluetooth để ghép đôi dễ dàng và trao đổi tệp tin trực tiếp với các thiết bị thông minh khác.", "Trang bị kết nối dải cáp quang biển xuyên lục địa để thiết bị có thể đạt được tốc độ truyền dữ liệu nhanh nhất có thể theo chuẩn mạng.", "Trang bị kết nối dải sóng hồng ngoại cổ điển đòi hỏi hai thiết bị phải được đặt thẳng hàng và dí sát cạnh vật lí vào nhau mới chạy.", "Trang bị kết nối mạng diện rộng WAN băng tần cao chuyên biệt vốn chỉ dành riêng cho các cơ quan tình báo của chính phủ quốc gia."], correct: 0 },
+        { id: '1_c1', type: 'tf_cluster', question: "Một nhóm học sinh đang thực hành quay video kỉ yếu cho lớp học với dung lượng tệp lưu trữ khoảng 4 Gigabyte (GB). Các em đang tranh luận về dung lượng lưu trữ của máy tính. Hãy phân tích tính Đúng/Sai của các lập luận dưới đây:", subQuestions: [
+            { id: '1_d25a', text: " Nếu một em sử dụng chiếc USB cũ có mức dung lượng trống chính xác là 4000 Megabyte (MB), chiếc USB đó hoàn toàn dư sức chứa được trọn vẹn tệp video kỉ yếu này.", correct: "Sai" },
+            { id: '1_d25b', text: " Theo chuẩn đo lường dữ liệu hệ nhị phân, các đơn vị lưu trữ tiêu chuẩn liền kề nhau như Gigabyte (GB), Megabyte (MB), Kilobyte (KB) luôn luôn hơn kém nhau chính xác 1024 lần.", correct: "Đúng" },
+            { id: '1_d25c', text: " Công nghệ thiết bị nhớ số hiện đại mang lại ưu điểm tuyệt đối là giúp người dùng lưu trữ lượng thông tin vô cùng khổng lồ trong một thiết kế rất gọn nhẹ với chi phí cực kì thấp.", correct: "Đúng" },
+            { id: '1_d25d', text: " Tệp video gốc 4GB của nhóm học sinh khi được tải lên chia sẻ trên mạng Internet sẽ bị hệ thống máy chủ tự động chuyển đổi định dạng và ép thành một tệp âm thanh siêu nhỏ bé.", correct: "Sai" }
+        ]},
+        { id: '1_c2', type: 'tf_cluster', question: "Trong buổi sinh hoạt câu lạc bộ Tin học chuyên đề tìm hiểu về tác động của cuộc cách mạng Công nghệ Thông tin, một bạn học sinh đã đứng lên thuyết trình và đưa ra các kết luận sau:", subQuestions: [
+            { id: '1_d26a', text: " Trong bối cảnh thời kì cách mạng công nghiệp 4.0, sự phát triển mang tính bùng nổ của trí tuệ nhân tạo (AI) và điện toán đám mây (Cloud Computing) được coi là những yếu tố nền tảng công nghệ cốt lõi.", correct: "Đúng" },
+            { id: '1_d26b', text: " Dưới tác động của nền sản xuất thông minh hiện đại, các quy trình thiết kế kĩ thuật, tính toán mô phỏng và tạo khuôn mẫu cho sản phẩm thường được thực hiện hoàn toàn ngay trên không gian số thế giới ảo.", correct: "Đúng" },
+            { id: '1_d26c', text: " Khi phân tích giá thành sản xuất thực tế của một chiếc điện thoại thông minh cao cấp, phần lớn giá trị kinh tế nằm ở khối lượng nguyên vật liệu linh kiện vật lí chứ hoàn toàn không nằm ở hàm lượng chất xám thiết kế.", correct: "Sai" },
+            { id: '1_d26d', text: " Mô hình nền kinh tế tri thức trên thế giới hiện nay coi việc tiếp tục khai thác và sử dụng triệt để lực lượng lao động tay chân giá cực rẻ làm động lực then chốt để duy trì sự tăng trưởng mạnh mẽ của quốc gia.", correct: "Sai" }
+        ]},
+        { id: '1_c3', type: 'tf_cluster', question: "Cô giáo dạy môn Tin học yêu cầu cả lớp tự chia thành các nhóm nhỏ để cùng nhau thảo luận về vai trò vĩ đại của mạng Internet và các hệ điều hành đối với lịch sử đời sống xã hội. Những lập luận của các nhóm là Đúng hay Sai:", subQuestions: [
+            { id: '1_d27a', text: " Hệ thống giao thức truyền thông mạng TCP/IP được các chuyên gia thiết lập vào năm 1983 chính là bộ quy tắc chuẩn mực cho phép kết nối dữ liệu thiết bị toàn cầu để tạo thành mạng lưới Internet.", correct: "Đúng" },
+            { id: '1_d27b', text: " Hệ điều hành máy tính OS/360 ra đời vào năm 1964 là một sự thất bại thảm hại của công nghệ và hoàn toàn không để lại bất kì nguyên lí nền tảng kế thừa nào cho các hệ điều hành máy tính cá nhân sau này.", correct: "Sai" },
+            { id: '1_d27c', text: " Phát minh ra dịch vụ mạng toàn cầu World Wide Web (WWW) vào khoảng năm 1992 đã giúp tạo ra một loại phương tiện truy cập dữ liệu Internet vô cùng nhất quán, qua đó giúp phổ cập nhanh chóng mạng lưới này đến công chúng.", correct: "Đúng" },
+            { id: '1_d27d', text: " Để đảm bảo tính năng bảo mật tuyệt đối trước tin tặc, mọi hệ thống siêu máy tính dự báo thời tiết trên thế giới hiện nay đều bắt buộc phải được các kĩ sư lập trình bằng ngôn ngữ máy mã nhị phân vô cùng thủ công.", correct: "Sai" }
+        ]},
+        { id: '1_c4', type: 'tf_cluster', question: "Một học sinh đang tận tình hướng dẫn người thân lớn tuổi trong gia đình cách thức sử dụng các chức năng cơ bản trên chiếc điện thoại di động thông minh (smartphone) sử dụng hệ điều hành Android mới mua:", subQuestions: [
+            { id: '1_d28a', text: " Người sử dụng hoàn toàn có thể dùng đầu ngón tay chạm vào màn hình cảm ứng để vuốt qua lại giữa các trang màn hình chính nhằm mục đích tìm kiếm nhanh chóng các biểu tượng phần mềm đã được cài đặt.", correct: "Đúng" },
+            { id: '1_d28b', text: " Đối với các ứng dụng phần mềm mà người dùng thường xuyên có nhu cầu sử dụng nhất, nên đưa biểu tượng của chúng xuống \"thanh truy cập nhanh\" (nằm ở dưới cùng màn hình) để thao tác chọn mở trở nên tiện lợi hơn.", correct: "Đúng" },
+            { id: '1_d28c', text: " Nếu muốn xem lại những bức ảnh phong cảnh do chính thiết bị điện thoại này chụp, người dùng bắt buộc phải luôn luôn cắm cáp kết nối chiếc điện thoại này với một màn hình máy tính bàn hoặc tivi thông minh.", correct: "Sai" },
+            { id: '1_d28d', text: " Do đặc tính kĩ thuật bảo mật, hệ thống ứng dụng quản lí tệp trên điện thoại Android hoàn toàn không có khái niệm tạo lập thư mục, mọi tệp tin đa phương tiện đều bị xáo trộn chung vào một danh sách văn bản duy nhất.", correct: "Sai" }
+        ]}
+    ];
+
+    let currentQuestions = [];
+    let deviceId = '';
+    let allScores = [];
+    let currentStudent = {};
+    let userAnswers = {};
+    let timerInterval;
+    let quizStartTime, quizEndTime;
+    
+    let currentPage = 1;
+    const rowsPerPage = 10;
+    let sortedScoresList = [];
+
+    function shuffleArray(array) {
+        let curId = array.length;
+        while (0 !== curId) {
+            let randId = Math.floor(Math.random() * curId);
+            curId -= 1;
+            let tmp = array[curId];
+            array[curId] = array[randId];
+            array[randId] = tmp;
+        }
+        return array;
+    }
+
+    window.startQuizAction = function() {
+        const errDiv = document.getElementById('login-error');
+        errDiv.classList.add('hidden');
+        const name = document.getElementById('hoTen').value.trim();
+        const lop = document.getElementById('lop').value.trim().toUpperCase(); 
+        
+        if (!name || !lop) {
+            errDiv.innerText = "⚠️ Yêu cầu nhập đầy đủ Họ tên và Lớp!";
+            errDiv.classList.remove('hidden');
+            return;
+        }
+
+        currentStudent = { hoTen: name, lop: lop, maDe: 'de_tin10_02', tenDe: 'Kiểm Tra Thường Xuyên Môn Tin Học 10 - Đề Số 2' };
+        
+        let rawQuestions = JSON.parse(JSON.stringify(de_data));
+        
+        let part1 = shuffleArray(rawQuestions.filter(q => q.type === 'single'));
+        part1.forEach((q, idx) => {
+            q.displayQuestion = `Câu ${idx + 1}: ${q.question}`;
+            let correctText = q.options[q.correct];
+            q.options = shuffleArray(q.options);
+            q.correct = q.options.indexOf(correctText);
+        });
+        
+        let part2 = shuffleArray(rawQuestions.filter(q => q.type === 'tf_cluster'));
+        part2.forEach((q, idx) => {
+            q.displayQuestion = `Câu ${part1.length + idx + 1}: ${q.question}`;
+            q.subQuestions = shuffleArray(q.subQuestions);
+            const labels = ['a)', 'b)', 'c)', 'd)'];
+            q.subQuestions.forEach((sub, sIdx) => {
+                sub.text = `${labels[sIdx]} ${sub.text}`;
+            });
+        });
+        
+        currentQuestions = [...part1, ...part2];
+        quizStartTime = new Date();
+        cheatCount = 0; 
+        setTimeout(() => { isQuizStarted = true; }, 1000);
+        showSection('quiz');
+        document.getElementById('quiz-title').innerText = currentStudent.tenDe;
+        document.getElementById('student-info').innerText = `${currentStudent.hoTen} - Lớp ${currentStudent.lop}`;
+        currentIdx = 0;
+        userAnswers = {};
+        window.renderQuestion();
+        // Thời gian đề bài ghi là 45 phút
+        startTimer(20 * 60);
+    };
+
+    window.nextQuestion = function() {
+        if (currentIdx < currentQuestions.length - 1) { currentIdx++; window.renderQuestion(); }
+    };
+
+    window.viewScoresAction = function() {
+        if (database) {
+            scoresRef.once('value').then((snapshot) => {
+                const data = snapshot.val();
+                allScores = data ? Object.keys(data).map(key => ({...data[key], id: key})) : [];
+                currentPage = 1;
+                window.renderScores();
+                showSection('scores');
+            });
+        }
+    };
+
+    window.goHome = function() {
+        document.getElementById('result-section').classList.add('hidden');
+        document.getElementById('hoTen').value = ''; 
+        document.getElementById('lop').value = ''; 
+        clearInterval(timerInterval);
+        showSection('login');
+    };
+
+    function getTotalItems() {
+        let count = 0;
+        currentQuestions.forEach(q => {
+            if (q.type === 'tf_cluster') count += q.subQuestions.length;
+            else count++;
+        });
+        return count; 
+    }
+
+    function getAnsweredCount() {
+        let count = 0;
+        currentQuestions.forEach(q => {
+            if (q.type === 'tf_cluster') {
+                q.subQuestions.forEach(sub => { if (userAnswers[sub.id]) count++; });
+            } else {
+                if (userAnswers[q.id] !== undefined) count++;
+            }
+        });
+        return count;
+    }
+
+    window.selectAnswer = function(qId, val, type) {
+        userAnswers[qId] = val;
+        window.updateProgress();
+    };
+
+    window.renderQuestion = function() {
+        if (!currentQuestions || currentQuestions.length === 0) return;
+        const q = currentQuestions[currentIdx];
+        const container = document.getElementById('question-container');
+        
+        if (q.type === 'tf_cluster') {
+            container.innerHTML = `<div class="fade-in">
+                <div class="flex items-center gap-3 mb-6 border-b-2 border-orange-100 pb-3">
+                    <span class="bg-gradient-to-br from-orange-400 to-red-500 text-white w-10 h-10 flex items-center justify-center rounded-xl font-bold text-xl shadow-md">II</span>
+                    <h3 class="text-xl sm:text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-orange-600 to-red-600 tracking-wide uppercase">PHẦN TRẮC NGHIỆM ĐÚNG/SAI</h3>
+                </div>
+                <div class="bg-red-50 border-2 border-red-200 p-4 sm:p-6 rounded-2xl mb-6 text-red-700 text-lg sm:text-xl font-bold leading-relaxed shadow-inner">
+                    ${q.displayQuestion.replace(/\n/g, '<br/>')}
+                </div>
+                <div class="space-y-4 md:pl-6">
+                    ${q.subQuestions.map(sub => `
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between bg-white p-5 sm:p-6 border-2 border-gray-100 hover:border-red-300 rounded-2xl gap-4 shadow-sm hover:shadow-md transition-all">
+                        <span class="flex-1 text-gray-800 font-bold text-lg sm:text-xl leading-relaxed">${sub.text}</span>
+                        <div class="flex gap-3 flex-shrink-0 w-full sm:w-auto mt-3 sm:mt-0 justify-between sm:justify-end">
+                            <input type="radio" id="q_${sub.id}_T" name="q_${sub.id}" value="Đúng" class="hidden tf-radio-T" onchange="window.selectAnswer('${sub.id}', 'Đúng', 'tf')" ${userAnswers[sub.id] === 'Đúng' ? 'checked' : ''}>
+                            <label for="q_${sub.id}_T" class="tf-label-T flex-1 sm:flex-none px-4 py-4 border-2 border-gray-200 rounded-xl cursor-pointer font-bold text-gray-500 text-base sm:text-lg text-center w-full sm:w-32 transition-all hover:bg-gray-50 uppercase tracking-wide active:scale-95 touch-manipulation">Đúng</label>
+                            
+                            <input type="radio" id="q_${sub.id}_S" name="q_${sub.id}" value="Sai" class="hidden tf-radio-S" onchange="window.selectAnswer('${sub.id}', 'Sai', 'tf')" ${userAnswers[sub.id] === 'Sai' ? 'checked' : ''}>
+                            <label for="q_${sub.id}_S" class="tf-label-S flex-1 sm:flex-none px-4 py-4 border-2 border-gray-200 rounded-xl cursor-pointer font-bold text-gray-500 text-base sm:text-lg text-center w-full sm:w-32 transition-all hover:bg-gray-50 uppercase tracking-wide active:scale-95 touch-manipulation">Sai</label>
+                        </div>
+                    </div>`).join('')}
+                </div>
+            </div>`;
+        } else {
+            container.innerHTML = `<div class="fade-in">
+                ${currentIdx === 0 ? `<div class="flex items-center gap-3 mb-6 border-b-2 border-blue-100 pb-3"><span class="bg-gradient-to-br from-blue-400 to-cyan-500 text-white w-10 h-10 flex items-center justify-center rounded-xl font-bold text-xl shadow-md">I</span><h3 class="text-xl sm:text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-600 tracking-wide uppercase">PHẦN TRẮC NGHIỆM MỘT LỰA CHỌN</h3></div>` : ''}
+                <div class="flex gap-4 mb-5">
+                    <div class="w-full">
+                        <p class="text-xl sm:text-2xl font-bold text-red-600 mt-1 leading-snug tracking-tight">${q.displayQuestion}</p>
+                    </div>
+                </div>
+                <div class="space-y-4 md:pl-14 mt-6">
+                    ${q.options.map((opt, i) => `
+                    <div class="flex items-center">
+                        <input type="radio" id="opt_${i}" name="q_${q.id}" value="${i}" class="hidden single-radio" ${userAnswers[q.id] === i ? 'checked' : ''} onchange="window.selectAnswer('${q.id}',${i}, 'single')">
+                        <label for="opt_${i}" class="option-label w-full p-4 sm:p-5 border-2 border-gray-200 rounded-2xl flex items-center gap-4 bg-white shadow-sm font-semibold text-lg sm:text-xl active:scale-[0.98] touch-manipulation">
+                            <span class="w-12 h-12 sm:w-10 sm:h-10 rounded-xl border-2 border-gray-300 flex items-center justify-center text-lg sm:text-base font-bold text-gray-400 flex-shrink-0 bg-gray-50 transition-colors">${String.fromCharCode(65 + i)}</span>
+                            <span class="text-gray-700 leading-relaxed">${opt}</span>
+                        </label>
+                    </div>`).join('')}
+                </div>
+            </div>`;
+        }
+        window.updateNav();
+        window.updateProgress();
+    };
+
+    window.updateNav = function() {
+        document.getElementById('next-btn').style.display = (currentIdx === currentQuestions.length - 1) ? 'none' : 'block';
+        document.getElementById('submit-btn').style.display = (currentIdx === currentQuestions.length - 1) ? 'block' : 'none';
+    };
+
+    window.updateProgress = function() {
+        document.getElementById('progress-text').innerText = `${getAnsweredCount()}/${getTotalItems()} ý`;
+    };
+
+    function formatDuration(sec) {
+        const m = Math.floor(sec / 60); const s = sec % 60;
+        return `${m}p ${s}s`;
+    }
+
+    window.submitQuiz = function() {
+        if (!isQuizStarted) return; 
+        isQuizStarted = false; 
+        
+        quizEndTime = new Date();
+        clearInterval(timerInterval);
+
+        let totalScore = 0;
+        let correctSubItems = 0;
+        let totalItems = getTotalItems();
+
+        currentQuestions.forEach(q => {
+            if (q.type === 'tf_cluster') {
+                let subCorrectCount = 0;
+                q.subQuestions.forEach(sub => {
+                    if (userAnswers[sub.id] === sub.correct) {
+                        subCorrectCount++;
+                        correctSubItems++;
+                    }
+                });
+                
+                if (subCorrectCount === 1) totalScore += 0.1;
+                else if (subCorrectCount === 2) totalScore += 0.25;
+                else if (subCorrectCount === 3) totalScore += 0.5;
+                else if (subCorrectCount === 4) totalScore += 1.0;
+
+            } else {
+                if (userAnswers[q.id] === q.correct) {
+                    totalScore += 0.25; 
+                    correctSubItems++;
+                }
+            }
+        });
+
+        const score = totalScore.toFixed(2);
+
+        const record = {
+            hoTen: currentStudent.hoTen, lop: currentStudent.lop, tenDe: currentStudent.tenDe,
+            diem: parseFloat(score), soCauDung: correctSubItems, tongCau: totalItems,
+            startTime: quizStartTime.toLocaleTimeString(), endTime: quizEndTime.toLocaleTimeString(),
+            duration: formatDuration(Math.floor((quizEndTime - quizStartTime) / 1000)),
+            thoiGian: new Date().toISOString(), deviceId: deviceId
+        };
+        if(database) {
+            scoresRef.push(record, () => { window.showModalResult(score, correctSubItems, totalItems, record.duration); });
+        }
+    };
+
+    window.showModalResult = function(score, correct, total, dur) {
+        ['login', 'quiz', 'scores'].forEach(s => document.getElementById(s+'-section').classList.add('hidden'));
+        document.getElementById('result-section').classList.remove('hidden');
+        document.getElementById('result-content').innerHTML = `<div class="text-6xl sm:text-7xl mb-4 animate-bounce">🎉</div><h3 class="text-2xl sm:text-3xl font-bold text-green-600 mb-2">Hoàn thành bài thi!</h3><p class="text-gray-600 mb-6 mt-2"><span class="font-bold text-blue-700 text-lg sm:text-xl uppercase tracking-wider">${currentStudent.hoTen} - Lớp ${currentStudent.lop}</span><br><span class="text-sm font-semibold text-gray-400 mt-1 block">${currentStudent.tenDe}</span></p><div class="bg-blue-50 border-2 border-blue-100 rounded-3xl p-6 mb-6 shadow-inner relative"><div class="text-sm text-blue-500 font-bold mb-2 uppercase tracking-widest">ĐIỂM SỐ CỦA BẠN</div><div class="text-6xl sm:text-7xl font-bold text-blue-600 drop-shadow-sm">${score} <span class="text-2xl text-gray-400">/ 10</span></div><div class="text-base sm:text-lg font-bold text-indigo-600 mt-4 bg-white inline-block px-5 py-2 rounded-full shadow-sm">Trả lời đúng ${correct}/${total} ý | TG: ${dur}</div></div><div class="grid grid-cols-2 gap-3 mb-4"><button onclick="window.goHome()" class="w-full py-4 bg-gray-100 text-gray-800 rounded-xl font-bold shadow-sm hover:bg-gray-200 transition-transform active:scale-95 touch-manipulation text-lg border-2 border-gray-200">🏠 Trang chủ</button><button onclick="document.getElementById('result-section').classList.add('hidden'); window.viewScoresAction();" class="w-full py-4 bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-xl font-bold shadow-sm hover:shadow-md transition-transform active:scale-95 touch-manipulation text-lg">🏆 Bảng điểm</button></div>`;
+    };
+
+    window.renderScores = function() {
+        const tbody = document.getElementById('scores-tbody');
+        const paginationControls = document.getElementById('pagination-controls');
+        
+        if (allScores.length === 0) { 
+            tbody.innerHTML = ''; 
+            document.getElementById('no-scores').classList.remove('hidden'); 
+            paginationControls.classList.add('hidden');
+            document.getElementById('my-score-summary').classList.add('hidden');
+            return; 
+        }
+        
+        document.getElementById('no-scores').classList.add('hidden');
+        paginationControls.classList.remove('hidden');
+        
+        const getTen = (fullName) => {
+            if (!fullName) return '';
+            const words = fullName.trim().split(' ');
+            return words[words.length - 1].toLowerCase();
+        };
+
+        sortedScoresList = [...allScores].sort((a, b) => {
+            const lopA = (a.lop || '').toUpperCase();
+            const lopB = (b.lop || '').toUpperCase();
+            if (lopA !== lopB) return lopA.localeCompare(lopB);
+            
+            const tenA = getTen(a.hoTen);
+            const tenB = getTen(b.hoTen);
+            if (tenA !== tenB) return tenA.localeCompare(tenB);
+            
+            return (a.hoTen || '').localeCompare(b.hoTen || '');
+        });
+
+        const myScoreIndex = sortedScoresList.findIndex(s => s.deviceId === deviceId);
+        if (myScoreIndex !== -1) {
+            const myScore = sortedScoresList[myScoreIndex];
+            document.getElementById('my-score-summary').classList.remove('hidden');
+            document.getElementById('my-summary-name').innerText = `${myScore.hoTen} (${(myScore.lop || '').toUpperCase()})`;
+            document.getElementById('my-summary-rank').innerText = `Hạng: #${myScoreIndex + 1}`;
+            document.getElementById('my-summary-score').innerText = `${myScore.diem}`;
+        } else {
+            document.getElementById('my-score-summary').classList.add('hidden');
+        }
+
+        const totalPages = Math.ceil(sortedScoresList.length / rowsPerPage) || 1;
+        if (currentPage > totalPages) currentPage = totalPages;
+        
+        document.getElementById('page-info').innerText = `Trang ${currentPage} / ${totalPages}`;
+        document.getElementById('prev-page-btn').disabled = currentPage === 1;
+        document.getElementById('next-page-btn').disabled = currentPage === totalPages;
+
+        const startIndex = (currentPage - 1) * rowsPerPage;
+        const endIndex = startIndex + rowsPerPage;
+        const pageData = sortedScoresList.slice(startIndex, endIndex);
+
+        tbody.innerHTML = pageData.map((s, idx) => {
+            let timeStr = s.startTime;
+            if (s.thoiGian) {
+                const dt = new Date(s.thoiGian);
+                timeStr = dt.toLocaleTimeString('vi-VN') + ' - ' + dt.toLocaleDateString('vi-VN');
+            }
+            const globalIdx = startIndex + idx + 1;
+
+            return `<tr class="${s.deviceId === deviceId ? 'my-score-row' : 'hover:bg-gray-50'} transition-colors border-b border-gray-100">
+                <td class="px-3 sm:px-4 py-4 text-center font-bold text-gray-500 text-sm">#${globalIdx}</td>
+                <td class="px-3 sm:px-4 py-4 font-bold text-blue-600 text-sm">${(s.lop || '').toUpperCase()}</td>
+                <td class="px-3 sm:px-4 py-4 font-semibold text-gray-800 text-sm">${s.hoTen} ${s.deviceId === deviceId ? '<span class="ml-2 bg-pink-500 text-white text-[10px] px-2 rounded-md">Bạn</span>' : ''}</td>
+                <td class="px-3 sm:px-4 py-4 text-center"><span class="font-bold text-lg ${s.diem >= 5 ? 'text-green-600' : 'text-red-500'}">${s.diem}</span></td>
+                <td class="px-3 sm:px-4 py-4 text-center text-gray-500 text-xs">${timeStr}</td>
+              
+            </tr>`;
+        }).join('');
+    };
+
+    window.prevPage = function() {
+        if (currentPage > 1) {
+            currentPage--;
+            window.renderScores();
+        }
+    };
+
+    window.nextPage = function() {
+        const totalPages = Math.ceil(sortedScoresList.length / rowsPerPage);
+        if (currentPage < totalPages) {
+            currentPage++;
+            window.renderScores();
+        }
+    };
+
+    function showSection(id) {
+        ['login', 'quiz', 'scores', 'result'].forEach(s => document.getElementById(s+'-section').classList.add('hidden'));
+        document.getElementById(id+'-section').classList.remove('hidden');
+    }
+
+    function startTimer(seconds) {
+        const display = document.getElementById('timer');
+        let remaining = seconds;
+        timerInterval = setInterval(() => {
+            remaining--;
+            const m = Math.floor(remaining / 60).toString().padStart(2, '0');
+            const s = (remaining % 60).toString().padStart(2, '0');
+            display.innerText = `${m}:${s}`;
+            if (remaining <= 0) window.submitQuiz();
+        }, 1000);
+    }
+
+    try {
+        if (!localStorage.getItem('deviceId')) {
+            localStorage.setItem('deviceId', 'dev_' + Math.random().toString(36).substr(2) + Date.now());
+        }
+        deviceId = localStorage.getItem('deviceId');
+    } catch (e) { deviceId = 'dev_temp_' + Math.random().toString(36).substr(2); }
+  </script>
+ </body>
+</html>
