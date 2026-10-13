@@ -2,7 +2,7 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
     <title>Hành Trình Số - Lật Mảnh Ghép Tin Học 11 Bài 8</title>
 
     <!-- Google tag (gtag.js) - Tích hợp 2 mã đo lường GA4 -->
@@ -39,30 +39,44 @@
 
         * {
             box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            overflow-x: hidden;
+            -webkit-overflow-scrolling: touch;
         }
 
         body {
             font-family: 'Be Vietnam Pro', Arial, sans-serif;
-            margin: 0;
-            padding: 20px 10px 40px;
+            padding: 16px 10px 40px;
             display: flex;
             flex-direction: column;
             align-items: center;
             background: var(--bg-gradient);
             min-height: 100vh;
             color: #1e293b;
+            touch-action: pan-y;
+        }
+
+        /* Khóa cuộn trang nền khi đang mở câu hỏi trên điện thoại */
+        body.modal-open {
+            overflow: hidden !important;
         }
 
         /* HEADER */
         .header-card {
             background: white;
-            width: 95%;
+            width: 96%;
             max-width: 960px;
             border-radius: 20px;
-            padding: 18px 25px;
-            box-shadow: 0 10px 25px rgba(30, 64, 175, 0.12);
+            padding: 16px 20px;
+            box-shadow: 0 8px 20px rgba(30, 64, 175, 0.1);
             border: 2px solid #bfdbfe;
-            margin-bottom: 18px;
+            margin-bottom: 16px;
             text-align: center;
         }
 
@@ -78,25 +92,25 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 62px;
-            height: 62px;
+            width: 58px;
+            height: 58px;
             border-radius: 50%;
             border: 3px solid #facc15;
             background: linear-gradient(135deg, #ef4444, #b91c1c);
-            box-shadow: 0 4px 10px rgba(220, 38, 38, 0.35);
+            box-shadow: 0 4px 10px rgba(220, 38, 38, 0.3);
             flex-shrink: 0;
         }
 
         .logo-hs span {
             color: white;
             font-weight: 900;
-            font-size: 26px;
+            font-size: 24px;
             letter-spacing: -1px;
         }
 
         .title-group h1 {
             color: #dc2626;
-            font-size: 26px;
+            font-size: 25px;
             font-weight: 900;
             margin: 0;
             text-transform: uppercase;
@@ -105,7 +119,7 @@
 
         .title-group .lesson-sub {
             color: var(--primary);
-            font-size: 18px;
+            font-size: 17px;
             font-weight: 700;
             margin-top: 4px;
         }
@@ -113,12 +127,12 @@
         /* KHUNG NHẬP THÔNG TIN HỌC SINH, NÚT BẮT ĐẦU & THỐNG KÊ */
         .control-panel {
             background: white;
-            width: 95%;
+            width: 96%;
             max-width: 960px;
             border-radius: 16px;
-            padding: 16px 20px;
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
-            margin-bottom: 18px;
+            padding: 16px 18px;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
+            margin-bottom: 16px;
             display: flex;
             flex-direction: column;
             gap: 14px;
@@ -139,7 +153,7 @@
             gap: 10px;
             align-items: center;
             flex: 1;
-            min-width: 280px;
+            min-width: 260px;
         }
 
         .input-group {
@@ -148,9 +162,9 @@
             background: #f8fafc;
             border: 2px solid #94a3b8;
             border-radius: 10px;
-            padding: 8px 12px;
+            padding: 9px 12px;
             flex: 1;
-            min-width: 150px;
+            min-width: 145px;
             transition: border-color 0.2s;
         }
 
@@ -169,7 +183,7 @@
             border: none;
             background: transparent;
             font-family: inherit;
-            font-size: 15px;
+            font-size: 16px;
             font-weight: 700;
             color: #0f172a;
             width: 100%;
@@ -181,7 +195,7 @@
             background: linear-gradient(135deg, #16a34a, #15803d);
             color: white;
             border: none;
-            padding: 10px 22px;
+            padding: 11px 22px;
             font-family: inherit;
             font-size: 16px;
             font-weight: 800;
@@ -190,14 +204,10 @@
             display: flex;
             align-items: center;
             gap: 8px;
-            box-shadow: 0 4px 12px rgba(22, 163, 74, 0.35);
-            transition: all 0.2s;
+            box-shadow: 0 4px 12px rgba(22, 163, 74, 0.3);
+            transition: transform 0.2s, background 0.2s;
             white-space: nowrap;
-        }
-
-        .start-btn:hover:not(:disabled) {
-            background: linear-gradient(135deg, #15803d, #14532d);
-            transform: translateY(-2px);
+            touch-action: manipulation;
         }
 
         .start-btn:disabled {
@@ -208,7 +218,7 @@
 
         .stats-bar {
             display: flex;
-            gap: 12px;
+            gap: 10px;
             flex-wrap: wrap;
             align-items: center;
             justify-content: center;
@@ -220,10 +230,10 @@
             background: #eff6ff;
             border: 2px solid #bfdbfe;
             color: var(--primary);
-            padding: 8px 16px;
+            padding: 7px 14px;
             border-radius: 10px;
             font-weight: 800;
-            font-size: 15px;
+            font-size: 14px;
             display: flex;
             align-items: center;
             gap: 6px;
@@ -243,28 +253,29 @@
 
         .subtext {
             color: var(--primary);
-            font-size: 19px;
+            font-size: 18px;
             font-weight: 800;
             text-align: center;
-            margin: 5px 0 15px;
+            margin: 4px 0 14px;
             padding: 0 10px;
+            line-height: 1.4;
         }
 
         /* KHU VỰC BỨC TRANH VÀ MẢNH GHÉP */
         .game-area {
             position: relative;
-            width: 95%;
+            width: 96%;
             max-width: 960px;
             aspect-ratio: 16 / 10;
             background-color: #fff;
-            border: 5px solid var(--primary);
+            border: 4px solid var(--primary);
             border-radius: 16px;
             overflow: hidden;
-            box-shadow: 0 15px 30px rgba(30, 64, 175, 0.25);
+            box-shadow: 0 10px 24px rgba(30, 64, 175, 0.2);
             margin-bottom: 20px;
+            touch-action: pan-y;
         }
 
-        /* Ảnh nền bí mật nằm dưới các mảnh ghép */
         .secret-image {
             position: absolute;
             top: 0;
@@ -274,6 +285,7 @@
             object-fit: fill;
             z-index: 1;
             display: block;
+            pointer-events: none;
         }
 
         .puzzle-grid {
@@ -295,15 +307,15 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            font-size: 42px;
+            font-size: 40px;
             font-weight: 900;
             color: white;
             cursor: pointer;
-            transition: all 0.4s ease;
-            -webkit-tap-highlight-color: transparent;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.25);
             position: relative;
             user-select: none;
+            touch-action: manipulation;
         }
 
         .puzzle-piece span.piece-sub {
@@ -313,19 +325,19 @@
             margin-top: 4px;
         }
 
-        .puzzle-piece:hover:not(.wrong-piece) {
-            background: linear-gradient(135deg, #fbbf24 0%, #d97706 100%);
-            box-shadow: inset 0 0 15px rgba(255,255,255,0.4);
+        @media (hover: hover) {
+            .puzzle-piece:hover:not(.wrong-piece) {
+                background: linear-gradient(135deg, #fbbf24 0%, #d97706 100%);
+                box-shadow: inset 0 0 15px rgba(255,255,255,0.4);
+            }
         }
 
-        /* Mảnh ghép trả lời ĐÚNG -> Lật mở ra */
         .puzzle-piece.hidden {
             opacity: 0;
             pointer-events: none;
-            transform: scale(0.6);
+            transform: scale(0.7);
         }
 
-        /* Mảnh ghép trả lời SAI -> Chuyển sang MÀU ĐEN và không lật lên */
         .puzzle-piece.wrong-piece {
             background: linear-gradient(135deg, #1e293b 0%, #090d16 100%) !important;
             color: #94a3b8 !important;
@@ -336,25 +348,28 @@
         /* NÚT ĐIỀU KHIỂN DƯỚI GAME */
         .action-buttons {
             display: flex;
-            gap: 15px;
+            gap: 12px;
             flex-wrap: wrap;
             justify-content: center;
-            margin-bottom: 30px;
+            margin-bottom: 26px;
+            width: 96%;
         }
 
         .btn-action {
             border: none;
-            padding: 13px 28px;
+            padding: 13px 24px;
             font-family: inherit;
-            font-size: 17px;
+            font-size: 16px;
             font-weight: 800;
             border-radius: 12px;
             cursor: pointer;
             display: flex;
             align-items: center;
+            justify-content: center;
             gap: 8px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            transition: all 0.2s;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.12);
+            transition: transform 0.2s;
+            touch-action: manipulation;
         }
 
         .reset-btn {
@@ -362,29 +377,19 @@
             color: white;
         }
 
-        .reset-btn:hover {
-            background: linear-gradient(135deg, #dc2626, #b91c1c);
-            transform: translateY(-2px);
-        }
-
         .save-score-btn {
             background: linear-gradient(135deg, #2563eb, #1d4ed8);
             color: white;
         }
 
-        .save-score-btn:hover {
-            background: linear-gradient(135deg, #1d4ed8, #1e40af);
-            transform: translateY(-2px);
-        }
-
         /* BẢNG XẾP HẠNG FIREBASE REALTIME */
         .leaderboard-card {
             background: white;
-            width: 95%;
+            width: 96%;
             max-width: 960px;
             border-radius: 20px;
-            padding: 25px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+            padding: 20px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
             border: 2px solid #bfdbfe;
         }
 
@@ -394,13 +399,13 @@
             justify-content: space-between;
             flex-wrap: wrap;
             gap: 10px;
-            margin-bottom: 18px;
+            margin-bottom: 16px;
             padding-bottom: 12px;
             border-bottom: 2px solid #f1f5f9;
         }
 
         .leaderboard-title {
-            font-size: 22px;
+            font-size: 20px;
             font-weight: 900;
             color: var(--primary);
             display: flex;
@@ -410,7 +415,7 @@
 
         .leaderboard-title i {
             color: #f59e0b;
-            font-size: 26px;
+            font-size: 24px;
         }
 
         .filter-class {
@@ -418,6 +423,7 @@
             border-radius: 10px;
             border: 2px solid #cbd5e1;
             font-family: inherit;
+            font-size: 15px;
             font-weight: 700;
             color: #1e293b;
             outline: none;
@@ -425,83 +431,85 @@
 
         .table-responsive {
             overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
         }
 
         .leaderboard-table {
             width: 100%;
             border-collapse: collapse;
             text-align: left;
+            min-width: 480px;
         }
 
         .leaderboard-table th {
             background: #eff6ff;
             color: var(--primary);
             font-weight: 800;
-            padding: 12px 15px;
-            font-size: 15px;
+            padding: 11px 12px;
+            font-size: 14px;
             text-transform: uppercase;
         }
 
         .leaderboard-table td {
-            padding: 12px 15px;
+            padding: 11px 12px;
             border-bottom: 1px solid #f1f5f9;
             font-weight: 600;
-            font-size: 15px;
-        }
-
-        .leaderboard-table tr:hover {
-            background-color: #f8fafc;
+            font-size: 14px;
         }
 
         .rank-badge {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            width: 30px;
-            height: 30px;
+            width: 28px;
+            height: 28px;
             border-radius: 50%;
             font-weight: 900;
-            font-size: 14px;
+            font-size: 13px;
         }
 
         .rank-1 { background: #fef08a; color: #854d0e; border: 2px solid #facc15; }
         .rank-2 { background: #e2e8f0; color: #334155; border: 2px solid #94a3b8; }
         .rank-3 { background: #fed7aa; color: #9a3412; border: 2px solid #fb923c; }
 
-        /* =================================================================
-           MODAL CÂU HỎI TRẮC NGHIỆM (RỘNG DÀI TRÊN PC, CHỮ ĐỎ, TRÀN MÀN HÌNH ĐT)
-           ================================================================= */
+        /* MODAL CÂU HỎI TRẮC NGHIỆM */
         @keyframes popIn {
-            0% { transform: scale(0.9); opacity: 0; }
+            0% { transform: scale(0.95); opacity: 0; }
             100% { transform: scale(1); opacity: 1; }
         }
 
         .modal-overlay, .alert-overlay {
             display: none;
             position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background-color: rgba(15, 23, 42, 0.82);
-            backdrop-filter: blur(5px);
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(15, 23, 42, 0.88);
             z-index: 9999;
             justify-content: center;
             align-items: center;
             padding: 20px;
+            overscroll-behavior: contain;
         }
 
         .alert-overlay { z-index: 10000; }
 
         .modal-content {
-            background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
-            padding: 32px 38px;
+            background: #ffffff;
+            padding: 28px 34px;
             border-radius: 24px;
-            max-width: 1150px; /* Trải dài trên máy tính */
+            max-width: 1150px;
             width: 94%;
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.45);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
             text-align: center;
             border: 4px solid #1d4ed8;
-            max-height: 92vh;
+            max-height: 90vh;
+            max-height: 90dvh;
             overflow-y: auto;
-            animation: popIn 0.25s ease-out;
+            -webkit-overflow-scrolling: touch;
+            overscroll-behavior: contain;
+            touch-action: pan-y;
+            animation: popIn 0.2s ease-out;
         }
 
         .question-badge {
@@ -511,24 +519,24 @@
             background: linear-gradient(135deg, #1e40af, #3b82f6);
             color: #ffffff;
             font-weight: 800;
-            font-size: 15px;
-            padding: 7px 20px;
+            font-size: 14px;
+            padding: 7px 18px;
             border-radius: 30px;
-            margin-bottom: 16px;
+            margin-bottom: 14px;
             text-transform: uppercase;
             letter-spacing: 0.5px;
+            align-self: center;
         }
 
-        /* Câu hỏi màu đỏ đậm nổi bật */
         #question-text {
             color: #dc2626;
-            font-size: 25px;
+            font-size: 24px;
             font-weight: 800;
-            margin-bottom: 24px;
-            line-height: 1.5;
+            margin-bottom: 22px;
+            line-height: 1.45;
             text-align: left;
             background: #fff5f5;
-            padding: 20px 26px;
+            padding: 18px 24px;
             border-radius: 16px;
             border: 2px solid #fecaca;
             border-left: 8px solid #dc2626;
@@ -537,31 +545,39 @@
         .options-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 18px;
+            gap: 16px;
         }
 
         .option-btn {
             background-color: #ffffff;
             color: #1e3a8a;
             border: 2px solid #93c5fd;
-            padding: 18px 22px;
+            padding: 16px 20px;
             font-family: inherit;
-            font-size: 20px;
+            font-size: 19px;
             font-weight: 700;
             border-radius: 14px;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: background-color 0.15s ease, border-color 0.15s ease;
             text-align: left;
             line-height: 1.45;
             display: flex;
             align-items: center;
+            touch-action: manipulation;
+            user-select: none;
         }
 
-        .option-btn:hover:not(.locked) {
-            background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
-            border-color: #1d4ed8;
-            color: #1e40af;
-            transform: translateY(-2px);
+        @media (hover: hover) {
+            .option-btn:hover:not(.locked) {
+                background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+                border-color: #1d4ed8;
+                color: #1e40af;
+            }
+        }
+
+        .option-btn:active:not(.locked) {
+            background-color: #dbeafe;
+            transform: scale(0.99);
         }
 
         .option-btn.locked { pointer-events: none; }
@@ -582,45 +598,48 @@
         }
 
         #feedback {
-            margin-top: 22px;
+            margin-top: 18px;
             font-weight: 800;
-            font-size: 22px;
-            min-height: 32px;
+            font-size: 20px;
+            min-height: 28px;
+            line-height: 1.4;
         }
 
         .close-btn {
-            margin-top: 18px;
+            margin-top: 16px;
             background: linear-gradient(135deg, #2563eb, #1d4ed8);
             color: #fff;
             font-family: inherit;
             font-weight: 800;
             border: none;
-            padding: 15px 40px;
-            font-size: 20px;
+            padding: 15px 38px;
+            font-size: 19px;
             border-radius: 12px;
             cursor: pointer;
+            touch-action: manipulation;
+            flex-shrink: 0;
         }
 
         /* ALERT TUỲ CHỈNH */
         .alert-content {
             background-color: white;
-            padding: 30px 25px;
+            padding: 26px 22px;
             border-radius: 20px;
-            max-width: 500px;
+            max-width: 480px;
             width: 92%;
             text-align: center;
             border: 4px solid #f59e0b;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.4);
-            animation: popIn 0.25s ease-out;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.35);
+            animation: popIn 0.2s ease-out;
         }
 
-        .alert-icon { font-size: 52px; margin-bottom: 12px; }
+        .alert-icon { font-size: 48px; margin-bottom: 10px; }
 
         #alert-message {
             color: #1e293b;
-            font-size: 20px;
+            font-size: 18px;
             font-weight: 800;
-            margin-bottom: 24px;
+            margin-bottom: 22px;
             line-height: 1.45;
             white-space: pre-line;
         }
@@ -632,60 +651,140 @@
             font-weight: 800;
             border: none;
             padding: 12px 35px;
-            font-size: 18px;
+            font-size: 17px;
             border-radius: 10px;
             cursor: pointer;
+            touch-action: manipulation;
         }
 
-        /* GIAO DIỆN ĐIỆN THOẠI: BẢNG CÂU HỎI TRÀN HẾT 100% MÀN HÌNH */
+        /* GIAO DIỆN ĐIỆN THOẠI */
         @media (max-width: 768px) {
-            .title-group h1 { font-size: 20px; }
-            .title-group .lesson-sub { font-size: 15px; }
-            .subtext { font-size: 16px; }
-            .puzzle-piece { font-size: 26px; }
+            body {
+                padding: 10px 6px 35px;
+            }
+
+            .header-card {
+                padding: 12px 14px;
+                border-radius: 16px;
+                margin-bottom: 12px;
+            }
+
+            .logo-hs {
+                width: 46px;
+                height: 46px;
+            }
+
+            .logo-hs span { font-size: 20px; }
+            .title-group h1 { font-size: 18px; }
+            .title-group .lesson-sub { font-size: 14px; }
+            .subtext { font-size: 15px; margin: 2px 0 12px; }
+
+            .control-panel {
+                padding: 12px 14px;
+                gap: 10px;
+            }
+
+            .top-row-controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .student-inputs {
+                flex-direction: column;
+                align-items: stretch;
+                min-width: 100%;
+            }
+
+            .input-group {
+                max-width: 100% !important;
+                width: 100%;
+            }
+
+            .start-btn {
+                justify-content: center;
+                padding: 13px;
+                width: 100%;
+            }
+
+            .stat-badge {
+                font-size: 13px;
+                padding: 6px 10px;
+                flex: 1;
+                justify-content: center;
+                min-width: 105px;
+            }
+
+            .game-area {
+                aspect-ratio: 16 / 11;
+                border-width: 3px;
+                margin-bottom: 16px;
+            }
+
+            .puzzle-piece { font-size: 24px; }
             .puzzle-piece span.piece-sub { display: none; }
-            .top-row-controls { flex-direction: column; align-items: stretch; }
-            .start-btn { justify-content: center; padding: 12px; }
+
+            .btn-action {
+                flex: 1;
+                min-width: 160px;
+                padding: 12px 16px;
+                font-size: 15px;
+            }
 
             .modal-overlay {
                 padding: 0 !important;
+                align-items: flex-start !important;
+                overflow-y: auto !important;
+                -webkit-overflow-scrolling: touch !important;
+                background-color: #ffffff !important;
             }
 
             .modal-content {
-                width: 100vw !important;
-                max-width: 100vw !important;
-                height: 100vh !important;
-                max-height: 100vh !important;
+                width: 100% !important;
+                max-width: 100% !important;
+                min-height: 100vh !important;
+                min-height: 100dvh !important;
+                max-height: none !important;
+                height: auto !important;
                 border-radius: 0 !important;
                 border: none !important;
-                padding: 25px 16px 35px !important;
+                box-shadow: none !important;
+                padding: 20px 14px 50px !important;
+                overflow-y: visible !important;
                 display: flex;
                 flex-direction: column;
                 justify-content: flex-start;
-                overflow-y: auto;
+                animation: none !important;
             }
 
             #question-text {
-                font-size: 20px;
-                padding: 16px 18px;
-                margin-bottom: 18px;
+                font-size: 18px;
+                padding: 14px 16px;
+                margin-bottom: 14px;
+                border-left-width: 6px;
             }
 
             .options-grid {
                 grid-template-columns: 1fr;
-                gap: 12px;
+                gap: 11px;
             }
 
             .option-btn {
+                font-size: 16px;
+                padding: 14px 15px;
+                border-radius: 12px;
+            }
+
+            #feedback {
                 font-size: 17px;
-                padding: 14px 16px;
+                margin-top: 14px;
             }
 
             .close-btn {
                 width: 100%;
                 padding: 15px;
-                font-size: 19px;
-                margin-top: 20px;
+                font-size: 18px;
+                margin-top: 16px;
+                margin-bottom: 20px;
             }
         }
     </style>
@@ -736,13 +835,13 @@
 
         <div class="stats-bar">
             <div class="stat-badge score-badge">
-                <i class="fa-solid fa-star"></i> Điểm số: <span id="score-display">0</span>/100
+                <i class="fa-solid fa-star"></i> Điểm: <span id="score-display">0</span>/100
             </div>
             <div class="stat-badge">
-                <i class="fa-solid fa-puzzle-piece"></i> Đã lật mở: <span id="pieces-display">0</span>/100
+                <i class="fa-solid fa-puzzle-piece"></i> Đã mở: <span id="pieces-display">0</span>/10
             </div>
             <div class="stat-badge time-badge">
-                <i class="fa-solid fa-hourglass-half"></i> Thời gian còn: <span id="timer-display">10:00</span>
+                <i class="fa-solid fa-hourglass-half"></i> Thời gian: <span id="timer-display">10:00</span>
             </div>
         </div>
     </div>
@@ -781,6 +880,7 @@
         <div class="leaderboard-header">
             <div class="leaderboard-title">
                 <i class="fa-solid fa-trophy"></i> BẢNG XẾP HẠNG THI ĐUA TRỰC TUYẾN
+                <span id="total-participants" style="font-size: 14px; font-weight: 600; color: #475569; margin-left: 10px; background: #f1f5f9; padding: 4px 10px; border-radius: 20px;">(0 bạn)</span>
             </div>
             <select id="filter-class" class="filter-class" onchange="renderLeaderboard()">
                 <option value="ALL">Tất cả các lớp</option>
@@ -798,12 +898,12 @@
             <table class="leaderboard-table">
                 <thead>
                     <tr>
-                        <th style="width: 70px;">Hạng</th>
+                        <th style="width: 65px;">Hạng</th>
                         <th>Họ và tên</th>
                         <th>Lớp</th>
                         <th>Điểm số</th>
                         <th>Mảnh mở</th>
-                        <th>Thời gian làm</th>
+                        <th>Ngày tham gia</th>
                     </tr>
                 </thead>
                 <tbody id="leaderboard-body">
@@ -824,9 +924,9 @@
         </div>
     </div>
 
-    <!-- Modal Trắc nghiệm (Đã bỏ phần giải thích theo yêu cầu) -->
+    <!-- Modal Trắc nghiệm -->
     <div class="modal-overlay" id="modal-overlay">
-        <div class="modal-content">
+        <div class="modal-content" id="modal-content-box">
             <div class="question-badge" id="question-level">Mức độ: Nhận biết</div>
             <div id="question-text"></div>
             <div class="options-grid" id="options-container"></div>
@@ -839,37 +939,38 @@
         // =========================================================================
         // 1. CẤU HÌNH FIREBASE REALTIME DATABASE (DỰ ÁN: hoctap-91691)
         // =========================================================================
-        const firebaseConfig = {
-            // Hãy dán mã apiKey của dự án hoctap-91691 vào dòng bên dưới:
-            apiKey: "AIzaSy_THAY_MA_API_KEY_CUA_BAN_VAO_DAY",
-            authDomain: "hoctap-91691.firebaseapp.com",
-            databaseURL: "https://hoctap-91691-default-rtdb.asia-southeast1.firebasedatabase.app",
-            projectId: "hoctap-91691",
-            storageBucket: "hoctap-91691.firebasestorage.app",
-            messagingSenderId: "1004553425319",
-            appId: "1:1004553425319:web:45d15cbae393f614c56682"
-        };
-
-        let scoresRef = null;
-        let allScoresData = [];
-
         try {
-            if (!firebase.apps.length) {
-                firebase.initializeApp(firebaseConfig);
-            }
-            const db = firebase.database();
-            scoresRef = db.ref('leaderboard_tin11_bai8');
+            const firebaseConfig = {
+                apiKey: "AIzaSyBQ9Pos8awlh9j041qDWTPFRsVIjF-kPnk",
+                authDomain: "hoctap-91691.firebaseapp.com",
+                databaseURL: "https://hoctap-91691-default-rtdb.asia-southeast1.firebasedatabase.app",
+                projectId: "hoctap-91691",
+                storageBucket: "hoctap-91691.firebasestorage.app",
+                messagingSenderId: "1004553425319",
+                appId: "1:1004553425319:web:45d15cbae393f614c56682",
+                measurementId: "G-Q6X1TL9PRV"
+            };
 
-            scoresRef.on('value', (snapshot) => {
-                allScoresData = [];
-                snapshot.forEach((childSnapshot) => {
-                    allScoresData.push(childSnapshot.val());
+            if (typeof firebase !== 'undefined') {
+                if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+                const db = firebase.database();
+                
+                // Trỏ tới đúng bảng xếp hạng của bài 8 Tin 11
+                window.scoresRef = db.ref('leaderboard_tin11_bai8');
+
+                window.scoresRef.on('value', (snapshot) => {
+                    allScoresData = [];
+                    snapshot.forEach((childSnapshot) => {
+                        allScoresData.push(childSnapshot.val());
+                    });
+                    renderLeaderboard();
                 });
-                renderLeaderboard();
-            });
-        } catch (err) {
-            console.warn("Chưa kết nối được Firebase:", err);
+            }
+        } catch(err) { 
+            console.error("Lỗi cấu hình Firebase:", err); 
         }
+
+        let allScoresData = [];
 
         // =========================================================================
         // 2. BỘ 10 CÂU HỎI ĐÃ CÂN BẰNG ĐỘ DÀI CÁC ĐÁP ÁN A, B, C, D ĐỀU NHAU
@@ -990,11 +1091,10 @@
         // =========================================================================
         // 3. LOGIC TRÒ CHƠI, CHẤM ĐIỂM (100 điểm) & ĐẾM NGƯỢC 10 PHÚT
         // =========================================================================
-        const MAX_TIME_SECONDS = 600; // 10 phút = 600 giây
+        const MAX_TIME_SECONDS = 600; 
         let currentPieceIndex = -1;
-        // pieceStatus: 0 = chưa chọn, 1 = trả lời ĐÚNG (đã lật mở), -1 = trả lời SAI (màu đen, khóa)
         let pieceStatus = new Array(10).fill(0);
-        let currentScore = 0; // Thang điểm 10 (mỗi câu đúng +1 điểm, sai +0 điểm)
+        let currentScore = 0;
         let remainingSeconds = MAX_TIME_SECONDS;
         let timerInterval = null;
         let isGameStarted = false;
@@ -1007,6 +1107,15 @@
             return `${m}:${s}`;
         }
 
+        function formatDate(timestamp) {
+            if (!timestamp) return "--/--/----";
+            const d = new Date(timestamp);
+            const day = d.getDate().toString().padStart(2, '0');
+            const month = (d.getMonth() + 1).toString().padStart(2, '0');
+            const year = d.getFullYear(); // Đã thêm năm vào chuỗi
+            return `${day}/${month}/${year}`;
+        }
+
         function updateStatsUI() {
             const openedCount = pieceStatus.filter(st => st === 1).length;
             document.getElementById("score-display").innerText = currentScore;
@@ -1014,7 +1123,6 @@
             document.getElementById("timer-display").innerText = formatTime(remainingSeconds);
         }
 
-        // Khởi tạo 10 mảnh ghép
         function initPuzzle() {
             const grid = document.getElementById("puzzle-grid");
             grid.innerHTML = "";
@@ -1029,7 +1137,6 @@
             updateStatsUI();
         }
 
-        // Bấm nút "Bắt đầu làm bài"
         function startGame() {
             const nameVal = document.getElementById("student-name").value.trim();
             const classVal = document.getElementById("student-class").value;
@@ -1054,7 +1161,6 @@
 
             document.getElementById("intro-text").innerText = `🚀 Bắt đầu! Chúc ${nameVal} (${classVal}) hoàn thành xuất sắc 10 mảnh ghép trong 10 phút!`;
 
-            // Khởi động đồng hồ đếm ngược 10 phút
             if (timerInterval) clearInterval(timerInterval);
             timerInterval = setInterval(() => {
                 remainingSeconds--;
@@ -1067,10 +1173,10 @@
             }, 1000);
         }
 
-        // Xử lý khi hết 10 phút mà học sinh chưa làm xong hoặc quên thoát
         function handleTimeOut() {
             isGameOver = true;
             document.getElementById("modal-overlay").style.display = "none";
+            document.body.classList.remove("modal-open");
             document.getElementById("intro-text").innerText = "⏰ ĐÃ HẾT THỜI GIAN LÀM BÀI (10 PHÚT)!";
 
             const nameVal = document.getElementById("student-name").value.trim();
@@ -1085,7 +1191,6 @@
             }
         }
 
-        // Khi học sinh bấm vào 1 mảnh ghép
         function handlePieceClick(index) {
             if (!isGameStarted) {
                 showCustomAlert("Em hãy nhập Họ tên, chọn Lớp và bấm nút 'Bắt đầu làm bài' màu xanh lá ở phía trên trước nhé!", "👉");
@@ -1097,13 +1202,11 @@
                 return;
             }
 
-            // Nếu mảnh ghép đã trả lời SAI trước đó (màu đen) -> Báo không được làm lại
             if (pieceStatus[index] === -1) {
                 showCustomAlert(`Mảnh ghép số ${index + 1} bạn đã chọn rồi và trả lời chưa chính xác nên không được làm lại câu hỏi này!`, "🔒");
                 return;
             }
 
-            // Nếu mảnh ghép đã lật mở
             if (pieceStatus[index] === 1) {
                 return;
             }
@@ -1133,10 +1236,15 @@
                 optsContainer.appendChild(btn);
             });
 
-            document.getElementById("modal-overlay").style.display = "flex";
+            const overlay = document.getElementById("modal-overlay");
+            const contentBox = document.getElementById("modal-content-box");
+            overlay.style.display = "flex";
+            document.body.classList.add("modal-open");
+
+            overlay.scrollTop = 0;
+            contentBox.scrollTop = 0;
         }
 
-        // Chấm điểm: Đúng +1 điểm (tổng 100 điểm), Sai không trừ điểm & khóa mảnh ghép thành màu đen
         function checkAnswer(selectedIdx, clickedBtn) {
             const data = questionData[currentPieceIndex];
             const allBtns = document.querySelectorAll(".option-btn");
@@ -1146,42 +1254,44 @@
             allBtns.forEach(b => b.classList.add("locked"));
 
             if (selectedIdx === data.ans) {
-                // TRẢ LỜI ĐÚNG
                 clickedBtn.classList.add("correct-choice");
                 feedback.style.color = "#16a34a";
                 feedback.innerText = "🎉 Chính xác! Bạn được cộng 10 điểm và mở khóa mảnh ghép này.";
 
                 currentScore += 10;
-                pieceStatus[currentPieceIndex] = 1; // Đánh dấu đã lật mở
+                pieceStatus[currentPieceIndex] = 1;
                 updateStatsUI();
 
                 closeBtn.innerText = "🔓 Lật mở mảnh ghép";
                 closeBtn.style.display = "inline-block";
                 closeBtn.style.background = "linear-gradient(135deg, #16a34a, #15803d)";
             } else {
-                // TRẢ LỜI SAI -> Không lật, không trừ điểm, chuyển mảnh ghép sang màu đen
                 clickedBtn.classList.add("wrong-choice");
                 feedback.style.color = "#dc2626";
                 feedback.innerText = "❌ Chưa chính xác! Mảnh ghép này sẽ bị khóa lại và không được lật mở.";
 
-                pieceStatus[currentPieceIndex] = -1; // Đánh dấu sai (màu đen)
+                pieceStatus[currentPieceIndex] = -1;
                 updateStatsUI();
 
                 closeBtn.innerText = "Đóng câu hỏi";
                 closeBtn.style.display = "inline-block";
                 closeBtn.style.background = "linear-gradient(135deg, #334155, #0f172a)";
             }
+
+            setTimeout(() => {
+                closeBtn.scrollIntoView({ behavior: "smooth", block: "nearest" });
+            }, 100);
         }
 
         function closeModal() {
             document.getElementById("modal-overlay").style.display = "none";
+            document.body.classList.remove("modal-open");
+
             const piece = document.getElementById(`piece-${currentPieceIndex}`);
 
             if (pieceStatus[currentPieceIndex] === 1) {
-                // Lật mở mảnh ghép
                 piece.classList.add("hidden");
             } else if (pieceStatus[currentPieceIndex] === -1) {
-                // Chuyển mảnh ghép sang màu đen và khóa lại
                 piece.classList.add("wrong-piece");
                 piece.innerHTML = `<span>${currentPieceIndex + 1}</span><span class="piece-sub"><i class="fa-solid fa-lock"></i> Đã khóa</span>`;
             }
@@ -1189,7 +1299,6 @@
             checkAllAttempted();
         }
 
-        // Kiểm tra xem đã làm hết cả 10 mảnh ghép chưa (dù đúng hay sai)
         function checkAllAttempted() {
             const isAllDone = pieceStatus.every(st => st !== 0);
             if (isAllDone) {
@@ -1251,7 +1360,7 @@
             const timeSpent = MAX_TIME_SECONDS - remainingSeconds;
             const openedCount = pieceStatus.filter(st => st === 1).length;
 
-            if (!scoresRef) {
+            if (!window.scoresRef) {
                 showCustomAlert(
                     `Kết quả của ${nameVal} (${classVal}): ${currentScore}/100 điểm - Mở ${openedCount}/10 mảnh ghép.\n(Lưu ý: Chưa kết nối được Firebase để lưu Bảng xếp hạng)`,
                     "ℹ️"
@@ -1268,7 +1377,7 @@
                 timestamp: firebase.database.ServerValue.TIMESTAMP
             };
 
-            scoresRef.push(record)
+            window.scoresRef.push(record)
                 .then(() => {
                     hasSubmittedScore = true;
                     if (typeof gtag === 'function') {
@@ -1310,7 +1419,11 @@
                 filtered = allScoresData.filter(item => item.className === filterClass);
             }
 
-            // Sắp xếp: Điểm cao xếp trước -> Số mảnh mở nhiều hơn -> Thời gian làm nhanh hơn
+            const totalSpan = document.getElementById("total-participants");
+            if (totalSpan) {
+                totalSpan.innerText = `(${filtered.length} bạn)`;
+            }
+
             filtered.sort((a, b) => {
                 if ((b.score || 0) !== (a.score || 0)) return (b.score || 0) - (a.score || 0);
                 if ((b.pieces || 0) !== (a.pieces || 0)) return (b.pieces || 0) - (a.pieces || 0);
@@ -1337,7 +1450,7 @@
                         <td><span style="background:#e0f2fe; color:#0369a1; padding:4px 10px; border-radius:8px; font-size:13px;">${escapeHTML(item.className || "")}</span></td>
                         <td style="color:#d97706; font-weight:800;">${item.score || 0} đ</td>
                         <td>${item.pieces || 0}/10</td>
-                        <td style="color:#15803d;">${formatTime(item.time || 0)}</td>
+                        <td style="color:#15803d; font-weight:600;">${formatDate(item.timestamp)}</td>
                     </tr>
                 `;
             }).join("");
@@ -1358,6 +1471,7 @@
             isGameOver = false;
             hasSubmittedScore = false;
 
+            document.body.classList.remove("modal-open");
             document.getElementById("student-name").disabled = false;
             document.getElementById("student-class").disabled = false;
 
