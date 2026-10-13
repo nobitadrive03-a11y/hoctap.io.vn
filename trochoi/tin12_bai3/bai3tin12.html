@@ -6,28 +6,28 @@
     <title>Giải Mã Mật Thư - Bài 3 Tin học 12</title>
 
     <!-- Google tag (gtag.js) - Google Analytics Measurement -->
-     <!-- 1. MÃ GA4 GỐC (Kết nối với Google Analytics) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-NSJCVSL9RM"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
+    <!-- 1. MÃ GA4 GỐC (Kết nối với Google Analytics) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-NSJCVSL9RM"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
 
-    gtag('config', 'G-NSJCVSL9RM'); 
-  </script>
+      gtag('config', 'G-NSJCVSL9RM'); 
+    </script>
 
-  <!-- 2. MÃ NHỊP TIM 30 GIÂY -->
-  <script>
-    setInterval(function() {
-      if (!document.hidden) { 
-        gtag('event', 'keep_alive', {
-          'event_category': 'Engagement',
-          'event_label': 'Học sinh đang làm ...',
-          'non_interaction': false
-        });
-      }
-    }, 30000); 
-  </script>
+    <!-- 2. MÃ NHỊP TIM 30 GIÂY -->
+    <script>
+      setInterval(function() {
+        if (!document.hidden) { 
+          gtag('event', 'keep_alive', {
+            'event_category': 'Engagement',
+            'event_label': 'Học sinh đang làm ...',
+            'non_interaction': false
+          });
+        }
+      }, 30000); 
+    </script>
 
     <!-- Confetti hiệu ứng pháo hoa -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
@@ -420,7 +420,6 @@
             white-space: nowrap;
         }
 
-        /* Thanh tiến trình mỏng dưới Header */
         .progress-track {
             width: 100%;
             height: 5px;
@@ -437,7 +436,6 @@
             padding: 16px 20px 20px;
         }
 
-        /* Hộp hiển thị Câu hỏi (CHỮ MÀU ĐỎ NỔI BẬT) */
         .question-box {
             background: #fff1f2;
             border: 2px solid #fecdd3;
@@ -454,7 +452,6 @@
             text-align: center;
         }
 
-        /* --- DANH SÁCH ĐÁP ÁN A, B, C, D (ĐÃ TĂNG CỠ CHỮ LÊN +2 ĐƠN VỊ) --- */
         .options-list {
             display: flex;
             flex-direction: column;
@@ -471,7 +468,6 @@
             background: #f8fafc;
             cursor: pointer;
             transition: transform 0.15s ease, background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
-            /* Tăng cỡ chữ thêm +2 đơn vị (từ 16px lên 18.5px) */
             font-size: 1.15rem;
             color: #1e3a8a;
             font-weight: 700;
@@ -497,7 +493,6 @@
             cursor: default;
         }
 
-        /* KHI BẤM CHỌN ĐÁP ÁN -> CHUYỂN MÀU XANH BLUE RỰC RỠ */
         .option-item.selected {
             background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%) !important;
             border-color: #1e40af !important;
@@ -514,7 +509,6 @@
             justify-content: center;
             align-items: center;
             font-weight: 900;
-            /* Tăng cỡ chữ A, B, C, D thêm +2 đơn vị */
             font-size: 1.12rem;
             color: #1d4ed8;
             background: #dbeafe;
@@ -528,7 +522,6 @@
             box-shadow: 0 2px 6px rgba(0,0,0,0.18);
         }
 
-        /* Thông báo mở khóa chữ cái mật thư */
         .cipher-hint-banner {
             display: none;
             margin-bottom: 12px;
@@ -542,7 +535,6 @@
             text-align: center;
         }
 
-        /* --- NÚT TIẾP THEO --- */
         .btn-next {
             display: flex;
             align-items: center;
@@ -637,7 +629,7 @@
         }
         .bxh-modal {
             background: #ffffff;
-            max-width: 540px;
+            max-width: 600px;
             width: 100%;
             border-radius: 24px;
             border: 4px solid #facc15;
@@ -659,6 +651,19 @@
             line-height: 1;
         }
         .bxh-close:hover { color: #ef4444; }
+        
+        .bxh-count-badge {
+            display: inline-block;
+            background: #fff1f2;
+            color: #e11d48;
+            border: 1px solid #fecdd3;
+            padding: 4px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            margin-top: 6px;
+        }
+
         .bxh-table-container {
             max-height: 54vh;
             overflow-y: auto;
@@ -711,10 +716,9 @@
             border: 2px solid #fecaca;
         }
 
-        /* --- TỐI ƯU HOÀN HẢO CHO ĐIỆN THOẠI DI ĐỘNG (VỪA KHÍT MÀN HÌNH & MƯỢT MÀ) --- */
+        /* --- TỐI ƯU HOÀN HẢO CHO ĐIỆN THOẠI DI ĐỘNG --- */
         @media (max-width: 640px) {
             body {
-                /* Tắt background-attachment: fixed trên mobile để cuộn cực mượt 60fps */
                 background-attachment: scroll;
             }
             .overlay {
@@ -751,7 +755,6 @@
                 padding: 0 8px;
             }
 
-            /* 10 ô mật thư nằm gọn trên 1 hàng duy nhất trên màn hình điện thoại */
             .cipher-panel {
                 padding: 8px 6px 10px;
                 margin-bottom: 8px;
@@ -775,7 +778,6 @@
                 margin-right: 7px;
             }
 
-            /* Thẻ câu hỏi gọn gàng, vừa màn hình điện thoại */
             .question-card {
                 border-radius: 18px;
                 margin-bottom: 8px;
@@ -813,7 +815,6 @@
                 line-height: 1.38;
             }
 
-            /* Cỡ chữ các lựa chọn A, B, C, D trên điện thoại cũng tăng +2 đơn vị (từ 0.92rem lên 1.05rem) */
             .options-list {
                 gap: 8px;
                 margin-bottom: 10px;
@@ -854,7 +855,7 @@
 </head>
 <body>
 
-    <!-- 1. MÀN HÌNH ĐĂNG NHẬP HỌ TÊN & LỚP (NHẬP TỰ DO) -->
+    <!-- 1. MÀN HÌNH ĐĂNG NHẬP HỌ TÊN & LỚP -->
     <div class="login-overlay" id="loginScreen">
         <div class="login-card">
             <div class="login-header">
@@ -903,12 +904,10 @@
                 <div class="cipher-title">
                     <span>🔑</span> DÃY Ô CHỮ MẬT THƯ BÍ ẨN (10 KÍ TỰ)
                 </div>
-                <div class="secret-word-container" id="secret-word-container">
-                    <!-- Javascript sẽ điền 10 ô vuông vào đây -->
-                </div>
+                <div class="secret-word-container" id="secret-word-container"></div>
             </div>
 
-            <!-- Thẻ câu hỏi thiết kế mới đẹp mắt (Không có nút Làm lại) -->
+            <!-- Thẻ câu hỏi -->
             <div class="question-card" id="quiz-card">
                 <div class="quiz-card-header">
                     <div class="quiz-header-left">
@@ -948,7 +947,7 @@
                 </div>
             </div>
 
-            <!-- Màn hình kết quả (Khi bấm nút sẽ quay lại màn hình Đăng nhập ban đầu) -->
+            <!-- Màn hình kết quả -->
             <div id="result-screen">
                 <div id="result-message"></div>
                 <div class="final-word-display" id="final-word"></div>
@@ -983,7 +982,8 @@
             <button class="bxh-close" onclick="closeLeaderboard()">&times;</button>
             <div style="text-align: center;">
                 <h3 style="font-size: 1.45rem; font-weight: 900; color: #d97706;">🏆 BẢNG XẾP HẠNG GIẢI MÃ</h3>
-                <p id="firebaseStatusText" style="font-size: 0.78rem; color: #16a34a; font-weight: bold; margin-top: 4px;">
+                <div class="bxh-count-badge">Tổng số học sinh tham gia: <span id="bxhTotalCount">0</span></div>
+                <p id="firebaseStatusText" style="font-size: 0.78rem; color: #16a34a; font-weight: bold; margin-top: 6px;">
                     ● Đồng bộ trực tuyến (Firebase Realtime Database)
                 </p>
             </div>
@@ -991,10 +991,11 @@
                 <table class="bxh-table">
                     <thead>
                         <tr>
-                            <th style="text-align: center; width: 60px;">Hạng</th>
+                            <th style="text-align: center; width: 55px;">Hạng</th>
                             <th>Học Sinh</th>
-                            <th style="text-align: center; width: 85px;">Lớp</th>
-                            <th style="text-align: right; width: 75px;">Điểm</th>
+                            <th style="text-align: center; width: 75px;">Lớp</th>
+                            <th style="text-align: center; width: 65px;">Điểm</th>
+                            <th style="text-align: right; width: 110px;">Ngày tham gia</th>
                         </tr>
                     </thead>
                     <tbody id="leaderboardBody"></tbody>
@@ -1021,6 +1022,21 @@
     let database = null;
     const LEADERBOARD_REF = 'bxh_tin12_bai3_thietbimang';
     let realtimeLeaderboard = [];
+
+    // Hàm chuyển đổi timestamp hoặc chuỗi ngày thành dạng dd/mm/yyyy
+    function formatDateOnly(val) {
+        if (!val) return "--/--/----";
+        const d = new Date(val);
+        if (isNaN(d.getTime())) {
+            // Trường hợp dữ liệu cũ lưu dạng chuỗi ngày giờ
+            const parts = String(val).split(' ');
+            return parts[parts.length - 1] || String(val);
+        }
+        const day = d.getDate().toString().padStart(2, '0');
+        const month = (d.getMonth() + 1).toString().padStart(2, '0');
+        const year = d.getFullYear();
+        return `${day}/${month}/${year}`;
+    }
 
     try {
         if (!firebase.apps.length) {
@@ -1059,7 +1075,6 @@
         console.error("Không thể khởi tạo Firebase:", e);
     }
 
-    // Âm thanh phản hồi khi bấm chọn đáp án
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     function playClickSound() {
         try {
@@ -1078,7 +1093,6 @@
         } catch (e) {}
     }
 
-    // Bộ đếm nhịp tim Google Analytics mỗi 30 giây
     let studentName = "";
     let studentClass = "";
     setInterval(() => {
@@ -1092,8 +1106,6 @@
     }, 30000);
 
     // --- 1. DỮ LIỆU 10 CÂU HỎI BÀI 3: MỘT SỐ THIẾT BỊ MẠNG THÔNG DỤNG (TIN HỌC 12) ---
-    // Đáp án đúng: 1-B, 2-A, 3-B, 4-C, 5-B, 6-A, 7-A, 8-A, 9-B, 10-A
-    // Ghép thành mật thư 10 chữ cái: "KẾT NỐI MẠNG"
     const quizData = [
         {
             text: "Câu 1: Thiết bị mạng nào sau đây có chức năng thu phát sóng vô tuyến để kết nối các thiết bị đầu cuối không dây vào mạng cục bộ (LAN)?",
@@ -1271,7 +1283,6 @@
                 box.innerText = i + 1;
             }
             
-            // Tách khoảng trống giữa chữ KẾT (index 2) - NỐI (index 5) - MẠNG
             if (i === 2 || i === 5) {
                 box.classList.add("space-after");
             }
@@ -1316,7 +1327,6 @@
             optDiv.className = "option-item";
             
             if (isAnswered) {
-                // Khóa cứng, không cho phép chọn lại
                 optDiv.classList.add("locked");
                 if (userAnswers[currentQ] === key) {
                     optDiv.classList.add("selected");
@@ -1340,7 +1350,6 @@
     }
 
     function selectOption(key) {
-        // Nếu đã chọn rồi thì khóa cứng, tuyệt đối không cho chọn lại
         if (userAnswers[currentQ] !== null) return;
         
         playClickSound();
@@ -1351,7 +1360,6 @@
         const nextBtn = document.getElementById("btn-next");
         nextBtn.disabled = false;
 
-        // Trên điện thoại màn hình nhỏ, tự động cuộn mượt xuống nút "Câu tiếp theo" để bấm dễ dàng
         if (window.innerWidth <= 640) {
             setTimeout(() => {
                 nextBtn.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
@@ -1379,12 +1387,15 @@
         if (isGameSaved) return;
         isGameSaved = true;
 
+        const now = new Date();
+        const dateFormatted = formatDateOnly(now.getTime());
+
         const record = {
             name: studentName || "Học sinh",
             className: studentClass || "---",
             score: score,
             timestamp: Date.now(),
-            date: new Date().toLocaleString('vi-VN')
+            date: dateFormatted
         };
 
         if (database) {
@@ -1433,7 +1444,6 @@
         }
     }
 
-    // Khi làm xong bấm nút sẽ quay về màn hình Đăng nhập ban đầu
     function returnToLogin() {
         studentName = "";
         studentClass = "";
@@ -1467,10 +1477,15 @@
     function renderLeaderboardRows() {
         const data = getLeaderboardData();
         const tbody = document.getElementById("leaderboardBody");
+        const totalCountEl = document.getElementById("bxhTotalCount");
         tbody.innerHTML = "";
 
+        if (totalCountEl) {
+            totalCountEl.innerText = `${data.length} học sinh`;
+        }
+
         if (data.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; padding: 20px; color:#64748b; font-style:italic;">Chưa có lượt ghi điểm nào. Hãy là người đầu tiên giải mã mật thư!</td></tr>`;
+            tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding: 20px; color:#64748b; font-style:italic;">Chưa có lượt ghi điểm nào. Hãy là người đầu tiên giải mã mật thư!</td></tr>`;
             return;
         }
 
@@ -1487,11 +1502,14 @@
             else if (index === 1) rankLabel = "🥈 2";
             else if (index === 2) rankLabel = "🥉 3";
 
+            const displayDate = formatDateOnly(player.timestamp || player.date);
+
             tr.innerHTML = `
-                <td style="text-align: center;">${rankLabel}</td>
+                <td style="text-align: center; font-weight: bold;">${rankLabel}</td>
                 <td>${player.name} ${isCurrent ? '(Em)' : ''}</td>
-                <td style="text-align: center;">${player.className || '---'}</td>
-                <td style="text-align: right; font-weight: 800; color: #dc2626;">${player.score}</td>
+                <td style="text-align: center;"><span style="background:#e0f2fe; color:#0369a1; padding:2px 8px; border-radius:6px; font-weight:700; font-size:12px;">${player.className || '---'}</span></td>
+                <td style="text-align: center; font-weight: 800; color: #dc2626;">${player.score}</td>
+                <td style="text-align: right; font-size: 13px; color: #15803d; font-weight: 700;">${displayDate}</td>
             `;
             tbody.appendChild(tr);
         });
