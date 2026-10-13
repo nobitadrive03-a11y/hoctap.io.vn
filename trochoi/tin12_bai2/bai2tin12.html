@@ -7,27 +7,27 @@
 
     <!-- Google tag (gtag.js) - Google Analytics Measurement -->
     <!-- 1. MÃ GA4 GỐC (Kết nối với Google Analytics) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-NSJCVSL9RM"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-NSJCVSL9RM"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
 
-    gtag('config', 'G-NSJCVSL9RM'); 
-  </script>
+      gtag('config', 'G-NSJCVSL9RM'); 
+    </script>
 
-  <!-- 2. MÃ NHỊP TIM 30 GIÂY -->
-  <script>
-    setInterval(function() {
-      if (!document.hidden) { 
-        gtag('event', 'keep_alive', {
-          'event_category': 'Engagement',
-          'event_label': 'Học sinh đang làm ...',
-          'non_interaction': false
-        });
-      }
-    }, 30000); 
-  </script>
+    <!-- 2. MÃ NHỊP TIM 30 GIÂY -->
+    <script>
+      setInterval(function() {
+        if (!document.hidden) { 
+          gtag('event', 'keep_alive', {
+            'event_category': 'Engagement',
+            'event_label': 'Học sinh đang làm ...',
+            'non_interaction': false
+          });
+        }
+      }, 30000); 
+    </script>
 
     <!-- Confetti hiệu ứng pháo hoa -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
@@ -453,7 +453,22 @@
             font-weight: 700;
             margin-top: 6px;
         }
-        #sidebar-list { flex-grow: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; padding-right: 4px; }
+        
+        .bxh-count-badge {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.15);
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            margin: 8px auto 0;
+            display: inline-block;
+            width: 100%;
+        }
+
+        #sidebar-list { flex-grow: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; padding-right: 4px; margin-top: 6px; }
         #sidebar-list::-webkit-scrollbar { width: 6px; }
         #sidebar-list::-webkit-scrollbar-track { background: rgba(255,255,255,0.08); border-radius: 4px; }
         #sidebar-list::-webkit-scrollbar-thumb { background: var(--secondary-color); border-radius: 4px; }
@@ -577,7 +592,6 @@
             -webkit-overflow-scrolling: touch;
         }
 
-        /* Hộp câu hỏi chữ màu ĐỎ nổi bật */
         .question-box {
             background: #fff1f2;
             border: 2px solid #fecdd3;
@@ -595,7 +609,6 @@
             text-align: center;
         }
 
-        /* Danh sách lựa chọn A, B, C, D cỡ chữ lớn, dễ nhìn */
         .options-grid {
             display: flex;
             flex-direction: column;
@@ -649,7 +662,6 @@
             transition: all 0.15s ease;
         }
 
-        /* KHI BẤM ĐÁP ÁN ĐÚNG -> CHUYỂN MÀU XANH BLUE RỰC RỠ */
         .option-btn.correct {
             background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%) !important;
             color: #ffffff !important;
@@ -662,7 +674,6 @@
             border-color: #ffffff !important;
         }
 
-        /* KHI BẤM ĐÁP ÁN SAI -> MÀU ĐỎ */
         .option-btn.wrong {
             background: #ef4444 !important;
             color: #ffffff !important;
@@ -731,7 +742,6 @@
                 font-size: 0.78rem;
             }
 
-            /* Sidebar BXH khi mở trên điện thoại sẽ thành popup mượt mà */
             #sidebar-leaderboard {
                 position: fixed;
                 inset: 0;
@@ -782,7 +792,6 @@
                 font-size: 0.85rem;
             }
 
-            /* Modal Câu hỏi vừa khít trong 1 khung màn hình điện thoại (không bị tràn) */
             .modal {
                 padding: 8px;
             }
@@ -917,6 +926,7 @@
             <button class="lb-close-mobile" onclick="toggleMobileLeaderboard(false)">&times;</button>
             <div class="lb-title">🏆 BẢNG XẾP HẠNG</div>
             <div class="lb-status" id="firebase-status-text">● Đồng bộ trực tuyến (Realtime Database)</div>
+            <div class="bxh-count-badge">Tổng số: <span id="bxh-total-count">0</span> học sinh</div>
         </div>
         <div id="sidebar-list"></div>
     </div>
@@ -999,7 +1009,6 @@
             console.error("Không thể khởi tạo Firebase:", e);
         }
 
-        // Nhịp tim Google Analytics mỗi 30 giây
         let playerName = "";
         let playerClass = "";
         setInterval(() => {
@@ -1012,7 +1021,6 @@
             }
         }, 30000);
 
-        // --- HỆ THỐNG LỜI KHEN & ĐỘNG VIÊN KHÔNG LẶP ---
         const originalCompliments = [
             "Quá xuất sắc! Em nắm bài rất vững!",
             "Đỉnh của chóp! Hoàn toàn chính xác!",
@@ -1054,7 +1062,6 @@
             return message;
         }
 
-        // --- LƯU VÀ LẤY ĐIỂM SỐ (FIREBASE + LOCAL STORAGE) ---
         function saveScore(name, cls, score) {
             const record = {
                 name: name,
@@ -1095,6 +1102,12 @@
             const list = document.getElementById('sidebar-list');
             list.innerHTML = '';
             const scores = getScores();
+            
+            const totalCountEl = document.getElementById('bxh-total-count');
+            if (totalCountEl) {
+                totalCountEl.textContent = scores.length;
+            }
+
             if (scores.length === 0) {
                 list.innerHTML = '<div style="text-align:center; color:#cbd5e1; padding:20px; font-style:italic;">Chưa có lượt ghi điểm nào</div>';
                 return;
@@ -1120,7 +1133,6 @@
             sb.style.display = show ? 'flex' : 'none';
         }
 
-        // --- HỆ THỐNG ÂM THANH ---
         let audioCtx;
         function initAudio() {
             if (!audioCtx) { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
@@ -1174,7 +1186,6 @@
             osc.stop(t + dur);
         }
 
-        // --- 10 CÂU HỎI BÀI 2: TRÍ TUỆ NHÂN TẠO TRONG KHOA HỌC VÀ ĐỜI SỐNG (TIN HỌC 12) ---
         const questions = [
             {
                 id: 1,
@@ -1306,7 +1317,6 @@
         const questionModal = document.getElementById('questionModal');
         const feedbackArea = document.getElementById('feedback-area');
 
-        // Khởi tạo Vòng Quay với 10 vạch chia và 10 con số nằm chính giữa từng múi quạt
         function initWheel() {
             numbersContainer.innerHTML = '';
             dividersContainer.innerHTML = '';
@@ -1505,7 +1515,6 @@
             document.getElementById('spin-btn').style.pointerEvents = 'auto';
         }
 
-        // Khi trả lời hết câu cuối cùng -> Trở về màn hình Vòng Quay chính (Không bật bảng kết quả che mất vòng quay)
         function finishOnMainScreen() {
             questionModal.style.display = 'none';
 
@@ -1516,14 +1525,12 @@
 
             renderSidebarLeaderboard();
 
-            // Cập nhật trạng thái hoàn thành ngay trên màn hình Vòng Quay chính
             const spinBtn = document.getElementById('spin-btn');
             spinBtn.textContent = "XONG";
             spinBtn.style.pointerEvents = 'none';
 
             document.getElementById('instruction').innerHTML = `🎉 Chúc mừng <b>${playerName} (${playerClass})</b> đã hoàn thành 10/10 vòng quay với <b>${currentScore} điểm</b>!`;
 
-            // Bắn pháo hoa chúc mừng trên màn hình Vòng Quay
             playCorrectSound();
             var duration = 2.5 * 1000;
             var animationEnd = Date.now() + duration;
