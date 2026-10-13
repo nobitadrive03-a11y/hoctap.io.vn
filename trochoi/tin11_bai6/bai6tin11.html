@@ -679,8 +679,7 @@
                             <th>Đề thi</th>
                             <th>Điểm</th>
                             <th>Ngày/Giờ làm bài</th>
-                            <th>Tổng TG</th>
-                            <th>Chi tiết</th>
+                           
                         </tr>
                     </thead>
                     <tbody id="final-leaderboard-list">
@@ -1200,8 +1199,7 @@
                     <td>${p.quizName || QUIZ_TITLE}</td>
                     <td><span class="badge-score">${p.score}</span></td>
                     <td style="font-size: 13px; color: #64748b;">${p.dateTime || ''}</td>
-                    <td style="font-weight: bold; color: #0f766e;">${formatDuration(p.duration)}</td>
-                    <td><button type="button" class="btn-detail" data-id="${p.id}">Xem</button></td>
+                    
                 `;
                 fragment.appendChild(tr);
             });
