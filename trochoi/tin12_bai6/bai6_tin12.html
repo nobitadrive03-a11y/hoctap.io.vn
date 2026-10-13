@@ -133,7 +133,7 @@
         #castle { position: absolute; bottom: 35px; right: 1%; font-size: 95px; z-index: 5; }
         .milestone { position: absolute; bottom: 50px; font-size: 35px; z-index: 4; opacity: 0.8; }
         
-        /* --- QUIZ AREA (CÂU HỎI ĐỎ & Ô ĐÁP ÁN NỀN TRẮNG TINH) --- */
+        /* --- QUIZ AREA --- */
         .quiz-area {
             flex: 1.15; background: #2c3e50; color: white; padding: 15px 25px;
             display: flex; flex-direction: column; align-items: center;
@@ -146,7 +146,7 @@
         }
         .question-text {
             font-size: 1.25em; text-align: center; background: #ffffff; 
-            color: #d90429; /* MÀU ĐỎ NỔI BẬT */
+            color: #d90429;
             padding: 16px 24px; border-radius: 12px; margin-bottom: 16px; 
             width: 95%; max-width: 1200px;
             font-weight: bold; border: 3px solid #e74c3c;
@@ -157,7 +157,6 @@
             display: grid; grid-template-columns: 1fr 1fr; gap: 15px; 
             width: 95%; max-width: 1200px; 
         }
-        /* Ô ĐÁP ÁN NỀN TRẮNG TINH (#ffffff) DỄ NHÌN */
         .btn {
             background: #ffffff; color: #1e293b; border: 2px solid #cbd5e1;
             padding: 16px 22px; border-radius: 12px; font-weight: bold; cursor: pointer;
@@ -204,7 +203,6 @@
             text-transform: uppercase;
         }
         
-        /* Tóm tắt điểm & thứ hạng cá nhân vừa làm */
         .my-result-banner {
             display: flex; justify-content: space-between; align-items: center;
             background: linear-gradient(135deg, #fffbeb, #fef3c7);
@@ -214,7 +212,6 @@
         .my-result-info { font-weight: bold; color: #92400e; font-size: 1em; }
         .my-result-score { font-size: 1.2em; font-weight: 900; color: #d90429; }
 
-        /* Thanh công cụ Tìm kiếm & Điều hướng nhanh cho 100.000+ học sinh */
         .lb-toolbar {
             display: flex; justify-content: space-between; align-items: center;
             gap: 10px; margin-bottom: 15px; flex-wrap: wrap;
@@ -238,13 +235,12 @@
             white-space: nowrap;
         }
 
-        /* Bảng dữ liệu */
         .table-responsive {
             width: 100%; overflow-x: auto; border-radius: 12px;
             border: 1px solid #e2e8f0; max-height: 55vh; overflow-y: auto;
         }
         .lb-table {
-            width: 100%; border-collapse: collapse; min-width: 750px;
+            width: 100%; border-collapse: collapse; min-width: 600px;
             text-align: center; font-size: 0.95em;
         }
         .lb-table thead tr {
@@ -271,14 +267,7 @@
             background: #fef2f2; color: #dc2626; padding: 4px 12px;
             border-radius: 20px; font-weight: 800; border: 1px solid #fecaca;
         }
-        .btn-detail {
-            background: #3b82f6; color: white; border: none;
-            padding: 6px 14px; border-radius: 8px; cursor: pointer;
-            font-weight: bold; font-size: 0.85em; transition: 0.2s;
-        }
-        .btn-detail:hover { background: #2563eb; }
 
-        /* Thanh phân trang bên dưới */
         .pagination-bar {
             display: flex; justify-content: space-between; align-items: center;
             margin-top: 15px; padding-top: 12px; border-top: 1px solid #e2e8f0;
@@ -378,9 +367,8 @@
             .my-result-banner { padding: 10px 12px; font-size: 0.88em; }
             .search-box { width: 100%; font-size: 13px; }
         }
-    </style>
+  </style>
   <style>@view-transition { navigation: auto; }</style>
-  <script src="https://cdn.tailwindcss.com" type="text/javascript"></script>
  </head>
  <body>
   <!-- MÀN HÌNH ĐĂNG NHẬP -->
@@ -435,7 +423,7 @@
    </div>
   </div>
 
-  <!-- MÀN HÌNH BẢNG XẾP HẠNG TOÀN BỘ HỌC SINH (KHÔNG GIỚI HẠN) -->
+  <!-- MÀN HÌNH BẢNG XẾP HẠNG TOÀN BỘ HỌC SINH -->
   <div id="end-screen">
    <div class="lb-container">
     <!-- Thanh tiêu đề trên cùng -->
@@ -451,23 +439,22 @@
     <!-- Thông báo điểm & thứ hạng cá nhân -->
     <div class="my-result-banner">
      <div class="my-result-info">
-      🎉 Học sinh: <span id="end-player-info">...</span> | Thời gian: <span id="end-time-spent">0s</span> | Thứ hạng: <span id="my-rank-badge" style="color:#d90429; font-weight:900;">Đang tính...</span>
+      🎉 Học sinh: <span id="end-player-info">...</span> | Thứ hạng: <span id="my-rank-badge" style="color:#d90429; font-weight:900;">Đang tính...</span>
      </div>
      <div class="my-result-score">
       ĐIỂM: <span id="final-score">0</span> / 100
      </div>
     </div>
 
-    <!-- Thanh công cụ tìm kiếm & nhảy tới vị trí cá nhân -->
+    <!-- Thanh công cụ tìm kiếm -->
     <div class="lb-toolbar">
      <input type="text" id="search-input" class="search-box" placeholder="🔍 Tìm kiếm theo Họ tên hoặc Lớp (VD: 12A1, Hoàng Anh)...">
      <div class="toolbar-actions">
       <button class="btn-find-me" id="find-me-btn">🎯 Tìm vị trí của tôi</button>
-      <div class="total-counter">Tổng số: <span id="total-players-count">0</span> lượt nộp bài</div>
+      <div class="total-counter">Tổng số: <span id="total-players-count">0</span> học sinh tham gia</div>
      </div>
     </div>
 
-    <!-- Bảng xếp hạng 8 cột chuẩn mẫu -->
     <div class="table-responsive" id="table-scroll-container">
      <table class="lb-table">
       <thead>
@@ -477,14 +464,12 @@
         <th style="text-align: left;">Họ tên</th>
         <th>Đề thi</th>
         <th>Điểm</th>
-        <th>Ngày/Giờ làm bài</th>
-        <th>Tổng TG</th>
-        <th>Chi tiết</th>
+        <th>Ngày tham gia</th>
        </tr>
       </thead>
       <tbody id="final-leaderboard-list">
        <tr>
-        <td colspan="8" style="padding: 40px; color: #64748b; font-weight: bold;">
+        <td colspan="6" style="padding: 40px; color: #64748b; font-weight: bold;">
          Đang tải dữ liệu bảng xếp hạng thời gian thực... ⏳
         </td>
        </tr>
@@ -492,7 +477,7 @@
      </table>
     </div>
 
-    <!-- Thanh phân trang thông minh hỗ trợ 100.000+ học sinh -->
+    <!-- Thanh phân trang -->
     <div class="pagination-bar">
      <div>
       Hiển thị <strong id="showing-range">0 - 0</strong> trên tổng số <strong id="showing-total">0</strong> học sinh
@@ -516,24 +501,11 @@
    </div>
   </div>
 
-  <!-- MODAL XEM CHI TIẾT ĐÁP ÁN ĐÃ CHỌN -->
-  <div id="detail-modal">
-   <div class="detail-card">
-    <div class="detail-header">
-     <span id="detail-modal-title">Chi tiết bài làm</span>
-     <button id="close-detail-btn" style="background:none; border:none; color:white; font-size:1.4em; cursor:pointer;">✖</button>
-    </div>
-    <div class="detail-body" id="detail-modal-body"></div>
-   </div>
-  </div>
-
-  <!-- 3. TÍCH HỢP FIREBASE REALTIME DATABASE & LOGIC XẾP HẠNG TOÀN BỘ -->
   <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
         import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-analytics.js";
         import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
-        // Cấu hình Firebase của bạn
         const firebaseConfig = {
             apiKey: "AIzaSyBQ9Pos8awlh9j041qDWTPFRsVIjF-kPnk",
             authDomain: "hoctap-91691.firebaseapp.com",
@@ -552,6 +524,15 @@
         const QUIZ_TITLE = 'Bài 6 - Giao tiếp mạng';
 
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+        function formatDateOnly(timestamp) {
+            if (!timestamp) return "--/--/----";
+            const d = new Date(timestamp);
+            const day = d.getDate().toString().padStart(2, '0');
+            const month = (d.getMonth() + 1).toString().padStart(2, '0');
+            const year = d.getFullYear();
+            return `${day}/${month}/${year}`;
+        }
 
         const questions = [
             { 
@@ -651,11 +632,9 @@
         let playerName = ""; 
         let playerClass = "";
         let startTime = 0;
-        let userAnswers = [];
         
-        // Dữ liệu bảng xếp hạng toàn bộ học sinh
-        let allPlayersRanked = []; // Chứa toàn bộ 100% học sinh đã được gắn số thứ tự rank
-        let filteredPlayers = [];  // Chứa danh sách sau khi tìm kiếm/lọc
+        let allPlayersRanked = []; 
+        let filteredPlayers = [];  
         let currentPage = 1;
         let pageSize = 50;
 
@@ -668,14 +647,6 @@
         const scoreDisplay = document.getElementById('score');
         const nextBtn = document.getElementById('next-btn');
 
-        function formatDuration(sec) {
-            if (!sec || sec < 0) return "0s";
-            const m = Math.floor(sec / 60);
-            const s = sec % 60;
-            return m > 0 ? `${m}p ${s}s` : `${s}s`;
-        }
-
-        // Lưu điểm lên Firebase Realtime Database
         async function saveScoreToFirebase(playerData) {
             try {
                 const playerRef = ref(db, `${LEADERBOARD_PATH}/${playerData.id}`);
@@ -692,7 +663,6 @@
             }
         }
 
-        // Lắng nghe và Xếp hạng TOÀN BỘ 100% học sinh theo thời gian thực
         function listenRealtimeLeaderboard() {
             const lbRef = ref(db, LEADERBOARD_PATH);
             onValue(lbRef, (snapshot) => {
@@ -700,14 +670,12 @@
                 let list = [];
                 if (data) {
                     list = Object.values(data);
-                    // Sắp xếp toàn bộ học sinh: Điểm cao -> Thời gian nhanh -> Nộp sớm
                     list.sort((a, b) => {
                         if (b.score !== a.score) return b.score - a.score;
                         if ((a.duration || 999999) !== (b.duration || 999999)) return (a.duration || 999999) - (b.duration || 999999);
                         return (a.timestamp || 0) - (b.timestamp || 0);
                     });
 
-                    // Gắn thứ hạng chính xác (từ 1 đến N, kể cả 100.000 học sinh)
                     list.forEach((item, index) => {
                         item.rank = index + 1;
                     });
@@ -716,7 +684,6 @@
                 allPlayersRanked = list;
                 document.getElementById('total-players-count').innerText = allPlayersRanked.length.toLocaleString('vi-VN');
 
-                // Cập nhật thứ hạng của người chơi hiện tại trên Banner
                 const myRecord = allPlayersRanked.find(p => p.id === sessionID);
                 if (myRecord) {
                     document.getElementById('my-rank-badge').innerText = `#${myRecord.rank.toLocaleString('vi-VN')} / ${allPlayersRanked.length.toLocaleString('vi-VN')}`;
@@ -755,7 +722,6 @@
             const endIdx = Math.min(startIdx + pageSize, total);
             const pageItems = filteredPlayers.slice(startIdx, endIdx);
 
-            // Cập nhật thông tin phân trang
             document.getElementById('showing-range').innerText = total > 0 ? `${(startIdx + 1).toLocaleString('vi-VN')} - ${endIdx.toLocaleString('vi-VN')}` : "0 - 0";
             document.getElementById('showing-total').innerText = total.toLocaleString('vi-VN');
             document.getElementById('current-page-display').innerText = currentPage.toLocaleString('vi-VN');
@@ -769,7 +735,7 @@
             if (pageItems.length === 0) {
                 listDiv.innerHTML = `
                     <tr>
-                        <td colspan="8" style="padding: 45px; color: #64748b; font-weight: bold; font-size: 1.1em;">
+                        <td colspan="6" style="padding: 45px; color: #64748b; font-weight: bold; font-size: 1.1em;">
                             Chưa có dữ liệu nộp bài phù hợp 📭
                         </td>
                     </tr>`;
@@ -788,31 +754,22 @@
                 else if (p.rank === 2) rankDisplay = '🥈 2';
                 else if (p.rank === 3) rankDisplay = '🥉 3';
 
+                const displayDate = formatDateOnly(p.timestamp);
+
                 tr.innerHTML = `
                     <td style="font-weight: bold;">${rankDisplay}</td>
                     <td><span class="badge-class">${p.className || '---'}</span></td>
                     <td style="text-align: left; font-weight: bold; color: #1e293b;">${p.name}</td>
                     <td>${p.quizName || QUIZ_TITLE}</td>
                     <td><span class="badge-score">${p.score}</span></td>
-                    <td style="font-size: 0.9em; color: #64748b;">${p.dateTime || p.date || ''}</td>
-                    <td style="font-weight: bold; color: #0f766e;">${formatDuration(p.duration)}</td>
-                    <td><button class="btn-detail" data-id="${p.id}">Xem</button></td>
+                    <td style="font-size: 0.95em; color: #15803d; font-weight: bold;">${displayDate}</td>
                 `;
                 fragment.appendChild(tr);
             });
 
             listDiv.appendChild(fragment);
-
-            // Gắn sự kiện nút Xem chi tiết
-            listDiv.querySelectorAll('.btn-detail').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    const id = btn.getAttribute('data-id');
-                    showPlayerDetail(id);
-                });
-            });
         }
 
-        // Nhảy đến đúng trang và vị trí của học sinh vừa làm bài
         function jumpToMyRank() {
             document.getElementById('search-input').value = '';
             filteredPlayers = allPlayersRanked;
@@ -832,34 +789,6 @@
             }, 100);
         }
 
-        function showPlayerDetail(playerId) {
-            const player = allPlayersRanked.find(p => p.id === playerId);
-            if (!player) return;
-
-            document.getElementById('detail-modal-title').innerText = `Hạng #${player.rank}: ${player.name} (${player.className}) - ${player.score} điểm`;
-            const body = document.getElementById('detail-modal-body');
-            body.innerHTML = '';
-
-            const details = player.details || [];
-            if (details.length === 0) {
-                body.innerHTML = '<p style="text-align:center; color:#64748b;">Không có dữ liệu chi tiết cho lượt chơi này.</p>';
-            } else {
-                details.forEach((d) => {
-                    const div = document.createElement('div');
-                    div.className = `detail-item ${d.isCorrect ? 'correct' : 'wrong'}`;
-                    div.innerHTML = `
-                        <div style="font-weight:bold; color:#1e293b; margin-bottom:6px;">${d.q}</div>
-                        <div style="font-size:0.95em;">
-                            👉 Đã chọn: <strong style="color:${d.isCorrect ? '#16a34a' : '#dc2626'}">${d.chosen}</strong> 
-                            ${d.isCorrect ? '✅' : `<br>✔️ Đáp án đúng: <strong style="color:#16a34a">${d.correctAns}</strong>`}
-                        </div>
-                    `;
-                    body.appendChild(div);
-                });
-            }
-            document.getElementById('detail-modal').style.display = 'flex';
-        }
-
         listenRealtimeLeaderboard();
 
         async function enterGame() {
@@ -874,7 +803,6 @@
             playerName = inputName;
             playerClass = inputClass;
             startTime = Date.now();
-            userAnswers = [];
 
             document.getElementById('display-name').innerText = playerName;
             document.getElementById('display-class').innerText = playerClass;
@@ -941,14 +869,6 @@
             allBtns.forEach(b => b.disabled = true);
 
             const isCorrect = q.a[selected].c;
-            const correctOption = q.a.find(item => item.c);
-
-            userAnswers.push({
-                q: q.q,
-                chosen: q.a[selected].t,
-                correctAns: correctOption ? correctOption.t : "",
-                isCorrect: isCorrect
-            });
 
             if (isCorrect) {
                 playSound('correct');
@@ -993,25 +913,19 @@
 
         async function finishGame() {
             const durationSec = Math.max(1, Math.round((Date.now() - startTime) / 1000));
-            const now = new Date();
-            const dateTimeStr = now.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit', second: '2-digit' }) + ' ' + now.toLocaleDateString('vi-VN');
-
             const resultData = { 
                 id: sessionID, 
                 name: playerName, 
                 className: playerClass,
                 quizName: QUIZ_TITLE,
                 score: score, 
-                dateTime: dateTimeStr,
                 duration: durationSec,
-                details: userAnswers,
                 timestamp: Date.now()
             };
             
             document.getElementById('end-screen').style.display = 'flex';
             document.getElementById('final-score').innerText = score;
             document.getElementById('end-player-info').innerText = `${playerName} (${playerClass})`;
-            document.getElementById('end-time-spent').innerText = formatDuration(durationSec);
             
             if(score === 100) { 
                 char.style.left = "88%"; 
@@ -1025,7 +939,6 @@
 
             createFireworks(window.innerWidth/2, window.innerHeight/2);
 
-            // Lưu lên Firebase và tự động nhảy đến trang có tên của học sinh
             await saveScoreToFirebase(resultData);
             setTimeout(() => jumpToMyRank(), 300);
         }
@@ -1041,7 +954,6 @@
             document.getElementById('game-wrapper').style.display = 'none';
         }
 
-        // Gắn sự kiện cho các nút điều khiển & phân trang
         document.getElementById('start-btn').addEventListener('click', enterGame);
         document.getElementById('next-btn').addEventListener('click', handleNextQuestion);
         document.getElementById('replay-btn').addEventListener('click', replayGame);
@@ -1063,10 +975,6 @@
         document.getElementById('last-page-btn').addEventListener('click', () => { 
             currentPage = Math.max(1, Math.ceil(filteredPlayers.length / pageSize)); 
             renderCurrentPage(); 
-        });
-
-        document.getElementById('close-detail-btn').addEventListener('click', () => {
-            document.getElementById('detail-modal').style.display = 'none';
         });
     </script>
  </body>
