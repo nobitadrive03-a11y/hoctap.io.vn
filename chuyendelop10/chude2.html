@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Chủ đề 2: Mạng máy tính và Internet - Hành Trình Số</title>
+    <!-- Tích hợp Font chữ Google -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&family=Merriweather:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <!-- Tích hợp thư viện Icon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- 1. MÃ GA4 GỐC (Kết nối với Google Analytics) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-NSJCVSL9RM"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-NSJCVSL9RM'); 
+</script>
+
+<!-- 2. MÃ NHỊP TIM 30 GIÂY -->
+<script>
+  setInterval(function() {
+    if (!document.hidden) { 
+      gtag('event', 'keep_alive', {
+        'event_category': 'Engagement',
+        'event_label': 'Học sinh đang làm bài',
+        'non_interaction': false
+      });
+    }
+  }, 30000); 
+</script>
+
+    <style id="main-style">
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1e40af;
+            --tech-gradient: linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%);
+            --landing-bg: linear-gradient(135deg, #ec4899 0%, #ef4444 100%); 
+            --accent: #f59e0b;
+            --success: #10b981;
+            --danger: #ef4444;
+            --bg-body: #e0f2fe;
+            --text-main: #334155;
+            --text-muted: #64748b;
+            --white: #ffffff;
+            --shadow-lg: 0 20px 40px -5px rgba(0, 0, 0, 0.15);
+            --radius-md: 12px;
+            --radius-lg: 24px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-body);
+            color: var(--text-main);
+            line-height: 1.6;
+            min-height: 100vh;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ----- MÀN HÌNH CHÀO (LANDING) ----- */
+        #landing-view {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: var(--landing-bg);
+            padding: 15px;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        .hero-card {
+            background: var(--white);
+            padding: 40px 25px;
+            border-radius: var(--radius-lg);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            max-width: 650px;
+            width: 100%;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .logo-hs {
+            width: 80px;
+            height: 80px;
+            background-color: #dc2626;
+            border: 4px solid #fbbf24;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2rem;
+            font-weight: 900;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(220, 38, 38, 0.4);
+        }
+
+        .hero-card h1 {
+            font-family: 'Inter', sans-serif;
+            color: #dc2626;
+            font-size: 1.2rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            letter-spacing: 1px;
+        }
+
+        .hero-card h2 {
+            font-family: 'Inter', sans-serif;
+            color: #dc2626;
+            font-size: 1.5rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            line-height: 1.3;
+        }
+
+        .motto-text {
+            font-family: 'Merriweather', serif;
+            color: var(--text-muted);
+            font-size: 1.05rem;
+            font-style: italic;
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+            width: 100%;
+        }
+
+        .btn {
+            padding: 14px 20px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            flex: 1;
+            min-width: 100%;
+        }
+
+        .btn-primary { background: #3b82f6; color: var(--white); box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.3); }
+        .btn-primary:hover { background: #2563eb; transform: translateY(-2px); }
+        .btn-outline { background-color: #f8fafc; color: #334155; border: 1px solid #cbd5e1; }
+        .btn-outline:hover { background-color: #f1f5f9; transform: translateY(-2px); }
+
+        /* ----- MÀN HÌNH ĐỌC SÁCH ----- */
+        #reader-view {
+            display: none;
+            max-width: 900px;
+            margin: 15px auto;
+            background: #f8fafc;
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+            animation: slideUp 0.6s ease-out;
+            border: 1px solid rgba(255,255,255,0.5);
+        }
+
+        .reader-header {
+            background: var(--tech-gradient);
+            color: var(--white);
+            padding: 15px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .reader-header h2 { font-size: 1.1rem; font-weight: 600; margin: 0; text-align: center; }
+        .nav-controls { display: flex; gap: 10px; width: 100%; justify-content: center; }
+        .btn-small { padding: 10px 15px; font-size: 0.9rem; border-radius: 10px; background: rgba(255,255,255,0.2); color: white; border: 1px solid rgba(255,255,255,0.4); cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; flex: 1; transition: 0.3s; min-width: auto; }
+        .btn-small:hover { background: rgba(255,255,255,0.3); }
+
+        .reader-content { padding: 20px 15px; background: var(--white); }
+
+        h1.main-title {
+            font-family: 'Merriweather', serif;
+            color: var(--primary-dark);
+            text-align: center;
+            margin-bottom: 25px;
+            font-size: 1.6rem;
+            line-height: 1.4;
+        }
+
+        h1.main-title span {
+            display: block;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.95rem;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+        
+        .lesson-banner {
+            text-align: center; 
+            margin: 40px 0 20px 0;
+        }
+        
+        .lesson-banner h2 {
+            display: inline-block; 
+            background: #dc2626; 
+            color: white; 
+            padding: 10px 25px; 
+            border-radius: 30px; 
+            font-size: 1.25rem; 
+            font-weight: 700; 
+            box-shadow: 0 4px 10px rgba(220,38,38,0.3);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        h2.part-title {
+            background: #f1f5f9;
+            color: var(--primary-dark);
+            padding: 12px 15px;
+            border-radius: 10px;
+            border-left: 5px solid var(--primary);
+            margin: 30px 0 15px 0;
+            font-size: 1.15rem;
+            display: flex;
+            align-items: flex-start;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        p { margin-bottom: 12px; text-align: justify; font-size: 0.95rem; }
+        
+        /* Cấu trúc danh sách gạch đầu dòng */
+        .content-list { list-style-type: none; padding-left: 0; margin-bottom: 20px; }
+        .content-list > li {
+            position: relative;
+            padding-left: 35px;
+            margin-bottom: 12px;
+            background: #f8fafc;
+            padding: 12px 12px 12px 35px;
+            border-radius: 10px;
+            border: 1px solid #e2e8f0;
+            font-size: 0.95rem;
+            text-align: justify;
+        }
+        .content-list > li::before {
+            content: '\f105';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            color: var(--primary);
+            position: absolute;
+            left: 12px;
+            top: 12px;
+            font-size: 1rem;
+        }
+        .content-list > li strong { color: var(--primary-dark); display: inline-block; margin-bottom: 5px; }
+
+        /* Hộp cảnh báo */
+        .warning-list > li { border-color: #fca5a5; background: #fef2f2; }
+        .warning-list > li::before { content: '\f071'; color: var(--danger); }
+        .warning-list > li strong { color: #b91c1c; }
+
+        /* Danh sách có đánh số thứ tự */
+        .numbered-list { list-style: none; counter-reset: my-counter; padding-left: 0; margin-bottom: 25px;}
+        .numbered-list > li {
+            position: relative;
+            padding-left: 45px;
+            margin-bottom: 15px;
+            background: #fff;
+            padding: 15px 15px 15px 45px;
+            border-radius: 10px;
+            border: 1px solid #cbd5e1;
+            font-size: 0.95rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            text-align: justify;
+        }
+        .numbered-list > li::before {
+            counter-increment: my-counter;
+            content: counter(my-counter);
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: absolute;
+            left: 10px;
+            top: 13px;
+            font-weight: bold;
+            font-size: 0.85rem;
+        }
+
+        /* Box Tình huống thực tế */
+        .situation-box { background: #fff; border: 1px solid #cbd5e1; padding: 15px; border-radius: 12px; margin-bottom: 25px; }
+        .situation-box h3 { color: #4338ca; font-size: 1.1rem; margin-top: 0; margin-bottom: 12px; border-bottom: 2px solid #818cf8; padding-bottom: 8px; }
+        
+        .question-item { margin-bottom: 15px; }
+        .question-text { font-weight: 600; color: #ef4444; margin-bottom: 8px; font-size: 0.95rem; display: flex; align-items: center; gap: 8px;}
+        .solution-box { background: #f0fdf4; border-left: 4px solid var(--success); padding: 15px; border-radius: 0 8px 8px 0; }
+        .solution-title { font-weight: 700; color: #047857; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; font-size: 1rem;}
+
+        .footer-credit {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 2px dashed #e2e8f0;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+        .footer-credit i { color: #ef4444; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Media Query cho thiết bị lớn (Tablet, PC) */
+        @media (min-width: 640px) {
+            .btn { min-width: 200px; flex: unset; }
+            .action-buttons { flex-direction: row; }
+            .hero-card { padding: 50px; }
+            .reader-header { flex-direction: row; justify-content: space-between; padding: 20px 40px; }
+            .reader-header h2 { text-align: left; }
+            .nav-controls { width: auto; justify-content: flex-end; }
+            .reader-content { padding: 40px; }
+            h1.main-title { font-size: 2.2rem; }
+            h2.part-title { flex-direction: row; align-items: center; }
+            p, .content-list > li, .numbered-list > li { font-size: 1.05rem; }
+            #reader-view { margin: 40px auto; border-radius: var(--radius-lg); }
+            .situation-box { padding: 25px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ================= MÀN HÌNH CHÀO ================= -->
+    <div id="landing-view">
+        <div class="hero-card">
+            <div class="logo-hs">HS</div>
+            
+            <h1>Chuyên đề học tập</h1>
+            <h2>Mạng máy tính<br>và Internet</h2>
+            
+            <p class="motto-text">"Mang công nghệ vào mọi chuyến đi"</p>
+
+            <div class="action-buttons">
+                <button class="btn btn-primary" onclick="openReader()">
+                    <i class="fa-solid fa-book-open"></i> Đọc trực tiếp
+                </button>
+                <button class="btn btn-outline" onclick="downloadContent()">
+                    <i class="fa-solid fa-cloud-arrow-down"></i> Tải bản Offline
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= MÀN HÌNH ĐỌC SÁCH BÊN TRONG ================= -->
+    <div id="reader-view">
+        <div class="reader-header" id="no-print">
+            <h2><i class="fa-solid fa-users"></i> Không gian học tập</h2>
+            <div class="nav-controls">
+                <button class="btn btn-small" onclick="downloadContent()">
+                    <i class="fa-solid fa-download"></i> Lưu máy
+                </button>
+                <button class="btn btn-small" onclick="closeReader()" style="background: rgba(0,0,0,0.2);">
+                    <i class="fa-solid fa-xmark"></i> Thoát
+                </button>
+            </div>
+        </div>
+
+        <div class="reader-content" id="printable-content">
+            <h1 class="main-title">
+                <span>Chủ đề 2</span>
+                MẠNG MÁY TÍNH VÀ INTERNET
+            </h1>
+
+            <!-- ================= BÀI 8 ================= -->
+            <div class="lesson-banner">
+                <h2>BÀI 8: MẠNG MÁY TÍNH TRONG CUỘC SỐNG HIỆN ĐẠI</h2>
+            </div>
+
+            <h2 class="part-title"><i class="fa-solid fa-network-wired"></i> 1. Mạng LAN và Internet</h2>
+            <ul class="content-list">
+                <li><strong>Khái niệm & Phạm vi:</strong>
+                    <div style="padding-left: 15px; margin-top: 10px;">
+                        <p style="margin-bottom: 8px;">✔️ <strong>Mạng LAN (Local Area Network):</strong> Là mạng cục bộ, kết nối các máy tính trong phạm vi hẹp như một phòng máy, một tòa nhà, hoặc khuôn viên trường học.</p>
+                        <p style="margin-bottom: 8px;">✔️ <strong>Internet:</strong> Là mạng của các mạng, bao phủ toàn cầu, kết nối hàng triệu mạng LAN, WAN và các máy tính đơn lẻ lại với nhau.</p>
+                    </div>
+                </li>
+                <li><strong>Cách kết nối & Sở hữu:</strong>
+                    <div style="padding-left: 15px; margin-top: 10px;">
+                        <p style="margin-bottom: 8px;">✔️ <strong>Mạng LAN:</strong> Được quản lý và sở hữu bởi một cá nhân hoặc tổ chức cụ thể (Ví dụ: Mạng LAN của phòng máy thực hành trường THPT Phan Đình Phùng do nhà trường sở hữu và quản trị). Kết nối thường qua cáp mạng (Ethernet) hoặc Wi-Fi nội bộ.</p>
+                        <p style="margin-bottom: 8px;">✔️ <strong>Internet:</strong> Không thuộc sở hữu của bất kỳ cá nhân hay quốc gia nào. Dữ liệu truyền qua hệ thống cáp quang biển, vệ tinh toàn cầu.</p>
+                    </div>
+                </li>
+            </ul>
+
+            <h2 class="part-title" style="border-left-color: #f59e0b;"><i class="fa-solid fa-globe" style="color: #f59e0b;"></i> 2. Vai trò của Internet</h2>
+            <ul class="content-list">
+                <li><strong>Giao tiếp cộng đồng:</strong> Phá vỡ khoảng cách không gian. (Ví dụ: Các nhóm lớp trên Zalo hoặc Facebook giúp học sinh và giáo viên trao đổi bài tập nhanh chóng ngoài giờ học).</li>
+                <li><strong>Giáo dục & Học tập:</strong> Cung cấp kho tài liệu khổng lồ và nền tảng học trực tuyến. (Ví dụ: Nền tảng Hành Trình Số cung cấp bài giảng Tin học, hay hệ thống FSEL giúp tự học tiếng Anh tại nhà).</li>
+            </ul>
+
+            <h2 class="part-title" style="border-left-color: #10b981;"><i class="fa-solid fa-cloud" style="color: #10b981;"></i> 3. Điện toán đám mây (Cloud Computing)</h2>
+            <ul class="content-list">
+                <li><strong>Khái niệm:</strong> Là việc cung cấp các tài nguyên máy tính (lưu trữ, máy chủ, phần mềm) qua Internet thay vì phải cài đặt trực tiếp trên máy tính cá nhân.</li>
+                <li><strong>Các loại dịch vụ cơ bản:</strong>
+                    <div style="padding-left: 15px; margin-top: 10px;">
+                        <p style="margin-bottom: 8px;">☁️ <strong>SaaS (Phần mềm như một dịch vụ):</strong> Người dùng chỉ việc dùng ứng dụng qua web. (Ví dụ: Google Docs, Google Drive).</p>
+                        <p style="margin-bottom: 8px;">☁️ <strong>PaaS (Nền tảng như một dịch vụ):</strong> Cung cấp môi trường cho lập trình viên phát triển web/app. (Ví dụ: Sử dụng Google Firebase Realtime Database để lưu trữ điểm số trắc nghiệm theo thời gian thực).</p>
+                        <p style="margin-bottom: 8px;">☁️ <strong>IaaS (Hạ tầng như một dịch vụ):</strong> Thuê máy chủ, mạng lưu trữ ảo.</p>
+                    </div>
+                </li>
+                <li><strong>Lợi ích:</strong> Tiết kiệm chi phí đầu tư phần cứng, dễ dàng nâng cấp, truy cập dữ liệu mọi lúc mọi nơi chỉ cần có Internet.</li>
+            </ul>
+
+            <h2 class="part-title" style="border-left-color: #8b5cf6;"><i class="fa-solid fa-microchip" style="color: #8b5cf6;"></i> 4. Internet vạn vật (IoT - Internet of Things)</h2>
+            <ul class="content-list">
+                <li><strong>Khái niệm:</strong> Là hệ thống các thiết bị vật lý (không chỉ là máy tính, điện thoại) được gắn cảm biến, phần mềm để kết nối và trao đổi dữ liệu với nhau qua Internet mà không cần con người trực tiếp thao tác.</li>
+                <li><strong>Ví dụ khoa học:</strong> Một hệ thống nông nghiệp thông minh. Cảm biến độ ẩm cắm dưới đất sẽ liên tục đo lường. Khi đất khô, cảm biến gửi dữ liệu qua Wi-Fi lên máy chủ ảo. Máy chủ phân tích và tự động gửi lệnh bật máy bơm nước. Hệ thống này rất phù hợp để học sinh phát triển thành các dự án STEM.</li>
+            </ul>
+
+            <h2 class="part-title" style="border-left-color: #ec4899; background: #fdf2f8;"><i class="fa-solid fa-puzzle-piece" style="color: #ec4899;"></i> BÀI TẬP TÌNH HUỐNG (BÀI 8)</h2>
+            
+            <div class="situation-box">
+                <h3><i class="fa-solid fa-wifi-slash"></i> Tình huống 1: Sự cố rớt mạng khi đang nộp bài</h3>
+                <div class="question-item">
+                    <div class="question-text"><i class="fa-solid fa-circle-exclamation"></i> Tình huống:</div>
+                    <p>Trong giờ thực hành Tin học, phòng máy đột ngột bị mất kết nối Internet cáp quang. Học sinh vừa làm xong bài tập nhưng không thể nộp lên Google Drive hoặc hệ thống Hành Trình Số được nữa.</p>
+                </div>
+                <div class="solution-box">
+                    <div class="solution-title"><i class="fa-solid fa-lightbulb"></i> Cách giải quyết:</div>
+                    <ul class="content-list" style="margin-bottom: 0;">
+                        <li>Giáo viên hướng dẫn học sinh chuyển sang khai thác <strong>Mạng LAN</strong>.</li>
+                        <li>Mặc dù không có Internet (mạng toàn cầu), các máy tính trong phòng vẫn đang kết nối với nhau qua Switch nội bộ. Giáo viên chỉ cần chia sẻ (Share) một thư mục dùng chung trên máy chủ của giáo viên.</li>
+                        <li>Học sinh truy cập vào mạng LAN (qua địa chỉ IP hoặc tên máy) và copy file bài làm vào đó để nộp bài.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="situation-box">
+                <h3><i class="fa-solid fa-seedling"></i> Tình huống 2: Ứng dụng IoT vào hệ thống tưới cây vườn trường</h3>
+                <div class="question-item">
+                    <div class="question-text"><i class="fa-solid fa-circle-exclamation"></i> Tình huống:</div>
+                    <p>Đoàn trường giao cho lớp chăm sóc một bồn hoa. Nhưng cuối tuần học sinh nghỉ học không ai tưới, mùa hè cây hay bị héo. Học sinh thắc mắc làm sao để ứng dụng Tin học giải quyết việc này?</p>
+                </div>
+                <div class="solution-box">
+                    <div class="solution-title"><i class="fa-solid fa-lightbulb"></i> Cách giải quyết:</div>
+                    <ul class="content-list" style="margin-bottom: 0;">
+                        <li>Giáo viên giải thích cách xây dựng một hệ thống <strong>Internet vạn vật (IoT)</strong>.</li>
+                        <li>Học sinh có thể cắm một cảm biến độ ẩm đất vào bồn hoa. Khi đất khô (độ ẩm dưới 30%), cảm biến truyền tín hiệu qua Wi-Fi về một bộ điều khiển trung tâm.</li>
+                        <li>Bộ điều khiển tự động kích hoạt một rơ-le để bật máy bơm nước. Khi đất đủ ẩm, hệ thống tự ngắt. Không cần học sinh phải đến tận nơi để tưới.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- ================= BÀI 9 ================= -->
+            <div class="lesson-banner" style="margin-top: 50px;">
+                <h2>BÀI 9: AN TOÀN TRÊN KHÔNG GIAN MẠNG</h2>
+            </div>
+
+            <h2 class="part-title"><i class="fa-solid fa-triangle-exclamation"></i> 1. Năm nguy cơ trên không gian mạng</h2>
+            <ol class="numbered-list">
+                <li><strong>Lừa đảo trực tuyến:</strong> Kẻ gian lập các trang web giả mạo (ví dụ giả mạo trang đăng nhập ngân hàng hoặc mạng xã hội) để đánh cắp tài khoản và mật khẩu.</li>
+                <li><strong>Bắt nạt trên mạng:</strong> Dùng mạng xã hội để đe dọa, xúc phạm hoặc bêu rếu thông tin cá nhân của bạn học.</li>
+                <li><strong>Rò rỉ thông tin cá nhân:</strong> Vô tình công khai CCCD, số điện thoại, địa chỉ nhà khiến kẻ xấu lợi dụng.</li>
+                <li><strong>Tiếp xúc với thông tin giả mạo:</strong> Tin tức sai lệch, độc hại gây hoang mang dư luận.</li>
+                <li><strong>Lây nhiễm mã độc:</strong> Tải các phần mềm không rõ nguồn gốc khiến máy tính bị hỏng hoặc mất dữ liệu.</li>
+            </ol>
+
+            <h2 class="part-title" style="border-left-color: #ef4444;"><i class="fa-solid fa-bug" style="color: #ef4444;"></i> 2. Phần mềm độc hại (Malware) & Virus</h2>
+            <ul class="content-list">
+                <li><strong>Khái niệm:</strong> Là các phần mềm được viết ra với mục đích phá hoại, đánh cắp dữ liệu hoặc chiếm quyền điều khiển hệ thống. Virus là một dạng phổ biến nhất của mã độc.</li>
+                <li><strong>Tác hại (Ví dụ cụ thể):</strong>
+                    <div style="padding-left: 15px; margin-top: 10px;">
+                        <p style="margin-bottom: 8px;">✔️ <strong>Phá hủy dữ liệu:</strong> Virus Ransomware lây nhiễm vào máy tính giáo viên, mã hóa toàn bộ đề thi, giáo án và yêu cầu phải nộp tiền chuộc mới mở khóa được.</p>
+                        <p style="margin-bottom: 8px;">✔️ <strong>Đánh cắp thông tin:</strong> Trojan ẩn mình trong một file tải game miễn phí; khi học sinh cài đặt, nó sẽ âm thầm ghi lại thao tác bàn phím để ăn cắp mật khẩu Facebook.</p>
+                    </div>
+                </li>
+                <li><strong>Cách phòng chống:</strong>
+                    <div style="padding-left: 15px; margin-top: 10px;">
+                        <p style="margin-bottom: 8px;">🛡️ Sử dụng phần mềm diệt virus (Windows Defender, Kaspersky...).</p>
+                        <p style="margin-bottom: 8px;">🛡️ Không click vào các đường link lạ gửi qua Messenger hoặc Email.</p>
+                        <p style="margin-bottom: 8px;">🛡️ Không tải phần mềm từ các trang web "bẻ khóa" (crack), luôn cập nhật hệ điều hành thường xuyên.</p>
+                    </div>
+                </li>
+            </ul>
+
+            <h2 class="part-title" style="border-left-color: #ec4899; background: #fdf2f8;"><i class="fa-solid fa-shield-halved" style="color: #ec4899;"></i> BÀI TẬP TÌNH HUỐNG (BÀI 9)</h2>
+            
+            <div class="situation-box">
+                <h3><i class="fa-solid fa-user-secret"></i> Tình huống 1: Sập bẫy lừa đảo qua tin nhắn</h3>
+                <div class="question-item">
+                    <div class="question-text"><i class="fa-solid fa-circle-exclamation"></i> Tình huống:</div>
+                    <p>Một học sinh nhận được tin nhắn Zalo/Facebook từ tài khoản giống hệt của giáo viên chủ nhiệm, thông báo: "Trường đang thu gấp quỹ hỗ trợ ngoại khóa, em báo phụ huynh chuyển 500k vào số tài khoản này ngay trong chiều nay nhé".</p>
+                </div>
+                <div class="solution-box">
+                    <div class="solution-title"><i class="fa-solid fa-lightbulb"></i> Cách giải quyết:</div>
+                    <ul class="content-list" style="margin-bottom: 0;">
+                        <li><strong>Bước 1:</strong> Tuyệt đối không chuyển tiền ngay.</li>
+                        <li><strong>Bước 2:</strong> Gọi điện thoại trực tiếp vào số di động của giáo viên chủ nhiệm hoặc gặp mặt trực tiếp trên lớp để xác minh lại thông tin.</li>
+                        <li><strong>Bước 3:</strong> Nếu xác định là giả mạo, cần chụp màn hình lại để cảnh báo cho các bạn trong lớp và dùng tính năng Báo cáo (Report) của mạng xã hội để khóa tài khoản giả mạo đó lại.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="situation-box">
+                <h3><i class="fa-solid fa-skull-crossbones"></i> Tình huống 2: Lây nhiễm mã độc tống tiền (Ransomware) từ USB</h3>
+                <div class="question-item">
+                    <div class="question-text"><i class="fa-solid fa-circle-exclamation"></i> Tình huống:</div>
+                    <p>Học sinh A mượn USB của bạn ở tiệm photocopy về cắm vào máy tính cá nhân để chép đề cương. Vừa mở USB, máy tính bị treo nhẹ, sau đó toàn bộ file Word, Excel, hình ảnh trên máy bị đổi đuôi thành .crypt và không thể mở được. Màn hình hiện thông báo yêu cầu chuyển tiền Bitcoin để lấy mật khẩu giải mã.</p>
+                </div>
+                <div class="solution-box">
+                    <div class="solution-title"><i class="fa-solid fa-lightbulb"></i> Cách giải quyết:</div>
+                    <ul class="content-list" style="margin-bottom: 0;">
+                        <li><strong>Bước 1:</strong> Ngay lập tức ngắt kết nối Internet (rút dây mạng, tắt Wi-Fi) để mã độc không lây lan sang các máy khác nếu đang dùng chung mạng LAN.</li>
+                        <li><strong>Bước 2:</strong> Tuyệt đối không trả tiền chuộc vì không có gì đảm bảo tin tặc sẽ trả lại dữ liệu.</li>
+                        <li><strong>Bước 3:</strong> Cài lại hệ điều hành, format lại ổ cứng và nhờ chuyên gia hỗ trợ. <strong>Bài học rút ra:</strong> Luôn quét virus bằng phần mềm khi cắm USB lạ, và thói quen quan trọng nhất là phải sao lưu (backup) các dữ liệu quan trọng lên Đám mây (Google Drive/OneDrive).</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-credit">
+                Hệ thống tài liệu điện tử chuyên sâu | <strong>Hành Trình Số</strong> <br>
+                Biên soạn chuẩn khoa học bởi Cô Lê Huyền Sinh <i class="fa-solid fa-heart"></i>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const landing = document.getElementById('landing-view');
+        const reader = document.getElementById('reader-view');
+
+        function openReader() {
+            landing.style.display = 'none';
+            reader.style.display = 'block';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            document.body.style.background = "var(--bg-body)";
+        }
+
+        function closeReader() {
+            reader.style.display = 'none';
+            landing.style.display = 'flex';
+            document.body.style.background = "var(--landing-bg)";
+        }
+
+        document.body.style.background = "var(--landing-bg)";
+
+        function downloadContent() {
+            const styleCSS = document.getElementById('main-style').innerHTML;
+            const contentHTML = document.getElementById('printable-content').innerHTML;
+
+            const htmlFile = `<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Chủ đề 2: Mạng máy tính và Internet - Hành Trình Số</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&family=Merriweather:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        ${styleCSS} 
+        body { background: #e0f2fe; padding: 10px; display: block; } 
+        .reader-content { background: white; max-width: 900px; margin: 0 auto; padding: 20px 15px; border-radius: 12px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); border: 1px solid rgba(255,255,255,0.8); } 
+        @media(min-width:640px){ .reader-content{padding: 40px; border-radius: 24px;} }
+    </style>
+</head>
+<body>
+    <div class="reader-content">${contentHTML}</div>
+    <script>alert("Tài liệu đã được lưu offline thành công!");<\/script>
+</body>
+</html>`;
+
+            const blob = new Blob([htmlFile], { type: 'text/html' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = "BaiHoc_MangMayTinh_Va_Internet.html";
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Bài học: Ứng xử văn hóa và tôn trọng pháp luật trên môi trường số - Hành Trình Số</title>
+    <!-- Tích hợp Font chữ Google -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&family=Merriweather:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <!-- Tích hợp thư viện Icon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- 1. MÃ GA4 GỐC (Kết nối với Google Analytics) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-NSJCVSL9RM"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-NSJCVSL9RM'); 
+</script>
+
+<!-- 2. MÃ NHỊP TIM 30 GIÂY -->
+<script>
+  setInterval(function() {
+    if (!document.hidden) { 
+      gtag('event', 'keep_alive', {
+        'event_category': 'Engagement',
+        'event_label': 'Học sinh đang làm bài',
+        'non_interaction': false
+      });
+    }
+  }, 30000); 
+</script>
+
+    <style id="main-style">
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1e40af;
+            --tech-gradient: linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%);
+            --landing-bg: linear-gradient(135deg, #ec4899 0%, #ef4444 100%); 
+            --accent: #f59e0b;
+            --success: #10b981;
+            --danger: #ef4444;
+            --bg-body: #e0f2fe;
+            --text-main: #334155;
+            --text-muted: #64748b;
+            --white: #ffffff;
+            --shadow-lg: 0 20px 40px -5px rgba(0, 0, 0, 0.15);
+            --radius-md: 12px;
+            --radius-lg: 24px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-body);
+            color: var(--text-main);
+            line-height: 1.6;
+            min-height: 100vh;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ----- MÀN HÌNH CHÀO (LANDING) ----- */
+        #landing-view {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: var(--landing-bg);
+            padding: 15px;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        .hero-card {
+            background: var(--white);
+            padding: 40px 25px;
+            border-radius: var(--radius-lg);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            max-width: 650px;
+            width: 100%;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .logo-hs {
+            width: 80px;
+            height: 80px;
+            background-color: #dc2626;
+            border: 4px solid #fbbf24;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2rem;
+            font-weight: 900;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(220, 38, 38, 0.4);
+        }
+
+        .hero-card h1 {
+            font-family: 'Inter', sans-serif;
+            color: #dc2626;
+            font-size: 1.2rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            letter-spacing: 1px;
+        }
+
+        .hero-card h2 {
+            font-family: 'Inter', sans-serif;
+            color: #dc2626;
+            font-size: 1.5rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            line-height: 1.3;
+        }
+
+        .motto-text {
+            font-family: 'Merriweather', serif;
+            color: var(--text-muted);
+            font-size: 1.05rem;
+            font-style: italic;
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+            width: 100%;
+        }
+
+        .btn {
+            padding: 14px 20px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            flex: 1;
+            min-width: 100%;
+        }
+
+        .btn-primary { background: #3b82f6; color: var(--white); box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.3); }
+        .btn-primary:hover { background: #2563eb; transform: translateY(-2px); }
+        .btn-outline { background-color: #f8fafc; color: #334155; border: 1px solid #cbd5e1; }
+        .btn-outline:hover { background-color: #f1f5f9; transform: translateY(-2px); }
+
+        /* ----- MÀN HÌNH ĐỌC SÁCH ----- */
+        #reader-view {
+            display: none;
+            max-width: 900px;
+            margin: 15px auto;
+            background: #f8fafc;
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+            animation: slideUp 0.6s ease-out;
+            border: 1px solid rgba(255,255,255,0.5);
+        }
+
+        .reader-header {
+            background: var(--tech-gradient);
+            color: var(--white);
+            padding: 15px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .reader-header h2 { font-size: 1.1rem; font-weight: 600; margin: 0; text-align: center; }
+        .nav-controls { display: flex; gap: 10px; width: 100%; justify-content: center; }
+        .btn-small { padding: 10px 15px; font-size: 0.9rem; border-radius: 10px; background: rgba(255,255,255,0.2); color: white; border: 1px solid rgba(255,255,255,0.4); cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; flex: 1; transition: 0.3s; min-width: auto; }
+        .btn-small:hover { background: rgba(255,255,255,0.3); }
+
+        .reader-content { padding: 20px 15px; background: var(--white); }
+
+        h1.main-title {
+            font-family: 'Merriweather', serif;
+            color: var(--primary-dark);
+            text-align: center;
+            margin-bottom: 25px;
+            font-size: 1.6rem;
+            line-height: 1.4;
+        }
+
+        h1.main-title span {
+            display: block;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.95rem;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        h2.part-title {
+            background: #f1f5f9;
+            color: var(--primary-dark);
+            padding: 12px 15px;
+            border-radius: 10px;
+            border-left: 5px solid var(--primary);
+            margin: 30px 0 15px 0;
+            font-size: 1.15rem;
+            display: flex;
+            align-items: flex-start;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        p { margin-bottom: 12px; text-align: justify; font-size: 0.95rem; }
+        
+        /* Cấu trúc danh sách gạch đầu dòng */
+        .content-list { list-style-type: none; padding-left: 0; margin-bottom: 20px; }
+        .content-list > li {
+            position: relative;
+            padding-left: 35px;
+            margin-bottom: 12px;
+            background: #f8fafc;
+            padding: 12px 12px 12px 35px;
+            border-radius: 10px;
+            border: 1px solid #e2e8f0;
+            font-size: 0.95rem;
+            text-align: justify;
+        }
+        .content-list > li::before {
+            content: '\f105';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            color: var(--primary);
+            position: absolute;
+            left: 12px;
+            top: 12px;
+            font-size: 1rem;
+        }
+        .content-list > li strong { color: var(--primary-dark); display: inline-block; margin-bottom: 5px; }
+
+        /* Hộp cảnh báo (Nhược điểm mạng/Pháp luật) */
+        .warning-list > li { border-color: #fca5a5; background: #fef2f2; }
+        .warning-list > li::before { content: '\f071'; color: var(--danger); }
+        .warning-list > li strong { color: #b91c1c; }
+
+        /* Danh sách có đánh số thứ tự (7 Biện pháp / 7 Vấn đề) */
+        .numbered-list { list-style: none; counter-reset: my-counter; padding-left: 0; margin-bottom: 25px;}
+        .numbered-list > li {
+            position: relative;
+            padding-left: 45px;
+            margin-bottom: 15px;
+            background: #fff;
+            padding: 15px 15px 15px 45px;
+            border-radius: 10px;
+            border: 1px solid #cbd5e1;
+            font-size: 0.95rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            text-align: justify;
+        }
+        .numbered-list > li::before {
+            counter-increment: my-counter;
+            content: counter(my-counter);
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: absolute;
+            left: 10px;
+            top: 13px;
+            font-weight: bold;
+            font-size: 0.85rem;
+        }
+
+        /* Box Tình huống thực tế */
+        .situation-box { background: #fff; border: 1px solid #cbd5e1; padding: 15px; border-radius: 12px; margin-bottom: 25px; }
+        .situation-box h3 { color: #4338ca; font-size: 1.1rem; margin-top: 0; margin-bottom: 12px; border-bottom: 2px solid #818cf8; padding-bottom: 8px; }
+        
+        .question-item { margin-bottom: 15px; }
+        .question-text { font-weight: 600; color: #ef4444; margin-bottom: 8px; font-size: 0.95rem; display: flex; align-items: center; gap: 8px;}
+        .solution-box { background: #f0fdf4; border-left: 4px solid var(--success); padding: 15px; border-radius: 0 8px 8px 0; }
+        .solution-title { font-weight: 700; color: #047857; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; font-size: 1rem;}
+
+        .footer-credit {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 2px dashed #e2e8f0;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+        .footer-credit i { color: #ef4444; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Media Query cho thiết bị lớn (Tablet, PC) */
+        @media (min-width: 640px) {
+            .btn { min-width: 200px; flex: unset; }
+            .action-buttons { flex-direction: row; }
+            .hero-card { padding: 50px; }
+            .reader-header { flex-direction: row; justify-content: space-between; padding: 20px 40px; }
+            .reader-header h2 { text-align: left; }
+            .nav-controls { width: auto; justify-content: flex-end; }
+            .reader-content { padding: 40px; }
+            h1.main-title { font-size: 2.2rem; }
+            h2.part-title { flex-direction: row; align-items: center; }
+            p, .content-list > li, .numbered-list > li { font-size: 1.05rem; }
+            #reader-view { margin: 40px auto; border-radius: var(--radius-lg); }
+            .situation-box { padding: 25px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ================= MÀN HÌNH CHÀO ================= -->
+    <div id="landing-view">
+        <div class="hero-card">
+            <div class="logo-hs">HS</div>
+            
+            <h1>Chuyên đề học tập</h1>
+            <h2>Ứng xử văn hóa và tôn trọng pháp luật<br>trên môi trường số</h2>
+            
+            <p class="motto-text">"Mang công nghệ vào mọi chuyến đi"</p>
+
+            <div class="action-buttons">
+                <button class="btn btn-primary" onclick="openReader()">
+                    <i class="fa-solid fa-book-open"></i> Đọc trực tiếp
+                </button>
+                <button class="btn btn-outline" onclick="downloadContent()">
+                    <i class="fa-solid fa-cloud-arrow-down"></i> Tải bản Offline
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= MÀN HÌNH ĐỌC SÁCH BÊN TRONG ================= -->
+    <div id="reader-view">
+        <div class="reader-header" id="no-print">
+            <h2><i class="fa-solid fa-users"></i> Không gian học tập</h2>
+            <div class="nav-controls">
+                <button class="btn btn-small" onclick="downloadContent()">
+                    <i class="fa-solid fa-download"></i> Lưu máy
+                </button>
+                <button class="btn btn-small" onclick="closeReader()" style="background: rgba(0,0,0,0.2);">
+                    <i class="fa-solid fa-xmark"></i> Thoát
+                </button>
+            </div>
+        </div>
+
+        <div class="reader-content" id="printable-content">
+            <h1 class="main-title">
+                <span>Bài học</span>
+                ỨNG XỬ VĂN HÓA VÀ TÔN TRỌNG PHÁP LUẬT TRÊN MÔI TRƯỜNG SỐ
+            </h1>
+
+            <!-- PHẦN 1 -->
+            <h2 class="part-title"><i class="fa-solid fa-triangle-exclamation"></i> 1. Bảy (07) vấn đề đạo đức, pháp luật và văn hóa trên mạng</h2>
+            <p>Khi tham gia không gian mạng, học sinh cần nhận thức rõ ranh giới giữa thế giới ảo và hậu quả thực. Dưới đây là 7 vấn đề nổi cộm thường gặp:</p>
+            <ol class="numbered-list">
+                <li><strong>Xuyên tạc, lan truyền thông tin giả mạo :</strong> Việc bịa đặt hoặc chia sẻ các tin tức chưa được kiểm chứng gây hoang mang dư luận, làm tổn hại danh dự người khác.</li>
+                <li><strong>Bắt nạt trực tuyến:</strong> Lập nhóm tẩy chay, nhắn tin đe dọa, hoặc đăng ảnh dìm hàng, chế giễu bạn bè trên mạng xã hội.</li>
+                <li><strong>Vi phạm quyền riêng tư:</strong> Tự ý đăng tải hình ảnh cá nhân, số điện thoại, địa chỉ nhà hoặc tin nhắn nội bộ của người khác khi chưa được sự cho phép.</li>
+                <li><strong>Vi phạm bản quyền và sở hữu trí tuệ:</strong> "Đạo" văn, sử dụng hình ảnh, âm nhạc, phần mềm của người khác mà không xin phép, không trả phí hoặc không ghi rõ nguồn.</li>
+                <li><strong>Lừa đảo trực tuyến:</strong> Lợi dụng sự cả tin để giả mạo người thân vay tiền, hoặc gửi link độc hại để chiếm đoạt tài khoản.</li>
+                <li><strong>Truyền bá nội dung độc hại:</strong> Chia sẻ các video bạo lực, văn hóa phẩm đồi trụy hoặc các trào lưu (trend) nguy hiểm.</li>
+                <li><strong>Nghiện Internet và thế giới ảo:</strong> Dành quá nhiều thời gian cho mạng xã hội, game online dẫn đến bỏ bê học tập và suy giảm sức khỏe thể chất, tinh thần.</li>
+            </ol>
+
+            <!-- PHẦN 2 -->
+            <h2 class="part-title" style="border-left-color: #ef4444;"><i class="fa-solid fa-scale-balanced" style="color: #ef4444;"></i> 2. Một số quy định pháp lý đối với người dùng trên mạng</h2>
+            <p>Không gian mạng không phải là "vùng ngoài vòng pháp luật". Mọi hành vi của người dùng đều bị điều chỉnh bởi pháp luật Việt Nam:</p>
+            <ul class="content-list warning-list">
+                <li><strong>Luật An ninh mạng (2018):</strong> Nghiêm cấm các hành vi sử dụng không gian mạng để xúc phạm nghiêm trọng danh dự, uy tín, nhân phẩm của người khác; thông tin sai sự thật gây hoang mang; chiếm đoạt tài sản; tổ chức đánh bạc, v.v.</li>
+                <li><strong>Nghị định 15/2020/NĐ-CP:</strong> Quy định rõ các mức xử phạt vi phạm hành chính. Ví dụ: Hành vi lợi dụng mạng xã hội để cung cấp, chia sẻ thông tin giả mạo, sai sự thật, vu khống, xúc phạm uy tín của cơ quan, tổ chức, danh dự của cá nhân sẽ bị phạt tiền từ 10.000.000 đồng đến 20.000.000 đồng (đối với tổ chức) và bằng 1/2 mức trên đối với cá nhân.</li>
+            </ul>
+
+            <!-- PHẦN 3 -->
+            <h2 class="part-title"><i class="fa-solid fa-copyright"></i> 3. Quyền tác giả và nghĩa vụ tôn trọng bản quyền</h2>
+            <ul class="content-list">
+                <li><strong>Quyền tác giả:</strong> Là quyền của tổ chức, cá nhân đối với tác phẩm do mình sáng tạo ra hoặc sở hữu (bao gồm bài viết, phần mềm, hình ảnh, âm nhạc, video...). Tác giả có quyền bảo vệ sự toàn vẹn của tác phẩm, cho phép hoặc không cho phép người khác sao chép, phân phối.</li>
+                <li><strong>Nghĩa vụ tôn trọng bản quyền:</strong>
+                    <div style="padding-left: 15px; margin-top: 10px;">
+                        <p style="margin-bottom: 8px;">✔️ <strong>Trích dẫn nguồn rõ ràng:</strong> Khi sử dụng tài liệu tham khảo để làm bài tập, dự án STEM.</p>
+                        <p style="margin-bottom: 8px;">✔️ <strong>Sử dụng phần mềm hợp pháp:</strong> Không dùng các phần mềm bẻ khóa (crack) vì vừa vi phạm pháp luật vừa dễ nhiễm mã độc. Khuyến khích học sinh sử dụng các phần mềm mã nguồn mở và miễn phí (Ví dụ: Dùng GIMP để chỉnh sửa ảnh thay vì Photoshop crack; dùng Python, hệ quản trị cơ sở dữ liệu miễn phí để lập trình).</p>
+                        <p style="margin-bottom: 8px;">✔️ <strong>Mua bản quyền hoặc dùng tài nguyên miễn phí (Free/Open License):</strong> Khi làm video hoặc poster, chỉ dùng hình ảnh/âm nhạc có giấy phép Creative Commons hoặc từ các kho miễn phí.</p>
+                    </div>
+                </li>
+            </ul>
+
+            <!-- PHẦN TÌNH HUỐNG THỰC TẾ -->
+            <h2 class="part-title" style="border-left-color: #8b5cf6; background: #f5f3ff;"><i class="fa-solid fa-puzzle-piece" style="color: #8b5cf6;"></i> 4. TÌNH HUỐNG THỰC TẾ VÀ CÁCH GIẢI QUYẾT</h2>
+
+            <!-- TÌNH HUỐNG 1 -->
+            <div class="situation-box">
+                <h3><i class="fa-solid fa-music"></i> Tình huống 1: Vi phạm bản quyền âm nhạc và hình ảnh trong dự án học tập</h3>
+                <div class="question-item">
+                    <div class="question-text"><i class="fa-solid fa-circle-exclamation"></i> Tình huống:</div>
+                    <p>Nhóm học sinh lớp 11A2 thực hiện một video báo cáo môn Tin học. Các em lên mạng tải một bài hát đang "hot" trên bảng xếp hạng và một số bức ảnh có gắn logo mờ (watermark) của các nhiếp ảnh gia để chèn vào video, sau đó đăng công khai lên YouTube. Hôm sau, video bị YouTube tắt tiếng và cảnh báo vi phạm bản quyền.</p>
+                </div>
+                <div class="solution-box">
+                    <div class="solution-title"><i class="fa-solid fa-lightbulb"></i> Cách giải quyết:</div>
+                    <ul class="content-list" style="margin-bottom: 0;">
+                        <li><strong>Bước 1:</strong> Gỡ bỏ ngay video vi phạm.</li>
+                        <li><strong>Bước 2:</strong> Giáo viên hướng dẫn học sinh cách tìm kiếm hình ảnh không vi phạm bản quyền.</li>
+                        <li><strong>Bước 3:</strong> Thay thế nhạc nền bằng các bản nhạc miễn phí bản quyền từ YouTube Audio Library, hoặc tự sáng tạo nhạc/lời (có thể ứng dụng AI tạo nhạc nếu có ghi chú rõ ràng về công cụ sử dụng).</li>
+                        <li><strong>Bước 4:</strong> Xuất lại video (bằng phần mềm như VideoPad) và đăng tải lại.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- TÌNH HUỐNG 2 -->
+            <div class="situation-box">
+                <h3><i class="fa-solid fa-gavel"></i> Tình huống 2: Bức xúc cá nhân dẫn đến xúc phạm trên mạng</h3>
+                <div class="question-item">
+                    <div class="question-text"><i class="fa-solid fa-circle-exclamation"></i> Tình huống:</div>
+                    <p>Học sinh A có mâu thuẫn cá nhân với học sinh B. Do quá tức giận, A đã lên trang Facebook cá nhân viết một bài đăng dùng những từ ngữ thô tục để chửi bới, bịa đặt thông tin nói xấu B, và gắn thẻ nhiều bạn bè khác vào để cùng "tẩy chay" B.</p>
+                </div>
+                <div class="solution-box">
+                    <div class="solution-title"><i class="fa-solid fa-lightbulb"></i> Cách giải quyết:</div>
+                    <ul class="content-list" style="margin-bottom: 0;">
+                        <li>Giáo viên/phụ huynh yêu cầu học sinh A ngay lập tức xóa bài đăng trên mạng xã hội để ngăn chặn thông tin lan truyền.</li>
+                        <li>Phân tích cho A hiểu hành vi này đã vi phạm Luật An ninh mạng (xúc phạm danh dự, nhân phẩm người khác) và có thể bị xử phạt hành chính theo Nghị định 15/2020/NĐ-CP nếu B tố cáo. Hành vi lôi kéo tẩy chay chính là Bắt nạt trực tuyến.</li>
+                        <li>Yêu cầu A công khai xin lỗi B. Đồng thời, tổ chức một buổi nói chuyện trực tiếp giữa A và B (có sự chứng kiến của giáo viên) để giải quyết dứt điểm mâu thuẫn ngoài đời thực thay vì mang lên mạng.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-credit">
+                Hệ thống tài liệu điện tử chuyên sâu | <strong>Hành Trình Số</strong> <br>
+                Biên soạn chuẩn khoa học bởi Cô Lê Huyền Sinh <i class="fa-solid fa-heart"></i>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const landing = document.getElementById('landing-view');
+        const reader = document.getElementById('reader-view');
+
+        function openReader() {
+            landing.style.display = 'none';
+            reader.style.display = 'block';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            document.body.style.background = "var(--bg-body)";
+        }
+
+        function closeReader() {
+            reader.style.display = 'none';
+            landing.style.display = 'flex';
+            document.body.style.background = "var(--landing-bg)";
+        }
+
+        document.body.style.background = "var(--landing-bg)";
+
+        function downloadContent() {
+            const styleCSS = document.getElementById('main-style').innerHTML;
+            const contentHTML = document.getElementById('printable-content').innerHTML;
+
+            const htmlFile = `<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Bài học: Ứng xử văn hóa và tôn trọng pháp luật trên môi trường số - Hành Trình Số</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&family=Merriweather:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        ${styleCSS} 
+        body { background: #e0f2fe; padding: 10px; display: block; } 
+        .reader-content { background: white; max-width: 900px; margin: 0 auto; padding: 20px 15px; border-radius: 12px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); border: 1px solid rgba(255,255,255,0.8); } 
+        @media(min-width:640px){ .reader-content{padding: 40px; border-radius: 24px;} }
+    </style>
+</head>
+<body>
+    <div class="reader-content">${contentHTML}</div>
+    <script>alert("Tài liệu đã được lưu offline thành công!");<\/script>
+</body>
+</html>`;
+
+            const blob = new Blob([htmlFile], { type: 'text/html' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = "BaiHoc_UngXuVanHoa_TonTrongPhapLuat.html";
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }
+    </script>
+</body>
+</html>
