@@ -1,1 +1,508 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Chủ đề 3: Giữ gìn tính nhân văn trong không gian mạng - Hành Trình Số</title>
+    <!-- Tích hợp Font chữ Google -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&family=Merriweather:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <!-- Tích hợp thư viện Icon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style id="main-style">
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1e40af;
+            --tech-gradient: linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%);
+            --landing-bg: linear-gradient(135deg, #ec4899 0%, #ef4444 100%); 
+            --accent: #f59e0b;
+            --success: #10b981;
+            --danger: #ef4444;
+            --bg-body: #e0f2fe;
+            --text-main: #334155;
+            --text-muted: #64748b;
+            --white: #ffffff;
+            --shadow-lg: 0 20px 40px -5px rgba(0, 0, 0, 0.15);
+            --radius-md: 12px;
+            --radius-lg: 24px;
+        }
 
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-body);
+            color: var(--text-main);
+            line-height: 1.6;
+            min-height: 100vh;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ----- MÀN HÌNH CHÀO (LANDING) ----- */
+        #landing-view {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: var(--landing-bg);
+            padding: 15px;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        .hero-card {
+            background: var(--white);
+            padding: 40px 25px;
+            border-radius: var(--radius-lg);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            max-width: 650px;
+            width: 100%;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .logo-hs {
+            width: 80px;
+            height: 80px;
+            background-color: #dc2626;
+            border: 4px solid #fbbf24;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2rem;
+            font-weight: 900;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(220, 38, 38, 0.4);
+        }
+
+        .hero-card h1 {
+            font-family: 'Inter', sans-serif;
+            color: #dc2626;
+            font-size: 1.2rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            letter-spacing: 1px;
+        }
+
+        .hero-card h2 {
+            font-family: 'Inter', sans-serif;
+            color: #dc2626;
+            font-size: 1.5rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            line-height: 1.3;
+        }
+
+        .motto-text {
+            font-family: 'Merriweather', serif;
+            color: var(--text-muted);
+            font-size: 1.05rem;
+            font-style: italic;
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+            width: 100%;
+        }
+
+        .btn {
+            padding: 14px 20px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            flex: 1;
+            min-width: 100%;
+        }
+
+        .btn-primary { background: #3b82f6; color: var(--white); box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.3); }
+        .btn-primary:hover { background: #2563eb; transform: translateY(-2px); }
+        .btn-outline { background-color: #f8fafc; color: #334155; border: 1px solid #cbd5e1; }
+        .btn-outline:hover { background-color: #f1f5f9; transform: translateY(-2px); }
+
+        /* ----- MÀN HÌNH ĐỌC SÁCH ----- */
+        #reader-view {
+            display: none;
+            max-width: 900px;
+            margin: 15px auto;
+            background: #f8fafc;
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+            animation: slideUp 0.6s ease-out;
+            border: 1px solid rgba(255,255,255,0.5);
+        }
+
+        .reader-header {
+            background: var(--tech-gradient);
+            color: var(--white);
+            padding: 15px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .reader-header h2 { font-size: 1.1rem; font-weight: 600; margin: 0; text-align: center; }
+        .nav-controls { display: flex; gap: 10px; width: 100%; justify-content: center; }
+        .btn-small { padding: 10px 15px; font-size: 0.9rem; border-radius: 10px; background: rgba(255,255,255,0.2); color: white; border: 1px solid rgba(255,255,255,0.4); cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; flex: 1; transition: 0.3s; }
+        .btn-small:hover { background: rgba(255,255,255,0.3); }
+
+        .reader-content { padding: 20px 15px; background: var(--white); }
+
+        h1.main-title {
+            font-family: 'Merriweather', serif;
+            color: var(--primary-dark);
+            text-align: center;
+            margin-bottom: 25px;
+            font-size: 1.6rem;
+            line-height: 1.4;
+        }
+
+        h1.main-title span {
+            display: block;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.95rem;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        h2.part-title {
+            background: #f1f5f9;
+            color: var(--primary-dark);
+            padding: 12px 15px;
+            border-radius: 10px;
+            border-left: 5px solid var(--primary);
+            margin: 30px 0 15px 0;
+            font-size: 1.15rem;
+            display: flex;
+            align-items: flex-start;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        p { margin-bottom: 12px; text-align: justify; font-size: 0.95rem; }
+        
+        /* Cấu trúc danh sách gạch đầu dòng */
+        .content-list { list-style-type: none; padding-left: 0; margin-bottom: 20px; }
+        .content-list > li {
+            position: relative;
+            padding-left: 35px;
+            margin-bottom: 12px;
+            background: #f8fafc;
+            padding: 12px 12px 12px 35px;
+            border-radius: 10px;
+            border: 1px solid #e2e8f0;
+            font-size: 0.95rem;
+            text-align: justify;
+        }
+        .content-list > li::before {
+            content: '\f105';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            color: var(--primary);
+            position: absolute;
+            left: 12px;
+            top: 12px;
+            font-size: 1rem;
+        }
+        .content-list > li strong { color: var(--primary-dark); display: inline-block; margin-bottom: 5px; }
+
+        /* Hộp cảnh báo (Nhược điểm mạng) */
+        .warning-list > li { border-color: #fca5a5; background: #fef2f2; }
+        .warning-list > li::before { content: '\f071'; color: var(--danger); }
+        .warning-list > li strong { color: #b91c1c; }
+
+        /* Danh sách có đánh số thứ tự (7 Biện pháp) */
+        .numbered-list { list-style: none; counter-reset: my-counter; padding-left: 0; margin-bottom: 25px;}
+        .numbered-list > li {
+            position: relative;
+            padding-left: 45px;
+            margin-bottom: 15px;
+            background: #fff;
+            padding: 15px 15px 15px 45px;
+            border-radius: 10px;
+            border: 1px solid #cbd5e1;
+            font-size: 0.95rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            text-align: justify;
+        }
+        .numbered-list > li::before {
+            counter-increment: my-counter;
+            content: counter(my-counter);
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: absolute;
+            left: 10px;
+            top: 13px;
+            font-weight: bold;
+            font-size: 0.85rem;
+        }
+
+        /* Box Tình huống thực tế */
+        .situation-box { background: #fff; border: 1px solid #cbd5e1; padding: 15px; border-radius: 12px; margin-bottom: 25px; }
+        .situation-box h3 { color: #4338ca; font-size: 1.1rem; margin-top: 0; margin-bottom: 12px; border-bottom: 2px solid #818cf8; padding-bottom: 8px; }
+        
+        .question-item { margin-bottom: 15px; }
+        .question-text { font-weight: 600; color: #ef4444; margin-bottom: 8px; font-size: 0.95rem; display: flex; align-items: center; gap: 8px;}
+        .solution-box { background: #f0fdf4; border-left: 4px solid var(--success); padding: 15px; border-radius: 0 8px 8px 0; }
+        .solution-title { font-weight: 700; color: #047857; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; font-size: 1rem;}
+
+        .footer-credit {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 2px dashed #e2e8f0;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+        .footer-credit i { color: #ef4444; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Media Query cho thiết bị lớn (Tablet, PC) */
+        @media (min-width: 640px) {
+            .btn { min-width: 200px; flex: unset; }
+            .action-buttons { flex-direction: row; }
+            .hero-card { padding: 50px; }
+            .reader-header { flex-direction: row; justify-content: space-between; padding: 20px 40px; }
+            .reader-header h2 { text-align: left; }
+            .nav-controls { width: auto; justify-content: flex-end; }
+            .reader-content { padding: 40px; }
+            h1.main-title { font-size: 2.2rem; }
+            h2.part-title { flex-direction: row; align-items: center; }
+            p, .content-list > li, .numbered-list > li { font-size: 1.05rem; }
+            #reader-view { margin: 40px auto; border-radius: var(--radius-lg); }
+            .situation-box { padding: 25px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ================= MÀN HÌNH CHÀO ================= -->
+    <div id="landing-view">
+        <div class="hero-card">
+            <div class="logo-hs">HS</div>
+            
+            <h1>Chuyên đề học tập</h1>
+            <h2>Giữ gìn tính nhân văn<br>trong không gian mạng</h2>
+            
+            <p class="motto-text">"Mang công nghệ vào mọi chuyến đi"</p>
+
+            <div class="action-buttons">
+                <button class="btn btn-primary" onclick="openReader()">
+                    <i class="fa-solid fa-book-open"></i> Đọc trực tiếp
+                </button>
+                <button class="btn btn-outline" onclick="downloadContent()">
+                    <i class="fa-solid fa-cloud-arrow-down"></i> Tải bản Offline
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= MÀN HÌNH ĐỌC SÁCH BÊN TRONG ================= -->
+    <div id="reader-view">
+        <div class="reader-header" id="no-print">
+            <h2><i class="fa-solid fa-users"></i> Không gian học tập</h2>
+            <div class="nav-controls">
+                <button class="btn btn-small" onclick="downloadContent()">
+                    <i class="fa-solid fa-download"></i> Lưu máy
+                </button>
+                <button class="btn btn-small" onclick="closeReader()" style="background: rgba(0,0,0,0.2);">
+                    <i class="fa-solid fa-xmark"></i> Thoát
+                </button>
+            </div>
+        </div>
+
+        <div class="reader-content" id="printable-content">
+            <h1 class="main-title">
+                <span>Chủ đề 3</span>
+                GIỮ GÌN TÍNH NHÂN VĂN TRONG KHÔNG GIAN MẠNG
+            </h1>
+
+            <!-- PHẦN 1 -->
+            <h2 class="part-title"><i class="fa-solid fa-heart-circle-check"></i> 1. Ưu điểm của không gian mạng đối với sự kết nối nhân văn</h2>
+            <p>Không gian mạng không chỉ là nơi lưu trữ thông tin mà còn là cầu nối mạnh mẽ giúp con người xích lại gần nhau hơn:</p>
+            <ul class="content-list">
+                <li><strong>Xóa bỏ rào cản địa lý và thời gian:</strong> Con người có thể kết nối, thăm hỏi và chia sẻ tình cảm với gia đình, bạn bè ở bất kỳ đâu trên thế giới chỉ qua một màn hình.</li>
+                <li><strong>Lan tỏa thông tin và giá trị tích cực nhanh chóng:</strong> Các chiến dịch thiện nguyện, kêu gọi ủng hộ đồng bào gặp thiên tai, hay những câu chuyện truyền cảm hứng có thể tiếp cận hàng triệu người trong thời gian ngắn.</li>
+                <li><strong>Tạo lập các cộng đồng hỗ trợ:</strong> Dễ dàng hình thành các nhóm chung sở thích, các cộng đồng hỗ trợ tâm lý, học tập, giúp những người yếu thế hoặc gặp khó khăn tìm thấy sự đồng cảm và giúp đỡ.</li>
+            </ul>
+
+            <!-- PHẦN 2 -->
+            <h2 class="part-title" style="border-left-color: #ef4444;"><i class="fa-solid fa-triangle-exclamation" style="color: #ef4444;"></i> 2. Nhược điểm và thách thức đối với tính nhân văn</h2>
+            <p>Bên cạnh những mặt tích cực, sự ẩn danh và khoảng cách vật lý trên mạng cũng tạo ra nhiều hệ lụy:</p>
+            <ul class="content-list warning-list">
+                <li><strong>Bạo lực mạng (Cyberbullying):</strong> Sự ẩn danh khiến nhiều người dễ dàng buông lời phán xét, nhục mạ hoặc công kích cá nhân người khác mà không sợ phải đối mặt trực tiếp.</li>
+                <li><strong>Vô cảm và bầy đàn:</strong> Hiệu ứng đám đông khiến nhiều người hùa theo chỉ trích một cá nhân khi chưa rõ thực hư. Việc thiếu đi các biểu cảm khuôn mặt ngoài đời thực làm giảm đi sự thấu cảm.</li>
+                <li><strong>Lan truyền thông tin giả mạo, độc hại:</strong> Việc bịa đặt, bôi nhọ danh dự người khác để "câu view" gây tổn thương sâu sắc đến tâm lý và cuộc sống thực của nạn nhân.</li>
+            </ul>
+
+            <!-- PHẦN 3 -->
+            <h2 class="part-title"><i class="fa-solid fa-handshake"></i> 3. Ứng xử nhân văn trong không gian mạng</h2>
+            <p>Tính nhân văn trên mạng xã hội được thể hiện qua 4 trụ cột cốt lõi:</p>
+            <ul class="content-list">
+                <li><strong>Tôn trọng:</strong> Tôn trọng sự khác biệt về quan điểm, tôn giáo, giới tính và xuất thân. Tôn trọng quyền riêng tư của người khác (không tự ý đăng ảnh, tiết lộ thông tin cá nhân của họ khi chưa được phép).</li>
+                <li><strong>Lịch sự:</strong> Sử dụng ngôn từ văn minh, chuẩn mực. Không dùng lời lẽ thô tục, xúc phạm hay mỉa mai để tranh luận. Giao tiếp trên mạng cũng cần chuẩn mực như giao tiếp ngoài đời thực.</li>
+                <li><strong>Thấu hiểu:</strong> Đặt mình vào vị trí của người khác trước khi bình luận. Nhận thức rõ rằng đằng sau mỗi tài khoản mạng xã hội là một con người thực sự với những cảm xúc, tổn thương riêng.</li>
+                <li><strong>Hỗ trợ:</strong> Sẵn sàng lên tiếng bảo vệ những người yếu thế bị bắt nạt trên mạng; chia sẻ những kiến thức, thông tin hữu ích và lan tỏa năng lượng tích cực đến cộng đồng.</li>
+            </ul>
+
+            <!-- PHẦN 4 -->
+            <h2 class="part-title"><i class="fa-solid fa-list-check"></i> 4. 7 Biện pháp để ứng xử nhân văn trong không gian mạng</h2>
+            <p>Để xây dựng một môi trường mạng an toàn và tử tế, mỗi cá nhân cần thực hiện 7 biện pháp sau:</p>
+            <ol class="numbered-list">
+                <li><strong>Suy nghĩ kỹ trước khi đăng tải (Think before you post):</strong> Tự hỏi xem bài đăng, bình luận của mình có đúng sự thật, có mang lại giá trị, và có làm tổn thương ai không.</li>
+                <li><strong>Kiểm chứng thông tin:</strong> Tuyệt đối không chia sẻ các thông tin chưa được xác thực, tin đồn thất thiệt để tránh gây hoang mang hoặc làm hại đến uy tín của người khác.</li>
+                <li><strong>Không tham gia vào "tâm lý bầy đàn":</strong> Giữ cái đầu lạnh, không hùa theo đám đông để công kích, tẩy chay (cancel culture) hay miệt thị bất kỳ ai trên mạng xã hội.</li>
+                <li><strong>Bảo vệ thông tin cá nhân:</strong> Quản lý tốt dữ liệu của bản thân và kiên quyết không xâm phạm, phát tán hình ảnh, đời tư của người khác.</li>
+                <li><strong>Biết cách phản ứng với tiêu cực:</strong> Sử dụng các tính năng chặn (Block), hủy kết bạn (Unfriend), hoặc báo cáo (Report) đối với các tài khoản có hành vi độc hại, thay vì tranh cãi đôi co với họ.</li>
+                <li><strong>Lan tỏa nội dung tích cực:</strong> Chủ động chia sẻ những câu chuyện đẹp, kiến thức bổ ích và dành những lời động viên, khen ngợi chân thành cho bạn bè, cộng đồng.</li>
+                <li><strong>Tuân thủ pháp luật và quy tắc ứng xử:</strong> Nắm rõ các quy định của Luật An ninh mạng và Bộ quy tắc ứng xử trên mạng xã hội để bảo vệ chính mình và tôn trọng pháp luật.</li>
+            </ol>
+
+            <!-- PHẦN TÌNH HUỐNG THỰC TẾ -->
+            <h2 class="part-title" style="border-left-color: #8b5cf6; background: #f5f3ff;"><i class="fa-solid fa-puzzle-piece" style="color: #8b5cf6;"></i> CHÚNG TA CÓ THỂ XEM QUA CÁC TÌNH HUỐNG VÀ GIẢI QUYẾT VẤN ĐỀ:</h2>
+
+            <!-- TÌNH HUỐNG 1 -->
+            <div class="situation-box">
+                <h3><i class="fa-solid fa-comments"></i> Tình huống 1: Bạo lực ẩn danh trên trang "Confessions"</h3>
+                <div class="question-item">
+                    <div class="question-text"><i class="fa-solid fa-circle-exclamation"></i> Tình huống:</div>
+                    <p>Một bài đăng ẩn danh trên trang Confessions của trường bịa đặt thông tin một nữ sinh lớp 11 gian lận trong kỳ thi và có lối sống không lành mạnh. Dưới phần bình luận, hàng loạt tài khoản hùa vào chửi bới, gắn thẻ (tag) tên nữ sinh đó và dùng những từ ngữ miệt thị nặng nề dù chưa rõ thực hư.</p>
+                </div>
+                <div class="solution-box">
+                    <div class="solution-title"><i class="fa-solid fa-lightbulb"></i> Thảo luận cách xử lý:</div>
+                    <ul class="content-list" style="margin-bottom: 0;">
+                        <li><strong>Với nạn nhân:</strong> Tuyệt đối không bình luận đôi co hay giải thích dưới bài đăng vì sẽ kích động đám đông. Lập tức chụp màn hình toàn bộ bài viết và bình luận làm bằng chứng. Báo cáo (Report) bài viết với Facebook và liên hệ trực tiếp với quản trị viên (Admin) của trang Confessions yêu cầu gỡ bài. Chia sẻ với giáo viên chủ nhiệm hoặc phụ huynh để được can thiệp kịp thời.</li>
+                        <li><strong>Với người ngoài cuộc (Bystander):</strong> Không nhấn Like, không chia sẻ bài viết. Thay vì hùa theo đám đông, hãy nhắn tin riêng để động viên nạn nhân và chủ động nhấn nút Report bài đăng vi phạm tiêu chuẩn cộng đồng.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- TÌNH HUỐNG 2 -->
+            <div class="situation-box">
+                <h3><i class="fa-solid fa-users-slash"></i> Tình huống 2: Lập nhóm chat kín (Anti-group) để tẩy chay</h3>
+                <div class="question-item">
+                    <div class="question-text"><i class="fa-solid fa-circle-exclamation"></i> Tình huống:</div>
+                    <p>Một nam sinh có tính cách rụt rè vô tình phát biểu sai một kiến thức trên lớp. Một nhóm bạn đã chụp lén biểu cảm của em, lập một nhóm Zalo kín có tên "Hội những người chê..." để liên tục chế ảnh meme, bình phẩm về ngoại hình và kêu gọi tẩy chay nam sinh này. Đoạn chat sau đó bị rò rỉ ra ngoài.</p>
+                </div>
+                <div class="solution-box">
+                    <div class="solution-title"><i class="fa-solid fa-lightbulb"></i> Thảo luận cách xử lý:</div>
+                    <ul class="content-list" style="margin-bottom: 0;">
+                        <li><strong>Với nạn nhân:</strong> Hiểu rằng hành vi miệt thị ngoại hình (body-shaming) phản ánh sự thiếu văn hóa của kẻ đi bắt nạt, không phải lỗi của mình. Chặn (Block) ngay lập tức các cá nhân có hành vi độc hại. Không tự cô lập bản thân mà hãy tìm đến những người bạn thực sự và phòng tư vấn tâm lý học đường.</li>
+                        <li><strong>Với thành viên vô tình bị thêm vào nhóm:</strong> Kiên quyết rời khỏi nhóm chat (Leave group) ngay lập tức. Lên tiếng nhắc nhở các bạn trong nhóm dừng hành vi này lại, và nếu sự việc đi quá xa, cần báo cho giáo viên hoặc người lớn để ngăn chặn trước khi nạn nhân bị chấn thương tâm lý.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- TÌNH HUỐNG 3 -->
+            <div class="situation-box">
+                <h3><i class="fa-solid fa-user-secret"></i> Tình huống 3: Rò rỉ và phát tán tin nhắn/hình ảnh riêng tư</h3>
+                <div class="question-item">
+                    <div class="question-text"><i class="fa-solid fa-circle-exclamation"></i> Tình huống:</div>
+                    <p>Hai học sinh từng chơi thân nhưng sau đó xảy ra mâu thuẫn. Một em đã bực tức chụp ảnh màn hình những đoạn tin nhắn tâm sự mang tính cá nhân, bí mật của người kia và đăng công khai lên Story Facebook cá nhân cùng những lời lẽ mỉa mai.</p>
+                </div>
+                <div class="solution-box">
+                    <div class="solution-title"><i class="fa-solid fa-lightbulb"></i> Thảo luận cách xử lý:</div>
+                    <ul class="content-list" style="margin-bottom: 0;">
+                        <li><strong>Người trong cuộc:</strong> Nhận bài học về việc bảo vệ dữ liệu cá nhân (ngay cả với bạn thân, không chia sẻ những thông tin, hình ảnh quá nhạy cảm qua mạng). Yêu cầu người kia xóa ngay hình ảnh. Nếu đối phương từ chối, nhờ sự can thiệp của gia đình và nhà trường, vì hành vi phát tán thông tin cá nhân của người khác khi chưa được phép là vi phạm pháp luật.</li>
+                        <li><strong>Với bạn bè nhìn thấy Story:</strong> Không chụp màn hình để gửi tiếp cho người khác (hành vi phát tán thứ cấp). Nhắc nhở người đăng gỡ bài vì hành động đó đang vi phạm quyền riêng tư.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-credit">
+                Hệ thống tài liệu điện tử chuyên sâu | <strong>Hành Trình Số</strong> <br>
+                Biên soạn chuẩn khoa học bởi Cô Lê Huyền Sinh <i class="fa-solid fa-heart"></i>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const landing = document.getElementById('landing-view');
+        const reader = document.getElementById('reader-view');
+
+        function openReader() {
+            landing.style.display = 'none';
+            reader.style.display = 'block';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            document.body.style.background = "var(--bg-body)";
+        }
+
+        function closeReader() {
+            reader.style.display = 'none';
+            landing.style.display = 'flex';
+            document.body.style.background = "var(--landing-bg)";
+        }
+
+        document.body.style.background = "var(--landing-bg)";
+
+        function downloadContent() {
+            const styleCSS = document.getElementById('main-style').innerHTML;
+            const contentHTML = document.getElementById('printable-content').innerHTML;
+
+            const htmlFile = `<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Chủ đề 3: Giữ gìn tính nhân văn trong không gian mạng - Hành Trình Số</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&family=Merriweather:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        ${styleCSS} 
+        body { background: #e0f2fe; padding: 10px; display: block; } 
+        .reader-content { background: white; max-width: 900px; margin: 0 auto; padding: 20px 15px; border-radius: 12px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); border: 1px solid rgba(255,255,255,0.8); } 
+        @media(min-width:640px){ .reader-content{padding: 40px; border-radius: 24px;} }
+    </style>
+</head>
+<body>
+    <div class="reader-content">${contentHTML}</div>
+    <script>alert("Tài liệu đã được lưu offline thành công!");<\/script>
+</body>
+</html>`;
+
+            const blob = new Blob([htmlFile], { type: 'text/html' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = "ChuyenDe_TinHoc11_ChuDe3_NhanVan.html";
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }
+    </script>
+</body>
+</html>

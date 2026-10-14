@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Chủ đề 2: Kết nối mạng và Internet - Hành Trình Số</title>
+    <!-- Tích hợp Font chữ Google -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&family=Merriweather:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <!-- Tích hợp thư viện Icon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style id="main-style">
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1e40af;
+            --tech-gradient: linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%);
+            --landing-bg: linear-gradient(135deg, #ec4899 0%, #ef4444 100%); 
+            --accent: #f59e0b;
+            --success: #10b981;
+            --danger: #ef4444;
+            --bg-body: #e0f2fe;
+            --text-main: #334155;
+            --text-muted: #64748b;
+            --white: #ffffff;
+            --shadow-lg: 0 20px 40px -5px rgba(0, 0, 0, 0.15);
+            --radius-md: 12px;
+            --radius-lg: 24px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-body);
+            color: var(--text-main);
+            line-height: 1.6;
+            min-height: 100vh;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ----- MÀN HÌNH CHÀO (LANDING) ----- */
+        #landing-view {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: var(--landing-bg);
+            padding: 15px;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        .hero-card {
+            background: var(--white);
+            padding: 40px 25px;
+            border-radius: var(--radius-lg);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            max-width: 650px;
+            width: 100%;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .logo-hs {
+            width: 80px;
+            height: 80px;
+            background-color: #dc2626;
+            border: 4px solid #fbbf24;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2rem;
+            font-weight: 900;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(220, 38, 38, 0.4);
+        }
+
+        .hero-card h1 {
+            font-family: 'Inter', sans-serif;
+            color: #dc2626;
+            font-size: 1.2rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            letter-spacing: 1px;
+        }
+
+        .hero-card h2 {
+            font-family: 'Inter', sans-serif;
+            color: #dc2626;
+            font-size: 1.5rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            line-height: 1.3;
+        }
+
+        .motto-text {
+            font-family: 'Merriweather', serif;
+            color: var(--text-muted);
+            font-size: 1.05rem;
+            font-style: italic;
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+            width: 100%;
+        }
+
+        .btn {
+            padding: 14px 20px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            flex: 1;
+            min-width: 100%;
+        }
+
+        .btn-primary { background: #3b82f6; color: var(--white); box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.3); }
+        .btn-primary:hover { background: #2563eb; transform: translateY(-2px); }
+        .btn-outline { background-color: #f8fafc; color: #334155; border: 1px solid #cbd5e1; }
+        .btn-outline:hover { background-color: #f1f5f9; transform: translateY(-2px); }
+
+        /* ----- MÀN HÌNH ĐỌC SÁCH ----- */
+        #reader-view {
+            display: none;
+            max-width: 900px;
+            margin: 15px auto;
+            background: #f8fafc;
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+            animation: slideUp 0.6s ease-out;
+            border: 1px solid rgba(255,255,255,0.5);
+        }
+
+        .reader-header {
+            background: var(--tech-gradient);
+            color: var(--white);
+            padding: 15px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .reader-header h2 { font-size: 1.1rem; font-weight: 600; margin: 0; text-align: center; }
+        .nav-controls { display: flex; gap: 10px; width: 100%; justify-content: center; }
+        .btn-small { padding: 10px 15px; font-size: 0.9rem; border-radius: 10px; background: rgba(255,255,255,0.2); color: white; border: 1px solid rgba(255,255,255,0.4); cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; flex: 1; transition: 0.3s; }
+        .btn-small:hover { background: rgba(255,255,255,0.3); }
+
+        .reader-content { padding: 20px 15px; background: var(--white); }
+
+        h1.main-title {
+            font-family: 'Merriweather', serif;
+            color: var(--primary-dark);
+            text-align: center;
+            margin-bottom: 25px;
+            font-size: 1.6rem;
+            line-height: 1.4;
+        }
+
+        h1.main-title span {
+            display: block;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.95rem;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+        
+        .part-header {
+            background: var(--primary-dark);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 1.25rem;
+            margin: 40px 0 20px 0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        h2.part-title {
+            background: #f1f5f9;
+            color: var(--primary-dark);
+            padding: 12px 15px;
+            border-radius: 10px;
+            border-left: 5px solid var(--primary);
+            margin: 25px 0 15px 0;
+            font-size: 1.15rem;
+            display: flex;
+            align-items: flex-start;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        h3.sub-title {
+            color: var(--primary);
+            font-size: 1.05rem;
+            margin: 20px 0 10px 0;
+            border-bottom: 1px dashed #cbd5e1;
+            padding-bottom: 5px;
+        }
+
+        p { margin-bottom: 12px; text-align: justify; font-size: 0.95rem; }
+        
+        /* Cấu trúc danh sách gạch đầu dòng */
+        .content-list { list-style-type: none; padding-left: 0; margin-bottom: 20px; }
+        .content-list > li {
+            position: relative;
+            padding-left: 35px;
+            margin-bottom: 12px;
+            background: #f8fafc;
+            padding: 12px 12px 12px 35px;
+            border-radius: 10px;
+            border: 1px solid #e2e8f0;
+            font-size: 0.95rem;
+            text-align: justify;
+        }
+        .content-list > li::before {
+            content: '\f105';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            color: var(--primary);
+            position: absolute;
+            left: 12px;
+            top: 12px;
+            font-size: 1rem;
+        }
+        .content-list > li strong { color: var(--primary-dark); display: inline-block; margin-bottom: 5px; }
+        
+        /* Danh sách có số cho phần Cáp */
+        .number-list-item { list-style: none; padding-left: 0;}
+        .number-list-item li { position: relative; padding-left: 25px; margin-bottom: 10px; text-align: justify;}
+        .number-list-item li::before {
+            content: '\f00c';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            color: var(--success);
+            position: absolute;
+            left: 0;
+            top: 2px;
+        }
+
+        /* Bảng biểu trượt ngang trên điện thoại */
+        .table-responsive { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 20px 0; border-radius: 8px; box-shadow: 0 0 0 1px #cbd5e1; }
+        .modern-table { width: 100%; border-collapse: collapse; background: white; min-width: 450px; }
+        .modern-table th, .modern-table td { padding: 12px 15px; border-bottom: 1px solid #e2e8f0; text-align: left; font-size: 0.95rem; }
+        .modern-table th { background: #f8fafc; color: var(--primary-dark); font-weight: 600; white-space: nowrap; text-transform: uppercase; font-size: 0.85rem;}
+        .modern-table tr:last-child td { border-bottom: none; }
+        .modern-table td:first-child { font-weight: 600; color: var(--primary); }
+
+        /* HỘP LOGIC KHOA HỌC */
+        .logic-box {
+            background: #f0fdf4;
+            border-radius: var(--radius-md);
+            padding: 20px 15px;
+            margin: 25px 0;
+            box-shadow: 0 4px 10px -3px rgba(34, 197, 94, 0.1);
+            border: 1px solid #bbf7d0;
+            border-left: 5px solid #22c55e;
+            font-size: 0.95rem;
+        }
+        .logic-box strong { 
+            color: #166534; 
+            font-size: 1.05rem; 
+            display: flex; 
+            align-items: center; 
+            gap: 8px; 
+            margin-bottom: 10px;
+        }
+
+        .footer-credit {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 2px dashed #e2e8f0;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+        .footer-credit i { color: #ef4444; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Media Query cho thiết bị lớn (Tablet, PC) */
+        @media (min-width: 640px) {
+            .btn { min-width: 200px; flex: unset; }
+            .action-buttons { flex-direction: row; }
+            .hero-card { padding: 50px; }
+            .reader-header { flex-direction: row; justify-content: space-between; padding: 20px 40px; }
+            .reader-header h2 { text-align: left; }
+            .nav-controls { width: auto; justify-content: flex-end; }
+            .reader-content { padding: 40px; }
+            h1.main-title { font-size: 2.2rem; }
+            h2.part-title { flex-direction: row; align-items: center; }
+            p, .content-list > li, .logic-box, .number-list-item li { font-size: 1.05rem; }
+            #reader-view { margin: 40px auto; border-radius: var(--radius-lg); }
+            .logic-box { padding: 25px 30px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ================= MÀN HÌNH CHÀO ================= -->
+    <div id="landing-view">
+        <div class="hero-card">
+            <div class="logo-hs">HS</div>
+            
+            <h1>Chuyên đề học tập</h1>
+            <h2>Kết nối mạng<br>và Internet</h2>
+            
+            <p class="motto-text">"Mang công nghệ vào mọi chuyến đi"</p>
+
+            <div class="action-buttons">
+                <button class="btn btn-primary" onclick="openReader()">
+                    <i class="fa-solid fa-book-open"></i> Đọc trực tiếp
+                </button>
+                <button class="btn btn-outline" onclick="downloadContent()">
+                    <i class="fa-solid fa-cloud-arrow-down"></i> Tải bản Offline
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= MÀN HÌNH ĐỌC SÁCH BÊN TRONG ================= -->
+    <div id="reader-view">
+        <div class="reader-header" id="no-print">
+            <h2><i class="fa-solid fa-network-wired"></i> Không gian học tập</h2>
+            <div class="nav-controls">
+                <button class="btn btn-small" onclick="downloadContent()">
+                    <i class="fa-solid fa-download"></i> Lưu máy
+                </button>
+                <button class="btn btn-small" onclick="closeReader()" style="background: rgba(0,0,0,0.2);">
+                    <i class="fa-solid fa-xmark"></i> Thoát
+                </button>
+            </div>
+        </div>
+
+        <div class="reader-content" id="printable-content">
+            <h1 class="main-title">
+                <span>Chủ đề 2</span>
+                KẾT NỐI MẠNG VÀ INTERNET
+            </h1>
+
+            <div class="part-header"><i class="fa-solid fa-server"></i> Phần 1: Thiết bị mạng và Giao thức mạng</div>
+            <p>Hệ thống mạng máy tính được hình thành dựa trên sự kết hợp giữa các thiết bị phần cứng (để kết nối vật lý/không dây) và các giao thức (quy tắc giao tiếp).</p>
+
+            <!-- 1. THIẾT BỊ MẠNG -->
+            <h2 class="part-title"><i class="fa-solid fa-plug"></i> 1. Một số thiết bị mạng thông dụng</h2>
+            <p>Để các máy tính có thể kết nối với nhau, chúng ta cần các thiết bị mạng cơ bản sau:</p>
+            <ul class="content-list">
+                <li><strong>Card mạng (NIC - Network Interface Card):</strong> Thiết bị được tích hợp sẵn trên bo mạch chủ hoặc cắm rời, giúp máy tính có thể giao tiếp với cáp mạng hoặc thu phát sóng Wi-Fi.</li>
+                <li><strong>Switch (Bộ chuyển mạch):</strong> Thiết bị trung tâm kết nối các máy tính trong một mạng cục bộ (LAN). Switch có khả năng nhận dạng địa chỉ MAC của các thiết bị để gửi dữ liệu đến đúng đích, giúp giảm ách tắc mạng.</li>
+                <li><strong>Router (Bộ định tuyến):</strong> Thiết bị kết nối các mạng khác nhau lại với nhau (ví dụ: kết nối mạng LAN của trường học với Internet). Router định tuyến đường đi tốt nhất cho dữ liệu dựa trên địa chỉ IP.</li>
+                <li><strong>Access Point (Điểm truy cập không dây - AP):</strong> Thiết bị tạo ra mạng cục bộ không dây (WLAN). Nó hoạt động như một cầu nối giữa mạng có dây (thường cắm vào Switch/Router) và các thiết bị không dây (laptop, điện thoại).</li>
+                <li><strong>Modem:</strong> Thiết bị chuyển đổi tín hiệu (từ tín hiệu quang/cáp đồng trục của nhà mạng sang tín hiệu số mà máy tính hiểu được và ngược lại) để truy cập Internet. Ngày nay, Modem thường được tích hợp sẵn cùng với Router Wi-Fi.</li>
+            </ul>
+
+            <!-- 2. GIAO THỨC MẠNG -->
+            <h2 class="part-title"><i class="fa-solid fa-handshake-angle"></i> 2. Giao thức mạng và Giao thức TCP/IP</h2>
+            <p>Giao thức mạng (Network Protocol) là tập hợp các quy tắc, tiêu chuẩn mà các thiết bị mạng phải tuân thủ để có thể "hiểu" nhau và trao đổi dữ liệu thành công, bất kể chúng chạy hệ điều hành nào hay do hãng nào sản xuất.</p>
+            
+            <h3 class="sub-title">Giao thức TCP/IP (Transmission Control Protocol / Internet Protocol)</h3>
+            <p>Đây là bộ giao thức nền tảng của Internet, chia làm hai thành phần chính:</p>
+            <ul class="content-list">
+                <li><strong>IP (Internet Protocol):</strong> Đảm nhận việc đánh địa chỉ cho mỗi thiết bị (địa chỉ IP) và tìm đường (định tuyến) để gửi các gói dữ liệu từ máy gửi đến máy nhận trên mạng.</li>
+                <li><strong>TCP (Transmission Control Protocol):</strong> Đảm bảo dữ liệu được truyền đi một cách đáng tin cậy. TCP chia nhỏ dữ liệu thành các gói tin (packet), đánh số thứ tự cho chúng trước khi gửi. Khi đến đích, TCP kiểm tra xem có gói nào bị lỗi hoặc thất lạc không (yêu cầu gửi lại nếu cần), rồi sắp xếp chúng lại theo đúng thứ tự ban đầu để tạo thành dữ liệu hoàn chỉnh.</li>
+            </ul>
+
+            <div class="logic-box">
+                <strong><i class="fa-solid fa-microscope"></i> Phân tích logic khoa học: Phân biệt vai trò</strong> 
+                <div class="table-responsive">
+                    <table class="modern-table">
+                        <tr>
+                            <th>Thiết bị</th>
+                            <th>Vai trò cốt lõi</th>
+                        </tr>
+                        <tr>
+                            <td>Hub</td>
+                            <td>Phân nhánh mạng (ngu ngốc - đã bị loại bỏ)</td>
+                        </tr>
+                        <tr>
+                            <td>Switch</td>
+                            <td>Chia mạng nội bộ (thông minh - lọc qua MAC)</td>
+                        </tr>
+                        <tr>
+                            <td>Router</td>
+                            <td>Tìm đường đi giữa các mạng (qua IP)</td>
+                        </tr>
+                        <tr>
+                            <td>wAP</td>
+                            <td>Phát sóng Wi-Fi từ mạng có dây</td>
+                        </tr>
+                        <tr>
+                            <td>Modem</td>
+                            <td>Chuyển đổi tín hiệu (Quang học <-> Số)</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <h3 class="sub-title">Chi tiết kỹ thuật & Sơ đồ kết nối thực tế</h3>
+            <p>Để hệ thống mạng hoạt động trơn tru và có thể truy cập Internet, các thiết bị này thường được kết nối theo một thứ tự ưu tiên:</p>
+            <ul class="content-list">
+                <li><strong>Modem (Modulator and Demodulator):</strong> Luôn là thiết bị đứng ở "cửa ngõ" đầu tiên. Không có Modem, mạng nội bộ của bạn không thể "nói chuyện" được với đường truyền của nhà cung cấp dịch vụ Internet (ISP).</li>
+                <li><strong>Router (Bộ định tuyến):</strong> Đứng ngay sau Modem. Nó lấy Internet từ Modem và tạo ra một lớp mạng riêng (cấp phát địa chỉ IP ảo cho các máy trong mạng). Router là lớp khiên bảo vệ (Firewall cơ bản) và là người ra quyết định gói tin nào được phép đi ra Internet.</li>
+                <li><strong>Switch (Bộ chuyển mạch):</strong> Đứng sau Router. Vì Router thường chỉ có 4-5 cổng, nếu bạn có một phòng máy thực hành Tin học với 40 máy tính, bạn cần cắm 1 dây từ Router xuống Switch (loại 48 cổng), sau đó chia ra cho 40 máy tính đó bằng dây mạng (cáp RJ45).</li>
+                <li><strong>WAP (Wireless Access Point):</strong> Nó hoạt động giống như một chiếc Switch nhưng ở môi trường không dây. Bạn cắm một đầu cáp mạng từ Switch/Router vào wAP, nó sẽ chuyển đổi tín hiệu có dây thành sóng Wi-Fi để laptop, điện thoại kết nối vào chung hệ thống mạng LAN đó.</li>
+                <li><strong>Hub (Bộ tập trung):</strong> Thiết bị đời cũ, có ngoại hình giống hệt Switch nhưng bên trong không có chip xử lý thông minh. Nó chỉ nhận tín hiệu điện từ cổng 1 và khuếch đại đẩy ra tất cả các cổng còn lại. Hiện nay, Hub đã bị loại bỏ hoàn toàn khỏi các hệ thống mạng hiện đại vì gây ra hiện tượng "nghẽn cổ chai".</li>
+            </ul>
+
+            <div class="logic-box" style="border-left-color: #f59e0b; background-color: #fffbeb;">
+                <strong style="color: #b45309;"><i class="fa-solid fa-lightbulb"></i> Lưu ý thực tế về thiết bị gia đình:</strong> 
+                Các thiết bị mạng gia đình hiện nay mà nhà mạng cấp cho chúng ta thường là một thiết bị "Tất cả trong một" - vừa làm Modem giải mã quang, vừa làm Router cấp IP, có 4 cổng Switch đằng sau và tích hợp luôn cả ăng-ten wAP để phát Wi-Fi. Việc gộp chung này đôi khi khiến học sinh khó phân biệt các khái niệm chuyên biệt.
+            </div>
+
+            <!-- PHẦN 2 -->
+            <div class="part-header" style="background: #047857;"><i class="fa-solid fa-mobile-screen"></i> Phần 2: Chức năng mạng và Thiết bị thông minh</div>
+            
+            <h2 class="part-title"><i class="fa-brands fa-windows"></i> 1. Các chức năng mạng của Hệ điều hành</h2>
+            <p>Hệ điều hành (Windows, macOS, Android, iOS...) đóng vai trò là phần mềm trung gian quản lý toàn bộ kết nối mạng của thiết bị:</p>
+            <ul class="content-list">
+                <li><strong>Quản lý kết nối vật lý/không dây:</strong> Cho phép bật/tắt Wi-Fi, Ethernet, Bluetooth và tự động cấp phát hoặc cấu hình địa chỉ IP (thông qua DHCP).</li>
+                <li><strong>Cung cấp bộ giao thức mạng:</strong> Tích hợp sẵn bộ giao thức TCP/IP và các giao thức khác để ứng dụng (trình duyệt, phần mềm chat) có thể giao tiếp với Internet.</li>
+                <li><strong>Chia sẻ tài nguyên:</strong> Cho phép thiết lập mạng LAN để chia sẻ tệp tin (File sharing), máy in (Printer sharing) hoặc chia sẻ thư mục giữa các máy tính trong cùng mạng.</li>
+                <li><strong>Bảo mật mạng cơ bản:</strong> Tích hợp tường lửa (Firewall) giúp kiểm soát dữ liệu ra/vào, ngăn chặn các truy cập trái phép.</li>
+            </ul>
+
+            <h2 class="part-title"><i class="fa-solid fa-wifi"></i> 2. Kết nối mạng và sử dụng thiết bị thông minh</h2>
+            <p>Các thiết bị thông minh (điện thoại, máy tính bảng) có thể kết nối và chia sẻ dữ liệu với máy tính qua hai hình thức chính:</p>
+            
+            <h3 class="sub-title">A. Kết nối thông qua cáp (Cable)</h3>
+            <ul class="number-list-item">
+                <li><strong>Truyền dữ liệu (File Transfer):</strong> Sử dụng cáp USB (Type-C, Lightning, Micro-USB) kết nối thiết bị với máy tính để sao chép hình ảnh, video, tài liệu.</li>
+                <li><strong>Chia sẻ kết nối Internet (USB Tethering):</strong> Sử dụng cáp USB để biến điện thoại thành một "Modem", chia sẻ mạng 4G/5G của điện thoại cho máy tính bàn hoặc laptop không có Wi-Fi.</li>
+                <li><strong>Xuất hình ảnh:</strong> Dùng cáp chuyển đổi (ví dụ Type-C sang HDMI) để chiếu màn hình điện thoại, máy tính bảng lên Tivi hoặc máy chiếu phục vụ trình chiếu học tập.</li>
+            </ul>
+
+            <h3 class="sub-title">B. Kết nối thông qua mạng máy tính (Không dây)</h3>
+            <ul class="number-list-item">
+                <li><strong>Kết nối Wi-Fi / Mạng cục bộ:</strong> Các thiết bị kết nối vào cùng một Access Point/Router để truy cập Internet và "nhìn thấy" nhau.</li>
+                <li><strong>Chia sẻ dữ liệu không dây:</strong> Truyền tệp tin nhanh chóng mà không cần cáp thông qua các công nghệ như AirDrop (hệ sinh thái Apple), Nearby Share/Quick Share (Android/Windows) hoặc qua mạng LAN.</li>
+                <li><strong>Bluetooth:</strong> Kết nối các thiết bị ngoại vi như tai nghe, chuột, bàn phím hoặc truyền tệp tin ở khoảng cách gần.</li>
+                <li><strong>Chiếu màn hình (Cast/Screen Mirroring):</strong> Chiếu không dây màn hình điện thoại/laptop lên Smart TV qua các giao thức như Miracast, Chromecast, hoặc AirPlay khi các thiết bị đang dùng chung một mạng Wi-Fi.</li>
+            </ul>
+
+            <div class="footer-credit">
+                Hệ thống tài liệu điện tử chuyên sâu | <strong>Hành Trình Số</strong> <br>
+                Biên soạn chuẩn khoa học bởi Cô Lê Huyền Sinh <i class="fa-solid fa-heart"></i>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const landing = document.getElementById('landing-view');
+        const reader = document.getElementById('reader-view');
+
+        function openReader() {
+            landing.style.display = 'none';
+            reader.style.display = 'block';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            document.body.style.background = "var(--bg-body)";
+        }
+
+        function closeReader() {
+            reader.style.display = 'none';
+            landing.style.display = 'flex';
+            document.body.style.background = "var(--landing-bg)";
+        }
+
+        document.body.style.background = "var(--landing-bg)";
+
+        function downloadContent() {
+            const styleCSS = document.getElementById('main-style').innerHTML;
+            const contentHTML = document.getElementById('printable-content').innerHTML;
+
+            const htmlFile = `<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Chủ đề 2: Kết nối mạng và Internet - Hành Trình Số</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&family=Merriweather:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        ${styleCSS} 
+        body { background: #e0f2fe; padding: 10px; display: block; } 
+        .reader-content { background: white; max-width: 900px; margin: 0 auto; padding: 20px 15px; border-radius: 12px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); border: 1px solid rgba(255,255,255,0.8); } 
+        @media(min-width:640px){ .reader-content{padding: 40px; border-radius: 24px;} }
+    </style>
+</head>
+<body>
+    <div class="reader-content">${contentHTML}</div>
+    <script>alert("Tài liệu đã được lưu offline thành công!");<\/script>
+</body>
+</html>`;
+
+            const blob = new Blob([htmlFile], { type: 'text/html' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = "ChuyenDe_TinHoc11_ChuDe2_Mang.html";
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }
+    </script>
+</body>
+</html>

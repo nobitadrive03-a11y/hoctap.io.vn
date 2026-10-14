@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Chủ đề 1: Trí tuệ nhân tạo - Hành Trình Số</title>
+    <!-- Tích hợp Font chữ Google -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&family=Merriweather:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <!-- Tích hợp thư viện Icon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style id="main-style">
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1e40af;
+            --tech-gradient: linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%);
+            --landing-bg: linear-gradient(135deg, #ec4899 0%, #ef4444 100%); 
+            --accent: #f59e0b;
+            --success: #10b981;
+            --danger: #ef4444;
+            --bg-body: #e0f2fe;
+            --text-main: #334155;
+            --text-muted: #64748b;
+            --white: #ffffff;
+            --shadow-lg: 0 20px 40px -5px rgba(0, 0, 0, 0.15);
+            --radius-md: 12px;
+            --radius-lg: 24px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-body);
+            color: var(--text-main);
+            line-height: 1.6;
+            min-height: 100vh;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ----- MÀN HÌNH CHÀO (LANDING) ----- */
+        #landing-view {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: var(--landing-bg);
+            padding: 15px;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        .hero-card {
+            background: var(--white);
+            padding: 40px 25px;
+            border-radius: var(--radius-lg);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            max-width: 650px;
+            width: 100%;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .logo-hs {
+            width: 80px;
+            height: 80px;
+            background-color: #dc2626;
+            border: 4px solid #fbbf24;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2rem;
+            font-weight: 900;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(220, 38, 38, 0.4);
+        }
+
+        .hero-card h1 {
+            font-family: 'Inter', sans-serif;
+            color: #dc2626;
+            font-size: 1.2rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            letter-spacing: 1px;
+        }
+
+        .hero-card h2 {
+            font-family: 'Inter', sans-serif;
+            color: #dc2626;
+            font-size: 1.6rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            line-height: 1.3;
+        }
+
+        .motto-text {
+            font-family: 'Merriweather', serif;
+            color: var(--text-muted);
+            font-size: 1.05rem;
+            font-style: italic;
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+            width: 100%;
+        }
+
+        .btn {
+            padding: 14px 20px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            flex: 1;
+            min-width: 100%;
+        }
+
+        .btn-primary { background: #3b82f6; color: var(--white); box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.3); }
+        .btn-primary:hover { background: #2563eb; transform: translateY(-2px); }
+        .btn-outline { background-color: #f8fafc; color: #334155; border: 1px solid #cbd5e1; }
+        .btn-outline:hover { background-color: #f1f5f9; transform: translateY(-2px); }
+
+        /* ----- MÀN HÌNH ĐỌC SÁCH ----- */
+        #reader-view {
+            display: none;
+            max-width: 900px;
+            margin: 15px auto;
+            background: #f8fafc;
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+            animation: slideUp 0.6s ease-out;
+            border: 1px solid rgba(255,255,255,0.5);
+        }
+
+        .reader-header {
+            background: var(--tech-gradient);
+            color: var(--white);
+            padding: 15px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .reader-header h2 { font-size: 1.1rem; font-weight: 600; margin: 0; text-align: center; }
+        .nav-controls { display: flex; gap: 10px; width: 100%; justify-content: center; }
+        .btn-small { padding: 10px 15px; font-size: 0.9rem; border-radius: 10px; background: rgba(255,255,255,0.2); color: white; border: 1px solid rgba(255,255,255,0.4); cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; flex: 1; transition: 0.3s; }
+        .btn-small:hover { background: rgba(255,255,255,0.3); }
+
+        .reader-content { padding: 20px 15px; background: var(--white); }
+
+        h1.main-title {
+            font-family: 'Merriweather', serif;
+            color: var(--primary-dark);
+            text-align: center;
+            margin-bottom: 25px;
+            font-size: 1.6rem;
+            line-height: 1.4;
+        }
+
+        h1.main-title span {
+            display: block;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.95rem;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        h2.part-title {
+            background: #f1f5f9;
+            color: var(--primary-dark);
+            padding: 12px 15px;
+            border-radius: 10px;
+            border-left: 5px solid var(--primary);
+            margin: 30px 0 15px 0;
+            font-size: 1.15rem;
+            display: flex;
+            align-items: flex-start;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        h3.sub-title {
+            color: var(--primary);
+            font-size: 1.05rem;
+            margin: 20px 0 10px 0;
+            border-bottom: 1px dashed #cbd5e1;
+            padding-bottom: 5px;
+        }
+
+        p { margin-bottom: 12px; text-align: justify; font-size: 0.95rem; }
+        
+        .content-list { list-style-type: none; padding-left: 0; margin-bottom: 20px; }
+        .content-list > li {
+            position: relative;
+            padding-left: 35px;
+            margin-bottom: 15px;
+            background: #f8fafc;
+            padding: 15px 15px 15px 35px;
+            border-radius: 10px;
+            border: 1px solid #e2e8f0;
+            font-size: 0.95rem;
+            text-align: justify;
+        }
+        .content-list > li::before {
+            content: '\f105';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            color: var(--primary);
+            position: absolute;
+            left: 12px;
+            top: 15px;
+            font-size: 1rem;
+        }
+        .content-list > li strong { color: var(--primary-dark); display: inline-block; margin-bottom: 5px; }
+
+        /* Hộp cảnh báo (Nguy cơ AI) */
+        .warning-list > li { border-color: #fca5a5; background: #fef2f2; }
+        .warning-list > li::before { content: '\f071'; color: var(--danger); }
+        .warning-list > li strong { color: #b91c1c; }
+
+        /* HỘP LOGIC KHOA HỌC */
+        .logic-box {
+            background: #f0fdf4;
+            border-radius: var(--radius-md);
+            padding: 20px 15px;
+            margin: 25px 0;
+            box-shadow: 0 4px 10px -3px rgba(34, 197, 94, 0.1);
+            border: 1px solid #bbf7d0;
+            border-left: 5px solid #22c55e;
+            font-size: 0.95rem;
+        }
+        .logic-box strong { 
+            color: #166534; 
+            font-size: 1.05rem; 
+            display: flex; 
+            align-items: center; 
+            gap: 8px; 
+            margin-bottom: 10px;
+        }
+
+        .footer-credit {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 2px dashed #e2e8f0;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+        .footer-credit i { color: #ef4444; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Media Query cho thiết bị lớn (Tablet, PC) */
+        @media (min-width: 640px) {
+            .btn { min-width: 200px; flex: unset; }
+            .action-buttons { flex-direction: row; }
+            .hero-card { padding: 50px; }
+            .reader-header { flex-direction: row; justify-content: space-between; padding: 20px 40px; }
+            .reader-header h2 { text-align: left; }
+            .nav-controls { width: auto; justify-content: flex-end; }
+            .reader-content { padding: 40px; }
+            h1.main-title { font-size: 2.2rem; }
+            h2.part-title { flex-direction: row; align-items: center; }
+            p, .content-list > li, .logic-box { font-size: 1.05rem; }
+            #reader-view { margin: 40px auto; border-radius: var(--radius-lg); }
+            .logic-box { padding: 25px 30px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ================= MÀN HÌNH CHÀO ================= -->
+    <div id="landing-view">
+        <div class="hero-card">
+            <div class="logo-hs">HS</div>
+            
+            <h1>Chuyên đề học tập</h1>
+            <h2>Trí tuệ nhân tạo (AI)</h2>
+            
+            <p class="motto-text">"Mang công nghệ vào mọi chuyến đi"</p>
+
+            <div class="action-buttons">
+                <button class="btn btn-primary" onclick="openReader()">
+                    <i class="fa-solid fa-book-open"></i> Đọc trực tiếp
+                </button>
+                <button class="btn btn-outline" onclick="downloadContent()">
+                    <i class="fa-solid fa-cloud-arrow-down"></i> Tải bản Offline
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= MÀN HÌNH ĐỌC SÁCH BÊN TRONG ================= -->
+    <div id="reader-view">
+        <div class="reader-header" id="no-print">
+            <h2><i class="fa-solid fa-microchip"></i> Không gian học tập</h2>
+            <div class="nav-controls">
+                <button class="btn btn-small" onclick="downloadContent()">
+                    <i class="fa-solid fa-download"></i> Lưu máy
+                </button>
+                <button class="btn btn-small" onclick="closeReader()" style="background: rgba(0,0,0,0.2);">
+                    <i class="fa-solid fa-xmark"></i> Thoát
+                </button>
+            </div>
+        </div>
+
+        <div class="reader-content" id="printable-content">
+            <h1 class="main-title">
+                <span>Chủ đề 1</span>
+                TRÍ TUỆ NHÂN TẠO
+            </h1>
+
+            <!-- PHẦN 1 & 2 -->
+            <h2 class="part-title"><i class="fa-solid fa-brain"></i> 1. Khái niệm Trí tuệ nhân tạo (AI)</h2>
+            <p>Trí tuệ nhân tạo (Artificial Intelligence - AI) là khả năng của máy tính có thể thực hiện những công việc mang tính trí tuệ của con người. Các hệ thống AI được thiết kế để mô phỏng năng lực nhận thức, tư duy và ra quyết định, từ đó giúp máy tính tự động hóa các tác vụ phức tạp mà trước đây chỉ con người mới làm được (như dịch thuật, nhận dạng hình ảnh, chẩn đoán bệnh, suy luận logic).</p>
+            
+            <h2 class="part-title"><i class="fa-solid fa-microchip"></i> 2. Các đặc trưng cơ bản của hệ thống AI</h2>
+            <p>Một hệ thống AI thường sở hữu 4 đặc trưng cốt lõi sau:</p>
+            <ul class="content-list">
+                <li><strong>Khả năng học hỏi (Học máy - Machine Learning):</strong> Khả năng tự động rút ra tri thức, quy luật từ nguồn dữ liệu khổng lồ mà không cần con người lập trình chi tiết từng bước. Càng tiếp xúc nhiều dữ liệu, AI làm việc càng chính xác.</li>
+                <li><strong>Khả năng hiểu ngôn ngữ tự nhiên (Natural Language Processing):</strong> Khả năng giao tiếp với con người bằng văn bản hoặc giọng nói. AI có thể hiểu ngữ nghĩa, dịch thuật tự động, tóm tắt văn bản và trả lời câu hỏi một cách linh hoạt (ví dụ: các chatbot, trợ lý ảo).</li>
+                <li><strong>Khả năng nhận thức môi trường (Perception):</strong> Máy tính có thể "nhìn" và "nghe" thế giới xung quanh thông qua các cảm biến, camera và micro. Điển hình là thị giác máy tính (nhận dạng khuôn mặt, vật thể, đọc biển báo) và nhận dạng tiếng nói.</li>
+                <li><strong>Khả năng suy luận và giải quyết vấn đề:</strong> Khả năng phân tích thông tin đầu vào, vận dụng các quy tắc hoặc mô hình đã học để đưa ra kết luận, dự đoán hoặc quyết định tối ưu cho những tình huống mới (ví dụ: hệ thống gợi ý nước cờ trong cờ vua).</li>
+            </ul>
+
+            <div class="logic-box">
+                <strong><i class="fa-solid fa-microscope"></i> Phân tích logic khoa học: Học máy (Machine Learning)</strong> 
+                Trong lập trình truyền thống (Traditional Programming), con người nạp Dữ liệu (Data) và Quy tắc (Rules/Thuật toán) vào máy tính để tạo ra Kết quả (Answers). Tuy nhiên, trong Học máy, quy trình này đảo ngược: Con người nạp Dữ liệu và Kết quả mẫu vào, hệ thống AI sẽ sử dụng các mô hình thống kê học để tự động tìm ra Quy tắc (Rules). Đây là nền tảng kỹ thuật cho phép AI "tự học" thay vì bị lập trình cứng.
+            </div>
+
+            <!-- PHẦN 3 -->
+            <h2 class="part-title"><i class="fa-solid fa-code-branch"></i> 3. Phân loại Trí tuệ nhân tạo</h2>
+            <p>Dựa trên mức độ thông minh và khả năng thực hiện tác vụ, AI được chia thành hai loại chính:</p>
+            <ul class="content-list">
+                <li><strong>Trí tuệ nhân tạo hẹp (Weak AI / Narrow AI):</strong> Hệ thống chỉ được huấn luyện để giải quyết một hoặc một số ít tác vụ cụ thể. Chúng rất xuất sắc trong phạm vi hẹp nhưng không thể tự chuyển đổi kỹ năng sang lĩnh vực khác. (Ví dụ: phần mềm nhận diện khuôn mặt, AI chơi cờ, hệ thống dịch tự động). <em>Lưu ý: Toàn bộ AI hiện nay trên thế giới đều thuộc nhóm AI hẹp.</em></li>
+                <li><strong>Trí tuệ nhân tạo tổng quát (Strong AI / General AI):</strong> Hệ thống giả định có mức độ thông minh tương đương não bộ con người, có khả năng học hỏi, suy luận, tự nhận thức và giải quyết bất kỳ bài toán nào trên mọi lĩnh vực. (Hiện tại loại AI này vẫn chỉ nằm ở mức độ nghiên cứu lý thuyết).</li>
+            </ul>
+
+            <!-- PHẦN 4 -->
+            <h2 class="part-title"><i class="fa-solid fa-globe"></i> 4. Ứng dụng phổ biến trong Khoa học và Đời sống</h2>
+            <p>Trí tuệ nhân tạo đang đóng vai trò làm thay đổi sâu sắc nhiều lĩnh vực:</p>
+            
+            <h3 class="sub-title">a. Trong Nghiên cứu khoa học</h3>
+            <p>AI hỗ trợ phân tích dữ liệu lớn để tìm ra vật liệu mới, dự báo thời tiết cực đoan, và đặc biệt là sinh học phân tử (như hệ thống AlphaFold dự đoán cấu trúc 3D của protein, giúp rút ngắn hàng chục năm nghiên cứu thuốc chữa bệnh).</p>
+
+            <h3 class="sub-title">b. Trong Y tế và Chăm sóc sức khỏe</h3>
+            <p>AI phân tích hình ảnh y khoa (X-quang, MRI) để hỗ trợ bác sĩ phát hiện sớm các khối u, ung thư với độ chính xác cao; thiết kế hồ sơ bệnh án điện tử thông minh.</p>
+            <ul class="content-list">
+                <li><strong>Chẩn đoán bệnh qua hình ảnh y khoa:</strong> Các mô hình học sâu (Deep Learning) phân tích ảnh X-quang, cắt lớp (CT), và cộng hưởng từ (MRI) để phát hiện các điểm bất thường như khối u ác tính, dấu hiệu đột quỵ hay tổn thương võng mạc ở giai đoạn rất sớm. Tốc độ và độ chính xác của AI trong lĩnh vực này thường ngang bằng hoặc vượt trội các bác sĩ chuyên khoa.</li>
+                <li><strong>Nghiên cứu và phát minh thuốc mới:</strong> Thay vì thử nghiệm hóa học thủ công mất hàng chục năm, AI mô phỏng và phân tích hàng triệu cấu trúc phân tử sinh học (điển hình như hệ thống AlphaFold dự đoán cấu trúc 3D của protein). Điều này rút ngắn thời gian chế tạo vắc-xin và thuốc đặc trị xuống còn vài tháng.</li>
+                <li><strong>Y học cá nhân hóa:</strong> AI phân tích dữ liệu gen di truyền, tiền sử bệnh án và thói quen sinh hoạt của từng cá nhân để đề xuất phác đồ điều trị chuyên biệt, giúp tăng hiệu quả chữa bệnh và giảm thiểu tối đa tác dụng phụ của thuốc.</li>
+            </ul>
+
+            <h3 class="sub-title">c. Trong Giao thông vận tải</h3>
+            <p>Phát triển các dòng xe tự lái nhờ sự kết hợp giữa hệ thống cảm biến và thị giác máy tính; điều phối và tối ưu hóa hệ thống đèn tín hiệu giao thông để giảm ùn tắc.</p>
+            <ul class="content-list">
+                <li><strong>Phương tiện tự hành (Xe tự lái):</strong> Nhờ sự kết hợp của Thị giác máy tính (Computer Vision) và hệ thống cảm biến (LiDAR, Radar), xe tự lái có thể liên tục quét môi trường xung quanh 360 độ. Chúng tự động nhận diện làn đường, người đi bộ, đọc biển báo, phán đoán quỹ đạo của các xe khác để đánh lái và phanh an toàn.</li>
+                <li><strong>Tối ưu hóa mạng lưới giao thông đô thị:</strong> Hệ thống camera AI tại các ngã tư đếm số lượng phương tiện theo thời gian thực, từ đó tự động điều chỉnh thời lượng đèn xanh/đỏ linh hoạt thay vì dùng bộ đếm thời gian cố định, giúp giải tỏa nhanh các điểm kẹt xe.</li>
+                <li><strong>Điều hướng và Logistics:</strong> AI phân tích dữ liệu thời tiết, tình hình tai nạn và mật độ xe cộ để vạch ra lộ trình giao hàng ngắn nhất, tối ưu hóa nhiên liệu cho các đội xe vận tải.</li>
+            </ul>
+
+            <h3 class="sub-title">d. Trong Sản xuất và Nông nghiệp</h3>
+            <p>Sử dụng robot AI tự động hóa trong các dây chuyền lắp ráp công nghiệp; hệ thống AI phân tích hình ảnh từ flycam để phát hiện sâu bệnh trên cánh đồng và tự động phun thuốc tưới tiêu.</p>
+
+            <h3 class="sub-title">e. Trong Giáo dục</h3>
+            <p>Tạo ra các hệ thống học tập thích ứng (Adaptive Learning) theo dõi tiến độ của từng học sinh để thiết kế lộ trình riêng; trợ lý ảo hỗ trợ giáo viên tự động chấm bài và trả lời thắc mắc.</p>
+
+            <h3 class="sub-title">f. Trong Tài chính và Kinh doanh</h3>
+            <p>Chấm điểm tín dụng, phát hiện giao dịch lừa đảo, gian lận ngân hàng theo thời gian thực; chatbot chăm sóc khách hàng 24/7.</p>
+
+            <h3 class="sub-title">g. Trí tuệ nhân tạo trong Tài chính - Ngân hàng</h3>
+            <ul class="content-list">
+                <li><strong>Phát hiện gian lận và chống rửa tiền theo thời gian thực:</strong> Các thuật toán ML giám sát hàng tỷ giao dịch mỗi giây. Khi phát hiện một giao dịch thẻ tín dụng có vị trí địa lý hoặc thói quen chi tiêu khác thường, AI lập tức đóng băng thẻ và gửi cảnh báo trước khi kẻ gian kịp rút tiền.</li>
+                <li><strong>Chấm điểm tín dụng thông minh:</strong> Hệ thống AI tự động phân tích không chỉ lịch sử vay nợ mà còn các dữ liệu phi truyền thống (như lịch sử thanh toán hóa đơn điện nước, hành vi mua sắm trực tuyến) để quyết định việc cấp vốn tự động, nhanh chóng và khách quan hơn con người.</li>
+                <li><strong>Giao dịch thuật toán (Algorithmic Trading):</strong> Các siêu máy tính sử dụng AI để đọc tin tức thị trường, phân tích báo cáo tài chính và thực hiện hàng triệu lệnh mua/bán chứng khoán tự động chỉ trong một phần nghìn giây để chênh lệch lợi nhuận.</li>
+            </ul>
+
+            <h3 class="sub-title">h. Trí tuệ nhân tạo trong Lập trình (Phát triển phần mềm)</h3>
+            <ul class="content-list">
+                <li><strong>Trợ lý viết mã (AI Coding Assistants):</strong> Dựa trên Mô hình ngôn ngữ lớn, các công cụ như GitHub Copilot hoạt động ngay trong môi trường lập trình. Khi lập trình viên gõ tên một chức năng bằng ngôn ngữ tự nhiên (ví dụ: "Viết hàm kiểm tra số nguyên tố"), AI sẽ tự động sinh ra đoạn mã nguồn hoàn chỉnh.</li>
+                <li><strong>Tự động phát hiện và sửa lỗi (Debugging & Refactoring):</strong> AI đóng vai trò như một "người soát lỗi" không mệt mỏi, quét qua hàng triệu dòng code để chỉ ra các lỗ hổng bảo mật nguy hiểm, các vòng lặp gây chậm máy và gợi ý cách tối ưu hóa thuật toán.</li>
+                <li><strong>Tự động hóa quá trình kiểm thử (Automated Testing):</strong> Thay vì lập trình viên phải tự nghĩ ra hàng trăm tình huống để thử nghiệm phần mềm, AI tự động sinh ra các kịch bản kiểm thử (test cases) bao phủ mọi trường hợp lỗi có thể xảy ra, đảm bảo phần mềm hoạt động ổn định trước khi phát hành.</li>
+            </ul>
+
+            <!-- PHẦN 5 -->
+            <h2 class="part-title" style="border-left-color: #ef4444;"><i class="fa-solid fa-triangle-exclamation" style="color: #ef4444;"></i> 5. Những cảnh báo về Trí tuệ nhân tạo trong tương lai</h2>
+            <p>Bên cạnh lợi ích to lớn, sự phát triển của AI cũng đặt ra những thách thức nghiêm trọng về mặt đạo đức và an toàn:</p>
+            
+            <ul class="content-list warning-list">
+                <li><strong>Nguy cơ mất việc làm:</strong> Các công việc lặp đi lặp lại hoặc có quy trình chuẩn hóa cao dễ dàng bị tự động hóa bằng robot và AI, dẫn đến dư thừa lao động và tỷ lệ thất nghiệp tăng cục bộ.</li>
+                <li><strong>Vấn đề an ninh mạng và lừa đảo:</strong> Kẻ xấu có thể sử dụng AI để tạo ra các cuộc tấn công mạng tinh vi, hoặc sử dụng công nghệ giả mạo (Deepfake) để tạo hình ảnh, giọng nói, video giả mạo nhằm mục đích bôi nhọ, tống tiền hoặc lừa đảo tài sản.</li>
+                <li><strong>Xâm phạm quyền riêng tư và dữ liệu cá nhân:</strong> Việc các hệ thống AI thu thập và phân tích lượng dữ liệu khổng lồ (bao gồm hình ảnh, vị trí, thói quen) dễ dẫn đến nguy cơ lộ lọt thông tin và theo dõi người dùng trái phép.</li>
+                <li><strong>Sự thiên vị và định kiến:</strong> Hệ thống AI học từ dữ liệu con người cung cấp. Nếu dữ liệu đầu vào chứa định kiến về giới tính, chủng tộc hoặc vùng miền, AI sẽ đưa ra những quyết định phân biệt đối xử (ví dụ: phần mềm tuyển dụng loại bỏ hồ sơ ứng viên nữ).</li>
+                <li><strong>Vấn đề bản quyền:</strong> Các hệ thống AI tạo sinh (như tạo tranh, làm thơ, viết nhạc) sử dụng các tác phẩm có bản quyền trên internet để huấn luyện mà không xin phép, gây tranh cãi lớn về quyền sở hữu trí tuệ.</li>
+                <li><strong>Nguy cơ mất kiểm soát:</strong> Các chuyên gia cảnh báo về kịch bản rủi ro dài hạn khi AI tự chủ phát triển vượt mức kiểm soát, đặc biệt là trong việc phát triển các hệ thống vũ khí tự động sát thương mà không cần sự can thiệp của con người.</li>
+            </ul>
+
+            <div class="footer-credit">
+                Hệ thống tài liệu điện tử chuyên sâu | <strong>Hành Trình Số</strong> <br>
+                Biên soạn chuẩn khoa học bởi Cô Lê Huyền Sinh  <i class="fa-solid fa-heart"></i>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const landing = document.getElementById('landing-view');
+        const reader = document.getElementById('reader-view');
+
+        function openReader() {
+            landing.style.display = 'none';
+            reader.style.display = 'block';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            document.body.style.background = "var(--bg-body)";
+        }
+
+        function closeReader() {
+            reader.style.display = 'none';
+            landing.style.display = 'flex';
+            document.body.style.background = "var(--landing-bg)";
+        }
+
+        document.body.style.background = "var(--landing-bg)";
+
+        function downloadContent() {
+            const styleCSS = document.getElementById('main-style').innerHTML;
+            const contentHTML = document.getElementById('printable-content').innerHTML;
+
+            const htmlFile = `<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Chủ đề 1: Trí tuệ nhân tạo - Hành Trình Số</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&family=Merriweather:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        ${styleCSS} 
+        body { background: #e0f2fe; padding: 10px; display: block; } 
+        .reader-content { background: white; max-width: 900px; margin: 0 auto; padding: 20px 15px; border-radius: 12px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); border: 1px solid rgba(255,255,255,0.8); } 
+        @media(min-width:640px){ .reader-content{padding: 40px; border-radius: 24px;} }
+    </style>
+</head>
+<body>
+    <div class="reader-content">${contentHTML}</div>
+    <script>alert("Tài liệu đã được lưu offline thành công!");<\/script>
+</body>
+</html>`;
+
+            const blob = new Blob([htmlFile], { type: 'text/html' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = "ChuyenDe_TinHoc11_ChuDe1_AI.html";
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }
+    </script>
+</body>
+</html>
