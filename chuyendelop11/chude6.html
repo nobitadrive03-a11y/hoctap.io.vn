@@ -2,7 +2,7 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Chủ đề 6: Quản trị CSDL trên máy tính - Hành Trình Số</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -27,78 +27,94 @@
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: 'Inter', sans-serif; background: var(--bg-body); color: var(--text-main); line-height: 1.8; min-height: 100vh; overflow-x: hidden; }
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background: var(--bg-body); 
+            color: var(--text-main); 
+            line-height: 1.6; 
+            min-height: 100vh; 
+            overflow-x: hidden; 
+            -webkit-font-smoothing: antialiased;
+        }
 
         /* ----- MÀN HÌNH CHÀO ----- */
-        #landing-view { display: flex; align-items: center; justify-content: center; min-height: 100vh; background: var(--landing-bg); padding: 20px; animation: fadeIn 0.8s ease-out; }
+        #landing-view { display: flex; align-items: center; justify-content: center; min-height: 100vh; background: var(--landing-bg); padding: 15px; animation: fadeIn 0.8s ease-out; }
         .hero-card { background: var(--white); padding: 40px 20px; border-radius: var(--radius-lg); box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); max-width: 700px; width: 100%; text-align: center; display: flex; flex-direction: column; align-items: center; }
         .logo-hs { width: 80px; height: 80px; background-color: #dc2626; border: 4px solid #fbbf24; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 2rem; font-weight: 900; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(220, 38, 38, 0.4); }
-        .hero-card h1 { color: #dc2626; font-size: 1.3rem; font-weight: 700; text-transform: uppercase; margin-bottom: 5px; }
-        .hero-card h2 { color: #dc2626; font-size: 1.5rem; font-weight: 900; text-transform: uppercase; margin-bottom: 20px; line-height: 1.4; }
+        .hero-card h1 { color: #dc2626; font-size: 1.2rem; font-weight: 700; text-transform: uppercase; margin-bottom: 8px; }
+        .hero-card h2 { color: #dc2626; font-size: 1.4rem; font-weight: 900; text-transform: uppercase; margin-bottom: 20px; line-height: 1.3; }
         
-        .motto-text { font-family: 'Merriweather', serif; color: var(--text-muted); font-size: 1.1rem; font-style: italic; margin-bottom: 30px; }
-        .action-buttons { display: flex; gap: 15px; justify-content: center; flex-direction: column; width: 100%; max-width: 400px; }
-        .btn { padding: 14px 20px; border: none; border-radius: 12px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; }
+        .motto-text { font-family: 'Merriweather', serif; color: var(--text-muted); font-size: 1rem; font-style: italic; margin-bottom: 30px; }
+        .action-buttons { display: flex; gap: 12px; justify-content: center; flex-direction: column; width: 100%; }
+        .btn { padding: 14px 20px; border: none; border-radius: 12px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; }
         .btn-primary { background: #3b82f6; color: var(--white); box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.3); }
         .btn-outline { background-color: #f8fafc; color: #334155; border: 1px solid #cbd5e1; }
 
         /* ----- MÀN HÌNH ĐỌC SÁCH ----- */
-        #reader-view { display: none; max-width: 900px; margin: 20px auto; background: #f8fafc; border-radius: var(--radius-md); box-shadow: var(--shadow-lg); overflow: hidden; animation: slideUp 0.6s ease-out; }
-        .reader-header { background: var(--tech-gradient); color: var(--white); padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 10; }
-        .reader-header h2 { font-size: 1.1rem; font-weight: 600; margin: 0; }
-        .nav-controls { display: flex; gap: 10px; }
-        .btn-small { padding: 8px 12px; font-size: 0.85rem; border-radius: 8px; background: rgba(255,255,255,0.2); color: white; border: 1px solid rgba(255,255,255,0.4); cursor: pointer; display: flex; align-items: center; gap: 5px; }
+        #reader-view { display: none; max-width: 900px; margin: 15px auto; background: #f8fafc; border-radius: var(--radius-md); box-shadow: var(--shadow-lg); overflow: hidden; animation: slideUp 0.6s ease-out; }
+        .reader-header { background: var(--tech-gradient); color: var(--white); padding: 15px 20px; display: flex; flex-direction: column; gap: 12px; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 10; }
+        .reader-header h2 { font-size: 1.1rem; font-weight: 600; margin: 0; text-align: center; }
+        .nav-controls { display: flex; gap: 10px; width: 100%; justify-content: center; }
+        .btn-small { padding: 10px 15px; font-size: 0.9rem; border-radius: 10px; background: rgba(255,255,255,0.2); color: white; border: 1px solid rgba(255,255,255,0.4); cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; flex: 1; }
 
-        .reader-content { padding: 25px 20px; background: var(--white); }
-        h1.main-title { font-family: 'Merriweather', serif; color: var(--primary-dark); text-align: center; margin-bottom: 30px; font-size: 1.8rem; line-height: 1.4; }
-        h1.main-title span { display: block; font-family: 'Inter', sans-serif; font-size: 1rem; color: var(--primary); text-transform: uppercase; margin-bottom: 8px; }
+        .reader-content { padding: 20px 15px; background: var(--white); }
+        h1.main-title { font-family: 'Merriweather', serif; color: var(--primary-dark); text-align: center; margin-bottom: 25px; font-size: 1.5rem; line-height: 1.4; }
+        h1.main-title span { display: block; font-family: 'Inter', sans-serif; font-size: 0.95rem; color: var(--primary); text-transform: uppercase; margin-bottom: 8px; }
 
-        .obj-box { background: #f0f9ff; border: 1px solid #bae6fd; padding: 20px; border-radius: 12px; margin-bottom: 30px; }
-        .obj-box strong { color: #0284c7; display: flex; align-items: center; gap: 8px; font-size: 1.1rem; margin-bottom: 12px;}
-        .obj-box ul { padding-left: 20px; margin: 0; }
+        .obj-box { background: #f0f9ff; border: 1px solid #bae6fd; padding: 15px; border-radius: 12px; margin-bottom: 25px; }
+        .obj-box strong { color: #0284c7; display: flex; align-items: center; gap: 8px; font-size: 1.05rem; margin-bottom: 12px;}
+        .obj-box ul { padding-left: 25px; margin: 0; font-size: 0.95rem; }
         
-        h2.part-title { background: #f1f5f9; color: var(--primary-dark); padding: 12px 15px; border-radius: 8px; border-left: 5px solid var(--primary); margin: 35px 0 20px 0; font-size: 1.2rem; display: flex; align-items: center; gap: 10px; }
-        h3.lesson-title { color: var(--primary); font-size: 1.1rem; margin: 20px 0 10px 0; border-bottom: 1px dashed #cbd5e1; padding-bottom: 5px; }
-        p { margin-bottom: 12px; text-align: justify; font-size: 1rem; }
+        h2.part-title { background: #f1f5f9; color: var(--primary-dark); padding: 12px 15px; border-radius: 8px; border-left: 5px solid var(--primary); margin: 30px 0 15px 0; font-size: 1.15rem; display: flex; flex-direction: column; align-items: flex-start; gap: 8px; }
+        h3.lesson-title { color: var(--primary); font-size: 1.05rem; margin: 20px 0 10px 0; border-bottom: 1px dashed #cbd5e1; padding-bottom: 5px; }
+        p { margin-bottom: 12px; text-align: justify; font-size: 0.95rem; }
 
         /* Trình bày Tỉ mỉ theo từng bước GUI */
-        .gui-step-box { background: #ffffff; border: 1px solid #e2e8f0; border-left: 5px solid #10b981; padding: 15px 20px; border-radius: 8px; margin: 15px 0; }
-        .gui-step-box ol { padding-left: 20px; margin-bottom: 0; }
+        .gui-step-box { background: #ffffff; border: 1px solid #e2e8f0; border-left: 5px solid #10b981; padding: 15px; border-radius: 8px; margin: 15px 0; }
+        .gui-step-box ol { padding-left: 25px; margin-bottom: 0; font-size: 0.95rem; }
         .gui-step-box li { margin-bottom: 10px; padding-left: 5px; }
-        .gui-step-box strong { color: #0f766e; }
+        .gui-step-box strong { color: #0f766e; display: block; margin-bottom: 8px; font-size: 1rem; }
 
         /* Code block tối ưu hiển thị Mobile */
         .sql-example { margin-bottom: 25px; }
-        .sql-example h4 { color: #dc2626; font-size: 1.05rem; margin-bottom: 8px; margin-top: 0; }
-        .code-block { background: #1e293b; color: #e2e8f0; padding: 15px; border-radius: 8px; font-family: 'Consolas', 'Monaco', monospace; font-size: 0.9rem; overflow-x: auto; border-left: 4px solid #3b82f6; line-height: 1.7; white-space: pre-wrap; }
+        .sql-example h4 { color: #dc2626; font-size: 1rem; margin-bottom: 8px; margin-top: 0; }
+        .code-block { background: #1e293b; color: #e2e8f0; padding: 15px; border-radius: 8px; font-family: 'Consolas', 'Monaco', monospace; font-size: 0.85rem; overflow-x: auto; -webkit-overflow-scrolling: touch; border-left: 4px solid #3b82f6; line-height: 1.6; white-space: pre; }
         
-        .code-tag { background: #f1f5f9; padding: 2px 5px; border-radius: 4px; font-family: monospace; color: #dc2626; font-weight: bold; border: 1px solid #cbd5e1; font-size: 0.9rem; }
+        .code-tag { background: #f1f5f9; padding: 2px 5px; border-radius: 4px; font-family: monospace; color: #dc2626; font-weight: bold; border: 1px solid #cbd5e1; font-size: 0.9rem; word-break: break-word; }
         .code-keyword { color: #38bdf8; font-weight: bold; }
         .code-string { color: #a3e635; }
 
         /* Bảng biểu trượt ngang trên điện thoại */
-        .table-responsive { width: 100%; overflow-x: auto; margin: 15px 0; border-radius: 8px; box-shadow: 0 0 0 1px #cbd5e1; }
-        .scientific-table { width: 100%; border-collapse: collapse; background: white; min-width: 500px; }
-        .scientific-table th, .scientific-table td { padding: 10px 12px; border: 1px solid #cbd5e1; text-align: left; font-size: 0.95rem; }
-        .scientific-table th { background: #f1f5f9; color: var(--primary-dark); font-weight: 600; }
+        .table-responsive { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 15px 0; border-radius: 8px; box-shadow: 0 0 0 1px #cbd5e1; }
+        .scientific-table { width: 100%; border-collapse: collapse; background: white; min-width: 450px; }
+        .scientific-table th, .scientific-table td { padding: 10px 12px; border: 1px solid #cbd5e1; text-align: left; font-size: 0.9rem; }
+        .scientific-table th { background: #f1f5f9; color: var(--primary-dark); font-weight: 600; white-space: nowrap; }
         
         /* Box Bài tập */
-        .exercise-box { background: #fff; border: 1px solid #cbd5e1; padding: 20px; border-radius: 12px; margin-bottom: 30px; }
-        .exercise-box h3 { color: var(--primary-dark); font-size: 1.15rem; margin-top: 0; margin-bottom: 15px; border-bottom: 2px solid var(--accent); padding-bottom: 8px; }
+        .exercise-box { background: #fff; border: 1px solid #cbd5e1; padding: 15px; border-radius: 12px; margin-bottom: 25px; }
+        .exercise-box h3 { color: var(--primary-dark); font-size: 1.1rem; margin-top: 0; margin-bottom: 12px; border-bottom: 2px solid var(--accent); padding-bottom: 8px; }
         
         .question-item { margin-bottom: 20px; }
-        .question-text { font-weight: 600; color: #334155; margin-bottom: 8px; }
-        .solution-box { background: #f0fdf4; border-left: 4px solid var(--success); padding: 15px; border-radius: 0 8px 8px 0; }
+        .question-text { font-weight: 600; color: #334155; margin-bottom: 8px; font-size: 0.95rem; }
+        .solution-box { background: #f0fdf4; border-left: 4px solid var(--success); padding: 12px; border-radius: 0 8px 8px 0; overflow-x: auto; -webkit-overflow-scrolling: touch; }
 
-        .footer-credit { text-align: center; margin-top: 40px; padding-top: 20px; border-top: 1px dashed #cbd5e1; color: var(--text-muted); font-size: 0.9rem; }
+        .footer-credit { text-align: center; margin-top: 30px; padding-top: 15px; border-top: 1px dashed #cbd5e1; color: var(--text-muted); font-size: 0.85rem; }
 
         @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
 
-        /* Media Query cho PC */
-        @media (min-width: 768px) {
+        /* Media Query cho thiết bị lớn (Tablet, PC) */
+        @media (min-width: 640px) {
+            .btn { min-width: 200px; flex: unset; }
             .action-buttons { flex-direction: row; }
             .hero-card { padding: 50px; }
-            .reader-content { padding: 40px 50px; }
+            .reader-header { flex-direction: row; justify-content: space-between; padding: 15px 30px; }
+            .nav-controls { width: auto; justify-content: flex-end; }
+            .reader-content { padding: 40px; }
+            h1.main-title { font-size: 1.8rem; }
+            h2.part-title { flex-direction: row; align-items: center; }
+            p, .gui-step-box ol, .obj-box ul { font-size: 1rem; }
+            .code-block { font-size: 0.95rem; }
         }
     </style>
 </head>
@@ -310,46 +326,38 @@
                 <div class="question-item">
                     <div class="question-text">Câu 1.1: Viết lệnh SQL thêm tác giả "Nam Cao" (có id = 1) và sách "Chí Phèo" (xuất bản 1941) của tác giả này.</div>
                     <div class="solution-box">
-                        <div class="code-block">
-<span class="code-keyword">INSERT INTO</span> TacGia (idTG, tenTG) 
+                        <div class="code-block"><span class="code-keyword">INSERT INTO</span> TacGia (idTG, tenTG) 
 <span class="code-keyword">VALUES</span> (1, <span class="code-string">'Nam Cao'</span>);
 
 <span class="code-keyword">INSERT INTO</span> Sach (tenSach, namXB, idTG) 
-<span class="code-keyword">VALUES</span> (<span class="code-string">'Chí Phèo'</span>, 1941, 1);
-                        </div>
+<span class="code-keyword">VALUES</span> (<span class="code-string">'Chí Phèo'</span>, 1941, 1);</div>
                     </div>
                 </div>
 
                 <div class="question-item">
                     <div class="question-text">Câu 1.2: Hiển thị danh sách các cuốn sách được xuất bản sau năm 2000.</div>
                     <div class="solution-box">
-                        <div class="code-block">
-<span class="code-keyword">SELECT</span> * 
+                        <div class="code-block"><span class="code-keyword">SELECT</span> * 
 <span class="code-keyword">FROM</span> Sach 
-<span class="code-keyword">WHERE</span> namXB > 2000;
-                        </div>
+<span class="code-keyword">WHERE</span> namXB > 2000;</div>
                     </div>
                 </div>
 
                 <div class="question-item">
                     <div class="question-text">Câu 1.3: Cập nhật đổi tên sách "Chí Phèo" thành "Chí Phèo - Tuyển tập".</div>
                     <div class="solution-box">
-                        <div class="code-block">
-<span class="code-keyword">UPDATE</span> Sach 
+                        <div class="code-block"><span class="code-keyword">UPDATE</span> Sach 
 <span class="code-keyword">SET</span> tenSach = <span class="code-string">'Chí Phèo - Tuyển tập'</span> 
-<span class="code-keyword">WHERE</span> tenSach = <span class="code-string">'Chí Phèo'</span>;
-                        </div>
+<span class="code-keyword">WHERE</span> tenSach = <span class="code-string">'Chí Phèo'</span>;</div>
                     </div>
                 </div>
 
                 <div class="question-item">
                     <div class="question-text">Câu 1.4: In ra màn hình Tên Sách, Năm XB và Tên Tác Giả bằng cách nối 2 bảng.</div>
                     <div class="solution-box">
-                        <div class="code-block">
-<span class="code-keyword">SELECT</span> Sach.tenSach, Sach.namXB, TacGia.tenTG 
+                        <div class="code-block"><span class="code-keyword">SELECT</span> Sach.tenSach, Sach.namXB, TacGia.tenTG 
 <span class="code-keyword">FROM</span> Sach 
-<span class="code-keyword">INNER JOIN</span> TacGia <span class="code-keyword">ON</span> Sach.idTG = TacGia.idTG;
-                        </div>
+<span class="code-keyword">INNER JOIN</span> TacGia <span class="code-keyword">ON</span> Sach.idTG = TacGia.idTG;</div>
                     </div>
                 </div>
             </div>
@@ -364,49 +372,41 @@
                 <div class="question-item">
                     <div class="question-text">Câu 2.1: Lấy toàn bộ Đơn hàng, sắp xếp theo ngày mua giảm dần.</div>
                     <div class="solution-box">
-                        <div class="code-block">
-<span class="code-keyword">SELECT</span> * 
+                        <div class="code-block"><span class="code-keyword">SELECT</span> * 
 <span class="code-keyword">FROM</span> DonHang 
-<span class="code-keyword">ORDER BY</span> ngayMua <span class="code-keyword">DESC</span>;
-                        </div>
+<span class="code-keyword">ORDER BY</span> ngayMua <span class="code-keyword">DESC</span>;</div>
                     </div>
                 </div>
 
                 <div class="question-item">
                     <div class="question-text">Câu 2.2: Đếm tổng số lượng đơn hàng đã được bán ra.</div>
                     <div class="solution-box">
-                        <div class="code-block">
-<span class="code-keyword">SELECT COUNT</span>(idDH) <span class="code-keyword">AS</span> TongSoDon 
-<span class="code-keyword">FROM</span> DonHang;
-                        </div>
+                        <div class="code-block"><span class="code-keyword">SELECT COUNT</span>(idDH) <span class="code-keyword">AS</span> TongSoDon 
+<span class="code-keyword">FROM</span> DonHang;</div>
                     </div>
                 </div>
 
                 <div class="question-item">
                     <div class="question-text">Câu 2.3: Hiển thị Tên khách hàng và Tổng tiền của các hóa đơn họ mua.</div>
                     <div class="solution-box">
-                        <div class="code-block">
-<span class="code-keyword">SELECT</span> KhachHang.tenKH, DonHang.tongTien 
+                        <div class="code-block"><span class="code-keyword">SELECT</span> KhachHang.tenKH, DonHang.tongTien 
 <span class="code-keyword">FROM</span> DonHang 
-<span class="code-keyword">INNER JOIN</span> KhachHang <span class="code-keyword">ON</span> DonHang.idKH = KhachHang.idKH;
-                        </div>
+<span class="code-keyword">INNER JOIN</span> KhachHang <span class="code-keyword">ON</span> DonHang.idKH = KhachHang.idKH;</div>
                     </div>
                 </div>
 
                 <div class="question-item">
                     <div class="question-text">Câu 2.4: Xóa vĩnh viễn thông tin Khách hàng có idKH = 5.</div>
                     <div class="solution-box">
-                        <div class="code-block">
-<span class="code-keyword">DELETE FROM</span> KhachHang 
-<span class="code-keyword">WHERE</span> idKH = 5;
-                        </div>
+                        <div class="code-block"><span class="code-keyword">DELETE FROM</span> KhachHang 
+<span class="code-keyword">WHERE</span> idKH = 5;</div>
                     </div>
                 </div>
             </div>
 
             <div class="footer-credit">
                 Hệ thống tài liệu điện tử chuyên sâu | <strong>Hành Trình Số</strong> <br>
-                Biên soạn chuẩn khoa học bởi Cô Lê Huyền Sinh (Cỏ Dại) <i class="fa-solid fa-heart"></i>
+                Biên soạn chuẩn khoa học bởi Cô Lê Huyền Sinh <i class="fa-solid fa-heart"></i>
             </div>
         </div>
     </div>
@@ -422,7 +422,26 @@
             const styleCSS = document.getElementById('main-style').innerHTML;
             const contentHTML = document.getElementById('printable-content').innerHTML;
 
-            const htmlFile = `<!DOCTYPE html><html lang="vi"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Chủ đề 6: Quản trị CSDL trên máy tính</title><link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&family=Merriweather:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"><style>${styleCSS} body { background: #e0f2fe; padding: 10px; display: block; } .reader-content { background: white; max-width: 900px; margin: 0 auto; padding: 20px; border-radius: 12px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); border: 1px solid rgba(255,255,255,0.8); } @media(min-width:768px){.reader-content{padding: 40px; border-radius: 24px;}}</style></head><body><div class="reader-content">${contentHTML}</div><script>alert("Tài liệu đã được lưu offline thành công!");<\/script></body></html>`;
+            const htmlFile = `<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Chủ đề 6: Quản trị CSDL trên máy tính</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&family=Merriweather:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        ${styleCSS} 
+        body { background: #e0f2fe; padding: 10px; display: block; } 
+        .reader-content { background: white; max-width: 900px; margin: 0 auto; padding: 20px 15px; border-radius: 12px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); border: 1px solid rgba(255,255,255,0.8); } 
+        @media(min-width:640px){ .reader-content{padding: 40px; border-radius: 24px;} }
+    </style>
+</head>
+<body>
+    <div class="reader-content">${contentHTML}</div>
+    <script>alert("Tài liệu đã được lưu offline thành công!");<\/script>
+</body>
+</html>`;
 
             const blob = new Blob([htmlFile], { type: 'text/html' });
             const a = document.createElement('a');

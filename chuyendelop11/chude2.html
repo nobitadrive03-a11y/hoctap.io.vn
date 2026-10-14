@@ -2,7 +2,7 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Chủ đề 2: Lưu trữ, tìm kiếm và chia sẻ thông tin - Hành Trình Số</title>
     <!-- Tích hợp Font chữ Google -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -16,7 +16,6 @@
             --primary: #2563eb;
             --primary-dark: #1e40af;
             --tech-gradient: linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%);
-            /* Nền màu hồng - đỏ rực rỡ chuẩn giao diện Hành Trình Số */
             --landing-bg: linear-gradient(135deg, #ec4899 0%, #ef4444 100%); 
             --accent: #f59e0b;
             --bg-body: #e0f2fe;
@@ -35,9 +34,10 @@
             font-family: 'Inter', sans-serif;
             background: var(--bg-body);
             color: var(--text-main);
-            line-height: 1.8;
+            line-height: 1.6;
             min-height: 100vh;
             overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
         }
 
         /* ----- MÀN HÌNH CHÀO (LANDING) ----- */
@@ -53,7 +53,7 @@
 
         .hero-card {
             background: var(--white);
-            padding: 50px 40px;
+            padding: 40px 25px;
             border-radius: var(--radius-lg);
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
             max-width: 650px;
@@ -64,10 +64,9 @@
             align-items: center;
         }
 
-        /* Logo Hành Trình Số */
         .logo-hs {
-            width: 85px;
-            height: 85px;
+            width: 80px;
+            height: 80px;
             background-color: #dc2626;
             border: 4px solid #fbbf24;
             border-radius: 50%;
@@ -75,63 +74,51 @@
             align-items: center;
             justify-content: center;
             color: white;
-            font-size: 2.2rem;
+            font-size: 2rem;
             font-weight: 900;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
             box-shadow: 0 4px 15px rgba(220, 38, 38, 0.4);
         }
 
         .hero-card h1 {
             font-family: 'Inter', sans-serif;
             color: #dc2626;
-            font-size: 1.5rem;
+            font-size: 1.2rem;
             font-weight: 700;
             text-transform: uppercase;
-            margin-bottom: 5px;
+            margin-bottom: 8px;
             letter-spacing: 1px;
         }
 
         .hero-card h2 {
             font-family: 'Inter', sans-serif;
             color: #dc2626;
-            font-size: 1.6rem;
+            font-size: 1.5rem;
             font-weight: 900;
             text-transform: uppercase;
-            margin-bottom: 25px;
-            line-height: 1.4;
+            margin-bottom: 20px;
+            line-height: 1.3;
         }
 
         .motto-text {
             font-family: 'Merriweather', serif;
             color: var(--text-muted);
-            font-size: 1.15rem;
+            font-size: 1.05rem;
             font-style: italic;
-            margin-bottom: 40px;
-            padding: 0 20px;
+            margin-bottom: 30px;
             position: relative;
         }
 
-        .motto-text::before, .motto-text::after {
-            content: "";
-            position: absolute;
-            top: 50%;
-            width: 40px;
-            height: 1px;
-            background: #cbd5e1;
-        }
-        .motto-text::before { left: -30px; }
-        .motto-text::after { right: -30px; }
-
         .action-buttons {
             display: flex;
-            gap: 15px;
+            gap: 12px;
             justify-content: center;
             flex-wrap: wrap;
             width: 100%;
         }
 
         .btn {
-            padding: 14px 28px;
+            padding: 14px 20px;
             border: none;
             border-radius: 12px;
             font-size: 1rem;
@@ -141,9 +128,9 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
+            gap: 8px;
             flex: 1;
-            min-width: 200px;
+            min-width: 100%; /* Trải dài trên di động */
         }
 
         .btn-primary {
@@ -172,9 +159,9 @@
         #reader-view {
             display: none;
             max-width: 1000px;
-            margin: 40px auto;
+            margin: 20px auto;
             background: #f8fafc;
-            border-radius: var(--radius-lg);
+            border-radius: var(--radius-md);
             box-shadow: var(--shadow-lg);
             overflow: hidden;
             animation: slideUp 0.6s ease-out;
@@ -184,9 +171,10 @@
         .reader-header {
             background: var(--tech-gradient);
             color: var(--white);
-            padding: 20px 40px;
+            padding: 15px 20px;
             display: flex;
-            justify-content: space-between;
+            flex-direction: column;
+            gap: 12px;
             align-items: center;
             position: sticky;
             top: 0;
@@ -194,13 +182,19 @@
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
 
-        .reader-header h2 { font-size: 1.2rem; font-weight: 600; margin: 0; }
-        .nav-controls { display: flex; gap: 15px; }
+        .reader-header h2 { font-size: 1.1rem; font-weight: 600; margin: 0; text-align: center; }
+        
+        .nav-controls { 
+            display: flex; 
+            gap: 10px; 
+            width: 100%;
+            justify-content: center;
+        }
         
         .btn-small {
-            padding: 8px 16px;
+            padding: 10px 15px;
             font-size: 0.9rem;
-            border-radius: 12px;
+            border-radius: 10px;
             background: rgba(255,255,255,0.2);
             color: white;
             border: 1px solid rgba(255,255,255,0.4);
@@ -208,44 +202,45 @@
             cursor: pointer;
             display: flex;
             align-items: center;
+            justify-content: center;
             gap: 8px;
+            flex: 1;
             transition: 0.3s;
         }
         .btn-small:hover { background: rgba(255,255,255,0.3); }
 
-        .reader-content { padding: 50px; background: var(--white); }
+        .reader-content { padding: 20px 15px; background: var(--white); }
 
         h1.main-title {
             font-family: 'Merriweather', serif;
             color: var(--primary-dark);
             text-align: center;
-            margin-bottom: 40px;
-            font-size: 2.2rem;
+            margin-bottom: 30px;
+            font-size: 1.6rem;
             line-height: 1.4;
         }
 
         h1.main-title span {
             display: block;
             font-family: 'Inter', sans-serif;
-            font-size: 1.1rem;
+            font-size: 0.95rem;
             color: var(--primary);
             text-transform: uppercase;
-            letter-spacing: 2px;
-            margin-bottom: 10px;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
         }
 
         .obj-box {
             background: linear-gradient(to right, #f0f9ff, #e0f2fe);
             border: 1px solid #bae6fd;
-            padding: 25px 30px;
+            padding: 20px 15px;
             border-radius: var(--radius-md);
-            margin-bottom: 40px;
-            box-shadow: inset 0 2px 4px rgba(255,255,255,0.8);
+            margin-bottom: 30px;
         }
         
-        .obj-box strong { color: #0284c7; display: flex; align-items: center; gap: 10px; font-size: 1.1rem; margin-bottom: 15px;}
+        .obj-box strong { color: #0284c7; display: flex; align-items: center; gap: 8px; font-size: 1.05rem; margin-bottom: 12px;}
         .obj-box ul { list-style: none; padding-left: 0; margin: 0;}
-        .obj-box ul li { position: relative; padding-left: 25px; margin-bottom: 10px; }
+        .obj-box ul li { position: relative; padding-left: 25px; margin-bottom: 10px; font-size: 0.95rem;}
         .obj-box ul li::before {
             content: '\f00c';
             font-family: 'Font Awesome 6 Free';
@@ -259,38 +254,40 @@
         h2.part-title {
             background: #f1f5f9;
             color: var(--primary-dark);
-            padding: 15px 20px;
-            border-radius: 12px;
-            border-left: 6px solid var(--primary);
-            margin: 40px 0 25px 0;
-            font-size: 1.3rem;
+            padding: 12px 15px;
+            border-radius: 10px;
+            border-left: 5px solid var(--primary);
+            margin: 30px 0 20px 0;
+            font-size: 1.15rem;
             display: flex;
-            align-items: center;
-            gap: 12px;
+            align-items: flex-start;
+            flex-direction: column;
+            gap: 8px;
         }
         
         h3.lesson-title {
             color: var(--primary);
-            font-size: 1.15rem;
-            margin: 25px 0 15px 0;
+            font-size: 1.1rem;
+            margin: 20px 0 10px 0;
             border-bottom: 1px dashed #cbd5e1;
-            padding-bottom: 8px;
+            padding-bottom: 6px;
         }
 
-        p { margin-bottom: 15px; text-align: justify; font-size: 1.05rem; }
+        p { margin-bottom: 12px; text-align: justify; font-size: 0.95rem; }
         
         .reader-content > ul {
             list-style-type: none;
-            padding-left: 10px;
+            padding-left: 0;
         }
         .reader-content > ul > li {
             position: relative;
-            padding-left: 30px;
-            margin-bottom: 15px;
+            padding-left: 35px;
+            margin-bottom: 12px;
             background: #f8fafc;
-            padding: 15px 15px 15px 40px;
-            border-radius: 12px;
+            padding: 12px 12px 12px 35px;
+            border-radius: 10px;
             border: 1px solid #e2e8f0;
+            font-size: 0.95rem;
         }
         .reader-content > ul > li::before {
             content: '\f105';
@@ -298,102 +295,69 @@
             font-weight: 900;
             color: var(--primary);
             position: absolute;
-            left: 15px;
-            top: 15px;
-            font-size: 1.2rem;
+            left: 12px;
+            top: 12px;
+            font-size: 1rem;
         }
         
         .code-tag {
             background: #f1f5f9;
-            padding: 2px 6px;
+            padding: 2px 5px;
             border-radius: 4px;
             font-family: monospace;
             color: #dc2626;
             font-weight: bold;
+            font-size: 0.9em;
+            word-break: break-word;
         }
 
-        .myth-box {
-            background: #fffbeb;
+        /* ----- HỘP KHOA HỌC MỚI ----- */
+        .logic-box {
+            background: #f0fdf4;
             border-radius: var(--radius-md);
-            padding: 25px 30px;
-            margin: 35px 0;
-            box-shadow: 0 10px 15px -3px rgba(245, 158, 11, 0.1);
-            position: relative;
-            border: 1px solid #fde68a;
-        }
-
-        .myth-box::before {
-            content: '\f0eb'; 
-            font-family: 'Font Awesome 6 Free';
-            font-weight: 900;
-            color: var(--white);
-            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-            font-size: 1.2rem;
-            position: absolute;
-            top: -20px;
-            left: 30px;
-            width: 45px;
-            height: 45px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 12px;
-            box-shadow: 0 4px 10px rgba(245, 158, 11, 0.3);
-            transform: rotate(-5deg);
+            padding: 20px 15px;
+            margin: 25px 0;
+            box-shadow: 0 4px 10px -3px rgba(34, 197, 94, 0.1);
+            border: 1px solid #bbf7d0;
+            border-left: 5px solid #22c55e;
+            font-size: 0.95rem;
         }
         
-        .myth-box strong { color: #b45309; font-size: 1.1rem; display: block; margin-bottom: 8px;}
-
-        .table-wrapper {
-            background: var(--white);
-            border-radius: var(--radius-md);
-            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
-            overflow: hidden;
-            margin: 30px 0;
-            border: 1px solid #e2e8f0;
+        .logic-box strong { 
+            color: #166534; 
+            font-size: 1.05rem; 
+            display: flex; 
+            align-items: center; 
+            gap: 8px; 
+            margin-bottom: 10px;
         }
-
-        .modern-table { width: 100%; border-collapse: collapse; }
-
-        .modern-table th, .modern-table td {
-            padding: 16px 20px;
-            border-bottom: 1px solid #f1f5f9;
-            text-align: left;
-        }
-
-        .modern-table th {
-            background: #f8fafc;
-            color: var(--primary-dark);
-            font-weight: 600;
-            text-transform: uppercase;
-            font-size: 0.85rem;
-            letter-spacing: 1px;
-        }
-        
-        .modern-table tr:last-child td { border-bottom: none; }
-        .modern-table tr:hover { background: #f8fafc; }
-        .modern-table td strong { color: var(--primary); }
 
         .footer-credit {
             text-align: center;
-            margin-top: 60px;
-            padding-top: 30px;
+            margin-top: 40px;
+            padding-top: 20px;
             border-top: 2px dashed #e2e8f0;
             color: var(--text-muted);
-            font-size: 0.95rem;
+            font-size: 0.85rem;
         }
         .footer-credit i { color: #ef4444; }
 
         @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
         @keyframes slideUp { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
 
-        @media (max-width: 768px) {
-            .reader-content { padding: 25px; }
-            .action-buttons { flex-direction: column; }
-            .btn { width: 100%; }
-            .table-wrapper { overflow-x: auto; }
-            h1.main-title { font-size: 1.8rem; }
-            .motto-text::before, .motto-text::after { display: none; }
+        /* Media Query cho thiết bị màn hình lớn */
+        @media (min-width: 640px) {
+            .btn { min-width: 200px; flex: unset; }
+            .action-buttons { flex-direction: row; }
+            .reader-header { flex-direction: row; justify-content: space-between; padding: 20px 40px; }
+            .reader-header h2 { text-align: left; }
+            .nav-controls { width: auto; justify-content: flex-end; }
+            .reader-content { padding: 40px; }
+            h1.main-title { font-size: 2.2rem; }
+            h2.part-title { flex-direction: row; align-items: center; }
+            p, .reader-content > ul > li, .obj-box ul li, .logic-box { font-size: 1.05rem; }
+            #reader-view { margin: 40px auto; border-radius: var(--radius-lg); }
+            .logic-box { padding: 25px 30px; }
         }
     </style>
 </head>
@@ -464,9 +428,9 @@
                 <li><strong>Người chỉnh sửa (Editor):</strong> Có toàn quyền thay đổi nội dung, xóa tệp, hoặc chia sẻ lại cho người khác.</li>
             </ul>
 
-            <div class="myth-box">
-                <strong>Góc giải ảo: "Đám mây" nằm ở đâu?</strong> 
-                Nhiều người nghĩ dữ liệu trên đám mây đang "bay lơ lửng" trong không gian mạng. Thực chất, dữ liệu của bạn được lưu vào các ổ cứng vật lý khổng lồ đặt tại các Trung tâm dữ liệu (Data Center) của Google, Microsoft... Việc chia sẻ link cho bạn bè xem video không hề làm tốn dung lượng ổ đĩa của họ, vì họ chỉ đang "nhìn" vào ổ đĩa của bạn từ xa.
+            <div class="logic-box">
+                <strong><i class="fa-solid fa-microscope"></i> Phân tích logic khoa học: Điện toán đám mây</strong> 
+                Hệ thống lưu trữ đám mây vận hành dựa trên kiến trúc hệ thống tệp phân tán (Distributed File System) và công nghệ ảo hóa (Virtualization). Dữ liệu thực chất được lưu trữ trên các mảng ổ cứng vật lý quy mô lớn tại các Trung tâm dữ liệu (Data Center). Khi tiến hành chia sẻ liên kết, hệ thống áp dụng cơ chế Danh sách kiểm soát truy cập (Access Control List - ACL) nhằm trỏ các luồng truy cập tới cùng một vùng nhớ gốc, giúp giảm thiểu độ trễ mạng và loại bỏ sự dư thừa dữ liệu.
             </div>
 
             <!-- BÀI 7 -->
@@ -485,9 +449,9 @@
                 <li><strong>Nhiệm vụ 4: Trải nghiệm các máy tìm kiếm:</strong> Cùng một từ khóa, Google có thể trả về kết quả khác với Microsoft Bing, do thuật toán đánh giá và sắp xếp trang web của mỗi hãng là khác nhau.</li>
             </ul>
 
-            <div class="myth-box">
-                <strong>Góc giải ảo: Máy tìm kiếm có biết tuốt?</strong> 
-                Khi bạn bấm "Tìm kiếm", Google KHÔNG lùng sục toàn bộ Internet ngay lúc đó. Thay vào đó, nó tìm trong "Mục lục" (Index) nội bộ khổng lồ mà nó đã tạo ra từ trước. Kỹ năng tìm kiếm giỏi không phải là hỏi một câu dài lê thê, mà là biết cách lắp ghép các từ khóa cốt lõi (Keywords) để loại bỏ thông tin nhiễu.
+            <div class="logic-box">
+                <strong><i class="fa-solid fa-microscope"></i> Phân tích logic khoa học: Thuật toán tìm kiếm</strong> 
+                Máy tìm kiếm không duyệt toàn bộ mạng Internet theo thời gian thực khi có yêu cầu truy vấn. Quá trình này được thực hiện trước đó qua ba giai đoạn kỹ thuật cốt lõi: 1) Thu thập dữ liệu (Crawling) bằng các tác tử phần mềm (Web Spiders), 2) Tổ chức dữ liệu thông qua cấu trúc Chỉ mục đảo ngược (Inverted Index), và 3) Xếp hạng (Ranking) sử dụng các thuật toán đánh giá độ tin cậy. Khi người dùng nhập từ khóa, hệ thống thực chất đang đối chiếu truy vấn đó với cơ sở dữ liệu chỉ mục nội bộ để xuất ra kết quả tức thời.
             </div>
 
             <!-- BÀI 8 -->
@@ -511,7 +475,7 @@
 
             <div class="footer-credit">
                 Hệ thống tài liệu điện tử | <strong>Hành Trình Số</strong> <br>
-                Biên soạn bởi Cô Lê Huyền Sinh (Cỏ Dại) <i class="fa-solid fa-heart"></i>
+                Biên soạn chuẩn khoa học bởi Cô Lê Huyền Sinh <i class="fa-solid fa-heart"></i>
             </div>
         </div>
     </div>
@@ -548,13 +512,18 @@
             <html lang="vi">
             <head>
                 <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
                 <title>Chủ đề 2: Lưu trữ, tìm kiếm và chia sẻ thông tin</title>
                 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&family=Merriweather:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
                 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
                 <style>
                     ${styleCSS}
-                    body { background: #e0f2fe; padding: 20px; display: block; }
-                    .reader-content { background: white; max-width: 900px; margin: 0 auto; padding: 40px; border-radius: 24px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); border: 1px solid rgba(255,255,255,0.8); }
+                    body { background: #e0f2fe; padding: 10px; display: block; }
+                    .reader-content { background: white; max-width: 900px; margin: 0 auto; padding: 20px; border-radius: 12px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); border: 1px solid rgba(255,255,255,0.8); }
+                    @media (min-width: 640px) {
+                        body { padding: 20px; }
+                        .reader-content { padding: 40px; border-radius: 24px; }
+                    }
                 </style>
             </head>
             <body>
@@ -568,7 +537,7 @@
             const blob = new Blob([htmlFile], { type: 'text/html' });
             const a = document.createElement('a');
             a.href = URL.createObjectURL(blob);
-            a.download = "ChuyenDe_TinHoc11_ChuDe2_HanhTrinhSo.html"; // Đổi tên file cho phù hợp với Chủ đề 2
+            a.download = "ChuyenDe_TinHoc11_ChuDe2_HanhTrinhSo.html";
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
