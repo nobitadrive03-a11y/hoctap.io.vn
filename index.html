@@ -150,7 +150,7 @@
 
             <!-- LIÊN HỆ -->
             <li>
-                <a href="javascript:void(0)" onclick="showLessons('HỖ TRỢ HỌC TẬP', tepLienHe)" class="nav-item block px-2 md:px-4 py-2 md:py-4">LIÊN HỆ</a>
+                <a href="javascript:void(0)" onclick="showLessons('CÁC TỆP LIÊN HỆ', tepLienHe)" class="nav-item block px-2 md:px-4 py-2 md:py-4">LIÊN HỆ</a>
             </li>
         </ul>
     </div>
@@ -215,39 +215,60 @@
         </aside>
 
         <!-- CỘT PHẢI: KHUNG TRANG CHỦ / KHUNG BÀI HỌC -->
-        <div id="content-area" class="lg:col-span-3 transition-all duration-300">
+      <!-- CỘT PHẢI: KHUNG TRANG CHỦ / KHUNG BÀI HỌC -->
+<!-- CỘT PHẢI: KHUNG TRANG CHỦ / KHUNG BÀI HỌC -->
+<div id="content-area" class="lg:col-span-3 transition-all duration-300">
+    
+    <!-- KHUNG TRANG CHỦ MẶC ĐỊNH -->
+    <div id="default-view" class="grid grid-cols-1 md:grid-cols-3 gap-6 h-full">
+
+        <!-- KHUNG CHÍNH Ở GIỮA (Chứa cả ảnh và nội dung HTML) -->
+        <div class="md:col-span-2 relative rounded-xl shadow-xl overflow-hidden border border-[#14b8a6]/30 bg-black min-h-[300px] md:min-h-[350px]">
             
-            <!-- KHUNG TRANG CHỦ MẶC ĐỊNH -->
-            <div id="default-view" class="grid grid-cols-1 md:grid-cols-3 gap-6 h-full">
+            <!-- TRẠNG THÁI 1: HIỂN THỊ ẢNH (Mặc định) -->
+            <div id="image-state" 
+                 class="absolute inset-0 cursor-pointer group" 
+                 onclick="document.getElementById('image-state').classList.add('hidden'); document.getElementById('content-state').classList.remove('hidden');">
+                
+                <!-- Hiển thị ảnh bìa anhbia_3.jpg -->
+                <img src="anhbia.png" alt="Ảnh bìa" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+                
+                <a href="LINK_TRANG_MOI_CUA_BAN.html" class="absolute inset-0 z-40 cursor-pointer"></a>
 
-                <div class="md:col-span-2 bg-gradient-to-br from-[#0f766e] to-[#042f2e] rounded-xl shadow-xl flex flex-col justify-center items-center text-center p-6 lg:p-12 min-h-[300px] md:min-h-[350px] transform hover:scale-[1.01] transition-transform duration-300 relative overflow-hidden group border border-[#14b8a6]/30">
-                    
-                    <a href="LINK_TRANG_MOI_CUA_BAN.html" class="absolute inset-0 z-50 cursor-pointer"></a>
+               
 
-                    <div class="text-white/80 text-5xl md:text-6xl mb-4 md:mb-6 transform group-hover:-translate-y-2 transition-transform duration-300">
-                        <i class="fa-solid fa-laptop-code"></i>
-                    </div>
+        <!-- CỘT PHẢI: CÁC NÚT CHỨC NĂNG (Giữ nguyên) -->
+        <div class="md:col-span-1 flex flex-col gap-4 md:gap-6">
+            <a href="https://lehuyensinh.io.vn/" target="_blank" class="bg-gradient-to-br from-blue-500 to-blue-700 rounded-xl shadow-lg flex-1 flex flex-col justify-center items-center text-center p-4 md:p-6 cursor-pointer transform hover:scale-[1.03] transition-all duration-300 border border-blue-400/30">
+                <i class="fa-solid fa-robot text-4xl md:text-5xl text-blue-100 mb-3 md:mb-4"></i>
+                <span class="text-white font-extrabold text-lg md:text-xl lg:text-2xl drop-shadow-md leading-tight">Hệ thống trắc nghiệm tương tác</span>
+            </a>
 
-                    <h1 class="text-white text-2xl md:text-4xl lg:text-5xl font-black uppercase leading-tight mb-3 md:mb-4 tracking-tight drop-shadow-lg z-10">
-                        MANG CÔNG NGHỆ<br>VÀO MỌI CHUYẾN ĐI
-                    </h1>
-                    <p class="text-teal-100 italic text-sm md:text-lg font-light max-w-md mx-auto z-10 border-t border-teal-600/50 pt-3 md:pt-4 mt-1 md:mt-2">
-                        Nền tảng học tập, rèn luyện tư duy lập trình và kiểm tra đánh giá trực tuyến.
-                    </p>
-                </div>
+            <a href="giaidapthacmac.html" class="bg-gradient-to-br from-yellow-400 to-orange-500 rounded-xl shadow-lg flex-1 flex flex-col justify-center items-center text-center p-4 md:p-6 cursor-pointer transform hover:scale-[1.03] transition-all duration-300 border border-yellow-300/30">
+                <i class="fa-solid fa-robot text-4xl md:text-5xl text-yellow-50 mb-3 md:mb-4"></i>
+                <span class="text-white font-extrabold text-lg md:text-xl lg:text-2xl drop-shadow-md leading-tight">Hỗ trợ giải đáp thắc mắc trực tuyến</span>
+            </a>
+        </div>
+    </div>
+</div>
 
-                <div class="md:col-span-1 flex flex-col gap-4 md:gap-6">
-                    <a href="https://lehuyensinh.io.vn/" target="_blank" class="bg-gradient-to-br from-blue-500 to-blue-700 rounded-xl shadow-lg flex-1 flex flex-col justify-center items-center text-center p-4 md:p-6 cursor-pointer transform hover:scale-[1.03] transition-all duration-300 border border-blue-400/30">
-                        <i class="fa-solid fa-robot text-4xl md:text-5xl text-blue-100 mb-3 md:mb-4"></i>
-                        <span class="text-white font-extrabold text-lg md:text-xl lg:text-2xl drop-shadow-md leading-tight">Hệ thống trắc nghiệm tương tác</span>
-                    </a>
+        <!-- CỘT PHẢI: CÁC NÚT CHỨC NĂNG -->
+        <div class="md:col-span-1 flex flex-col gap-4 md:gap-6">
+            <a href="https://lehuyensinh.io.vn/" target="_blank" class="bg-gradient-to-br from-blue-500 to-blue-700 rounded-xl shadow-lg flex-1 flex flex-col justify-center items-center text-center p-4 md:p-6 cursor-pointer transform hover:scale-[1.03] transition-all duration-300 border border-blue-400/30">
+                <i class="fa-solid fa-robot text-4xl md:text-5xl text-blue-100 mb-3 md:mb-4"></i>
+                <span class="text-white font-extrabold text-lg md:text-xl lg:text-2xl drop-shadow-md leading-tight">Hệ thống trắc nghiệm tương tác</span>
+            </a>
 
-                     <a href="giaidapthacmac.html" class="bg-gradient-to-br from-yellow-400 to-orange-500 rounded-xl shadow-lg flex-1 flex flex-col justify-center items-center text-center p-4 md:p-6 cursor-pointer transform hover:scale-[1.03] transition-all duration-300 border border-yellow-300/30">
-    <i class="fa-solid fa-robot text-4xl md:text-5xl text-yellow-50 mb-3 md:mb-4"></i>
-    <span class="text-white font-extrabold text-lg md:text-xl lg:text-2xl drop-shadow-md leading-tight">Hỗ trợ giải đáp thắc mắc <br>trực tuyến</span>
-</a>
-                </div>
-            </div>
+            <a href="giaidapthacmac.html" class="bg-gradient-to-br from-yellow-400 to-orange-500 rounded-xl shadow-lg flex-1 flex flex-col justify-center items-center text-center p-4 md:p-6 cursor-pointer transform hover:scale-[1.03] transition-all duration-300 border border-yellow-300/30">
+                <i class="fa-solid fa-robot text-4xl md:text-5xl text-yellow-50 mb-3 md:mb-4"></i>
+                <span class="text-white font-extrabold text-lg md:text-xl lg:text-2xl drop-shadow-md leading-tight">Hỗ trợ giải đáp thắc mắc <br>trực tuyến</span>
+            </a>
+        </div>
+    </div>
+</div>
+
+
+
 
            <!-- KHUNG LƯỚI KHỐI MÀU BÀI HỌC / KIỂM TRA -->
             <div id="grid-view" class="hidden bg-white rounded-xl shadow-md border border-gray-100 p-4 md:p-8 min-h-[400px]">
@@ -597,9 +618,10 @@
     const tepLienHe = [
 
          { title: "Khảo sát đánh giá trang Web hoctap.io.vn", link: "lienhe/danhgia.html", image: "lienhe/danhgia.png", icon: "fa-envelope" },
-        { title: "Gửi thắc và hổ trợ giải đáp", link: "lienhe/lienhe.html", image: "lienhe/lienhe.png", icon: "fa-address-card" }
+        { title: "Gửi thắc và hổ trợ giải đáp", link: "lienhe/lienhe.html", image: "lienhe/lienhe.png", icon: "fa-address-card" },
        
-       
+        { title: "Tệp liên hệ 3", link: "file3.html", image: "https://placehold.co/600x300/eab308/ffffff?text=Tep+3", icon: "fa-share-nodes" },
+        { title: "Tệp liên hệ 4", link: "file4.html", image: "https://placehold.co/600x300/dc2626/ffffff?text=Tep+4", icon: "fa-headset" }
 
     ];
 
