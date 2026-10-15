@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trường THPT Phan Đình Phùng | Hành Trình Số </title>
+    <title>Trường THPT Phan Đình Phùng | Hành Trình Số</title>
     <meta name="description" content="Hành Trình Số - Nền tảng học Tin học trực tuyến của cô Lê Huyền Sinh. Cung cấp tài liệu học tập, đề thi trắc nghiệm môn tin học, lập trình Python và trợ lý AI cho học sinh THPT.">
-    <meta name="keywords" content="lê huyền sinh, Hành Trình Số, đề kiểm tra trắc nghiệm, đề kiểm tra trắc nghiệm tin học 10, đề kiểm tra trắc nghiệm tin học 11, đề kiểm tra trắc nghiệm tin học 12, Tin học 10, Tin học 11, Tin học 12, Trường THPT Phan Đình Phùng,  THPT Phan Đình Phùng, học lập trình Python, trắc nghiệm Tin học, Lê Huyền Sinh">
+    <meta name="keywords" content="lê huyền sinh, Hành Trình Số, đề kiểm tra trắc nghiệm, đề kiểm tra trắc nghiệm tin học 10, đề kiểm tra trắc nghiệm tin học 11, đề kiểm tra trắc nghiệm tin học 12, Tin học 10, Tin học 11, Tin học 12, Trường THPT Phan Đình Phùng, THPT Phan Đình Phùng, học lập trình Python, trắc nghiệm Tin học, Lê Huyền Sinh">
     <meta name="author" content="Lê Huyền Sinh">
     
     <meta name="google-site-verification" content="Cw9RiI8exDEqFFkd9MNsxkjt-8HFgVPuS32BR8kD5Sc" />
@@ -215,42 +215,41 @@
         </aside>
 
         <!-- CỘT PHẢI: KHUNG TRANG CHỦ / KHUNG BÀI HỌC -->
-    <!-- KHUNG TRANG CHỦ MẶC ĐỊNH -->
-    <div id="default-view" class="grid grid-cols-1 md:grid-cols-3 gap-6 h-full">
-
-        <!-- KHUNG CHÍNH Ở GIỮA (Chứa cả ảnh và nội dung HTML) -->
-        <div class="md:col-span-2 relative rounded-xl shadow-xl overflow-hidden border border-[#14b8a6]/30 bg-black min-h-[300px] md:min-h-[350px]">
+        <div id="content-area" class="lg:col-span-3 transition-all duration-300">
             
-            <!-- TRẠNG THÁI 1: HIỂN THỊ ẢNH (Mặc định) -->
-            <div id="image-state" 
-                 class="absolute inset-0 cursor-pointer group" 
-                 onclick="document.getElementById('image-state').classList.add('hidden'); document.getElementById('content-state').classList.remove('hidden');">
-                
-                <!-- Hiển thị ảnh bìa anhbia.png -->
-                <img src="anhbia.png" alt="Ảnh bìa" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
-                
-                <a href="LINK_TRANG_MOI_CUA_BAN.html" class="absolute inset-0 z-40 cursor-pointer"></a>
+            <!-- KHUNG TRANG CHỦ MẶC ĐỊNH -->
+            <div id="default-view" class="grid grid-cols-1 md:grid-cols-3 gap-6 h-full">
+
+                <!-- KHUNG CHÍNH Ở GIỮA (Chứa cả ảnh và nội dung HTML) -->
+                <div class="md:col-span-2 relative rounded-xl shadow-xl overflow-hidden border border-[#14b8a6]/30 bg-black min-h-[300px] md:min-h-[350px]">
+                    
+                    <!-- TRẠNG THÁI 1: HIỂN THỊ ẢNH (Mặc định) -->
+                    <div id="image-state" 
+                         class="absolute inset-0 cursor-pointer group" 
+                         onclick="document.getElementById('image-state').classList.add('hidden'); document.getElementById('content-state').classList.remove('hidden');">
+                        
+                        <!-- Hiển thị ảnh bìa anhbia.png -->
+                        <img src="anhbia.png" alt="Ảnh bìa" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+                        
+                        <a href="LINK_TRANG_MOI_CUA_BAN.html" class="absolute inset-0 z-40 cursor-pointer"></a>
+                    </div>
+                </div>
+
+                <!-- CỘT PHẢI: CÁC NÚT CHỨC NĂNG -->
+                <div class="md:col-span-1 flex flex-col gap-4 md:gap-6">
+                    <a href="https://lehuyensinh.io.vn/" target="_blank" class="bg-gradient-to-br from-blue-500 to-blue-700 rounded-xl shadow-lg flex-1 flex flex-col justify-center items-center text-center p-4 md:p-6 cursor-pointer transform hover:scale-[1.03] transition-all duration-300 border border-blue-400/30">
+                        <i class="fa-solid fa-robot text-4xl md:text-5xl text-blue-100 mb-3 md:mb-4"></i>
+                        <span class="text-white font-extrabold text-lg md:text-xl lg:text-2xl drop-shadow-md leading-tight">Hệ thống trắc nghiệm tương tác</span>
+                    </a>
+
+                    <a href="giaidapthacmac.html" class="bg-gradient-to-br from-yellow-400 to-orange-500 rounded-xl shadow-lg flex-1 flex flex-col justify-center items-center text-center p-4 md:p-6 cursor-pointer transform hover:scale-[1.03] transition-all duration-300 border border-yellow-300/30">
+                        <i class="fa-solid fa-robot text-4xl md:text-5xl text-yellow-50 mb-3 md:mb-4"></i>
+                        <span class="text-white font-extrabold text-lg md:text-xl lg:text-2xl drop-shadow-md leading-tight">Hỗ trợ giải đáp thắc mắc <br>trực tuyến</span>
+                    </a>
+                </div>
             </div>
-        </div>
 
-        <!-- CỘT PHẢI: CÁC NÚT CHỨC NĂNG -->
-        <div class="md:col-span-1 flex flex-col gap-4 md:gap-6">
-            <a href="https://lehuyensinh.io.vn/" target="_blank" class="bg-gradient-to-br from-blue-500 to-blue-700 rounded-xl shadow-lg flex-1 flex flex-col justify-center items-center text-center p-4 md:p-6 cursor-pointer transform hover:scale-[1.03] transition-all duration-300 border border-blue-400/30">
-                <i class="fa-solid fa-robot text-4xl md:text-5xl text-blue-100 mb-3 md:mb-4"></i>
-                <span class="text-white font-extrabold text-lg md:text-xl lg:text-2xl drop-shadow-md leading-tight">Hệ thống trắc nghiệm tương tác</span>
-            </a>
-
-            <a href="giaidapthacmac.html" class="bg-gradient-to-br from-yellow-400 to-orange-500 rounded-xl shadow-lg flex-1 flex flex-col justify-center items-center text-center p-4 md:p-6 cursor-pointer transform hover:scale-[1.03] transition-all duration-300 border border-yellow-300/30">
-                <i class="fa-solid fa-robot text-4xl md:text-5xl text-yellow-50 mb-3 md:mb-4"></i>
-                <span class="text-white font-extrabold text-lg md:text-xl lg:text-2xl drop-shadow-md leading-tight">Hỗ trợ giải đáp thắc mắc <br>trực tuyến</span>
-            </a>
-        </div>
-    </div>
-
-
-
-
-           <!-- KHUNG LƯỚI KHỐI MÀU BÀI HỌC / KIỂM TRA -->
+            <!-- KHUNG LƯỚI KHỐI MÀU BÀI HỌC / KIỂM TRA -->
             <div id="grid-view" class="hidden bg-white rounded-xl shadow-md border border-gray-100 p-4 md:p-8 min-h-[400px]">
                 <h2 id="grid-title" class="text-center font-extrabold text-xl md:text-3xl uppercase mb-6 md:mb-8 text-gray-800 drop-shadow-sm">TIÊU ĐỀ MỤC</h2>
                 
@@ -287,8 +286,8 @@
                 </div>
             </div>
 
-        </div>
-    </div>
+        </div> <!-- KẾT THÚC #content-area -->
+    </div> <!-- KẾT THÚC grid lg:grid-cols-4 -->
 </main>
 
 <!-- FOOTER -->
