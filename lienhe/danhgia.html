@@ -51,6 +51,27 @@
         /* ================= BẢNG DỮ LIỆU & PHÂN TRANG ================= */
         .chart-box { max-width: 530px; margin: 10px auto 20px; } 
         
+        /* CSS CHO BẢNG THỐNG KÊ CHI TIẾT */
+        .stats-grid { 
+            display: flex; gap: 10px; flex-wrap: wrap; 
+            margin-bottom: 25px; justify-content: center; 
+        }
+        .stat-card { 
+            background: #f8f9fa; padding: 15px; border-radius: 10px; 
+            flex: 1; min-width: 140px; text-align: center; 
+            border: 1px solid #e0e0e0; box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+        }
+        .stat-card h4 { margin: 0 0 8px 0; font-size: 15px; color: #5f6368; }
+        .stat-card p { margin: 0; font-size: 18px; font-weight: bold; color: #333; }
+        .stat-card:nth-child(1) { border-bottom: 4px solid #34a853; }
+        .stat-card:nth-child(2) { border-bottom: 4px solid #4285f4; }
+        .stat-card:nth-child(3) { border-bottom: 4px solid #fbbc05; }
+        .stat-card:nth-child(4) { border-bottom: 4px solid #ea4335; }
+        .stat-card:nth-child(1) h4 { color: #2b8c46; }
+        .stat-card:nth-child(2) h4 { color: #1a73e8; }
+        .stat-card:nth-child(3) h4 { color: #e3a800; }
+        .stat-card:nth-child(4) h4 { color: #d32f2f; }
+        
         .accordion-header {
             background: linear-gradient(135deg, #1a73e8, #4285f4); 
             border: none; border-radius: 8px;
@@ -143,9 +164,9 @@
             .header-actions button { width: 100%; margin-bottom: 5px; }
             .hide-on-mobile { display: none; } 
             .chart-box { max-width: 100%; margin: 5px auto 15px;}
+            .stats-grid { flex-direction: column; }
         }
         @media (max-width: 480px) {
-            /* Xếp dọc 2 ô nhập liệu nếu màn hình điện thoại quá nhỏ */
             .form-row { flex-direction: column; gap: 15px; }
         }
     </style>
@@ -166,16 +187,34 @@
             </button>
         </div>
 
-         <p style="text-align: center; color: #d32f2f; font-size: 20px; font-weight: bold; margin-bottom: 25px;">
-            Tổng số học sinh đã đánh giá: <strong id="totalCount" style="font-size: 24px; color: #1a73e8;">0</strong>
+         <p style="text-align: center; color: #d32f2f; font-size: 20px; font-weight: bold; margin-bottom: 20px;">
+            Tổng số học sinh đã đánh giá: <strong id="totalCount" style="font-size: 26px; color: #1a73e8;">0</strong>
         </p>
 
-        
+        <!-- BẢNG THỐNG KÊ SỐ LƯỢNG & PHẦN TRĂM -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h4>Rất hữu ích</h4>
+                <p><span id="count1">0</span> hs (<span id="percent1">0</span>%)</p>
+            </div>
+            <div class="stat-card">
+                <h4>Hữu ích</h4>
+                <p><span id="count2">0</span> hs (<span id="percent2">0</span>%)</p>
+            </div>
+            <div class="stat-card">
+                <h4>Bình thường</h4>
+                <p><span id="count3">0</span> hs (<span id="percent3">0</span>%)</p>
+            </div>
+            <div class="stat-card">
+                <h4>Ý kiến khác</h4>
+                <p><span id="count4">0</span> hs (<span id="percent4">0</span>%)</p>
+            </div>
+        </div>
+
         <div class="chart-box">
             <canvas id="resultChart"></canvas>
         </div>
 
-      
         <div class="accordion-header" onclick="toggleTable()">
             <span>📋 Bảng dữ liệu ý kiến học sinh</span>
             <span id="toggleIcon">▼</span>
@@ -203,17 +242,14 @@
         </div>
     </div>
 
-    <!-- ================= VIEW 2: KHUNG ĐĂNG NHẬP (GIAO DIỆN MỚI NÂNG CẤP) ================= -->
+    <!-- ================= VIEW 2: KHUNG ĐĂNG NHẬP ================= -->
     <div id="loginModal" class="modal-overlay">
         <div class="modal-box login-box">
-            <!-- Logo Đỏ - Viền Vàng -->
             <div class="logo-hs-red">HS</div>
             
-            <!-- Tiêu đề In hoa, màu đỏ -->
             <h3 style="margin-top:0; margin-bottom: 5px; color: #d32f2f; font-size: 24px; text-transform: uppercase;">Đăng Nhập Khảo Sát</h3>
             <p style="color: #d32f2f; font-weight: bold; font-size: 17px; margin-top: 0; margin-bottom: 25px;">Hệ thống hoctap.io.vn</p>
             
-            <!-- Hai ô nhập liệu ngang hàng -->
             <div class="form-row">
                 <div class="form-group">
                     <label>Họ và tên</label>
@@ -225,9 +261,7 @@
                 </div>
             </div>
             
-            <!-- Nút bấm Gradient Xanh -->
             <button class="btn-gradient-blue" onclick="startSurvey()">🚀 VÀO LÀM KHẢO SÁT</button>
-            <!-- Nút trở về thu gọn -->
             <button class="btn" style="background: transparent; color: #7f8c8d; width: 100%; padding: 10px; font-weight: normal; margin-top: 5px; text-decoration: underline;" onclick="closeLoginModal()">Trở về màn hình chính</button>
         </div>
     </div>
@@ -236,24 +270,9 @@
     <div id="warningModal" class="modal-overlay" style="z-index: 1001;">
         <div class="modal-box">
             <div class="modal-icon icon-warning">⚠️</div>
-            <h3 style="color: #202124; margin-top: 0;">Thiếu thông tin!</h3>
+            <h3 style="color: #202124; margin-top: 0;">Thông báo!</h3>
             <p id="warningMsg" style="color: #5f6368; font-size: 18px;">Vui lòng nhập đầy đủ thông tin.</p>
             <button class="btn btn-danger" style="width:100%; padding:12px; margin-top: 10px;" onclick="closeWarning()">Đã hiểu</button>
-        </div>
-    </div>
-
-    <!-- ================= VIEW 4: THÔNG BÁO XÁC NHẬN LÀM LẠI KHẢO SÁT ================= -->
-    <div id="retakeModal" class="modal-overlay" style="z-index: 1002;">
-        <div class="modal-box">
-            <div class="modal-icon icon-info">🔄</div>
-            <h3 style="color: #1a73e8; margin-top: 0;">Bạn đã khảo sát rồi!</h3>
-            <p style="color: #5f6368; font-size: 17px; line-height: 1.5; margin-bottom: 25px;">
-                Hệ thống ghi nhận bạn đã từng làm khảo sát trước đó. Bạn có muốn <strong>cập nhật lại</strong> ý kiến đánh giá của mình không?
-            </p>
-            <div style="display: flex; gap: 10px;">
-                <button class="btn btn-secondary" style="flex: 1; padding:12px;" onclick="cancelRetake()">Không, quay lại</button>
-                <button class="btn btn-primary" style="flex: 1; padding:12px;" onclick="proceedToSurvey()">Có, làm lại</button>
-            </div>
         </div>
     </div>
 
@@ -323,7 +342,7 @@
     // ================= 1. CẤU HÌNH FIREBASE =================
     let database, surveyRef;
     let dbSurvey = []; 
-    let existingRecordId = null; 
+    let currentStudent = { name: '', class: '' };
 
     try {
         const firebaseConfig = {
@@ -395,9 +414,6 @@
     });
 
     // ================= 3. ĐIỀU HƯỚNG & HỘP THOẠI =================
-    let currentStudent = { name: '', class: '' };
-
-    function goHome() { alert("Nút này liên kết về trang chủ."); }
     function showDashboard() {
         document.getElementById('dashboardView').style.display = 'block';
         document.getElementById('surveyView').style.display = 'none';
@@ -405,9 +421,16 @@
     }
     
     function openLoginModal() {
+        // KIỂM TRA MÁY ĐÃ KHẢO SÁT CHƯA
+        if (localStorage.getItem('daKhaoSat') === 'true') {
+            showWarning("Thiết bị này đã thực hiện khảo sát. Mỗi máy chỉ được phép tham gia 1 lần!");
+            return;
+        }
+
         document.getElementById('loginModal').style.display = 'flex';
         document.getElementById('hsName').value = ''; document.getElementById('hsClass').value = '';
     }
+    
     function closeLoginModal() { document.getElementById('loginModal').style.display = 'none'; }
     
     function showWarning(msg) {
@@ -435,37 +458,30 @@
     function startSurvey() {
         const name = document.getElementById('hsName').value.trim();
         const lop = document.getElementById('hsClass').value.trim();
+        
         if(!name || !lop) { 
             showWarning("Em vui lòng nhập đầy đủ Họ tên và Lớp nhé!"); return; 
         }
 
-        currentStudent = { name: name, class: lop };
-        existingRecordId = null;
-
+        // Kiểm tra xem tên và lớp này đã khảo sát chưa
         const existingStudent = dbSurvey.find(s => 
             s.name.toLowerCase() === name.toLowerCase() && 
             s.class.toLowerCase() === lop.toLowerCase()
         );
 
         if(existingStudent) {
-            existingRecordId = existingStudent.id; 
-            closeLoginModal();
-            document.getElementById('retakeModal').style.display = 'flex'; 
-        } else {
-            proceedToSurvey(); 
+            showWarning("Học sinh này đã tham gia khảo sát. Không được làm lại!");
+            return;
         }
-    }
 
-    function cancelRetake() {
-        document.getElementById('retakeModal').style.display = 'none';
-        showDashboard();
+        currentStudent = { name: name, class: lop };
+        proceedToSurvey(); 
     }
 
     function proceedToSurvey() {
         document.getElementById('displayHsName').innerText = currentStudent.name;
         document.getElementById('displayHsClass').innerText = currentStudent.class;
         
-        document.getElementById('retakeModal').style.display = 'none';
         closeLoginModal();
 
         document.getElementById('dashboardView').style.display = 'none';
@@ -491,31 +507,26 @@
         };
 
         if(surveyRef) {
-            if(existingRecordId) {
-                surveyRef.child(existingRecordId).update(newRecord);
-            } else {
-                surveyRef.push(newRecord);
-            }
+            surveyRef.push(newRecord);
         } else {
-            if(existingRecordId) {
-                const idx = dbSurvey.findIndex(s => s.id === existingRecordId);
-                if(idx !== -1) dbSurvey[idx] = {id: existingRecordId, ...newRecord};
-            } else {
-                newRecord.id = Date.now().toString();
-                dbSurvey.push(newRecord); 
-            }
+            newRecord.id = Date.now().toString();
+            dbSurvey.push(newRecord); 
         }
+        
+        // Đánh dấu thiết bị này đã khảo sát
+        localStorage.setItem('daKhaoSat', 'true');
         
         document.getElementById('surveyView').style.display = 'none';
         document.getElementById('successModal').style.display = 'flex';
     }
 
-    // ================= 5. HIỂN THỊ =================
+    // ================= 5. HIỂN THỊ, TÍNH TOÁN & SẮP XẾP =================
     let currentPage = 1;
     const rowsPerPage = 5;
 
     function updateDashboard() {
-        document.getElementById('totalCount').innerText = dbSurvey.length;
+        let total = dbSurvey.length;
+        document.getElementById('totalCount').innerText = total;
         
         let c1 = 0, c2 = 0, c3 = 0, c4 = 0;
         dbSurvey.forEach((row) => {
@@ -524,10 +535,30 @@
             else if(row.a2 === 'Bình thường') c3++;
             else c4++; 
         });
+
+        // Cập nhật biểu đồ
         myChart.data.datasets[0].data = [c1, c2, c3, c4];
         myChart.update();
 
+        // Tính toán phần trăm
+        let p1 = total > 0 ? ((c1 / total) * 100).toFixed(1) : 0;
+        let p2 = total > 0 ? ((c2 / total) * 100).toFixed(1) : 0;
+        let p3 = total > 0 ? ((c3 / total) * 100).toFixed(1) : 0;
+        let p4 = total > 0 ? ((c4 / total) * 100).toFixed(1) : 0;
+
+        // Đổ dữ liệu vào bảng thống kê chi tiết
+        document.getElementById('count1').innerText = c1; document.getElementById('percent1').innerText = p1;
+        document.getElementById('count2').innerText = c2; document.getElementById('percent2').innerText = p2;
+        document.getElementById('count3').innerText = c3; document.getElementById('percent3').innerText = p3;
+        document.getElementById('count4').innerText = c4; document.getElementById('percent4').innerText = p4;
+
         renderTable();
+    }
+
+    // Hàm lấy Tên (chữ cuối cùng trong Họ Tên) để sắp xếp
+    function getLastName(fullName) {
+        let parts = fullName.trim().split(' ');
+        return parts[parts.length - 1].toLowerCase();
     }
 
     function renderTable() {
@@ -535,9 +566,19 @@
         const totalPages = Math.ceil(totalRows / rowsPerPage) || 1;
         if(currentPage > totalPages) currentPage = totalPages;
 
-        const reversedData = [...dbSurvey].reverse(); 
+        // SẮP XẾP TÊN HỌC SINH THEO BẢNG CHỮ CÁI (Dựa vào Tên chính, sau đó đến Họ đệm)
+        const sortedData = [...dbSurvey].sort((a, b) => {
+            let nameA = getLastName(a.name);
+            let nameB = getLastName(b.name);
+            
+            if (nameA === nameB) {
+                return a.name.localeCompare(b.name, 'vi');
+            }
+            return nameA.localeCompare(nameB, 'vi');
+        });
+
         const startIndex = (currentPage - 1) * rowsPerPage;
-        const paginatedData = reversedData.slice(startIndex, startIndex + rowsPerPage);
+        const paginatedData = sortedData.slice(startIndex, startIndex + rowsPerPage);
 
         let tbodyHTML = '';
         paginatedData.forEach((row, idx) => {
