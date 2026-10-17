@@ -139,7 +139,7 @@
                 <div class="dropdown-menu absolute left-1/2 -translate-x-1/2 md:translate-x-0 md:left-0 top-full hidden md:group-hover:flex flex-col bg-white shadow-2xl rounded-xl border border-gray-100 w-56 p-3 gap-2 z-[100] mt-1 md:mt-0">
                     <button onclick="showLessons('Âm nhạc học đường', giaiTriAmNhac)" class="w-full bg-[#f97316] text-white font-bold py-2 px-4 rounded-lg hover:brightness-110 shadow-sm transition-all text-sm text-left">ÂM NHẠC</button>
                     <button onclick="showLessons('Góc chia sẻ kỉ niệm', giaiTriKiNiem)" class="w-full bg-[#22c55e] text-white font-bold py-2 px-4 rounded-lg hover:brightness-110 shadow-sm transition-all text-sm text-left">KỈ NIỆM</button>
-                    <button onclick="showLessons('Minigame Trí tuệ', giaiTriGame)" class="w-full bg-[#8b5cf6] text-white font-bold py-2 px-4 rounded-lg hover:brightness-110 shadow-sm transition-all text-sm text-left">SÁCH LẬT</button>
+                    <button onclick="showLessons('Sách truyện ngắn', giaiTriGame)" class="w-full bg-[#8b5cf6] text-white font-bold py-2 px-4 rounded-lg hover:brightness-110 shadow-sm transition-all text-sm text-left">SÁCH LẬT</button>
                 </div>
             </li>
 
@@ -181,19 +181,19 @@
                 
                 <ul class="flex flex-col text-sm text-gray-700 font-medium pb-2">
                     <li class="border-b border-gray-50">
-                        <button onclick="showLessons(Tài liệu Tin học 10', duLieuTin10)" class="w-full flex items-center gap-3 px-4 py-3 hover:bg-teal-50 hover:text-[#0f766e] transition-colors border-l-4 border-transparent hover:border-[#0f766e] text-left">
+                        <button onclick="showLessons('Tài liệu Tin học 10', duLieuTin10)" class="w-full flex items-center gap-3 px-4 py-3 hover:bg-teal-50 hover:text-[#0f766e] transition-colors border-l-4 border-transparent hover:border-[#0f766e] text-left">
                             <span class="text-lg w-6 text-center text-blue-500"><i class="fa-solid fa-book"></i></span>
                             <span>Tài liệu Tin học 10</span>
                         </button>
                     </li>
                     <li class="border-b border-gray-50">
-                        <button onclick="showLessons(Tài liệu Tin học 11', duLieuTin11)" class="w-full flex items-center gap-3 px-4 py-3 hover:bg-teal-50 hover:text-[#0f766e] transition-colors border-l-4 border-transparent hover:border-[#0f766e] text-left">
+                        <button onclick="showLessons('Tài liệu Tin học 11', duLieuTin11)" class="w-full flex items-center gap-3 px-4 py-3 hover:bg-teal-50 hover:text-[#0f766e] transition-colors border-l-4 border-transparent hover:border-[#0f766e] text-left">
                             <span class="text-lg w-6 text-center text-green-500"><i class="fa-solid fa-book"></i></span>
                             <span>Tài liệu Tin học 11</span>
                         </button>
                     </li>
                     <li class="border-b border-gray-50">
-                        <button onclick="showLessons(Tài liệu Tin học 12', duLieuTin12)" class="w-full flex items-center gap-3 px-4 py-3 hover:bg-teal-50 hover:text-[#0f766e] transition-colors border-l-4 border-transparent hover:border-[#0f766e] text-left">
+                        <button onclick="showLessons('Tài liệu Tin học 12', duLieuTin12)" class="w-full flex items-center gap-3 px-4 py-3 hover:bg-teal-50 hover:text-[#0f766e] transition-colors border-l-4 border-transparent hover:border-[#0f766e] text-left">
                             <span class="text-lg w-6 text-center text-orange-500"><i class="fa-solid fa-book"></i></span>
                             <span>Tài liệu Tin học 12</span>
                         </button>
@@ -316,14 +316,14 @@
                 <h3 class="font-bold text-lg border-b-2 border-teal-600 pb-2 inline-block w-max text-[#ccfbf1] uppercase tracking-wide">Tính năng nổi bật</h3>
                 <ul class="flex flex-col gap-3 text-white/80 text-sm mt-2">
                    <li><a href="trolyai/codeai.html" class="hover:text-[#fde047] hover:translate-x-2 inline-block transition-transform duration-200"><i class="fa-solid fa-chevron-right text-xs text-teal-400 mr-2"></i>Trợ lý học tập AI</a></li>
-                    <li><a href="javascript:void(0)" onclick="showLessons('Minigame Trí tuệ', giaiTriGame)" class="hover:text-[#fde047] hover:translate-x-2 inline-block transition-transform duration-200"><i class="fa-solid fa-chevron-right text-xs text-teal-400 mr-2"></i>Minigame ôn tập</a></li>
+                    <li><a href="javascript:void(0)" onclick="showLessons('Minigame Trí tuệ', troChoiOChu)" class="hover:text-[#fde047] hover:translate-x-2 inline-block transition-transform duration-200"><i class="fa-solid fa-chevron-right text-xs text-teal-400 mr-2"></i>Minigame ôn tập</a></li>
                 </ul>
             </div>
 
             <div class="flex flex-col gap-4">
                 <h3 class="font-bold text-lg border-b-2 border-teal-600 pb-2 inline-block w-max text-[#ccfbf1] uppercase tracking-wide">Hỗ trợ học sinh</h3>
                 <ul class="flex flex-col gap-3 text-white/80 text-sm mt-2">
-                    <li><a href="trolyai/codeaihs.html" class="hover:text-[#fde047] hover:translate-x-2 inline-block transition-transform duration-200"><i class="fa-solid fa-chevron-right text-xs text-teal-400 mr-2"></i>Gửi thắc mắc môn học</a></li>
+                    <li><a href="giaidapthacmac.html" class="hover:text-[#fde047] hover:translate-x-2 inline-block transition-transform duration-200"><i class="fa-solid fa-chevron-right text-xs text-teal-400 mr-2"></i>Gửi thắc mắc môn học</a></li>
                     <li><a href="https://padlet.com/nobitadrive03/goc-chia-se-thanh-xuan-s0245utfw1cxjovv2i6h" class="hover:text-[#fde047] hover:translate-x-2 inline-block transition-transform duration-200"><i class="fa-solid fa-chevron-right text-xs text-teal-400 mr-2"></i>Góc chia sẻ thanh xuân</a></li>
                 </ul>
             </div>
@@ -479,7 +479,7 @@
         { title: "Đề luyện thi Cuối kỳ 2 - Mẫu số 2", link: "LINK_CUA_BAN_O_DAY.html", icon: "fa-award" }
     ];
     const tin11_tn = [
-       { title: "🎓 Bài 1. Bài 1. Hệ điều hành", link: "tinhoc11/baihoc/bai1.html", icon: "fa-list-check" },
+       { title: "🎓 Bài 1. Hệ điều hành", link: "tinhoc11/baihoc/bai1.html", icon: "fa-list-check" },
         { title: "✍️ Bài 2. Thực hành sử dụng hệ điều hành", link: "tinhoc11/baihoc/bai2.html", icon: "fa-list-check" },
         { title: "💡 Bài 3. Phần mềm nguồn mở và phần mềm chạy trên Internet", link: "tinhoc11/baihoc/bai3.html", icon: "fa-list-check" },
         { title: "💻 Bài 4. Bên trong máy tính", link: "tinhoc11/baihoc/bai4.html", icon: "fa-list-check" },
@@ -565,7 +565,7 @@
     ];
 
     const giaiTriAmNhac = [
-        { title: "Mùa thu vẫn gọi những bước chân", link: "https://www.youtube.com/watch?v=i1jEP6P7Sqc", image: "https://img.youtube.com/vi/i1jEP6P7Sqc/hqdefault.jpg", icon: "fa-music" },
+        { title: "Mùa thu vẫy gọi những bước chân", link: "https://www.youtube.com/watch?v=i1jEP6P7Sqc", image: "https://img.youtube.com/vi/i1jEP6P7Sqc/hqdefault.jpg", icon: "fa-music" },
         { title: "Vui đến trường", link: "https://www.youtube.com/watch?v=nBslIBnqOUM&list=RDnBslIBnqOUM&start_radio=1", image: "https://img.youtube.com/vi/nBslIBnqOUM/hqdefault.jpg", icon: "fa-headphones" },
         { title: "Trang Web YouTube", link: "https://www.youtube.com/", image: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2MDAgMzAwIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZmZmZmZmIi8+PGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTQ1LCAxMDgpIHNjYWxlKDEuNCkiPjxwYXRoIGQ9Ik02MyAxNC44N2E3Ljg4IDcuODggMCAwIDAtNS41NS01LjU4QzUyLjU0IDggMzIuODUgOCAzMi44NSA4cy0xOS42OSAwLTI0LjYgMS4yOWE3Ljg4IDcuODggMCAwIDAtNS41NSA1LjU4QzEuNCAxOS44IDEuNCAzMCAxLjQgMzBzMCAxMC4yIDEuMyAxNS4xM2E3Ljg4IDcuODggMCAwIDAgNS41NSA1LjU4QzEzLjE2IDUyIDMyLjg1IDUyIDMyLjg1IDUyczE5LjY5IDAgMjQuNi0xLjI5YTcuODggNy44OCAwIDAgMCA1LjU1LTUuNThDNjQuMyA0MC4yIDY0LjMgMzAgNjQuMyAzMHMwLTEwLjItMS4zLTE1LjEzeiIgZmlsbD0iI0ZGMDAwMCIvPjxwb2x5Z29uIHBvaW50cz0iMjYuNCAzOS40IDQyLjggMzAgMjYuNCAyMC42IiBmaWxsPSIjRkZGRkZGIi8+PHRleHQgeD0iNzIiIHk9IjQyIiBmb250LWZhbWlseT0iQXJpYWwsIEhlbHZldGljYSwgc2Fucy1zZXJpZiIgZm9udC13ZWlnaHQ9IjkwMCIgZm9udC1zaXplPSIzNiIgbGV0dGVyLXNwYWNpbmc9Ii0xIiBmaWxsPSIjMjEyMTIxIj5Zb3VUdWJlPC90ZXh0PjwvZz48L3N2Zz4=", icon: "fa-circle-play" }
     ];
@@ -596,12 +596,11 @@
   // Dữ liệu 4 tệp hiển thị khi bấm vào LIÊN HỆ
     const tepLienHe = [
 
-         { title: "Khảo sát đánh giá trang Web hoctap.io.vn", link: "lienhe/danhgia.html", image: "lienhe/danhgia.png", icon: "fa-envelope" },
-        { title: "Gửi thắc và hổ trợ giải đáp", link: "lienhe/lienhe.html", image: "lienhe/lienhe.png", icon: "fa-address-card" },
+        
+        { title: "Gửi thắc mắc và hổ trợ giải đáp", link: "lienhe/lienhe.html", image: "lienhe/lienhe.png", icon: "fa-address-card" },
+         { title: "Khảo sát đánh giá trang Web hoctap.io.vn", link: "lienhe/danhgia.html", image: "lienhe/danhgia.png", icon: "fa-envelope" }
        
-        { title: "Tệp liên hệ 3", link: "file3.html", image: "https://placehold.co/600x300/eab308/ffffff?text=Tep+3", icon: "fa-share-nodes" },
-        { title: "Tệp liên hệ 4", link: "file4.html", image: "https://placehold.co/600x300/dc2626/ffffff?text=Tep+4", icon: "fa-headset" }
-
+       
     ];
 
 
