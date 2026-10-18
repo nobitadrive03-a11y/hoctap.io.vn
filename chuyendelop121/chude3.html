@@ -11,7 +11,7 @@
     <!-- Tích hợp thư viện Icon -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- 1. MÃ GA4 GỐC (Kết nối với Google Analytics) -->
+<!-- 1. MÃ GA4 GỐC (Kết nối với Google Analytics) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-NSJCVSL9RM"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
@@ -34,15 +34,11 @@
   }, 30000); 
 </script>
 
-
-
-
     <style id="main-style">
         :root {
             --primary: #2563eb;
             --primary-dark: #1e40af;
             --tech-gradient: linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%);
-            --landing-bg: linear-gradient(135deg, #ec4899 0%, #ef4444 100%); 
             --accent: #f59e0b;
             --success: #10b981;
             --danger: #ef4444;
@@ -65,111 +61,14 @@
             min-height: 100vh;
             overflow-x: hidden;
             -webkit-font-smoothing: antialiased;
+            padding: 15px; 
         }
 
-        /* ----- MÀN HÌNH CHÀO (LANDING) ----- */
-        #landing-view {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            background: var(--landing-bg);
-            padding: 15px;
-            animation: fadeIn 0.8s ease-out;
-        }
-
-        .hero-card {
-            background: var(--white);
-            padding: 40px 25px;
-            border-radius: var(--radius-lg);
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-            max-width: 650px;
-            width: 100%;
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .logo-hs {
-            width: 80px;
-            height: 80px;
-            background-color: #dc2626;
-            border: 4px solid #fbbf24;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 2rem;
-            font-weight: 900;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 15px rgba(220, 38, 38, 0.4);
-        }
-
-        .hero-card h1 {
-            font-family: 'Inter', sans-serif;
-            color: #dc2626;
-            font-size: 1.2rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            margin-bottom: 8px;
-            letter-spacing: 1px;
-        }
-
-        .hero-card h2 {
-            font-family: 'Inter', sans-serif;
-            color: #dc2626;
-            font-size: 1.5rem;
-            font-weight: 900;
-            text-transform: uppercase;
-            margin-bottom: 20px;
-            line-height: 1.3;
-        }
-
-        .motto-text {
-            font-family: 'Merriweather', serif;
-            color: var(--text-muted);
-            font-size: 1.05rem;
-            font-style: italic;
-            margin-bottom: 30px;
-            position: relative;
-        }
-
-        .action-buttons {
-            display: flex;
-            gap: 12px;
-            justify-content: center;
-            flex-wrap: wrap;
-            width: 100%;
-        }
-
-        .btn {
-            padding: 14px 20px;
-            border: none;
-            border-radius: 12px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            flex: 1;
-            min-width: 100%;
-        }
-
-        .btn-primary { background: #3b82f6; color: var(--white); box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.3); }
-        .btn-primary:hover { background: #2563eb; transform: translateY(-2px); }
-        .btn-outline { background-color: #f8fafc; color: #334155; border: 1px solid #cbd5e1; }
-        .btn-outline:hover { background-color: #f1f5f9; transform: translateY(-2px); }
-
-        /* ----- MÀN HÌNH ĐỌC SÁCH ----- */
+        /* ----- MÀN HÌNH ĐỌC SÁCH TRỰC TIẾP ----- */
         #reader-view {
-            display: none;
+            display: block; 
             max-width: 900px;
-            margin: 15px auto;
+            margin: 0 auto;
             background: #f8fafc;
             border-radius: var(--radius-md);
             box-shadow: var(--shadow-lg);
@@ -183,8 +82,7 @@
             color: var(--white);
             padding: 15px 20px;
             display: flex;
-            flex-direction: column;
-            gap: 12px;
+            justify-content: space-between; 
             align-items: center;
             position: sticky;
             top: 0;
@@ -192,12 +90,25 @@
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
 
-        .reader-header h2 { font-size: 1.1rem; font-weight: 600; margin: 0; text-align: center; }
-        .nav-controls { display: flex; gap: 10px; width: 100%; justify-content: center; }
-        .btn-small { padding: 10px 15px; font-size: 0.9rem; border-radius: 10px; background: rgba(255,255,255,0.2); color: white; border: 1px solid rgba(255,255,255,0.4); cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; flex: 1; transition: 0.3s; min-width: auto; }
-        .btn-small:hover { background: rgba(255,255,255,0.3); }
+        .reader-header h2 { font-size: 1.1rem; font-weight: 600; margin: 0; display: flex; align-items: center; gap: 8px; }
+        
+        .btn-small { 
+            padding: 8px 16px; 
+            font-size: 0.9rem; 
+            border-radius: 8px; 
+            background: rgba(0,0,0,0.2); 
+            color: white; 
+            border: 1px solid rgba(255,255,255,0.4); 
+            cursor: pointer; 
+            display: flex; 
+            align-items: center; 
+            gap: 8px; 
+            transition: 0.3s; 
+            font-weight: 500;
+        }
+        .btn-small:hover { background: rgba(0,0,0,0.4); transform: translateX(-2px); }
 
-        .reader-content { padding: 20px 15px; background: var(--white); }
+        .reader-content { padding: 25px 15px; background: var(--white); }
 
         h1.main-title {
             font-family: 'Merriweather', serif;
@@ -232,20 +143,21 @@
             gap: 8px;
         }
 
-        p { margin-bottom: 12px; text-align: justify; font-size: 0.95rem; }
+        p { margin-bottom: 12px; text-align: justify; font-size: 0.95rem; line-height: 1.7; }
         
-        /* Cấu trúc danh sách gạch đầu dòng */
+        /* Cấu trúc danh sách gạch đầu dòng TỐI ƯU MOBILE */
         .content-list { list-style-type: none; padding-left: 0; margin-bottom: 20px; }
         .content-list > li {
             position: relative;
-            padding-left: 35px;
+            padding-left: 30px; /* Giảm padding left để chữ không bị tràn */
             margin-bottom: 12px;
             background: #f8fafc;
-            padding: 12px 12px 12px 35px;
+            padding: 12px 12px 12px 30px; 
             border-radius: 10px;
             border: 1px solid #e2e8f0;
             font-size: 0.95rem;
             text-align: justify;
+            line-height: 1.6;
         }
         .content-list > li::before {
             content: '\f105';
@@ -253,30 +165,31 @@
             font-weight: 900;
             color: var(--primary);
             position: absolute;
-            left: 12px;
-            top: 12px;
+            left: 10px; /* Chỉnh lại icon cho cân xứng */
+            top: 14px;
             font-size: 1rem;
         }
         .content-list > li strong { color: var(--primary-dark); display: inline-block; margin-bottom: 5px; }
 
-        /* Hộp cảnh báo (Nhược điểm mạng) */
+        /* Hộp cảnh báo (Nhược điểm mạng/Pháp luật) */
         .warning-list > li { border-color: #fca5a5; background: #fef2f2; }
         .warning-list > li::before { content: '\f071'; color: var(--danger); }
         .warning-list > li strong { color: #b91c1c; }
 
-        /* Danh sách có đánh số thứ tự (7 Biện pháp) */
+        /* Danh sách có đánh số thứ tự TỐI ƯU MOBILE */
         .numbered-list { list-style: none; counter-reset: my-counter; padding-left: 0; margin-bottom: 25px;}
         .numbered-list > li {
             position: relative;
-            padding-left: 45px;
+            padding-left: 40px; /* Giảm padding left */
             margin-bottom: 15px;
             background: #fff;
-            padding: 15px 15px 15px 45px;
+            padding: 15px 15px 15px 40px;
             border-radius: 10px;
             border: 1px solid #cbd5e1;
             font-size: 0.95rem;
             box-shadow: 0 2px 4px rgba(0,0,0,0.02);
             text-align: justify;
+            line-height: 1.6;
         }
         .numbered-list > li::before {
             counter-increment: my-counter;
@@ -284,21 +197,21 @@
             background: var(--primary);
             color: white;
             border-radius: 50%;
-            width: 24px;
-            height: 24px;
+            width: 22px; /* Thu nhỏ icon chút xíu */
+            height: 22px;
             display: flex;
             align-items: center;
             justify-content: center;
             position: absolute;
             left: 10px;
-            top: 13px;
+            top: 15px;
             font-weight: bold;
             font-size: 0.85rem;
         }
 
         /* Box Tình huống thực tế */
         .situation-box { background: #fff; border: 1px solid #cbd5e1; padding: 15px; border-radius: 12px; margin-bottom: 25px; }
-        .situation-box h3 { color: #4338ca; font-size: 1.1rem; margin-top: 0; margin-bottom: 12px; border-bottom: 2px solid #818cf8; padding-bottom: 8px; }
+        .situation-box h3 { color: #4338ca; font-size: 1.1rem; margin-top: 0; margin-bottom: 12px; border-bottom: 2px solid #818cf8; padding-bottom: 8px; line-height: 1.4; }
         
         .question-item { margin-bottom: 15px; }
         .question-text { font-weight: 600; color: #ef4444; margin-bottom: 8px; font-size: 0.95rem; display: flex; align-items: center; gap: 8px;}
@@ -315,67 +228,41 @@
         }
         .footer-credit i { color: #ef4444; }
 
-        @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
         /* Media Query cho thiết bị lớn (Tablet, PC) */
         @media (min-width: 640px) {
-            .btn { min-width: 200px; flex: unset; }
-            .action-buttons { flex-direction: row; }
-            .hero-card { padding: 50px; }
-            .reader-header { flex-direction: row; justify-content: space-between; padding: 20px 40px; }
-            .reader-header h2 { text-align: left; }
-            .nav-controls { width: auto; justify-content: flex-end; }
+            body { padding: 40px 20px; }
+            .reader-header { padding: 20px 40px; }
             .reader-content { padding: 40px; }
             h1.main-title { font-size: 2.2rem; }
             h2.part-title { flex-direction: row; align-items: center; }
             p, .content-list > li, .numbered-list > li { font-size: 1.05rem; }
-            #reader-view { margin: 40px auto; border-radius: var(--radius-lg); }
+            #reader-view { border-radius: var(--radius-lg); }
             .situation-box { padding: 25px; }
+            /* Trả lại padding rộng rãi cho màn hình máy tính */
+            .content-list > li { padding-left: 45px; }
+            .content-list > li::before { left: 15px; }
+            .numbered-list > li { padding-left: 50px; }
+            .numbered-list > li::before { left: 15px; width: 26px; height: 26px; }
         }
     </style>
 </head>
 <body>
 
-    <!-- ================= MÀN HÌNH CHÀO ================= -->
-    <div id="landing-view">
-        <div class="hero-card">
-            <div class="logo-hs">HS</div>
-            
-            <h1>Chuyên đề học tập</h1>
-            <h2>Giữ gìn tính nhân văn<br>trong không gian mạng</h2>
-            
-            <p class="motto-text">"Mang công nghệ vào mọi chuyến đi"</p>
-
-            <div class="action-buttons">
-                <button class="btn btn-primary" onclick="openReader()">
-                    <i class="fa-solid fa-book-open"></i> Đọc trực tiếp
-                </button>
-                <button class="btn btn-outline" onclick="downloadContent()">
-                    <i class="fa-solid fa-cloud-arrow-down"></i> Tải bản Offline
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- ================= MÀN HÌNH ĐỌC SÁCH BÊN TRONG ================= -->
     <div id="reader-view">
-        <div class="reader-header" id="no-print">
-            <h2><i class="fa-solid fa-users"></i> Không gian học tập</h2>
-            <div class="nav-controls">
-                <button class="btn btn-small" onclick="downloadContent()">
-                    <i class="fa-solid fa-download"></i> Lưu máy
-                </button>
-                <button class="btn btn-small" onclick="closeReader()" style="background: rgba(0,0,0,0.2);">
-                    <i class="fa-solid fa-xmark"></i> Thoát
-                </button>
-            </div>
+        <div class="reader-header">
+            <h2><i class="fa-solid fa-users"></i> Không gian học tập Hành Trình Số</h2>
+            <!-- Nút Quay lại tự động lùi về trang trước đó -->
+            <button class="btn-small" onclick="window.history.back()">
+                <i class="fa-solid fa-arrow-left"></i> Thoát
+            </button>
         </div>
 
-        <div class="reader-content" id="printable-content">
+        <div class="reader-content">
             <h1 class="main-title">
-                <span>Chủ đề 3</span>
-                GIỮ GÌN TÍNH NHÂN VĂN TRONG KHÔNG GIAN MẠNG
+                <span>Bài học</span>
+                ỨNG XỬ VĂN HÓA VÀ TÔN TRỌNG PHÁP LUẬT TRÊN MÔI TRƯỜNG SỐ
             </h1>
 
             <!-- PHẦN 1 -->
@@ -391,7 +278,7 @@
             <h2 class="part-title" style="border-left-color: #ef4444;"><i class="fa-solid fa-triangle-exclamation" style="color: #ef4444;"></i> 2. Nhược điểm và thách thức đối với tính nhân văn</h2>
             <p>Bên cạnh những mặt tích cực, sự ẩn danh và khoảng cách vật lý trên mạng cũng tạo ra nhiều hệ lụy:</p>
             <ul class="content-list warning-list">
-                <li><strong>Bạo lực mạng (Cyberbullying):</strong> Sự ẩn danh khiến nhiều người dễ dàng buông lời phán xét, nhục mạ hoặc công kích cá nhân người khác mà không sợ phải đối mặt trực tiếp.</li>
+                <li><strong>Bạo lực mạng:</strong> Sự ẩn danh khiến nhiều người dễ dàng buông lời phán xét, nhục mạ hoặc công kích cá nhân người khác mà không sợ phải đối mặt trực tiếp.</li>
                 <li><strong>Vô cảm và bầy đàn:</strong> Hiệu ứng đám đông khiến nhiều người hùa theo chỉ trích một cá nhân khi chưa rõ thực hư. Việc thiếu đi các biểu cảm khuôn mặt ngoài đời thực làm giảm đi sự thấu cảm.</li>
                 <li><strong>Lan truyền thông tin giả mạo, độc hại:</strong> Việc bịa đặt, bôi nhọ danh dự người khác để "câu view" gây tổn thương sâu sắc đến tâm lý và cuộc sống thực của nạn nhân.</li>
             </ul>
@@ -420,115 +307,49 @@
             </ol>
 
             <!-- PHẦN TÌNH HUỐNG THỰC TẾ -->
-            <h2 class="part-title" style="border-left-color: #8b5cf6; background: #f5f3ff;"><i class="fa-solid fa-puzzle-piece" style="color: #8b5cf6;"></i> CHÚNG TA CÓ THỂ XEM QUA CÁC TÌNH HUỐNG VÀ GIẢI QUYẾT VẤN ĐỀ:</h2>
+            <h2 class="part-title" style="border-left-color: #8b5cf6; background: #f5f3ff;"><i class="fa-solid fa-puzzle-piece" style="color: #8b5cf6;"></i> 4. TÌNH HUỐNG THỰC TẾ VÀ CÁCH GIẢI QUYẾT</h2>
 
             <!-- TÌNH HUỐNG 1 -->
             <div class="situation-box">
-                <h3><i class="fa-solid fa-comments"></i> Tình huống 1: Bạo lực ẩn danh trên trang "Confessions"</h3>
+                <h3><i class="fa-solid fa-music"></i> Tình huống 1: Vi phạm bản quyền âm nhạc và hình ảnh trong dự án học tập</h3>
                 <div class="question-item">
                     <div class="question-text"><i class="fa-solid fa-circle-exclamation"></i> Tình huống:</div>
-                    <p>Một bài đăng ẩn danh trên trang Confessions của trường bịa đặt thông tin một nữ sinh lớp 11 gian lận trong kỳ thi và có lối sống không lành mạnh. Dưới phần bình luận, hàng loạt tài khoản hùa vào chửi bới, gắn thẻ (tag) tên nữ sinh đó và dùng những từ ngữ miệt thị nặng nề dù chưa rõ thực hư.</p>
+                    <p>Nhóm học sinh lớp 11A2 thực hiện một video báo cáo môn Tin học. Các em lên mạng tải một bài hát đang "hot" trên bảng xếp hạng và một số bức ảnh có gắn logo mờ (watermark) của các nhiếp ảnh gia để chèn vào video, sau đó đăng công khai lên YouTube. Hôm sau, video bị YouTube tắt tiếng và cảnh báo vi phạm bản quyền.</p>
                 </div>
                 <div class="solution-box">
-                    <div class="solution-title"><i class="fa-solid fa-lightbulb"></i> Thảo luận cách xử lý:</div>
+                    <div class="solution-title"><i class="fa-solid fa-lightbulb"></i> Cách giải quyết:</div>
                     <ul class="content-list" style="margin-bottom: 0;">
-                        <li><strong>Với nạn nhân:</strong> Tuyệt đối không bình luận đôi co hay giải thích dưới bài đăng vì sẽ kích động đám đông. Lập tức chụp màn hình toàn bộ bài viết và bình luận làm bằng chứng. Báo cáo (Report) bài viết với Facebook và liên hệ trực tiếp với quản trị viên (Admin) của trang Confessions yêu cầu gỡ bài. Chia sẻ với giáo viên chủ nhiệm hoặc phụ huynh để được can thiệp kịp thời.</li>
-                        <li><strong>Với người ngoài cuộc (Bystander):</strong> Không nhấn Like, không chia sẻ bài viết. Thay vì hùa theo đám đông, hãy nhắn tin riêng để động viên nạn nhân và chủ động nhấn nút Report bài đăng vi phạm tiêu chuẩn cộng đồng.</li>
+                        <li><strong>Bước 1:</strong> Gỡ bỏ ngay video vi phạm.</li>
+                        <li><strong>Bước 2:</strong> Giáo viên hướng dẫn học sinh cách tìm kiếm hình ảnh không vi phạm bản quyền.</li>
+                        <li><strong>Bước 3:</strong> Thay thế nhạc nền bằng các bản nhạc miễn phí bản quyền từ YouTube Audio Library, hoặc tự sáng tạo nhạc/lời (có thể ứng dụng AI tạo nhạc nếu có ghi chú rõ ràng về công cụ sử dụng).</li>
+                        <li><strong>Bước 4:</strong> Xuất lại video (bằng phần mềm như VideoPad) và đăng tải lại.</li>
                     </ul>
                 </div>
             </div>
 
             <!-- TÌNH HUỐNG 2 -->
             <div class="situation-box">
-                <h3><i class="fa-solid fa-users-slash"></i> Tình huống 2: Lập nhóm chat kín (Anti-group) để tẩy chay</h3>
+                <h3><i class="fa-solid fa-gavel"></i> Tình huống 2: Bức xúc cá nhân dẫn đến xúc phạm trên mạng</h3>
                 <div class="question-item">
                     <div class="question-text"><i class="fa-solid fa-circle-exclamation"></i> Tình huống:</div>
-                    <p>Một nam sinh có tính cách rụt rè vô tình phát biểu sai một kiến thức trên lớp. Một nhóm bạn đã chụp lén biểu cảm của em, lập một nhóm Zalo kín có tên "Hội những người chê..." để liên tục chế ảnh meme, bình phẩm về ngoại hình và kêu gọi tẩy chay nam sinh này. Đoạn chat sau đó bị rò rỉ ra ngoài.</p>
+                    <p>Học sinh A có mâu thuẫn cá nhân với học sinh B. Do quá tức giận, A đã lên trang Facebook cá nhân viết một bài đăng dùng những từ ngữ thô tục để chửi bới, bịa đặt thông tin nói xấu B, và gắn thẻ nhiều bạn bè khác vào để cùng "tẩy chay" B.</p>
                 </div>
                 <div class="solution-box">
-                    <div class="solution-title"><i class="fa-solid fa-lightbulb"></i> Thảo luận cách xử lý:</div>
+                    <div class="solution-title"><i class="fa-solid fa-lightbulb"></i> Cách giải quyết:</div>
                     <ul class="content-list" style="margin-bottom: 0;">
-                        <li><strong>Với nạn nhân:</strong> Hiểu rằng hành vi miệt thị ngoại hình (body-shaming) phản ánh sự thiếu văn hóa của kẻ đi bắt nạt, không phải lỗi của mình. Chặn (Block) ngay lập tức các cá nhân có hành vi độc hại. Không tự cô lập bản thân mà hãy tìm đến những người bạn thực sự và phòng tư vấn tâm lý học đường.</li>
-                        <li><strong>Với thành viên vô tình bị thêm vào nhóm:</strong> Kiên quyết rời khỏi nhóm chat (Leave group) ngay lập tức. Lên tiếng nhắc nhở các bạn trong nhóm dừng hành vi này lại, và nếu sự việc đi quá xa, cần báo cho giáo viên hoặc người lớn để ngăn chặn trước khi nạn nhân bị chấn thương tâm lý.</li>
-                    </ul>
-                </div>
-            </div>
-
-            <!-- TÌNH HUỐNG 3 -->
-            <div class="situation-box">
-                <h3><i class="fa-solid fa-user-secret"></i> Tình huống 3: Rò rỉ và phát tán tin nhắn/hình ảnh riêng tư</h3>
-                <div class="question-item">
-                    <div class="question-text"><i class="fa-solid fa-circle-exclamation"></i> Tình huống:</div>
-                    <p>Hai học sinh từng chơi thân nhưng sau đó xảy ra mâu thuẫn. Một em đã bực tức chụp ảnh màn hình những đoạn tin nhắn tâm sự mang tính cá nhân, bí mật của người kia và đăng công khai lên Story Facebook cá nhân cùng những lời lẽ mỉa mai.</p>
-                </div>
-                <div class="solution-box">
-                    <div class="solution-title"><i class="fa-solid fa-lightbulb"></i> Thảo luận cách xử lý:</div>
-                    <ul class="content-list" style="margin-bottom: 0;">
-                        <li><strong>Người trong cuộc:</strong> Nhận bài học về việc bảo vệ dữ liệu cá nhân (ngay cả với bạn thân, không chia sẻ những thông tin, hình ảnh quá nhạy cảm qua mạng). Yêu cầu người kia xóa ngay hình ảnh. Nếu đối phương từ chối, nhờ sự can thiệp của gia đình và nhà trường, vì hành vi phát tán thông tin cá nhân của người khác khi chưa được phép là vi phạm pháp luật.</li>
-                        <li><strong>Với bạn bè nhìn thấy Story:</strong> Không chụp màn hình để gửi tiếp cho người khác (hành vi phát tán thứ cấp). Nhắc nhở người đăng gỡ bài vì hành động đó đang vi phạm quyền riêng tư.</li>
+                        <li>Giáo viên/phụ huynh yêu cầu học sinh A ngay lập tức xóa bài đăng trên mạng xã hội để ngăn chặn thông tin lan truyền.</li>
+                        <li>Phân tích cho A hiểu hành vi này đã vi phạm Luật An ninh mạng (xúc phạm danh dự, nhân phẩm người khác) và có thể bị xử phạt hành chính theo Nghị định 15/2020/NĐ-CP nếu B tố cáo. Hành vi lôi kéo tẩy chay chính là Bắt nạt trực tuyến.</li>
+                        <li>Yêu cầu A công khai xin lỗi B. Đồng thời, tổ chức một buổi nói chuyện trực tiếp giữa A và B (có sự chứng kiến của giáo viên) để giải quyết dứt điểm mâu thuẫn ngoài đời thực thay vì mang lên mạng.</li>
                     </ul>
                 </div>
             </div>
 
             <div class="footer-credit">
                 Hệ thống tài liệu điện tử chuyên sâu | <strong>Hành Trình Số</strong> <br>
-                Biên soạn chuẩn khoa học bởi Cô Lê Huyền Sinh <i class="fa-solid fa-heart"></i>
+                Biên soạn chuẩn khoa học bởi Cô Lê Huyền Sinh (Cỏ Dại) <i class="fa-solid fa-heart"></i>
             </div>
         </div>
     </div>
 
-    <script>
-        const landing = document.getElementById('landing-view');
-        const reader = document.getElementById('reader-view');
-
-        function openReader() {
-            landing.style.display = 'none';
-            reader.style.display = 'block';
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-            document.body.style.background = "var(--bg-body)";
-        }
-
-        function closeReader() {
-            reader.style.display = 'none';
-            landing.style.display = 'flex';
-            document.body.style.background = "var(--landing-bg)";
-        }
-
-        document.body.style.background = "var(--landing-bg)";
-
-        function downloadContent() {
-            const styleCSS = document.getElementById('main-style').innerHTML;
-            const contentHTML = document.getElementById('printable-content').innerHTML;
-
-            const htmlFile = `<!DOCTYPE html>
-<html lang="vi">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Chủ đề 3: Giữ gìn tính nhân văn trong không gian mạng - Hành Trình Số</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&family=Merriweather:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        ${styleCSS} 
-        body { background: #e0f2fe; padding: 10px; display: block; } 
-        .reader-content { background: white; max-width: 900px; margin: 0 auto; padding: 20px 15px; border-radius: 12px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); border: 1px solid rgba(255,255,255,0.8); } 
-        @media(min-width:640px){ .reader-content{padding: 40px; border-radius: 24px;} }
-    </style>
-</head>
-<body>
-    <div class="reader-content">${contentHTML}</div>
-    <script>alert("Tài liệu đã được lưu offline thành công!");<\/script>
-</body>
-</html>`;
-
-            const blob = new Blob([htmlFile], { type: 'text/html' });
-            const a = document.createElement('a');
-            a.href = URL.createObjectURL(blob);
-            a.download = "ChuyenDe_TinHoc11_ChuDe3_NhanVan.html";
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-        }
-    </script>
 </body>
 </html>

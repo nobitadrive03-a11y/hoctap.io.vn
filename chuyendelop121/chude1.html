@@ -11,7 +11,6 @@
     <!-- Tích hợp thư viện Icon -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-
 <!-- 1. MÃ GA4 GỐC (Kết nối với Google Analytics) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-NSJCVSL9RM"></script>
 <script>
@@ -35,13 +34,11 @@
   }, 30000); 
 </script>
 
-    
     <style id="main-style">
         :root {
             --primary: #2563eb;
             --primary-dark: #1e40af;
             --tech-gradient: linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%);
-            --landing-bg: linear-gradient(135deg, #ec4899 0%, #ef4444 100%); 
             --accent: #f59e0b;
             --success: #10b981;
             --danger: #ef4444;
@@ -64,111 +61,14 @@
             min-height: 100vh;
             overflow-x: hidden;
             -webkit-font-smoothing: antialiased;
+            padding: 15px; 
         }
 
-        /* ----- MÀN HÌNH CHÀO (LANDING) ----- */
-        #landing-view {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            background: var(--landing-bg);
-            padding: 15px;
-            animation: fadeIn 0.8s ease-out;
-        }
-
-        .hero-card {
-            background: var(--white);
-            padding: 40px 25px;
-            border-radius: var(--radius-lg);
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-            max-width: 650px;
-            width: 100%;
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .logo-hs {
-            width: 80px;
-            height: 80px;
-            background-color: #dc2626;
-            border: 4px solid #fbbf24;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 2rem;
-            font-weight: 900;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 15px rgba(220, 38, 38, 0.4);
-        }
-
-        .hero-card h1 {
-            font-family: 'Inter', sans-serif;
-            color: #dc2626;
-            font-size: 1.2rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            margin-bottom: 8px;
-            letter-spacing: 1px;
-        }
-
-        .hero-card h2 {
-            font-family: 'Inter', sans-serif;
-            color: #dc2626;
-            font-size: 1.6rem;
-            font-weight: 900;
-            text-transform: uppercase;
-            margin-bottom: 20px;
-            line-height: 1.3;
-        }
-
-        .motto-text {
-            font-family: 'Merriweather', serif;
-            color: var(--text-muted);
-            font-size: 1.05rem;
-            font-style: italic;
-            margin-bottom: 30px;
-            position: relative;
-        }
-
-        .action-buttons {
-            display: flex;
-            gap: 12px;
-            justify-content: center;
-            flex-wrap: wrap;
-            width: 100%;
-        }
-
-        .btn {
-            padding: 14px 20px;
-            border: none;
-            border-radius: 12px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            flex: 1;
-            min-width: 100%;
-        }
-
-        .btn-primary { background: #3b82f6; color: var(--white); box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.3); }
-        .btn-primary:hover { background: #2563eb; transform: translateY(-2px); }
-        .btn-outline { background-color: #f8fafc; color: #334155; border: 1px solid #cbd5e1; }
-        .btn-outline:hover { background-color: #f1f5f9; transform: translateY(-2px); }
-
-        /* ----- MÀN HÌNH ĐỌC SÁCH ----- */
+        /* ----- MÀN HÌNH ĐỌC SÁCH TRỰC TIẾP ----- */
         #reader-view {
-            display: none;
+            display: block; 
             max-width: 900px;
-            margin: 15px auto;
+            margin: 0 auto;
             background: #f8fafc;
             border-radius: var(--radius-md);
             box-shadow: var(--shadow-lg);
@@ -182,8 +82,7 @@
             color: var(--white);
             padding: 15px 20px;
             display: flex;
-            flex-direction: column;
-            gap: 12px;
+            justify-content: space-between; 
             align-items: center;
             position: sticky;
             top: 0;
@@ -191,12 +90,25 @@
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
 
-        .reader-header h2 { font-size: 1.1rem; font-weight: 600; margin: 0; text-align: center; }
-        .nav-controls { display: flex; gap: 10px; width: 100%; justify-content: center; }
-        .btn-small { padding: 10px 15px; font-size: 0.9rem; border-radius: 10px; background: rgba(255,255,255,0.2); color: white; border: 1px solid rgba(255,255,255,0.4); cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; flex: 1; transition: 0.3s; min-width: auto; }
-        .btn-small:hover { background: rgba(255,255,255,0.3); }
+        .reader-header h2 { font-size: 1.1rem; font-weight: 600; margin: 0; display: flex; align-items: center; gap: 8px; }
+        
+        .btn-small { 
+            padding: 8px 16px; 
+            font-size: 0.9rem; 
+            border-radius: 8px; 
+            background: rgba(0,0,0,0.2); 
+            color: white; 
+            border: 1px solid rgba(255,255,255,0.4); 
+            cursor: pointer; 
+            display: flex; 
+            align-items: center; 
+            gap: 8px; 
+            transition: 0.3s; 
+            font-weight: 500;
+        }
+        .btn-small:hover { background: rgba(0,0,0,0.4); transform: translateX(-2px); }
 
-        .reader-content { padding: 20px 15px; background: var(--white); }
+        .reader-content { padding: 25px 15px; background: var(--white); }
 
         h1.main-title {
             font-family: 'Merriweather', serif;
@@ -241,6 +153,7 @@
 
         p { margin-bottom: 12px; text-align: justify; font-size: 0.95rem; }
         
+        /* Cấu trúc danh sách gạch đầu dòng */
         .content-list { list-style-type: none; padding-left: 0; margin-bottom: 20px; }
         .content-list > li {
             position: relative;
@@ -300,64 +213,33 @@
         }
         .footer-credit i { color: #ef4444; }
 
-        @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
         /* Media Query cho thiết bị lớn (Tablet, PC) */
         @media (min-width: 640px) {
-            .btn { min-width: 200px; flex: unset; }
-            .action-buttons { flex-direction: row; }
-            .hero-card { padding: 50px; }
-            .reader-header { flex-direction: row; justify-content: space-between; padding: 20px 40px; }
-            .reader-header h2 { text-align: left; }
-            .nav-controls { width: auto; justify-content: flex-end; }
+            body { padding: 40px 20px; }
+            .reader-header { padding: 20px 40px; }
             .reader-content { padding: 40px; }
             h1.main-title { font-size: 2.2rem; }
             h2.part-title { flex-direction: row; align-items: center; }
             p, .content-list > li, .logic-box { font-size: 1.05rem; }
-            #reader-view { margin: 40px auto; border-radius: var(--radius-lg); }
+            #reader-view { border-radius: var(--radius-lg); }
             .logic-box { padding: 25px 30px; }
         }
     </style>
 </head>
 <body>
 
-    <!-- ================= MÀN HÌNH CHÀO ================= -->
-    <div id="landing-view">
-        <div class="hero-card">
-            <div class="logo-hs">HS</div>
-            
-            <h1>Chuyên đề học tập</h1>
-            <h2>Trí tuệ nhân tạo (AI)</h2>
-            
-            <p class="motto-text">"Mang công nghệ vào mọi chuyến đi"</p>
-
-            <div class="action-buttons">
-                <button class="btn btn-primary" onclick="openReader()">
-                    <i class="fa-solid fa-book-open"></i> Đọc trực tiếp
-                </button>
-                <button class="btn btn-outline" onclick="downloadContent()">
-                    <i class="fa-solid fa-cloud-arrow-down"></i> Tải bản Offline
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- ================= MÀN HÌNH ĐỌC SÁCH BÊN TRONG ================= -->
     <div id="reader-view">
-        <div class="reader-header" id="no-print">
+        <div class="reader-header">
             <h2><i class="fa-solid fa-microchip"></i> Không gian học tập</h2>
-            <div class="nav-controls">
-                <button class="btn btn-small" onclick="downloadContent()">
-                    <i class="fa-solid fa-download"></i> Lưu máy
-                </button>
-                <button class="btn btn-small" onclick="closeReader()" style="background: rgba(0,0,0,0.2);">
-                    <i class="fa-solid fa-xmark"></i> Thoát
-                </button>
-            </div>
+            <!-- Nút Quay lại tự động lùi về trang trước đó -->
+            <button class="btn-small" onclick="window.history.back()">
+                <i class="fa-solid fa-arrow-left"></i> Thoát
+            </button>
         </div>
 
-        <div class="reader-content" id="printable-content">
+        <div class="reader-content">
             <h1 class="main-title">
                 <span>Chủ đề 1</span>
                 TRÍ TUỆ NHÂN TẠO
@@ -370,15 +252,15 @@
             <h2 class="part-title"><i class="fa-solid fa-microchip"></i> 2. Các đặc trưng cơ bản của hệ thống AI</h2>
             <p>Một hệ thống AI thường sở hữu 4 đặc trưng cốt lõi sau:</p>
             <ul class="content-list">
-                <li><strong>Khả năng học hỏi (Học máy - Machine Learning):</strong> Khả năng tự động rút ra tri thức, quy luật từ nguồn dữ liệu khổng lồ mà không cần con người lập trình chi tiết từng bước. Càng tiếp xúc nhiều dữ liệu, AI làm việc càng chính xác.</li>
-                <li><strong>Khả năng hiểu ngôn ngữ tự nhiên (Natural Language Processing):</strong> Khả năng giao tiếp với con người bằng văn bản hoặc giọng nói. AI có thể hiểu ngữ nghĩa, dịch thuật tự động, tóm tắt văn bản và trả lời câu hỏi một cách linh hoạt (ví dụ: các chatbot, trợ lý ảo).</li>
-                <li><strong>Khả năng nhận thức môi trường (Perception):</strong> Máy tính có thể "nhìn" và "nghe" thế giới xung quanh thông qua các cảm biến, camera và micro. Điển hình là thị giác máy tính (nhận dạng khuôn mặt, vật thể, đọc biển báo) và nhận dạng tiếng nói.</li>
+                <li><strong>Khả năng học hỏi:</strong> Khả năng tự động rút ra tri thức, quy luật từ nguồn dữ liệu khổng lồ mà không cần con người lập trình chi tiết từng bước. Càng tiếp xúc nhiều dữ liệu, AI làm việc càng chính xác.</li>
+                <li><strong>Khả năng hiểu ngôn ngữ tự nhiên:</strong> Khả năng giao tiếp với con người bằng văn bản hoặc giọng nói. AI có thể hiểu ngữ nghĩa, dịch thuật tự động, tóm tắt văn bản và trả lời câu hỏi một cách linh hoạt (ví dụ: các chatbot, trợ lý ảo).</li>
+                <li><strong>Khả năng nhận thức môi trường:</strong> Máy tính có thể "nhìn" và "nghe" thế giới xung quanh thông qua các cảm biến, camera và micro. Điển hình là thị giác máy tính (nhận dạng khuôn mặt, vật thể, đọc biển báo) và nhận dạng tiếng nói.</li>
                 <li><strong>Khả năng suy luận và giải quyết vấn đề:</strong> Khả năng phân tích thông tin đầu vào, vận dụng các quy tắc hoặc mô hình đã học để đưa ra kết luận, dự đoán hoặc quyết định tối ưu cho những tình huống mới (ví dụ: hệ thống gợi ý nước cờ trong cờ vua).</li>
             </ul>
 
             <div class="logic-box">
-                <strong><i class="fa-solid fa-microscope"></i> Phân tích logic khoa học: Học máy (Machine Learning)</strong> 
-                Trong lập trình truyền thống (Traditional Programming), con người nạp Dữ liệu (Data) và Quy tắc (Rules/Thuật toán) vào máy tính để tạo ra Kết quả (Answers). Tuy nhiên, trong Học máy, quy trình này đảo ngược: Con người nạp Dữ liệu và Kết quả mẫu vào, hệ thống AI sẽ sử dụng các mô hình thống kê học để tự động tìm ra Quy tắc (Rules). Đây là nền tảng kỹ thuật cho phép AI "tự học" thay vì bị lập trình cứng.
+                <strong><i class="fa-solid fa-microscope"></i> Phân tích logic khoa học: Học máy </strong> 
+                Trong lập trình truyền thống, con người nạp Dữ liệu  và Quy tắc vào máy tính để tạo ra Kết quả. Tuy nhiên, trong Học máy, quy trình này đảo ngược: Con người nạp Dữ liệu và Kết quả mẫu vào, hệ thống AI sẽ sử dụng các mô hình thống kê học để tự động tìm ra Quy tắc. Đây là nền tảng kỹ thuật cho phép AI "tự học" thay vì bị lập trình cứng.
             </div>
 
             <!-- PHẦN 3 -->
@@ -450,63 +332,10 @@
 
             <div class="footer-credit">
                 Hệ thống tài liệu điện tử chuyên sâu | <strong>Hành Trình Số</strong> <br>
-                Biên soạn chuẩn khoa học bởi Cô Lê Huyền Sinh  <i class="fa-solid fa-heart"></i>
+                Biên soạn chuẩn khoa học bởi Cô Lê Huyền Sinh (Cỏ Dại) <i class="fa-solid fa-heart"></i>
             </div>
         </div>
     </div>
 
-    <script>
-        const landing = document.getElementById('landing-view');
-        const reader = document.getElementById('reader-view');
-
-        function openReader() {
-            landing.style.display = 'none';
-            reader.style.display = 'block';
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-            document.body.style.background = "var(--bg-body)";
-        }
-
-        function closeReader() {
-            reader.style.display = 'none';
-            landing.style.display = 'flex';
-            document.body.style.background = "var(--landing-bg)";
-        }
-
-        document.body.style.background = "var(--landing-bg)";
-
-        function downloadContent() {
-            const styleCSS = document.getElementById('main-style').innerHTML;
-            const contentHTML = document.getElementById('printable-content').innerHTML;
-
-            const htmlFile = `<!DOCTYPE html>
-<html lang="vi">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Chủ đề 1: Trí tuệ nhân tạo - Hành Trình Số</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&family=Merriweather:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        ${styleCSS} 
-        body { background: #e0f2fe; padding: 10px; display: block; } 
-        .reader-content { background: white; max-width: 900px; margin: 0 auto; padding: 20px 15px; border-radius: 12px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); border: 1px solid rgba(255,255,255,0.8); } 
-        @media(min-width:640px){ .reader-content{padding: 40px; border-radius: 24px;} }
-    </style>
-</head>
-<body>
-    <div class="reader-content">${contentHTML}</div>
-    <script>alert("Tài liệu đã được lưu offline thành công!");<\/script>
-</body>
-</html>`;
-
-            const blob = new Blob([htmlFile], { type: 'text/html' });
-            const a = document.createElement('a');
-            a.href = URL.createObjectURL(blob);
-            a.download = "ChuyenDe_TinHoc11_ChuDe1_AI.html";
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-        }
-    </script>
 </body>
 </html>
