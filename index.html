@@ -224,16 +224,14 @@
                 <div class="md:col-span-2 relative rounded-xl shadow-xl overflow-hidden border border-[#14b8a6]/30 bg-black min-h-[300px] md:min-h-[350px]">
                     
                     <!-- TRẠNG THÁI 1: HIỂN THỊ ẢNH (Mặc định) -->
-                    <div id="image-state" 
-                         class="absolute inset-0 cursor-pointer group" 
-                         onclick="document.getElementById('image-state').classList.add('hidden'); document.getElementById('content-state').classList.remove('hidden');">
-                        
-                        <!-- Hiển thị ảnh bìa anhbia.png -->
-                        <img src="anhbia.png" alt="Ảnh bìa" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
-                        
-                        <a href="noidungbia.html" class="absolute inset-0 z-40 cursor-pointer"></a>
-                    </div>
-                </div>
+                   <!-- TRẠNG THÁI 1: HIỂN THỊ ẢNH (Mặc định) -->
+        <div id="image-state" class="absolute inset-0 group">
+            <!-- Bọc toàn bộ ảnh bằng thẻ a để tạo liên kết -->
+            <a href="noidungbia.html" class="block w-full h-full cursor-pointer">
+                <!-- Hiển thị ảnh bìa anhbia.png -->
+                <img src="anhbia.png" alt="Ảnh bìa" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+            </a>
+        </div>
 
                 <!-- CỘT PHẢI: CÁC NÚT CHỨC NĂNG -->
                 <div class="md:col-span-1 flex flex-col gap-4 md:gap-6">
