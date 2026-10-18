@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Lời Giới Thiệu - Hành Trình Số</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Nunito:ital,wght@0,400;0,600;0,700;1,400&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #1a4b8c;
+            --text-color: #1e272e;
+            --main-font: 'Nunito', sans-serif;
+            --title-font: 'Playfair Display', serif;
+            --sign-font: 'Dancing Script', cursive;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: var(--main-font);
+            /* Đã sửa lại đúng tên file ảnh của cô là noidung.png */
+            background-image: url('noidung.png');
+            background-size: cover;
+            background-position: center top;
+            background-attachment: fixed;
+            background-color: #e0f2fe; 
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* KHUNG LƯU BÚT: Làm trong suốt để lộ cảnh vật phía sau */
+        .diary-paper {
+            max-width: 850px;
+            width: 90%;
+            margin: 40px auto;
+            /* Nền trắng mờ 85% để chữ nổi lên nhưng vẫn nhìn xuyên thấu cảnh vật */
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(3px); 
+            -webkit-backdrop-filter: blur(3px);
+            border-radius: 15px;
+            padding: 40px 50px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+
+        h1.title-small {
+            font-family: var(--main-font);
+            color: var(--primary-color);
+            text-align: center;
+            font-size: 1.2rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-bottom: 0;
+            font-weight: 700;
+        }
+
+        h1.title-large {
+            font-family: var(--title-font);
+            color: var(--primary-color);
+            text-align: center;
+            font-size: 3.2rem;
+            margin-top: -5px;
+            margin-bottom: 30px;
+            font-style: italic;
+        }
+
+        /* CHỮ TO ĐỂ ĐỌC TRÊN ĐIỆN THOẠI */
+        .content {
+            color: var(--text-color);
+            line-height: 1.8;
+            font-size: 1.3rem; 
+            text-align: justify;
+        }
+
+        .content p {
+            margin-bottom: 22px;
+            text-indent: 30px;
+        }
+
+        strong.highlight {
+            font-weight: 800;
+            color: #000;
+        }
+
+        .signature-block {
+            text-align: right;
+            margin-top: 40px;
+        }
+
+        .signature-block p {
+            font-size: 1.2rem;
+            margin-bottom: 5px;
+        }
+
+        .signature-block strong {
+            display: inline-block;
+            font-family: var(--sign-font);
+            font-size: 3.2rem;
+            color: #d63031;
+            transform: rotate(-3deg);
+            margin-top: 5px;
+        }
+
+        /* Nút bấm trở về */
+        .btn-home {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: fit-content;
+            margin: 40px auto 0;
+            padding: 15px 40px;
+            background: linear-gradient(90deg, #20bf55 0%, #01baef 100%);
+            color: white;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1.25rem;
+            border-radius: 50px;
+            box-shadow: 0 5px 15px rgba(1, 186, 239, 0.4);
+            transition: 0.3s;
+        }
+
+        .btn-home:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(1, 186, 239, 0.6);
+        }
+
+        /* Responsive cho điện thoại */
+        @media (max-width: 768px) {
+            .diary-paper {
+                padding: 30px 25px;
+                width: 85%;
+                margin: 20px auto;
+            }
+            .content {
+                font-size: 1.2rem;
+            }
+            .content p {
+                text-indent: 0;
+            }
+            h1.title-large {
+                font-size: 2.6rem;
+            }
+            .btn-home {
+                width: 90%;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="diary-paper">
+        <h1 class="title-small">LỜI NGỎ</h1>
+        <h1 class="title-large">HÀNH TRÌNH SỐ 💝</h1>
+        
+        <div class="content">
+            <p>Các em học sinh yêu quý,</p>
+            
+            <p>Mỗi ngày đến trường, nhìn những ánh mắt háo hức và tò mò của các em, cô luôn ấp ủ một mong muốn giản dị: làm sao để những <strong class="highlight">giờ học Tin học</strong> không chỉ là những dòng code hay lý thuyết trên bục giảng, mà thực sự trở thành một hành trang vững chắc cho tương lai của các em? Đó chính là lý do <strong>"Hành Trình Số"</strong> được ra đời.</p>
+            
+            <p>Cô đã dành trọn tâm huyết xây dựng nền tảng trực tuyến này, hy vọng đây sẽ là một góc nhỏ thân thuộc để các em tự do học tập, rèn luyện tư duy lập trình và thử sức với các bài đánh giá trực tuyến. Hơn cả một trang web giáo dục, cô muốn truyền gửi đến các em thông điệp sống: <strong class="highlight">"Mang công nghệ vào mọi chuyến đi"</strong>. Công nghệ không chỉ giới hạn trong bốn bức tường của phòng máy, mà chính là chiếc chìa khóa vạn năng giúp các em mở ra những chân trời mới, khám phá thế giới và tự do sáng tạo trên bất kỳ con đường nào các em lựa chọn.</p>
+            
+            <p>Tại không gian này, các em có thể vừa học vừa chơi, vượt qua những thử thách lập trình, ôn tập qua các trò chơi thú vị, và tự tin trò chuyện cùng <strong class="highlight">Trợ lý AI</strong> để giải đáp mọi thắc mắc ngay lập tức. Dù các em đang chập chững làm quen với máy tính hay đang miệt mài gỡ lỗi từng đoạn mã, cô vẫn luôn ở đây để đồng hành. Nếu có bất kỳ khó khăn nào trong quá trình trải nghiệm và học tập, đừng ngần ngại gửi lời nhắn trực tuyến cho cô, cô luôn sẵn sàng lắng nghe và hỗ trợ các em hết mình.</p>
+            
+            <p>Cô mong rằng góc nhỏ này sẽ mang lại cho các em những trải nghiệm thật nhiều niềm vui và ý nghĩa. Chúc các em luôn giữ vững ngọn lửa đam mê, không ngừng nỗ lực và gặt hái được những thành công rực rỡ trong năm học này cũng như trên chặng đường đời phía trước. Hãy cứ mạnh dạn bước đi, vì mỗi kiến thức các em chinh phục hôm nay đều đang kiến tạo nên một tương lai rộng mở cho chính mình.</p>
+            
+            <div class="signature-block">
+                <p>💝 🌼  Yêu thương và luôn tin tưởng các em  🌼 💝</p>
+                <strong>Cô Huyền Sinh 💝</strong>
+            </div>
+        </div>
+
+        <a href="/index.html" class="btn-home">🚀 Trở về trang chủ</a>
+    </div>
+
+</body>
+</html>
