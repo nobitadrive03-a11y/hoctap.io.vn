@@ -11,13 +11,12 @@
     <!-- Tích hợp thư viện Icon -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- 1. MÃ GA4 GỐC (Kết nối với Google Analytics) -->
+<!-- 1. MÃ GA4 GỐC (Kết nối với Google Analytics) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-NSJCVSL9RM"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
-
   gtag('config', 'G-NSJCVSL9RM'); 
 </script>
 
@@ -39,7 +38,6 @@
             --primary: #2563eb;
             --primary-dark: #1e40af;
             --tech-gradient: linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%);
-            --landing-bg: linear-gradient(135deg, #ec4899 0%, #ef4444 100%); 
             --accent: #f59e0b;
             --success: #10b981;
             --danger: #ef4444;
@@ -62,111 +60,14 @@
             min-height: 100vh;
             overflow-x: hidden;
             -webkit-font-smoothing: antialiased;
+            padding: 15px; 
         }
 
-        /* ----- MÀN HÌNH CHÀO (LANDING) ----- */
-        #landing-view {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            background: var(--landing-bg);
-            padding: 15px;
-            animation: fadeIn 0.8s ease-out;
-        }
-
-        .hero-card {
-            background: var(--white);
-            padding: 40px 25px;
-            border-radius: var(--radius-lg);
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-            max-width: 650px;
-            width: 100%;
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .logo-hs {
-            width: 80px;
-            height: 80px;
-            background-color: #dc2626;
-            border: 4px solid #fbbf24;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 2rem;
-            font-weight: 900;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 15px rgba(220, 38, 38, 0.4);
-        }
-
-        .hero-card h1 {
-            font-family: 'Inter', sans-serif;
-            color: #dc2626;
-            font-size: 1.2rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            margin-bottom: 8px;
-            letter-spacing: 1px;
-        }
-
-        .hero-card h2 {
-            font-family: 'Inter', sans-serif;
-            color: #dc2626;
-            font-size: 1.5rem;
-            font-weight: 900;
-            text-transform: uppercase;
-            margin-bottom: 20px;
-            line-height: 1.3;
-        }
-
-        .motto-text {
-            font-family: 'Merriweather', serif;
-            color: var(--text-muted);
-            font-size: 1.05rem;
-            font-style: italic;
-            margin-bottom: 30px;
-            position: relative;
-        }
-
-        .action-buttons {
-            display: flex;
-            gap: 12px;
-            justify-content: center;
-            flex-wrap: wrap;
-            width: 100%;
-        }
-
-        .btn {
-            padding: 14px 20px;
-            border: none;
-            border-radius: 12px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            flex: 1;
-            min-width: 100%;
-        }
-
-        .btn-primary { background: #3b82f6; color: var(--white); box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.3); }
-        .btn-primary:hover { background: #2563eb; transform: translateY(-2px); }
-        .btn-outline { background-color: #f8fafc; color: #334155; border: 1px solid #cbd5e1; }
-        .btn-outline:hover { background-color: #f1f5f9; transform: translateY(-2px); }
-
-        /* ----- MÀN HÌNH ĐỌC SÁCH ----- */
+        /* ----- MÀN HÌNH ĐỌC SÁCH TRỰC TIẾP ----- */
         #reader-view {
-            display: none;
+            display: block; 
             max-width: 900px;
-            margin: 15px auto;
+            margin: 0 auto;
             background: #f8fafc;
             border-radius: var(--radius-md);
             box-shadow: var(--shadow-lg);
@@ -180,8 +81,7 @@
             color: var(--white);
             padding: 15px 20px;
             display: flex;
-            flex-direction: column;
-            gap: 12px;
+            justify-content: space-between; 
             align-items: center;
             position: sticky;
             top: 0;
@@ -189,12 +89,25 @@
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
 
-        .reader-header h2 { font-size: 1.1rem; font-weight: 600; margin: 0; text-align: center; }
-        .nav-controls { display: flex; gap: 10px; width: 100%; justify-content: center; }
-        .btn-small { padding: 10px 15px; font-size: 0.9rem; border-radius: 10px; background: rgba(255,255,255,0.2); color: white; border: 1px solid rgba(255,255,255,0.4); cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; flex: 1; transition: 0.3s; min-width: auto; }
-        .btn-small:hover { background: rgba(255,255,255,0.3); }
+        .reader-header h2 { font-size: 1.1rem; font-weight: 600; margin: 0; display: flex; align-items: center; gap: 8px; }
+        
+        .btn-small { 
+            padding: 8px 16px; 
+            font-size: 0.9rem; 
+            border-radius: 8px; 
+            background: rgba(0,0,0,0.2); 
+            color: white; 
+            border: 1px solid rgba(255,255,255,0.4); 
+            cursor: pointer; 
+            display: flex; 
+            align-items: center; 
+            gap: 8px; 
+            transition: 0.3s; 
+            font-weight: 500;
+        }
+        .btn-small:hover { background: rgba(0,0,0,0.4); transform: translateX(-2px); }
 
-        .reader-content { padding: 20px 15px; background: var(--white); }
+        .reader-content { padding: 25px 15px; background: var(--white); }
 
         h1.main-title {
             font-family: 'Merriweather', serif;
@@ -215,23 +128,8 @@
             margin-bottom: 8px;
         }
         
-        .lesson-banner {
-            text-align: center; 
-            margin: 40px 0 20px 0;
-        }
-        
-        .lesson-banner h2 {
-            display: inline-block; 
-            background: #dc2626; 
-            color: white; 
-            padding: 10px 25px; 
-            border-radius: 30px; 
-            font-size: 1.25rem; 
-            font-weight: 700; 
-            box-shadow: 0 4px 10px rgba(220,38,38,0.3);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
+        .lesson-banner { text-align: center; margin: 40px 0 20px 0; }
+        .lesson-banner h2 { display: inline-block; background: #dc2626; color: white; padding: 10px 25px; border-radius: 30px; font-size: 1.25rem; font-weight: 700; box-shadow: 0 4px 10px rgba(220,38,38,0.3); text-transform: uppercase; }
 
         h2.part-title {
             background: #f1f5f9;
@@ -249,161 +147,55 @@
 
         p { margin-bottom: 12px; text-align: justify; font-size: 0.95rem; }
         
-        /* Cấu trúc danh sách gạch đầu dòng */
         .content-list { list-style-type: none; padding-left: 0; margin-bottom: 20px; }
-        .content-list > li {
-            position: relative;
-            padding-left: 35px;
-            margin-bottom: 12px;
-            background: #f8fafc;
-            padding: 12px 12px 12px 35px;
-            border-radius: 10px;
-            border: 1px solid #e2e8f0;
-            font-size: 0.95rem;
-            text-align: justify;
-        }
-        .content-list > li::before {
-            content: '\f105';
-            font-family: 'Font Awesome 6 Free';
-            font-weight: 900;
-            color: var(--primary);
-            position: absolute;
-            left: 12px;
-            top: 12px;
-            font-size: 1rem;
-        }
+        .content-list > li { position: relative; padding-left: 35px; margin-bottom: 12px; background: #f8fafc; padding: 12px 12px 12px 35px; border-radius: 10px; border: 1px solid #e2e8f0; font-size: 0.95rem; text-align: justify; }
+        .content-list > li::before { content: '\f105'; font-family: 'Font Awesome 6 Free'; font-weight: 900; color: var(--primary); position: absolute; left: 12px; top: 12px; font-size: 1rem; }
         .content-list > li strong { color: var(--primary-dark); display: inline-block; margin-bottom: 5px; }
 
-        /* Danh sách có đánh số thứ tự */
         .numbered-list { list-style: none; counter-reset: my-counter; padding-left: 0; margin-bottom: 25px;}
-        .numbered-list > li {
-            position: relative;
-            padding-left: 45px;
-            margin-bottom: 15px;
-            background: #fff;
-            padding: 15px 15px 15px 45px;
-            border-radius: 10px;
-            border: 1px solid #cbd5e1;
-            font-size: 0.95rem;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
-            text-align: justify;
-        }
-        .numbered-list > li::before {
-            counter-increment: my-counter;
-            content: counter(my-counter);
-            background: var(--primary);
-            color: white;
-            border-radius: 50%;
-            width: 24px;
-            height: 24px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: absolute;
-            left: 10px;
-            top: 13px;
-            font-weight: bold;
-            font-size: 0.85rem;
-        }
+        .numbered-list > li { position: relative; padding-left: 45px; margin-bottom: 15px; background: #fff; padding: 15px 15px 15px 45px; border-radius: 10px; border: 1px solid #cbd5e1; font-size: 0.95rem; box-shadow: 0 2px 4px rgba(0,0,0,0.02); text-align: justify; }
+        .numbered-list > li::before { counter-increment: my-counter; content: counter(my-counter); background: var(--primary); color: white; border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; position: absolute; left: 10px; top: 13px; font-weight: bold; font-size: 0.85rem; }
 
-        /* Định dạng Table */
-        .data-table-wrapper {
-            overflow-x: auto;
-            margin-bottom: 20px;
-            border-radius: 10px;
-            border: 1px solid #cbd5e1;
-        }
-        .data-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 0.9rem;
-        }
-        .data-table th, .data-table td {
-            padding: 12px 15px;
-            border: 1px solid #cbd5e1;
-            text-align: left;
-        }
-        .data-table th {
-            background-color: var(--primary);
-            color: white;
-            font-weight: 600;
-        }
+        .data-table-wrapper { overflow-x: auto; margin-bottom: 20px; border-radius: 10px; border: 1px solid #cbd5e1; }
+        .data-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; min-width: 500px; }
+        .data-table th, .data-table td { padding: 12px 15px; border: 1px solid #cbd5e1; text-align: left; }
+        .data-table th { background-color: var(--primary); color: white; font-weight: 600; white-space: nowrap; }
         .data-table tr:nth-child(even) { background-color: #f8fafc; }
         .data-table tr:hover { background-color: #f1f5f9; }
 
-        .footer-credit {
-            text-align: center;
-            margin-top: 40px;
-            padding-top: 20px;
-            border-top: 2px dashed #e2e8f0;
-            color: var(--text-muted);
-            font-size: 0.85rem;
-        }
+        .footer-credit { text-align: center; margin-top: 40px; padding-top: 20px; border-top: 2px dashed #e2e8f0; color: var(--text-muted); font-size: 0.85rem; }
         .footer-credit i { color: #ef4444; }
 
-        @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Media Query cho thiết bị lớn (Tablet, PC) */
         @media (min-width: 640px) {
-            .btn { min-width: 200px; flex: unset; }
-            .action-buttons { flex-direction: row; }
-            .hero-card { padding: 50px; }
-            .reader-header { flex-direction: row; justify-content: space-between; padding: 20px 40px; }
-            .reader-header h2 { text-align: left; }
-            .nav-controls { width: auto; justify-content: flex-end; }
+            body { padding: 40px 20px; }
+            .reader-header { padding: 20px 40px; }
             .reader-content { padding: 40px; }
             h1.main-title { font-size: 2.2rem; }
             h2.part-title { flex-direction: row; align-items: center; }
             p, .content-list > li, .numbered-list > li, .data-table { font-size: 1.05rem; }
-            #reader-view { margin: 40px auto; border-radius: var(--radius-lg); }
+            #reader-view { border-radius: var(--radius-lg); }
         }
     </style>
 </head>
 <body>
 
-    <!-- ================= MÀN HÌNH CHÀO ================= -->
-    <div id="landing-view">
-        <div class="hero-card">
-            <div class="logo-hs">HS</div>
-            
-            <h1>Chuyên đề học tập</h1>
-            <h2>Máy tính và<br>Xã hội tri thức</h2>
-            
-            <p class="motto-text">"Mang công nghệ vào mọi chuyến đi"</p>
-
-            <div class="action-buttons">
-                <button class="btn btn-primary" onclick="openReader()">
-                    <i class="fa-solid fa-book-open"></i> Đọc trực tiếp
-                </button>
-                <button class="btn btn-outline" onclick="downloadContent()">
-                    <i class="fa-solid fa-cloud-arrow-down"></i> Tải bản Offline
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- ================= MÀN HÌNH ĐỌC SÁCH BÊN TRONG ================= -->
     <div id="reader-view">
-        <div class="reader-header" id="no-print">
+        <div class="reader-header">
             <h2><i class="fa-solid fa-users"></i> Không gian học tập</h2>
-            <div class="nav-controls">
-                <button class="btn btn-small" onclick="downloadContent()">
-                    <i class="fa-solid fa-download"></i> Lưu máy
-                </button>
-                <button class="btn btn-small" onclick="closeReader()" style="background: rgba(0,0,0,0.2);">
-                    <i class="fa-solid fa-xmark"></i> Thoát
-                </button>
-            </div>
+            <!-- Nút Quay lại tự động lùi về trang trước đó -->
+            <button class="btn-small" onclick="window.history.back()">
+                <i class="fa-solid fa-arrow-left"></i> Thoát
+            </button>
         </div>
 
-        <div class="reader-content" id="printable-content">
+        <div class="reader-content">
             <h1 class="main-title">
                 <span>Chủ đề 1</span>
                 MÁY TÍNH VÀ XÃ HỘI TRI THỨC
             </h1>
 
-            <!-- ================= BÀI 1 ================= -->
             <div class="lesson-banner">
                 <h2>BÀI 1: THÔNG TIN VÀ XỬ LÍ THÔNG TIN</h2>
             </div>
@@ -432,7 +224,7 @@
                 <li><strong>Bit (Binary Digit):</strong> Là đơn vị đo lường nhỏ nhất trong máy tính. Một bit chỉ có thể nhận một trong hai trạng thái: 0 hoặc 1.</li>
                 <li><strong>Byte (B):</strong> Máy tính không xử lý từng bit đơn lẻ mà gom chúng lại. <strong>1 Byte = 8 bits</strong>. Byte là đơn vị đo lượng dữ liệu cơ bản nhất. Trong thực tế, 1 Byte biểu diễn được đúng 1 kí tự chữ cái (ví dụ chữ "A" hoặc số "5").</li>
             </ul>
-            <p><strong>Các bội số của Byte:</strong> Để đo lường các tệp tin lớn hơn, người ta dùng các đơn vị bội số. Điểm khác biệt khoa học cốt lõi cần lưu ý là máy tính vận hành theo hệ nhị phân (cơ số 2) chứ không phải hệ thập phân (cơ số 10) như con người. Do đó, các đơn vị liền kề hơn kém nhau $2^{10} = 1024$ lần (thường làm tròn là 1000 lần trong thực tế thương mại).</p>
+            <p><strong>Các bội số của Byte:</strong> Để đo lường các tệp tin lớn hơn, người ta dùng các đơn vị bội số. Điểm khác biệt khoa học cốt lõi cần lưu ý là máy tính vận hành theo hệ nhị phân (cơ số 2) chứ không phải hệ thập phân (cơ số 10) như con người. Do đó, các đơn vị liền kề hơn kém nhau 2^10 = 1024 lần (thường làm tròn là 1000 lần trong thực tế thương mại).</p>
 
             <div class="data-table-wrapper">
                 <table class="data-table">
@@ -484,7 +276,6 @@
                 <li><strong>Đưa ra kết quả (Output / Storage):</strong> Máy tính xuất kết quả ra các thiết bị ra (màn hình, loa, máy in) để con người hiểu được. Đồng thời, kết quả này có thể được lưu trữ (Storage) vào bộ nhớ (RAM, Ổ cứng) để tiếp tục sử dụng cho các bước xử lí sau.</li>
             </ol>
 
-            <!-- ================= BÀI 2 ================= -->
             <div class="lesson-banner" style="margin-top: 50px;">
                 <h2>BÀI 2: VAI TRÒ CỦA THIẾT BỊ THÔNG MINH VÀ TIN HỌC ĐỐI VỚI XÃ HỘI</h2>
             </div>
@@ -510,7 +301,6 @@
                 <li><strong>Giáo dục và Kinh tế:</strong> Thúc đẩy học tập trực tuyến (E-learning), thương mại điện tử, thanh toán số không dùng tiền mặt (quét mã QR).</li>
             </ul>
 
-            <!-- ================= BÀI 7 ================= -->
             <div class="lesson-banner" style="margin-top: 50px;">
                 <h2>BÀI 7: THỰC HÀNH SỬ DỤNG THIẾT BỊ SỐ THÔNG DỤNG</h2>
             </div>
@@ -542,58 +332,5 @@
         </div>
     </div>
 
-    <script>
-        const landing = document.getElementById('landing-view');
-        const reader = document.getElementById('reader-view');
-
-        function openReader() {
-            landing.style.display = 'none';
-            reader.style.display = 'block';
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-            document.body.style.background = "var(--bg-body)";
-        }
-
-        function closeReader() {
-            reader.style.display = 'none';
-            landing.style.display = 'flex';
-            document.body.style.background = "var(--landing-bg)";
-        }
-
-        document.body.style.background = "var(--landing-bg)";
-
-        function downloadContent() {
-            const styleCSS = document.getElementById('main-style').innerHTML;
-            const contentHTML = document.getElementById('printable-content').innerHTML;
-
-            const htmlFile = `<!DOCTYPE html>
-<html lang="vi">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Chủ đề 1: Máy tính và Xã hội tri thức - Hành Trình Số</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&family=Merriweather:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        ${styleCSS} 
-        body { background: #e0f2fe; padding: 10px; display: block; } 
-        .reader-content { background: white; max-width: 900px; margin: 0 auto; padding: 20px 15px; border-radius: 12px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); border: 1px solid rgba(255,255,255,0.8); } 
-        @media(min-width:640px){ .reader-content{padding: 40px; border-radius: 24px;} }
-    </style>
-</head>
-<body>
-    <div class="reader-content">${contentHTML}</div>
-    <script>alert("Tài liệu đã được lưu offline thành công!");<\/script>
-</body>
-</html>`;
-
-            const blob = new Blob([htmlFile], { type: 'text/html' });
-            const a = document.createElement('a');
-            a.href = URL.createObjectURL(blob);
-            a.download = "BaiHoc_MayTinh_XaHoiTriThuc.html";
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-        }
-    </script>
 </body>
 </html>
