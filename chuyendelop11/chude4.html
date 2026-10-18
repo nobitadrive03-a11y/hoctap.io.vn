@@ -39,7 +39,6 @@
             --primary: #2563eb;
             --primary-dark: #1e40af;
             --tech-gradient: linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%);
-            --landing-bg: linear-gradient(135deg, #ec4899 0%, #ef4444 100%); 
             --accent: #f59e0b;
             --bg-body: #e0f2fe;
             --text-main: #334155;
@@ -60,15 +59,14 @@
             min-height: 100vh;
             overflow-x: hidden;
             -webkit-font-smoothing: antialiased;
+            padding: 15px; 
         }
 
-        /* ----- THỦ THUẬT CHUYỂN TRANG KHÔNG JS ----- */
-        #read-toggle { display: none; }
-        
-        #reader-view { 
-            display: none; 
+        /* ----- MÀN HÌNH ĐỌC SÁCH TRỰC TIẾP ----- */
+        #reader-view {
+            display: block; 
             max-width: 1000px;
-            margin: 20px auto;
+            margin: 0 auto;
             background: #f8fafc;
             border-radius: var(--radius-md);
             box-shadow: var(--shadow-lg);
@@ -77,40 +75,38 @@
             border: 1px solid rgba(255,255,255,0.5);
         }
 
-        #landing-view {
+        .reader-header {
+            background: var(--tech-gradient);
+            color: var(--white);
+            padding: 15px 20px;
             display: flex;
+            justify-content: space-between; 
             align-items: center;
-            justify-content: center;
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: var(--landing-bg);
-            padding: 20px;
-            z-index: 100;
-            overflow-y: auto;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
 
-        #read-toggle:checked ~ #landing-view { display: none; }
-        #read-toggle:checked ~ #reader-view { display: block; }
-
-        .hero-card { background: var(--white); padding: 40px 25px; border-radius: var(--radius-lg); box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); max-width: 650px; width: 100%; text-align: center; display: flex; flex-direction: column; align-items: center; }
-        .logo-hs { width: 80px; height: 80px; background-color: #dc2626; border: 4px solid #fbbf24; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 2rem; font-weight: 900; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(220, 38, 38, 0.4); }
-        .hero-card h1 { color: #dc2626; font-size: 1.2rem; font-weight: 700; text-transform: uppercase; margin-bottom: 8px; letter-spacing: 1px; }
-        .hero-card h2 { color: #dc2626; font-size: 1.5rem; font-weight: 900; text-transform: uppercase; margin-bottom: 20px; line-height: 1.3; }
-        .motto-text { font-family: 'Merriweather', serif; color: var(--text-muted); font-size: 1.05rem; font-style: italic; margin-bottom: 30px; position: relative; }
-
-        .action-buttons { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; width: 100%; }
+        .reader-header h2 { font-size: 1.1rem; font-weight: 600; margin: 0; display: flex; align-items: center; gap: 8px; }
         
-        .btn { padding: 14px 20px; border: none; border-radius: 12px; font-size: 1.1rem; font-weight: 600; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; justify-content: center; gap: 8px; flex: 1; min-width: 100%; max-width: 300px; text-decoration: none; }
-        .btn-primary { background: #3b82f6; color: var(--white); box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.3); }
-        .btn-primary:active { background: #1d4ed8; }
-        
-        .reader-header { background: var(--tech-gradient); color: var(--white); padding: 15px 20px; display: flex; flex-direction: column; gap: 12px; align-items: center; position: sticky; top: 0; z-index: 10; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
-        .reader-header h2 { font-size: 1.1rem; font-weight: 600; margin: 0; text-align: center; }
-        .nav-controls { display: flex; gap: 10px; width: 100%; justify-content: center; flex-wrap: wrap; }
-        .btn-small { padding: 10px 25px; font-size: 0.95rem; border-radius: 10px; background: rgba(255,255,255,0.2); color: white; border: 1px solid rgba(255,255,255,0.4); cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.3s; min-width: auto; }
-        .btn-small:hover { background: rgba(255,255,255,0.3); }
+        .btn-small { 
+            padding: 8px 16px; 
+            font-size: 0.9rem; 
+            border-radius: 8px; 
+            background: rgba(0,0,0,0.2); 
+            color: white; 
+            border: 1px solid rgba(255,255,255,0.4); 
+            cursor: pointer; 
+            display: flex; 
+            align-items: center; 
+            gap: 8px; 
+            transition: 0.3s; 
+            font-weight: 500;
+        }
+        .btn-small:hover { background: rgba(0,0,0,0.4); transform: translateX(-2px); }
 
-        .reader-content { padding: 20px 15px; background: var(--white); }
+        .reader-content { padding: 25px 15px; background: var(--white); }
 
         h1.main-title { font-family: 'Merriweather', serif; color: var(--primary-dark); text-align: center; margin-bottom: 30px; font-size: 1.6rem; line-height: 1.4; }
         h1.main-title span { display: block; font-family: 'Inter', sans-serif; font-size: 0.95rem; color: var(--primary); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
@@ -125,11 +121,11 @@
         
         h3.lesson-title { color: var(--primary); font-size: 1.1rem; margin: 20px 0 10px 0; border-bottom: 1px dashed #cbd5e1; padding-bottom: 6px; }
 
-        p { margin-bottom: 12px; text-align: justify; font-size: 0.95rem; }
+        p { margin-bottom: 12px; text-align: justify; font-size: 0.95rem; line-height: 1.7; }
         
         .reader-content > ul { list-style-type: none; padding-left: 0; }
-        .reader-content > ul > li { position: relative; padding-left: 35px; margin-bottom: 12px; background: #f8fafc; padding: 12px 12px 12px 35px; border-radius: 10px; border: 1px solid #e2e8f0; font-size: 0.95rem; }
-        .reader-content > ul > li::before { content: '\f105'; font-family: 'Font Awesome 6 Free'; font-weight: 900; color: var(--primary); position: absolute; left: 12px; top: 12px; font-size: 1rem; }
+        .reader-content > ul > li { position: relative; padding-left: 30px; margin-bottom: 12px; background: #f8fafc; padding: 12px 12px 12px 30px; border-radius: 10px; border: 1px solid #e2e8f0; font-size: 0.95rem; text-align: justify; line-height: 1.6; }
+        .reader-content > ul > li::before { content: '\f105'; font-family: 'Font Awesome 6 Free'; font-weight: 900; color: var(--primary); position: absolute; left: 10px; top: 14px; font-size: 1rem; }
 
         /* Các lớp CSS riêng của CĐ 4 */
         .code-tag { background: #f1f5f9; padding: 2px 5px; border-radius: 4px; font-family: monospace; color: #dc2626; font-weight: bold; border: 1px solid #cbd5e1; font-size: 0.9em; word-break: break-word; }
@@ -148,59 +144,33 @@
         .footer-credit { text-align: center; margin-top: 40px; padding-top: 20px; border-top: 2px dashed #e2e8f0; color: var(--text-muted); font-size: 0.85rem; }
         .footer-credit i { color: #ef4444; }
 
-        @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
         @media (min-width: 640px) {
-            .btn { min-width: 250px; flex: unset; }
-            .action-buttons { flex-direction: row; }
-            .reader-header { flex-direction: row; justify-content: space-between; padding: 20px 40px; }
-            .reader-header h2 { text-align: left; }
-            .nav-controls { width: auto; justify-content: flex-end; }
+            body { padding: 40px 20px; }
+            .reader-header { padding: 20px 40px; }
             .reader-content { padding: 40px; }
             h1.main-title { font-size: 2.2rem; }
             h2.part-title { flex-direction: row; align-items: center; }
             p, .reader-content > ul > li, .obj-box ul li { font-size: 1.05rem; }
-            #reader-view { margin: 40px auto; border-radius: var(--radius-lg); }
+            .reader-content > ul > li { padding-left: 45px; }
+            .reader-content > ul > li::before { left: 15px; top: 15px; }
+            #reader-view { border-radius: var(--radius-lg); }
         }
     </style>
 </head>
 <body>
 
-    <!-- TRÁI TIM CỦA CƠ CHẾ CHUYỂN TRANG KHÔNG DÙNG JS -->
-    <input type="checkbox" id="read-toggle">
-
-    <!-- MÀN HÌNH CHÀO -->
-    <div id="landing-view">
-        <div class="hero-card">
-            <div class="logo-hs">HS</div>
-            
-            <h1>Chuyên đề học tập Tin học 11</h1>
-            <h2>Hệ cơ sở dữ liệu<br>và SQL Chuyên sâu</h2>
-            
-            <p class="motto-text">"Mang công nghệ vào mọi chuyến đi"</p>
-
-            <div class="action-buttons">
-                <!-- Nút Đọc Trực Tiếp duy nhất -->
-                <label for="read-toggle" class="btn btn-primary">
-                    <i class="fa-solid fa-book-open"></i> Bắt đầu đọc
-                </label>
-            </div>
-        </div>
-    </div>
-
-    <!-- MÀN HÌNH ĐỌC SÁCH -->
     <div id="reader-view">
         <div class="reader-header">
-            <h2><i class="fa-solid fa-database"></i> Tài liệu Chuyên đề HQTCSDL</h2>
-            <div class="nav-controls">
-                <!-- Nút Thoát duy nhất -->
-                <label for="read-toggle" class="btn btn-small" style="background: rgba(0,0,0,0.2);">
-                    <i class="fa-solid fa-arrow-left"></i> Quay lại
-                </label>
-            </div>
+            <h2><i class="fa-solid fa-database"></i> Không gian học tập Hành Trình Số</h2>
+            <!-- Nút Quay lại tự động lùi về trang trước đó -->
+            <button class="btn-small" onclick="window.history.back()">
+                <i class="fa-solid fa-arrow-left"></i> Thoát
+            </button>
         </div>
 
-        <div class="reader-content" id="printable-content">
+        <div class="reader-content">
             <h1 class="main-title">
                 <span>Chuyên đề Tin học 11 - Chủ đề 4</span>
                 HỆ CƠ SỞ DỮ LIỆU VÀ TRUY VẤN SQL
@@ -222,9 +192,9 @@
             <h3 class="lesson-title">1. Các hoạt động quản lý dữ liệu cơ bản</h3>
             <p>Trong hệ thống thông tin của một tổ chức (như trường học, doanh nghiệp, cơ quan nhà nước), quá trình xử lý thông tin dựa trên cơ sở dữ liệu tuân theo chu trình khép kín:</p>
             <ul>
-                <li><strong>Cập nhật dữ liệu (Data Update):</strong> Bao gồm ba thao tác nghiệp vụ chính: <em>Thêm mới</em> (Insert) bản ghi khi có đối tượng phát sinh; <em>Chỉnh sửa</em> (Update) thông tin khi có sự thay đổi; và <em>Xóa</em> (Delete) các bản ghi không còn giá trị sử dụng.</li>
-                <li><strong>Truy xuất và khai thác thông tin (Data Retrieval & Mining):</strong> Trích xuất các tập dữ liệu theo những tiêu chí xác định, kết hợp xử lý logic để chuyển hóa dữ liệu thô thành tri thức hoặc báo cáo phục vụ công tác ra quyết định của nhà quản lý.</li>
-                <li><strong>Thu thập dữ liệu tự động (Automatic Data Collection):</strong> Giải pháp thay thế phương thức nhập liệu thủ công bằng cách ứng dụng công nghệ như mã vạch (Barcode), mã QR, thẻ từ RFID, các trạm cảm biến IoT (Internet of Things) hoặc hệ thống nhận diện quang học (OCR), giúp tối ưu hóa tốc độ và độ chính xác của dữ liệu đầu vào.</li>
+                <li><strong>Cập nhật dữ liệu :</strong> Bao gồm ba thao tác nghiệp vụ chính: <em>Thêm mới</em> (Insert) bản ghi khi có đối tượng phát sinh; <em>Chỉnh sửa</em> (Update) thông tin khi có sự thay đổi; và <em>Xóa</em> (Delete) các bản ghi không còn giá trị sử dụng.</li>
+                <li><strong>Truy xuất và khai thác thông tin:</strong> Trích xuất các tập dữ liệu theo những tiêu chí xác định, kết hợp xử lý logic để chuyển hóa dữ liệu thô thành tri thức hoặc báo cáo phục vụ công tác ra quyết định của nhà quản lý.</li>
+                <li><strong>Thu thập dữ liệu tự động:</strong> Giải pháp thay thế phương thức nhập liệu thủ công bằng cách ứng dụng công nghệ như mã vạch, mã QR, thẻ từ RFID, các trạm cảm biến IoT hoặc hệ thống nhận diện quang học, giúp tối ưu hóa tốc độ và độ chính xác của dữ liệu đầu vào.</li>
             </ul>
 
             <!-- BÀI 11 -->
@@ -253,7 +223,7 @@
 
             <h3 class="lesson-title">3. Hệ CSDL tập trung và phân tán</h3>
             <ul>
-                <li><strong>Hệ CSDL tập trung:</strong> Toàn bộ dữ liệu và DBMS được cài đặt và lưu trữ trên một máy chủ duy nhất. Phù hợp với các tổ chức quy margin nhỏ, quản lý tập trung, dễ vận hành nhưng phụ thuộc hoàn toàn vào độ ổn định của máy chủ trung tâm.</li>
+                <li><strong>Hệ CSDL tập trung:</strong> Toàn bộ dữ liệu và DBMS được cài đặt và lưu trữ trên một máy chủ duy nhất. Phù hợp với các tổ chức quy mô nhỏ, quản lý tập trung, dễ vận hành nhưng phụ thuộc hoàn toàn vào độ ổn định của máy chủ trung tâm.</li>
                 <li><strong>Hệ CSDL phân tán:</strong> Dữ liệu được chia nhỏ và lưu trữ tại nhiều máy tính khác nhau kết nối qua mạng máy tính. Hệ thống phân tán giúp tối ưu hiệu năng truy vấn cho các đơn vị ở xa, tăng khả năng chịu lỗi nhưng đòi hỏi cơ chế đồng bộ hóa dữ liệu phức tạp.</li>
             </ul>
 
@@ -342,24 +312,24 @@ REVOKE SELECT ON HOC_SINH FROM 'giaoVien';
             <!-- BÀI 15 -->
             <h2 class="part-title"><i class="fa-solid fa-shield-halved"></i> Bài 15: Bảo mật và an toàn hệ cơ sở dữ liệu</h2>
             
-            <h3 class="lesson-title">1. Bảo mật hệ CSDL (Database Security)</h3>
+            <h3 class="lesson-title">1. Bảo mật hệ CSDL</h3>
             <p>Bảo mật là tập hợp các biện pháp phòng chống sự truy cập trái phép, rò rỉ hoặc phá hoại dữ liệu từ phía con người. Các giải pháp kỹ thuật tiêu chuẩn gồm:</p>
             <ul>
-                <li><strong>Phân quyền truy cập:</strong> Thiết lập chính sách người dùng dựa trên vai trò (Role-based access control), giới hạn quyền thực thi trên từng bảng/cột cụ thể.</li>
+                <li><strong>Phân quyền truy cập:</strong> Thiết lập chính sách người dùng dựa trên vai trò, giới hạn quyền thực thi trên từng bảng/cột cụ thể.</li>
                 <li><strong>Xác thực định danh:</strong> Sử dụng mật khẩu mạnh, xác thực đa yếu tố (MFA).</li>
-                <li><strong>Mã hóa dữ liệu (Encryption):</strong> Mã hóa dữ liệu ngay cả khi lưu trữ trên ổ cứng (At rest) hoặc khi truyền tải trên mạng (In transit).</li>
+                <li><strong>Mã hóa dữ liệu:</strong> Mã hóa dữ liệu ngay cả khi lưu trữ trên ổ cứng  hoặc khi truyền tải trên mạng.</li>
             </ul>
 
-            <h3 class="lesson-title">2. Bảo đảm an toàn dữ liệu (Database Safety & Reliability)</h3>
+            <h3 class="lesson-title">2. Bảo đảm an toàn dữ liệu)</h3>
             <p>An toàn dữ liệu tập trung giải quyết các sự cố khách quan xuất phát từ lỗi phần cứng, sự cố nguồn điện, thiên tai hoặc sai sót thao tác của con người:</p>
             <ul>
                 <li><strong>Sao lưu dự phòng (Backup):</strong> Định kỳ tạo các bản sao lưu toàn bộ hoặc gia tăng của CSDL lưu trữ tại các thiết bị hoặc vùng mây độc lập.</li>
-                <li><strong>Phục hồi dữ liệu (Recovery):</strong> Khôi phục lại trạng thái ổn định gần nhất của CSDL dựa trên các tệp bản sao lưu và nhật ký giao dịch (Transaction Log) khi xảy ra sự cố sập hệ thống.</li>
+                <li><strong>Phục hồi dữ liệu:</strong> Khôi phục lại trạng thái ổn định gần nhất của CSDL dựa trên các tệp bản sao lưu và nhật ký giao dịch (Transaction Log) khi xảy ra sự cố sập hệ thống.</li>
             </ul>
 
             <div class="footer-credit">
                 Hệ thống tài liệu điện tử chuyên sâu | <strong>Hành Trình Số</strong> <br>
-                Biên soạn chuẩn khoa học bởi Cô Lê Huyền Sinh (Cỏ Dại) <i class="fa-solid fa-heart"></i>
+                Biên soạn chuẩn khoa học bởi Cô Lê Huyền Sinh <i class="fa-solid fa-heart"></i>
             </div>
         </div>
     </div>
