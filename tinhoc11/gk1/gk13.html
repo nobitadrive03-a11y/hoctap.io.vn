@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
-  <title>Kiểm Tra Giữa Kỳ 1 - Đề 3 - Tin học 11</title>
+  <title>Kiểm Tra Giữa Kỳ 1 - Đề 3 - Tin học 12</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   
@@ -100,7 +100,7 @@
           <span class="text-white font-bold text-3xl tracking-tighter">HS</span>
       </div>
       <h1 class="text-1xl sm:text-3xl font-bold text-red-600 mb-1 leading-tight tracking-tight">KIỂM TRA GIỮA KỲ 1</h1>
-      <h2 class="text-xl font-bold text-red-500 mb-2">Tin Học 11 - Đề số 3</h2>
+      <h2 class="text-xl font-bold text-red-500 mb-2">Tin Học 12 - Đề số 3</h2>
      </div>
      
      <div id="login-form" class="space-y-4">
@@ -111,7 +111,7 @@
           </div>
           <div class="w-full sm:w-1/3">
                <label class="block text-sm font-bold text-gray-700 mb-1">Lớp</label> 
-               <input type="text" id="lop" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-100 outline-none transition-all text-base touch-manipulation" placeholder="Ví dụ: 11A2">
+               <input type="text" id="lop" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-100 outline-none transition-all text-base touch-manipulation" placeholder="Ví dụ: 12A1">
           </div>
       </div>
       
@@ -161,7 +161,7 @@
    <div id="scores-section" class="w-full max-w-6xl mx-auto hidden flex-grow flex flex-col">
     <div class="glass-card rounded-none sm:rounded-3xl p-4 sm:p-8 flex flex-col flex-grow border-t-8 border-orange-500 bg-white">
      <div class="mb-6 flex items-center justify-between">
-      <h2 class="text-2xl sm:text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-red-600">🏆 BẢNG XẾP HẠNG</h2>
+  <h2 class="text-2xl sm:text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-red-600">🏆 Bảng Xếp Hạng</h2>
       <button onclick="window.goHome()" class="px-5 py-2.5 bg-gray-100 text-gray-700 rounded-xl font-bold hover:bg-gray-200 transition-transform active:scale-95 shadow-sm border border-gray-200 touch-manipulation">🏠 Về trang chủ</button>
      </div>
      
@@ -181,7 +181,7 @@
       <table class="w-full text-xs sm:text-sm whitespace-nowrap">
        <thead class="bg-gradient-to-r from-orange-500 to-red-500 text-white">
         <tr>
-         <th class="px-3 sm:px-4 py-4 text-center font-bold">#</th>
+         <th class="px-3 sm:px-4 py-4 text-center font-bold">STT</th>
          <th class="px-3 sm:px-4 py-4 text-center font-bold">Lớp</th>
          <th class="px-3 sm:px-4 py-4 text-left font-bold w-full">Họ tên</th>
          <th class="px-3 sm:px-4 py-4 text-center font-bold">Điểm</th>
@@ -200,19 +200,6 @@
         <button id="next-page-btn" onclick="window.nextPage()" class="px-4 py-3 bg-gray-100 text-gray-700 rounded-xl font-bold hover:bg-gray-200 transition-transform active:scale-95 shadow-sm border border-gray-200 touch-manipulation">Trang sau ➡️</button>
      </div>
     </div>
-   </div>
-
-   <!-- MODAL CẢNH BÁO GIAN LẬN -->
-   <div id="cheat-modal" data-nosnippet class="fixed inset-0 bg-red-900/95 backdrop-blur-sm flex items-center justify-center p-4 hidden z-[9999]">
-      <div class="bg-white rounded-[2rem] shadow-2xl p-6 max-w-sm w-full text-center flex flex-col border-t-8 border-red-600 transform transition-all scale-100 max-h-[90vh] overflow-y-auto">
-        <div class="text-5xl mb-3 animate-bounce">🚨</div>
-        <h3 class="text-2xl sm:text-3xl font-black text-red-600 mb-2 uppercase tracking-wide">THÔNG BÁO!</h3>
-        <p class="text-gray-700 font-bold mb-4 text-sm sm:text-base leading-relaxed" id="cheat-message"></p>
-        <div class="bg-red-50 text-red-700 font-extrabold p-3 rounded-2xl border-2 border-red-100 mb-5">
-            Vi phạm làm bài lần thứ <span id="cheat-count-display" class="text-4xl font-black mx-1">1</span>
-        </div>
-        <button id="cheat-continue-btn" class="w-full py-4 bg-gradient-to-r from-red-600 to-red-800 text-white font-extrabold rounded-xl shadow-lg hover:shadow-xl transition-transform active:scale-95 touch-manipulation text-base tracking-wide uppercase shrink-0">TÔI ĐÃ HIỂU & TIẾP TỤC</button>
-      </div>
    </div>
 
   </div>
@@ -236,144 +223,63 @@
         if (typeof firebase !== 'undefined') {
             if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
             database = firebase.database();
-            scoresRef = database.ref('bxh_gk1_10_11'); // Thay đổi tên bảng nếu cần phân biệt dữ liệu
+            // Đổi bảng dữ liệu xếp hạng sang đề 3
+            scoresRef = database.ref('bxh_gk1_12_de3');
         }
     } catch(err) { console.error("Lỗi Firebase:", err); }
 
-    let cheatCount = 0;
     let isQuizStarted = false; 
-    let isPenalizing = false; 
     let isSubmitting = false;
 
-    window.handleCheatAction = function(reason) {
-        if (!isQuizStarted || isPenalizing || isSubmitting) return; 
-        const isQuizActive = !document.getElementById('quiz-section').classList.contains('hidden');
-        
-        if (isQuizActive) {
-            isPenalizing = true;
-            cheatCount++;
-            document.getElementById('cheat-count-display').innerText = cheatCount;
-            const modal = document.getElementById('cheat-modal');
-            const msg = document.getElementById('cheat-message');
-            const btn = document.getElementById('cheat-continue-btn');
-            modal.classList.remove('hidden');
-            
-            const currentQ = currentQuestions[currentIdx];
-            if (currentQ) {
-                if (currentQ.type === 'tf_cluster') {
-                    currentQ.subQuestions.forEach(sub => {
-                        if (!userAnswers[sub.id]) userAnswers[sub.id] = "Gian lận"; 
-                    });
-                } else {
-                    if (userAnswers[currentQ.id] === undefined) userAnswers[currentQ.id] = -1; 
-                }
-                updateProgress();
-            }
-
-            if (cheatCount >= 2) {
-                msg.innerHTML = "Bạn đã vi phạm quy chế (Rời khỏi màn hình/Dùng phím cấm/Copy) quá 2 lần.<br>Hệ thống bắt buộc <b>TỰ ĐỘNG THU BÀI</b>!";
-                btn.innerText = "NỘP BÀI NGAY";
-                btn.onclick = () => {
-                    modal.classList.add('hidden');
-                    isPenalizing = false;
-                    window.submitQuiz();
-                };
-            } else {
-                msg.innerHTML = `Hệ thống phát hiện bạn vừa sử dụng thao tác : <b>${reason}</b>.<br><br><span class='text-red-600 font-black bg-red-50 px-3 py-1 rounded-lg border border-red-200 inline-block mt-2 mb-2'>Câu hỏi này bị bỏ qua (0 điểm).</span><br><br><i class='text-sm text-gray-500'>Vui lòng bấm nút bên dưới để tiếp tục.</i>`;
-                btn.innerText = "TÔI ĐÃ HIỂU & TIẾP TỤC";
-                btn.onclick = () => {
-                    modal.classList.add('hidden');
-                    if (currentIdx < currentQuestions.length - 1) {
-                        currentIdx++;
-                        window.renderQuestion();
-                    } else { window.submitQuiz(); }
-                    isPenalizing = false;
-                };
-            }
-        }
-    };
-
-    document.addEventListener("visibilitychange", () => {
-        if (document.visibilityState === 'hidden') {
-            window.handleCheatAction('Chuyển tab hoặc thu nhỏ trình duyệt');
-        }
-    });
-
-    window.addEventListener('keydown', (e) => {
-        const forbiddenKeys = ['PrintScreen', 'F12'];
-        if (forbiddenKeys.includes(e.key)) {
-            e.preventDefault();
-            window.handleCheatAction('Nhấn phím ' + e.key);
-        }
-        if (e.ctrlKey && (e.key === 'c' || e.key === 'v' || e.key === 'p' || e.key === 's')) {
-            e.preventDefault();
-            window.handleCheatAction('Dùng tổ hợp phím Ctrl + ' + e.key.toUpperCase());
-        }
-    });
-    window.addEventListener('keyup', (e) => {
-        if (e.key === 'PrintScreen') window.handleCheatAction('Chụp màn hình');
-    });
-
-    document.addEventListener('contextmenu', event => event.preventDefault()); 
-    document.addEventListener('selectstart', event => {
-        if (event.target.tagName !== 'INPUT' && event.target.tagName !== 'SELECT') { event.preventDefault(); }
-    });
-    document.addEventListener('dragstart', event => event.preventDefault()); 
-    document.addEventListener('copy', event => {
-        event.clipboardData.setData('text/plain', 'Tài liệu đã được bảo vệ!');
-        event.preventDefault();
-        window.handleCheatAction('Sao chép (Copy) văn bản');
-    });
-
-    // NGÂN HÀNG CÂU HỎI ĐỀ SỐ 3 (TIN HỌC 11) - ĐÃ LOẠI BỎ THẺ CHÚ THÍCH & SET ĐÁP ÁN ĐÚNG
+    // NGÂN HÀNG CÂU HỎI ĐỀ 3 (TIN HỌC 12) - ĐÃ LOẠI BỎ CHỮ NHẬN BIẾT/THÔNG HIỂU/VẬN DỤNG VÀ MÃ HÓA HTML
     const de_data = [
-        { id: "3_1", type: "single", question: "Trong quá trình vận hành một hệ thống máy tính, thành phần phần mềm nào đảm nhận vai trò quản lý thiết bị ngoại vi và điều phối tài nguyên cho các ứng dụng?", options: ["Trình duyệt web và công cụ tìm kiếm mạng.", "Hệ điều hành cơ sở của hệ thống máy tính.", "Phần mềm diệt virus và bảo vệ an ninh mạng.", "Trình quản lý bộ nhớ đệm đám mây trực tuyến."], correct: 1 },
-        { id: "3_2", type: "single", question: "Khi tìm hiểu về các loại giấy phép phần mềm, thuật ngữ nào dùng để chỉ loại phần mềm được cung cấp kèm theo mã nguồn để người dùng tùy ý sửa đổi?", options: ["Thuật ngữ phần mềm thương mại dạng đóng gói.", "Thuật ngữ phần mềm thương mại theo đặt hàng.", "Thuật ngữ phần mềm thuộc nhóm mã nguồn mở.", "Thuật ngữ phần mềm hệ thống độc quyền mã máy."], correct: 2 },
-        { id: "3_3", type: "single", question: "Một kỹ thuật viên máy tính đang kiểm tra một thiết bị có chức năng lưu trữ dữ liệu lâu dài ngay cả khi không có nguồn điện cung cấp. Thiết bị này là gì?", options: ["Bộ xử lý trung tâm (CPU) đa nhân thế hệ mới.", "Bộ nhớ truy cập ngẫu nhiên (RAM) dung lượng cao.", "Bộ nhớ lưu trữ đĩa cứng thể rắn chuẩn (SSD).", "Bảng mạch mở rộng kết nối mạng không dây."], correct: 2 },
-        { id: "3_4", type: "single", question: "Để thuyết trình trong hội trường, một diễn giả cần kết nối máy tính xách tay với máy chiếu thông qua cổng truyền tải đa phương tiện chất lượng cao. Đó là cổng nào?", options: ["Cổng kết nối truyền tín hiệu âm thanh Audio.", "Cổng kết nối truyền tín hiệu hình ảnh VGA cũ.", "Cổng kết nối truyền tải mạng nội bộ LAN RJ45.", "Cổng kết nối truyền tải đa phương tiện HDMI."], correct: 3 },
-        { id: "3_5", type: "single", question: "Một nhân viên văn phòng muốn sao lưu toàn bộ hình ảnh công việc lên mạng để giải phóng dung lượng cho máy tính. Dịch vụ nào dưới đây đáp ứng yêu cầu này?", options: ["Nền tảng chia sẻ video trực tuyến YouTube toàn cầu.", "Dịch vụ lưu trữ trực tuyến đám mây Microsoft OneDrive.", "Phần mềm thiết kế đồ họa đa phương tiện Adobe.", "Dịch vụ mạng xã hội giải trí video ngắn TikTok."], correct: 1 },
-        { id: "3_6", type: "single", question: "Khi sử dụng công cụ Google, một nhà nghiên cứu muốn bộ máy tìm kiếm chỉ hiển thị kết quả là các tệp tin chứa văn bản PDF. Cú pháp nào sau đây là chính xác?", options: ["Sử dụng cú pháp format=pdf đặt ngay sau từ khóa tìm kiếm.", "Sử dụng cú pháp filetype:pdf đặt ngay sau từ khóa tìm kiếm.", "Sử dụng cú pháp document:pdf đặt ngay sau từ khóa tìm kiếm.", "Sử dụng cú pháp download.pdf đặt ngay sau từ khóa tìm kiếm."], correct: 1 },
-        { id: "3_7", type: "single", question: "Một cửa hàng thời trang muốn tạo một trang chính thức trên mạng xã hội Facebook để tương tác với khách hàng một cách chuyên nghiệp. Họ nên khởi tạo loại trang nào?", options: ["Khởi tạo một tài khoản Facebook cá nhân đại diện.", "Khởi tạo một trang Fanpage chuyên nghiệp cho cửa hàng.", "Khởi tạo một hội nhóm kín (Private Group) trên mạng.", "Khởi tạo một phòng trò chuyện (Chat Room) trực tuyến."], correct: 1 },
-        { id: "3_8", type: "single", question: "Trong quá trình quản lý hộp thư điện tử Gmail, để đánh dấu nhanh những bức thư quan trọng nhằm ưu tiên xử lý, người dùng thường sử dụng tính năng nào?", options: ["Tính năng Đánh dấu sao (Star) cho các thư điện tử.", "Tính năng Xóa thư điện tử (Delete) vào thùng rác.", "Tính năng Báo cáo thư rác (Spam) cho các thư điện tử.", "Tính năng Chặn địa chỉ (Block) của người gửi thư đến."], correct: 0 },
-        { id: "3_9", type: "single", question: "Khi so sánh sự tiến hóa của hệ điều hành máy tính cá nhân, sự xuất hiện của giao diện đồ họa (GUI) đã mang lại lợi ích cốt lõi nào so với giao diện dòng lệnh?", options: ["Giúp máy tính có thể tự động lập trình ra các phần mềm ứng dụng phức tạp.", "Giúp tăng cường tốc độ xử lý dữ liệu của bộ vi xử lý lên gấp nhiều lần.", "Giúp người dùng giao tiếp và thao tác với máy tính một cách trực quan, thân thiện.", "Giúp máy tính miễn nhiễm hoàn toàn với các loại virus lây lan trên mạng."], correct: 2 },
-        { id: "3_10", type: "single", question: "Khi cắm một chiếc ổ đĩa USB mới vào máy tính, hệ điều hành tự động nhận diện thiết bị và cài đặt trình điều khiển một cách thầm lặng. Cơ chế này được gọi là gì?", options: ["Tính năng chống phân mảnh ổ đĩa cứng tự động.", "Tính năng cơ chế \"cắm và chạy\" (Plug & Play).", "Tính năng kết nối mạng không dây tầm xa Bluetooth.", "Tính năng tường lửa bảo vệ hệ thống máy tính cục bộ."], correct: 1 },
-        { id: "3_11", type: "single", question: "Trong các hệ thống điều khiển tự động, mạch logic AND đóng vai trò là mạch kiểm tra điều kiện đồng thời. Theo nguyên lý, mạch logic AND chỉ cho ra tín hiệu bằng 1 khi nào?", options: ["Khi và chỉ khi có ít nhất một tín hiệu đầu vào mang giá trị bằng 1.", "Khi và chỉ khi tất cả các tín hiệu đầu vào đều mang giá trị bằng 1.", "Khi và chỉ khi hai tín hiệu đầu vào có những giá trị hoàn toàn trái ngược.", "Khi và chỉ khi tất cả các tín hiệu đầu vào đều mang giá trị bằng 0."], correct: 1 },
-        { id: "3_12", type: "single", question: "Khi làm việc nhóm trên một dự án, các thành viên ưu tiên sử dụng ứng dụng Google Docs thay vì phần mềm soạn thảo cài trên máy cục bộ. Ưu điểm nổi bật của phương pháp này là gì?", options: ["Cho phép nhiều thành viên cùng lúc cộng tác chỉnh sửa văn bản qua mạng Internet.", "Đảm bảo phần mềm có thể chạy mượt mà ngay cả khi không có kết nối mạng Internet.", "Loại bỏ hoàn toàn khả năng người dùng sao chép nội dung văn bản sang nơi khác.", "Tự động dịch và chỉnh sửa mọi lỗi ngữ pháp trong văn bản mà không cần thao tác."], correct: 0 },
-        { id: "3_13", type: "single", question: "Một người dùng thiết lập quyền chia sẻ tệp tin báo cáo trên Google Drive cho cấp dưới với vai trò là \"Người xem\". Hệ quả của việc thiết lập này là gì?", options: ["Người nhận liên kết có thể tùy ý sửa đổi hoặc xóa các đoạn văn bản trong tệp.", "Người nhận liên kết có thể thêm các nhận xét vào bên lề của nội dung tệp tin.", "Người nhận liên kết chỉ có thể đọc nội dung và tải tệp về máy tính cá nhân.", "Người nhận liên kết có quyền chia sẻ lại tệp tin này cho hàng ngàn người khác."], correct: 2 },
-        { id: "3_14", type: "single", question: "Khi sử dụng công cụ tìm kiếm trên nền tảng web, việc đặt cụm từ khóa vào bên trong cặp dấu ngoặc kép (\" \") sẽ mang lại kết quả tìm kiếm có đặc tính như thế nào?", options: ["Hệ thống sẽ tự động dịch cụm từ đó sang tiếng Anh trước khi tiến hành tìm kiếm.", "Máy tìm kiếm bắt buộc phải trả về các trang web chứa chính xác thứ tự cụm từ đó.", "Hệ thống sẽ tự động bỏ qua mọi lỗi chính tả mà người dùng lỡ tay gõ sai trên phím.", "Máy tìm kiếm sẽ chỉ trả về các trang web có định dạng là video clip hoặc hình ảnh."], correct: 1 },
-        { id: "3_15", type: "single", question: "Tính năng \"Nhãn\" (Label) trong Gmail được đánh giá là ưu việt hơn so với việc sử dụng hệ thống \"Thư mục\" (Folder) truyền thống. Điểm khác biệt lớn nhất là do đâu?", options: ["Vì Nhãn giúp tăng gấp đôi giới hạn dung lượng lưu trữ của toàn bộ hộp thư điện tử.", "Vì một thư điện tử có thể được gắn cùng lúc nhiều Nhãn khác nhau để linh hoạt phân loại.", "Vì khi xóa một Nhãn thì toàn bộ thư nằm trong Nhãn đó sẽ được bảo vệ tuyệt đối an toàn.", "Vì Nhãn cho phép người dùng có thể gửi email đi mà không cần bất kỳ kết nối mạng nào."], correct: 1 },
-        { id: "3_16", type: "single", question: "Việc sử dụng thiết lập \"Bạn bè ngoại trừ...\" khi đăng bài trên mạng xã hội Facebook giúp giải quyết được nhu cầu cá nhân nào cho người sử dụng?", options: ["Ngăn chặn hệ thống tự động chèn các quảng cáo thương mại vào bài viết của người dùng.", "Giúp bài viết nhanh chóng lan truyền và có nhiều lượt tương tác từ người lạ trên toàn cầu.", "Đảm bảo thông tin cá nhân không bị hiển thị với một số đối tượng cụ thể không mong muốn.", "Tự động mã hóa toàn bộ hình ảnh và video có trong bài viết để không một ai có thể tải về."], correct: 2 },
-        { id: "3_17", type: "single", question: "Một nhóm khởi nghiệp cần triển khai phần mềm chỉnh sửa đồ họa chuyên sâu nhưng không có kinh phí để mua bản quyền phần mềm đóng gói đắt đỏ. Giải pháp hợp pháp và tối ưu chi phí nhất là gì?", options: ["Tìm kiếm các diễn đàn trên mạng để tải về một bản phần mềm đồ họa đã bị bẻ khóa (crack).", "Thuê một công ty công nghệ viết riêng một phần mềm đồ họa chuyên nghiệp với mức giá thật rẻ.", "Tìm kiếm và cài đặt một phần mềm đồ họa thay thế thuộc loại mã nguồn mở miễn phí như GIMP.", "Chỉ sử dụng giấy bút và các công cụ thủ công để vẽ tay toàn bộ các ấn phẩm truyền thông."], correct: 2 },
-        { id: "3_18", type: "single", question: "Khi máy tính để bàn sử dụng ổ cứng từ tính (HDD) liên tục báo lỗi do các liên cung mất liên kết (dữ liệu mồ côi), người dùng nên thực hiện thao tác bảo trì nào trên hệ điều hành?", options: ["Mở vỏ máy tính ra và dùng khăn ướt lau sạch các cổng kết nối trên bo mạch chủ.", "Mở hệ điều hành và chạy tiện ích kiểm tra lỗi đĩa (Check disk) để hệ thống khắc phục.", "Xóa bỏ hoàn toàn hệ điều hành hiện tại và cài đặt lại một hệ điều hành mới tinh.", "Thay thế ngay thanh RAM bằng một thanh có dung lượng lớn gấp đôi thanh hiện tại."], correct: 1 },
-        { id: "3_19", type: "single", question: "Một người thiết kế đồ họa sử dụng chuột không dây nhưng cảm thấy con trỏ di chuyển quá nhanh khiến việc vẽ các chi tiết nhỏ bị lệch. Để khắc phục triệt để, người này cần thao tác gì?", options: ["Khởi động lại toàn bộ máy tính để hệ điều hành tự động khôi phục các cài đặt ban đầu.", "Thay một tấm lót chuột có bề mặt trơn bóng hơn để làm giảm tốc độ nhận diện quang học.", "Truy cập vào phần Cài đặt của hệ điều hành và giảm thông số tốc độ của chuột (Cursor speed).", "Chuyển sang sử dụng một chiếc màn hình có kích thước đường chéo lớn hơn gấp đôi bình thường."], correct: 2 },
-        { id: "3_20", type: "single", question: "Một nhóm dự án đang làm việc tại quán cà phê và cần chia sẻ nhanh một kho tài liệu đồ sộ dung lượng 20GB cho nhau mà không ai mang theo ổ cứng di động ngoài. Giải pháp công nghệ tốt nhất là gì?", options: ["Chia nhỏ thư mục thành hàng trăm tệp nhỏ rồi gửi từng tệp qua phần mềm tin nhắn.", "Tải toàn bộ tài liệu lên dịch vụ lưu trữ Google Drive, tạo liên kết chia sẻ và gửi vào nhóm.", "In toàn bộ 20GB tài liệu đó ra giấy tại tiệm photocopy gần nhất để mọi người cùng xem.", "Chờ đến ngày hôm sau khi lên văn phòng công ty để sử dụng chung một chiếc máy tính."], correct: 1 },
-        { id: "3_21", type: "single", question: "Một nhân viên văn phòng được cấp trên giao nhiệm vụ tìm kiếm mẫu \"Hợp đồng thương mại\" dưới dạng tệp văn bản MS Word để tải về tham khảo. Cú pháp tìm kiếm nào trên Google là tối ưu nhất?", options: ["Tìm kiếm nội dung Hợp đồng thương mại mẫu chuẩn trên mạng.", "\"Hợp đồng thương mại\" filetype:docx (hoặc định dạng doc).", "Hợp đồng thương mại định dạng tệp tin word file miễn phí.", "\"Hợp đồng thương mại\" download tài liệu văn bản chuẩn nhất."], correct: 1 },
-        { id: "3_22", type: "single", question: "Do đặc thù công việc, một hộp thư điện tử nhận hàng chục thư mời họp và thư báo cáo mỗi ngày khiến các thư họp bị trôi đi mất. Cách quản lý khoa học nhất mà không cần xóa thư là gì?", options: ["Xóa toàn bộ hộp thư đến mỗi ngày một lần để bắt đầu ngày mới với giao diện thật sạch sẽ.", "Đánh dấu tất cả thư báo cáo là thư rác (Spam) để hệ thống tự động xóa đi sau 30 ngày.", "Lập một Nhãn mang tên \"Lịch Họp\" và thiết lập bộ lọc tự động gán nhãn cho các thư này.", "Chuyển tiếp toàn bộ thư đến sang một địa chỉ email cá nhân khác để lưu trữ tạm thời."], correct: 2 },
-        { id: "3_23", type: "single", question: "Một câu lạc bộ văn nghệ của trường học muốn mở rộng việc quảng bá hình ảnh ra bên ngoài để thu hút sự chú ý của cộng đồng học sinh. Phương thức truyền thông trên mạng xã hội nào là tối ưu nhất?", options: ["Lập một tài khoản Facebook cá nhân mới tinh và kết bạn ngẫu nhiên với mọi người trên mạng.", "Yêu cầu toàn bộ thành viên đổi tên tài khoản cá nhân thành tên của câu lạc bộ văn nghệ.", "Tạo một trang Fanpage chuyên nghiệp đại diện cho câu lạc bộ để dễ dàng đăng tải và quảng bá.", "Thiết lập chế độ \"Chỉ mình tôi\" cho các video biểu diễn để tạo sự tò mò, bí ẩn cho người xem."], correct: 2 },
-        { id: "3_24", type: "single", question: "Một học sinh thường xuyên bị một số tài khoản bán hàng gắn thẻ (tag) vào các bức ảnh quảng cáo không mong muốn trên mạng xã hội Facebook. Để ngăn chặn hình ảnh đó xuất hiện công khai trên tường nhà mình, học sinh này cần làm gì?", options: ["Kích hoạt tính năng \"Xem lại thẻ mọi người thêm vào bài viết của bạn trước khi thẻ xuất hiện\".", "Khóa tạm thời tài khoản mạng xã hội của bản thân trong vòng vài tháng để các tài khoản kia quên đi.", "Xóa hoàn toàn danh sách bạn bè hiện tại và không bao giờ kết bạn lại với những người đó.", "Phản hồi bằng những lời lẽ gay gắt dưới các bức ảnh để yêu cầu người đăng tự động gỡ thẻ."], correct: 0 },
-        { id: '3_c1', type: 'tf_cluster', question: "Hệ điều hành trên các thiết bị máy tính cá nhân và thiết bị di động đều mang những đặc điểm cấu trúc và cung cấp các tiện ích riêng biệt nhằm tối ưu hóa trải nghiệm người dùng.", subQuestions: [
-            { id: '3_d25a', text: "Một đặc điểm khác biệt của hệ điều hành trên thiết bị di động là giao diện thân thiện, được thiết kế chú trọng vào các thao tác nhận diện cảm biến và vuốt chạm.", correct: "Đúng" },
-            { id: '3_d25b', text: "Tiện ích hợp mảnh (Defragment) là một công cụ luôn được tích hợp sẵn trong hầu hết các điện thoại thông minh dùng Android để tối ưu hóa bộ nhớ RAM.", correct: "Sai" },
-            { id: '3_d25c', text: "Chức năng kiểm tra lỗi đĩa (Check disk) hoạt động bằng cách rà soát hệ thống tập tin và khoanh vùng các khu vực vật lý bị hỏng để ngăn hệ điều hành ghi đè dữ liệu lên đó.", correct: "Đúng" },
-            { id: '3_d25d', text: "Nếu người dùng cảm thấy con trỏ chuột trên màn hình máy tính xách tay di chuyển với tốc độ quá nhanh khó kiểm soát, họ bắt buộc phải gỡ bỏ hệ điều hành và cài đặt lại bản khác để khắc phục.", correct: "Sai" }
+        { id: "3_1", type: "single", question: "Hệ chuyên gia MYCIN được thiết kế với mục đích ứng dụng AI vào lĩnh vực nào?", options: ["Chẩn đoán y tế và đề xuất điều trị bệnh.", "Phân tích biến động của thị trường chứng khoán.", "Điều khiển tự động các máy bay không người lái.", "Xử lý các ngôn ngữ lập trình trên máy tính web."], correct: 0 },
+        { id: "3_2", type: "single", question: "Giao thức TCP/IP là cụm từ viết tắt của những thuật ngữ chuyên ngành nào?", options: ["Transmission Control Protocol / Internet Protocol.", "Transfer Center Process / International Protocol.", "Transmission Code Program / Internal Procedure.", "Transport Cable Protocol / Internet Procedure."], correct: 0 },
+        { id: "3_3", type: "single", question: "Thuật ngữ WAP trong hệ thống mạng không dây là viết tắt của cụm từ gì?", options: ["Wireless Access Point (Điểm truy cập không dây).", "Wide Area Protocol (Giao thức mạng diện rộng).", "Web Application Program (Chương trình ứng dụng web).", "Wired Antenna Pole (Cột ăng ten kết nối có dây)."], correct: 0 },
+        { id: "3_4", type: "single", question: "Thẻ &lt;em&gt; trong ngôn ngữ HTML mang lại tác dụng hiển thị gì cho văn bản?", options: ["Định dạng chữ in nghiêng để nhấn mạnh nội dung.", "Tạo một đường gạch ngang ở chính giữa dòng chữ.", "Biến đoạn văn bản thành một siêu liên kết dạng URL.", "Định dạng văn bản thành các chữ cái viết hoa toàn bộ."], correct: 0 },
+        { id: "3_5", type: "single", question: "Thiết bị tường lửa (Firewall) trong mạng máy tính thực hiện chức năng gì?", options: ["Kiểm soát các luồng truy cập máy tính từ bên ngoài.", "Tăng tốc độ đường truyền tải dữ liệu của mạng LAN.", "Chuyển đổi mã hóa tín hiệu quang học thành điện từ.", "Lưu trữ và sao lưu các tệp tin an toàn trên Internet."], correct: 0 },
+        { id: "3_6", type: "single", question: "Yếu tố nào sau đây là tiêu chuẩn cơ bản của văn hóa ứng xử trên không gian mạng?", options: ["Tôn trọng quyền riêng tư của mọi người dùng khác.", "Liên tục phát tán các đường dẫn chứa nội dung lạ.", "Tải xuống và cài đặt tất cả các phần mềm crack.", "Bình luận dạo bằng các từ ngữ lóng không rõ nghĩa."], correct: 0 },
+        { id: "3_7", type: "single", question: "Tên gọi chính thức của ngôn ngữ đánh dấu siêu văn bản trong thiết kế web là gì?", options: ["Hypertext Markup Language (HTML).", "Hyperlink Text Management Logic (HTML).", "Hyperboard Transfer Master Level (HTML).", "Home Tool Markup Language (HTML)."], correct: 0 },
+        { id: "3_8", type: "single", question: "Robot mang hình dáng con người nổi tiếng có tên Asimo do hãng nào chế tạo?", options: ["Hãng công nghệ Honda.", "Hãng công nghệ Google.", "Hãng công nghệ Apple.", "Hãng công nghệ Amazon."], correct: 0 },
+        { id: "3_9", type: "single", question: "Đặc trưng nào của Trí tuệ nhân tạo giúp trợ lý ảo nhận lệnh bằng giọng nói của con người?", options: ["Khả năng hiểu và xử lý ngôn ngữ tự nhiên.", "Khả năng tính toán số học tốc độ siêu cao.", "Khả năng dự báo trước thời tiết trong tương lai.", "Khả năng tổng hợp gen của các sinh vật sống."], correct: 0 },
+        { id: "3_10", type: "single", question: "Thiết bị Điểm truy cập không dây (WAP) hoạt động dựa trên cơ chế nào dưới đây?", options: ["Phát sóng tín hiệu Wi-Fi cho các thiết bị đầu cuối kết nối.", "Chặn tất cả các tín hiệu vô tuyến độc hại trong phạm vi hẹp.", "Kết nối trực tiếp các máy tính với nhau bằng dây cáp quang.", "Mã hóa các dải địa chỉ IP thành tên miền dễ nhớ cho người dùng."], correct: 0 },
+        { id: "3_11", type: "single", question: "Trong chuẩn giao thức IPv4, một địa chỉ IP được biểu diễn dưới định dạng nào?", options: ["Bốn cụm số trong hệ thập phân cách nhau bởi dấu chấm.", "Bốn dãy ký tự in hoa và in thường liên kết bằng dấu gạch ngang.", "Tám cụm số trong hệ thập lục phân nối nhau bằng dấu hai chấm.", "Một dãy số nhị phân dài liên tục không có bất kỳ ký tự ngăn cách."], correct: 0 },
+        { id: "3_12", type: "single", question: "Khi một máy tính thực hiện chia sẻ máy in trong mạng LAN, nó đang đóng vai trò gì?", options: ["Máy chủ cung cấp dịch vụ in ấn (Print Server).", "Trạm phát sóng kết nối không dây cho mạng LAN.", "Bộ lưu trữ toàn bộ các tệp tin của toàn hệ thống.", "Bộ định tuyến dẫn đường dữ liệu truyền ra Internet."], correct: 0 },
+        { id: "3_13", type: "single", question: "Khuyết điểm lớn nhất của việc giao tiếp bằng tin nhắn văn bản thuần túy là gì?", options: ["Dễ gây hiểu lầm do thiếu các tín hiệu giao tiếp phi ngôn ngữ.", "Không thể nào gửi được vào các khung giờ đêm khuya hay sáng sớm.", "Chi phí gửi đi đắt đỏ hơn rất nhiều so với gọi điện thoại video.", "Tự động xóa dữ liệu ngay sau khi đối phương vừa đọc xong tin."], correct: 0 },
+        { id: "3_14", type: "single", question: "Đặc điểm của cấu trúc các phần tử HTML lồng nhau thể hiện bản chất gì?", options: ["Thể hiện quan hệ phân cấp cha - con giữa các thẻ HTML.", "Thể hiện tốc độ tải trang web nhanh hay chậm trên trình duyệt.", "Bắt buộc mọi trình duyệt phải có màu nền giống hệt nhau.", "Bắt buộc trang web phải chứa ít nhất ba đoạn video clip."], correct: 0 },
+        { id: "3_15", type: "single", question: "Cặp ký tự đặc biệt &lt;!-- và --&gt; được sử dụng trong mã nguồn HTML để làm gì?", options: ["Chèn một đoạn chú thích ẩn không hiển thị trên trình duyệt.", "Chèn một hiệu ứng âm thanh tự động phát nền cho trang web.", "Biến đoạn chữ nằm ở giữa thành một siêu liên kết nhấp được.", "Ra lệnh cho máy in tự động in trang web đó ra giấy ngay lập tức."], correct: 0 },
+        { id: "3_16", type: "single", question: "Bảng định tuyến (routing table) dùng để dẫn đường gói tin được lưu trữ ở thiết bị nào?", options: ["Nằm trong bộ nhớ của Bộ định tuyến (Router).", "Nằm trong màn hình hiển thị của máy tính cá nhân.", "Nằm trong sợi dây cáp mạng chuẩn UTP.", "Nằm trong thiết bị chia cổng mạng Hub."], correct: 0 },
+        { id: "3_17", type: "single", question: "Để dự đoán thời điểm thu hoạch tối ưu nhất, công nghệ AI đã được vận dụng trong lĩnh vực nào?", options: ["Mô hình nông nghiệp thông minh.", "Lĩnh vực giáo dục và đào tạo.", "Lĩnh vực y tế chẩn đoán hình ảnh.", "Giao thông vận tải không người lái."], correct: 0 },
+        { id: "3_18", type: "single", question: "Muốn kết nối hai mạng LAN ở hai thành phố cách xa nhau thông qua Internet, bắt buộc phải dùng thiết bị nào?", options: ["Sử dụng thiết bị Bộ định tuyến (Router).", "Sử dụng thiết bị Bộ chuyển mạch (Switch).", "Sử dụng thiết bị phát sóng không dây (WAP).", "Sử dụng dây cáp mạng bằng đồng kéo dài."], correct: 0 },
+        { id: "3_19", type: "single", question: "Để kiểm tra xem máy tính của mình có đang kết nối thông suốt với mạng không, ta dùng lệnh gì?", options: ["Sử dụng lệnh ping trong hệ điều hành.", "Sử dụng lệnh copy trong hệ điều hành.", "Sử dụng lệnh format trong hệ điều hành.", "Sử dụng lệnh delete trong hệ điều hành."], correct: 0 },
+        { id: "3_20", type: "single", question: "Trên hệ điều hành Windows, thư mục \"Public\" (Công cộng) có đặc điểm nổi bật nào khi chia sẻ mạng?", options: ["Nếu bật tính năng chia sẻ thư mục công cộng, mọi máy tính trong LAN đều truy cập được.", "Nó là thư mục dùng để xóa vĩnh viễn các tệp tin rác mà không cho phép khôi phục lại.", "Mọi tệp tin đặt trong này sẽ tự động được mã hóa và không thể đọc được trên máy khác.", "Nó tự động nén tất cả các tệp tin có dung lượng lớn thành dung lượng cực kỳ nhỏ gọn."], correct: 0 },
+        { id: "3_21", type: "single", question: "Nếu bị một người lạ liên tục gửi tin nhắn xúc phạm trên mạng xã hội, cách xử lý an toàn nhất là gì?", options: ["Lập tức chặn tài khoản đó và báo cáo vi phạm cho ban quản trị.", "Công khai thông tin của người đó lên mạng để nhờ cộng đồng mạng chửi lại.", "Nhắn tin khiêu khích lại để thể hiện mình không sợ những lời hăm dọa đó.", "Hẹn người đó gặp mặt trực tiếp ngoài đời thực để giải quyết mọi mâu thuẫn."], correct: 0 },
+        { id: "3_22", type: "single", question: "Việc viết đoạn mã &lt;h1&gt;Bài 1&lt;p&gt;Nội dung&lt;/p&gt;&lt;/h1&gt; là thao tác không được khuyến khích vì sao?", options: ["Thẻ tiêu đề &lt;h1&gt; không nên dùng để chứa phần tử đoạn văn bản cấp khối &lt;p&gt;.", "Trình duyệt web sẽ ngay lập tức bị lỗi treo máy và phải khởi động lại hệ thống.", "Màu sắc của chữ \"Nội dung\" sẽ tự động chuyển sang màu đen che mất nền web.", "Trang web sẽ bị từ chối truy cập khi đẩy dữ liệu lên máy chủ hosting quốc tế."], correct: 0 },
+        { id: "3_23", type: "single", question: "Khi soạn thảo văn bản bằng HTML, nếu bạn gõ 5 dấu cách liên tiếp giữa hai từ thì kết quả hiển thị sẽ thế nào?", options: ["Trình duyệt chỉ hiển thị 1 dấu cách duy nhất giữa hai từ đó.", "Trình duyệt sẽ hiển thị đúng 5 dấu cách khoảng trắng như đã gõ.", "Trình duyệt tự động chèn thêm một dấu phẩy vào giữa hai từ.", "Trình duyệt tự động ép từ thứ hai phải nằm ở dòng mới bên dưới."], correct: 0 },
+        { id: "3_24", type: "single", question: "Khi tìm kiếm mạng Wi-Fi trên điện thoại, biểu tượng chiếc ổ khóa nằm cạnh tên Wi-Fi có ý nghĩa gì?", options: ["Điểm truy cập Wi-Fi này đã được cấu hình bảo mật bằng một mật khẩu.", "Điểm truy cập Wi-Fi này đã bị chặn và không bao giờ cho phép kết nối.", "Thiết bị phát sóng Wi-Fi đang bị hỏng phần cứng và cần được sửa chữa.", "Tốc độ truyền tải của mạng Wi-Fi này cực kỳ chậm và hay bị mất sóng."], correct: 0 },
+        { id: '3_c1', type: 'tf_cluster', question: "Chú Tư muốn lắp đặt một hệ thống nông nghiệp thông minh có ứng dụng AI cho trang trại của mình:", subQuestions: [
+            { id: '3_d25a', text: "a) Các robot nông nghiệp chỉ lặp đi lặp lại một thao tác cố định theo lập trình sẵn (không tự học, không tự ra quyết định) thì không được coi là hệ thống có trí tuệ nhân tạo.", correct: "Đúng" },
+            { id: '3_d25b', text: "b) Khả năng \"nhận thức\" của hệ thống AI trong trang trại thể hiện qua việc nó dùng các cảm biến để thu thập dữ liệu về nhiệt độ, độ ẩm môi trường xung quanh.", correct: "Đúng" },
+            { id: '3_d25c', text: "c) Nhờ sự tiến bộ của phương pháp Học máy (Machine Learning), hệ thống AI có khả năng tự học từ các dữ liệu thời tiết cũ để cải thiện khả năng dự báo chứ không chỉ phụ thuộc vào luật do chú Tư nhập thủ công.", correct: "Đúng" },
+            { id: '3_d25d', text: "d) Việc tích hợp AI để phân tích dữ liệu thời tiết giúp chú Tư có thể quyết định chính xác thời điểm thu hoạch tối ưu nhất, qua đó giảm thiểu đáng kể thiệt hại do mưa bão bất ngờ.", correct: "Đúng" }
         ]},
-        { id: '3_c2', type: 'tf_cluster', question: "Một doanh nghiệp khởi nghiệp về thiết kế nội thất đang tìm kiếm các giải pháp phần mềm để tiết kiệm tối đa ngân sách vận hành trong những năm đầu tiên.", subQuestions: [
-            { id: '3_d26a', text: "Phần mềm mã nguồn mở như phần mềm xử lý ảnh GIMP cho phép người dùng tải về sử dụng miễn phí mà không phải trả các khoản tiền bản quyền mua gói phần mềm đắt đỏ.", correct: "Đúng" },
-            { id: '3_d26b', text: "Tất cả các nền tảng chạy trên Internet (như Google Docs) đều bắt buộc người dùng trả phí thuê bao hàng tháng ngay khi vừa hoàn tất việc đăng ký tài khoản.", correct: "Sai" },
-            { id: '3_d26c', text: "Việc tuân thủ giấy phép công cộng GNU GPL đối với phần mềm nguồn mở đảm bảo rằng người dùng có quyền tự do chỉnh sửa nhưng buộc phải duy trì tính mở của mã nguồn nếu phát hành sản phẩm phái sinh.", correct: "Đúng" },
-            { id: '3_d26d', text: "Nếu doanh nghiệp này quyết định ký hợp đồng thuê một đội ngũ kỹ sư lập trình để viết riêng một phần mềm quản lý kho theo quy trình đặc thù của hãng, phần mềm đó được gọi là phần mềm thương mại \"đóng gói\" bán sẵn.", correct: "Sai" }
+        { id: '3_c2', type: 'tf_cluster', question: "Cô giáo mầm non muốn kết nối máy tính xách tay với các thiết bị thông minh khác trong lớp học:", subQuestions: [
+            { id: '3_d26a', text: "a) Để máy tính của cô giáo có thể kết nối ra ngoài Internet thông qua mạng viễn thông cáp quang, hệ thống mạng bắt buộc phải có thiết bị Modem.", correct: "Đúng" },
+            { id: '3_d26b', text: "b) Để cho phép điện thoại thông minh của cô giáo kết nối không dây vào mạng LAN của lớp học, lớp học cần trang bị một Điểm truy cập không dây (WAP).", correct: "Đúng" },
+            { id: '3_d26c', text: "c) Khi kết nối các máy tính để bàn bằng cáp mạng, việc cô giáo chọn dùng Switch hay Hub đều mang lại hiệu suất mạng nội bộ và khả năng chống xung đột tín hiệu y hệt nhau.", correct: "Sai" },
+            { id: '3_d26d', text: "d) Nếu cô giáo kiểm tra cấu hình mạng trên máy tính và thấy dải địa chỉ IP đang là 192.168.1.15, điều này chứng tỏ máy tính của cô đang sử dụng chuẩn giao thức mạng IPv6.", correct: "Sai" }
         ]},
-        { id: '3_c3', type: 'tf_cluster', question: "Ban truyền thông của một trường đại học vừa thiết lập một không gian lưu trữ trên nền tảng đám mây Google Drive để tổng hợp tư liệu về các hoạt động đoàn thể.", subQuestions: [
-            { id: '3_d27a', text: "Thao tác Tải lên (Upload) là hành động đưa các tập tin tài liệu từ ổ đĩa cứng của máy tính lên không gian lưu trữ trực tuyến trên máy chủ mạng Internet.", correct: "Đúng" },
-            { id: '3_d27b', text: "Các dịch vụ lưu trữ đám mây luôn thiết lập mặc định tính năng xóa vĩnh viễn toàn bộ dữ liệu nếu người dùng không truy cập vào tài khoản quá 3 ngày liên tiếp.", correct: "Sai" },
-            { id: '3_d27c', text: "Nếu trưởng ban truyền thông thiết lập quyền \"Người xem\" cho một thư mục hình ảnh, những người truy cập thông qua liên kết đó sẽ có khả năng tải ảnh về nhưng không thể chèn thêm ảnh mới lên thư mục.", correct: "Đúng" },
-            { id: '3_d27d', text: "Để hạn chế rủi ro thất thoát tài liệu quan trọng do một thành viên vô tình ấn xóa, trưởng ban nên áp dụng chính sách phân quyền nghiêm ngặt: chỉ giữ quyền \"Người chỉnh sửa\" cho các cán bộ nòng cốt và cấp quyền \"Người xem\" cho thành viên phổ thông.", correct: "Đúng" }
+        { id: '3_c3', type: 'tf_cluster', question: "Nhóm bạn Hùng đang thiết kế trang web đầu tiên cho dự án làm báo tường điện tử của lớp 12A1:", subQuestions: [
+            { id: '3_d27a', text: "a) Ngôn ngữ lập trình chính được nhóm sử dụng để thiết lập cấu trúc cho trang báo tường điện tử có tên viết tắt là HTML.", correct: "Đúng" },
+            { id: '3_d27b', text: "b) Quy tắc cú pháp của HTML bắt buộc mọi thẻ HTML đều phải có thẻ mở và thẻ đóng đi kèm với nhau (ví dụ thẻ ngắt dòng phải viết là &lt;br&gt;&lt;/br&gt;).", correct: "Sai" },
+            { id: '3_d27c', text: "c) Nhóm sử dụng phần tử &lt;head&gt; ở đầu tệp tin để chứa các thẻ định nghĩa thông tin chung (như tiêu đề trang bằng thẻ &lt;title&gt;) chứ không phải để chứa hình ảnh báo tường.", correct: "Đúng" },
+            { id: '3_d27d', text: "d) Để hiển thị tên lớp \"12A1\" in đậm giúp thu hút sự chú ý trong đoạn văn mở đầu, Hùng có thể sử dụng câu lệnh HTML: &lt;p&gt;Báo tường của tập thể lớp &lt;strong&gt;12A1&lt;/strong&gt;&lt;/p&gt;.", correct: "Đúng" }
         ]},
-        { id: '3_c4', type: 'tf_cluster', question: "Để bảo vệ hình ảnh cá nhân và quản lý luồng thông tin tốt hơn, một giảng viên đang rà soát lại các mục cài đặt trên mạng xã hội Facebook và hộp thư Gmail.", subQuestions: [
-            { id: '3_d28a', text: "Trang Fanpage là một tính năng mở rộng của mạng xã hội Facebook được thiết kế chuyên biệt nhằm phục vụ mục đích quảng bá cho các cá nhân, doanh nghiệp và tổ chức.", correct: "Đúng" },
-            { id: '3_d28b', text: "Chức năng \"Nhãn\" (Label) trong hộp thư điện tử Gmail được lập trình để bắt buộc mỗi một bức thư chỉ được phép gắn một nhãn duy nhất tại một thời điểm.", correct: "Sai" },
-            { id: '3_d28c', text: "Việc kích hoạt tính năng \"Xem lại thẻ\" trên mạng xã hội giúp người dùng chủ động sàng lọc và quyết định những hình ảnh nào được phép xuất hiện công khai trên dòng thời gian cá nhân của mình.", correct: "Đúng" },
-            { id: '3_d28d', text: "Nếu muốn phân loại toàn bộ email hóa đơn gửi về hàng tháng nhằm dễ tra cứu mà không làm đầy hộp thư đến, giải pháp tốt nhất là đánh dấu các email này vào mục Thư rác (Spam) để hệ thống tự động lọc.", correct: "Sai" }
+        { id: '3_c4', type: 'tf_cluster', question: "Bạn Hoa là trưởng nhóm dự án, chịu trách nhiệm lưu trữ và chia sẻ các tài liệu ôn tập trên máy tính của mình cho cả nhóm:", subQuestions: [
+            { id: '3_d28a', text: "a) Đặt một mật khẩu phức tạp cho bộ phát Wi-Fi tại nhà là một trong những biện pháp cơ bản giúp Hoa bảo vệ sự an toàn cho mạng LAN cục bộ.", correct: "Đúng" },
+            { id: '3_d28b', text: "b) Khi thao tác trên hệ điều hành Windows 11, việc tạm thời tắt Tường lửa (Firewall) cho mạng Private có thể giúp quá trình cấu hình chia sẻ tệp ban đầu diễn ra suôn sẻ hơn.", correct: "Đúng" },
+            { id: '3_d28c', text: "c) Khi cấu hình chia sẻ thư mục bài tập, nếu Hoa thêm nhóm người dùng \"Everyone\" và đặt mức quyền (Permission Level) là Read/Write, thì các bạn trong nhóm chỉ được phép mở ra xem mà tuyệt đối không thể sửa hoặc xóa tệp.", correct: "Sai" },
+            { id: '3_d28d', text: "d) Trong quá trình làm việc nhóm trực tuyến, nếu bị một thành viên trong nhóm đăng ảnh khiếm nhã lên mạng để trêu đùa, Hoa nên dùng lời lẽ nặng nề chửi bới đáp trả công khai để bảo vệ danh dự của mình trên không gian mạng.", correct: "Sai" }
         ]}
     ];
 
@@ -413,7 +319,7 @@
             return;
         }
 
-        currentStudent = { hoTen: name, lop: lop, maDe: 'de_tin11_3', tenDe: 'Kiểm Tra Giữa kỳ - Tin Học 11 - Đề 3' };
+        currentStudent = { hoTen: name, lop: lop, maDe: 'de_tin12', tenDe: 'Kiểm Tra Giữa kỳ - Tin Học 12 - Đề 1' };
         
         let rawQuestions = JSON.parse(JSON.stringify(de_data));
         
@@ -428,16 +334,11 @@
         let part2 = shuffleArray(rawQuestions.filter(q => q.type === 'tf_cluster'));
         part2.forEach((q, idx) => {
             q.displayQuestion = `Câu ${idx + 1}: ${q.question}`;
-            q.subQuestions = shuffleArray(q.subQuestions);
-            const labels = ['a)', 'b)', 'c)', 'd)'];
-            q.subQuestions.forEach((sub, sIdx) => {
-                sub.text = `${labels[sIdx]} ${sub.text}`;
-            });
         });
         
         currentQuestions = [...part1, ...part2];
         quizStartTime = new Date();
-        cheatCount = 0; 
+        
         setTimeout(() => { isQuizStarted = true; }, 1000);
         showSection('quiz');
         document.getElementById('quiz-title').innerText = currentStudent.tenDe;
@@ -607,8 +508,12 @@
             duration: formatDuration(Math.floor((quizEndTime - quizStartTime) / 1000)),
             thoiGian: new Date().toISOString(), deviceId: deviceId
         };
+        
         if(database) {
             scoresRef.push(record, () => { window.showModalResult(score, correctSubItems, totalItems, record.duration); });
+        } else {
+            // Hiển thị tạm nếu Firebase bị lỗi
+            window.showModalResult(score, correctSubItems, totalItems, record.duration);
         }
     };
 
@@ -640,23 +545,26 @@
         };
 
         sortedScoresList = [...allScores].sort((a, b) => {
-            const lopA = (a.lop || '').toUpperCase();
-            const lopB = (b.lop || '').toUpperCase();
-            if (lopA !== lopB) return lopA.localeCompare(lopB);
+            // Sắp xếp theo điểm giảm dần
+            if (b.diem !== a.diem) return b.diem - a.diem;
             
+            // Điểm bằng nhau thì sắp xếp theo tên
             const tenA = getTen(a.hoTen);
             const tenB = getTen(b.hoTen);
-            if (tenA !== tenB) return tenA.localeCompare(tenB);
+            if (tenA !== tenB) return tenA.localeCompare(tenB, 'vi');
             
-            return (a.hoTen || '').localeCompare(b.hoTen || '');
+            return (a.hoTen || '').localeCompare(b.hoTen || '', 'vi');
         });
+
+        // Gán thứ hạng
+        sortedScoresList.forEach((s, i) => s.absoluteRank = i + 1);
 
         const myScoreIndex = sortedScoresList.findIndex(s => s.deviceId === deviceId);
         if (myScoreIndex !== -1) {
             const myScore = sortedScoresList[myScoreIndex];
             document.getElementById('my-score-summary').classList.remove('hidden');
             document.getElementById('my-summary-name').innerText = `${myScore.hoTen} (${(myScore.lop || '').toUpperCase()})`;
-            document.getElementById('my-summary-rank').innerText = `Hạng: #${myScoreIndex + 1}`;
+            document.getElementById('my-summary-rank').innerText = `Hạng: #${myScore.absoluteRank}`;
             document.getElementById('my-summary-score').innerText = `${myScore.diem}`;
         } else {
             document.getElementById('my-score-summary').classList.add('hidden');
@@ -674,15 +582,16 @@
         const pageData = sortedScoresList.slice(startIndex, endIndex);
 
         tbody.innerHTML = pageData.map((s, idx) => {
-            let timeStr = s.startTime;
+            let timeStr = "";
             if (s.thoiGian) {
                 const dt = new Date(s.thoiGian);
-                timeStr = dt.toLocaleTimeString('vi-VN') + ' - ' + dt.toLocaleDateString('vi-VN');
+                timeStr = `${dt.getDate().toString().padStart(2, '0')}/${(dt.getMonth() + 1).toString().padStart(2, '0')}/${dt.getFullYear()}`;
+            } else {
+                timeStr = s.endTime ? s.endTime.split(' ').pop() : s.duration;
             }
-            const globalIdx = startIndex + idx + 1;
 
             return `<tr class="${s.deviceId === deviceId ? 'my-score-row' : 'hover:bg-gray-50'} transition-colors border-b border-gray-100">
-                <td class="px-3 sm:px-4 py-4 text-center font-bold text-gray-500 text-sm">#${globalIdx}</td>
+                <td class="px-3 sm:px-4 py-4 text-center font-bold text-gray-500 text-sm">${s.absoluteRank}</td>
                 <td class="px-3 sm:px-4 py-4 font-bold text-blue-600 text-sm">${(s.lop || '').toUpperCase()}</td>
                 <td class="px-3 sm:px-4 py-4 font-semibold text-gray-800 text-sm">${s.hoTen} ${s.deviceId === deviceId ? '<span class="ml-2 bg-pink-500 text-white text-[10px] px-2 rounded-md">Bạn</span>' : ''}</td>
                 <td class="px-3 sm:px-4 py-4 text-center"><span class="font-bold text-lg ${s.diem >= 5 ? 'text-green-600' : 'text-red-500'}">${s.diem}</span></td>
