@@ -213,7 +213,7 @@
       <table class="w-full text-xs sm:text-sm whitespace-nowrap">
        <thead class="bg-gradient-to-r from-orange-500 to-red-500 text-white">
         <tr>
-         <th class="px-3 sm:px-4 py-4 text-center font-bold">#</th>
+         <th class="px-3 sm:px-4 py-4 text-center font-bold">STT</th>
          <th class="px-3 sm:px-4 py-4 text-center font-bold">Lớp</th>
          <th class="px-3 sm:px-4 py-4 text-left font-bold w-full">Họ tên</th>
          <th class="px-3 sm:px-4 py-4 text-center font-bold">Điểm</th>
@@ -354,7 +354,7 @@
             return;
         }
 
-        currentStudent = { hoTen: name, lop: lop, maDe: 'de_tin12_2_full', tenDe: 'Kiểm Tra học kỳ 1 - Tin học 12 - Đề số 2' };
+        currentStudent = { hoTen: name, lop: lop, maDe: 'de_tin12', tenDe: 'Kiểm Tra Giữa kỳ - Tin Học 12 - Đề 1' };
         
         let rawQuestions = JSON.parse(JSON.stringify(de_data));
         
@@ -474,9 +474,9 @@
                     ${q.options.map((opt, i) => `
                     <div class="flex items-center">
                         <input type="radio" id="opt_${i}" name="q_${q.id}" value="${i}" class="hidden single-radio" ${userAnswers[q.id] === i ? 'checked' : ''} onchange="window.selectAnswer('${q.id}',${i}, 'single')">
-                        <label for="opt_${i}" class="option-label w-full p-4 sm:p-5 border-2 border-gray-200 rounded-2xl flex items-center gap-4 bg-white shadow-sm font-semibold text-lg sm:text-xl active:scale-[0.98] touch-manipulation overflow-hidden">
+                        <label for="opt_${i}" class="option-label w-full p-4 sm:p-5 border-2 border-gray-200 rounded-2xl flex items-center gap-4 bg-white shadow-sm font-semibold text-lg sm:text-xl active:scale-[0.98] touch-manipulation">
                             <span class="w-12 h-12 sm:w-10 sm:h-10 rounded-xl border-2 border-gray-300 flex items-center justify-center text-lg sm:text-base font-bold text-gray-400 flex-shrink-0 bg-gray-50 transition-colors">${String.fromCharCode(65 + i)}</span>
-                            <span class="text-gray-700 leading-relaxed w-full break-words">${opt}</span>
+                            <span class="text-gray-700 leading-relaxed">${opt}</span>
                         </label>
                     </div>`).join('')}
                 </div>
@@ -547,6 +547,7 @@
         if(database) {
             scoresRef.push(record, () => { window.showModalResult(score, correctSubItems, totalItems, record.duration); });
         } else {
+            // Hiển thị tạm nếu Firebase bị lỗi
             window.showModalResult(score, correctSubItems, totalItems, record.duration);
         }
     };
@@ -579,23 +580,26 @@
         };
 
         sortedScoresList = [...allScores].sort((a, b) => {
-            const lopA = (a.lop || '').toUpperCase();
-            const lopB = (b.lop || '').toUpperCase();
-            if (lopA !== lopB) return lopA.localeCompare(lopB);
+            // Sắp xếp theo điểm giảm dần
+            if (b.diem !== a.diem) return b.diem - a.diem;
             
+            // Điểm bằng nhau thì sắp xếp theo tên
             const tenA = getTen(a.hoTen);
             const tenB = getTen(b.hoTen);
-            if (tenA !== tenB) return tenA.localeCompare(tenB);
+            if (tenA !== tenB) return tenA.localeCompare(tenB, 'vi');
             
-            return (a.hoTen || '').localeCompare(b.hoTen || '');
+            return (a.hoTen || '').localeCompare(b.hoTen || '', 'vi');
         });
+
+        // Gán thứ hạng
+        sortedScoresList.forEach((s, i) => s.absoluteRank = i + 1);
 
         const myScoreIndex = sortedScoresList.findIndex(s => s.deviceId === deviceId);
         if (myScoreIndex !== -1) {
             const myScore = sortedScoresList[myScoreIndex];
             document.getElementById('my-score-summary').classList.remove('hidden');
             document.getElementById('my-summary-name').innerText = `${myScore.hoTen} (${(myScore.lop || '').toUpperCase()})`;
-            document.getElementById('my-summary-rank').innerText = `Hạng: #${myScoreIndex + 1}`;
+            document.getElementById('my-summary-rank').innerText = `Hạng: #${myScore.absoluteRank}`;
             document.getElementById('my-summary-score').innerText = `${myScore.diem}`;
         } else {
             document.getElementById('my-score-summary').classList.add('hidden');
@@ -613,15 +617,16 @@
         const pageData = sortedScoresList.slice(startIndex, endIndex);
 
         tbody.innerHTML = pageData.map((s, idx) => {
-            let timeStr = s.startTime;
+            let timeStr = "";
             if (s.thoiGian) {
                 const dt = new Date(s.thoiGian);
-                timeStr = dt.toLocaleTimeString('vi-VN') + ' - ' + dt.toLocaleDateString('vi-VN');
+                timeStr = `${dt.getDate().toString().padStart(2, '0')}/${(dt.getMonth() + 1).toString().padStart(2, '0')}/${dt.getFullYear()}`;
+            } else {
+                timeStr = s.endTime ? s.endTime.split(' ').pop() : s.duration;
             }
-            const globalIdx = startIndex + idx + 1;
 
             return `<tr class="${s.deviceId === deviceId ? 'my-score-row' : 'hover:bg-gray-50'} transition-colors border-b border-gray-100">
-                <td class="px-3 sm:px-4 py-4 text-center font-bold text-gray-500 text-sm">#${globalIdx}</td>
+                <td class="px-3 sm:px-4 py-4 text-center font-bold text-gray-500 text-sm">${s.absoluteRank}</td>
                 <td class="px-3 sm:px-4 py-4 font-bold text-blue-600 text-sm">${(s.lop || '').toUpperCase()}</td>
                 <td class="px-3 sm:px-4 py-4 font-semibold text-gray-800 text-sm">${s.hoTen} ${s.deviceId === deviceId ? '<span class="ml-2 bg-pink-500 text-white text-[10px] px-2 rounded-md">Bạn</span>' : ''}</td>
                 <td class="px-3 sm:px-4 py-4 text-center"><span class="font-bold text-lg ${s.diem >= 5 ? 'text-green-600' : 'text-red-500'}">${s.diem}</span></td>
