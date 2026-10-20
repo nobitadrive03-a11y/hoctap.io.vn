@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
-  <title>Kiểm Tra Giữa Kỳ 1 - Đề 2 - Tin học 12</title>
+  <title>Kiểm Tra Giữa Kỳ 1 - Đề 1 - Tin học 11</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   
@@ -87,6 +87,21 @@
     }
     .my-score-row td { padding-top: 16px; padding-bottom: 16px; }
     button:disabled { opacity: 0.5; cursor: not-allowed; transform: none !important; }
+
+    .code-snippet {
+        display: inline-block;
+        background-color: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-left: 4px solid #2563eb;
+        border-radius: 6px;
+        padding: 2px 8px;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+        color: #1e3a8a;
+        font-weight: 700;
+        font-size: 0.95em;
+        margin: 0 4px;
+        word-break: break-word;
+    }
   </style>
  </head>
  <body oncopy="return false" oncut="return false" onpaste="return false">
@@ -100,7 +115,7 @@
           <span class="text-white font-bold text-3xl tracking-tighter">HS</span>
       </div>
       <h1 class="text-1xl sm:text-3xl font-bold text-red-600 mb-1 leading-tight tracking-tight">KIỂM TRA GIỮA KỲ 1</h1>
-      <h2 class="text-xl font-bold text-red-500 mb-2">Tin Học 12 - Đề số 2</h2>
+      <h2 class="text-xl font-bold text-red-500 mb-2">Tin Học 11 - Đề số 2</h2>
      </div>
      
      <div id="login-form" class="space-y-4">
@@ -111,7 +126,7 @@
           </div>
           <div class="w-full sm:w-1/3">
                <label class="block text-sm font-bold text-gray-700 mb-1">Lớp</label> 
-               <input type="text" id="lop" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-100 outline-none transition-all text-base touch-manipulation" placeholder="Ví dụ: 12A1">
+               <input type="text" id="lop" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-100 outline-none transition-all text-base touch-manipulation" placeholder="Ví dụ: 11A2">
           </div>
       </div>
       
@@ -161,7 +176,7 @@
    <div id="scores-section" class="w-full max-w-6xl mx-auto hidden flex-grow flex flex-col">
     <div class="glass-card rounded-none sm:rounded-3xl p-4 sm:p-8 flex flex-col flex-grow border-t-8 border-orange-500 bg-white">
      <div class="mb-6 flex items-center justify-between">
-     <h2 class="text-2xl sm:text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-red-600">🏆 Bảng Xếp Hạng</h2>
+      <h2 class="text-2xl sm:text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-red-600">🏆Bảng xếp hạng </h2>
       <button onclick="window.goHome()" class="px-5 py-2.5 bg-gray-100 text-gray-700 rounded-xl font-bold hover:bg-gray-200 transition-transform active:scale-95 shadow-sm border border-gray-200 touch-manipulation">🏠 Về trang chủ</button>
      </div>
      
@@ -185,7 +200,7 @@
          <th class="px-3 sm:px-4 py-4 text-center font-bold">Lớp</th>
          <th class="px-3 sm:px-4 py-4 text-left font-bold w-full">Họ tên</th>
          <th class="px-3 sm:px-4 py-4 text-center font-bold">Điểm</th>
-         <th class="px-3 sm:px-4 py-4 text-center font-bold">Thời gian</th>
+         <th class="px-3 sm:px-4 py-4 text-center font-bold">Ngày nộp</th>
         </tr>
        </thead>
        <tbody id="scores-tbody" class="bg-white/80 divide-y divide-gray-100"></tbody>
@@ -223,67 +238,66 @@
         if (typeof firebase !== 'undefined') {
             if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
             database = firebase.database();
-            // Đã đổi tên bảng để không bị trùng với đề 1
-            scoresRef = database.ref('bxh_gk1_12_de2');
+            scoresRef = database.ref('bxh_gk1_11_12');
         }
     } catch(err) { console.error("Lỗi Firebase:", err); }
 
     let isQuizStarted = false; 
     let isSubmitting = false;
 
-    // NGÂN HÀNG CÂU HỎI ĐỀ 2 (TIN HỌC 12) - ĐÃ LOẠI BỎ CHỮ NHẬN BIẾT/THÔNG HIỂU/VẬN DỤNG VÀ MÃ HÓA HTML
+    // DỮ LIỆU CÂU HỎI (GIỮ NGUYÊN THỨ TỰ GỐC, ĐÁP ÁN PHÂN BỐ NGẪU NHIÊN)
     const de_data = [
-        { id: "2_1", type: "single", question: "Đặc trưng nào sau đây của Trí tuệ nhân tạo thể hiện khả năng nắm bắt thông tin từ dữ liệu?", options: ["Khả năng học từ dữ liệu để thay đổi hành vi.", "Khả năng tự động sinh ra nguồn năng lượng.", "Khả năng lắp ráp các linh kiện cơ khí vật lý.", "Khả năng tự hủy khi phát hiện ra lỗi vi mạch."], correct: 0 },
-        { id: "2_2", type: "single", question: "Ứng dụng \"Nhận dạng khuôn mặt\" trên điện thoại là minh chứng cho đặc trưng nào của AI?", options: ["Khả năng nhận thức môi trường qua hình ảnh.", "Khả năng in ấn các tài liệu văn bản phức tạp.", "Khả năng chia sẻ tài nguyên trên mạng Internet.", "Khả năng phát sóng tín hiệu vô tuyến tầm xa."], correct: 0 },
-        { id: "2_3", type: "single", question: "Thiết bị mạng Switch khác với Hub ở điểm cơ bản nào khi truyền tải dữ liệu?", options: ["Switch chỉ tạo kênh truyền tạm thời đến đích.", "Switch phát tán mọi tín hiệu ra tất cả các cổng.", "Switch biến đổi tín hiệu tương tự sang tín hiệu số.", "Switch chỉ dùng để mở rộng sóng vô tuyến Wi-Fi."], correct: 0 },
-        { id: "2_4", type: "single", question: "Điểm truy cập không dây (WAP) có chức năng chính là gì trong mạng máy tính?", options: ["Kết nối các thiết bị với nhau thông qua sóng Wi-Fi.", "Truyền tải dữ liệu bằng hệ thống cáp quang tốc độ.", "Quản lý toàn bộ hệ thống thư điện tử của máy chủ.", "Lọc các trang web độc hại khỏi trình duyệt máy tính."], correct: 0 },
-        { id: "2_5", type: "single", question: "Khái niệm \"Giao thức mạng\" (Network Protocol) được định nghĩa chính xác là gì?", options: ["Tập hợp các quy định về cách thức truyền nhận dữ liệu.", "Một phần mềm dùng để soạn thảo ngôn ngữ lập trình.", "Cấu trúc vật lý của dây cáp mạng trong một căn phòng.", "Tên gọi khác của địa chỉ trang web trên mạng Internet."], correct: 0 },
-        { id: "2_6", type: "single", question: "Nhược điểm nào sau đây thường gặp khi giao tiếp qua tin nhắn trong không gian mạng?", options: ["Thiếu các tín hiệu phi ngôn ngữ như nét mặt, giọng nói.", "Không thể nào mở rộng được các mối quan hệ bạn bè.", "Tốn kém chi phí di chuyển hơn so với việc gặp trực tiếp.", "Không thể lưu trữ lại được các nội dung đã từng trao đổi."], correct: 0 },
-        { id: "2_7", type: "single", question: "Thẻ HTML &lt;h1&gt; được sử dụng với mục đích chính là gì trong việc xây dựng trang web?", options: ["Thiết lập tiêu đề cấp độ cao nhất cho trang web.", "Chèn một đoạn video trực tuyến vào trang web.", "Thay đổi màu sắc của toàn bộ nội dung văn bản.", "Tạo ra một bảng dữ liệu gồm các hàng và các cột."], correct: 0 },
-        { id: "2_8", type: "single", question: "Trong cấu trúc cơ bản của tệp HTML, phần tử &lt;body&gt; chứa các thông tin gì?", options: ["Các nội dung sẽ được hiển thị trực tiếp trên trình duyệt.", "Các khai báo về ngôn ngữ lập trình cho máy chủ xử lý.", "Các thông tin về bản quyền phần mềm thiết kế đồ họa.", "Các cấu hình về dải địa chỉ IP của thiết bị mạng LAN."], correct: 0 },
-        { id: "2_9", type: "single", question: "Hiện nay, các hệ thống Trí tuệ nhân tạo (AI) trong thực tế hầu hết thuộc phân loại nào?", options: ["Trí tuệ nhân tạo hẹp (chỉ giải quyết một tác vụ cụ thể).", "Trí tuệ nhân tạo tổng quát (giống hệt trí tuệ con người).", "Trí tuệ nhân tạo toàn năng (vượt trội hơn hẳn loài người).", "Trí tuệ nhân tạo sinh học (tạo ra từ các tế bào sinh vật)."], correct: 0 },
-        { id: "2_10", type: "single", question: "Vì sao trong các mạng LAN quy mô lớn, người ta ưu tiên sử dụng Switch thay vì Hub?", options: ["Switch giúp giảm thiểu tình trạng xung đột tín hiệu mạng.", "Switch có giá thành rẻ hơn rất nhiều so với thiết bị Hub.", "Switch không cần tiêu thụ điện năng khi đang hoạt động.", "Switch hỗ trợ phát sóng Wi-Fi mạnh mẽ xuyên qua tường."], correct: 0 },
-        { id: "2_11", type: "single", question: "Trong bộ giao thức TCP/IP, chức năng chính của giao thức TCP là gì?", options: ["Cắt dữ liệu thành các gói tin và kiểm tra lỗi truyền tải.", "Cấp phát địa chỉ IP động cho tất cả các thiết bị mạng.", "Dịch tên miền trang web sang dải địa chỉ dạng chữ số.", "Chuyển đổi tín hiệu quang học thành tín hiệu điện từ."], correct: 0 },
-        { id: "2_12", type: "single", question: "Khi muốn chia sẻ tài liệu trong mạng LAN Windows, việc đầu tiên cần phải thực hiện là gì?", options: ["Bật tính năng phát hiện mạng (Network discovery).", "Tắt hoàn toàn màn hình máy tính đang được chia sẻ.", "Cài đặt lại toàn bộ hệ điều hành của các thiết bị mạng.", "Tải xuống tất cả các phần mềm diệt virus mới nhất."], correct: 0 },
-        { id: "2_13", type: "single", question: "Biểu hiện nào sau đây cho thấy người dùng đang giao tiếp ứng xử nhân văn trên mạng?", options: ["Bình tĩnh lắng nghe và tôn trọng ý kiến của người khác.", "Đăng tải thông tin cá nhân của người khác để trêu đùa.", "Lập tức chửi bới khi thấy một bình luận trái chiều mình.", "Tự động chia sẻ các phần mềm bẻ khóa không bản quyền."], correct: 0 },
-        { id: "2_14", type: "single", question: "Cú pháp &lt;meta charset=\"utf-8\"&gt; đặt trong thẻ &lt;head&gt; có tác dụng cụ thể nào?", options: ["Hỗ trợ hiển thị đúng các bộ ký tự phức tạp như tiếng Việt.", "Hỗ trợ thay đổi độ phân giải màn hình của trang web đó.", "Hỗ trợ tải nhanh các hình ảnh có dung lượng bộ nhớ lớn.", "Hỗ trợ mã hóa mật khẩu người dùng khi đăng nhập web."], correct: 0 },
-        { id: "2_15", type: "single", question: "Bộ định tuyến (Router) sử dụng công cụ nào để chọn đường đi cho gói dữ liệu đến đích?", options: ["Sử dụng bảng định tuyến (routing table) được cấu hình.", "Sử dụng danh sách các trang web đã lưu trong lịch sử.", "Sử dụng phần mềm nghe nhạc được cài đặt sẵn trên máy.", "Sử dụng tín hiệu vệ tinh được bắt trực tiếp từ không gian."], correct: 0 },
-        { id: "2_16", type: "single", question: "Cấu trúc cây HTML lồng nhau thể hiện mối quan hệ gì giữa các phần tử trên trang web?", options: ["Mối quan hệ cha - con giữa các thẻ HTML bao bọc nhau.", "Mối quan hệ mạng ngang hàng giữa các máy tính cá nhân.", "Mối quan hệ giữa khách hàng và nhà cung cấp dịch vụ web.", "Mối quan hệ dữ liệu giữa cơ sở dữ liệu và người dùng web."], correct: 0 },
-        { id: "2_17", type: "single", question: "Khi người dùng yêu cầu ChatGPT sáng tác một bài thơ, AI này đã vận dụng khả năng gì?", options: ["Khả năng hiểu ngôn ngữ tự nhiên và tổng hợp thông tin.", "Khả năng chẩn đoán chính xác các loại bệnh lý y khoa.", "Khả năng nhận diện biển báo giao thông trên đường bộ.", "Khả năng điều khiển cánh tay robot trong nhà máy lớn."], correct: 0 },
-        { id: "2_18", type: "single", question: "Thiết bị nào tích hợp cả chức năng kết nối mạng quang, định tuyến và phát sóng Wi-Fi tại nhà?", options: ["Thiết bị Modem cáp quang tích hợp Router Wi-Fi.", "Thiết bị màn hình máy tính tích hợp cổng xuất HDMI.", "Thiết bị bàn phím cơ tích hợp hệ thống đèn LED RGB.", "Thiết bị Hub chia mạng tích hợp ổ cứng di động SSD."], correct: 0 },
-        { id: "2_19", type: "single", question: "Để người khác trong mạng LAN chỉ có thể xem mà không thể xóa tệp, bạn chọn quyền gì?", options: ["Thiết lập mức quyền Read cho người dùng được chia sẻ.", "Thiết lập mức quyền Write cho người dùng được chia sẻ.", "Thiết lập mức quyền Full Control cho mọi người truy cập.", "Thiết lập mức quyền Remove cho tài khoản của máy tính."], correct: 0 },
-        { id: "2_20", type: "single", question: "Nếu phát hiện một người bạn cùng lớp bị nói xấu trên diễn đàn mạng, bạn nên làm gì?", options: ["Báo cáo bài viết xấu đó và nhắn tin an ủi, hỗ trợ bạn.", "Tham gia bình luận hùa theo để chứng tỏ mình hòa đồng.", "Chụp ảnh màn hình rồi gửi cho tất cả các bạn khác xem.", "Tìm cách tấn công đánh sập diễn đàn mạng nói trên ngay."], correct: 0 },
-        { id: "2_21", type: "single", question: "Để tạo cấu trúc 3 mức tiêu đề giảm dần về kích thước cho một bài báo, ta dùng các thẻ nào?", options: ["Sử dụng lần lượt các thẻ &lt;h1&gt;, &lt;h2&gt; và &lt;h3&gt;.", "Sử dụng lần lượt các thẻ &lt;strong&gt;, &lt;b&gt; và &lt;em&gt;.", "Sử dụng lần lượt các thẻ &lt;p&gt;, &lt;br&gt; và &lt;hr&gt;.", "Sử dụng lần lượt các thẻ &lt;div&gt;, &lt;span&gt; và &lt;a&gt;."], correct: 0 },
-        { id: "2_22", type: "single", question: "Một địa chỉ IP như 192.168.1.1 (chuẩn IPv4) tiêu tốn chính xác bao nhiêu dung lượng lưu trữ?", options: ["Tiêu tốn độ dài lưu trữ chính xác là 4 byte.", "Tiêu tốn độ dài lưu trữ chính xác là 8 byte.", "Tiêu tốn độ dài lưu trữ chính xác là 2 byte.", "Tiêu tốn độ dài lưu trữ chính xác là 6 byte."], correct: 0 },
-        { id: "2_23", type: "single", question: "Để trình duyệt hiển thị dòng chữ \"Trang chủ\" trên tab cửa sổ, câu lệnh HTML nào viết đúng?", options: ["&lt;title&gt;Trang chủ&lt;/title&gt; đặt trong phần tử &lt;head&gt;.", "&lt;h1&gt;Trang chủ&lt;/h1&gt; đặt tại dòng đầu tiên của &lt;body&gt;.", "&lt;p&gt;Trang chủ&lt;/p&gt; đặt nằm ở phía dưới cùng của &lt;html&gt;.", "&lt;header&gt;Trang chủ&lt;/header&gt; đặt ngay bên ngoài &lt;html&gt;."], correct: 0 },
-        { id: "2_24", type: "single", question: "Khi chia sẻ máy in cho các máy tính khác trong mạng, máy tính gắn máy in đó đóng vai trò gì?", options: ["Trở thành một máy chủ cung cấp dịch vụ in (Print Server).", "Trở thành một bộ định tuyến trung chuyển tín hiệu mạng.", "Trở thành một bức tường lửa bảo vệ toàn bộ mạng LAN.", "Trở thành một bộ chia tín hiệu Hub phát tán các gói tin."], correct: 0 },
-        { id: '2_c1', type: 'tf_cluster', question: "Bạn An đang nghiên cứu hệ thống trí tuệ nhân tạo ChatGPT để chuẩn bị cho bài báo cáo môn học:", subQuestions: [
-            { id: '2_d25a', text: "a) ChatGPT là một ví dụ tiêu biểu về ứng dụng Trí tuệ nhân tạo tạo sinh (Generative AI) trong lĩnh vực xử lý ngôn ngữ.", correct: "Đúng" },
-            { id: '2_d25b', text: "b) ChatGPT được thiết kế với cốt lõi là khả năng tự động điều khiển các robot vật lý trong môi trường nhà máy công nghiệp.", correct: "Sai" },
-            { id: '2_d25c', text: "c) Để tạo ra các câu trả lời tự nhiên, ChatGPT đã phải trải qua quá trình học máy (Machine Learning) trên một lượng lớn dữ liệu văn bản.", correct: "Đúng" },
-            { id: '2_d25d', text: "d) Vì ChatGPT có nền tảng tri thức rất rộng, An hoàn toàn có thể sao chép nguyên văn mọi kết quả do AI này tạo ra vào bài báo cáo mà không cần phải đối chiếu lại tính chính xác.", correct: "Sai" }
+        { id: "2_1", type: "single", question: "Một trong những đặc điểm nổi bật nhất khi so sánh hệ điều hành máy tính cá nhân ở thời kỳ đầu (như MS-DOS) với các hệ điều hành hiện đại ngày nay (như Windows, macOS) là gì?", options: ["Sử dụng giao diện màn hình đen với các dòng lệnh chữ viết.", "Sử dụng giao diện đồ họa thân thiện với hệ thống cửa sổ, biểu tượng.", "Có khả năng tự động viết ra các phần mềm lập trình phức tạp.", "Dung lượng hệ điều hành chiếm toàn bộ không gian của ổ cứng."], correct: 1 },
+        { id: "2_2", type: "single", question: "Khi tìm hiểu về luật bản quyền phần mềm, loại giấy phép nào yêu cầu người dùng nếu sửa đổi và phân phối lại phần mềm thì cũng phải cung cấp mã nguồn một cách công khai?", options: ["Giấy phép thương mại độc quyền (Commercial License).", "Giấy phép nội bộ doanh nghiệp khép kín.", "Giấy phép công cộng chung GNU (GNU GPL).", "Giấy phép phần mềm chia sẻ (Shareware)."], correct: 2 },
+        { id: "2_3", type: "single", question: "Linh kiện điện tử nào đóng vai trò cốt lõi trong việc thực hiện toàn bộ các phép tính số học, tính toán logic và điều phối đồng bộ các thiết bị của hệ thống máy tính hoạt động?", options: ["Bộ nhớ đệm tốc độ cao (Cache).", "Bộ xử lý trung tâm máy tính (CPU).", "Bảng mạch mở rộng đồ họa (VGA).", "Ổ đĩa cứng lưu trữ thể rắn (SSD)."], correct: 1 },
+        { id: "2_4", type: "single", question: "Khi chọn mua một chiếc màn hình máy tính, thông số kỹ thuật nào dưới đây cho biết khả năng tái tạo số lần hiển thị lại hình ảnh trong một giây, giúp hình ảnh mượt mà, đỡ mỏi mắt?", options: ["Độ phân giải hiển thị ảnh của màn hình (Pixel).", "Tần số quét hình ảnh của màn hình (Hz).", "Kích thước đường chéo của màn hình (inch).", "Thời gian phản hồi tín hiệu của màn hình (ms)."], correct: 1 },
+        { id: "2_5", type: "single", question: "Nền tảng nào sau đây là một dịch vụ lưu trữ dữ liệu trực tuyến (lưu trữ đám mây) nổi tiếng do tập đoàn công nghệ Microsoft vận hành và phát triển?", options: ["Dịch vụ lưu trữ trực tuyến Google Drive.", "Dịch vụ lưu trữ trực tuyến Microsoft OneDrive.", "Dịch vụ lưu trữ trực tuyến Dropbox.", "Dịch vụ lưu trữ trực tuyến Apple iCloud."], correct: 1 },
+        { id: "2_6", type: "single", question: "Trong lúc tra cứu tài liệu bằng Google, nếu muốn bắt buộc bộ máy tìm kiếm phải trả về các kết quả chứa chính xác một cụm từ cụ thể mà không bị tách rời, người dùng cần dùng cặp dấu nào?", options: ["Đặt cụm từ khóa vào bên trong cặp dấu ngoặc đơn ( ).", "Đặt cụm từ khóa vào bên trong cặp dấu ngoặc kép \" \".", "Đặt cụm từ khóa vào bên trong cặp dấu ngoặc vuông [ ].", "Đặt cụm từ khóa vào bên trong cặp dấu ngoặc nhọn { }."], correct: 1 },
+        { id: "2_7", type: "single", question: "Một tính năng trên dịch vụ thư điện tử Gmail giúp người dùng đánh dấu thư điện tử quan trọng thường có biểu tượng mang hình dáng gì và màu sắc gì?", options: ["Biểu tượng hình chiếc lá có màu xanh lá cây tươi.", "Biểu tượng hình ngọn lửa có màu đỏ rực rỡ.", "Biểu tượng hình một dấu quan trọng có màu vàng.", "Biểu tượng hình một bánh răng cưa có màu xám."], correct: 2 },
+        { id: "2_8", type: "single", question: "Đối tượng nào trên mạng xã hội Facebook thường được khởi tạo với mục đích chính là để đại diện cho một thương hiệu, doanh nghiệp hoặc một người nổi tiếng quảng bá hình ảnh?", options: ["Trang thông tin cá nhân (Profile) người dùng.", "Nhóm chat trò chuyện (Messenger) khép kín.", "Trang Fanpage chuyên nghiệp trên mạng xã hội.", "Thước phim ngắn dạng dọc (Facebook Reels)."], correct: 2 },
+        { id: "2_9", type: "single", question: "Việc các nhà sản xuất áp dụng cơ chế \"Cắm và chạy\" (Plug & Play) trên hệ điều hành máy tính cá nhân đã mang lại lợi ích to lớn nào cho người sử dụng phổ thông?", options: ["Tránh được hoàn toàn nguy cơ máy tính bị nhiễm virus lây lan từ thiết bị ngoại vi.", "Thiết bị ngoại vi kết nối xong là có thể sử dụng ngay mà không cần cài đặt phần mềm thủ công.", "Tăng gấp đôi tốc độ đường truyền kết nối mạng không dây của các thiết bị Bluetooth.", "Làm cho tất cả các thiết bị ngoại vi không tiêu thụ bất kỳ lượng điện năng nào từ máy tính nữa."], correct: 1 },
+        { id: "2_10", type: "single", question: "Khi nghiên cứu về cấu trúc phần cứng của thiết bị số, các nhà khoa học khẳng định rằng mọi mạch logic dù phức tạp đến đâu cũng có thể được tổng hợp từ ba loại cổng logic cơ bản nào?", options: ["Tổng hợp từ các cổng XOR, NAND và NOR.", "Tổng hợp từ các mạch rơ le thời gian độc lập.", "Tổng hợp từ các cổng cơ bản AND, OR và NOT.", "Tổng hợp từ các bộ nhớ ROM và RAM dung lượng nhỏ."], correct: 2 },
+        { id: "2_11", type: "single", question: "Việc sử dụng các phần mềm văn phòng chạy trực tuyến trên nền tảng web (như Google Workspace) giúp giải quyết được hạn chế lớn nhất nào của các phần mềm cài đặt truyền thống?", options: ["Xóa bỏ hoàn toàn hiện tượng phần mềm văn phòng bị treo khi xử lý các bảng tính đồ họa nặng.", "Đảm bảo dữ liệu không bao giờ bị hacker xâm nhập do không lưu trên ổ cứng vật lý cục bộ.", "Giúp vượt qua rào cản phụ thuộc vào thiết bị, cho phép làm việc cộng tác mọi nơi chỉ cần có mạng.", "Tự động dịch và sửa toàn bộ lỗi chính tả văn bản theo mọi loại ngôn ngữ trên thế giới."], correct: 2 },
+        { id: "2_12", type: "single", question: "Khi nói về nguyên lý hoạt động của các loại máy in ấn, loại máy in nào sử dụng công nghệ tạo tĩnh điện hút mực bột rồi nung nóng chảy ép chặt lên mặt giấy?", options: ["Máy in kim sử dụng đầu kim đập vật lý vào dải ruy-băng mực.", "Máy in phun sử dụng vòi phun các hạt mực lỏng li ti lên giấy.", "Máy in laser sử dụng tia laser và trống từ cảm quang tạo tĩnh điện.", "Máy in nhiệt sử dụng cuộn giấy cảm ứng đổi màu khi bị làm nóng."], correct: 2 },
+        { id: "2_13", type: "single", question: "Lợi thế nổi bật của việc sử dụng tính năng Nhãn (Label) so với việc sử dụng các Thư mục (Folder) truyền thống khi phân loại lượng lớn thư điện tử là gì?", options: ["Mỗi thư điện tử chỉ có thể nằm trong một Nhãn duy nhất để đảm bảo tính gọn gàng tuyệt đối.", "Nhãn giúp tiết kiệm dung lượng lưu trữ trên máy chủ lên đến hàng chục lần so với Thư mục.", "Một bức thư điện tử có thể được gắn cùng lúc nhiều Nhãn khác nhau rất linh hoạt để phân loại chéo.", "Khi tiến hành xóa một Nhãn, toàn bộ thư điện tử nằm trong Nhãn đó sẽ tự động biến mất theo."], correct: 2 },
+        { id: "2_14", type: "single", question: "Khi tiến hành đăng tải một bài viết chứa các thông tin mang tính chất nội bộ lên mạng xã hội, việc thiết lập quyền xem ở chế độ \"Bạn bè ngoại trừ...\" có tác dụng gì?", options: ["Bài đăng sẽ hiện lên trang chủ của những người nổi tiếng để tăng độ phủ sóng trên mạng.", "Hạn chế danh sách người xem, không cho một vài cá nhân cụ thể thấy được nội dung bài viết.", "Tự động gắn thẻ toàn bộ danh sách bạn bè vào bài viết đó để ép họ vào bình luận.", "Gửi bài đăng đó qua tin nhắn riêng tư cho tất cả những người không nằm trong danh sách loại trừ."], correct: 1 },
+        { id: "2_15", type: "single", question: "Các nền tảng lưu trữ trực tuyến (đám mây) như Google Drive hoạt động trơn tru phụ thuộc vào yếu tố hạ tầng công nghệ tiên quyết nào sau đây từ phía người dùng?", options: ["Máy tính của người dùng bắt buộc phải sở hữu hệ thống card đồ họa kép rời thật mạnh mẽ.", "Người dùng phải liên tục duy trì một đường truyền kết nối mạng Internet có tính ổn định.", "Hệ thống điện tại nhà người dùng phải có đường truyền cáp đồng trục theo kiểu truyền thống.", "Người dùng phải cài đặt đồng thời hệ điều hành Windows và Linux song song trên cùng máy tính."], correct: 1 },
+        { id: "2_16", type: "single", question: "Tính năng \"Xem lại thẻ (tag) trước khi xuất hiện trên dòng thời gian\" trong mạng xã hội Facebook giúp người dùng ngăn ngừa trực tiếp rủi ro gì về mặt hình ảnh?", options: ["Rủi ro bị mất mật khẩu tài khoản do nhấp vào các liên kết độc hại trên các trang mạng trôi nổi.", "Rủi ro tài khoản bị trừ tiền tự động khi xem các video quảng cáo có chứa tính năng thu phí.", "Rủi ro hình ảnh hoặc nội dung không mong muốn bị gán tên và hiển thị công khai trên tường nhà mình.", "Rủi ro bài viết cá nhân bị hệ thống trí tuệ nhân tạo tự động xóa sổ do vi phạm quy tắc cộng đồng."], correct: 2 },
+        { id: "2_17", type: "single", question: "Một phòng ban cần thiết kế nhanh một bản kế hoạch kinh doanh nhưng không có kinh phí để mua phần mềm soạn thảo bản quyền. Giải pháp hợp pháp và tối ưu chi phí nhất là gì?", options: ["Bỏ qua việc soạn thảo trên máy tính và tiến hành viết tay toàn bộ bản kế hoạch kinh doanh ra giấy.", "Nhờ một công ty phần mềm chuyên nghiệp lập trình riêng một công cụ soạn thảo văn bản với giá rẻ.", "Tải phần mềm thương mại từ một nguồn chia sẻ file lậu trên mạng và tiến hành bẻ khóa (crack) hệ thống.", "Cài đặt một bộ phần mềm văn phòng thuộc loại mã nguồn mở miễn phí như bộ phần mềm LibreOffice."], correct: 3 },
+        { id: "2_18", type: "single", question: "Một hệ thống cảm biến nhiệt tự động báo cháy cần thiết lập: Còi báo động kêu (Giá trị bằng 1) khi nhiệt độ tăng quá cao (T=1). Nếu dùng trực tiếp tín hiệu T để kích hoạt còi, ta đang mô phỏng mạch của cổng logic nào nếu tín hiệu T đi qua hai lần phủ định liên tiếp?", options: ["Mô phỏng cổng NOT cơ bản.", "Mô phỏng mạch giữ nguyên trạng thái.", "Mô phỏng cổng XOR nâng cao.", "Mô phỏng cổng NAND tích hợp."], correct: 1 },
+        { id: "2_19", type: "single", question: "Một người dùng chuyên làm công việc xử lý video liên tục phàn nàn vì mỗi khi kết xuất (render) video, máy tính lại báo dung lượng bộ nhớ tạm thời bị thiếu trầm trọng. Linh kiện phần cứng nào cần được ưu tiên nâng cấp để giải quyết?", options: ["Nâng cấp Bảng mạch mở rộng mạng (Card LAN).", "Nâng cấp Bộ xử lý trung tâm đa nhân (CPU).", "Nâng cấp Bộ nhớ truy cập ngẫu nhiên (RAM).", "Nâng cấp Cáp kết nối tín hiệu đa phương tiện HDMI."], correct: 2 },
+        { id: "2_20", type: "single", question: "Khi được phân công viết biên bản cho một buổi họp nhóm trực tuyến có nhịp độ phát biểu rất nhanh, người thư ký nhận thấy bản thân gõ phím không thể theo kịp. Có thể vận dụng công nghệ nào trên nền tảng Google Docs để hỗ trợ trực tiếp?", options: ["Sử dụng công cụ vẽ hình khối và biểu đồ tự động của tiện ích Google Docs.", "Bật tính năng Nhập liệu bằng giọng nói (Voice typing) để máy tính tự động ghi chép.", "Chèn các hình ảnh định dạng ảnh động GIF minh họa vào giữa đoạn văn bản.", "Chuyển đổi ngôn ngữ của bàn phím hệ thống sang một ngôn ngữ có tốc độ gõ nhanh hơn."], correct: 1 },
+        { id: "2_21", type: "single", question: "Trong quá trình thu thập số liệu cho một bài báo cáo khoa học, để nhanh chóng tải về danh sách các tệp dữ liệu dạng bảng tính nén (ZIP), cú pháp tìm kiếm trên Google nào mang lại kết quả chuẩn xác nhất?", options: ["Bài báo cáo khoa học dạng số liệu format=zip file.", "\"Tài liệu số liệu khoa học\" filetype:zip.", "Tài liệu nghiên cứu khoa học đuôi zip download miễn phí.", "Báo cáo khoa học tải thư mục nén chuẩn zip về máy."], correct: 1 },
+        { id: "2_22", type: "single", question: "Một trưởng phòng nhận thấy hộp thư của mình có rất nhiều email thông báo tự động từ hệ thống quản lý công việc (LMS). Để dọn dẹp Hộp thư đến mà không đánh mất các email này nhằm đối chiếu sau này, người này nên thao tác gì?", options: ["Đánh dấu tất cả chúng là thư rác (Spam) để ngăn hệ thống tiếp tục gửi thư tự động trong tương lai.", "Thay đổi mật khẩu đăng nhập hộp thư ngay lập tức để ép hệ thống cắt đứt quyền gửi thư thông báo.", "Gửi một email nhắc nhở chung đến toàn bộ nhân viên trong phòng yêu cầu ngừng sử dụng hệ thống LMS.", "Tạo Nhãn \"Thông báo LMS\" và thiết lập bộ lọc tự động gán nhãn rồi Lưu trữ (Archive) chúng khỏi Hộp thư đến."], correct: 3 },
+        { id: "2_23", type: "single", question: "Một tổ chức phi chính phủ hoạt động bảo vệ môi trường muốn cập nhật thường xuyên tin tức và tương tác với hàng ngàn tình nguyện viên khắp nơi. Phương tiện truyền thông trên mạng xã hội nào phù hợp nhất với tổ chức này?", options: ["Tạo một tài khoản cá nhân có tên tổ chức và đi gửi lời mời kết bạn thủ công với từng người một.", "Thiết lập một nhóm trò chuyện Messenger nhỏ lẻ giới hạn 50 người và thảo luận nội bộ trong đó.", "Khởi tạo một trang Fanpage chuyên nghiệp đại diện cho tổ chức để dễ dàng chạy các chiến dịch truyền thông.", "Đăng tải toàn bộ thông tin lên trang tiểu sử của chủ tịch tổ chức và thiết lập khóa tính năng bình luận."], correct: 2 },
+        { id: "2_24", type: "single", question: "Tại một hội thảo ngoài trời, người thuyết trình muốn phát sóng một đoạn video lưu trữ trên đám mây xuống màn hình lớn, nhưng mạng wifi ở khu vực tổ chức được thông báo là rất chập chờn. Để đảm bảo bài thuyết trình diễn ra suôn sẻ, hành động nào là cần thiết nhất trước giờ khai mạc?", options: ["Đợi đến đúng thời điểm phát sóng rồi mới ấn nút Tải xuống (Download) tệp video từ trên đám mây về.", "Yêu cầu toàn bộ khán giả tự lấy điện thoại thông minh quét mã QR truy cập vào đường liên kết đám mây.", "Tải trước (Download) tệp video từ đám mây xuống lưu trữ trực tiếp trên ổ cứng máy tính cá nhân.", "Tắt hoàn toàn kết nối mạng wifi của máy tính đi và gọi điện thoại phàn nàn với nhân viên kỹ thuật của Google."], correct: 2 },
+        { id: '2_c1', type: 'tf_cluster', question: "Hệ điều hành đóng vai trò là một môi trường trung gian vững chắc giúp các phần mềm ứng dụng khai thác tài nguyên phần cứng, áp dụng trên cả máy tính cá nhân và thiết bị di động.", subQuestions: [
+            { id: '2_d25a', text: "Một sự khác biệt nổi bật của hệ điều hành trên thiết bị di động là giao diện vô cùng thân thiện, ưu tiên thao tác nhận diện cảm biến và các cử chỉ vuốt chạm.", correct: "Đúng" },
+            { id: '2_d25b', text: "Chức năng kiểm tra lỗi đĩa (Check disk) là một tính năng độc quyền, chỉ xuất hiện duy nhất trên các dòng điện thoại thông minh chạy hệ điều hành iOS.", correct: "Sai" },
+            { id: '2_d25c', text: "Việc chạy tiện ích hợp mảnh (Defragment) trên ổ cứng cơ (HDD) mang lại lợi ích gom các cung dữ liệu bị phân tán về gần nhau, từ đó rút ngắn thời gian đầu từ cơ học phải di chuyển để tìm kiếm tệp tin.", correct: "Đúng" },
+            { id: '2_d25d', text: "Nếu người dùng cảm thấy con trỏ chuột không dây trên màn hình máy tính xách tay di chuyển với tốc độ quá nhanh khó kiểm soát, họ bắt buộc phải mua một con chuột mới có độ phân giải cảm biến thấp hơn để khắc phục.", correct: "Sai" }
         ]},
-        { id: '2_c2', type: 'tf_cluster', question: "Thầy Hùng muốn thiết lập một hệ thống mạng ổn định cho phòng thực hành Tin học của nhà trường:", subQuestions: [
-            { id: '2_d26a', text: "a) Cáp mạng UTP sử dụng giắc cắm chuẩn RJ45 là loại dây cáp phổ biến để kết nối máy tính với Switch.", correct: "Đúng" },
-            { id: '2_d26b', text: "b) Hub là thiết bị kết nối mạng có khả năng định tuyến tìm đường tối ưu nhất cho các gói dữ liệu trên Internet.", correct: "Sai" },
-            { id: '2_d26c', text: "c) Việc sử dụng Switch thay thế cho Hub trong phòng máy có nhiều máy tính sẽ giúp hạn chế triệt để tình trạng xung đột tín hiệu mạng.", correct: "Đúng" },
-            { id: '2_d26d', text: "d) Để thu phát sóng không dây (Wi-Fi) cho các thiết bị di động trong phòng, thầy Hùng bắt buộc phải mua một Modem ADSL mới thay vì dùng thiết bị WAP (Access Point).", correct: "Sai" }
+        { id: '2_c2', type: 'tf_cluster', question: "Một doanh nghiệp bán lẻ quy mô nhỏ đang rà soát lại các phương án đầu tư phần mềm nhằm tối ưu hóa ngân sách vận hành công ty trong năm tài chính đầu tiên.", subQuestions: [
+            { id: '2_d26a', text: "Việc sử dụng các phần mềm mã nguồn mở như trình duyệt web Firefox hay phần mềm xử lý ảnh GIMP hoàn toàn không yêu cầu doanh nghiệp phải trả các khoản phí bản quyền phần mềm đắt đỏ.", correct: "Đúng" },
+            { id: '2_d26b', text: "Mọi nền tảng ứng dụng làm việc trực tuyến trên Internet đều cho phép sử dụng tất cả các chức năng ngoại tuyến (offline) mà không cần có bất kỳ đường truyền kết nối mạng nào.", correct: "Sai" },
+            { id: '2_d26c', text: "Việc tuân thủ giấy phép công cộng GNU GPL đối với phần mềm nguồn mở đảm bảo rằng người dùng có quyền tự do chỉnh sửa nhưng buộc phải duy trì tính mở của mã nguồn nếu phát hành sản phẩm phái sinh ra thị trường.", correct: "Đúng" },
+            { id: '2_d26d', text: "Nếu doanh nghiệp này quyết định ký hợp đồng thuê một đội ngũ kỹ sư lập trình để viết riêng một phần mềm quản lý kho theo quy trình đặc thù của hãng, phần mềm đó được gọi là phần mềm thương mại \"đóng gói\" bán sẵn.", correct: "Sai" }
         ]},
-        { id: '2_c3', type: 'tf_cluster', question: "Bạn Bình muốn chia sẻ thư mục bài tập chung trên máy tính Windows cho các thành viên trong nhóm:", subQuestions: [
-            { id: '2_d27a', text: "a) Thao tác chia sẻ tài nguyên trong mạng LAN giúp người dùng trên các máy tính khác có thể truy cập được dữ liệu máy Bình.", correct: "Đúng" },
-            { id: '2_d27b', text: "b) Tường lửa (Firewall) của Windows không bao giờ cho phép bất kỳ việc chia sẻ tệp tin nào diễn ra trong mạng cục bộ.", correct: "Sai" },
-            { id: '2_d27c', text: "c) Để giới hạn rủi ro bị xóa mất dữ liệu quan trọng, Bình nên cấp cho các bạn trong nhóm mức quyền Permission Level là \"Read\" (chỉ đọc) thay vì \"Read/Write\".", correct: "Đúng" },
-            { id: '2_d27d', text: "d) Trong quá trình làm bài, một bạn lỡ thao tác sai làm hỏng tệp dùng chung; Bình lập tức nhắn tin chỉ trích gay gắt trên nhóm chat lớp để cảnh cáo; hành động này thể hiện chuẩn mực ứng xử nhân văn trên môi trường số.", correct: "Sai" }
+        { id: '2_c3', type: 'tf_cluster', question: "Ban phụ huynh của một lớp học vừa thiết lập một không gian lưu trữ trên nền tảng đám mây Google Drive để tổng hợp hình ảnh và tư liệu về các hoạt động dã ngoại.", subQuestions: [
+            { id: '2_d27a', text: "Thao tác Tải lên (Upload) là hành động đưa các tập tin ảnh từ ổ đĩa cứng của máy tính cá nhân lên không gian lưu trữ trực tuyến trên máy chủ mạng Internet.", correct: "Đúng" },
+            { id: '2_d27b', text: "Các dịch vụ lưu trữ đám mây luôn thiết lập mặc định tính năng xóa vĩnh viễn toàn bộ dữ liệu nếu người dùng không truy cập vào tài khoản quá 3 ngày liên tiếp.", correct: "Sai" },
+            { id: '2_d27c', text: "Nếu trưởng ban phụ huynh thiết lập quyền \"Người xem\" cho một thư mục hình ảnh, những người truy cập thông qua liên kết đó sẽ có khả năng tải ảnh về máy nhưng không thể chèn thêm ảnh mới lên thư mục chung.", correct: "Đúng" },
+            { id: '2_d27d', text: "Để hạn chế rủi ro thất thoát tài liệu quan trọng do một phụ huynh vô tình ấn xóa, trưởng ban nên áp dụng chính sách phân quyền nghiêm ngặt: chỉ giữ quyền \"Người chỉnh sửa\" cho các cán bộ nòng cốt và cấp quyền \"Người xem\" cho phụ huynh phổ thông.", correct: "Đúng" }
         ]},
-        { id: '2_c4', type: 'tf_cluster', question: "Bạn Mai đang tập tành viết những dòng mã HTML đầu tiên để tạo một trang web giới thiệu bản thân:", subQuestions: [
-            { id: '2_d28a', text: "a) Một tệp tin HTML cơ bản hoàn toàn có thể được soạn thảo bằng phần mềm Notepad có sẵn trên hệ điều hành Windows.", correct: "Đúng" },
-            { id: '2_d28b', text: "b) Phần tử &lt;div&gt; được phân loại là một phần tử nội tuyến (inline), nên nó sẽ hiển thị nằm trên cùng dòng với các phần tử khác.", correct: "Sai" },
-            { id: '2_d28c', text: "c) Thẻ &lt;h1&gt; không thể lồng bên trong phần tử &lt;title&gt;, bởi vì &lt;title&gt; chỉ được phép chứa văn bản thuần túy hiển thị trên tab trình duyệt.", correct: "Đúng" },
-            { id: '2_d28d', text: "d) Để trình bày một dòng chữ \"Hồ sơ của Mai\" vừa được in đậm vừa được in nghiêng, Mai có thể sử dụng cú pháp lồng thẻ: &lt;p&gt;&lt;strong&gt;&lt;em&gt;Hồ sơ của Mai&lt;/em&gt;&lt;/strong&gt;&lt;/p&gt;.", correct: "Đúng" }
+        { id: '2_c4', type: 'tf_cluster', question: "Để bảo vệ hình ảnh cá nhân và quản lý luồng thông tin liên lạc tốt hơn, một nhân viên bán hàng đang rà soát lại các mục cài đặt trên mạng xã hội Facebook và hộp thư Gmail.", subQuestions: [
+            { id: '2_d28a', text: "Trang Fanpage là một tính năng mở rộng của mạng xã hội Facebook được thiết kế chuyên biệt nhằm phục vụ mục đích quảng bá hình ảnh cho các cá nhân, doanh nghiệp và tổ chức.", correct: "Đúng" },
+            { id: '2_d28b', text: "Chức năng \"Nhãn\" (Label) trong hộp thư điện tử Gmail được lập trình để bắt buộc mỗi một bức thư chỉ được phép gắn một nhãn duy nhất tại một thời điểm nhất định.", correct: "Sai" },
+            { id: '2_d28c', text: "Việc kích hoạt tính năng \"Xem lại thẻ\" trên mạng xã hội giúp người dùng chủ động sàng lọc và quyết định những hình ảnh nào được phép xuất hiện công khai trên dòng thời gian trang cá nhân của mình.", correct: "Đúng" },
+            { id: '2_d28d', text: "Nếu muốn phân loại toàn bộ email báo cáo doanh thu gửi về hàng tháng nhằm dễ tra cứu mà không làm đầy hộp thư đến, giải pháp tốt nhất là đánh dấu các email này vào mục Thư rác (Spam) để hệ thống tự động lọc và xóa đi.", correct: "Sai" }
         ]}
     ];
 
-     let currentQuestions = [];
+    let currentQuestions = [];
     let deviceId = '';
     let allScores = [];
     let currentStudent = {};
@@ -319,11 +333,12 @@
             return;
         }
 
-        currentStudent = { hoTen: name, lop: lop, maDe: 'de_tin12', tenDe: 'Kiểm Tra Giữa kỳ - Tin Học 12 - Đề 1' };
+        currentStudent = { hoTen: name, lop: lop, maDe: 'de_tin11_2', tenDe: 'Kiểm Tra Giữa kỳ - Tin Học 11 - Đề 2' };
         
         let rawQuestions = JSON.parse(JSON.stringify(de_data));
         
-        let part1 = shuffleArray(rawQuestions.filter(q => q.type === 'single'));
+        // Không trộn đề nữa, giữ nguyên thứ tự câu hỏi, chỉ xáo trộn đáp án các câu trắc nghiệm đơn
+        let part1 = rawQuestions.filter(q => q.type === 'single');
         part1.forEach((q, idx) => {
             q.displayQuestion = `Câu ${idx + 1}: ${q.question}`;
             let correctText = q.options[q.correct];
@@ -331,14 +346,18 @@
             q.correct = q.options.indexOf(correctText);
         });
         
-        let part2 = shuffleArray(rawQuestions.filter(q => q.type === 'tf_cluster'));
+        let part2 = rawQuestions.filter(q => q.type === 'tf_cluster');
         part2.forEach((q, idx) => {
             q.displayQuestion = `Câu ${idx + 1}: ${q.question}`;
+            const labels = ['a)', 'b)', 'c)', 'd)'];
+            q.subQuestions.forEach((sub, sIdx) => {
+                sub.text = `${labels[sIdx]} ${sub.text.replace(/^[a-d]\)\s*/i, '')}`;
+            });
         });
         
         currentQuestions = [...part1, ...part2];
         quizStartTime = new Date();
-        
+        cheatCount = 0; 
         setTimeout(() => { isQuizStarted = true; }, 1000);
         showSection('quiz');
         document.getElementById('quiz-title').innerText = currentStudent.tenDe;
@@ -508,12 +527,8 @@
             duration: formatDuration(Math.floor((quizEndTime - quizStartTime) / 1000)),
             thoiGian: new Date().toISOString(), deviceId: deviceId
         };
-        
         if(database) {
             scoresRef.push(record, () => { window.showModalResult(score, correctSubItems, totalItems, record.duration); });
-        } else {
-            // Hiển thị tạm nếu Firebase bị lỗi
-            window.showModalResult(score, correctSubItems, totalItems, record.duration);
         }
     };
 
@@ -538,33 +553,20 @@
         document.getElementById('no-scores').classList.add('hidden');
         paginationControls.classList.remove('hidden');
         
-        const getTen = (fullName) => {
-            if (!fullName) return '';
-            const words = fullName.trim().split(' ');
-            return words[words.length - 1].toLowerCase();
-        };
-
+        // Sắp xếp theo điểm số từ cao xuống thấp
         sortedScoresList = [...allScores].sort((a, b) => {
-            // Sắp xếp theo điểm giảm dần
-            if (b.diem !== a.diem) return b.diem - a.diem;
-            
-            // Điểm bằng nhau thì sắp xếp theo tên
-            const tenA = getTen(a.hoTen);
-            const tenB = getTen(b.hoTen);
-            if (tenA !== tenB) return tenA.localeCompare(tenB, 'vi');
-            
-            return (a.hoTen || '').localeCompare(b.hoTen || '', 'vi');
+            if (b.diem !== a.diem) {
+                return b.diem - a.diem;
+            }
+            return (a.hoTen || '').localeCompare(b.hoTen || '');
         });
-
-        // Gán thứ hạng
-        sortedScoresList.forEach((s, i) => s.absoluteRank = i + 1);
 
         const myScoreIndex = sortedScoresList.findIndex(s => s.deviceId === deviceId);
         if (myScoreIndex !== -1) {
             const myScore = sortedScoresList[myScoreIndex];
             document.getElementById('my-score-summary').classList.remove('hidden');
             document.getElementById('my-summary-name').innerText = `${myScore.hoTen} (${(myScore.lop || '').toUpperCase()})`;
-            document.getElementById('my-summary-rank').innerText = `Hạng: #${myScore.absoluteRank}`;
+            document.getElementById('my-summary-rank').innerText = `Hạng: #${myScoreIndex + 1}`;
             document.getElementById('my-summary-score').innerText = `${myScore.diem}`;
         } else {
             document.getElementById('my-score-summary').classList.add('hidden');
@@ -582,16 +584,16 @@
         const pageData = sortedScoresList.slice(startIndex, endIndex);
 
         tbody.innerHTML = pageData.map((s, idx) => {
-            let timeStr = "";
+            let timeStr = s.startTime;
             if (s.thoiGian) {
                 const dt = new Date(s.thoiGian);
-                timeStr = `${dt.getDate().toString().padStart(2, '0')}/${(dt.getMonth() + 1).toString().padStart(2, '0')}/${dt.getFullYear()}`;
-            } else {
-                timeStr = s.endTime ? s.endTime.split(' ').pop() : s.duration;
+                // Chỉ hiển thị ngày tháng năm
+                timeStr = dt.toLocaleDateString('vi-VN');
             }
+            const globalIdx = startIndex + idx + 1;
 
             return `<tr class="${s.deviceId === deviceId ? 'my-score-row' : 'hover:bg-gray-50'} transition-colors border-b border-gray-100">
-                <td class="px-3 sm:px-4 py-4 text-center font-bold text-gray-500 text-sm">${s.absoluteRank}</td>
+                <td class="px-3 sm:px-4 py-4 text-center font-bold text-gray-500 text-sm">#${globalIdx}</td>
                 <td class="px-3 sm:px-4 py-4 font-bold text-blue-600 text-sm">${(s.lop || '').toUpperCase()}</td>
                 <td class="px-3 sm:px-4 py-4 font-semibold text-gray-800 text-sm">${s.hoTen} ${s.deviceId === deviceId ? '<span class="ml-2 bg-pink-500 text-white text-[10px] px-2 rounded-md">Bạn</span>' : ''}</td>
                 <td class="px-3 sm:px-4 py-4 text-center"><span class="font-bold text-lg ${s.diem >= 5 ? 'text-green-600' : 'text-red-500'}">${s.diem}</span></td>
