@@ -12,7 +12,6 @@
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
 <!-- MÃ GA4 -->
-  <!-- 1. MÃ GA4 GỐC (Kết nối với Google Analytics) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-NSJCVSL9RM"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
@@ -21,20 +20,6 @@
 
   gtag('config', 'G-NSJCVSL9RM'); 
 </script>
-
-<!-- 2. MÃ NHỊP TIM 30 GIÂY -->
-<script>
-  setInterval(function() {
-    if (!document.hidden) { 
-      gtag('event', 'keep_alive', {
-        'event_category': 'Engagement',
-        'event_label': 'Học sinh đang làm bài',
-        'non_interaction': false
-      });
-    }
-  }, 30000); 
-</script>
-
 
 <script>
   setInterval(function() {
@@ -116,7 +101,6 @@
       </div>
       <h1 class="text-1xl sm:text-3xl font-bold text-red-600 mb-1 leading-tight tracking-tight">KIỂM TRA THƯỜNG XUYÊN LẦN 1</h1>
       <h2 class="text-xl font-bold text-red-500 mb-2"> Đề 1 - Tin Học 12</h2>
-     
      </div>
      
      <div id="login-form" class="space-y-4">
@@ -184,12 +168,12 @@
      <div id="my-score-summary" class="hidden bg-gradient-to-r from-blue-50 to-indigo-50 border-2 border-blue-200 rounded-2xl p-4 sm:p-6 mb-6 flex items-center justify-between shadow-md">
          <div>
              <div class="text-sm text-blue-500 font-extrabold uppercase tracking-wider mb-1">Thành tích của bạn</div>
-             <div class="font-black text-gray-800 text-xl sm:text-1xl" id="my-summary-name">Nguyễn Văn A</div>
+             <div class="font-black text-gray-800 text-xl sm:text-1xl" id="my-summary-name"></div>
              <div class="text-base font-bold text-indigo-600 mt-1" id="my-summary-rank">Hạng: --</div>
          </div>
          <div class="text-right">
              <div class="text-xs text-gray-500 font-bold uppercase mb-1">Điểm số</div>
-             <div class="text-4xl sm:text-3xl font-black text-blue-600 drop-shadow-sm" id="my-summary-score">10</div>
+             <div class="text-4xl sm:text-3xl font-black text-blue-600 drop-shadow-sm" id="my-summary-score">0</div>
          </div>
      </div>
 
@@ -197,12 +181,11 @@
       <table class="w-full text-xs sm:text-sm whitespace-nowrap">
        <thead class="bg-gradient-to-r from-orange-500 to-red-500 text-white">
         <tr>
-         <th class="px-3 sm:px-4 py-4 text-center font-bold">#</th>
+         <th class="px-3 sm:px-4 py-4 text-center font-bold">Hạng</th>
          <th class="px-3 sm:px-4 py-4 text-center font-bold">Lớp</th>
          <th class="px-3 sm:px-4 py-4 text-left font-bold w-full">Họ tên</th>
          <th class="px-3 sm:px-4 py-4 text-center font-bold">Điểm</th>
-         <th class="px-3 sm:px-4 py-4 text-center font-bold">Thời gian</th>
-         <th class="px-3 sm:px-4 py-4 text-right font-bold">Tổng TG</th>
+         <th class="px-3 sm:px-4 py-4 text-center font-bold">Ngày nộp</th>
         </tr>
        </thead>
        <tbody id="scores-tbody" class="bg-white/80 divide-y divide-gray-100"></tbody>
@@ -347,32 +330,32 @@
         window.handleCheatAction('Sao chép (Copy) văn bản');
     });
 
-    // ==================== NGÂN HÀNG CÂU HỎI (ĐÃ ĐƯỢC BIÊN TẬP) ====================
+    // ==================== NGÂN HÀNG CÂU HỎI ====================
     const de_data = [
-        { id: "1_1", type: "single", question: "Hệ thống trí tuệ nhân tạo nào dưới đây có khả năng tạo ra văn bản, làm thơ và lập trình?", options: ["Hệ thống chuyên gia y tế MYCIN.", "Robot hình người Asimo của Honda.", "Hệ thống xử lí ngôn ngữ ChatGPT.", "Hệ thống tìm kiếm Google Maps."], correct: 0 },
+        { id: "1_1", type: "single", question: "Hệ thống trí tuệ nhân tạo nào dưới đây có khả năng tạo ra văn bản, làm thơ và lập trình?", options: ["Hệ thống chuyên gia y tế MYCIN.", "Robot hình người Asimo của Honda.", "Hệ thống xử lí ngôn ngữ ChatGPT.", "Hệ thống tìm kiếm Google Maps."], correct: 2 },
         { id: "1_2", type: "single", question: "Sự kiện nào đánh dấu sự ra đời của thuật ngữ 'Trí tuệ nhân tạo'?", options: ["Hội thảo tại Đại học Dartmouth năm 1956.", "Phép thử Turing được đưa ra năm 1950.", "Sự ra đời của robot Asimo năm 1986.", "Hệ thống MYCIN được phát triển năm 1972."], correct: 0 },
-        { id: "1_3", type: "single", question: "Thiết bị mạng nào dùng để kết nối các máy tính trong văn phòng nhỏ sao cho tín hiệu gửi đi không bị phát tán ra tất cả các cổng gây xung đột?", options: ["Thiết bị Hub (Bộ chia tín hiệu).", "Thiết bị Switch (Bộ chuyển mạch).", "Thiết bị Modem (Bộ điều chế).", "Thiết bị Access Point (Điểm truy cập)."], correct: 0 },
-        { id: "1_4", type: "single", question: "Thiết bị nào được dùng để chuyển đổi tín hiệu số từ máy tính thành tín hiệu tương tự để truyền qua đường dây cáp quang của nhà mạng?", options: ["Bộ định tuyến (Router).", "Bộ chuyển mạch (Switch).", "Bộ chia tín hiệu (Hub).", "Bộ điều giải (Modem)."], correct: 0 },
+        { id: "1_3", type: "single", question: "Thiết bị mạng nào dùng để kết nối các máy tính trong văn phòng nhỏ sao cho tín hiệu gửi đi không bị phát tán ra tất cả các cổng gây xung đột?", options: ["Thiết bị Hub (Bộ chia tín hiệu).", "Thiết bị Switch (Bộ chuyển mạch).", "Thiết bị Modem (Bộ điều chế).", "Thiết bị Access Point (Điểm truy cập)."], correct: 1 },
+        { id: "1_4", type: "single", question: "Thiết bị nào được dùng để chuyển đổi tín hiệu số từ máy tính thành tín hiệu tương tự để truyền qua đường dây cáp quang của nhà mạng?", options: ["Bộ định tuyến (Router).", "Bộ chuyển mạch (Switch).", "Bộ chia tín hiệu (Hub).", "Bộ điều giải (Modem)."], correct: 3 },
         { id: "1_5", type: "single", question: "Để các máy tính khác có thể nhìn thấy máy của mình khi chia sẻ máy in trong hệ điều hành Windows 11, cần bật tính năng nào?", options: ["Tính năng Network discovery.", "Tính năng Password protection.", "Tính năng Microsoft Defender.", "Tính năng Public folder sharing."], correct: 0 },
-        { id: "1_6", type: "single", question: "Khi chia sẻ một thư mục trên mạng LAN, nếu muốn mọi người chỉ có thể xem tài liệu mà không được phép xoá hay chỉnh sửa, cần chọn mức quyền (Permission Level) nào?", options: ["Quyền Owner (Chủ sở hữu).", "Quyền Read (Chỉ đọc).", "Quyền Read/Write (Đọc/Ghi).", "Quyền Full Control (Toàn quyền)."], correct: 0 },
-        { id: "1_7", type: "single", question: "Internet hoạt động dựa trên bộ giao thức cốt lõi nào đóng vai trò định tuyến và truyền tải?", options: ["Bộ giao thức HTTP/HTTPS.", "Bộ giao thức TCP/IP.", "Bộ giao thức SMTP/POP3.", "Bộ giao thức MAC/LAN."], correct: 0 },
-        { id: "1_8", type: "single", question: "Đặc trưng cơ bản nhất giúp phân biệt AI với các hệ thống tự động hoá thông thường là gì?", options: ["Khả năng hoạt động liên tục không ngừng nghỉ.", "Khả năng thực hiện lặp đi lặp lại một thao tác.", "Khả năng học từ dữ liệu và điều chỉnh hành vi.", "Khả năng kết nối trực tiếp với mạng Internet."], correct: 0 },
-        { id: "1_9", type: "single", question: "Cửa tự động ở siêu thị mở ra khi có người bước tới có phải là ứng dụng của AI không? Chọn câu trả lời và giải thích hợp lí nhất.", options: ["Có, vì nó nhận thức được môi trường và hiểu được ngôn ngữ con người.", "Có, vì nó thay thế con người làm công việc đóng mở cửa vô cùng thông minh.", "Không, vì nó chỉ hoạt động dựa trên cảm biến đơn giản, không có khả năng học.", "Không, vì nó không được kết nối với mạng Internet để truy xuất dữ liệu lớn."], correct: 0 },
-        { id: "1_10", type: "single", question: "Tính năng dịch một đoạn văn bản tiếng Anh sang tiếng Việt của Google Dịch thể hiện đặc trưng trí tuệ nào của AI?", options: ["Khả năng nhận thức môi trường vật lí xung quanh.", "Khả năng hiểu và xử lí ngôn ngữ tự nhiên.", "Khả năng tự động điều khiển các máy móc cơ khí.", "Khả năng ra quyết định chiến lược trong trò chơi."], correct: 0 },
-        { id: "1_11", type: "single", question: "Tại sao ở các mạng nội bộ lớn có hàng trăm máy tính, người ta thường sử dụng Switch thay vì Hub?", options: ["Switch có giá thành rẻ hơn rất nhiều so với thiết bị Hub cùng loại.", "Switch giúp giảm thiểu xung đột tín hiệu bằng cách kết nối đúng cổng.", "Switch có khả năng phát tín hiệu Wi-Fi xuyên qua các bức tường dày.", "Switch tự động chuyển đổi tín hiệu số thành tín hiệu cáp quang."], correct: 0 },
-        { id: "1_12", type: "single", question: "Thiết bị nào làm nhiệm vụ chọn đường đi (định tuyến) cho một gói tin được gửi từ máy tính này đến máy tính khác qua Internet?", options: ["Thiết bị Switch.", "Thiết bị Modem.", "Thiết bị Router.", "Thiết bị Hub."], correct: 0 },
-        { id: "1_13", type: "single", question: "Chức năng chính của giao thức TCP trong bộ giao thức TCP/IP là gì?", options: ["Quy định cách đánh địa chỉ cho các thiết bị mạng.", "Chọn đường đi ngắn nhất cho dữ liệu trên Internet.", "Đảm bảo truyền dữ liệu chính xác, tin cậy, không lỗi.", "Chuyển đổi tên miền thành địa chỉ IP tương ứng."], correct: 0 },
-        { id: "1_14", type: "single", question: "Trong hệ điều hành Windows, thư mục Public mặc định có đặc điểm gì?", options: ["Mặc định tự động chia sẻ cho mọi máy tính trên toàn thế giới qua Internet.", "Dữ liệu trong đó có thể được nhìn thấy bởi mọi người dùng trong mạng LAN nếu bật chia sẻ.", "Chỉ có chủ sở hữu máy tính mới có quyền truy cập vào các tệp tin bên trong thư mục này.", "Không thể lưu trữ các tệp tin cá nhân mà chỉ dùng để lưu trữ các tệp tin hệ thống."], correct: 0 },
-        { id: "1_15", type: "single", question: "Rủi ro nào dưới đây liên quan trực tiếp đến vấn đề đạo đức và tính minh bạch của AI?", options: ["Máy tính tiêu tốn quá nhiều điện năng để vận hành các mô hình AI lớn.", "AI hoạt động như một 'hộp đen' khiến con người khó hiểu được cách nó ra quyết định.", "Giá thành của các thiết bị phần cứng hỗ trợ AI ngày càng tăng cao.", "Tốc độ đường truyền mạng không đủ để đáp ứng nhu cầu xử lí của AI."], correct: 0 },
-        { id: "1_16", type: "single", question: "Khẳng định nào sau đây là đúng về sự khác biệt giữa địa chỉ MAC và địa chỉ IP trong mạng máy tính?", options: ["Địa chỉ MAC có thể thay đổi linh hoạt, còn địa chỉ IP được gắn cố định vào phần cứng thiết bị.", "Địa chỉ MAC dùng để định tuyến trên Internet, địa chỉ IP dùng để định tuyến trong mạng LAN.", "Địa chỉ MAC gắn liền với phần cứng không đổi, địa chỉ IP có thể thay đổi khi đổi mạng.", "Địa chỉ MAC gồm 4 byte phân cách bởi dấu chấm, địa chỉ IP gồm 6 byte phân cách bởi dấu hai chấm."], correct: 0 },
+        { id: "1_6", type: "single", question: "Khi chia sẻ một thư mục trên mạng LAN, nếu muốn mọi người chỉ có thể xem tài liệu mà không được phép xoá hay chỉnh sửa, cần chọn mức quyền (Permission Level) nào?", options: ["Quyền Owner (Chủ sở hữu).", "Quyền Read (Chỉ đọc).", "Quyền Read/Write (Đọc/Ghi).", "Quyền Full Control (Toàn quyền)."], correct: 1 },
+        { id: "1_7", type: "single", question: "Internet hoạt động dựa trên bộ giao thức cốt lõi nào đóng vai trò định tuyến và truyền tải?", options: ["Bộ giao thức HTTP/HTTPS.", "Bộ giao thức TCP/IP.", "Bộ giao thức SMTP/POP3.", "Bộ giao thức MAC/LAN."], correct: 1 },
+        { id: "1_8", type: "single", question: "Đặc trưng cơ bản nhất giúp phân biệt AI với các hệ thống tự động hoá thông thường là gì?", options: ["Khả năng hoạt động liên tục không ngừng nghỉ.", "Khả năng thực hiện lặp đi lặp lại một thao tác.", "Khả năng học từ dữ liệu và điều chỉnh hành vi.", "Khả năng kết nối trực tiếp với mạng Internet."], correct: 2 },
+        { id: "1_9", type: "single", question: "Cửa tự động ở siêu thị mở ra khi có người bước tới có phải là ứng dụng của AI không? Chọn câu trả lời và giải thích hợp lí nhất.", options: ["Có, vì nó nhận thức được môi trường và hiểu được ngôn ngữ con người.", "Có, vì nó thay thế con người làm công việc đóng mở cửa vô cùng thông minh.", "Không, vì nó chỉ hoạt động dựa trên cảm biến đơn giản, không có khả năng học.", "Không, vì nó không được kết nối với mạng Internet để truy xuất dữ liệu lớn."], correct: 2 },
+        { id: "1_10", type: "single", question: "Tính năng dịch một đoạn văn bản tiếng Anh sang tiếng Việt của Google Dịch thể hiện đặc trưng trí tuệ nào của AI?", options: ["Khả năng nhận thức môi trường vật lí xung quanh.", "Khả năng hiểu và xử lí ngôn ngữ tự nhiên.", "Khả năng tự động điều khiển các máy móc cơ khí.", "Khả năng ra quyết định chiến lược trong trò chơi."], correct: 1 },
+        { id: "1_11", type: "single", question: "Tại sao ở các mạng nội bộ lớn có hàng trăm máy tính, người ta thường sử dụng Switch thay vì Hub?", options: ["Switch có giá thành rẻ hơn rất nhiều so với thiết bị Hub cùng loại.", "Switch giúp giảm thiểu xung đột tín hiệu bằng cách kết nối đúng cổng.", "Switch có khả năng phát tín hiệu Wi-Fi xuyên qua các bức tường dày.", "Switch tự động chuyển đổi tín hiệu số thành tín hiệu cáp quang."], correct: 1 },
+        { id: "1_12", type: "single", question: "Thiết bị nào làm nhiệm vụ chọn đường đi (định tuyến) cho một gói tin được gửi từ máy tính này đến máy tính khác qua Internet?", options: ["Thiết bị Switch.", "Thiết bị Modem.", "Thiết bị Router.", "Thiết bị Hub."], correct: 2 },
+        { id: "1_13", type: "single", question: "Chức năng chính của giao thức TCP trong bộ giao thức TCP/IP là gì?", options: ["Quy định cách đánh địa chỉ cho các thiết bị mạng.", "Chọn đường đi ngắn nhất cho dữ liệu trên Internet.", "Đảm bảo truyền dữ liệu chính xác, tin cậy, không lỗi.", "Chuyển đổi tên miền thành địa chỉ IP tương ứng."], correct: 2 },
+        { id: "1_14", type: "single", question: "Trong hệ điều hành Windows, thư mục Public mặc định có đặc điểm gì?", options: ["Mặc định tự động chia sẻ cho mọi máy tính trên toàn thế giới qua Internet.", "Dữ liệu trong đó có thể được nhìn thấy bởi mọi người dùng trong mạng LAN nếu bật chia sẻ.", "Chỉ có chủ sở hữu máy tính mới có quyền truy cập vào các tệp tin bên trong thư mục này.", "Không thể lưu trữ các tệp tin cá nhân mà chỉ dùng để lưu trữ các tệp tin hệ thống."], correct: 1 },
+        { id: "1_15", type: "single", question: "Rủi ro nào dưới đây liên quan trực tiếp đến vấn đề đạo đức và tính minh bạch của AI?", options: ["Máy tính tiêu tốn quá nhiều điện năng để vận hành các mô hình AI lớn.", "AI hoạt động như một 'hộp đen' khiến con người khó hiểu được cách nó ra quyết định.", "Giá thành của các thiết bị phần cứng hỗ trợ AI ngày càng tăng cao.", "Tốc độ đường truyền mạng không đủ để đáp ứng nhu cầu xử lí của AI."], correct: 1 },
+        { id: "1_16", type: "single", question: "Khẳng định nào sau đây là đúng về sự khác biệt giữa địa chỉ MAC và địa chỉ IP trong mạng máy tính?", options: ["Địa chỉ MAC có thể thay đổi linh hoạt, còn địa chỉ IP được gắn cố định vào phần cứng thiết bị.", "Địa chỉ MAC dùng để định tuyến trên Internet, địa chỉ IP dùng để định tuyến trong mạng LAN.", "Địa chỉ MAC gắn liền với phần cứng không đổi, địa chỉ IP có thể thay đổi khi đổi mạng.", "Địa chỉ MAC gồm 4 byte phân cách bởi dấu chấm, địa chỉ IP gồm 6 byte phân cách bởi dấu hai chấm."], correct: 2 },
         { id: "1_17", type: "single", question: "Để thiết lập một mạng gia đình cho phép tất cả thiết bị truy cập Internet không dây và kết nối với đường truyền cáp quang, cần trang bị tổ hợp thiết bị nào là tối ưu nhất?", options: ["Một Modem quang kết hợp với một Router Wi-Fi.", "Một Switch 8 cổng kết hợp với một thiết bị Hub.", "Chỉ cần một thiết bị Access Point (Điểm truy cập).", "Một Modem ADSL kết hợp với một cáp mạng UTP."], correct: 0 },
-        { id: "1_18", type: "single", question: "Để các máy tính khác trong cùng mạng LAN có thể in tài liệu qua một máy in đang kết nối trực tiếp bằng cáp USB vào máy tính A, cần thực hiện bước thiết lập nào trên máy tính A?", options: ["Bật tính năng Password Protection và ngắt kết nối mạng LAN.", "Chia sẻ máy in trong Printers & scanners và bật File/Printer sharing.", "Cài đặt lại hệ điều hành Windows để máy tính tự động nhận diện máy in.", "Ngắt tạm thời tường lửa Firewall và cắm cáp mạng trực tiếp sang máy tính khác."], correct: 0 },
-        { id: "1_19", type: "single", question: "Khi sử dụng các công cụ AI như ChatGPT để hỗ trợ viết mã lập trình nhưng hệ thống đưa ra đoạn mã có lỗi cú pháp, hành động vận dụng đúng đắn nhất là gì?", options: ["Mặc định ChatGPT luôn đúng và sao chép y nguyên đoạn mã để nộp bài.", "Phản hồi lại cho ChatGPT về lỗi cú pháp để hệ thống tự động chỉnh sửa.", "Xoá tài khoản ChatGPT vì cho rằng hệ thống AI này hoàn toàn vô dụng.", "Chuyển sang sử dụng Google Dịch để dịch lỗi cú pháp sang ngôn ngữ khác."], correct: 0 },
+        { id: "1_18", type: "single", question: "Để các máy tính khác trong cùng mạng LAN có thể in tài liệu qua một máy in đang kết nối trực tiếp bằng cáp USB vào máy tính A, cần thực hiện bước thiết lập nào trên máy tính A?", options: ["Bật tính năng Password Protection và ngắt kết nối mạng LAN.", "Chia sẻ máy in trong Printers & scanners và bật File/Printer sharing.", "Cài đặt lại hệ điều hành Windows để máy tính tự động nhận diện máy in.", "Ngắt tạm thời tường lửa Firewall và cắm cáp mạng trực tiếp sang máy tính khác."], correct: 1 },
+        { id: "1_19", type: "single", question: "Khi sử dụng các công cụ AI như ChatGPT để hỗ trợ viết mã lập trình nhưng hệ thống đưa ra đoạn mã có lỗi cú pháp, hành động vận dụng đúng đắn nhất là gì?", options: ["Mặc định ChatGPT luôn đúng và sao chép y nguyên đoạn mã để nộp bài.", "Phản hồi lại cho ChatGPT về lỗi cú pháp để hệ thống tự động chỉnh sửa.", "Xoá tài khoản ChatGPT vì cho rằng hệ thống AI này hoàn toàn vô dụng.", "Chuyển sang sử dụng Google Dịch để dịch lỗi cú pháp sang ngôn ngữ khác."], correct: 1 },
         { id: "1_20", type: "single", question: "Khi chia sẻ thư mục trên mạng LAN cho nhiều người nhưng chỉ muốn họ xem tài liệu mà không thể xoá nhầm các tệp tin bên trong, cần thiết lập Sharing như thế nào?", options: ["Chọn mục Everyone và đặt mức quyền Permission Level là Read.", "Chọn mục Everyone và đặt mức quyền Permission Level là Read/Write.", "Thêm tài khoản Guest và đặt mức quyền Permission Level là Owner.", "Bật Password Protected Sharing và không cung cấp mật khẩu cho ai."], correct: 0 },
-        { id: "1_21", type: "single", question: "Địa chỉ IP nào sau đây là địa chỉ IPv4 hợp lệ để cấp cho một máy tính trong mạng LAN?", options: ["192.168.1.300", "10.25.0.255", "172.16.0.ABCD", "256.0.0.1"], correct: 0 },
-        { id: "1_22", type: "single", question: "Hệ thống nhận diện khuôn mặt để mở khoá cửa không thể hoạt động khi người dùng đeo khẩu trang. Tình huống này cho thấy hạn chế nào của hệ thống AI hiện tại?", options: ["AI thiếu khả năng cảm nhận nhiệt độ của con người.", "AI chưa có khả năng linh hoạt suy luận ngoài dữ liệu đã được huấn luyện.", "AI không có khả năng nhận dạng và hiểu ngôn ngữ tiếng Việt.", "AI bị hỏng hóc phần cứng máy quay camera do thời tiết."], correct: 0 },
-        { id: "1_23", type: "single", question: "Trong công cụ Command Prompt trên máy tính, lệnh nào được dùng để gửi các gói tin kiểm tra kết nối đến một máy tính khác?", options: ["Lệnh ipconfig.", "Lệnh ping.", "Lệnh telnet.", "Lệnh tracert."], correct: 0 },
-        { id: "1_24", type: "single", question: "Việc sử dụng AI để theo dõi thời tiết và tình trạng cây trồng nhằm dự đoán thời điểm thu hoạch tối ưu là ứng dụng của AI trong lĩnh vực nào?", options: ["Lĩnh vực tài chính và ngân hàng trực tuyến.", "Lĩnh vực y tế và chăm sóc sức khoẻ cộng đồng.", "Lĩnh vực giao thông vận tải thông minh.", "Lĩnh vực sản xuất nông nghiệp công nghệ cao."], correct: 0 },
+        { id: "1_21", type: "single", question: "Địa chỉ IP nào sau đây là địa chỉ IPv4 hợp lệ để cấp cho một máy tính trong mạng LAN?", options: ["192.168.1.300", "10.25.0.255", "172.16.0.ABCD", "256.0.0.1"], correct: 1 },
+        { id: "1_22", type: "single", question: "Hệ thống nhận diện khuôn mặt để mở khoá cửa không thể hoạt động khi người dùng đeo khẩu trang. Tình huống này cho thấy hạn chế nào của hệ thống AI hiện tại?", options: ["AI thiếu khả năng cảm nhận nhiệt độ của con người.", "AI chưa có khả năng linh hoạt suy luận ngoài dữ liệu đã được huấn luyện.", "AI không có khả năng nhận dạng và hiểu ngôn ngữ tiếng Việt.", "AI bị hỏng hóc phần cứng máy quay camera do thời tiết."], correct: 1 },
+        { id: "1_23", type: "single", question: "Trong công cụ Command Prompt trên máy tính, lệnh nào được dùng để gửi các gói tin kiểm tra kết nối đến một máy tính khác?", options: ["Lệnh ipconfig.", "Lệnh ping.", "Lệnh telnet.", "Lệnh tracert."], correct: 1 },
+        { id: "1_24", type: "single", question: "Việc sử dụng AI để theo dõi thời tiết và tình trạng cây trồng nhằm dự đoán thời điểm thu hoạch tối ưu là ứng dụng của AI trong lĩnh vực nào?", options: ["Lĩnh vực tài chính và ngân hàng trực tuyến.", "Lĩnh vực y tế và chăm sóc sức khoẻ cộng đồng.", "Lĩnh vực giao thông vận tải thông minh.", "Lĩnh vực sản xuất nông nghiệp công nghệ cao."], correct: 3 },
         { id: '1_c1', type: 'tf_cluster', question: "Về đặc trưng và các ứng dụng của Trí tuệ nhân tạo (AI) trong đời sống, các phát biểu sau đây đúng hay sai?", subQuestions: [
             { id: '1_d25a', text: " Trợ lí ảo Google Assistant trên điện thoại là một ví dụ điển hình về ứng dụng AI có khả năng hiểu ngôn ngữ tự nhiên.", correct: "Đúng" },
             { id: '1_d25b', text: " Máy tính điều khiển hệ thống tưới cây tự động hẹn giờ bật/tắt mỗi ngày là một hệ thống AI mạnh.", correct: "Sai" },
@@ -411,18 +394,6 @@
     const rowsPerPage = 10;
     let sortedScoresList = [];
 
-    function shuffleArray(array) {
-        let curId = array.length;
-        while (0 !== curId) {
-            let randId = Math.floor(Math.random() * curId);
-            curId -= 1;
-            let tmp = array[curId];
-            array[curId] = array[randId];
-            array[randId] = tmp;
-        }
-        return array;
-    }
-
     window.startQuizAction = function() {
         const errDiv = document.getElementById('login-error');
         errDiv.classList.add('hidden');
@@ -435,31 +406,30 @@
             return;
         }
 
-        currentStudent = { hoTen: name, lop: lop, maDe: 'de_tin12', tenDe: 'Kiểm Tra Thường Xuyên -Đề 1 - Tin Học 12' };
+        currentStudent = { hoTen: name, lop: lop, maDe: 'de_tin12', tenDe: 'Kiểm Tra Thường Xuyên - Đề 1 - Tin Học 12' };
         
         let rawQuestions = JSON.parse(JSON.stringify(de_data));
         
-        let part1 = shuffleArray(rawQuestions.filter(q => q.type === 'single'));
+        // KHÔNG ĐẢO CÂU, KHÔNG ĐẢO ĐÁP ÁN
+        let part1 = rawQuestions.filter(q => q.type === 'single');
         part1.forEach((q, idx) => {
             q.displayQuestion = `Câu ${idx + 1}: ${q.question}`;
-            let correctText = q.options[q.correct];
-            q.options = shuffleArray(q.options);
-            q.correct = q.options.indexOf(correctText);
         });
         
-        let part2 = shuffleArray(rawQuestions.filter(q => q.type === 'tf_cluster'));
+        let part2 = rawQuestions.filter(q => q.type === 'tf_cluster');
         part2.forEach((q, idx) => {
             q.displayQuestion = `Câu ${part1.length + idx + 1}: ${q.question}`;
-            q.subQuestions = shuffleArray(q.subQuestions);
             const labels = ['a)', 'b)', 'c)', 'd)'];
             q.subQuestions.forEach((sub, sIdx) => {
-                sub.text = `${labels[sIdx]} ${sub.text}`;
+                if (!sub.text.startsWith(labels[sIdx])) {
+                    sub.text = `${labels[sIdx]} ${sub.text}`;
+                }
             });
         });
         
         currentQuestions = [...part1, ...part2];
         quizStartTime = new Date();
-        cheatCount = 0; // Đặt lại bộ đếm gian lận
+        cheatCount = 0;
         setTimeout(() => { isQuizStarted = true; }, 1000);
         showSection('quiz');
         document.getElementById('quiz-title').innerText = currentStudent.tenDe;
@@ -520,7 +490,6 @@
         window.updateProgress();
     };
 
-    // TỐI ƯU HIỂN THỊ ĐÚNG/SAI VÀ NÚT BẤM DI ĐỘNG (Bản chuẩn)
     window.renderQuestion = function() {
         if (!currentQuestions || currentQuestions.length === 0) return;
         const q = currentQuestions[currentIdx];
@@ -621,6 +590,11 @@
             }
         });
 
+        // CHỐT CHẶN: Đảm bảo không bị sai số thập phân nếu học sinh làm đúng 100% số ý
+        if (correctSubItems === totalItems) {
+            totalScore = 10.0;
+        }
+
         const score = totalScore.toFixed(2);
 
         const record = {
@@ -663,15 +637,31 @@
         };
 
         sortedScoresList = [...allScores].sort((a, b) => {
-            const lopA = (a.lop || '').toUpperCase();
-            const lopB = (b.lop || '').toUpperCase();
-            if (lopA !== lopB) return lopA.localeCompare(lopB);
+            // Sắp xếp theo điểm giảm dần
+            if (b.diem !== a.diem) return b.diem - a.diem;
             
+            // Điểm bằng nhau thì sắp xếp theo tên
             const tenA = getTen(a.hoTen);
             const tenB = getTen(b.hoTen);
-            if (tenA !== tenB) return tenA.localeCompare(tenB);
+            if (tenA !== tenB) return tenA.localeCompare(tenB, 'vi');
             
-            return (a.hoTen || '').localeCompare(b.hoTen || '');
+            return (a.hoTen || '').localeCompare(b.hoTen || '', 'vi');
+        });
+
+        // Áp dụng thuật toán xếp hạng theo điểm (Dense Ranking)
+        let currentRank = 1;
+        let prevScore = -1;
+        
+        sortedScoresList.forEach((s, i) => {
+            if (i === 0) {
+                s.absoluteRank = currentRank;
+            } else {
+                if (s.diem < prevScore) {
+                    currentRank++;
+                }
+                s.absoluteRank = currentRank;
+            }
+            prevScore = s.diem;
         });
 
         // Tìm thứ hạng và điểm của người dùng hiện tại
@@ -680,7 +670,7 @@
             const myScore = sortedScoresList[myScoreIndex];
             document.getElementById('my-score-summary').classList.remove('hidden');
             document.getElementById('my-summary-name').innerText = `${myScore.hoTen} (${(myScore.lop || '').toUpperCase()})`;
-            document.getElementById('my-summary-rank').innerText = `Hạng: #${myScoreIndex + 1}`;
+            document.getElementById('my-summary-rank').innerText = `Hạng: ${myScore.absoluteRank}`;
             document.getElementById('my-summary-score').innerText = `${myScore.diem}`;
         } else {
             document.getElementById('my-score-summary').classList.add('hidden');
@@ -698,20 +688,21 @@
         const pageData = sortedScoresList.slice(startIndex, endIndex);
 
         tbody.innerHTML = pageData.map((s, idx) => {
-            let timeStr = s.startTime;
+            let timeStr = "";
             if (s.thoiGian) {
                 const dt = new Date(s.thoiGian);
-                timeStr = dt.toLocaleTimeString('vi-VN') + ' - ' + dt.toLocaleDateString('vi-VN');
+                // Hiển thị ngày/tháng/năm
+                timeStr = `${dt.getDate().toString().padStart(2, '0')}/${(dt.getMonth() + 1).toString().padStart(2, '0')}/${dt.getFullYear()}`;
+            } else {
+                timeStr = s.endTime ? s.endTime.split(' ').pop() : s.duration;
             }
-            const globalIdx = startIndex + idx + 1;
 
             return `<tr class="${s.deviceId === deviceId ? 'my-score-row' : 'hover:bg-gray-50'} transition-colors border-b border-gray-100">
-                <td class="px-3 sm:px-4 py-4 text-center font-bold text-gray-500 text-sm">#${globalIdx}</td>
+                <td class="px-3 sm:px-4 py-4 text-center font-bold text-gray-500 text-sm">${s.absoluteRank}</td>
                 <td class="px-3 sm:px-4 py-4 font-bold text-blue-600 text-sm">${(s.lop || '').toUpperCase()}</td>
                 <td class="px-3 sm:px-4 py-4 font-semibold text-gray-800 text-sm">${s.hoTen} ${s.deviceId === deviceId ? '<span class="ml-2 bg-pink-500 text-white text-[10px] px-2 rounded-md">Bạn</span>' : ''}</td>
                 <td class="px-3 sm:px-4 py-4 text-center"><span class="font-bold text-lg ${s.diem >= 5 ? 'text-green-600' : 'text-red-500'}">${s.diem}</span></td>
                 <td class="px-3 sm:px-4 py-4 text-center text-gray-500 text-xs">${timeStr}</td>
-                <td class="px-3 sm:px-4 py-4 text-right font-bold text-orange-600 text-xs">${s.duration}</td>
             </tr>`;
         }).join('');
     };

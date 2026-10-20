@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
-  <title>Kiểm Tra Thường Xuyên - Tin học 12 - Đề số 4</title>
+  <title>Kiểm Tra Thường Xuyên - Tin học 12 - Đề số 5</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   
@@ -213,11 +213,11 @@
       <table class="w-full text-xs sm:text-sm whitespace-nowrap">
        <thead class="bg-gradient-to-r from-orange-500 to-red-500 text-white">
         <tr>
-         <th class="px-3 sm:px-4 py-4 text-center font-bold">#</th>
+         <th class="px-3 sm:px-4 py-4 text-center font-bold">Hạng</th>
          <th class="px-3 sm:px-4 py-4 text-center font-bold">Lớp</th>
          <th class="px-3 sm:px-4 py-4 text-left font-bold w-full">Họ tên</th>
          <th class="px-3 sm:px-4 py-4 text-center font-bold">Điểm</th>
-         <th class="px-3 sm:px-4 py-4 text-center font-bold">Thời gian</th>
+         <th class="px-3 sm:px-4 py-4 text-center font-bold">Ngày nộp</th>
         </tr>
        </thead>
        <tbody id="scores-tbody" class="bg-white/80 divide-y divide-gray-100"></tbody>
@@ -234,7 +234,6 @@
     </div>
    </div>
 
-  
   </div>
 
   <script>
@@ -256,39 +255,38 @@
         if (typeof firebase !== 'undefined') {
             if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
             database = firebase.database();
-            // Bảng dữ liệu xếp hạng đề số 3
-            scoresRef = database.ref('bxh_gk1_12_15');
+            scoresRef = database.ref('bxh_tx_12_de5_final');
         }
     } catch(err) { console.error("Lỗi Firebase:", err); }
 
     let isQuizStarted = false; 
     let isSubmitting = false;
 
-    // CẬP NHẬT 24 CÂU TRẮC NGHIỆM VÀ 4 CÂU ĐÚNG/SAI ĐỀ SỐ 3
+    // DỮ LIỆU CÂU HỎI (ĐÃ TRỘN VỊ TRÍ ĐÁP ÁN ĐÚNG NGẪU NHIÊN)
     const de_data = [
-        { id: "3_1", type: "single", question: "Để tạo một danh sách các mục có đánh số thứ tự (1, 2, 3...), ta dùng thẻ nào?", options: ["Thẻ <code class='code-snippet'>&lt;ol&gt;</code>.", "Thẻ <code class='code-snippet'>&lt;ul&gt;</code>.", "Thẻ <code class='code-snippet'>&lt;li&gt;</code>.", "Thẻ <code class='code-snippet'>&lt;dl&gt;</code>."], correct: 0 },
-        { id: "3_2", type: "single", question: "Thẻ đơn nào sau đây dùng để ngắt xuống dòng bên trong một đoạn văn bản?", options: ["Thẻ <code class='code-snippet'>&lt;br&gt;</code>.", "Thẻ <code class='code-snippet'>&lt;hr&gt;</code>.", "Thẻ <code class='code-snippet'>&lt;cr&gt;</code>.", "Thẻ <code class='code-snippet'>&lt;pr&gt;</code>."], correct: 0 },
-        { id: "3_3", type: "single", question: "Thuộc tính CSS <code class='code-snippet'>font-size</code> được sử dụng với mục đích chính là gì?", options: ["Thay đổi kích thước hiển thị của chữ.", "Thay đổi màu sắc hiển thị của chữ.", "Thay đổi phông chữ (kiểu chữ) hiển thị.", "Thay đổi đường viền bao quanh chữ."], correct: 0 },
+        { id: "3_1", type: "single", question: "Để tạo một danh sách các mục có đánh số thứ tự (1, 2, 3...), ta dùng thẻ nào?", options: ["Thẻ <code class='code-snippet'>&lt;ul&gt;</code>.", "Thẻ <code class='code-snippet'>&lt;ol&gt;</code>.", "Thẻ <code class='code-snippet'>&lt;li&gt;</code>.", "Thẻ <code class='code-snippet'>&lt;dl&gt;</code>."], correct: 1 },
+        { id: "3_2", type: "single", question: "Thẻ đơn nào sau đây dùng để ngắt xuống dòng bên trong một đoạn văn bản?", options: ["Thẻ <code class='code-snippet'>&lt;hr&gt;</code>.", "Thẻ <code class='code-snippet'>&lt;cr&gt;</code>.", "Thẻ <code class='code-snippet'>&lt;br&gt;</code>.", "Thẻ <code class='code-snippet'>&lt;pr&gt;</code>."], correct: 2 },
+        { id: "3_3", type: "single", question: "Thuộc tính CSS <code class='code-snippet'>font-size</code> được sử dụng với mục đích chính là gì?", options: ["Thay đổi màu sắc hiển thị của chữ.", "Thay đổi đường viền bao quanh chữ.", "Thay đổi phông chữ (kiểu chữ) hiển thị.", "Thay đổi kích thước hiển thị của chữ."], correct: 3 },
         { id: "3_4", type: "single", question: "Thẻ nào được dùng để tạo ra một ô đóng vai trò là tiêu đề cột/hàng trong bảng?", options: ["Thẻ <code class='code-snippet'>&lt;th&gt;</code>.", "Thẻ <code class='code-snippet'>&lt;tr&gt;</code>.", "Thẻ <code class='code-snippet'>&lt;td&gt;</code>.", "Thẻ <code class='code-snippet'>&lt;tbody&gt;</code>."], correct: 0 },
-        { id: "3_5", type: "single", question: "Kiểu dữ liệu <code class='code-snippet'>&lt;input type=\"radio\"&gt;</code> trong biểu mẫu được dùng khi nào?", options: ["Chỉ cho phép người dùng chọn duy nhất một giá trị.", "Cho phép người dùng chọn cùng lúc nhiều giá trị.", "Dùng để nhập một đoạn văn bản dài nhiều dòng.", "Dùng để nhấn nút gửi toàn bộ dữ liệu đi xử lý."], correct: 0 },
-        { id: "3_6", type: "single", question: "Một tệp tin chỉ chứa các câu lệnh định dạng CSS thường có phần mở rộng là gì?", options: ["Đuôi .css.", "Đuôi .htm.", "Đuôi .txt.", "Đuôi .doc."], correct: 0 },
+        { id: "3_5", type: "single", question: "Kiểu dữ liệu <code class='code-snippet'>&lt;input type=\"radio\"&gt;</code> trong biểu mẫu được dùng khi nào?", options: ["Cho phép người dùng chọn cùng lúc nhiều giá trị.", "Chỉ cho phép người dùng chọn duy nhất một giá trị.", "Dùng để nhập một đoạn văn bản dài nhiều dòng.", "Dùng để nhấn nút gửi toàn bộ dữ liệu đi xử lý."], correct: 1 },
+        { id: "3_6", type: "single", question: "Một tệp tin chỉ chứa các câu lệnh định dạng CSS thường có phần mở rộng là gì?", options: ["Đuôi .htm.", "Đuôi .txt.", "Đuôi .css.", "Đuôi .doc."], correct: 2 },
         { id: "3_7", type: "single", question: "Cú pháp CSS nào dưới đây là bộ chọn (selector) dùng cho tất cả các thẻ <code class='code-snippet'>&lt;p&gt;</code>?", options: ["<code class='code-block'>p { }</code>", "<code class='code-block'>#p { }</code>", "<code class='code-block'>.p { }</code>", "<code class='code-block'>*p { }</code>"], correct: 0 },
-        { id: "3_8", type: "single", question: "Thẻ HTML nào sau đây được thiết kế chuyên biệt để chèn tệp tin âm thanh?", options: ["Thẻ <code class='code-snippet'>&lt;audio&gt;</code>.", "Thẻ <code class='code-snippet'>&lt;sound&gt;</code>.", "Thẻ <code class='code-snippet'>&lt;music&gt;</code>.", "Thẻ <code class='code-snippet'>&lt;media&gt;</code>."], correct: 0 },
+        { id: "3_8", type: "single", question: "Thẻ HTML nào sau đây được thiết kế chuyên biệt để chèn tệp tin âm thanh?", options: ["Thẻ <code class='code-snippet'>&lt;sound&gt;</code>.", "Thẻ <code class='code-snippet'>&lt;music&gt;</code>.", "Thẻ <code class='code-snippet'>&lt;media&gt;</code>.", "Thẻ <code class='code-snippet'>&lt;audio&gt;</code>."], correct: 3 },
         { id: "3_9", type: "single", question: "Đặc điểm nhận dạng của một phần tử HTML dạng nội tuyến (inline) là gì?", options: ["Được hiển thị tiếp nối ngay trên cùng một dòng.", "Luôn luôn ép nội dung bắt đầu trên một dòng mới.", "Mặc định chiếm toàn bộ chiều rộng của trang web.", "Bị ẩn đi hoàn toàn và không hiển thị trên màn hình."], correct: 0 },
-        { id: "3_10", type: "single", question: "Trong thẻ <code class='code-snippet'>&lt;input&gt;</code>, thuộc tính <code class='code-snippet'>type=\"submit\"</code> có tác dụng như thế nào?", options: ["Tạo một nút bấm để gửi dữ liệu biểu mẫu về máy chủ.", "Tạo một nút bấm để tải lại trang web đang hiển thị.", "Tạo một nút bấm để xóa sạch dữ liệu vừa nhập vào.", "Tạo một nút bấm để in nội dung trang web ra giấy."], correct: 0 },
-        { id: "3_11", type: "single", question: "Khai báo CSS <code class='code-snippet'>* { color: black; }</code> mang lại ý nghĩa gì cho trang web?", options: ["Thiết lập màu chữ đen cho tất cả phần tử trên trang.", "Thiết lập màu nền đen cho tất cả phần tử trên trang.", "Ẩn toàn bộ văn bản bằng cách hòa lẫn với nền đen.", "Loại bỏ toàn bộ định dạng màu sắc hiện có trên trang."], correct: 0 },
+        { id: "3_10", type: "single", question: "Trong thẻ <code class='code-snippet'>&lt;input&gt;</code>, thuộc tính <code class='code-snippet'>type=\"submit\"</code> có tác dụng như thế nào?", options: ["Tạo một nút bấm để tải lại trang web đang hiển thị.", "Tạo một nút bấm để gửi dữ liệu biểu mẫu về máy chủ.", "Tạo một nút bấm để xóa sạch dữ liệu vừa nhập vào.", "Tạo một nút bấm để in nội dung trang web ra giấy."], correct: 1 },
+        { id: "3_11", type: "single", question: "Khai báo CSS <code class='code-snippet'>* { color: black; }</code> mang lại ý nghĩa gì cho trang web?", options: ["Thiết lập màu nền đen cho tất cả phần tử trên trang.", "Ẩn toàn bộ văn bản bằng cách hòa lẫn với nền đen.", "Thiết lập màu chữ đen cho tất cả phần tử trên trang.", "Loại bỏ toàn bộ định dạng màu sắc hiện có trên trang."], correct: 2 },
         { id: "3_12", type: "single", question: "Phần tử giả (pseudo-element) <code class='code-snippet'>::first-letter</code> dùng để định dạng riêng cho thành phần nào?", options: ["Ký tự đầu tiên của đoạn văn bản được chỉ định.", "Dòng chữ đầu tiên của đoạn văn bản được chỉ định.", "Đoạn văn đầu tiên xuất hiện trong toàn bộ trang web.", "Từ ngữ đầu tiên của mọi câu nằm trong trang web."], correct: 0 },
-        { id: "3_13", type: "single", question: "Thẻ <code class='code-snippet'>&lt;title&gt;</code> dùng để khai báo tiêu đề trang web phải được đặt ở vị trí nào?", options: ["Nằm gọn bên trong cặp thẻ <code class='code-snippet'>&lt;head&gt;</code>.", "Nằm gọn bên trong cặp thẻ <code class='code-snippet'>&lt;body&gt;</code>.", "Nằm gọn bên trong cặp thẻ <code class='code-snippet'>&lt;div&gt;</code>.", "Nằm gọn bên trong cặp thẻ <code class='code-snippet'>&lt;p&gt;</code>."], correct: 0 },
-        { id: "3_14", type: "single", question: "Bộ chọn CSS dạng <code class='code-snippet'>E &gt; F</code> mang ý nghĩa logic hình cây như thế nào?", options: ["Phần tử F phải là con trực tiếp của phần tử E.", "Phần tử F là cháu (nằm sâu bên trong) của E.", "Phần tử F phải đứng liền kề ngay sau phần tử E.", "Phần tử F phải đứng ngay phía trước phần tử E."], correct: 0 },
-        { id: "3_15", type: "single", question: "Trong thẻ <code class='code-snippet'>&lt;img&gt;</code>, thuộc tính <code class='code-snippet'>src</code> (source) đóng vai trò quan trọng gì?", options: ["Chỉ định chính xác đường dẫn đến tệp tin hình ảnh.", "Thực hiện căn lề trái hoặc phải cho hình ảnh đó.", "Thay đổi tự động màu sắc của hình ảnh khi hiển thị.", "Tạo ra đường viền bao quanh hình ảnh để trang trí."], correct: 0 },
+        { id: "3_13", type: "single", question: "Thẻ <code class='code-snippet'>&lt;title&gt;</code> dùng để khai báo tiêu đề trang web phải được đặt ở vị trí nào?", options: ["Nằm gọn bên trong cặp thẻ <code class='code-snippet'>&lt;body&gt;</code>.", "Nằm gọn bên trong cặp thẻ <code class='code-snippet'>&lt;div&gt;</code>.", "Nằm gọn bên trong cặp thẻ <code class='code-snippet'>&lt;p&gt;</code>.", "Nằm gọn bên trong cặp thẻ <code class='code-snippet'>&lt;head&gt;</code>."], correct: 3 },
+        { id: "3_14", type: "single", question: "Bộ chọn CSS dạng <code class='code-snippet'>E &gt; F</code> mang ý nghĩa logic hình cây như thế nào?", options: ["Phần tử F là cháu (nằm sâu bên trong) của E.", "Phần tử F phải là con trực tiếp của phần tử E.", "Phần tử F phải đứng liền kề ngay sau phần tử E.", "Phần tử F phải đứng ngay phía trước phần tử E."], correct: 1 },
+        { id: "3_15", type: "single", question: "Trong thẻ <code class='code-snippet'>&lt;img&gt;</code>, thuộc tính <code class='code-snippet'>src</code> (source) đóng vai trò quan trọng gì?", options: ["Thực hiện căn lề trái hoặc phải cho hình ảnh đó.", "Thay đổi tự động màu sắc của hình ảnh khi hiển thị.", "Chỉ định chính xác đường dẫn đến tệp tin hình ảnh.", "Tạo ra đường viền bao quanh hình ảnh để trang trí."], correct: 2 },
         { id: "3_16", type: "single", question: "Theo hệ mã màu Hexadecimal trong CSS, mã <code class='code-snippet'>#000000</code> biểu thị cho màu gì?", options: ["Màu đen tuyền.", "Màu trắng bóc.", "Màu đỏ thắm.", "Màu xanh lục."], correct: 0 },
-        { id: "3_17", type: "single", question: "Câu lệnh đúng để chèn một tệp âm thanh có tên \"baihat.mp3\" vào trang web là?", options: ["<code class='code-block'>&lt;audio src=\"baihat.mp3\"&gt;&lt;/audio&gt;</code>", "<code class='code-block'>&lt;sound src=\"baihat.mp3\"&gt;&lt;/sound&gt;</code>", "<code class='code-block'>&lt;music src=\"baihat.mp3\"&gt;&lt;/music&gt;</code>", "<code class='code-block'>&lt;media src=\"baihat.mp3\"&gt;&lt;/media&gt;</code>"], correct: 0 },
-        { id: "3_18", type: "single", question: "Để đặt chữ màu xanh cho TẤT CẢ các thẻ có thuộc tính <code class='code-snippet'>class=\"doan\"</code>, CSS nào đúng?", options: ["<code class='code-block'>.doan {color:blue;}</code>", "<code class='code-block'>#doan {color:blue;}</code>", "<code class='code-block'>*doan {color:blue;}</code>", "<code class='code-block'>$doan {color:blue;}</code>"], correct: 0 },
-        { id: "3_19", type: "single", question: "Cú pháp CSS nào sau đây đúng để thiết lập kích cỡ chữ là 20 pixels?", options: ["<code class='code-block'>font-size: 20px;</code>", "<code class='code-block'>text-size: 20px;</code>", "<code class='code-block'>size-font: 20px;</code>", "<code class='code-block'>size-text: 20px;</code>"], correct: 0 },
+        { id: "3_17", type: "single", question: "Câu lệnh đúng để chèn một tệp âm thanh có tên \"baihat.mp3\" vào trang web là?", options: ["<code class='code-block'>&lt;sound src=\"baihat.mp3\"&gt;&lt;/sound&gt;</code>", "<code class='code-block'>&lt;audio src=\"baihat.mp3\"&gt;&lt;/audio&gt;</code>", "<code class='code-block'>&lt;music src=\"baihat.mp3\"&gt;&lt;/music&gt;</code>", "<code class='code-block'>&lt;media src=\"baihat.mp3\"&gt;&lt;/media&gt;</code>"], correct: 1 },
+        { id: "3_18", type: "single", question: "Để đặt chữ màu xanh cho TẤT CẢ các thẻ có thuộc tính <code class='code-snippet'>class=\"doan\"</code>, CSS nào đúng?", options: ["<code class='code-block'>#doan {color:blue;}</code>", "<code class='code-block'>*doan {color:blue;}</code>", "<code class='code-block'>.doan {color:blue;}</code>", "<code class='code-block'>$doan {color:blue;}</code>"], correct: 2 },
+        { id: "3_19", type: "single", question: "Cú pháp CSS nào sau đây đúng để thiết lập kích cỡ chữ là 20 pixels?", options: ["<code class='code-block'>text-size: 20px;</code>", "<code class='code-block'>size-font: 20px;</code>", "<code class='code-block'>size-text: 20px;</code>", "<code class='code-block'>font-size: 20px;</code>"], correct: 3 },
         { id: "3_20", type: "single", question: "Để tạo danh sách tùy chọn thả xuống, thẻ <code class='code-snippet'>&lt;option&gt;</code> phải được đặt bên trong thẻ nào?", options: ["Thẻ <code class='code-snippet'>&lt;select&gt;</code>.", "Thẻ <code class='code-snippet'>&lt;inputs&gt;</code>.", "Thẻ <code class='code-snippet'>&lt;choice&gt;</code>.", "Thẻ <code class='code-snippet'>&lt;radios&gt;</code>."], correct: 0 },
-        { id: "3_21", type: "single", question: "Câu lệnh CSS nào đúng để đổi màu văn bản bên trong thẻ <code class='code-snippet'>&lt;h1&gt;</code> thành màu đỏ?", options: ["<code class='code-block'>h1 { color: red; }</code>", "<code class='code-block'>h1 { text: red; }</code>", "<code class='code-block'>h1 { bg: red; }</code>", "<code class='code-block'>h1 { font: red; }</code>"], correct: 0 },
+        { id: "3_21", type: "single", question: "Câu lệnh CSS nào đúng để đổi màu văn bản bên trong thẻ <code class='code-snippet'>&lt;h1&gt;</code> thành màu đỏ?", options: ["<code class='code-block'>h1 { text: red; }</code>", "<code class='code-block'>h1 { color: red; }</code>", "<code class='code-block'>h1 { bg: red; }</code>", "<code class='code-block'>h1 { font: red; }</code>"], correct: 1 },
         { id: "3_22", type: "single", question: "Lệnh CSS nào tạo ra đường viền xung quanh bảng dày 1 pixel, nét liền, màu đen?", options: ["<code class='code-block'>border: 1px solid black;</code>", "<code class='code-block'>border: 1px line black;</code>", "<code class='code-block'>border: 1px dash black;</code>", "<code class='code-block'>border: 1px dot black;</code>"], correct: 0 },
-        { id: "3_23", type: "single", question: "Cú pháp nào dùng để tạo một siêu liên kết cho phép người dùng mở tệp \"tailieu.pdf\"?", options: ["<code class='code-block'>&lt;a href=\"tailieu.pdf\"&gt;Xem&lt;/a&gt;</code>", "<code class='code-block'>&lt;a src=\"tailieu.pdf\"&gt;Xem&lt;/a&gt;</code>", "<code class='code-block'>&lt;a link=\"tailieu.pdf\"&gt;Xem&lt;/a&gt;</code>", "<code class='code-block'>&lt;a file=\"tailieu.pdf\"&gt;Xem&lt;/a&gt;</code>"], correct: 0 },
+        { id: "3_23", type: "single", question: "Cú pháp nào dùng để tạo một siêu liên kết cho phép người dùng mở tệp \"tailieu.pdf\"?", options: ["<code class='code-block'>&lt;a src=\"tailieu.pdf\"&gt;Xem&lt;/a&gt;</code>", "<code class='code-block'>&lt;a link=\"tailieu.pdf\"&gt;Xem&lt;/a&gt;</code>", "<code class='code-block'>&lt;a href=\"tailieu.pdf\"&gt;Xem&lt;/a&gt;</code>", "<code class='code-block'>&lt;a file=\"tailieu.pdf\"&gt;Xem&lt;/a&gt;</code>"], correct: 2 },
         { id: "3_24", type: "single", question: "Thẻ nào được sử dụng để tạo ra một \"khung nội tuyến\" lồng trang web khác vào?", options: ["Thẻ <code class='code-snippet'>&lt;iframe&gt;</code>", "Thẻ <code class='code-snippet'>&lt;frames&gt;</code>", "Thẻ <code class='code-snippet'>&lt;window&gt;</code>", "Thẻ <code class='code-snippet'>&lt;panels&gt;</code>"], correct: 0 },
         
         { id: '3_c1', type: 'tf_cluster', question: "Bạn Mai đang chuẩn bị xây dựng phần mã nguồn trang chủ cho một dự án môn học bằng HTML:", subQuestions: [
@@ -329,18 +327,7 @@
     const rowsPerPage = 10;
     let sortedScoresList = [];
 
-    function shuffleArray(array) {
-        let curId = array.length;
-        while (0 !== curId) {
-            let randId = Math.floor(Math.random() * curId);
-            curId -= 1;
-            let tmp = array[curId];
-            array[curId] = array[randId];
-            array[randId] = tmp;
-        }
-        return array;
-    }
-
+    // KHÔNG ĐẢO CÂU VÀ ĐÁP ÁN (Dùng nguyên bản)
     window.startQuizAction = function() {
         const errDiv = document.getElementById('login-error');
         errDiv.classList.add('hidden');
@@ -353,21 +340,20 @@
             return;
         }
 
-        currentStudent = { hoTen: name, lop: lop, maDe: 'de_tin12_3_full', tenDe: 'Kiểm Tra Thường Xuyên - Tin học 12 - Đề số 5' };
+        currentStudent = { hoTen: name, lop: lop, maDe: 'de_tin12_5_final', tenDe: 'Kiểm Tra Thường Xuyên - Tin học 12 - Đề số 5' };
         
         let rawQuestions = JSON.parse(JSON.stringify(de_data));
         
-        let part1 = shuffleArray(rawQuestions.filter(q => q.type === 'single'));
+        let part1 = rawQuestions.filter(q => q.type === 'single');
         part1.forEach((q, idx) => {
             q.displayQuestion = `Câu ${idx + 1}: ${q.question}`;
-            let correctText = q.options[q.correct];
-            q.options = shuffleArray(q.options);
-            q.correct = q.options.indexOf(correctText);
+            // Không trộn q.options
         });
         
-        let part2 = shuffleArray(rawQuestions.filter(q => q.type === 'tf_cluster'));
+        let part2 = rawQuestions.filter(q => q.type === 'tf_cluster');
         part2.forEach((q, idx) => {
-            q.displayQuestion = `Câu ${idx + 1}: ${q.question}`;
+            q.displayQuestion = `Câu ${part1.length + idx + 1}: ${q.question}`;
+            // Không trộn q.subQuestions
         });
         
         currentQuestions = [...part1, ...part2];
@@ -533,6 +519,11 @@
             }
         });
 
+        // CHỐT CHẶN: Đảm bảo điểm 10/10 chính xác 100% không bị sai số thập phân
+        if (correctSubItems === totalItems) {
+            totalScore = 10.0;
+        }
+
         const score = totalScore.toFixed(2);
 
         const record = {
@@ -577,16 +568,31 @@
             return words[words.length - 1].toLowerCase();
         };
 
+        // 1. Sắp xếp danh sách điểm giảm dần
         sortedScoresList = [...allScores].sort((a, b) => {
-            const lopA = (a.lop || '').toUpperCase();
-            const lopB = (b.lop || '').toUpperCase();
-            if (lopA !== lopB) return lopA.localeCompare(lopB);
+            if (b.diem !== a.diem) return b.diem - a.diem;
             
             const tenA = getTen(a.hoTen);
             const tenB = getTen(b.hoTen);
-            if (tenA !== tenB) return tenA.localeCompare(tenB);
+            if (tenA !== tenB) return tenA.localeCompare(tenB, 'vi');
             
-            return (a.hoTen || '').localeCompare(b.hoTen || '');
+            return (a.hoTen || '').localeCompare(b.hoTen || '', 'vi');
+        });
+
+        // 2. Thuật toán Dense Ranking (Bằng điểm thì chung một hạng)
+        let currentRank = 1;
+        let prevScore = -1;
+        
+        sortedScoresList.forEach((s, i) => {
+            if (i === 0) {
+                s.absoluteRank = currentRank;
+            } else {
+                if (s.diem < prevScore) {
+                    currentRank++;
+                }
+                s.absoluteRank = currentRank;
+            }
+            prevScore = s.diem;
         });
 
         const myScoreIndex = sortedScoresList.findIndex(s => s.deviceId === deviceId);
@@ -594,7 +600,7 @@
             const myScore = sortedScoresList[myScoreIndex];
             document.getElementById('my-score-summary').classList.remove('hidden');
             document.getElementById('my-summary-name').innerText = `${myScore.hoTen} (${(myScore.lop || '').toUpperCase()})`;
-            document.getElementById('my-summary-rank').innerText = `Hạng: #${myScoreIndex + 1}`;
+            document.getElementById('my-summary-rank').innerText = `Hạng: ${myScore.absoluteRank}`;
             document.getElementById('my-summary-score').innerText = `${myScore.diem}`;
         } else {
             document.getElementById('my-score-summary').classList.add('hidden');
@@ -611,16 +617,19 @@
         const endIndex = startIndex + rowsPerPage;
         const pageData = sortedScoresList.slice(startIndex, endIndex);
 
-        tbody.innerHTML = pageData.map((s, idx) => {
-            let timeStr = s.startTime;
+        tbody.innerHTML = pageData.map((s) => {
+            let timeStr = "";
             if (s.thoiGian) {
                 const dt = new Date(s.thoiGian);
-                timeStr = dt.toLocaleTimeString('vi-VN') + ' - ' + dt.toLocaleDateString('vi-VN');
+                // Định dạng Ngày/Tháng/Năm
+                timeStr = `${dt.getDate().toString().padStart(2, '0')}/${(dt.getMonth() + 1).toString().padStart(2, '0')}/${dt.getFullYear()}`;
+            } else {
+                timeStr = s.endTime ? s.endTime.split(' ').pop() : s.duration;
             }
-            const globalIdx = startIndex + idx + 1;
 
+            // Đã xóa cột Tổng thời gian
             return `<tr class="${s.deviceId === deviceId ? 'my-score-row' : 'hover:bg-gray-50'} transition-colors border-b border-gray-100">
-                <td class="px-3 sm:px-4 py-4 text-center font-bold text-gray-500 text-sm">#${globalIdx}</td>
+                <td class="px-3 sm:px-4 py-4 text-center font-bold text-gray-500 text-sm">${s.absoluteRank}</td>
                 <td class="px-3 sm:px-4 py-4 font-bold text-blue-600 text-sm">${(s.lop || '').toUpperCase()}</td>
                 <td class="px-3 sm:px-4 py-4 font-semibold text-gray-800 text-sm">${s.hoTen} ${s.deviceId === deviceId ? '<span class="ml-2 bg-pink-500 text-white text-[10px] px-2 rounded-md">Bạn</span>' : ''}</td>
                 <td class="px-3 sm:px-4 py-4 text-center"><span class="font-bold text-lg ${s.diem >= 5 ? 'text-green-600' : 'text-red-500'}">${s.diem}</span></td>

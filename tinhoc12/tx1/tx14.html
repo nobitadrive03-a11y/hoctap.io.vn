@@ -213,11 +213,11 @@
       <table class="w-full text-xs sm:text-sm whitespace-nowrap">
        <thead class="bg-gradient-to-r from-orange-500 to-red-500 text-white">
         <tr>
-         <th class="px-3 sm:px-4 py-4 text-center font-bold">#</th>
+         <th class="px-3 sm:px-4 py-4 text-center font-bold">Hạng</th>
          <th class="px-3 sm:px-4 py-4 text-center font-bold">Lớp</th>
          <th class="px-3 sm:px-4 py-4 text-left font-bold w-full">Họ tên</th>
          <th class="px-3 sm:px-4 py-4 text-center font-bold">Điểm</th>
-         <th class="px-3 sm:px-4 py-4 text-center font-bold">Thời gian</th>
+         <th class="px-3 sm:px-4 py-4 text-center font-bold">Ngày nộp</th>
         </tr>
        </thead>
        <tbody id="scores-tbody" class="bg-white/80 divide-y divide-gray-100"></tbody>
@@ -233,8 +233,6 @@
      </div>
     </div>
    </div>
-
-  
 
   </div>
 
@@ -257,64 +255,64 @@
         if (typeof firebase !== 'undefined') {
             if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
             database = firebase.database();
-            // Bảng dữ liệu xếp hạng đề số 2
-            scoresRef = database.ref('bxh_gk1_12_14');
+            scoresRef = database.ref('bxh_tx_12_de4_final');
         }
     } catch(err) { console.error("Lỗi Firebase:", err); }
 
     let isQuizStarted = false; 
     let isSubmitting = false;
 
-    // CẬP NHẬT 24 CÂU TRẮC NGHIỆM VÀ 4 CÂU ĐÚNG/SAI
+    // DỮ LIỆU CÂU HỎI (Đã trộn sẵn vị trí đáp án đúng ngẫu nhiên A, B, C, D)
     const de_data = [
-        { id: "2_1", type: "single", question: "Thẻ HTML nào sau đây được sử dụng để bắt đầu định nghĩa một bảng dữ liệu?", options: ["Thẻ <code class='code-snippet'>&lt;table&gt;</code>.", "Thẻ <code class='code-snippet'>&lt;image&gt;</code>.", "Thẻ <code class='code-snippet'>&lt;block&gt;</code>.", "Thẻ <code class='code-snippet'>&lt;forms&gt;</code>."], correct: 0 },
-        { id: "2_2", type: "single", question: "Để tạo một siêu liên kết (hyperlink) trong trang web, ta sử dụng thẻ nào?", options: ["Thẻ <code class='code-snippet'>&lt;a&gt;</code>.", "Thẻ <code class='code-snippet'>&lt;p&gt;</code>.", "Thẻ <code class='code-snippet'>&lt;b&gt;</code>.", "Thẻ <code class='code-snippet'>&lt;i&gt;</code>."], correct: 0 },
-        { id: "2_3", type: "single", question: "Thuộc tính CSS nào sau đây được sử dụng để thiết lập màu nền cho trang web?", options: ["Thuộc tính <code class='code-snippet'>background-color</code>.", "Thuộc tính <code class='code-snippet'>back-color-style</code>.", "Thuộc tính <code class='code-snippet'>color-background</code>.", "Thuộc tính <code class='code-snippet'>bg-color-display</code>."], correct: 0 },
-        { id: "2_4", type: "single", question: "Khi sử dụng CSS nội tuyến (inline), ta phải viết trực tiếp vào thuộc tính nào của thẻ HTML?", options: ["Thuộc tính <code class='code-snippet'>style</code>.", "Thuộc tính <code class='code-snippet'>class</code>.", "Thuộc tính <code class='code-snippet'>fonts</code>.", "Thuộc tính <code class='code-snippet'>links</code>."], correct: 0 },
-        { id: "2_5", type: "single", question: "Phần tử <code class='code-snippet'>&lt;head&gt;</code> trong tài liệu HTML thường dùng để chứa thông tin gì?", options: ["Các thông tin chung, mô tả trang web.", "Toàn bộ nội dung hiển thị cho người xem.", "Danh sách hình ảnh và video trên trang.", "Tập hợp các bài viết và bảng biểu."], correct: 0 },
-        { id: "2_6", type: "single", question: "Trong hệ màu HSL, chữ \"H\" (Hue) đại diện cho thông số nào sau đây?", options: ["Vòng tròn màu sắc (độ).", "Mã màu hệ Hexadecimal.", "Độ sáng tối của màu sắc.", "Độ bão hòa của màu sắc."], correct: 0 },
-        { id: "2_7", type: "single", question: "Để thu thập thông tin từ người dùng, ta sử dụng thẻ HTML nào để tạo biểu mẫu?", options: ["Thẻ <code class='code-snippet'>&lt;form&gt;</code>.", "Thẻ <code class='code-snippet'>&lt;data&gt;</code>.", "Thẻ <code class='code-snippet'>&lt;text&gt;</code>.", "Thẻ <code class='code-snippet'>&lt;list&gt;</code>."], correct: 0 },
-        { id: "2_8", type: "single", question: "Thẻ đơn <code class='code-snippet'>&lt;hr&gt;</code> trong ngôn ngữ HTML mang lại tác dụng hiển thị gì?", options: ["Tạo ra một đường kẻ ngang trang.", "Ép nội dung xuống đầu dòng mới.", "In đậm đoạn văn bản được chọn.", "Chèn một hình ảnh vào trang web."], correct: 0 },
-        { id: "2_9", type: "single", question: "Điểm khác biệt lớn nhất giữa thuộc tính <code class='code-snippet'>id</code> và <code class='code-snippet'>class</code> trong HTML là gì?", options: ["Dữ liệu id là duy nhất, class có thể dùng nhiều lần.", "Dữ liệu class là duy nhất, id có thể dùng nhiều lần.", "Dữ liệu id dùng cho văn bản, class dùng cho số liệu.", "Dữ liệu class dùng cho bảng, id dùng cho danh sách."], correct: 0 },
-        { id: "2_10", type: "single", question: "Việc sử dụng CSS ngoài (external CSS) mang lại lợi ích nổi bật nào sau đây?", options: ["Có thể dùng chung định dạng cho nhiều trang web.", "Chỉ áp dụng được định dạng cho đúng một trang web.", "Không cần phải sử dụng bất kỳ thẻ liên kết <code class='code-snippet'>&lt;link&gt;</code> nào.", "Cho phép viết mã trực tiếp vào ngay bên trong thẻ HTML."], correct: 0 },
-        { id: "2_11", type: "single", question: "Trong thẻ tạo bảng, thuộc tính <code class='code-snippet'>colspan</code> được sử dụng với mục đích gì?", options: ["Gộp nhiều ô trên cùng một hàng (gộp cột).", "Gộp nhiều ô trên cùng một cột (gộp hàng).", "Xóa bỏ các cột thừa không chứa nội dung.", "Xóa bỏ các hàng thừa không chứa nội dung."], correct: 0 },
-        { id: "2_12", type: "single", question: "Đường dẫn tương đối (relative URL) phát huy hiệu quả tốt nhất trong trường hợp nào?", options: ["Liên kết các tệp tin lưu trữ bên trong cùng một website.", "Liên kết đến các trang web bên ngoài hệ thống của mình.", "Đính kèm các tệp tin đa phương tiện gửi qua thư điện tử.", "Tải toàn bộ dữ liệu của trang web lên một máy chủ khác."], correct: 0 },
-        { id: "2_13", type: "single", question: "Trường dữ liệu <code class='code-snippet'>&lt;input type=\"password\"&gt;</code> sẽ hiển thị thông tin như thế nào?", options: ["Che giấu các ký tự bằng dấu chấm tròn hoặc dấu sao.", "Tự động chuyển đổi các chữ cái thành chữ in hoa.", "Tự động chuyển đổi các chữ cái thành chữ in đậm.", "Che giấu hoàn toàn màu chữ sao cho trùng với màu nền."], correct: 0 },
-        { id: "2_14", type: "single", question: "Tính kế thừa (inheritance) của CSS trong mô hình HTML có nghĩa là gì?", options: ["Định dạng của phần tử cha tự động áp dụng cho phần tử con.", "Định dạng của phần tử con tự động áp dụng cho phần tử cha.", "Các tệp CSS khác nhau tự động sao chép mã nguồn của nhau.", "Định dạng viết sau tự động ghi đè định dạng viết phía trước."], correct: 0 },
-        { id: "2_15", type: "single", question: "Lớp giả (pseudo-class) <code class='code-snippet'>:hover</code> được trình duyệt kích hoạt trong trường hợp nào?", options: ["Khi người dùng di chuyển con trỏ chuột lên phần tử.", "Khi người dùng nháy đúp chuột thẳng vào phần tử.", "Khi trình duyệt vừa tải xong toàn bộ nội dung trang.", "Khi người dùng rời con trỏ chuột ra khỏi phần tử đó."], correct: 0 },
-        { id: "2_16", type: "single", question: "Sự khác biệt giữa thuộc tính <code class='code-snippet'>padding</code> và <code class='code-snippet'>margin</code> trong định dạng khung là gì?", options: ["Padding là khoảng vùng đệm bên trong, margin là lề bên ngoài.", "Padding là khoảng lề bên ngoài, margin là vùng đệm bên trong.", "Padding điều chỉnh màu chữ hiển thị, margin điều chỉnh màu nền.", "Padding tạo đường viền bên trong, margin tạo đường viền ngoài."], correct: 0 },
-        { id: "2_17", type: "single", question: "Câu lệnh nào sau đây dùng để chèn hình ảnh có chiều rộng đúng 100 pixels?", options: ["<code class='code-block'>&lt;img src=\"anh.jpg\" width=\"100\"&gt;</code>", "<code class='code-block'>&lt;img href=\"anh.jpg\" size=\"100\"&gt;</code>", "<code class='code-block'>&lt;image src=\"anh.jpg\" width=\"100\"&gt;</code>", "<code class='code-block'>&lt;img url=\"anh.jpg\" width=\"100\"&gt;</code>"], correct: 0 },
-        { id: "2_18", type: "single", question: "Định dạng CSS <code class='code-snippet'>div p { color: blue; }</code> sẽ có tác dụng như thế nào?", options: ["Tô màu xanh cho các thẻ <code class='code-snippet'>&lt;p&gt;</code> nằm bên trong thẻ <code class='code-snippet'>&lt;div&gt;</code>.", "Tô màu xanh cho các thẻ <code class='code-snippet'>&lt;div&gt;</code> nằm bên trong thẻ <code class='code-snippet'>&lt;p&gt;</code>.", "Tô màu xanh cho cả hai thẻ <code class='code-snippet'>&lt;div&gt;</code> và thẻ <code class='code-snippet'>&lt;p&gt;</code> độc lập.", "Tô màu xanh cho thẻ <code class='code-snippet'>&lt;p&gt;</code> nếu nó đứng ngay sau thẻ <code class='code-snippet'>&lt;div&gt;</code>."], correct: 0 },
-        { id: "2_19", type: "single", question: "Để người dùng đánh dấu chọn nhiều mục cùng lúc, ta sử dụng thẻ input nào?", options: ["<code class='code-block'>&lt;input type=\"checkbox\"&gt;</code>", "<code class='code-block'>&lt;input type=\"radios\"&gt;</code>", "<code class='code-block'>&lt;input type=\"selects\"&gt;</code>", "<code class='code-block'>&lt;input type=\"buttons\"&gt;</code>"], correct: 0 },
-        { id: "2_20", type: "single", question: "Cú pháp CSS nào đúng để đặt chữ màu đỏ cho phần tử có id=\"tieu-de\"?", options: ["<code class='code-block'>#tieu-de { color: red; }</code>", "<code class='code-block'>.tieu-de { color: red; }</code>", "<code class='code-block'>*tieu-de { color: red; }</code>", "<code class='code-block'>$tieu-de { color: red; }</code>"], correct: 0 },
-        { id: "2_21", type: "single", question: "Thẻ HTML nào cho phép nhúng (chèn) trực tiếp một trang web khác vào trang hiện tại?", options: ["Thẻ <code class='code-snippet'>&lt;iframe&gt;</code>", "Thẻ <code class='code-snippet'>&lt;embeds&gt;</code>", "Thẻ <code class='code-snippet'>&lt;object&gt;</code>", "Thẻ <code class='code-snippet'>&lt;window&gt;</code>"], correct: 0 },
-        { id: "2_22", type: "single", question: "Lệnh nào tạo danh sách không có thứ tự với dấu chấm đầu dòng là hình vuông?", options: ["<code class='code-block'>&lt;ul style=\"list-style-type: square\"&gt;</code>", "<code class='code-block'>&lt;ul style=\"list-style-type: circle\"&gt;</code>", "<code class='code-block'>&lt;ol style=\"list-style-type: square\"&gt;</code>", "<code class='code-block'>&lt;ol style=\"list-style-type: circle\"&gt;</code>"], correct: 0 },
-        { id: "2_23", type: "single", question: "Cú pháp nào dùng để gộp 2 hàng liền kề lại thành 1 ô duy nhất trong bảng?", options: ["<code class='code-block'>&lt;td rowspan=\"2\"&gt;</code>", "<code class='code-block'>&lt;td colspan=\"2\"&gt;</code>", "<code class='code-block'>&lt;th row=\"2\"&gt;</code>", "<code class='code-block'>&lt;th col=\"2\"&gt;</code>"], correct: 0 },
-        { id: "2_24", type: "single", question: "Từ khóa nào trong CSS dùng để ép buộc một định dạng có mức độ ưu tiên cao nhất?", options: ["Từ khóa <code class='code-snippet'>!important</code>", "Từ khóa <code class='code-snippet'>*important</code>", "Từ khóa <code class='code-snippet'>#important</code>", "Từ khóa <code class='code-snippet'>.important</code>"], correct: 0 },
+        { id: "2_1", type: "single", question: "Ngôn ngữ đánh dấu siêu văn bản HTML được sử dụng chủ yếu để làm gì?", options: ["Viết các chương trình tính toán phức tạp.", "Quản trị hệ thống cơ sở dữ liệu mạng.", "Thiết lập cấu trúc và nội dung trang web.", "Chỉnh sửa hình ảnh và video trực tuyến."], correct: 2 },
+        { id: "2_2", type: "single", question: "Thẻ nào sau đây trong HTML được sử dụng để tạo một đoạn văn bản?", options: ["Thẻ <code class='code-snippet'>&lt;a&gt;</code> kết hợp với thẻ đóng <code class='code-snippet'>&lt;/a&gt;</code>.", "Thẻ <code class='code-snippet'>&lt;h1&gt;</code> kết hợp với thẻ đóng <code class='code-snippet'>&lt;/h1&gt;</code>.", "Thẻ <code class='code-snippet'>&lt;ul&gt;</code> kết hợp với thẻ đóng <code class='code-snippet'>&lt;/ul&gt;</code>.", "Thẻ <code class='code-snippet'>&lt;p&gt;</code> kết hợp với thẻ đóng <code class='code-snippet'>&lt;/p&gt;</code>."], correct: 3 },
+        { id: "2_3", type: "single", question: "Để tạo một danh sách có thứ tự (đánh số), ta sử dụng cặp thẻ nào?", options: ["Cặp thẻ <code class='code-snippet'>&lt;ul&gt;</code> và <code class='code-snippet'>&lt;/ul&gt;</code>.", "Cặp thẻ <code class='code-snippet'>&lt;ol&gt;</code> và <code class='code-snippet'>&lt;/ol&gt;</code>.", "Cặp thẻ <code class='code-snippet'>&lt;li&gt;</code> và <code class='code-snippet'>&lt;/li&gt;</code>.", "Cặp thẻ <code class='code-snippet'>&lt;dl&gt;</code> và <code class='code-snippet'>&lt;/dl&gt;</code>."], correct: 1 },
+        { id: "2_4", type: "single", question: "Thuộc tính nào của thẻ <code class='code-snippet'>&lt;a&gt;</code> dùng để xác định địa chỉ đích của liên kết?", options: ["Thuộc tính src (Source of the link).", "Thuộc tính alt (Alternative text link).", "Thuộc tính id (Identifier of the link).", "Thuộc tính href (Hypertext Reference)."], correct: 3 },
+        { id: "2_5", type: "single", question: "Thẻ HTML nào sau đây được sử dụng để chèn hình ảnh vào trang web?", options: ["Thẻ <code class='code-snippet'>&lt;picture&gt;</code> với thuộc tính alt.", "Thẻ <code class='code-snippet'>&lt;img&gt;</code> với thuộc tính src.", "Thẻ <code class='code-snippet'>&lt;image&gt;</code> với thuộc tính href.", "Thẻ <code class='code-snippet'>&lt;media&gt;</code> với thuộc tính src."], correct: 1 },
+        { id: "2_6", type: "single", question: "Thành phần nào thu thập dữ liệu do người dùng nhập vào trên trang web?", options: ["Khung nội tuyến (thẻ <code class='code-snippet'>&lt;iframe&gt;</code>).", "Bảng dữ liệu (thẻ <code class='code-snippet'>&lt;table&gt;</code>).", "Biểu mẫu web (thẻ <code class='code-snippet'>&lt;form&gt;</code>).", "Danh sách mô tả (thẻ <code class='code-snippet'>&lt;dl&gt;</code>)."], correct: 2 },
+        { id: "2_7", type: "single", question: "CSS (Cascading Style Sheets) có vai trò chính là gì đối với trang web?", options: ["Tạo ra các siêu liên kết giữa nhiều tài liệu.", "Thiết lập các định dạng trình bày cho trang.", "Cấu trúc lại toàn bộ các thẻ HTML của trang.", "Xử lý các phép toán logic trên máy chủ web."], correct: 1 },
+        { id: "2_8", type: "single", question: "Thuộc tính CSS nào sau đây được sử dụng để thay đổi màu của chữ?", options: ["Thuộc tính bgcolor.", "Thuộc tính text-color.", "Thuộc tính color.", "Thuộc tính font-color."], correct: 2 },
+        { id: "2_9", type: "single", question: "Ý nghĩa của dòng khai báo <code class='code-snippet'>&lt;!DOCTYPE html&gt;</code> ở đầu trang web là gì?", options: ["Khai báo tiêu đề chính sẽ hiển thị của trang web.", "Bắt buộc trình duyệt phải dùng phông chữ chuẩn.", "Thông báo cho trình duyệt biết đây là tệp HTML5.", "Định nghĩa ngôn ngữ lập trình cho máy chủ web."], correct: 2 },
+        { id: "2_10", type: "single", question: "Trong bảng HTML, sự khác biệt giữa thẻ <code class='code-snippet'>&lt;th&gt;</code> và <code class='code-snippet'>&lt;td&gt;</code> là gì?", options: ["<code class='code-snippet'>&lt;th&gt;</code> tạo hàng mới cho bảng, <code class='code-snippet'>&lt;td&gt;</code> tạo cột mới cho bảng.", "<code class='code-snippet'>&lt;th&gt;</code> tạo ô tiêu đề của bảng, <code class='code-snippet'>&lt;td&gt;</code> tạo ô dữ liệu thường.", "<code class='code-snippet'>&lt;th&gt;</code> gộp các cột trong bảng, <code class='code-snippet'>&lt;td&gt;</code> gộp các hàng trong bảng.", "<code class='code-snippet'>&lt;th&gt;</code> tạo đường viền bảng, <code class='code-snippet'>&lt;td&gt;</code> tạo màu nền cho toàn bảng."], correct: 1 },
+        { id: "2_11", type: "single", question: "Trong thẻ tạo bảng, thuộc tính <code class='code-snippet'>colspan</code> được sử dụng với mục đích gì?", options: ["Gộp nhiều ô trên cùng một cột (gộp hàng).", "Xóa bỏ các cột thừa không chứa nội dung.", "Gộp nhiều ô trên cùng một hàng (gộp cột).", "Xóa bỏ các hàng thừa không chứa nội dung."], correct: 2 },
+        { id: "2_12", type: "single", question: "Đường dẫn tương đối (relative URL) phát huy hiệu quả tốt nhất trong trường hợp nào?", options: ["Liên kết đến các trang web bên ngoài hệ thống của mình.", "Đính kèm các tệp tin đa phương tiện gửi qua thư điện tử.", "Liên kết các tệp tin lưu trữ bên trong cùng một website.", "Tải toàn bộ dữ liệu của trang web lên một máy chủ khác."], correct: 2 },
+        { id: "2_13", type: "single", question: "Trường dữ liệu <code class='code-snippet'>&lt;input type=\"password\"&gt;</code> sẽ hiển thị thông tin như thế nào?", options: ["Tự động chuyển đổi các chữ cái thành chữ in hoa.", "Che giấu các ký tự bằng dấu chấm tròn hoặc dấu sao.", "Tự động chuyển đổi các chữ cái thành chữ in đậm.", "Che giấu hoàn toàn màu chữ sao cho trùng với màu nền."], correct: 1 },
+        { id: "2_14", type: "single", question: "Tính kế thừa (inheritance) của CSS trong mô hình HTML có nghĩa là gì?", options: ["Định dạng của phần tử con tự động áp dụng cho phần tử cha.", "Định dạng của phần tử cha tự động áp dụng cho phần tử con.", "Các tệp CSS khác nhau tự động sao chép mã nguồn của nhau.", "Định dạng viết sau tự động ghi đè định dạng viết phía trước."], correct: 1 },
+        { id: "2_15", type: "single", question: "Lớp giả (pseudo-class) <code class='code-snippet'>:hover</code> được trình duyệt kích hoạt trong trường hợp nào?", options: ["Khi người dùng nháy đúp chuột thẳng vào phần tử.", "Khi trình duyệt vừa tải xong toàn bộ nội dung trang.", "Khi người dùng rời con trỏ chuột ra khỏi phần tử đó.", "Khi người dùng di chuyển con trỏ chuột lên phần tử."], correct: 3 },
+        { id: "2_16", type: "single", question: "Sự khác biệt giữa thuộc tính <code class='code-snippet'>padding</code> và <code class='code-snippet'>margin</code> trong định dạng khung là gì?", options: ["Padding là khoảng lề bên ngoài, margin là vùng đệm bên trong.", "Padding điều chỉnh màu chữ hiển thị, margin điều chỉnh màu nền.", "Padding là khoảng vùng đệm bên trong, margin là lề bên ngoài.", "Padding tạo đường viền bên trong, margin tạo đường viền ngoài."], correct: 2 },
+        { id: "2_17", type: "single", question: "Câu lệnh nào sau đây dùng để chèn hình ảnh có chiều rộng đúng 100 pixels?", options: ["<code class='code-block'>&lt;image src=\"anh.jpg\" width=\"100\"&gt;</code>", "<code class='code-block'>&lt;img href=\"anh.jpg\" size=\"100\"&gt;</code>", "<code class='code-block'>&lt;img src=\"anh.jpg\" width=\"100\"&gt;</code>", "<code class='code-block'>&lt;img url=\"anh.jpg\" width=\"100\"&gt;</code>"], correct: 2 },
+        { id: "2_18", type: "single", question: "Định dạng CSS <code class='code-snippet'>div p { color: blue; }</code> sẽ có tác dụng như thế nào?", options: ["Tô màu xanh cho các thẻ <code class='code-snippet'>&lt;div&gt;</code> nằm bên trong thẻ <code class='code-snippet'>&lt;p&gt;</code>.", "Tô màu xanh cho các thẻ <code class='code-snippet'>&lt;p&gt;</code> nằm bên trong thẻ <code class='code-snippet'>&lt;div&gt;</code>.", "Tô màu xanh cho cả hai thẻ <code class='code-snippet'>&lt;div&gt;</code> và thẻ <code class='code-snippet'>&lt;p&gt;</code> độc lập.", "Tô màu xanh cho thẻ <code class='code-snippet'>&lt;p&gt;</code> nếu nó đứng ngay sau thẻ <code class='code-snippet'>&lt;div&gt;</code>."], correct: 1 },
+        { id: "2_19", type: "single", question: "Để người dùng đánh dấu chọn nhiều mục cùng lúc, ta sử dụng thẻ input nào?", options: ["<code class='code-block'>&lt;input type=\"radios\"&gt;</code>", "<code class='code-block'>&lt;input type=\"selects\"&gt;</code>", "<code class='code-block'>&lt;input type=\"buttons\"&gt;</code>", "<code class='code-block'>&lt;input type=\"checkbox\"&gt;</code>"], correct: 3 },
+        { id: "2_20", type: "single", question: "Cú pháp CSS nào đúng để đặt chữ màu đỏ cho phần tử có id=\"tieu-de\"?", options: ["<code class='code-block'>.tieu-de { color: red; }</code>", "<code class='code-block'>*tieu-de { color: red; }</code>", "<code class='code-block'>#tieu-de { color: red; }</code>", "<code class='code-block'>$tieu-de { color: red; }</code>"], correct: 2 },
+        { id: "2_21", type: "single", question: "Thẻ HTML nào cho phép nhúng (chèn) trực tiếp một trang web khác vào trang hiện tại?", options: ["Thẻ <code class='code-snippet'>&lt;embeds&gt;</code>", "Thẻ <code class='code-snippet'>&lt;iframe&gt;</code>", "Thẻ <code class='code-snippet'>&lt;object&gt;</code>", "Thẻ <code class='code-snippet'>&lt;window&gt;</code>"], correct: 1 },
+        { id: "2_22", type: "single", question: "Lệnh nào tạo danh sách không có thứ tự với dấu chấm đầu dòng là hình vuông?", options: ["<code class='code-block'>&lt;ul style=\"list-style-type: circle\"&gt;</code>", "<code class='code-block'>&lt;ol style=\"list-style-type: square\"&gt;</code>", "<code class='code-block'>&lt;ul style=\"list-style-type: square\"&gt;</code>", "<code class='code-block'>&lt;ol style=\"list-style-type: circle\"&gt;</code>"], correct: 2 },
+        { id: "2_23", type: "single", question: "Cú pháp nào dùng để gộp 2 hàng liền kề lại thành 1 ô duy nhất trong bảng?", options: ["<code class='code-block'>&lt;td colspan=\"2\"&gt;</code>", "<code class='code-block'>&lt;td rowspan=\"2\"&gt;</code>", "<code class='code-block'>&lt;th row=\"2\"&gt;</code>", "<code class='code-block'>&lt;th col=\"2\"&gt;</code>"], correct: 1 },
+        { id: "2_24", type: "single", question: "Từ khóa nào trong CSS dùng để ép buộc một định dạng có mức độ ưu tiên cao nhất?", options: ["Từ khóa <code class='code-snippet'>*important</code>", "Từ khóa <code class='code-snippet'>#important</code>", "Từ khóa <code class='code-snippet'>.important</code>", "Từ khóa <code class='code-snippet'>!important</code>"], correct: 3 },
         
-        { id: '2_c1', type: 'tf_cluster', question: "Bạn Bình muốn tạo một trang web cá nhân để giới thiệu về sở thích và thói quen hàng ngày bằng HTML:", subQuestions: [
-            { id: '2_d25a', text: "a) Cặp thẻ <code class='code-snippet'>&lt;body&gt;</code> và <code class='code-snippet'>&lt;/body&gt;</code> được dùng để chứa toàn bộ nội dung hiển thị cho người xem trên trang web.", correct: "Đúng" },
-            { id: '2_d25b', text: "b) Thẻ <code class='code-snippet'>&lt;h1&gt;</code> thường được sử dụng để tạo một đoạn văn bản bình thường kéo dài nhiều dòng.", correct: "Sai" },
-            { id: '2_d25c', text: "c) Để ngắt xuống một dòng mới ngay lập tức mà không cần tạo thành một đoạn văn bản (paragraph) mới, Bình có thể sử dụng thẻ <code class='code-snippet'>&lt;br&gt;</code>.", correct: "Đúng" },
-            { id: '2_d25d', text: "d) Để đổi màu nền của toàn bộ trang web thành màu vàng, Bình có thể sử dụng câu lệnh CSS: <code class='code-snippet'>body { background-color: yellow; }</code>.", correct: "Đúng" }
+        // 4 CÂU ĐÚNG/SAI
+        { id: '2_c1', type: 'tf_cluster', question: "Một học sinh đang thiết kế cấu trúc cơ bản cho trang web giới thiệu lớp học bằng HTML:", subQuestions: [
+            { id: '2_d25a', text: "a) Phần tử <code class='code-snippet'>&lt;html&gt;</code> là phần tử gốc và chứa tất cả các phần tử HTML còn lại của trang web.", correct: "Đúng" },
+            { id: '2_d25b', text: "b) Thẻ <code class='code-snippet'>&lt;title&gt;</code> dùng để đặt tên trang web và bắt buộc phải nằm bên trong phần tử <code class='code-snippet'>&lt;body&gt;</code>.", correct: "Sai" },
+            { id: '2_d25c', text: "c) Trong HTML, trình duyệt sẽ tự động nhận biết khoảng trắng và phím Enter (xuống dòng) mà người dùng gõ trong phần mềm soạn thảo để hiển thị giống hệt như vậy.", correct: "Sai" },
+            { id: '2_d25d', text: "d) Để hiển thị một danh sách gồm 3 tổ trong lớp, trong đó mỗi tổ được đánh dấu đầu dòng bằng các dấu chấm tròn (bullet), học sinh này cần sử dụng cặp thẻ <code class='code-snippet'>&lt;ul&gt;</code> và <code class='code-snippet'>&lt;/ul&gt;</code> lồng bên ngoài các thẻ <code class='code-snippet'>&lt;li&gt;</code>.", correct: "Đúng" }
         ]},
-        { id: '2_c2', type: 'tf_cluster', question: "Thầy Hùng muốn xây dựng một bảng điểm học sinh hiển thị trực quan trên website của nhà trường:", subQuestions: [
-            { id: '2_d26a', text: "a) Thẻ <code class='code-snippet'>&lt;table&gt;</code> được sử dụng để bắt đầu quá trình tạo một bảng dữ liệu trong HTML.", correct: "Đúng" },
-            { id: '2_d26b', text: "b) Thẻ <code class='code-snippet'>&lt;th&gt;</code> được sử dụng để định nghĩa một ô dữ liệu thông thường chứa thông tin chi tiết trong bảng.", correct: "Sai" },
-            { id: '2_d26c', text: "c) Việc sử dụng thuộc tính <code class='code-snippet'>rowspan</code> sẽ giúp thầy Hùng gộp nhiều ô liên tiếp trên cùng một hàng (cột ngang) lại với nhau thành một ô lớn.", correct: "Sai" },
-            { id: '2_d26d', text: "d) Để kẻ đường viền mỏng 1 pixel màu đen cho toàn bộ bảng và các ô bên trong, thầy Hùng có thể dùng mã CSS: <code class='code-snippet'>table, th, td { border: 1px solid black; }</code>.", correct: "Đúng" }
+        { id: '2_c2', type: 'tf_cluster', question: "Để bổ sung phương tiện trực quan, nhóm thiết kế web quyết định chèn hình ảnh và liên kết vào trang:", subQuestions: [
+            { id: '2_d26a', text: "a) Cú pháp cơ bản để chèn hình ảnh là: <code class='code-snippet'>&lt;img src=\"đường_dẫn_ảnh\" alt=\"mô_tả\"&gt;</code>.", correct: "Đúng" },
+            { id: '2_d26b', text: "b) Siêu liên kết (hyperlink) trong HTML chỉ có thể chuyển hướng người dùng đến một trang web khác, không thể trỏ tới một vị trí trong cùng trang web.", correct: "Sai" },
+            { id: '2_d26c', text: "c) Việc sử dụng đường dẫn tương đối (ví dụ: <code class='code-snippet'>src=\"images/anh_lop.jpg\"</code>) giúp website dễ dàng hoạt động bình thường ngay cả khi sao chép toàn bộ thư mục website sang một máy tính khác.", correct: "Đúng" },
+            { id: '2_d26d', text: "d) Để tạo một khung nhỏ trên trang web hiển thị trực tiếp một trang web khác (ví dụ trang web của trường), ta sử dụng thẻ <code class='code-snippet'>&lt;iframe&gt;</code> kết hợp với thuộc tính <code class='code-snippet'>href</code>.", correct: "Sai" }
         ]},
-        { id: '2_c3', type: 'tf_cluster', question: "Lan đang thiết kế một biểu mẫu (form) trên web để thu thập thông tin đăng ký tham gia câu lạc bộ nhiếp ảnh:", subQuestions: [
-            { id: '2_d27a', text: "a) Thẻ <code class='code-snippet'>&lt;input type=\"text\"&gt;</code> cho phép tạo một trường nhập dữ liệu dạng văn bản ngắn (như họ tên).", correct: "Đúng" },
-            { id: '2_d27b', text: "b) Thẻ <code class='code-snippet'>&lt;textarea&gt;</code> được sử dụng để tạo ra một danh sách thả xuống (dropdown list) cho người dùng lựa chọn.", correct: "Sai" },
-            { id: '2_d27c', text: "c) Để người dùng có thể kích hoạt thao tác gửi thông tin biểu mẫu lên máy chủ, Lan bắt buộc phải thiết lập một nút bấm bằng thẻ <code class='code-snippet'>&lt;input type=\"submit\"&gt;</code>.", correct: "Đúng" },
-            { id: '2_d27d', text: "d) Để cho phép các bạn học sinh đánh dấu chọn nhiều sở thích cùng một lúc (ví dụ: Chụp phong cảnh, Chụp chân dung), Lan cần dùng thẻ <code class='code-snippet'>&lt;input type=\"checkbox\"&gt;</code>.", correct: "Đúng" }
+        { id: '2_c3', type: 'tf_cluster', question: "Trong quá trình tạo trang đăng ký tham gia sự kiện, học sinh sử dụng phần tử biểu mẫu (Form):", subQuestions: [
+            { id: '2_d27a', text: "a) Biểu mẫu web được tạo bởi cặp thẻ <code class='code-snippet'>&lt;form&gt;</code> và <code class='code-snippet'>&lt;/form&gt;</code>.", correct: "Đúng" },
+            { id: '2_d27b', text: "b) Để tạo một nút cho phép người dùng gửi dữ liệu đi, ta dùng lệnh <code class='code-snippet'>&lt;input type=\"send\"&gt;</code>.", correct: "Sai" },
+            { id: '2_d27c', text: "c) Phần tử <code class='code-snippet'>&lt;select&gt;</code> kết hợp với các thẻ <code class='code-snippet'>&lt;option&gt;</code> được dùng để tạo ra một danh sách thả xuống, cho phép người dùng chọn một giá trị trong danh sách đó.", correct: "Đúng" },
+            { id: '2_d27d', text: "d) Để người dùng chọn giới tính (Nam/Nữ) mà chỉ được phép chọn một trong hai, học sinh cần tạo hai thẻ <code class='code-snippet'>&lt;input type=\"radio\"&gt;</code> và đặt cho chúng hai giá trị thuộc tính <code class='code-snippet'>name</code> hoàn toàn khác nhau.", correct: "Sai" }
         ]},
-        { id: '2_c4', type: 'tf_cluster', question: "Bạn Tuấn muốn trình bày định dạng cho các văn bản và liên kết trên trang web sao cho sinh động hơn bằng CSS:", subQuestions: [
-            { id: '2_d28a', text: "a) CSS là từ viết tắt của Cascading Style Sheets, được thiết kế chuyên biệt để định dạng cách hiển thị của các phần tử HTML.", correct: "Đúng" },
-            { id: '2_d28b', text: "b) Bộ chọn lớp giả <code class='code-snippet'>a:hover</code> được sử dụng để định dạng cho siêu liên kết vào đúng khoảnh khắc người dùng đã bấm (click) xong vào nó.", correct: "Sai" },
-            { id: '2_d28c', text: "c) Nếu Tuấn sử dụng bộ chọn dạng tổ hợp <code class='code-snippet'>div p</code>, thì định dạng đó sẽ chỉ được áp dụng cho những thẻ <code class='code-snippet'>&lt;p&gt;</code> đang nằm lồng bên trong thẻ <code class='code-snippet'>&lt;div&gt;</code>.", correct: "Đúng" },
-            { id: '2_d28d', text: "d) Để đảm bảo một liên kết thẻ <code class='code-snippet'>&lt;a&gt;</code> luôn có màu đỏ mà không bị bất kỳ mã CSS nào viết sau ghi đè lên, Tuấn dùng câu lệnh: <code class='code-snippet'>a { color: red !important; }</code>.", correct: "Đúng" }
+        { id: '2_c4', type: 'tf_cluster', question: "Để trang web thêm sinh động, học sinh áp dụng CSS để định dạng:", subQuestions: [
+            { id: '2_d28a', text: "a) Bộ chọn (selector) <code class='code-snippet'>.waring</code> (có dấu chấm ở trước) được sử dụng để áp dụng định dạng cho tất cả các phần tử HTML có thuộc tính <code class='code-snippet'>class=\"waring\"</code>.", correct: "Đúng" },
+            { id: '2_d28b', text: "b) Thuộc tính <code class='code-snippet'>margin</code> trong CSS dùng để xác định khoảng cách từ nội dung văn bản đến đường viền khung của chính phần tử đó.", correct: "Sai" },
+            { id: '2_d28c', text: "c) Nếu khai báo CSS <code class='code-snippet'>h1 {color: red;}</code> và sau đó lại khai báo <code class='code-snippet'>h1 {color: blue;}</code> ở dòng dưới, thì tất cả các thẻ <code class='code-snippet'>&lt;h1&gt;</code> trên trang web sẽ hiển thị màu xanh dương (blue) theo nguyên tắc thứ tự cuối cùng (cascading).", correct: "Đúng" },
+            { id: '2_d28d', text: "d) Để dòng chữ trong thẻ <code class='code-snippet'>&lt;p&gt;</code> có id là \"gioithieu\" được in đậm và căn lề giữa, câu lệnh CSS viết đúng là: <code class='code-snippet'>#gioithieu {font-weight: bold; text-align: center;}</code>.", correct: "Đúng" }
         ]}
     ];
 
@@ -330,18 +328,7 @@
     const rowsPerPage = 10;
     let sortedScoresList = [];
 
-    function shuffleArray(array) {
-        let curId = array.length;
-        while (0 !== curId) {
-            let randId = Math.floor(Math.random() * curId);
-            curId -= 1;
-            let tmp = array[curId];
-            array[curId] = array[randId];
-            array[randId] = tmp;
-        }
-        return array;
-    }
-
+    // KHÔNG ĐẢO CÂU VÀ ĐÁP ÁN (Sử dụng trực tiếp mảng nguyên bản)
     window.startQuizAction = function() {
         const errDiv = document.getElementById('login-error');
         errDiv.classList.add('hidden');
@@ -354,21 +341,20 @@
             return;
         }
 
-        currentStudent = { hoTen: name, lop: lop, maDe: 'de_tin12_2_full', tenDe: 'Kiểm Tra Thường Xuyên - Tin học 12 - Đề số 4' };
+        currentStudent = { hoTen: name, lop: lop, maDe: 'de_tin12_4_final', tenDe: 'Kiểm Tra Thường Xuyên - Tin học 12 - Đề số 4' };
         
         let rawQuestions = JSON.parse(JSON.stringify(de_data));
         
-        let part1 = shuffleArray(rawQuestions.filter(q => q.type === 'single'));
+        let part1 = rawQuestions.filter(q => q.type === 'single');
         part1.forEach((q, idx) => {
             q.displayQuestion = `Câu ${idx + 1}: ${q.question}`;
-            let correctText = q.options[q.correct];
-            q.options = shuffleArray(q.options);
-            q.correct = q.options.indexOf(correctText);
+            // Không trộn q.options
         });
         
-        let part2 = shuffleArray(rawQuestions.filter(q => q.type === 'tf_cluster'));
+        let part2 = rawQuestions.filter(q => q.type === 'tf_cluster');
         part2.forEach((q, idx) => {
-            q.displayQuestion = `Câu ${idx + 1}: ${q.question}`;
+            q.displayQuestion = `Câu ${part1.length + idx + 1}: ${q.question}`;
+            // Không trộn q.subQuestions
         });
         
         currentQuestions = [...part1, ...part2];
@@ -534,6 +520,11 @@
             }
         });
 
+        // CHỐT CHẶN: Đảm bảo điểm 10/10 chính xác 100% không bị sai số
+        if (correctSubItems === totalItems) {
+            totalScore = 10.0;
+        }
+
         const score = totalScore.toFixed(2);
 
         const record = {
@@ -578,16 +569,31 @@
             return words[words.length - 1].toLowerCase();
         };
 
+        // 1. Sắp xếp danh sách điểm giảm dần
         sortedScoresList = [...allScores].sort((a, b) => {
-            const lopA = (a.lop || '').toUpperCase();
-            const lopB = (b.lop || '').toUpperCase();
-            if (lopA !== lopB) return lopA.localeCompare(lopB);
+            if (b.diem !== a.diem) return b.diem - a.diem;
             
             const tenA = getTen(a.hoTen);
             const tenB = getTen(b.hoTen);
-            if (tenA !== tenB) return tenA.localeCompare(tenB);
+            if (tenA !== tenB) return tenA.localeCompare(tenB, 'vi');
             
-            return (a.hoTen || '').localeCompare(b.hoTen || '');
+            return (a.hoTen || '').localeCompare(b.hoTen || '', 'vi');
+        });
+
+        // 2. Thuật toán Dense Ranking (Bằng điểm thì chung một hạng)
+        let currentRank = 1;
+        let prevScore = -1;
+        
+        sortedScoresList.forEach((s, i) => {
+            if (i === 0) {
+                s.absoluteRank = currentRank;
+            } else {
+                if (s.diem < prevScore) {
+                    currentRank++;
+                }
+                s.absoluteRank = currentRank;
+            }
+            prevScore = s.diem;
         });
 
         const myScoreIndex = sortedScoresList.findIndex(s => s.deviceId === deviceId);
@@ -595,7 +601,7 @@
             const myScore = sortedScoresList[myScoreIndex];
             document.getElementById('my-score-summary').classList.remove('hidden');
             document.getElementById('my-summary-name').innerText = `${myScore.hoTen} (${(myScore.lop || '').toUpperCase()})`;
-            document.getElementById('my-summary-rank').innerText = `Hạng: #${myScoreIndex + 1}`;
+            document.getElementById('my-summary-rank').innerText = `Hạng: ${myScore.absoluteRank}`;
             document.getElementById('my-summary-score').innerText = `${myScore.diem}`;
         } else {
             document.getElementById('my-score-summary').classList.add('hidden');
@@ -612,16 +618,19 @@
         const endIndex = startIndex + rowsPerPage;
         const pageData = sortedScoresList.slice(startIndex, endIndex);
 
-        tbody.innerHTML = pageData.map((s, idx) => {
-            let timeStr = s.startTime;
+        tbody.innerHTML = pageData.map((s) => {
+            let timeStr = "";
             if (s.thoiGian) {
                 const dt = new Date(s.thoiGian);
-                timeStr = dt.toLocaleTimeString('vi-VN') + ' - ' + dt.toLocaleDateString('vi-VN');
+                // Định dạng Ngày/Tháng/Năm
+                timeStr = `${dt.getDate().toString().padStart(2, '0')}/${(dt.getMonth() + 1).toString().padStart(2, '0')}/${dt.getFullYear()}`;
+            } else {
+                timeStr = s.endTime ? s.endTime.split(' ').pop() : s.duration;
             }
-            const globalIdx = startIndex + idx + 1;
 
+            // Đã xóa cột Tổng thời gian
             return `<tr class="${s.deviceId === deviceId ? 'my-score-row' : 'hover:bg-gray-50'} transition-colors border-b border-gray-100">
-                <td class="px-3 sm:px-4 py-4 text-center font-bold text-gray-500 text-sm">#${globalIdx}</td>
+                <td class="px-3 sm:px-4 py-4 text-center font-bold text-gray-500 text-sm">${s.absoluteRank}</td>
                 <td class="px-3 sm:px-4 py-4 font-bold text-blue-600 text-sm">${(s.lop || '').toUpperCase()}</td>
                 <td class="px-3 sm:px-4 py-4 font-semibold text-gray-800 text-sm">${s.hoTen} ${s.deviceId === deviceId ? '<span class="ml-2 bg-pink-500 text-white text-[10px] px-2 rounded-md">Bạn</span>' : ''}</td>
                 <td class="px-3 sm:px-4 py-4 text-center"><span class="font-bold text-lg ${s.diem >= 5 ? 'text-green-600' : 'text-red-500'}">${s.diem}</span></td>
