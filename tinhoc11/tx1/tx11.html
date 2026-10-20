@@ -161,7 +161,7 @@
    <div id="scores-section" class="w-full max-w-6xl mx-auto hidden flex-grow flex flex-col">
     <div class="glass-card rounded-none sm:rounded-3xl p-4 sm:p-8 flex flex-col flex-grow border-t-8 border-orange-500 bg-white">
      <div class="mb-6 flex items-center justify-between">
-      <h2 class="text-2xl sm:text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-red-600">🏆 BẢNG XẾP HẠNG</h2>
+      <h2 class="text-2xl sm:text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-red-600">🏆 Bảng xếp hạng </h2>
       <button onclick="window.goHome()" class="px-5 py-2.5 bg-gray-100 text-gray-700 rounded-xl font-bold hover:bg-gray-200 transition-transform active:scale-95 shadow-sm border border-gray-200 touch-manipulation">🏠 Về trang chủ</button>
      </div>
      
@@ -181,12 +181,11 @@
       <table class="w-full text-xs sm:text-sm whitespace-nowrap">
        <thead class="bg-gradient-to-r from-orange-500 to-red-500 text-white">
         <tr>
-         <th class="px-3 sm:px-4 py-4 text-center font-bold">#</th>
+         <th class="px-3 sm:px-4 py-4 text-center font-bold">Hạng</th>
          <th class="px-3 sm:px-4 py-4 text-center font-bold">Lớp</th>
          <th class="px-3 sm:px-4 py-4 text-left font-bold w-full">Họ tên</th>
          <th class="px-3 sm:px-4 py-4 text-center font-bold">Điểm</th>
-         <th class="px-3 sm:px-4 py-4 text-center font-bold">Thời gian</th>
-        
+         <th class="px-3 sm:px-4 py-4 text-center font-bold">Ngày nộp</th>
         </tr>
        </thead>
        <tbody id="scores-tbody" class="bg-white/80 divide-y divide-gray-100"></tbody>
@@ -201,19 +200,6 @@
         <button id="next-page-btn" onclick="window.nextPage()" class="px-4 py-3 bg-gray-100 text-gray-700 rounded-xl font-bold hover:bg-gray-200 transition-transform active:scale-95 shadow-sm border border-gray-200 touch-manipulation">Trang sau ➡️</button>
      </div>
     </div>
-   </div>
-
-   <!-- MODAL CẢNH BÁO GIAN LẬN -->
-   <div id="cheat-modal" data-nosnippet class="fixed inset-0 bg-red-900/95 backdrop-blur-sm flex items-center justify-center p-4 hidden z-[9999]">
-      <div class="bg-white rounded-[2rem] shadow-2xl p-6 max-w-sm w-full text-center flex flex-col border-t-8 border-red-600 transform transition-all scale-100 max-h-[90vh] overflow-y-auto">
-        <div class="text-5xl mb-3 animate-bounce">🚨</div>
-        <h3 class="text-2xl sm:text-3xl font-black text-red-600 mb-2 uppercase tracking-wide">THÔNG BÁO!</h3>
-        <p class="text-gray-700 font-bold mb-4 text-sm sm:text-base leading-relaxed" id="cheat-message"></p>
-        <div class="bg-red-50 text-red-700 font-extrabold p-3 rounded-2xl border-2 border-red-100 mb-5">
-            Vi phạm làm bài lần thứ <span id="cheat-count-display" class="text-4xl font-black mx-1">1</span>
-        </div>
-        <button id="cheat-continue-btn" class="w-full py-4 bg-gradient-to-r from-red-600 to-red-800 text-white font-extrabold rounded-xl shadow-lg hover:shadow-xl transition-transform active:scale-95 touch-manipulation text-base tracking-wide uppercase shrink-0">TÔI ĐÃ HIỂU & TIẾP TỤC</button>
-      </div>
    </div>
 
   </div>
@@ -241,143 +227,61 @@
         }
     } catch(err) { console.error("Lỗi Firebase:", err); }
 
-    let cheatCount = 0;
     let isQuizStarted = false; 
-    let isPenalizing = false; 
     let isSubmitting = false;
 
-    window.handleCheatAction = function(reason) {
-        if (!isQuizStarted || isPenalizing || isSubmitting) return; 
-        const isQuizActive = !document.getElementById('quiz-section').classList.contains('hidden');
-        
-        if (isQuizActive) {
-            isPenalizing = true;
-            cheatCount++;
-            document.getElementById('cheat-count-display').innerText = cheatCount;
-            const modal = document.getElementById('cheat-modal');
-            const msg = document.getElementById('cheat-message');
-            const btn = document.getElementById('cheat-continue-btn');
-            modal.classList.remove('hidden');
-            
-            const currentQ = currentQuestions[currentIdx];
-            if (currentQ) {
-                if (currentQ.type === 'tf_cluster') {
-                    currentQ.subQuestions.forEach(sub => {
-                        if (!userAnswers[sub.id]) userAnswers[sub.id] = "Gian lận"; 
-                    });
-                } else {
-                    if (userAnswers[currentQ.id] === undefined) userAnswers[currentQ.id] = -1; 
-                }
-                updateProgress();
-            }
-
-            if (cheatCount >= 2) {
-                msg.innerHTML = "Bạn đã vi phạm quy chế (Rời khỏi màn hình/Dùng phím cấm/Copy) quá 2 lần.<br>Hệ thống bắt buộc <b>TỰ ĐỘNG THU BÀI</b>!";
-                btn.innerText = "NỘP BÀI NGAY";
-                btn.onclick = () => {
-                    modal.classList.add('hidden');
-                    isPenalizing = false;
-                    window.submitQuiz();
-                };
-            } else {
-                msg.innerHTML = `Hệ thống phát hiện bạn vừa sử dụng thao tác : <b>${reason}</b>.<br><br><span class='text-red-600 font-black bg-red-50 px-3 py-1 rounded-lg border border-red-200 inline-block mt-2 mb-2'>Câu hỏi này bị bỏ qua (0 điểm).</span><br><br><i class='text-sm text-gray-500'>Vui lòng bấm nút bên dưới để tiếp tục.</i>`;
-                btn.innerText = "TÔI ĐÃ HIỂU & TIẾP TỤC";
-                btn.onclick = () => {
-                    modal.classList.add('hidden');
-                    if (currentIdx < currentQuestions.length - 1) {
-                        currentIdx++;
-                        window.renderQuestion();
-                    } else { window.submitQuiz(); }
-                    isPenalizing = false;
-                };
-            }
-        }
-    };
-
-    document.addEventListener("visibilitychange", () => {
-        if (document.visibilityState === 'hidden') {
-            window.handleCheatAction('Chuyển tab hoặc thu nhỏ trình duyệt');
-        }
-    });
-
-    window.addEventListener('keydown', (e) => {
-        const forbiddenKeys = ['PrintScreen', 'F12'];
-        if (forbiddenKeys.includes(e.key)) {
-            e.preventDefault();
-            window.handleCheatAction('Nhấn phím ' + e.key);
-        }
-        if (e.ctrlKey && (e.key === 'c' || e.key === 'v' || e.key === 'p' || e.key === 's')) {
-            e.preventDefault();
-            window.handleCheatAction('Dùng tổ hợp phím Ctrl + ' + e.key.toUpperCase());
-        }
-    });
-    window.addEventListener('keyup', (e) => {
-        if (e.key === 'PrintScreen') window.handleCheatAction('Chụp màn hình');
-    });
-
-    document.addEventListener('contextmenu', event => event.preventDefault()); 
-    document.addEventListener('selectstart', event => {
-        if (event.target.tagName !== 'INPUT' && event.target.tagName !== 'SELECT') { event.preventDefault(); }
-    });
-    document.addEventListener('dragstart', event => event.preventDefault()); 
-    document.addEventListener('copy', event => {
-        event.clipboardData.setData('text/plain', 'Tài liệu đã được bảo vệ!');
-        event.preventDefault();
-        window.handleCheatAction('Sao chép (Copy) văn bản');
-    });
-
-    // NGÂN HÀNG CÂU HỎI MỚI (TIN HỌC 11 - ĐỀ SỐ 1)
+    // NGÂN HÀNG CÂU HỎI ĐÃ ĐƯỢC TRỘN VỊ TRÍ ĐÁP ÁN ĐÚNG NGẪU NHIÊN
     const de_data = [
         // PHẦN I. TRẮC NGHIỆM NHIỀU PHƯƠNG ÁN LỰA CHỌN
-        { id: "1_1", type: "single", question: "Trong quá trình lưu trữ dữ liệu trực tuyến, một người dùng đăng nhập vào dịch vụ Google Drive. Tính năng cơ bản nhất của dịch vụ này là gì?", options: ["Cung cấp không gian lưu trữ và chia sẻ tệp tin qua mạng Internet.", "Cung cấp bộ gõ tiếng Việt để chỉnh sửa văn bản ngoại tuyến.", "Cung cấp phần mềm chỉnh sửa video chuyên nghiệp trên máy.", "Cung cấp công cụ tối ưu hóa phần cứng và chống phân mảnh."], correct: 0 },
-        { id: "1_2", type: "single", question: "Khi chia sẻ một tài liệu cho người khác qua ổ đĩa trực tuyến, chủ sở hữu có thể thiết lập các quyền cơ bản nào cho người được chia sẻ?", options: ["Quyền chỉnh sửa, quyền sao chép phần cứng và quyền xóa tài khoản.", "Quyền chỉ xem, quyền được nhận xét và quyền được chỉnh sửa tệp.", "Quyền ẩn danh, quyền xóa bộ nhớ đệm và quyền thay đổi mật khẩu.", "Quyền mã hóa dữ liệu, quyền phát trực tiếp và quyền khóa thư mục."], correct: 1 },
-        { id: "1_3", type: "single", question: "Trong giờ thực hành, giáo viên yêu cầu học sinh tìm kiếm thông tin bằng tiếng nói. Thiết bị ngoại vi nào bắt buộc phải có để thực hiện?", options: ["Cần trang bị chuột quang không dây kết nối Bluetooth.", "Cần trang bị bàn phím cơ có tích hợp phím đa phương tiện.", "Cần trang bị micro thu âm kết nối trực tiếp với máy tính.", "Cần trang bị màn hình cảm ứng để nhận diện thao tác tay."], correct: 2 },
-        { id: "1_4", type: "single", question: "Khi sử dụng công cụ tìm kiếm Google, người dùng muốn thu hẹp phạm vi để chỉ tìm các tệp tin có định dạng PDF. Cú pháp nào sau đây là đúng?", options: ["Sử dụng thêm cú pháp \"filetype:pdf\" ngay sau từ khóa cần tìm.", "Sử dụng thêm cú pháp \"format=pdf\" ngay sau từ khóa cần tìm.", "Sử dụng thêm cú pháp \"document:pdf\" ngay sau từ khóa cần tìm.", "Sử dụng thêm cú pháp \"download:pdf\" ngay sau từ khóa cần tìm."], correct: 0 },
+        { id: "1_1", type: "single", question: "Trong quá trình lưu trữ dữ liệu trực tuyến, một người dùng đăng nhập vào dịch vụ Google Drive. Tính năng cơ bản nhất của dịch vụ này là gì?", options: ["Cung cấp phần mềm chỉnh sửa video chuyên nghiệp trên máy.", "Cung cấp công cụ tối ưu hóa phần cứng và chống phân mảnh.", "Cung cấp không gian lưu trữ và chia sẻ tệp tin qua mạng Internet.", "Cung cấp bộ gõ tiếng Việt để chỉnh sửa văn bản ngoại tuyến."], correct: 2 },
+        { id: "1_2", type: "single", question: "Khi chia sẻ một tài liệu cho người khác qua ổ đĩa trực tuyến, chủ sở hữu có thể thiết lập các quyền cơ bản nào cho người được chia sẻ?", options: ["Quyền mã hóa dữ liệu, quyền phát trực tiếp và quyền khóa thư mục.", "Quyền chỉnh sửa, quyền sao chép phần cứng và quyền xóa tài khoản.", "Quyền ẩn danh, quyền xóa bộ nhớ đệm và quyền thay đổi mật khẩu.", "Quyền chỉ xem, quyền được nhận xét và quyền được chỉnh sửa tệp."], correct: 3 },
+        { id: "1_3", type: "single", question: "Trong giờ thực hành, giáo viên yêu cầu học sinh tìm kiếm thông tin bằng tiếng nói. Thiết bị ngoại vi nào bắt buộc phải có để thực hiện?", options: ["Cần trang bị chuột quang không dây kết nối Bluetooth.", "Cần trang bị micro thu âm kết nối trực tiếp với máy tính.", "Cần trang bị bàn phím cơ có tích hợp phím đa phương tiện.", "Cần trang bị màn hình cảm ứng để nhận diện thao tác tay."], correct: 1 },
+        { id: "1_4", type: "single", question: "Khi sử dụng công cụ tìm kiếm Google, người dùng muốn thu hẹp phạm vi để chỉ tìm các tệp tin có định dạng PDF. Cú pháp nào sau đây là đúng?", options: ["Sử dụng thêm cú pháp \"download:pdf\" ngay sau từ khóa cần tìm.", "Sử dụng thêm cú pháp \"document:pdf\" ngay sau từ khóa cần tìm.", "Sử dụng thêm cú pháp \"filetype:pdf\" ngay sau từ khóa cần tìm.", "Sử dụng thêm cú pháp \"format=pdf\" ngay sau từ khóa cần tìm."], correct: 2 },
         { id: "1_5", type: "single", question: "Khi kiểm tra hộp thư điện tử Gmail, người dùng thấy một số thư được đánh dấu bằng biểu tượng màu vàng. Biểu tượng này có ý nghĩa gì?", options: ["Biểu thị đây là thư rác cần được xóa bỏ khỏi hệ thống ngay.", "Biểu thị đây là thư điện tử quan trọng do hệ thống nhận diện.", "Biểu thị đây là thư chứa tập tin đính kèm có nhiễm mã độc.", "Biểu thị đây là thư điện tử được gửi từ mạng xã hội Facebook."], correct: 1 },
-        { id: "1_6", type: "single", question: "Một câu lạc bộ trong trường muốn tạo một trang riêng trên Facebook để quảng bá các hoạt động tới học sinh. Loại trang này được gọi là gì?", options: ["Trang Facebook cá nhân.", "Trang Fanpage Facebook.", "Trang Messenger Facebook.", "Trang Nhóm kín Facebook."], correct: 1 },
-        { id: "1_7", type: "single", question: "Để quản lý hộp thư đến một cách khoa học, người dùng có thể phân loại các thư điện tử có cùng chủ đề vào chung một nhóm bằng tính năng nào?", options: ["Tính năng gán Nhãn (Label) cho thư.", "Tính năng tải xuống ngoại tuyến thư.", "Tính năng chuyển tiếp (Forward) thư.", "Tính năng báo cáo thư rác (Spam)."], correct: 0 },
-        { id: "1_8", type: "single", question: "Một doanh nghiệp muốn thuê dịch vụ lưu trữ đám mây để sao lưu dữ liệu nội bộ. Trong các tên dưới đây, đâu là một dịch vụ lưu trữ đám mây?", options: ["Nền tảng Microsoft Windows.", "Trình duyệt Google Chrome.", "Nền tảng Microsoft OneDrive.", "Ứng dụng Adobe Photoshop."], correct: 2 },
-        { id: "1_9", type: "single", question: "Khi làm việc nhóm từ xa, học sinh chọn sử dụng Google Docs thay vì phần mềm soạn thảo cài trên máy. Ưu điểm lớn nhất của lựa chọn này là gì?", options: ["Giúp nhiều người cùng xem và chỉnh sửa trực tiếp qua Internet.", "Không yêu cầu máy tính phải có kết nối mạng Internet ổn định.", "Ngăn chặn hoàn toàn việc người lạ xem lén nội dung trên màn hình.", "Tự động dịch văn bản sang nhiều ngôn ngữ mà không cần thao tác."], correct: 0 },
-        { id: "1_10", type: "single", question: "Khi chia sẻ tệp kế hoạch lớp, lớp trưởng chọn quyền \"Người nhận xét\". Điều này có nghĩa là những người nhận được liên kết sẽ có quyền gì?", options: ["Có quyền chỉnh sửa trực tiếp nội dung nhưng không được xóa tệp.", "Chỉ có quyền đọc nội dung tệp mà không được để lại bất kỳ dấu vết nào.", "Có quyền đọc tệp và thêm các ghi chú, nhận xét vào bên lề văn bản.", "Có quyền tải tệp về máy tính cá nhân nhưng không được đọc trực tuyến."], correct: 2 },
-        { id: "1_11", type: "single", question: "Trong lúc tra cứu tài liệu học tập, việc đặt từ khóa tìm kiếm vào trong cặp dấu ngoặc kép (\" \") sẽ mang lại lợi ích cụ thể nào cho người tìm kiếm?", options: ["Hệ thống sẽ tự động tìm kiếm kết quả trên các trang web nước ngoài.", "Buộc máy tìm kiếm phải trả về kết quả chứa chính xác cụm từ khóa đó.", "Loại bỏ các kết quả tìm kiếm chứa các tập tin có định dạng là video clip.", "Hệ thống sẽ bỏ qua mọi lỗi chính tả mà người dùng nhập vào ô tìm kiếm."], correct: 1 },
-        { id: "1_12", type: "single", question: "Khi thực hiện tìm kiếm bằng giọng nói trong môi trường lớp học ồn ào, kết quả trả về thường không chính xác. Nguyên nhân chính là do đâu?", options: ["Do trình duyệt web chưa được cập nhật lên phiên bản mới nhất hiện tại.", "Do máy tính không có đủ dung lượng bộ nhớ RAM để xử lý tín hiệu âm thanh.", "Do micro thu lẫn tạp âm khiến hệ thống nhận dạng sai từ khóa đầu vào.", "Do hệ thống mạng không có tốc độ cao nên quá trình dịch từ bị chậm trễ."], correct: 2 },
+        { id: "1_6", type: "single", question: "Một câu lạc bộ trong trường muốn tạo một trang riêng trên Facebook để quảng bá các hoạt động tới học sinh. Loại trang này được gọi là gì?", options: ["Trang Facebook cá nhân.", "Trang Messenger Facebook.", "Trang Nhóm kín Facebook.", "Trang Fanpage Facebook."], correct: 3 },
+        { id: "1_7", type: "single", question: "Để quản lý hộp thư đến một cách khoa học, người dùng có thể phân loại các thư điện tử có cùng chủ đề vào chung một nhóm bằng tính năng nào?", options: ["Tính năng gán Nhãn (Label) cho thư.", "Tính năng chuyển tiếp (Forward) thư.", "Tính năng tải xuống ngoại tuyến thư.", "Tính năng báo cáo thư rác (Spam)."], correct: 0 },
+        { id: "1_8", type: "single", question: "Một doanh nghiệp muốn thuê dịch vụ lưu trữ đám mây để sao lưu dữ liệu nội bộ. Trong các tên dưới đây, đâu là một dịch vụ lưu trữ đám mây?", options: ["Trình duyệt Google Chrome.", "Nền tảng Microsoft OneDrive.", "Nền tảng Microsoft Windows.", "Ứng dụng Adobe Photoshop."], correct: 1 },
+        { id: "1_9", type: "single", question: "Khi làm việc nhóm từ xa, học sinh chọn sử dụng Google Docs thay vì phần mềm soạn thảo cài trên máy. Ưu điểm lớn nhất của lựa chọn này là gì?", options: ["Ngăn chặn hoàn toàn việc người lạ xem lén nội dung trên màn hình.", "Tự động dịch văn bản sang nhiều ngôn ngữ mà không cần thao tác.", "Không yêu cầu máy tính phải có kết nối mạng Internet ổn định.", "Giúp nhiều người cùng xem và chỉnh sửa trực tiếp qua Internet."], correct: 3 },
+        { id: "1_10", type: "single", question: "Khi chia sẻ tệp kế hoạch lớp, lớp trưởng chọn quyền \"Người nhận xét\". Điều này có nghĩa là những người nhận được liên kết sẽ có quyền gì?", options: ["Có quyền đọc tệp và thêm các ghi chú, nhận xét vào bên lề văn bản.", "Chỉ có quyền đọc nội dung tệp mà không được để lại bất kỳ dấu vết nào.", "Có quyền tải tệp về máy tính cá nhân nhưng không được đọc trực tuyến.", "Có quyền chỉnh sửa trực tiếp nội dung nhưng không được xóa tệp."], correct: 0 },
+        { id: "1_11", type: "single", question: "Trong lúc tra cứu tài liệu học tập, việc đặt từ khóa tìm kiếm vào trong cặp dấu ngoặc kép (\" \") sẽ mang lại lợi ích cụ thể nào cho người tìm kiếm?", options: ["Hệ thống sẽ bỏ qua mọi lỗi chính tả mà người dùng nhập vào ô tìm kiếm.", "Hệ thống sẽ tự động tìm kiếm kết quả trên các trang web nước ngoài.", "Buộc máy tìm kiếm phải trả về kết quả chứa chính xác cụm từ khóa đó.", "Loại bỏ các kết quả tìm kiếm chứa các tập tin có định dạng là video clip."], correct: 2 },
+        { id: "1_12", type: "single", question: "Khi thực hiện tìm kiếm bằng giọng nói trong môi trường lớp học ồn ào, kết quả trả về thường không chính xác. Nguyên nhân chính là do đâu?", options: ["Do hệ thống mạng không có tốc độ cao nên quá trình dịch từ bị chậm trễ.", "Do micro thu lẫn tạp âm khiến hệ thống nhận dạng sai từ khóa đầu vào.", "Do trình duyệt web chưa được cập nhật lên phiên bản mới nhất hiện tại.", "Do máy tính không có đủ dung lượng bộ nhớ RAM để xử lý tín hiệu âm thanh."], correct: 1 },
         { id: "1_13", type: "single", question: "Một người dùng phân vân giữa việc sử dụng \"Nhãn\" và tạo \"Thư mục\" truyền thống để phân loại email. Điểm khác biệt cốt lõi của Nhãn là gì?", options: ["Một thư điện tử chỉ có thể nằm trong một Nhãn duy nhất tại một thời điểm nhất định.", "Một thư điện tử có thể được gán nhiều Nhãn khác nhau cùng lúc rất linh hoạt.", "Khi xóa một Nhãn, tất cả các thư điện tử được gán Nhãn đó sẽ bị xóa vĩnh viễn.", "Nhãn chỉ có tác dụng thay đổi màu sắc của thư điện tử mà không thay đổi vị trí."], correct: 1 },
-        { id: "1_14", type: "single", question: "Hàng ngày, Gmail tự động dán nhãn \"Quan trọng\" cho một số email nhất định. Tiêu chí nào được hệ thống sử dụng để đưa ra quyết định này?", options: ["Dựa vào việc email đó có đính kèm các tệp tin hình ảnh hoặc video hay không.", "Dựa vào dung lượng của email được gửi đến lớn hay nhỏ so với dung lượng trống.", "Dựa vào mức độ thường xuyên tương tác giữa người nhận và địa chỉ người gửi.", "Dựa vào thời gian email được gửi đến vào ban ngày hay là gửi vào ban đêm."], correct: 2 },
-        { id: "1_15", type: "single", question: "Các cửa hàng kinh doanh thường ưu tiên tạo Fanpage trên mạng xã hội để quảng bá sản phẩm thay vì dùng tài khoản cá nhân. Vì sao lại có sự lựa chọn này?", options: ["Fanpage cung cấp các công cụ quản lý chuyên nghiệp và không giới hạn người theo dõi.", "Tài khoản cá nhân yêu cầu phải trả phí duy trì hàng tháng để kết nối mạng xã hội.", "Fanpage tự động mua các sản phẩm từ các cửa hàng khác trên mạng mà không cần bấm.", "Tài khoản cá nhân không thể đăng tải các tập tin video có độ dài quá mười phút."], correct: 0 },
-        { id: "1_16", type: "single", question: "Việc thiết lập chế độ hiển thị bài viết trên mạng xã hội là \"Chỉ bạn bè\" có ý nghĩa quan trọng như thế nào đối với người sử dụng?", options: ["Giúp bài viết đạt được lượng tương tác cao nhất từ mọi người trên toàn cầu.", "Đảm bảo nội dung cá nhân không bị lộ cho những người lạ không quen biết.", "Ngăn chặn mạng xã hội chèn quảng cáo vào giữa các bài viết của người dùng.", "Cho phép người dùng lưu trữ bài viết không giới hạn dung lượng trên máy chủ."], correct: 1 },
-        { id: "1_17", type: "single", question: "Một nhóm học sinh đang làm bài thuyết trình, bạn trưởng nhóm đưa tài liệu lên Google Drive và muốn mọi người cùng viết bài. Bạn ấy cần thực hiện thao tác nào?", options: ["Chọn chia sẻ tệp và cấp quyền \"Người chỉnh sửa\" cho các thành viên nhóm.", "Chọn chia sẻ tệp và cấp quyền \"Người nhận xét\" cho các thành viên nhóm.", "Chọn chia sẻ tệp và chỉ cấp quyền \"Người xem\" cho các thành viên nhóm.", "Tải tệp xuống thẻ nhớ USB và mang đến tận nhà cho từng thành viên nhóm."], correct: 0 },
-        { id: "1_18", type: "single", question: "Để tìm kiếm chính xác văn bản hướng dẫn tuyển sinh đại học định dạng PDF từ một trường cụ thể, cú pháp tìm kiếm nào dưới đây là tối ưu nhất?", options: ["Tuyển sinh đại học filetype:pdf của trường.", "\"Hướng dẫn tuyển sinh đại học\" filetype:pdf.", "Hướng dẫn tuyển sinh đại học dạng văn bản pdf.", "\"Hướng dẫn tuyển sinh\" format:document pdf."], correct: 1 },
+        { id: "1_14", type: "single", question: "Hàng ngày, Gmail tự động dán nhãn \"Quan trọng\" cho một số email nhất định. Tiêu chí nào được hệ thống sử dụng để đưa ra quyết định này?", options: ["Dựa vào việc email đó có đính kèm các tệp tin hình ảnh hoặc video hay không.", "Dựa vào thời gian email được gửi đến vào ban ngày hay là gửi vào ban đêm.", "Dựa vào dung lượng của email được gửi đến lớn hay nhỏ so với dung lượng trống.", "Dựa vào mức độ thường xuyên tương tác giữa người nhận và địa chỉ người gửi."], correct: 3 },
+        { id: "1_15", type: "single", question: "Các cửa hàng kinh doanh thường ưu tiên tạo Fanpage trên mạng xã hội để quảng bá sản phẩm thay vì dùng tài khoản cá nhân. Vì sao lại có sự lựa chọn này?", options: ["Tài khoản cá nhân không thể đăng tải các tập tin video có độ dài quá mười phút.", "Tài khoản cá nhân yêu cầu phải trả phí duy trì hàng tháng để kết nối mạng xã hội.", "Fanpage tự động mua các sản phẩm từ các cửa hàng khác trên mạng mà không cần bấm.", "Fanpage cung cấp các công cụ quản lý chuyên nghiệp và không giới hạn người theo dõi."], correct: 3 },
+        { id: "1_16", type: "single", question: "Việc thiết lập chế độ hiển thị bài viết trên mạng xã hội là \"Chỉ bạn bè\" có ý nghĩa quan trọng như thế nào đối với người sử dụng?", options: ["Đảm bảo nội dung cá nhân không bị lộ cho những người lạ không quen biết.", "Giúp bài viết đạt được lượng tương tác cao nhất từ mọi người trên toàn cầu.", "Ngăn chặn mạng xã hội chèn quảng cáo vào giữa các bài viết của người dùng.", "Cho phép người dùng lưu trữ bài viết không giới hạn dung lượng trên máy chủ."], correct: 0 },
+        { id: "1_17", type: "single", question: "Một nhóm học sinh đang làm bài thuyết trình, bạn trưởng nhóm đưa tài liệu lên Google Drive và muốn mọi người cùng viết bài. Bạn ấy cần thực hiện thao tác nào?", options: ["Tải tệp xuống thẻ nhớ USB và mang đến tận nhà cho từng thành viên nhóm.", "Chọn chia sẻ tệp và cấp quyền \"Người nhận xét\" cho các thành viên nhóm.", "Chọn chia sẻ tệp và chỉ cấp quyền \"Người xem\" cho các thành viên nhóm.", "Chọn chia sẻ tệp và cấp quyền \"Người chỉnh sửa\" cho các thành viên nhóm."], correct: 3 },
+        { id: "1_18", type: "single", question: "Để tìm kiếm chính xác văn bản hướng dẫn tuyển sinh đại học định dạng PDF từ một trường cụ thể, cú pháp tìm kiếm nào dưới đây là tối ưu nhất?", options: ["Hướng dẫn tuyển sinh đại học dạng văn bản pdf.", "\"Hướng dẫn tuyển sinh đại học\" filetype:pdf.", "\"Hướng dẫn tuyển sinh\" format:document pdf.", "Tuyển sinh đại học filetype:pdf của trường."], correct: 1 },
         { id: "1_19", type: "single", question: "Một người dùng nhận được quá nhiều thư từ các trang mua sắm trực tuyến khiến hộp thư lộn xộn. Để quản lý tốt hơn mà không xóa thư, cần làm gì?", options: ["Đánh dấu tất cả các thư mua sắm là thư rác để hệ thống tự động xóa đi.", "Tạo một Nhãn mới mang tên \"Mua sắm\" và gán nhãn đó cho các thư liên quan.", "Chuyển toàn bộ các thư này sang một tài khoản email của một người khác.", "Gửi email yêu cầu tất cả các trang mua sắm ngừng gửi thông báo khuyến mãi."], correct: 1 },
-        { id: "1_20", type: "single", question: "Ban chấp hành Đoàn trường muốn có một kênh truyền thông chính thức để đăng tải tin tức và cho phép học sinh toàn trường bình luận. Ban chấp hành nên làm gì?", options: ["Lập một tài khoản Facebook cá nhân mang tên trường và kết bạn với từng học sinh.", "Tạo một Fanpage trên Facebook đại diện cho trường và chia sẻ đường liên kết rộng rãi.", "Thiết lập chế độ \"Chỉ mình tôi\" cho tất cả các bài viết liên quan đến hoạt động của trường.", "Yêu cầu toàn bộ học sinh cung cấp thông tin tài khoản cá nhân để Đoàn trường quản lý."], correct: 1 },
-        { id: "1_21", type: "single", question: "Một học sinh liên tục bị gắn thẻ (tag) vào các bài quảng cáo bán hàng không mong muốn trên mạng xã hội. Để ngăn chặn nội dung này xuất hiện trên trang cá nhân, học sinh đó nên thiết lập chức năng nào?", options: ["Xóa tài khoản mạng xã hội hiện tại và tạo một tài khoản hoàn toàn mới để sử dụng.", "Bật tính năng \"Xem lại bài viết có gắn thẻ trước khi bài viết xuất hiện trên dòng thời gian\".", "Cài đặt trạng thái hiển thị của trang cá nhân thành \"Chỉ mình tôi\" để không ai tìm thấy.", "Phản hồi bằng những lời lẽ gay gắt dưới bài quảng cáo để người đăng tự động gỡ thẻ."], correct: 1 },
-        { id: "1_22", type: "single", question: "Do ổ cứng máy tính cá nhân bị đầy, một người làm nghề nhiếp ảnh không còn chỗ lưu trữ ảnh gốc. Giải pháp an toàn và tiện lợi nhất trong tình huống này là gì?", options: ["Xóa bớt hệ điều hành trên máy tính để lấy thêm không gian trống lưu trữ ảnh.", "Nén tất cả các bức ảnh lại thành một tệp duy nhất và để nguyên trên màn hình nền.", "Sử dụng dịch vụ lưu trữ trực tuyến để đồng bộ và lưu trữ các tệp ảnh lên đám mây.", "In tất cả các bức ảnh ra giấy rồi xóa các tệp ảnh gốc trên máy tính để tiết kiệm dung lượng."], correct: 2 },
-        { id: "1_23", type: "single", question: "Đang bận tay nấu ăn nhưng cần tra cứu công thức làm món súp trên điện thoại thông minh. Thao tác nào là tiện lợi nhất để thực hiện tìm kiếm lúc này?", options: ["Rửa sạch tay, mở bàn phím điện thoại và gõ cẩn thận từng chữ cái của từ khóa.", "Nhấn vào biểu tượng micro trên công cụ tìm kiếm và đọc từ khóa \"công thức nấu súp\".", "Gọi điện thoại cho người thân để nhờ tra cứu giúp và ghi chép lại ra giấy.", "Tìm kiếm công thức nấu ăn thông qua tính năng nhập liệu bằng hình ảnh trên điện thoại."], correct: 1 },
-        { id: "1_24", type: "single", question: "Một tài khoản email có tạo một Nhãn tên \"Tài liệu môn Tin\". Lỡ tay ấn xóa Nhãn này khỏi hệ thống. Điều gì sẽ xảy ra với những email bên trong?", options: ["Các email đó sẽ bị xóa vĩnh viễn khỏi hệ thống và không thể nào khôi phục lại được.", "Các email đó vẫn nằm an toàn trong Hộp thư đến hoặc Lưu trữ, chỉ mất đi thẻ nhãn đánh dấu.", "Các email đó sẽ tự động được chuyển tiếp đến những địa chỉ liên lạc khác trong danh bạ.", "Các email đó sẽ bị đưa vào thư mục Thư rác và chờ hệ thống dọn dẹp sau ba mươi ngày."], correct: 1 },
+        { id: "1_20", type: "single", question: "Ban chấp hành Đoàn trường muốn có một kênh truyền thông chính thức để đăng tải tin tức và cho phép học sinh toàn trường bình luận. Ban chấp hành nên làm gì?", options: ["Tạo một Fanpage trên Facebook đại diện cho trường và chia sẻ đường liên kết rộng rãi.", "Lập một tài khoản Facebook cá nhân mang tên trường và kết bạn với từng học sinh.", "Thiết lập chế độ \"Chỉ mình tôi\" cho tất cả các bài viết liên quan đến hoạt động của trường.", "Yêu cầu toàn bộ học sinh cung cấp thông tin tài khoản cá nhân để Đoàn trường quản lý."], correct: 0 },
+        { id: "1_21", type: "single", question: "Một học sinh liên tục bị gắn thẻ (tag) vào các bài quảng cáo bán hàng không mong muốn trên mạng xã hội. Để ngăn chặn nội dung này xuất hiện trên trang cá nhân, học sinh đó nên thiết lập chức năng nào?", options: ["Phản hồi bằng những lời lẽ gay gắt dưới bài quảng cáo để người đăng tự động gỡ thẻ.", "Bật tính năng \"Xem lại bài viết có gắn thẻ trước khi bài viết xuất hiện trên dòng thời gian\".", "Cài đặt trạng thái hiển thị của trang cá nhân thành \"Chỉ mình tôi\" để không ai tìm thấy.", "Xóa tài khoản mạng xã hội hiện tại và tạo một tài khoản hoàn toàn mới để sử dụng."], correct: 1 },
+        { id: "1_22", type: "single", question: "Do ổ cứng máy tính cá nhân bị đầy, một người làm nghề nhiếp ảnh không còn chỗ lưu trữ ảnh gốc. Giải pháp an toàn và tiện lợi nhất trong tình huống này là gì?", options: ["Sử dụng dịch vụ lưu trữ trực tuyến để đồng bộ và lưu trữ các tệp ảnh lên đám mây.", "Nén tất cả các bức ảnh lại thành một tệp duy nhất và để nguyên trên màn hình nền.", "Xóa bớt hệ điều hành trên máy tính để lấy thêm không gian trống lưu trữ ảnh.", "In tất cả các bức ảnh ra giấy rồi xóa các tệp ảnh gốc trên máy tính để tiết kiệm dung lượng."], correct: 0 },
+        { id: "1_23", type: "single", question: "Đang bận tay nấu ăn nhưng cần tra cứu công thức làm món súp trên điện thoại thông minh. Thao tác nào là tiện lợi nhất để thực hiện tìm kiếm lúc này?", options: ["Tìm kiếm công thức nấu ăn thông qua tính năng nhập liệu bằng hình ảnh trên điện thoại.", "Rửa sạch tay, mở bàn phím điện thoại và gõ cẩn thận từng chữ cái của từ khóa.", "Gọi điện thoại cho người thân để nhờ tra cứu giúp và ghi chép lại ra giấy.", "Nhấn vào biểu tượng micro trên công cụ tìm kiếm và đọc từ khóa \"công thức nấu súp\"."], correct: 3 },
+        { id: "1_24", type: "single", question: "Một tài khoản email có tạo một Nhãn tên \"Tài liệu môn Tin\". Lỡ tay ấn xóa Nhãn này khỏi hệ thống. Điều gì sẽ xảy ra với những email bên trong?", options: ["Các email đó sẽ bị đưa vào thư mục Thư rác và chờ hệ thống dọn dẹp sau ba mươi ngày.", "Các email đó vẫn nằm an toàn trong Hộp thư đến hoặc Lưu trữ, chỉ mất đi thẻ nhãn đánh dấu.", "Các email đó sẽ tự động được chuyển tiếp đến những địa chỉ liên lạc khác trong danh bạ.", "Các email đó sẽ bị xóa vĩnh viễn khỏi hệ thống và không thể nào khôi phục lại được."], correct: 1 },
         
         // PHẦN II. TRẮC NGHIỆM ĐÚNG/SAI
         { id: '1_c1', type: 'tf_cluster', question: "Trong quá trình thực hiện dự án cuối kì, một nhóm học sinh quyết định sử dụng Google Drive để chia sẻ dữ liệu và làm việc chung.", subQuestions: [
-            { id: '1_d25a', text: "Khi một thành viên tải tệp lên Google Drive, tệp đó tự động trở thành tài sản chung, bất kỳ ai trên mạng đều có thể tải xuống.", correct: "Sai" },
-            { id: '1_d25b', text: "Dung lượng lưu trữ miễn phí trên Google Drive phụ thuộc vào dung lượng ổ đĩa cứng vật lý của chiếc máy tính đang sử dụng.", correct: "Sai" },
-            { id: '1_d25c', text: "Việc nhóm trưởng cấp quyền \"Người chỉnh sửa\" cho phép các thành viên khác có thể cùng cập nhật nội dung vào báo cáo chung.", correct: "Đúng" },
-            { id: '1_d25d', text: "Nếu gửi đường liên kết chia sẻ tệp với chế độ \"Bất kỳ ai có đường liên kết đều có thể xem\", người nhận không bắt buộc phải đăng nhập tài khoản Google vẫn có thể đọc được nội dung tệp.", correct: "Đúng" }
+            { id: '1_d25a', text: "a) Khi một thành viên tải tệp lên Google Drive, tệp đó tự động trở thành tài sản chung, bất kỳ ai trên mạng đều có thể tải xuống.", correct: "Sai" },
+            { id: '1_d25b', text: "b) Dung lượng lưu trữ miễn phí trên Google Drive phụ thuộc vào dung lượng ổ đĩa cứng vật lý của chiếc máy tính đang sử dụng.", correct: "Sai" },
+            { id: '1_d25c', text: "c) Việc nhóm trưởng cấp quyền \"Người chỉnh sửa\" cho phép các thành viên khác có thể cùng cập nhật nội dung vào báo cáo chung.", correct: "Đúng" },
+            { id: '1_d25d', text: "d) Nếu gửi đường liên kết chia sẻ tệp với chế độ \"Bất kỳ ai có đường liên kết đều có thể xem\", người nhận không bắt buộc phải đăng nhập tài khoản Google vẫn có thể đọc được nội dung tệp.", correct: "Đúng" }
         ]},
         { id: '1_c2', type: 'tf_cluster', question: "Khi được giao đề tài nghiên cứu về \"Trí tuệ nhân tạo\", một sinh viên lên mạng Internet để tiến hành thu thập tài liệu tham khảo.", subQuestions: [
-            { id: '1_d26a', text: "Công cụ tìm kiếm Google là một trong những máy tìm kiếm thông tin phổ biến nhất hiện nay trên mạng Internet.", correct: "Đúng" },
-            { id: '1_d26b', text: "Máy tìm kiếm chỉ cho phép người dùng nhập từ khóa bằng bàn phím chứ không hỗ trợ nhập bằng các thao tác khác.", correct: "Sai" },
-            { id: '1_d26c', text: "Việc sử dụng cú pháp tìm kiếm \"Trí tuệ nhân tạo\" sẽ yêu cầu máy tìm kiếm trả về các trang web có cụm từ này theo đúng trình tự.", correct: "Đúng" },
-            { id: '1_d26d', text: "Để chỉ tìm các bài báo cáo dưới dạng tệp PDF, sinh viên này nên nhập từ khóa: \"Trí tuệ nhân tạo\" filetype:pdf.", correct: "Đúng" }
+            { id: '1_d26a', text: "a) Công cụ tìm kiếm Google là một trong những máy tìm kiếm thông tin phổ biến nhất hiện nay trên mạng Internet.", correct: "Đúng" },
+            { id: '1_d26b', text: "b) Máy tìm kiếm chỉ cho phép người dùng nhập từ khóa bằng bàn phím chứ không hỗ trợ nhập bằng các thao tác khác.", correct: "Sai" },
+            { id: '1_d26c', text: "c) Việc sử dụng cú pháp tìm kiếm \"Trí tuệ nhân tạo\" sẽ yêu cầu máy tìm kiếm trả về các trang web có cụm từ này theo đúng trình tự.", correct: "Đúng" },
+            { id: '1_d26d', text: "d) Để chỉ tìm các bài báo cáo dưới dạng tệp PDF, sinh viên này nên nhập từ khóa: \"Trí tuệ nhân tạo\" filetype:pdf.", correct: "Đúng" }
         ]},
         { id: '1_c3', type: 'tf_cluster', question: "Sau một thời gian sử dụng, một nhân viên văn phòng thấy hộp thư đến của mình tràn ngập hàng nghìn email và khó tìm lại thông tin cũ.", subQuestions: [
-            { id: '1_d27a', text: "Gmail tự động gắn dấu hiệu quan trọng (màu vàng) cho tất cả các email có đính kèm hình ảnh từ bất kỳ nguồn nào.", correct: "Sai" },
-            { id: '1_d27b', text: "Sử dụng chức năng tìm kiếm với cú pháp is:important trong Gmail sẽ lọc ra danh sách các thư được hệ thống đánh dấu quan trọng.", correct: "Đúng" },
-            { id: '1_d27c', text: "Việc sử dụng tính năng \"Nhãn\" (Label) giúp phân loại thư điện tử tương tự như việc tạo các thư mục lưu trữ hồ sơ trong thực tế.", correct: "Đúng" },
-            { id: '1_d27d', text: "Nếu người nhân viên này lỡ tay xóa một email trong hộp thư đến, email đó vẫn sẽ còn tồn tại nguyên vẹn bên trong Nhãn đã được gắn trước đó.", correct: "Sai" }
+            { id: '1_d27a', text: "a) Gmail tự động gắn dấu hiệu quan trọng (màu vàng) cho tất cả các email có đính kèm hình ảnh từ bất kỳ nguồn nào.", correct: "Sai" },
+            { id: '1_d27b', text: "b) Sử dụng chức năng tìm kiếm với cú pháp is:important trong Gmail sẽ lọc ra danh sách các thư được hệ thống đánh dấu quan trọng.", correct: "Đúng" },
+            { id: '1_d27c', text: "c) Việc sử dụng tính năng \"Nhãn\" (Label) giúp phân loại thư điện tử tương tự như việc tạo các thư mục lưu trữ hồ sơ trong thực tế.", correct: "Đúng" },
+            { id: '1_d27d', text: "d) Nếu người nhân viên này lỡ tay xóa một email trong hộp thư đến, email đó vẫn sẽ còn tồn tại nguyên vẹn bên trong Nhãn đã được gắn trước đó.", correct: "Sai" }
         ]},
         { id: '1_c4', type: 'tf_cluster', question: "Để chuẩn bị cho giải bóng đá giao hữu, ban tổ chức của trường dự định lập một kênh truyền thông trên mạng xã hội Facebook.", subQuestions: [
-            { id: '1_d28a', text: "Fanpage là trang web trên Facebook được tạo ra với mục đích giúp các tổ chức, doanh nghiệp, cộng đồng quảng bá hình ảnh.", correct: "Đúng" },
-            { id: '1_d28b', text: "Trong phần Cài đặt quyền riêng tư, không có tùy chọn nào cho phép ẩn bài viết đối với một số cá nhân cụ thể trong danh sách bạn bè.", correct: "Sai" },
-            { id: '1_d28c', text: "Việc xây dựng Fanpage giúp ban tổ chức dễ dàng đăng tải thông báo, lịch thi đấu và tiếp cận học sinh toàn trường chuyên nghiệp hơn so với tài khoản cá nhân.", correct: "Đúng" },
-            { id: '1_d28d', text: "Để kiểm soát việc hình ảnh đội bóng bị người khác đăng tải và tự ý gắn tên mình vào, đội trưởng cần bật tính năng xem xét lại thẻ trước khi cho hiển thị trên dòng thời gian cá nhân.", correct: "Đúng" }
+            { id: '1_d28a', text: "a) Fanpage là trang web trên Facebook được tạo ra với mục đích giúp các tổ chức, doanh nghiệp, cộng đồng quảng bá hình ảnh.", correct: "Đúng" },
+            { id: '1_d28b', text: "b) Trong phần Cài đặt quyền riêng tư, không có tùy chọn nào cho phép ẩn bài viết đối với một số cá nhân cụ thể trong danh sách bạn bè.", correct: "Sai" },
+            { id: '1_d28c', text: "c) Việc xây dựng Fanpage giúp ban tổ chức dễ dàng đăng tải thông báo, lịch thi đấu và tiếp cận học sinh toàn trường chuyên nghiệp hơn so với tài khoản cá nhân.", correct: "Đúng" },
+            { id: '1_d28d', text: "d) Để kiểm soát việc hình ảnh đội bóng bị người khác đăng tải và tự ý gắn tên mình vào, đội trưởng cần bật tính năng xem xét lại thẻ trước khi cho hiển thị trên dòng thời gian cá nhân.", correct: "Đúng" }
         ]}
     ];
 
@@ -393,18 +297,7 @@
     const rowsPerPage = 10;
     let sortedScoresList = [];
 
-    function shuffleArray(array) {
-        let curId = array.length;
-        while (0 !== curId) {
-            let randId = Math.floor(Math.random() * curId);
-            curId -= 1;
-            let tmp = array[curId];
-            array[curId] = array[randId];
-            array[randId] = tmp;
-        }
-        return array;
-    }
-
+    // KHÔNG SỬ DỤNG HÀM SHUFFLEARRAY NỮA ĐỂ GIỮ NGUYÊN GỐC
     window.startQuizAction = function() {
         const errDiv = document.getElementById('login-error');
         errDiv.classList.add('hidden');
@@ -417,31 +310,23 @@
             return;
         }
 
-        currentStudent = { hoTen: name, lop: lop, maDe: 'de_tin11', tenDe: 'Kiểm Tra Thường Xuyên Đề 1 - Tin Học 11' };
+        currentStudent = { hoTen: name, lop: lop, maDe: 'de_tin11_final', tenDe: 'Kiểm Tra Thường Xuyên Đề 1 - Tin Học 11' };
         
-        let rawQuestions = JSON.parse(JSON.stringify(de_data));
+       let rawQuestions = JSON.parse(JSON.stringify(de_data));
         
-        let part1 = shuffleArray(rawQuestions.filter(q => q.type === 'single'));
+        let part1 = rawQuestions.filter(q => q.type === 'single');
         part1.forEach((q, idx) => {
             q.displayQuestion = `Câu ${idx + 1}: ${q.question}`;
-            let correctText = q.options[q.correct];
-            q.options = shuffleArray(q.options);
-            q.correct = q.options.indexOf(correctText);
         });
         
-        let part2 = shuffleArray(rawQuestions.filter(q => q.type === 'tf_cluster'));
+        let part2 = rawQuestions.filter(q => q.type === 'tf_cluster');
         part2.forEach((q, idx) => {
             q.displayQuestion = `Câu ${part1.length + idx + 1}: ${q.question}`;
-            q.subQuestions = shuffleArray(q.subQuestions);
-            const labels = ['a)', 'b)', 'c)', 'd)'];
-            q.subQuestions.forEach((sub, sIdx) => {
-                sub.text = `${labels[sIdx]} ${sub.text}`;
-            });
         });
         
         currentQuestions = [...part1, ...part2];
         quizStartTime = new Date();
-        cheatCount = 0; 
+        
         setTimeout(() => { isQuizStarted = true; }, 1000);
         showSection('quiz');
         document.getElementById('quiz-title').innerText = currentStudent.tenDe;
@@ -602,6 +487,11 @@
             }
         });
 
+        // CHỐT CHẶN: Đảm bảo không bị sai số thập phân nếu học sinh làm đúng 100% số ý
+        if (correctSubItems === totalItems) {
+            totalScore = 10.0;
+        }
+
         const score = totalScore.toFixed(2);
 
         const record = {
@@ -611,8 +501,11 @@
             duration: formatDuration(Math.floor((quizEndTime - quizStartTime) / 1000)),
             thoiGian: new Date().toISOString(), deviceId: deviceId
         };
+        
         if(database) {
             scoresRef.push(record, () => { window.showModalResult(score, correctSubItems, totalItems, record.duration); });
+        } else {
+            window.showModalResult(score, correctSubItems, totalItems, record.duration);
         }
     };
 
@@ -643,24 +536,40 @@
             return words[words.length - 1].toLowerCase();
         };
 
+        // 1. Sắp xếp danh sách điểm giảm dần
         sortedScoresList = [...allScores].sort((a, b) => {
-            const lopA = (a.lop || '').toUpperCase();
-            const lopB = (b.lop || '').toUpperCase();
-            if (lopA !== lopB) return lopA.localeCompare(lopB);
+            if (b.diem !== a.diem) return b.diem - a.diem;
             
             const tenA = getTen(a.hoTen);
             const tenB = getTen(b.hoTen);
-            if (tenA !== tenB) return tenA.localeCompare(tenB);
+            if (tenA !== tenB) return tenA.localeCompare(tenB, 'vi');
             
-            return (a.hoTen || '').localeCompare(b.hoTen || '');
+            return (a.hoTen || '').localeCompare(b.hoTen || '', 'vi');
         });
 
+        // 2. Tính toán Dense Ranking (Vị thứ)
+        let currentRank = 1;
+        let prevScore = -1;
+        
+        sortedScoresList.forEach((s, i) => {
+            if (i === 0) {
+                s.absoluteRank = currentRank;
+            } else {
+                if (s.diem < prevScore) {
+                    currentRank++;
+                }
+                s.absoluteRank = currentRank;
+            }
+            prevScore = s.diem;
+        });
+
+        // Hiển thị phần tóm tắt cho người dùng (Vị thứ)
         const myScoreIndex = sortedScoresList.findIndex(s => s.deviceId === deviceId);
         if (myScoreIndex !== -1) {
             const myScore = sortedScoresList[myScoreIndex];
             document.getElementById('my-score-summary').classList.remove('hidden');
             document.getElementById('my-summary-name').innerText = `${myScore.hoTen} (${(myScore.lop || '').toUpperCase()})`;
-            document.getElementById('my-summary-rank').innerText = `Hạng: #${myScoreIndex + 1}`;
+            document.getElementById('my-summary-rank').innerText = `Vị thứ: ${myScore.absoluteRank}`;
             document.getElementById('my-summary-score').innerText = `${myScore.diem}`;
         } else {
             document.getElementById('my-score-summary').classList.add('hidden');
@@ -678,20 +587,24 @@
         const pageData = sortedScoresList.slice(startIndex, endIndex);
 
         tbody.innerHTML = pageData.map((s, idx) => {
-            let timeStr = s.startTime;
+            let timeStr = "";
             if (s.thoiGian) {
                 const dt = new Date(s.thoiGian);
-                timeStr = dt.toLocaleTimeString('vi-VN') + ' - ' + dt.toLocaleDateString('vi-VN');
+                // Định dạng Ngày/Tháng/Năm
+                timeStr = `${dt.getDate().toString().padStart(2, '0')}/${(dt.getMonth() + 1).toString().padStart(2, '0')}/${dt.getFullYear()}`;
+            } else {
+                timeStr = s.endTime ? s.endTime.split(' ').pop() : s.duration;
             }
-            const globalIdx = startIndex + idx + 1;
+            
+            // Tính số thứ tự (STT) hiển thị liên tục 1, 2, 3, 4... trên bảng
+            const globalSTT = startIndex + idx + 1;
 
             return `<tr class="${s.deviceId === deviceId ? 'my-score-row' : 'hover:bg-gray-50'} transition-colors border-b border-gray-100">
-                <td class="px-3 sm:px-4 py-4 text-center font-bold text-gray-500 text-sm">#${globalIdx}</td>
+                <td class="px-3 sm:px-4 py-4 text-center font-bold text-gray-500 text-sm">${globalSTT}</td>
                 <td class="px-3 sm:px-4 py-4 font-bold text-blue-600 text-sm">${(s.lop || '').toUpperCase()}</td>
                 <td class="px-3 sm:px-4 py-4 font-semibold text-gray-800 text-sm">${s.hoTen} ${s.deviceId === deviceId ? '<span class="ml-2 bg-pink-500 text-white text-[10px] px-2 rounded-md">Bạn</span>' : ''}</td>
                 <td class="px-3 sm:px-4 py-4 text-center"><span class="font-bold text-lg ${s.diem >= 5 ? 'text-green-600' : 'text-red-500'}">${s.diem}</span></td>
                 <td class="px-3 sm:px-4 py-4 text-center text-gray-500 text-xs">${timeStr}</td>
-                
             </tr>`;
         }).join('');
     };

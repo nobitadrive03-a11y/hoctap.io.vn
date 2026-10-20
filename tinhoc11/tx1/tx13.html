@@ -161,7 +161,7 @@
    <div id="scores-section" class="w-full max-w-6xl mx-auto hidden flex-grow flex flex-col">
     <div class="glass-card rounded-none sm:rounded-3xl p-4 sm:p-8 flex flex-col flex-grow border-t-8 border-orange-500 bg-white">
      <div class="mb-6 flex items-center justify-between">
-      <h2 class="text-2xl sm:text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-red-600">🏆 BẢNG XẾP HẠNG</h2>
+      <h2 class="text-2xl sm:text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-red-600">🏆 Bảng xếp hạng </h2>
       <button onclick="window.goHome()" class="px-5 py-2.5 bg-gray-100 text-gray-700 rounded-xl font-bold hover:bg-gray-200 transition-transform active:scale-95 shadow-sm border border-gray-200 touch-manipulation">🏠 Về trang chủ</button>
      </div>
      
@@ -181,12 +181,11 @@
       <table class="w-full text-xs sm:text-sm whitespace-nowrap">
        <thead class="bg-gradient-to-r from-orange-500 to-red-500 text-white">
         <tr>
-         <th class="px-3 sm:px-4 py-4 text-center font-bold">#</th>
+         <th class="px-3 sm:px-4 py-4 text-center font-bold">STT</th>
          <th class="px-3 sm:px-4 py-4 text-center font-bold">Lớp</th>
          <th class="px-3 sm:px-4 py-4 text-left font-bold w-full">Họ tên</th>
          <th class="px-3 sm:px-4 py-4 text-center font-bold">Điểm</th>
-         <th class="px-3 sm:px-4 py-4 text-center font-bold">Thời gian</th>
-        
+         <th class="px-3 sm:px-4 py-4 text-center font-bold">Ngày nộp</th>
         </tr>
        </thead>
        <tbody id="scores-tbody" class="bg-white/80 divide-y divide-gray-100"></tbody>
@@ -201,19 +200,6 @@
         <button id="next-page-btn" onclick="window.nextPage()" class="px-4 py-3 bg-gray-100 text-gray-700 rounded-xl font-bold hover:bg-gray-200 transition-transform active:scale-95 shadow-sm border border-gray-200 touch-manipulation">Trang sau ➡️</button>
      </div>
     </div>
-   </div>
-
-   <!-- MODAL CẢNH BÁO GIAN LẬN -->
-   <div id="cheat-modal" data-nosnippet class="fixed inset-0 bg-red-900/95 backdrop-blur-sm flex items-center justify-center p-4 hidden z-[9999]">
-      <div class="bg-white rounded-[2rem] shadow-2xl p-6 max-w-sm w-full text-center flex flex-col border-t-8 border-red-600 transform transition-all scale-100 max-h-[90vh] overflow-y-auto">
-        <div class="text-5xl mb-3 animate-bounce">🚨</div>
-        <h3 class="text-2xl sm:text-3xl font-black text-red-600 mb-2 uppercase tracking-wide">THÔNG BÁO!</h3>
-        <p class="text-gray-700 font-bold mb-4 text-sm sm:text-base leading-relaxed" id="cheat-message"></p>
-        <div class="bg-red-50 text-red-700 font-extrabold p-3 rounded-2xl border-2 border-red-100 mb-5">
-            Vi phạm làm bài lần thứ <span id="cheat-count-display" class="text-4xl font-black mx-1">1</span>
-        </div>
-        <button id="cheat-continue-btn" class="w-full py-4 bg-gradient-to-r from-red-600 to-red-800 text-white font-extrabold rounded-xl shadow-lg hover:shadow-xl transition-transform active:scale-95 touch-manipulation text-base tracking-wide uppercase shrink-0">TÔI ĐÃ HIỂU & TIẾP TỤC</button>
-      </div>
    </div>
 
   </div>
@@ -241,143 +227,59 @@
         }
     } catch(err) { console.error("Lỗi Firebase:", err); }
 
-    let cheatCount = 0;
     let isQuizStarted = false; 
-    let isPenalizing = false; 
     let isSubmitting = false;
 
-    window.handleCheatAction = function(reason) {
-        if (!isQuizStarted || isPenalizing || isSubmitting) return; 
-        const isQuizActive = !document.getElementById('quiz-section').classList.contains('hidden');
-        
-        if (isQuizActive) {
-            isPenalizing = true;
-            cheatCount++;
-            document.getElementById('cheat-count-display').innerText = cheatCount;
-            const modal = document.getElementById('cheat-modal');
-            const msg = document.getElementById('cheat-message');
-            const btn = document.getElementById('cheat-continue-btn');
-            modal.classList.remove('hidden');
-            
-            const currentQ = currentQuestions[currentIdx];
-            if (currentQ) {
-                if (currentQ.type === 'tf_cluster') {
-                    currentQ.subQuestions.forEach(sub => {
-                        if (!userAnswers[sub.id]) userAnswers[sub.id] = "Gian lận"; 
-                    });
-                } else {
-                    if (userAnswers[currentQ.id] === undefined) userAnswers[currentQ.id] = -1; 
-                }
-                updateProgress();
-            }
-
-            if (cheatCount >= 2) {
-                msg.innerHTML = "Bạn đã vi phạm quy chế (Rời khỏi màn hình/Dùng phím cấm/Copy) quá 2 lần.<br>Hệ thống bắt buộc <b>TỰ ĐỘNG THU BÀI</b>!";
-                btn.innerText = "NỘP BÀI NGAY";
-                btn.onclick = () => {
-                    modal.classList.add('hidden');
-                    isPenalizing = false;
-                    window.submitQuiz();
-                };
-            } else {
-                msg.innerHTML = `Hệ thống phát hiện bạn vừa sử dụng thao tác : <b>${reason}</b>.<br><br><span class='text-red-600 font-black bg-red-50 px-3 py-1 rounded-lg border border-red-200 inline-block mt-2 mb-2'>Câu hỏi này bị bỏ qua (0 điểm).</span><br><br><i class='text-sm text-gray-500'>Vui lòng bấm nút bên dưới để tiếp tục.</i>`;
-                btn.innerText = "TÔI ĐÃ HIỂU & TIẾP TỤC";
-                btn.onclick = () => {
-                    modal.classList.add('hidden');
-                    if (currentIdx < currentQuestions.length - 1) {
-                        currentIdx++;
-                        window.renderQuestion();
-                    } else { window.submitQuiz(); }
-                    isPenalizing = false;
-                };
-            }
-        }
-    };
-
-    document.addEventListener("visibilitychange", () => {
-        if (document.visibilityState === 'hidden') {
-            window.handleCheatAction('Chuyển tab hoặc thu nhỏ trình duyệt');
-        }
-    });
-
-    window.addEventListener('keydown', (e) => {
-        const forbiddenKeys = ['PrintScreen', 'F12'];
-        if (forbiddenKeys.includes(e.key)) {
-            e.preventDefault();
-            window.handleCheatAction('Nhấn phím ' + e.key);
-        }
-        if (e.ctrlKey && (e.key === 'c' || e.key === 'v' || e.key === 'p' || e.key === 's')) {
-            e.preventDefault();
-            window.handleCheatAction('Dùng tổ hợp phím Ctrl + ' + e.key.toUpperCase());
-        }
-    });
-    window.addEventListener('keyup', (e) => {
-        if (e.key === 'PrintScreen') window.handleCheatAction('Chụp màn hình');
-    });
-
-    document.addEventListener('contextmenu', event => event.preventDefault()); 
-    document.addEventListener('selectstart', event => {
-        if (event.target.tagName !== 'INPUT' && event.target.tagName !== 'SELECT') { event.preventDefault(); }
-    });
-    document.addEventListener('dragstart', event => event.preventDefault()); 
-    document.addEventListener('copy', event => {
-        event.clipboardData.setData('text/plain', 'Tài liệu đã được bảo vệ!');
-        event.preventDefault();
-        window.handleCheatAction('Sao chép (Copy) văn bản');
-    });
-
-    // NGÂN HÀNG CÂU HỎI MỚI (TIN HỌC 11 - ĐỀ SỐ 3)
+    // DỮ LIỆU CÂU HỎI (ĐÃ TRỘN VỊ TRÍ ĐÁP ÁN ĐÚNG NGẪU NHIÊN A, B, C, D)
     const de_data = [
-        // PHẦN I. TRẮC NGHIỆM NHIỀU PHƯƠNG ÁN LỰA CHỌN
-        { id: "3_1", type: "single", question: "Khi nhận được một email thông báo trúng thưởng lớn nhưng yêu cầu phải nộp trước một khoản phí nhỏ để nhận giải, một người dùng đã quyết định phớt lờ. Hành động này phản ánh nguyên tắc phòng tránh lừa đảo nào?", options: ["Nguyên tắc \"Hãy chậm lại\" để phân tích.", "Nguyên tắc \"Dừng lại, không gửi\" tiền.", "Nguyên tắc \"Kiểm tra ngay\" thông tin.", "Nguyên tắc \"Tôn trọng, tuân thủ pháp luật\"."], correct: 1 },
-        { id: "3_2", type: "single", question: "Tại một siêu thị, nhân viên thu ngân dùng máy quét để đọc mã vạch trên sản phẩm thay vì gõ tên từng món hàng bằng bàn phím. Thao tác này thuộc hoạt động nào trong quản lý?", options: ["Hoạt động phân tích và đánh giá dữ liệu.", "Hoạt động truy xuất dữ liệu trên hệ thống.", "Hoạt động thu thập dữ liệu một cách tự động.", "Hoạt động thiết lập bảo mật và an toàn mạng."], correct: 2 },
-        { id: "3_3", type: "single", question: "Trong quá trình thiết kế hệ thống lưu trữ hồ sơ cho một trường học, chuyên viên IT đảm bảo rằng không có thông tin nào bị lưu trùng lặp ở nhiều nơi khác nhau. Thuộc tính này của cơ sở dữ liệu được gọi là gì?", options: ["Tính độc lập của phần mềm với dữ liệu.", "Tính toàn vẹn của dữ liệu trong hệ thống.", "Tính nhất quán khi thực hiện các giao dịch.", "Tính không dư thừa trong lưu trữ dữ liệu."], correct: 3 },
-        { id: "3_4", type: "single", question: "Để khởi tạo, cập nhật và quản lý một kho dữ liệu khổng lồ của công ty, bộ phận kỹ thuật cần phải cài đặt một bộ phần mềm chuyên dụng. Bộ phần mềm này có tên gọi là gì?", options: ["Hệ điều hành mạng nội bộ chuyên dụng.", "Hệ quản trị cơ sở dữ liệu (Hệ QTCSDL).", "Phần mềm ứng dụng cơ sở dữ liệu khách.", "Ngôn ngữ truy vấn có cấu trúc tập trung."], correct: 1 },
-        { id: "3_5", type: "single", question: "Khi quan sát một bảng dữ liệu quản lý nhân sự, người quản lý nhận thấy mỗi hàng ngang chứa đầy đủ thông tin của một nhân viên cụ thể. Hàng ngang này được gọi bằng thuật ngữ gì?", options: ["Một trường dữ liệu (Field).", "Một kiểu dữ liệu (Data Type).", "Một bản ghi dữ liệu (Record).", "Một khóa chính (Primary Key)."], correct: 2 },
-        { id: "3_6", type: "single", question: "Một lập trình viên muốn thiết lập một bảng dữ liệu mới mang tên \"KhachHang\" trong hệ thống thông qua câu lệnh SQL. Lệnh nào dưới đây được sử dụng để thực hiện việc này?", options: ["Câu lệnh UPDATE TABLE KhachHang.", "Câu lệnh CREATE TABLE KhachHang.", "Câu lệnh INSERT INTO KhachHang.", "Câu lệnh ALTER TABLE KhachHang."], correct: 1 },
-        { id: "3_7", type: "single", question: "Để đề phòng trường hợp mất điện đột ngột gây hỏng hóc và mất mát dữ liệu đang xử lý, một trung tâm máy chủ đã trang bị thiết bị gì?", options: ["Lắp đặt hệ thống camera an ninh giám sát.", "Cài đặt phần mềm diệt virus bản quyền mới.", "Trang bị bộ lưu điện (UPS) cấp điện lập tức.", "Sử dụng ổ cứng thể rắn (SSD) tốc độ cao."], correct: 2 },
-        { id: "3_8", type: "single", question: "Theo Quyết định số 874/QĐ-BTTTT về Quy tắc ứng xử trên mạng xã hội, người dùng chia sẻ những nội dung phù hợp với giá trị đạo đức truyền thống là đang thực hiện quy tắc nào?", options: ["Quy tắc Tôn trọng, tuân thủ pháp luật.", "Quy tắc Trách nhiệm trong môi trường số.", "Quy tắc An toàn, bảo mật thông tin cá nhân.", "Quy tắc Lành mạnh khi tham gia mạng xã hội."], correct: 3 },
-        { id: "3_9", type: "single", question: "Khi nhận được tin nhắn từ người quen nhờ chuyển tiền gấp vì đang cấp cứu, thay vì chuyển ngay, một người đã gọi điện trực tiếp lại cho người quen đó. Thao tác này thể hiện việc áp dụng nguyên tắc nào?", options: ["Nguyên tắc \"Hãy chậm lại\" trước áp lực.", "Nguyên tắc \"Kiểm tra ngay\" để xác minh.", "Nguyên tắc \"Dừng lại, không gửi\" tuyệt đối.", "Nguyên tắc \"Chặn tin nhắn\" người lạ gửi."], correct: 1 },
-        { id: "3_10", type: "single", question: "Việc lắp đặt công tơ điện tử truyền dữ liệu thẳng về công ty điện lực giúp loại bỏ công đoạn nhân viên đi ghi số điện thủ công hằng tháng. Lợi ích lớn nhất của giải pháp này là gì?", options: ["Ngăn chặn triệt để tình trạng trộm cắp điện năng tại các khu dân cư.", "Cung cấp dữ liệu lớn tự động giúp ngành điện quản lý và ra quyết định.", "Giúp khách hàng không bao giờ phải nộp tiền điện hàng tháng nữa.", "Biến công tơ điện trở thành một thiết bị phát sóng mạng Internet wifi."], correct: 1 },
-        { id: "3_11", type: "single", question: "Nếu một cơ sở dữ liệu được thiết kế sao cho khi thay đổi cách thức lưu trữ vật lý mà phần mềm khai thác bên trên không cần phải viết lại mã nguồn, thì cơ sở dữ liệu đó đã đạt được thuộc tính nào?", options: ["Thuộc tính bảo mật an toàn tuyệt đối.", "Thuộc tính toàn vẹn dữ liệu hệ thống.", "Thuộc tính tính độc lập của dữ liệu.", "Thuộc tính không dư thừa dữ liệu."], correct: 2 },
-        { id: "3_12", type: "single", question: "Khác biệt cốt lõi nhất khi tổ chức Hệ cơ sở dữ liệu phân tán so với Hệ cơ sở dữ liệu tập trung là gì?", options: ["Hệ phân tán bắt buộc phải do nhiều quản trị viên cùng nhau vận hành.", "Hệ phân tán lưu trữ dữ liệu tại nhiều máy tính khác nhau trên mạng.", "Hệ phân tán không cần cài đặt phần mềm quản trị cơ sở dữ liệu nào.", "Hệ phân tán chỉ sử dụng cho các ứng dụng nhỏ không cần bảo mật."], correct: 1 },
-        { id: "3_13", type: "single", question: "Trong bảng \"Sản phẩm\", mỗi mặt hàng đều có một mã số nhận diện duy nhất không bao giờ trùng lặp để phục vụ việc tra cứu. Thuật ngữ chuyên ngành gọi mã số này là gì?", options: ["Khóa ngoài của bảng dữ liệu.", "Bản ghi trống của bảng dữ liệu.", "Khóa chính của bảng dữ liệu.", "Trường dữ liệu kiểu lôgic (Boolean)."], correct: 2 },
-        { id: "3_14", type: "single", question: "Khi sử dụng ngôn ngữ truy vấn có cấu trúc (SQL), thành phần DML (Data Manipulation Language) đảm nhận nhóm chức năng cụ thể nào dưới đây?", options: ["Nhóm chức năng khởi tạo, xóa, và sửa đổi cấu trúc của bảng dữ liệu.", "Nhóm chức năng thêm, xóa, sửa dữ liệu bên trong và truy xuất dữ liệu.", "Nhóm chức năng cấp quyền và thu hồi quyền truy cập cho người dùng.", "Nhóm chức năng tự động sao lưu dữ liệu sang hệ thống máy chủ phụ."], correct: 1 },
-        { id: "3_15", type: "single", question: "Trong quá trình thiết lập chính sách bảo mật cho cơ sở dữ liệu của trường học, quản trị viên cấp cho nhóm \"Học sinh\" quyền SELECT nhưng không cấp quyền INSERT, UPDATE hay DELETE. Mục đích của thao tác này là gì?", options: ["Để học sinh chỉ có thể tìm kiếm và xem điểm mà không thể tự ý thay đổi.", "Để học sinh có toàn quyền tạo lập các bảng dữ liệu mới trong hệ thống.", "Để hệ thống ngăn chặn hoàn toàn học sinh truy cập vào mạng Internet.", "Để học sinh có thể nhập thêm điểm mới nhưng không được xóa điểm cũ."], correct: 0 },
-        { id: "3_16", type: "single", question: "Khi một ổ cứng vật lý chứa cơ sở dữ liệu bị hỏng hoàn toàn do hết tuổi thọ, giải pháp cốt lõi nào giúp tổ chức không bị mất mát dữ liệu vĩnh viễn?", options: ["Lắp đặt một bộ lưu điện (UPS) công suất lớn để cấp nguồn.", "Yêu cầu toàn bộ nhân viên đổi mật khẩu đăng nhập hệ thống.", "Dựa vào các bản sao lưu dự phòng (backup) định kỳ trước đó.", "Tịch thu toàn bộ quyền truy cập của tất cả các nhóm người dùng."], correct: 2 },
-        { id: "3_17", type: "single", question: "Một cửa hàng nhận được yêu cầu thanh toán gấp qua tin nhắn từ một đối tác quen thuộc nhưng số tài khoản nhận tiền lại hoàn toàn lạ. Nhân viên cửa hàng nên xử lý tình huống này theo cách nào an toàn nhất?", options: ["Chuyển tiền ngay vào số tài khoản lạ để giữ uy tín và không làm phật lòng đối tác.", "Trả lời tin nhắn bằng những lời lẽ gay gắt và đe dọa báo công an ngay lập tức.", "Lập tức tìm số điện thoại của đối tác và gọi điện trực tiếp để xác minh yêu cầu.", "Bỏ qua tin nhắn và xóa hoàn toàn lịch sử giao dịch với đối tác này khỏi hệ thống."], correct: 2 },
-        { id: "3_18", type: "single", question: "Khi thiết kế một ứng dụng bán hàng, người lập trình quyết định tạo các bảng dữ liệu riêng biệt cho \"Khách hàng\" và \"Đơn hàng\" thay vì dồn chung vào một bảng khổng lồ. Cách làm này mang lại hiệu quả gì rõ rệt nhất?", options: ["Giúp giảm thiểu tình trạng lặp lại thông tin khách hàng, tránh dư thừa dữ liệu.", "Làm cho phần mềm chạy chậm hơn vì phải tìm kiếm dữ liệu qua lại nhiều bảng.", "Gây khó khăn cho quá trình bảo mật thông tin do dữ liệu nằm rải rác nhiều nơi.", "Loại bỏ hoàn toàn khả năng người dùng nhập sai thông tin trong quá trình mua."], correct: 0 },
-        { id: "3_19", type: "single", question: "Một ngân hàng lớn có chi nhánh ở cả ba miền Bắc, Trung, Nam. Để hệ thống vẫn hoạt động bình thường ngay cả khi máy chủ ở một miền gặp sự cố, ngân hàng này nên thiết lập kiến trúc cơ sở dữ liệu nào?", options: ["Mô hình Cơ sở dữ liệu lưu trữ đám mây cá nhân.", "Mô hình Hệ cơ sở dữ liệu phân tán trên mạng.", "Mô hình Hệ cơ sở dữ liệu tập trung cục bộ.", "Mô hình Cơ sở dữ liệu vật lý lưu bằng sổ sách."], correct: 1 },
-        { id: "3_20", type: "single", question: "Khi thiết lập bảng \"Học sinh\", một nhân viên chọn trường \"Họ và tên\" làm khóa chính. Quyết định này sẽ dẫn đến hệ quả không mong muốn nào sau đây trong thực tế quản lý?", options: ["Hệ thống sẽ không cho phép nhập thêm các học sinh có cùng năm sinh.", "Không thể nhập được hai học sinh trùng họ tên vào cùng một bảng dữ liệu.", "Độ dài của cột \"Họ và tên\" tự động bị cắt ngắn xuống còn một ký tự duy nhất.", "Mọi học sinh đều có thể tự do truy cập và sửa điểm của bạn khác trong lớp."], correct: 1 },
-        { id: "3_21", type: "single", question: "Một quản trị viên muốn xóa một bản ghi của nhân viên có mã số 'NV05' đã nghỉ việc khỏi bảng 'NhanVien'. Câu lệnh SQL nào dưới đây sẽ thực thi chính xác yêu cầu này?", options: ["DELETE FROM NhanVien WHERE MaNV = 'NV05';", "DROP TABLE NhanVien WHERE MaNV = 'NV05';", "UPDATE NhanVien SET Xoa = True WHERE MaNV = 'NV05';", "SELECT * FROM NhanVien WHERE MaNV = 'NV05';"], correct: 0 },
-        { id: "3_22", type: "single", question: "Một công ty bán lẻ phát hiện có tình trạng nhân viên tự ý sửa đổi giá trị đơn hàng trong cơ sở dữ liệu. Để ngăn chặn rủi ro nội bộ này trong tương lai, biện pháp kỹ thuật cấp thiết nhất cần áp dụng là gì?", options: ["Lắp đặt thêm máy phát điện dự phòng cho khu vực máy chủ trung tâm.", "Cấu hình lại phân quyền (Revoke/Grant) chặt chẽ và ghi log (nhật ký) mọi giao dịch.", "Mua thêm phần mềm diệt virus và thiết lập tường lửa mạnh hơn chống hacker.", "Sao lưu toàn bộ cơ sở dữ liệu hiện tại ra một ổ đĩa cứng dự phòng rời."], correct: 1 },
-        { id: "3_23", type: "single", question: "Khi liên kết bảng \"Sách\" và bảng \"Tác giả\" để biết cuốn sách đó do ai viết, người thiết kế hệ thống phải sử dụng yếu tố nào làm cầu nối giữa hai bảng?", options: ["Sử dụng thuộc tính kiểu dữ liệu ngày tháng chung của cả hai bảng.", "Sử dụng khóa ngoài của bảng Sách tham chiếu đến khóa chính bảng Tác giả.", "Sử dụng lệnh DELETE để xóa các thông tin không khớp giữa hai bảng.", "Sử dụng công cụ mã hóa để ẩn giấu thông tin của cả cuốn sách và tác giả."], correct: 1 },
-        { id: "3_24", type: "single", question: "Một cửa hàng tạp hóa muốn lưu trữ giá tiền của các mặt hàng trong cơ sở dữ liệu SQL. Kiểu dữ liệu nào dưới đây là lựa chọn phù hợp nhất cho trường \"Đơn giá\"?", options: ["Lựa chọn kiểu dữ liệu VARCHAR (Xâu ký tự).", "Lựa chọn kiểu dữ liệu DATE (Ngày tháng).", "Lựa chọn kiểu dữ liệu BOOLEAN (Đúng/Sai).", "Lựa chọn kiểu dữ liệu REAL (Số thực)."], correct: 3 },
+        { id: "1_1", type: "single", question: "Trí tuệ nhân tạo (AI) được chia thành mấy loại chính dựa trên khả năng?", options: ["1 loại", "3 loại", "2 loại", "4 loại"], correct: 2 },
+        { id: "1_2", type: "single", question: "Thiết bị nào sau đây dùng để kết nối các mạng máy tính khác nhau và định tuyến đường đi cho dữ liệu?", options: ["Switch", "Router", "Hub", "Access Point"], correct: 1 },
+        { id: "1_3", type: "single", question: "Trong HTML, thẻ nào sau đây được dùng để tạo tiêu đề có kích thước lớn nhất?", options: ["<code class='code-snippet'>&lt;h1&gt;</code>", "<code class='code-snippet'>&lt;h6&gt;</code>", "<code class='code-snippet'>&lt;header&gt;</code>", "<code class='code-snippet'>&lt;title&gt;</code>"], correct: 0 },
+        { id: "1_4", type: "single", question: "Ngôn ngữ đánh dấu siêu văn bản có tên viết tắt là gì?", options: ["HTTP", "CSS", "WWW", "HTML"], correct: 3 },
+        { id: "1_5", type: "single", question: "Thẻ nào sau đây được sử dụng để tạo một danh sách không có thứ tự (danh sách dạng dấu chấm)?", options: ["<code class='code-snippet'>&lt;ol&gt;</code>", "<code class='code-snippet'>&lt;ul&gt;</code>", "<code class='code-snippet'>&lt;li&gt;</code>", "<code class='code-snippet'>&lt;dl&gt;</code>"], correct: 1 },
+        { id: "1_6", type: "single", question: "Để chèn một hình ảnh vào trang web, ta sử dụng thẻ nào?", options: ["<code class='code-snippet'>&lt;image&gt;</code>", "<code class='code-snippet'>&lt;pic&gt;</code>", "<code class='code-snippet'>&lt;img&gt;</code>", "<code class='code-snippet'>&lt;picture&gt;</code>"], correct: 2 },
+        { id: "1_7", type: "single", question: "CSS (Cascading Style Sheets) được sử dụng để làm gì?", options: ["Tạo cấu trúc cho trang web", "Xử lý các sự kiện click chuột", "Lưu trữ cơ sở dữ liệu", "Định dạng, trang trí kiểu dáng cho trang web"], correct: 3 },
+        { id: "1_8", type: "single", question: "Thuộc tính nào trong thẻ <code class='code-snippet'>&lt;a&gt;</code> được dùng để xác định địa chỉ URL của liên kết?", options: ["href", "src", "link", "target"], correct: 0 },
+        { id: "1_9", type: "single", question: "Đặc điểm nào sau đây KHÔNG phải là đặc trưng của Trí tuệ nhân tạo hiện nay (AI hẹp)?", options: ["Khả năng tự học từ dữ liệu", "Có nhận thức và cảm xúc như con người", "Có thể nhận dạng hình ảnh và giọng nói", "Thực hiện tốt một nhiệm vụ cụ thể"], correct: 1 },
+        { id: "1_10", type: "single", question: "Trong mạng LAN, điểm khác biệt cơ bản giữa Switch và Hub là gì?", options: ["Switch gửi dữ liệu đến tất cả các cổng, Hub chỉ gửi đến cổng đích", "Switch có khả năng phát Wi-Fi, Hub thì không", "Switch chuyển dữ liệu dựa trên địa chỉ MAC đến đúng cổng đích, Hub gửi broadcast", "Switch dùng cáp quang, Hub dùng cáp đồng"], correct: 2 },
+        { id: "1_11", type: "single", question: "Cấu trúc cơ bản của một tệp HTML chuẩn gồm những thành phần chính nào?", options: ["<code class='code-snippet'>&lt;html&gt;, &lt;head&gt;, &lt;body&gt;</code>", "<code class='code-snippet'>&lt;header&gt;, &lt;main&gt;, &lt;footer&gt;</code>", "<code class='code-snippet'>&lt;title&gt;, &lt;content&gt;, &lt;script&gt;</code>", "<code class='code-snippet'>&lt;html&gt;, &lt;css&gt;, &lt;js&gt;</code>"], correct: 0 },
+        { id: "1_12", type: "single", question: "Thẻ <code class='code-snippet'>&lt;title&gt;</code> có vai trò gì và được đặt ở phần nào trong tài liệu HTML?", options: ["Hiển thị tiêu đề bài viết, đặt trong <code class='code-snippet'>&lt;body&gt;</code>", "Tạo chữ chạy ngang trang web, đặt trong <code class='code-snippet'>&lt;body&gt;</code>", "Hiển thị tiêu đề trên tab của trình duyệt, đặt trong <code class='code-snippet'>&lt;head&gt;</code>", "Định dạng font chữ cho toàn trang, đặt trong <code class='code-snippet'>&lt;head&gt;</code>"], correct: 2 },
+        { id: "1_13", type: "single", question: "Khi sử dụng CSS, cú pháp nào sau đây dùng để chọn một phần tử có id là 'main-menu'?", options: [".main-menu", "#main-menu", "*main-menu", "main-menu"], correct: 1 },
+        { id: "1_14", type: "single", question: "Trong CSS Box Model, thuộc tính 'padding' có ý nghĩa gì?", options: ["Khoảng cách từ viền (border) trở ra ngoài", "Độ dày của đường viền", "Kích thước của nội dung", "Khoảng cách từ nội dung (content) đến viền (border) của phần tử"], correct: 3 },
+        { id: "1_15", type: "single", question: "Ý nghĩa của đoạn mã <code class='code-snippet'>&lt;tr&gt;&lt;td&gt;...&lt;/td&gt;&lt;td&gt;...&lt;/td&gt;&lt;/tr&gt;</code> trong bảng HTML là gì?", options: ["Tạo 2 hàng, mỗi hàng 1 cột", "Tạo 1 bảng có 2 dòng", "Tạo 1 hàng có 2 cột (2 ô)", "Tạo 2 bảng lồng nhau"], correct: 2 },
+        { id: "1_16", type: "single", question: "Thuộc tính 'alt' trong thẻ <code class='code-snippet'>&lt;img&gt;</code> có tác dụng chính là gì?", options: ["Phóng to hình ảnh khi click chuột", "Căn lề hình ảnh ra giữa trang", "Tạo đường viền cho hình ảnh", "Hiển thị văn bản thay thế khi hình ảnh không tải được"], correct: 3 },
+        { id: "1_17", type: "single", question: "Nhà trường cần triển khai mạng không dây cho phòng đọc thư viện. Thiết bị nào sau đây là phù hợp nhất để đóng vai trò thu phát sóng Wi-Fi cho học sinh sử dụng?", options: ["Access Point", "Modem ADSL", "Switch 24 cổng", "Cáp mạng Cat6"], correct: 0 },
+        { id: "1_18", type: "single", question: "Ứng dụng nào sau đây thể hiện rõ nhất việc sử dụng Trí tuệ nhân tạo (AI) trong y tế?", options: ["Phần mềm quản lý thông tin bệnh nhân bằng Excel", "Hệ thống phân tích ảnh X-quang để hỗ trợ chẩn đoán khối u", "Gửi email lịch hẹn khám cho bệnh nhân", "Máy đo huyết áp điện tử"], correct: 1 },
+        { id: "1_19", type: "single", question: "Khi thiết kế giao diện cho trang web 'Hành Trình Số', bạn muốn tạo một liên kết khi nhấp vào sẽ mở ra trang mới. Bạn phải viết mã HTML như thế nào?", options: ["<code class='code-snippet'>&lt;a href='index.html' open='new'&gt;Trang chủ&lt;/a&gt;</code>", "<code class='code-snippet'>&lt;a href='index.html' target='_self'&gt;Trang chủ&lt;/a&gt;</code>", "<code class='code-snippet'>&lt;a href='index.html' target='_blank'&gt;Trang chủ&lt;/a&gt;</code>", "<code class='code-snippet'>&lt;link href='index.html' tab='new'&gt;Trang chủ&lt;/link&gt;</code>"], correct: 2 },
+        { id: "1_20", type: "single", question: "Để định dạng màu nền (background) cho toàn bộ trang web là màu vàng nhạt (lightyellow), đoạn mã CSS nào sau đây đúng?", options: ["<code class='code-snippet'>html { color: lightyellow; }</code>", "<code class='code-snippet'>body { background-color: lightyellow; }</code>", "<code class='code-snippet'>page { bg-color: lightyellow; }</code>", "<code class='code-snippet'>body { background: lightyellow; }</code>"], correct: 1 },
+        { id: "1_21", type: "single", question: "Bạn muốn chèn bức ảnh 'logo.jpg' và thiết lập kích thước ảnh có chiều rộng là 300 pixel, chiều cao tự động. Cách viết nào đúng?", options: ["<code class='code-snippet'>&lt;img href='logo.jpg' size='300'&gt;</code>", "<code class='code-snippet'>&lt;image src='logo.jpg' width='300px'&gt;</code>", "<code class='code-snippet'>&lt;img src='logo.jpg' height='300'&gt;</code>", "<code class='code-snippet'>&lt;img src='logo.jpg' width='300'&gt;</code>"], correct: 3 },
+        { id: "1_22", type: "single", question: "Trong biểu mẫu HTML (Form), để tạo một ô cho phép người dùng nhập mật khẩu (ký tự bị che đi), ta dùng mã nào?", options: ["<code class='code-snippet'>&lt;input type='text' hide='true'&gt;</code>", "<code class='code-snippet'>&lt;input type='hidden'&gt;</code>", "<code class='code-snippet'>&lt;input type='password'&gt;</code>", "<code class='code-snippet'>&lt;password&gt;&lt;/password&gt;</code>"], correct: 2 },
+        { id: "1_23", type: "single", question: "Để gộp 2 ô liền kề trong cùng một hàng của bảng (gộp cột), ta dùng thuộc tính nào trong thẻ <code class='code-snippet'>&lt;td&gt;</code>?", options: ["colspan='2'", "rowspan='2'", "merge='2'", "group='2'"], correct: 0 },
+        { id: "1_24", type: "single", question: "Trong CSS, quy tắc nào sau đây sẽ làm cho TẤT CẢ các thẻ <code class='code-snippet'>&lt;h1&gt;</code> có màu đỏ và được căn giữa?", options: ["<code class='code-snippet'>#h1 { color: red; align: center; }</code>", "<code class='code-snippet'>.h1 { text-color: red; align-text: center; }</code>", "<code class='code-snippet'>h1 { font-color: red; align: center; }</code>", "<code class='code-snippet'>h1 { color: red; text-align: center; }</code>"], correct: 3 },
         
-        // PHẦN II. TRẮC NGHIỆM ĐÚNG/SAI
-        { id: '3_c1', type: 'tf_cluster', question: "Trong tình huống nhận được một thông báo vi phạm luật giao thông qua tin nhắn chứa đường dẫn lạ yêu cầu nộp phạt khẩn cấp.", subQuestions: [
-            { id: '3_d25a', text: "Việc yêu cầu nạn nhân phải nộp phạt khẩn cấp nhằm tạo ra cảm giác cấp bách là dấu hiệu phổ biến của lừa đảo mạng.", correct: "Đúng" },
-            { id: '3_d25b', text: "Hành động chia sẻ thông tin thất thiệt và thiếu kiểm chứng trên mạng xã hội là vi phạm quy tắc ứng xử lành mạnh trong môi trường số.", correct: "Đúng" },
-            { id: '3_d25c', text: "Áp dụng nguyên tắc \"Kiểm tra ngay\" trong tình huống này có nghĩa là người nhận nên bấm ngay vào đường link để xem mức phạt là bao nhiêu.", correct: "Sai" },
-            { id: '3_d25d', text: "Phương án xử lý tối ưu là tuyệt đối không bấm vào đường liên kết, đồng thời tự mình gọi điện đến đường dây nóng của Cục Cảnh sát giao thông để xác minh.", correct: "Đúng" }
+        { id: '1_c1', type: 'tf_cluster', question: "Câu 1. Bạn An đang tìm hiểu về các công nghệ hiện đại và cách thiết lập mạng cơ bản cho nhóm học tập. Khi tìm hiểu về Trí tuệ nhân tạo (AI) và Mạng máy tính, các phát biểu sau đây là:", subQuestions: [
+            { id: '1_c1_0', text: "a) AI có khả năng học hỏi từ dữ liệu và tự động cải thiện hiệu suất thông qua học máy (Machine Learning).", correct: "Đúng"}, 
+            { id: '1_c1_1', text: "b) Giao thức mạng là bộ quy tắc chuẩn quy định cách thức truyền thông tin giữa các thiết bị trên mạng.", correct: "Đúng"}, 
+            { id: '1_c1_2', text: "c) Router là thiết bị dùng để kết nối các máy tính trong cùng một mạng LAN đơn giản mà không có khả năng định tuyến ra Internet.", correct: "Sai"}, 
+            { id: '1_c1_3', text: "d) Để chia sẻ một máy in cho nhiều máy tính trong phòng thực hành, người ta bắt buộc phải trang bị cho mỗi máy tính một router riêng.", correct: "Sai"}
         ]},
-        { id: '3_c2', type: 'tf_cluster', question: "Một doanh nghiệp vừa chuyển đổi quy trình từ việc ghi chép sổ sách giấy tờ sang lưu trữ thông tin bằng một Hệ quản trị cơ sở dữ liệu (Hệ QTCSDL) trên máy tính.", subQuestions: [
-            { id: '3_d26a', text: "Khác với ghi chép trên giấy, cơ sở dữ liệu lưu trên máy tính phải đảm bảo tính không dư thừa để tiết kiệm bộ nhớ và tránh sai lệch.", correct: "Đúng" },
-            { id: '3_d26b', text: "Hệ QTCSDL là phần mềm chuyên dụng hỗ trợ cung cấp phương thức lưu trữ, truy xuất dữ liệu và bảo mật an toàn cho dữ liệu.", correct: "Đúng" },
-            { id: '3_d26c', text: "Việc thu thập dữ liệu bán hàng thông qua đầu đọc mã vạch không chỉ giúp tính tiền nhanh mà còn cung cấp nguồn dữ liệu phong phú để quản lý kho tự động.", correct: "Đúng" },
-            { id: '3_d26d', text: "Nếu doanh nghiệp muốn hệ thống có khả năng tiếp tục hoạt động mà không bị gián đoạn kể cả khi một chi nhánh bị hỏng máy chủ, họ bắt buộc phải chọn kiến trúc cơ sở dữ liệu tập trung.", correct: "Sai" }
+        { id: '1_c2', type: 'tf_cluster', question: "Câu 2. Bạn Bình muốn tự tay tạo một trang web cá nhân để giới thiệu về sở thích của mình. Trong quá trình sử dụng ngôn ngữ đánh dấu siêu văn bản HTML, Bình nhận thấy:", subQuestions: [
+            { id: '1_c2_0', text: "a) Thẻ <code class='code-snippet'>&lt;br&gt;</code> được sử dụng để ngắt dòng văn bản mà không tạo ra một đoạn văn mới.", correct: "Đúng"}, 
+            { id: '1_c2_1', text: "b) Cặp thẻ <code class='code-snippet'>&lt;ol&gt;</code> và <code class='code-snippet'>&lt;li&gt;</code> được dùng để tạo danh sách không có thứ tự (bullet list).", correct: "Sai"}, 
+            { id: '1_c2_2', text: "c) Thẻ <code class='code-snippet'>&lt;a&gt;</code> nếu không có thuộc tính 'href' thì văn bản bên trong vẫn hiển thị nhưng không thể nhấp chuột để chuyển hướng được.", correct: "Đúng"}, 
+            { id: '1_c2_3', text: "d) Để tạo một bảng có đường viền nét liền hiển thị trên trình duyệt, ta chỉ cần viết duy nhất thẻ <code class='code-snippet'>&lt;table&gt;</code> mà không cần thêm CSS hay thuộc tính nào khác.", correct: "Sai"}
         ]},
-        { id: '3_c3', type: 'tf_cluster', question: "Một sinh viên công nghệ thông tin đang thiết kế cấu trúc cho cơ sở dữ liệu \"Quản lý Bệnh viện\" bằng ngôn ngữ truy vấn có cấu trúc SQL.", subQuestions: [
-            { id: '3_d27a', text: "Mô hình cơ sở dữ liệu quan hệ tổ chức lưu trữ các dữ liệu dưới dạng các bảng gồm các hàng (bản ghi) và các cột (trường).", correct: "Đúng" },
-            { id: '3_d27b', text: "Câu lệnh CREATE DATABASE thuộc nhóm ngôn ngữ định nghĩa dữ liệu (DDL), có chức năng để khởi tạo một cơ sở dữ liệu hoàn toàn mới.", correct: "Đúng" },
-            { id: '3_d27c', text: "Khi xác định trường \"Mã bệnh nhân\", sinh viên này cần thiết lập nó làm khóa chính (Primary Key) để đảm bảo mỗi bệnh nhân có một định danh phân biệt duy nhất.", correct: "Đúng" },
-            { id: '3_d27d', text: "Để lấy ra danh sách các bệnh nhân khám trong ngày hôm nay, sinh viên này phải sử dụng câu lệnh UPDATE thay vì câu lệnh SELECT.", correct: "Sai" }
+        { id: '1_c3', type: 'tf_cluster', question: "Câu 3. Để làm cho trang web cá nhân của mình đẹp mắt và sinh động hơn, bạn Bình tiếp tục tìm hiểu về cách định dạng trang web bằng CSS (Cascading Style Sheets). Khi áp dụng CSS, Bình rút ra các kết luận:", subQuestions: [
+            { id: '1_c3_0', text: "a) CSS có thể được viết trực tiếp vào bên trong thuộc tính 'style' của một thẻ HTML.", correct: "Đúng"}, 
+            { id: '1_c3_1', text: "b) Bộ chọn (Selector) theo Class trong CSS được bắt đầu bằng dấu thăng (#).", correct: "Sai"}, 
+            { id: '1_c3_2', text: "c) Cú pháp <code class='code-snippet'>p { font-weight: bold; }</code> sẽ làm cho tất cả đoạn văn bản trong thẻ <code class='code-snippet'>&lt;p&gt;</code> in đậm.", correct: "Đúng"}, 
+            { id: '1_c3_3', text: "d) Khi có sự xung đột, định dạng CSS nội tuyến (Inline style) sẽ có độ ưu tiên cao nhất, đè lên định dạng CSS bên ngoài (External file).", correct: "Đúng"}
         ]},
-        { id: '3_c4', type: 'tf_cluster', question: "Sau một sự cố rò rỉ thông tin cá nhân của người dùng, ban quản lý của một hệ thống thương mại điện tử tiến hành rà soát lại chính sách bảo mật cơ sở dữ liệu.", subQuestions: [
-            { id: '3_d28a', text: "Tình trạng mất điện đột ngột hoặc hư hỏng thiết bị ổ cứng vật lý đều là những sự cố có thể gây ra việc mất mát dữ liệu hệ thống.", correct: "Đúng" },
-            { id: '3_d28b', text: "Lệnh REVOKE trong ngôn ngữ SQL được sử dụng để cấp thêm quyền truy cập cho một nhóm người dùng mới vào hệ thống.", correct: "Sai" },
-            { id: '3_d28c', text: "Việc phân quyền người dùng thành nhiều cấp bậc (như khách, nhân viên, quản trị viên cao cấp) giúp giảm thiểu tối đa rủi ro lộ lọt dữ liệu từ bên trong.", correct: "Đúng" },
-            { id: '3_d28d', text: "Để đảm bảo tính toàn vẹn của dữ liệu trước sự cố hỏng hóc thiết bị lưu trữ, ban quản lý chỉ cần ban hành nội quy cấm nhân viên làm rơi vỡ máy tính là đủ.", correct: "Sai" }
+        { id: '1_c4', type: 'tf_cluster', question: "Câu 4 (Câu hỏi tình huống HTML). Bạn Cường đang thiết kế phần hiển thị thông tin người dùng cho trang web 'Hành Trình Số'. Cường đã viết đoạn mã HTML sau đây trong thẻ &lt;body&gt;:<br><code class='code-block'>&lt;div class=\"user-profile\"&gt;\n    &lt;img src=\"avatar.png\" alt=\"Ảnh đại diện học sinh\"&gt;\n    &lt;h2 style=\"color: blue;\"&gt;Trần Lê Cỏ Dại&lt;/h2&gt;\n    &lt;p class=\"bio\"&gt;Học sinh yêu thích môn Tin học.&lt;/p&gt;\n&lt;/div&gt;</code><br>Hãy giúp Cường xác định tính Đúng/Sai của các phát biểu sau về đoạn mã trên:", subQuestions: [
+            { id: '1_c4_0', text: "a) Đoạn mã sử dụng thẻ <code class='code-snippet'>&lt;img&gt;</code> để chèn một hình ảnh có tên tệp là 'avatar.png'.", correct: "Đúng"}, 
+            { id: '1_c4_1', text: "b) Phần tử <code class='code-snippet'>&lt;h2&gt;</code> được áp dụng CSS nội tuyến (Inline) để đổi màu chữ thành màu xanh dương.", correct: "Đúng"}, 
+            { id: '1_c4_2', text: "c) Dòng chữ 'Ảnh đại diện học sinh' sẽ luôn luôn hiển thị đè lên trên bức ảnh để làm chú thích cho ảnh.", correct: "Sai"}, 
+            { id: '1_c4_3', text: "d) Để thay đổi kích thước chữ cho dòng 'Học sinh yêu thích môn Tin học.' thông qua CSS ngoài, ta có thể sử dụng bộ chọn lớp bằng cú pháp: <code class='code-snippet'>.bio { font-size: 16px; }</code>", correct: "Đúng"}
         ]}
     ];
 
@@ -393,18 +295,7 @@
     const rowsPerPage = 10;
     let sortedScoresList = [];
 
-    function shuffleArray(array) {
-        let curId = array.length;
-        while (0 !== curId) {
-            let randId = Math.floor(Math.random() * curId);
-            curId -= 1;
-            let tmp = array[curId];
-            array[curId] = array[randId];
-            array[randId] = tmp;
-        }
-        return array;
-    }
-
+    // KHÔNG SỬ DỤNG HÀM SHUFFLEARRAY CHO QUESTION VÀ OPTIONS (GIỮ NGUYÊN GỐC)
     window.startQuizAction = function() {
         const errDiv = document.getElementById('login-error');
         errDiv.classList.add('hidden');
@@ -417,31 +308,23 @@
             return;
         }
 
-        currentStudent = { hoTen: name, lop: lop, maDe: 'de_tin11_3', tenDe: 'Kiểm Tra Thường Xuyên Môn Tin Học 11 - Đề 3' };
+        currentStudent = { hoTen: name, lop: lop, maDe: 'de_tin11_3_final', tenDe: 'Kiểm Tra Thường Xuyên Đề 3 - Tin Học 11' };
         
         let rawQuestions = JSON.parse(JSON.stringify(de_data));
         
-        let part1 = shuffleArray(rawQuestions.filter(q => q.type === 'single'));
+        let part1 = rawQuestions.filter(q => q.type === 'single');
         part1.forEach((q, idx) => {
             q.displayQuestion = `Câu ${idx + 1}: ${q.question}`;
-            let correctText = q.options[q.correct];
-            q.options = shuffleArray(q.options);
-            q.correct = q.options.indexOf(correctText);
         });
         
-        let part2 = shuffleArray(rawQuestions.filter(q => q.type === 'tf_cluster'));
+        let part2 = rawQuestions.filter(q => q.type === 'tf_cluster');
         part2.forEach((q, idx) => {
             q.displayQuestion = `Câu ${part1.length + idx + 1}: ${q.question}`;
-            q.subQuestions = shuffleArray(q.subQuestions);
-            const labels = ['a)', 'b)', 'c)', 'd)'];
-            q.subQuestions.forEach((sub, sIdx) => {
-                sub.text = `${labels[sIdx]} ${sub.text}`;
-            });
         });
         
         currentQuestions = [...part1, ...part2];
         quizStartTime = new Date();
-        cheatCount = 0; 
+        
         setTimeout(() => { isQuizStarted = true; }, 1000);
         showSection('quiz');
         document.getElementById('quiz-title').innerText = currentStudent.tenDe;
@@ -602,6 +485,11 @@
             }
         });
 
+        // CHỐT CHẶN: Đảm bảo không bị sai số thập phân nếu học sinh làm đúng 100% số ý
+        if (correctSubItems === totalItems) {
+            totalScore = 10.0;
+        }
+
         const score = totalScore.toFixed(2);
 
         const record = {
@@ -611,8 +499,11 @@
             duration: formatDuration(Math.floor((quizEndTime - quizStartTime) / 1000)),
             thoiGian: new Date().toISOString(), deviceId: deviceId
         };
+        
         if(database) {
             scoresRef.push(record, () => { window.showModalResult(score, correctSubItems, totalItems, record.duration); });
+        } else {
+            window.showModalResult(score, correctSubItems, totalItems, record.duration);
         }
     };
 
@@ -643,24 +534,40 @@
             return words[words.length - 1].toLowerCase();
         };
 
+        // 1. Sắp xếp danh sách điểm giảm dần
         sortedScoresList = [...allScores].sort((a, b) => {
-            const lopA = (a.lop || '').toUpperCase();
-            const lopB = (b.lop || '').toUpperCase();
-            if (lopA !== lopB) return lopA.localeCompare(lopB);
+            if (b.diem !== a.diem) return b.diem - a.diem;
             
             const tenA = getTen(a.hoTen);
             const tenB = getTen(b.hoTen);
-            if (tenA !== tenB) return tenA.localeCompare(tenB);
+            if (tenA !== tenB) return tenA.localeCompare(tenB, 'vi');
             
-            return (a.hoTen || '').localeCompare(b.hoTen || '');
+            return (a.hoTen || '').localeCompare(b.hoTen || '', 'vi');
         });
 
+        // 2. Tính toán Dense Ranking (Vị thứ)
+        let currentRank = 1;
+        let prevScore = -1;
+        
+        sortedScoresList.forEach((s, i) => {
+            if (i === 0) {
+                s.absoluteRank = currentRank;
+            } else {
+                if (s.diem < prevScore) {
+                    currentRank++;
+                }
+                s.absoluteRank = currentRank;
+            }
+            prevScore = s.diem;
+        });
+
+        // Hiển thị phần tóm tắt cho người dùng (Vị thứ)
         const myScoreIndex = sortedScoresList.findIndex(s => s.deviceId === deviceId);
         if (myScoreIndex !== -1) {
             const myScore = sortedScoresList[myScoreIndex];
             document.getElementById('my-score-summary').classList.remove('hidden');
             document.getElementById('my-summary-name').innerText = `${myScore.hoTen} (${(myScore.lop || '').toUpperCase()})`;
-            document.getElementById('my-summary-rank').innerText = `Hạng: #${myScoreIndex + 1}`;
+            document.getElementById('my-summary-rank').innerText = `Vị thứ: ${myScore.absoluteRank}`;
             document.getElementById('my-summary-score').innerText = `${myScore.diem}`;
         } else {
             document.getElementById('my-score-summary').classList.add('hidden');
@@ -678,20 +585,24 @@
         const pageData = sortedScoresList.slice(startIndex, endIndex);
 
         tbody.innerHTML = pageData.map((s, idx) => {
-            let timeStr = s.startTime;
+            let timeStr = "";
             if (s.thoiGian) {
                 const dt = new Date(s.thoiGian);
-                timeStr = dt.toLocaleTimeString('vi-VN') + ' - ' + dt.toLocaleDateString('vi-VN');
+                // Định dạng Ngày/Tháng/Năm
+                timeStr = `${dt.getDate().toString().padStart(2, '0')}/${(dt.getMonth() + 1).toString().padStart(2, '0')}/${dt.getFullYear()}`;
+            } else {
+                timeStr = s.endTime ? s.endTime.split(' ').pop() : s.duration;
             }
-            const globalIdx = startIndex + idx + 1;
+            
+            // Tính số thứ tự (STT) hiển thị liên tục 1, 2, 3, 4... trên bảng
+            const globalSTT = startIndex + idx + 1;
 
             return `<tr class="${s.deviceId === deviceId ? 'my-score-row' : 'hover:bg-gray-50'} transition-colors border-b border-gray-100">
-                <td class="px-3 sm:px-4 py-4 text-center font-bold text-gray-500 text-sm">#${globalIdx}</td>
+                <td class="px-3 sm:px-4 py-4 text-center font-bold text-gray-500 text-sm">${globalSTT}</td>
                 <td class="px-3 sm:px-4 py-4 font-bold text-blue-600 text-sm">${(s.lop || '').toUpperCase()}</td>
                 <td class="px-3 sm:px-4 py-4 font-semibold text-gray-800 text-sm">${s.hoTen} ${s.deviceId === deviceId ? '<span class="ml-2 bg-pink-500 text-white text-[10px] px-2 rounded-md">Bạn</span>' : ''}</td>
                 <td class="px-3 sm:px-4 py-4 text-center"><span class="font-bold text-lg ${s.diem >= 5 ? 'text-green-600' : 'text-red-500'}">${s.diem}</span></td>
                 <td class="px-3 sm:px-4 py-4 text-center text-gray-500 text-xs">${timeStr}</td>
-                
             </tr>`;
         }).join('');
     };
