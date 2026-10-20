@@ -105,7 +105,7 @@
       <div class="flex items-center justify-center w-24 h-24 mx-auto mb-4 rounded-full border-4 border-yellow-400 bg-red-600 shadow-lg transform transition-transform hover:scale-105">
           <span class="text-white font-black text-4xl tracking-tighter">HS</span>
       </div>
-      <h1 class="text-2xl sm:text-3xl font-bold text-red-500 mb-3"> ĐỀ KIỂM TRA<br> BÀI 7: THIẾT BỊ THÔNG MINH VÀ INTERNET VẠN VẬT </h1>
+      <h1 class="text-2xl sm:text-3xl font-bold text-red-500 mb-3"> BÀI 7: THIẾT BỊ THÔNG MINH VÀ INTERNET VẠN VẬT </h1>
      </div>
       <div id="login-form" class="space-y-4">
       <div class="flex flex-col gap-4">
@@ -217,7 +217,7 @@
          <th class="px-3 sm:px-4 py-4 text-center font-extrabold w-16">STT</th>
          <th class="px-3 sm:px-4 py-4 text-left font-extrabold">Họ tên</th>
          <th class="px-3 sm:px-4 py-4 text-center font-extrabold">Lớp</th>
-         <th class="px-3 sm:px-4 py-4 text-center font-extrabold">Thời gian</th>
+         <th class="px-3 sm:px-4 py-4 text-center font-extrabold">Ngày nộp</th>
          <th class="px-3 sm:px-4 py-4 text-center font-extrabold">Điểm</th>
          <th class="px-2 sm:px-4 py-4 text-center font-extrabold">Xem lại</th>
         </tr>
@@ -230,7 +230,6 @@
      <div id="pagination-controls" class="w-full flex justify-center mt-6"></div>
     </div>
   </div>
- 
 
   <script>
     let database = null;
@@ -238,14 +237,13 @@
 
     try {
         const firebaseConfig = {
-            apiKey: "AIzaSyBQ9Pos8awlh9j041qDWTPFRsVIjF-kPnk",
-            authDomain: "hoctap-91691.firebaseapp.com",
-            databaseURL: "https://hoctap-91691-default-rtdb.asia-southeast1.firebasedatabase.app",
-            projectId: "hoctap-91691",
-            storageBucket: "hoctap-91691.firebasestorage.app",
-            messagingSenderId: "1004553425319",
-            appId: "1:1004553425319:web:45d15cbae393f614c56682",
-            measurementId: "G-Q6X1TL9PRV"
+            apiKey: "AIzaSyC4ou3Fu8IxAPYV347pHKT1jtPxQe5TBM4",
+            authDomain: "hanhtrinhso-e3368.firebaseapp.com",
+            databaseURL: "https://hanhtrinhso-e3368-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "hanhtrinhso-e3368",
+            storageBucket: "hanhtrinhso-e3368.firebasestorage.app",
+            messagingSenderId: "1046142513655",
+            appId: "1:1046142513655:web:5c7bb3a47ee90ac279fef2"
         };
         if (typeof firebase !== 'undefined') {
             if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
@@ -268,7 +266,7 @@
     const itemsPerPage = 10;
 
     const exam_data = [
-        { id: "q1", type: "single", question: "Câu 1: Theo tài liệu tin học, khái niệm \"thiết bị thông minh\" được các chuyên gia định nghĩa tập trung vào đặc tính cốt lõi nào sau đây?", options: ["Là những thiết bị luôn yêu cầu con người phải điều khiển mọi thao tác thủ công từ lúc khởi động đến khi tắt.", "Là những thiết bị cơ khí truyền thống chỉ chạy bằng năng lượng điện và không bao giờ kết nối sóng vô tuyến.", "Là những thiết bị điện tử có thể hoạt động tự chủ ở mức độ nhất định nhờ phần mềm điều khiển cài đặt sẵn.", "Là những thiết bị luôn luôn phải sử dụng giao diện dòng lệnh văn bản để nhập dữ liệu thay cho màn hình màu."], correct: 2, explanation: "Đúng. Thiết bị thông minh là thiết bị điện tử có thể hoạt động tự chủ ở mức độ nhất định nhờ phần mềm điều khiển cài đặt sẵn." },
+        { id: "q1", type: "single", question: "Câu 1: Theo định nghĩa chuyên ngành, thế nào là một \"thiết bị thông minh\" trong kỉ nguyên công nghệ số hiện đại ngày nay?", options: ["Là loại thiết bị cơ khí chạy bằng điện, chuyên sử dụng để ghi nhận hình ảnh vật lí liên tục nhưng không bao giờ có khả năng kết nối mạng.", "Là các thiết bị điện tử có thể hoạt động tự chủ ở một mức độ nhất định nhờ vào hệ thống các phần mềm điều khiển được cài đặt sẵn.", "Là một cỗ máy tự động hóa thuần túy chỉ thực hiện lặp đi lặp lại những thao tác đơn giản theo đúng một lịch trình băng chuyền vật lý.", "Là thiết bị truyền thông vô tuyến dùng để kết nối mạng nhưng hoàn toàn không có bộ vi xử lý và không chạy bất kỳ hệ điều hành nào."], correct: 1, explanation: "Đúng. Thiết bị thông minh là thiết bị điện tử có thể hoạt động tự chủ ở mức độ nhất định nhờ phần mềm điều khiển cài đặt sẵn." },
         { id: "q2", type: "single", question: "Câu 2: Thuật ngữ \"Trí tuệ nhân tạo\" (viết tắt là AI) được tích hợp trong các thiết bị thông minh hiện đại nhằm mục đích mang lại khả năng gì?", options: ["Nhằm cung cấp khả năng tự động sao chép mọi tài liệu cá nhân của người dùng sang các thiết bị ổ cứng khác.", "Nhằm cung cấp khả năng bắt chước một vài hành vi hay cách thức tư duy của con người ở các mức độ khác nhau.", "Nhằm cung cấp khả năng phá hủy hoàn toàn mọi hệ thống tường lửa bảo vệ máy tính khi bị tấn công mạng.", "Nhằm cung cấp khả năng thay thế triệt để vai trò của bộ vi xử lí trung tâm bên trong tất cả các dòng máy tính."], correct: 1, explanation: "Đúng. Trí tuệ nhân tạo có khả năng bắt chước một vài hành vi hay cách thức tư duy của con người." },
         { id: "q3", type: "single", question: "Câu 3: Cuộc cách mạng công nghiệp lần thứ tư (thường được gọi tắt là CMCN 4.0) được xây dựng chủ yếu dựa trên nền tảng công nghệ gì?", options: ["Xây dựng dựa trên nền tảng công nghệ cơ giới hoá máy móc kết hợp sức kéo động cơ hơi nước nhiệt độ cao.", "Xây dựng dựa trên nền tảng công nghệ phát triển mạnh mẽ điện năng và các dây chuyền sản xuất tập trung.", "Xây dựng dựa trên nền tảng công nghệ chế tạo động cơ đốt trong kết hợp hệ thống khung gầm thép vững chắc.", "Xây dựng dựa trên nền tảng công nghệ số và tích hợp chặt chẽ với các công nghệ thông minh trên diện rộng."], correct: 3, explanation: "Đúng. Cuộc cách mạng công nghiệp 4.0 được xây dựng dựa trên nền tảng công nghệ số và công nghệ thông minh." },
         { id: "q4", type: "single", question: "Câu 4: Giao thức kết nối truyền thông mạng mang tên TCP/IP được thiết lập chính thức trên phạm vi toàn cầu vào khoảng thời gian nào?", options: ["Chuẩn giao thức kết nối mạng lưới máy tính TCP/IP được chính thức đưa vào sử dụng từ những năm 1957.", "Chuẩn giao thức kết nối mạng lưới máy tính TCP/IP được chính thức đưa vào sử dụng từ những năm 1964.", "Chuẩn giao thức kết nối mạng lưới máy tính TCP/IP được chính thức đưa vào sử dụng từ những năm 1983.", "Chuẩn giao thức kết nối mạng lưới máy tính TCP/IP được chính thức đưa vào sử dụng từ những năm 1992."], correct: 2, explanation: "Đúng. Giao thức truyền thông mạng TCP/IP được thiết lập chính thức vào năm 1983." },
@@ -589,10 +587,34 @@
         </div>`;
     };
 
-    function getStatusBadge(isCorrect, isUnanswered) {
-        if (isUnanswered) return `<div class="mt-4 mb-2 inline-block px-4 py-2 bg-yellow-100 text-yellow-800 text-base font-black rounded-lg border border-yellow-300 shadow-sm">⚠️ BẠN CHƯA LÀM CÂU NÀY</div>`;
-        if (isCorrect) return `<div class="mt-4 mb-2 inline-block px-4 py-2 bg-emerald-100 text-emerald-800 text-base font-black rounded-lg border border-emerald-300 shadow-sm">✅ BẠN LÀM ĐÚNG RỒI</div>`;
-        return `<div class="mt-4 mb-2 inline-block px-4 py-2 bg-red-100 text-red-800 text-base font-black rounded-lg border border-red-300 shadow-sm">❌ BẠN LÀM SAI RỒI</div>`;
+    function getPedagogicalFeedback(isCorrect, isUnanswered, explanation) {
+        let statusHtml = '';
+        if (isUnanswered) {
+            statusHtml = `<div class="flex items-center gap-2 text-yellow-700 font-bold mb-2"><span class="text-xl">⚠️</span> BỎ QUA - CHƯA CHỌN ĐÁP ÁN</div>`;
+        } else if (isCorrect) {
+            statusHtml = `<div class="flex items-center gap-2 text-emerald-700 font-bold mb-2"><span class="text-xl">✅</span> ĐÁP ÁN CHÍNH XÁC</div>`;
+        } else {
+            statusHtml = `<div class="flex items-center gap-2 text-red-700 font-bold mb-2"><span class="text-xl">❌</span> ĐÁP ÁN CHƯA CHÍNH XÁC</div>`;
+        }
+        
+        let explHtml = '';
+        if (explanation) {
+            // Tự động bỏ qua các cụm từ "Đúng.", "Sai.", "ĐÚNG.", "SAI." ở đầu đoạn văn giải thích bằng Regex
+            let cleanExpl = explanation.replace(/^(Đúng|Sai|ĐÚNG|SAI)[\.\:\s]+/i, '').trim();
+            
+            explHtml = `<div class="mt-3 bg-white p-4 rounded-xl border border-blue-100 shadow-sm">
+                <div class="text-sm font-black uppercase tracking-widest text-blue-700 mb-2 flex items-center gap-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    GIẢI THÍCH KHOA HỌC
+                </div>
+                <div class="text-gray-800 font-medium text-base leading-relaxed math-scroll">${cleanExpl}</div>
+            </div>`;
+        }
+
+        return `<div class="mt-4 p-5 rounded-2xl shadow-inner ${isCorrect ? 'bg-emerald-50 border-2 border-emerald-200' : (isUnanswered ? 'bg-yellow-50 border-2 border-yellow-200' : 'bg-red-50 border-2 border-red-200')}">
+            ${statusHtml}
+            ${explHtml}
+        </div>`;
     }
 
     window.reviewQuiz = function() {
@@ -626,11 +648,7 @@
                 });
                 html += `</div>`;
                 
-                html += getStatusBadge(isCorrect, isUnanswered); 
-                
-                if (q.explanation) {
-                    html += `<div class="review-explanation mt-3 pt-3 border-t-2 border-gray-200"><p class="text-base font-black uppercase tracking-widest text-blue-600 mb-2">💡 Giải chi tiết:</p><p class="text-black font-medium text-lg leading-loose math-scroll">${q.explanation}</p></div>`;
-                }
+                html += getPedagogicalFeedback(isCorrect, isUnanswered, q.explanation);
                 html += `</div>`;
             } 
             else if (q.type === 'tf_cluster') {
@@ -651,10 +669,7 @@
                             <span class="font-black text-xl ${isCorrect ? 'text-emerald-500' : 'text-red-500'}">Đáp án: ${ansText} ${iconHtml}</span>
                         </div>`;
                         
-                    html += getStatusBadge(isCorrect, isUnanswered);
-                    if(item.expl) {
-                        html += `<div class="review-explanation mt-3 pt-3 text-lg text-gray-700 font-medium leading-relaxed math-scroll"><span class="text-indigo-500 font-bold uppercase">Giải chi tiết:</span><br> ${item.expl}</div>`;
-                    }
+                    html += getPedagogicalFeedback(isCorrect, isUnanswered, item.expl);
                     html += `</div>`;
                 });
                 html += `</div></div>`;
@@ -843,4 +858,4 @@
     } catch (e) { deviceId = 'dev_temp_' + Math.random().toString(36).substr(2); }
   </script>
  </body>
-</html>
+</html>s
