@@ -181,7 +181,7 @@
       <table class="w-full text-xs sm:text-sm whitespace-nowrap">
        <thead class="bg-gradient-to-r from-orange-500 to-red-500 text-white">
         <tr>
-         <th class="px-3 sm:px-4 py-4 text-center font-bold">#</th>
+         <th class="px-3 sm:px-4 py-4 text-center font-bold">STT</th>
          <th class="px-3 sm:px-4 py-4 text-center font-bold">Lớp</th>
          <th class="px-3 sm:px-4 py-4 text-left font-bold w-full">Họ tên</th>
          <th class="px-3 sm:px-4 py-4 text-center font-bold">Điểm</th>
@@ -237,7 +237,6 @@
         if (typeof firebase !== 'undefined') {
             if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
             database = firebase.database();
-            // Đã đổi đường dẫn lưu trữ sang Đề  Tin 10
             scoresRef = database.ref('TinHoc10/KiemTraThuongXuyen_De3');
         }
     } catch(err) { console.error("Lỗi Firebase:", err); }
@@ -327,7 +326,7 @@
         window.handleCheatAction('Sao chép (Copy) văn bản');
     });
 
-    // NGÂN HÀNG CÂU HỎI MỚI (TIN HỌC 10 - ĐỀ SỐ 6)
+    // NGÂN HÀNG CÂU HỎI MỚI
     const de_data = [
         { id: "1_1", type: "single", question: "Theo quy mô phân bổ địa lí, khái niệm mạng cục bộ (viết tắt là LAN) được các chuyên gia định nghĩa chuẩn xác nhất là gì?", options: ["Là hệ thống mạng viễn thông toàn cầu chuyên kết nối các quốc gia thông qua dải vệ tinh và đường cáp quang ngầm dưới biển.", "Là mạng cục bộ có phạm vi địa lí vô cùng nhỏ như không gian của một hộ gia đình, một trường học hay một công ty nội bộ.", "Là giải pháp phần mềm thông minh tự động hóa tất cả mọi quy trình làm việc trong môi trường kinh doanh của doanh nghiệp.", "Là thiết bị phần cứng đặc biệt được chế tạo nhằm mục đích chuyển đổi tín hiệu sóng tương tự sang tín hiệu kỹ thuật số."], correct: 1 },
         { id: "1_2", type: "single", question: "Sự khác biệt cốt lõi về bản chất sở hữu giữa mạng cục bộ (LAN) và mạng toàn cầu (Internet) là gì?", options: ["Mạng LAN không có bất kỳ tổ chức hay chủ sở hữu nào, còn Internet thuộc về một chính phủ duy nhất quản lý.", "Mạng LAN là sở hữu của cá nhân, gia đình hay tổ chức xác định, còn Internet hoàn toàn không thuộc quyền sở hữu riêng ai.", "Mạng LAN và Internet đều là tài sản chung của mọi người dân trên thế giới và hoàn toàn được miễn phí khi truy cập.", "Mạng LAN và Internet đều bắt buộc phải đăng ký quyền sở hữu với nhà mạng viễn thông quốc tế trước khi bắt đầu dùng."], correct: 1 },
@@ -419,7 +418,8 @@
         
         let rawQuestions = JSON.parse(JSON.stringify(de_data));
         
-        let part1 = shuffleArray(rawQuestions.filter(q => q.type === 'single'));
+        // Không trộn thứ tự câu hỏi, chỉ trộn ngẫu nhiên các đáp án ở từng câu đơn
+        let part1 = rawQuestions.filter(q => q.type === 'single');
         part1.forEach((q, idx) => {
             q.displayQuestion = `Câu ${idx + 1}: ${q.question}`;
             let correctText = q.options[q.correct];
@@ -427,13 +427,12 @@
             q.correct = q.options.indexOf(correctText);
         });
         
-        let part2 = shuffleArray(rawQuestions.filter(q => q.type === 'tf_cluster'));
+        let part2 = rawQuestions.filter(q => q.type === 'tf_cluster');
         part2.forEach((q, idx) => {
             q.displayQuestion = `Câu ${part1.length + idx + 1}: ${q.question}`;
-            q.subQuestions = shuffleArray(q.subQuestions);
             const labels = ['a)', 'b)', 'c)', 'd)'];
             q.subQuestions.forEach((sub, sIdx) => {
-                sub.text = `${labels[sIdx]} ${sub.text}`;
+                sub.text = `${labels[sIdx]} ${sub.text.replace(/^[a-d]\)\s*/i, '')}`;
             });
         });
         
@@ -635,21 +634,11 @@
         document.getElementById('no-scores').classList.add('hidden');
         paginationControls.classList.remove('hidden');
         
-        const getTen = (fullName) => {
-            if (!fullName) return '';
-            const words = fullName.trim().split(' ');
-            return words[words.length - 1].toLowerCase();
-        };
-
+        // Sắp xếp điểm ưu tiên từ cao xuống thấp
         sortedScoresList = [...allScores].sort((a, b) => {
-            const lopA = (a.lop || '').toUpperCase();
-            const lopB = (b.lop || '').toUpperCase();
-            if (lopA !== lopB) return lopA.localeCompare(lopB);
-            
-            const tenA = getTen(a.hoTen);
-            const tenB = getTen(b.hoTen);
-            if (tenA !== tenB) return tenA.localeCompare(tenB);
-            
+            if (b.diem !== a.diem) {
+                return b.diem - a.diem;
+            }
             return (a.hoTen || '').localeCompare(b.hoTen || '');
         });
 
@@ -679,6 +668,7 @@
             let timeStr = s.startTime;
             if (s.thoiGian) {
                 const dt = new Date(s.thoiGian);
+                // Chỉ in ra định dạng ngày tháng năm
                 timeStr = dt.toLocaleDateString('vi-VN');
             }
             const globalIdx = startIndex + idx + 1;
@@ -689,7 +679,6 @@
                 <td class="px-3 sm:px-4 py-4 font-semibold text-gray-800 text-sm">${s.hoTen} ${s.deviceId === deviceId ? '<span class="ml-2 bg-pink-500 text-white text-[10px] px-2 rounded-md">Bạn</span>' : ''}</td>
                 <td class="px-3 sm:px-4 py-4 text-center"><span class="font-bold text-lg ${s.diem >= 5 ? 'text-green-600' : 'text-red-500'}">${s.diem}</span></td>
                 <td class="px-3 sm:px-4 py-4 text-center text-gray-500 text-xs">${timeStr}</td>
-                
             </tr>`;
         }).join('');
     };

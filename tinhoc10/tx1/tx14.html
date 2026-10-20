@@ -181,7 +181,7 @@
       <table class="w-full text-xs sm:text-sm whitespace-nowrap">
        <thead class="bg-gradient-to-r from-orange-500 to-red-500 text-white">
         <tr>
-         <th class="px-3 sm:px-4 py-4 text-center font-bold">#</th>
+         <th class="px-3 sm:px-4 py-4 text-center font-bold">STT</th>
          <th class="px-3 sm:px-4 py-4 text-center font-bold">Lớp</th>
          <th class="px-3 sm:px-4 py-4 text-left font-bold w-full">Họ tên</th>
          <th class="px-3 sm:px-4 py-4 text-center font-bold">Điểm</th>
@@ -378,7 +378,6 @@
         ]}
     ];
 
-  
     let currentQuestions = [];
     let deviceId = '';
     let allScores = [];
@@ -415,11 +414,12 @@
             return;
         }
 
-        currentStudent = { hoTen: name, lop: lop, maDe: 'de_tin10', tenDe: 'Kiểm Tra Thường Xuyên Đề 4 -Tin Học 10' };
+        currentStudent = { hoTen: name, lop: lop, maDe: 'de_tin10', tenDe: 'Kiểm Tra Thường Xuyên Đề 4 - Tin Học 10' };
         
         let rawQuestions = JSON.parse(JSON.stringify(de_data));
         
-        let part1 = shuffleArray(rawQuestions.filter(q => q.type === 'single'));
+        // Không trộn thứ tự câu hỏi, chỉ trộn ngẫu nhiên các đáp án ở từng câu đơn
+        let part1 = rawQuestions.filter(q => q.type === 'single');
         part1.forEach((q, idx) => {
             q.displayQuestion = `Câu ${idx + 1}: ${q.question}`;
             let correctText = q.options[q.correct];
@@ -427,13 +427,12 @@
             q.correct = q.options.indexOf(correctText);
         });
         
-        let part2 = shuffleArray(rawQuestions.filter(q => q.type === 'tf_cluster'));
+        let part2 = rawQuestions.filter(q => q.type === 'tf_cluster');
         part2.forEach((q, idx) => {
             q.displayQuestion = `Câu ${part1.length + idx + 1}: ${q.question}`;
-            q.subQuestions = shuffleArray(q.subQuestions);
             const labels = ['a)', 'b)', 'c)', 'd)'];
             q.subQuestions.forEach((sub, sIdx) => {
-                sub.text = `${labels[sIdx]} ${sub.text}`;
+                sub.text = `${labels[sIdx]} ${sub.text.replace(/^[a-d]\)\s*/i, '')}`;
             });
         });
         
@@ -635,21 +634,11 @@
         document.getElementById('no-scores').classList.add('hidden');
         paginationControls.classList.remove('hidden');
         
-        const getTen = (fullName) => {
-            if (!fullName) return '';
-            const words = fullName.trim().split(' ');
-            return words[words.length - 1].toLowerCase();
-        };
-
+        // Sắp xếp điểm ưu tiên từ cao xuống thấp
         sortedScoresList = [...allScores].sort((a, b) => {
-            const lopA = (a.lop || '').toUpperCase();
-            const lopB = (b.lop || '').toUpperCase();
-            if (lopA !== lopB) return lopA.localeCompare(lopB);
-            
-            const tenA = getTen(a.hoTen);
-            const tenB = getTen(b.hoTen);
-            if (tenA !== tenB) return tenA.localeCompare(tenB);
-            
+            if (b.diem !== a.diem) {
+                return b.diem - a.diem;
+            }
             return (a.hoTen || '').localeCompare(b.hoTen || '');
         });
 
@@ -679,6 +668,7 @@
             let timeStr = s.startTime;
             if (s.thoiGian) {
                 const dt = new Date(s.thoiGian);
+                // Chỉ in ra định dạng ngày tháng năm
                 timeStr = dt.toLocaleDateString('vi-VN');
             }
             const globalIdx = startIndex + idx + 1;
@@ -689,7 +679,6 @@
                 <td class="px-3 sm:px-4 py-4 font-semibold text-gray-800 text-sm">${s.hoTen} ${s.deviceId === deviceId ? '<span class="ml-2 bg-pink-500 text-white text-[10px] px-2 rounded-md">Bạn</span>' : ''}</td>
                 <td class="px-3 sm:px-4 py-4 text-center"><span class="font-bold text-lg ${s.diem >= 5 ? 'text-green-600' : 'text-red-500'}">${s.diem}</span></td>
                 <td class="px-3 sm:px-4 py-4 text-center text-gray-500 text-xs">${timeStr}</td>
-                
             </tr>`;
         }).join('');
     };

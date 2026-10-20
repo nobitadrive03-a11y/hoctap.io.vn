@@ -181,12 +181,11 @@
       <table class="w-full text-xs sm:text-sm whitespace-nowrap">
        <thead class="bg-gradient-to-r from-orange-500 to-red-500 text-white">
         <tr>
-         <th class="px-3 sm:px-4 py-4 text-center font-bold">#</th>
+         <th class="px-3 sm:px-4 py-4 text-center font-bold">STT</th>
          <th class="px-3 sm:px-4 py-4 text-center font-bold">Lớp</th>
          <th class="px-3 sm:px-4 py-4 text-left font-bold w-full">Họ tên</th>
          <th class="px-3 sm:px-4 py-4 text-center font-bold">Điểm</th>
-         <th class="px-3 sm:px-4 py-4 text-center font-bold">Ngày tháng năm</th>
-        
+         <th class="px-3 sm:px-4 py-4 text-center font-bold">Thời gian</th>
         </tr>
        </thead>
        <tbody id="scores-tbody" class="bg-white/80 divide-y divide-gray-100"></tbody>
@@ -346,35 +345,35 @@
         { id: "1_16", type: "single", question: "Các hệ thống siêu máy tính (Supercomputer) hiện nay thường được con người sử dụng để làm gì?", options: ["Chuyên dùng để giải quyết các bài toán khoa học kĩ thuật cực kì lớn và vô cùng phức tạp.", "Chuyên dùng để soạn thảo văn bản hành chính và lập các bảng tính điểm số cho học sinh.", "Chuyên dùng để truy cập vào các trang web xem phim giải trí trực tuyến độ phân giải cao.", "Chuyên dùng để điều khiển hệ thống đèn tín hiệu giao thông tự động tại một ngã tư đường."], correct: 0 },
         { id: "1_17", type: "single", question: "Khái niệm Trợ thủ số cá nhân (PDA) dùng để chỉ các thiết bị sở hữu đặc điểm nổi bật nào?", options: ["Tích hợp nhiều tính năng hữu ích, kích thước vô cùng nhỏ gọn và có thể kết nối mạng.", "Kích thước vô cùng cồng kềnh, nặng nề và chỉ được sử dụng cố định tại một phòng máy.", "Là thiết bị điện tử chỉ dùng duy nhất để xem giờ giấc và phát ra các âm thanh báo thức.", "Hoàn toàn không thể cài đặt thêm bất kì một phần mềm ứng dụng nào khác từ bên ngoài."], correct: 0 },
         { id: "1_18", type: "single", question: "Hiện nay, hai hệ điều hành nào đang chiếm vị trí phổ biến nhất trên các thiết bị di động cá nhân?", options: ["Hệ điều hành độc quyền iOS của hãng Apple và hệ điều hành mở Android của hãng Google.", "Hệ điều hành máy tính Windows 10 của hãng Microsoft và hệ điều hành mở Linux cộng đồng.", "Hệ điều hành máy chủ Ubuntu mã nguồn mở và hệ điều hành văn bản MS-DOS truyền thống.", "Hệ điều hành máy tính macOS của hãng Apple và hệ điều hành phím bấm Symbian cổ điển."], correct: 0 },
-        { id: "1_19", type: "single", question: "Trên giao diện màn hình chính của điện thoại thông minh, thanh trạng thái hiển thị những thông tin gì?", options: ["Hiển thị tình trạng kết nối sóng mạng, thời gian hiện tại và tỉ lệ phần trăm pin còn lại.", "Hiển thị toàn bộ danh sách các tập tin văn bản quan trọng đang được lưu trữ trong máy.", "Hiển thị các dải mật khẩu cá nhân của tất cả các tài khoản mạng xã hội mà người dùng có.", "Hiển thị chi tiết lịch sử duyệt web của người sử dụng thiết bị trong khoảng một năm vừa qua."], correct: 0 },
+        { id: "1_19", type: "single", question: "Trên giao diện màn hình chính của điện thoại thông minh, thanh trạng thái hiển thị những thông tin gì?", options: ["Hiển thị tình trạng kết nối sóng mạng, thời hiện tại và tỉ lệ phần trăm pin còn lại.", "Hiển thị toàn bộ danh sách các tập tin văn bản quan trọng đang được lưu trữ trong máy.", "Hiển thị các dải mật khẩu cá nhân của tất cả các tài khoản mạng xã hội mà người dùng có.", "Hiển thị chi tiết lịch sử duyệt web của người sử dụng thiết bị trong khoảng một năm vừa qua."], correct: 0 },
         { id: "1_20", type: "single", question: "Nút ảo 'Tổng quan' (Overview) trên thanh điều hướng của hệ điều hành Android dùng để làm gì?", options: ["Dùng để hiển thị danh sách tất cả các ứng dụng phần mềm đang chạy ngầm trên thiết bị.", "Dùng để ngắt toàn bộ kết nối mạng wifi và mạng dữ liệu di động ngay lập tức một cách tức thời.", "Dùng để chụp lại toàn bộ màn hình hiển thị và lưu bức ảnh đó vào thư viện ảnh của hệ thống.", "Dùng để khóa chặt màn hình cảm ứng nhằm ngăn chặn mọi thao tác chạm tay không có chủ ý."], correct: 0 },
         { id: "1_21", type: "single", question: "Nút cứng vật lí 'Khóa' nằm bên hông thân máy của các điện thoại thông minh có chức năng chính là gì?", options: ["Chức năng dùng để bật nguồn thiết bị hoặc tiến hành tắt màn hình hiển thị cảm ứng.", "Chức năng dùng để tăng giảm mức âm lượng hệ thống phát ra từ cụm loa đa phương tiện.", "Chức năng tự động gọi điện thoại khẩn cấp đến cơ quan cảnh sát giao thông khi gặp tai nạn.", "Chức năng chuyển đổi ngôn ngữ của toàn bộ hệ điều hành sang một định dạng hoàn toàn mới."], correct: 0 },
         { id: "1_22", type: "single", question: "Hệ thống quản lí tệp trên điện thoại thông minh hiện nay được tổ chức theo phương pháp nào?", options: ["Tổ chức theo cấu trúc phân cấp đa tầng tương tự như trên các hệ thống máy tính cá nhân.", "Tổ chức theo cấu trúc dạng phẳng hoàn toàn không phân chia thành bất kì thư mục gốc nào.", "Tổ chức theo cấu trúc bảng tính dạng lưới để dễ dàng tính toán các con số dung lượng lớn.", "Tổ chức theo chuỗi đồ thị ngẫu nhiên hoàn toàn không có sự liên kết logic vật lí nào cả."], correct: 0 },
         { id: "1_23", type: "single", question: "Người sử dụng thiết bị di động có thể tiến hành cài đặt thêm các ứng dụng phần mềm từ đâu?", options: ["Tải về trực tiếp từ các chợ phần mềm ứng dụng trực tuyến cung cấp trên nền tảng mạng.", "Lắp thêm các đĩa quang định dạng CD/DVD vật lí trực tiếp vào khe đọc trên thân thiết bị.", "Kết nối với các đài phát thanh sóng vô tuyến địa phương để nhận và giải mã các mã nguồn.", "Nhập thủ công từng dòng lệnh nhị phân thông qua hệ thống bàn phím cảm ứng trên màn hình."], correct: 0 },
         { id: "1_24", type: "single", question: "Để làm xuất hiện các tùy chọn di chuyển hoặc sao chép tệp tin trên điện thoại, ta cần thao tác thế nào?", options: ["Thực hiện thao tác chạm ngón tay và giữ lâu một chút vào đúng biểu tượng của tệp tin đó.", "Thực hiện thao tác nháy đúp thật nhanh hai lần liên tiếp vào đúng biểu tượng của tệp tin đó.", "Thực hiện thao tác úp mặt màn hình điện thoại xuống sát mặt bàn trong vòng khoảng năm giây.", "Thực hiện thao tác kết nối điện thoại với bộ sạc pin dự phòng để kích hoạt tính năng ẩn giấu."], correct: 0 },
         { id: '1_c1', type: 'tf_cluster', question: "Bạn Tuấn đang ghi chú lại các kiến thức trọng tâm về xử lí thông tin và dữ liệu số. Hãy xác định tính Đúng/Sai của các ghi chú sau:", subQuestions: [
-            { id: '1_d25a', text: " Hệ thống máy tính điện tử xử lí thông tin cực nhanh, mang lại kết quả có độ chính xác vô cùng cao và hoàn toàn có thể làm việc liên tục nhiều ngày không nghỉ.", correct: "Đúng" },
-            { id: '1_d25b', text: " Cùng một bộ dữ liệu giống hệt nhau, nếu các nhà phân tích áp dụng các công cụ và cách xử lí khác nhau thì hoàn toàn có thể đem lại những thông tin kết luận khác nhau.", correct: "Đúng" },
-            { id: '1_d25c', text: " Đơn vị Byte được giới khoa học quy định là đơn vị lưu trữ dữ liệu nhỏ nhất mà máy tính có thể truy cập được, mỗi một Byte được cấu tạo từ chính xác 8 bit liền kề.", correct: "Đúng" },
-            { id: '1_d25d', text: " Thiết bị số hiện đại chỉ có duy nhất một tính năng là tiếp nhận và truyền tải thông tin chứ không hề được trang bị các bộ vi xử lí để tự động tính toán dữ liệu.", correct: "Sai" }
+            { id: '1_d25a', text: "Hệ thống máy tính điện tử xử lí thông tin cực nhanh, mang lại kết quả có độ chính xác vô cùng cao và hoàn toàn có thể làm việc liên tục nhiều ngày không nghỉ.", correct: "Đúng" },
+            { id: '1_d25b', text: "Cùng một bộ dữ liệu giống hệt nhau, nếu các nhà phân tích áp dụng các công cụ và cách xử lí khác nhau thì hoàn toàn có thể đem lại những thông tin kết luận khác nhau.", correct: "Đúng" },
+            { id: '1_d25c', text: "Đơn vị Byte được giới khoa học quy định là đơn vị lưu trữ dữ liệu nhỏ nhất mà máy tính có thể truy cập được, mỗi một Byte được cấu tạo từ chính xác 8 bit liền kề.", correct: "Đúng" },
+            { id: '1_d25d', text: "Thiết bị số hiện đại chỉ có duy nhất một tính năng là tiếp nhận và truyền tải thông tin chứ không hề được trang bị các bộ vi xử lí để tự động tính toán dữ liệu.", correct: "Sai" }
         ]},
         { id: '1_c2', type: 'tf_cluster', question: "Lớp trưởng đang điều hành buổi thảo luận về sự phát triển của công nghệ thông minh trong kỉ nguyên 4.0. Các thành viên đã đưa ra những ý kiến sau:", subQuestions: [
-            { id: '1_d26a', text: " Thiết bị thông minh có đặc trưng cốt lõi là khả năng hoạt động tự chủ ở mức độ nhất định nhờ các phần mềm điều khiển ưu việt được cài đặt sẵn bên trong.", correct: "Đúng" },
-            { id: '1_d26b', text: " Mạng Internet vạn vật (IoT) là mô hình liên kết các thiết bị thông minh nhằm tự động thu thập và xử lí dữ liệu tức thời, hoạt động cực kì hiệu quả trên diện rộng.", correct: "Đúng" },
-            { id: '1_d26c', text: " Nền kinh tế tri thức hiện đại lấy việc khai thác cạn kiệt tài nguyên thiên nhiên và sử dụng lao động thủ công giá rẻ làm động lực cốt lõi để thúc đẩy sự tăng trưởng.", correct: "Sai" },
-            { id: '1_d26d', text: " Về bản chất phân loại kĩ thuật, một chiếc máy ảnh kĩ thuật số đời cũ (chỉ dùng thẻ nhớ, không tích hợp sóng wifi) cũng được giới công nghệ xếp vào nhóm thiết bị thông minh.", correct: "Sai" }
+            { id: '1_d26a', text: "Thiết bị thông minh có đặc trưng cốt lõi là khả năng hoạt động tự chủ ở mức độ nhất định nhờ các phần mềm điều khiển ưu việt được cài đặt sẵn bên trong.", correct: "Đúng" },
+            { id: '1_d26b', text: "Mạng Internet vạn vật (IoT) là mô hình liên kết các thiết bị thông minh nhằm tự động thu thập và xử lí dữ liệu tức thời, hoạt động cực kì hiệu quả trên diện rộng.", correct: "Đúng" },
+            { id: '1_d26c', text: "Nền kinh tế tri thức hiện đại lấy việc khai thác cạn kiệt tài nguyên thiên nhiên và sử dụng lao động thủ công giá rẻ làm động lực cốt lõi để thúc đẩy sự tăng trưởng.", correct: "Sai" },
+            { id: '1_d26d', text: "Về bản chất phân loại kĩ thuật, một chiếc máy ảnh kĩ thuật số đời cũ (chỉ dùng thẻ nhớ, không tích hợp sóng wifi) cũng được giới công nghệ xếp vào nhóm thiết bị thông minh.", correct: "Sai" }
         ]},
         { id: '1_c3', type: 'tf_cluster', question: "Trong bài báo cáo nhóm về các thành tựu vĩ đại của ngành Tin học, các em học sinh đã trình bày các luận điểm dưới đây. Hãy đánh giá tính Đúng/Sai của chúng:", subQuestions: [
-            { id: '1_d27a', text: " Giao thức truyền thông mạng TCP/IP được thiết lập vào năm 1983 chính là bộ quy tắc chuẩn mực giúp kết nối hàng triệu máy tính tạo thành mạng Internet toàn cầu.", correct: "Đúng" },
-            { id: '1_d27b', text: " Sự ra đời của các ngôn ngữ lập trình bậc cao hiện đại đã giúp người lập trình viên không còn phải vất vả viết các phần mềm bằng những dãy mã máy nhị phân khô khan.", correct: "Đúng" },
-            { id: '1_d27c', text: " Các hệ quản trị cơ sở dữ liệu làm tăng độ phức tạp của việc lập trình do chúng luôn luôn bắt buộc người dùng phải tự viết tay mọi công cụ cập nhật và tìm kiếm dữ liệu.", correct: "Sai" },
-            { id: '1_d27d', text: " Các hệ điều hành máy tính (như Windows, macOS) đóng vai trò then chốt trong việc quản lí hệ thống phần cứng, quản lí tiến trình xử lí và cung cấp giao diện cho người dùng.", correct: "Đúng" }
+            { id: '1_d27a', text: "Giao thức truyền thông mạng TCP/IP được thiết lập vào năm 1983 chính là bộ quy tắc chuẩn mực giúp kết nối hàng triệu máy tính tạo thành mạng Internet toàn cầu.", correct: "Đúng" },
+            { id: '1_d27b', text: "Sự ra đời của các ngôn ngữ lập trình bậc cao hiện đại đã giúp người lập trình viên không còn phải vất vả viết các phần mềm bằng những dãy mã máy nhị phân khô khan.", correct: "Đúng" },
+            { id: '1_d27c', text: "Các hệ quản trị cơ sở dữ liệu làm tăng độ phức tạp của việc lập trình do chúng luôn luôn bắt buộc người dùng phải tự viết tay mọi công cụ cập nhật và tìm kiếm dữ liệu.", correct: "Sai" },
+            { id: '1_d27d', text: "Các hệ điều hành máy tính (như Windows, macOS) đóng vai trò then chốt trong việc quản lí hệ thống phần cứng, quản lí tiến trình xử lí và cung cấp giao diện cho người dùng.", correct: "Đúng" }
         ]},
         { id: '1_c4', type: 'tf_cluster', question: "Một bạn học sinh vừa được phụ huynh tặng một chiếc máy tính bảng mới và đang tự mày mò khám phá các chức năng. Bạn ấy rút ra một số nhận xét sau:", subQuestions: [
-            { id: '1_d28a', text: " Trợ thủ số cá nhân (PDA) như máy tính bảng ngày nay tích hợp rất nhiều tính năng giải trí đa phương tiện, quản lí công việc học tập và có thể kết nối mạng wifi dễ dàng.", correct: "Đúng" },
-            { id: '1_d28b', text: " Mọi ứng dụng phần mềm có trên chiếc máy tính bảng này đều do nhà sản xuất cài đặt cố định từ đầu, người sử dụng hoàn toàn không thể truy cập mạng để tải thêm ứng dụng mới.", correct: "Sai" },
-            { id: '1_d28c', text: " Dải thanh trạng thái hiển thị trên màn hình chính của thiết bị luôn cung cấp cho người dùng các thông tin quan trọng như mức phần trăm pin, đồng hồ thời gian và tình trạng sóng.", correct: "Đúng" },
-            { id: '1_d28d', text: " Hệ thống tổ chức không gian lưu trữ dữ liệu bên trong thiết bị di động này được quản lí dưới dạng cấu trúc cây phân cấp các thư mục, cơ chế này hoàn toàn tương tự như trên máy tính.", correct: "Đúng" }
+            { id: '1_d28a', text: "Trợ thủ số cá nhân (PDA) như máy tính bảng ngày nay tích hợp rất nhiều tính năng giải trí đa phương tiện, quản lí công việc học tập và có thể kết nối mạng wifi dễ dàng.", correct: "Đúng" },
+            { id: '1_d28b', text: "Mọi ứng dụng phần mềm có trên chiếc máy tính bảng này đều do nhà sản xuất cài đặt cố định từ đầu, người sử dụng hoàn toàn không thể truy cập mạng để tải thêm ứng dụng mới.", correct: "Sai" },
+            { id: '1_d28c', text: "Dải thanh trạng thái hiển thị trên màn hình chính của thiết bị luôn cung cấp cho người dùng các thông tin quan trọng như mức phần trăm pin, đồng hồ thời gian và tình trạng sóng.", correct: "Đúng" },
+            { id: '1_d28d', text: "Hệ thống tổ chức không gian lưu trữ dữ liệu bên trong thiết bị di động này được quản lí dưới dạng cấu trúc cây phân cấp các thư mục, cơ chế này hoàn toàn tương tự như trên máy tính.", correct: "Đúng" }
         ]}
     ];
 
@@ -418,21 +417,22 @@
         
         let rawQuestions = JSON.parse(JSON.stringify(de_data));
         
-        let part1 = shuffleArray(rawQuestions.filter(q => q.type === 'single'));
+        // GIỮ NGUYÊN THỨ TỰ CÂU HỎI
+        let part1 = rawQuestions.filter(q => q.type === 'single');
         part1.forEach((q, idx) => {
             q.displayQuestion = `Câu ${idx + 1}: ${q.question}`;
             let correctText = q.options[q.correct];
+            // XÁO TRỘN ĐÁP ÁN
             q.options = shuffleArray(q.options);
             q.correct = q.options.indexOf(correctText);
         });
         
-        let part2 = shuffleArray(rawQuestions.filter(q => q.type === 'tf_cluster'));
+        let part2 = rawQuestions.filter(q => q.type === 'tf_cluster');
         part2.forEach((q, idx) => {
             q.displayQuestion = `Câu ${part1.length + idx + 1}: ${q.question}`;
-            q.subQuestions = shuffleArray(q.subQuestions);
             const labels = ['a)', 'b)', 'c)', 'd)'];
             q.subQuestions.forEach((sub, sIdx) => {
-                sub.text = `${labels[sIdx]} ${sub.text}`;
+                sub.text = `${labels[sIdx]} ${sub.text.replace(/^[a-d]\)\s*/i, '')}`;
             });
         });
         
@@ -634,21 +634,11 @@
         document.getElementById('no-scores').classList.add('hidden');
         paginationControls.classList.remove('hidden');
         
-        const getTen = (fullName) => {
-            if (!fullName) return '';
-            const words = fullName.trim().split(' ');
-            return words[words.length - 1].toLowerCase();
-        };
-
+        // SẮP XẾP BẢNG ĐIỂM TỪ CAO XUỐNG THẤP
         sortedScoresList = [...allScores].sort((a, b) => {
-            const lopA = (a.lop || '').toUpperCase();
-            const lopB = (b.lop || '').toUpperCase();
-            if (lopA !== lopB) return lopA.localeCompare(lopB);
-            
-            const tenA = getTen(a.hoTen);
-            const tenB = getTen(b.hoTen);
-            if (tenA !== tenB) return tenA.localeCompare(tenB);
-            
+            if (b.diem !== a.diem) {
+                return b.diem - a.diem;
+            }
             return (a.hoTen || '').localeCompare(b.hoTen || '');
         });
 
@@ -678,6 +668,7 @@
             let timeStr = s.startTime;
             if (s.thoiGian) {
                 const dt = new Date(s.thoiGian);
+                // CHỈ HIỂN THỊ NGÀY THÁNG NĂM
                 timeStr = dt.toLocaleDateString('vi-VN');
             }
             const globalIdx = startIndex + idx + 1;
@@ -688,7 +679,6 @@
                 <td class="px-3 sm:px-4 py-4 font-semibold text-gray-800 text-sm">${s.hoTen} ${s.deviceId === deviceId ? '<span class="ml-2 bg-pink-500 text-white text-[10px] px-2 rounded-md">Bạn</span>' : ''}</td>
                 <td class="px-3 sm:px-4 py-4 text-center"><span class="font-bold text-lg ${s.diem >= 5 ? 'text-green-600' : 'text-red-500'}">${s.diem}</span></td>
                 <td class="px-3 sm:px-4 py-4 text-center text-gray-500 text-xs">${timeStr}</td>
-                
             </tr>`;
         }).join('');
     };
