@@ -319,7 +319,7 @@
             return;
         }
 
-        currentStudent = { hoTen: name, lop: lop, maDe: 'de_tin12', tenDe: 'Kiểm Tra Giữa kỳ - Tin Học 12 - Đề 1' };
+        currentStudent = { hoTen: name, lop: lop, maDe: 'de_tin12', tenDe: 'Kiểm Tra Giữa kỳ - Tin Học 12 - Đề 3' };
         
         let rawQuestions = JSON.parse(JSON.stringify(de_data));
         
@@ -499,6 +499,11 @@
             }
         });
 
+        // CHỐT CHẶN: Đảm bảo không bị sai số thập phân nếu học sinh làm đúng 100% số ý
+        if (correctSubItems === totalItems) {
+            totalScore = 10.0;
+        }
+
         const score = totalScore.toFixed(2);
 
         const record = {
@@ -538,26 +543,26 @@
         document.getElementById('no-scores').classList.add('hidden');
         paginationControls.classList.remove('hidden');
         
-        const getTen = (fullName) => {
-            if (!fullName) return '';
-            const words = fullName.trim().split(' ');
-            return words[words.length - 1].toLowerCase();
-        };
-
+        // Sắp xếp danh sách điểm giảm dần
         sortedScoresList = [...allScores].sort((a, b) => {
-            // Sắp xếp theo điểm giảm dần
-            if (b.diem !== a.diem) return b.diem - a.diem;
-            
-            // Điểm bằng nhau thì sắp xếp theo tên
-            const tenA = getTen(a.hoTen);
-            const tenB = getTen(b.hoTen);
-            if (tenA !== tenB) return tenA.localeCompare(tenB, 'vi');
-            
-            return (a.hoTen || '').localeCompare(b.hoTen || '', 'vi');
+            return b.diem - a.diem;
         });
 
-        // Gán thứ hạng
-        sortedScoresList.forEach((s, i) => s.absoluteRank = i + 1);
+        // Áp dụng thuật toán xếp hạng theo điểm (Dense Ranking - Bằng điểm thì bằng hạng)
+        let currentRank = 1;
+        let prevScore = -1;
+        
+        sortedScoresList.forEach((s, i) => {
+            if (i === 0) {
+                s.absoluteRank = currentRank;
+            } else {
+                if (s.diem < prevScore) {
+                    currentRank++;
+                }
+                s.absoluteRank = currentRank;
+            }
+            prevScore = s.diem;
+        });
 
         const myScoreIndex = sortedScoresList.findIndex(s => s.deviceId === deviceId);
         if (myScoreIndex !== -1) {

@@ -242,7 +242,7 @@
         { id: "2_7", type: "single", question: "Thẻ HTML &lt;h1&gt; được sử dụng với mục đích chính là gì trong việc xây dựng trang web?", options: ["Thiết lập tiêu đề cấp độ cao nhất cho trang web.", "Chèn một đoạn video trực tuyến vào trang web.", "Thay đổi màu sắc của toàn bộ nội dung văn bản.", "Tạo ra một bảng dữ liệu gồm các hàng và các cột."], correct: 0 },
         { id: "2_8", type: "single", question: "Trong cấu trúc cơ bản của tệp HTML, phần tử &lt;body&gt; chứa các thông tin gì?", options: ["Các nội dung sẽ được hiển thị trực tiếp trên trình duyệt.", "Các khai báo về ngôn ngữ lập trình cho máy chủ xử lý.", "Các thông tin về bản quyền phần mềm thiết kế đồ họa.", "Các cấu hình về dải địa chỉ IP của thiết bị mạng LAN."], correct: 0 },
         { id: "2_9", type: "single", question: "Hiện nay, các hệ thống Trí tuệ nhân tạo (AI) trong thực tế hầu hết thuộc phân loại nào?", options: ["Trí tuệ nhân tạo hẹp (chỉ giải quyết một tác vụ cụ thể).", "Trí tuệ nhân tạo tổng quát (giống hệt trí tuệ con người).", "Trí tuệ nhân tạo toàn năng (vượt trội hơn hẳn loài người).", "Trí tuệ nhân tạo sinh học (tạo ra từ các tế bào sinh vật)."], correct: 0 },
-        { id: "2_10", type: "single", question: "Vì sao trong các mạng LAN quy mô lớn, người ta ưu tiên sử dụng Switch thay vì Hub?", options: ["Switch giúp giảm thiểu tình trạng xung đột tín hiệu mạng.", "Switch có giá thành rẻ hơn rất nhiều so với thiết bị Hub.", "Switch không cần tiêu thụ điện năng khi đang hoạt động.", "Switch hỗ trợ phát sóng Wi-Fi mạnh mẽ xuyên qua tường."], correct: 0 },
+        { id: "2_10", type: "single", question: "Vì sao trong các mạng LAN quy mô lớn, người người ta ưu tiên sử dụng Switch thay vì Hub?", options: ["Switch giúp giảm thiểu tình trạng xung đột tín hiệu mạng.", "Switch có giá thành rẻ hơn rất nhiều so với thiết bị Hub.", "Switch không cần tiêu thụ điện năng khi đang hoạt động.", "Switch hỗ trợ phát sóng Wi-Fi mạnh mẽ xuyên qua tường."], correct: 0 },
         { id: "2_11", type: "single", question: "Trong bộ giao thức TCP/IP, chức năng chính của giao thức TCP là gì?", options: ["Cắt dữ liệu thành các gói tin và kiểm tra lỗi truyền tải.", "Cấp phát địa chỉ IP động cho tất cả các thiết bị mạng.", "Dịch tên miền trang web sang dải địa chỉ dạng chữ số.", "Chuyển đổi tín hiệu quang học thành tín hiệu điện từ."], correct: 0 },
         { id: "2_12", type: "single", question: "Khi muốn chia sẻ tài liệu trong mạng LAN Windows, việc đầu tiên cần phải thực hiện là gì?", options: ["Bật tính năng phát hiện mạng (Network discovery).", "Tắt hoàn toàn màn hình máy tính đang được chia sẻ.", "Cài đặt lại toàn bộ hệ điều hành của các thiết bị mạng.", "Tải xuống tất cả các phần mềm diệt virus mới nhất."], correct: 0 },
         { id: "2_13", type: "single", question: "Biểu hiện nào sau đây cho thấy người dùng đang giao tiếp ứng xử nhân văn trên mạng?", options: ["Bình tĩnh lắng nghe và tôn trọng ý kiến của người khác.", "Đăng tải thông tin cá nhân của người khác để trêu đùa.", "Lập tức chửi bới khi thấy một bình luận trái chiều mình.", "Tự động chia sẻ các phần mềm bẻ khóa không bản quyền."], correct: 0 },
@@ -319,7 +319,7 @@
             return;
         }
 
-        currentStudent = { hoTen: name, lop: lop, maDe: 'de_tin12', tenDe: 'Kiểm Tra Giữa kỳ - Tin Học 12 - Đề 1' };
+        currentStudent = { hoTen: name, lop: lop, maDe: 'de_tin12', tenDe: 'Kiểm Tra Giữa kỳ - Tin Học 12 - Đề 2' };
         
         let rawQuestions = JSON.parse(JSON.stringify(de_data));
         
@@ -499,6 +499,11 @@
             }
         });
 
+        // CHỐT CHẶN: Đảm bảo không bị sai số thập phân nếu học sinh làm đúng 100% số ý
+        if (correctSubItems === totalItems) {
+            totalScore = 10.0;
+        }
+
         const score = totalScore.toFixed(2);
 
         const record = {
@@ -538,26 +543,26 @@
         document.getElementById('no-scores').classList.add('hidden');
         paginationControls.classList.remove('hidden');
         
-        const getTen = (fullName) => {
-            if (!fullName) return '';
-            const words = fullName.trim().split(' ');
-            return words[words.length - 1].toLowerCase();
-        };
-
+        // Sắp xếp danh sách điểm giảm dần
         sortedScoresList = [...allScores].sort((a, b) => {
-            // Sắp xếp theo điểm giảm dần
-            if (b.diem !== a.diem) return b.diem - a.diem;
-            
-            // Điểm bằng nhau thì sắp xếp theo tên
-            const tenA = getTen(a.hoTen);
-            const tenB = getTen(b.hoTen);
-            if (tenA !== tenB) return tenA.localeCompare(tenB, 'vi');
-            
-            return (a.hoTen || '').localeCompare(b.hoTen || '', 'vi');
+            return b.diem - a.diem;
         });
 
-        // Gán thứ hạng
-        sortedScoresList.forEach((s, i) => s.absoluteRank = i + 1);
+        // Áp dụng thuật toán xếp hạng theo điểm (Dense Ranking - Bằng điểm thì bằng hạng)
+        let currentRank = 1;
+        let prevScore = -1;
+        
+        sortedScoresList.forEach((s, i) => {
+            if (i === 0) {
+                s.absoluteRank = currentRank;
+            } else {
+                if (s.diem < prevScore) {
+                    currentRank++;
+                }
+                s.absoluteRank = currentRank;
+            }
+            prevScore = s.diem;
+        });
 
         const myScoreIndex = sortedScoresList.findIndex(s => s.deviceId === deviceId);
         if (myScoreIndex !== -1) {
