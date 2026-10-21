@@ -68,7 +68,7 @@
             font-size: 1.4rem;
             font-weight: 700;
             margin-bottom: 5px;
-            padding: 0 100px; 
+            padding: 0 100px;
         }
 
         .header p {
@@ -93,8 +93,9 @@
             overflow: hidden;
             display: flex;
             flex-direction: column;
-            height: 80vh; /* Điều chỉnh chiều cao cho vừa màn hình */
-            min-height: 500px;
+            /* Đã điều chỉnh chiều cao tự động co giãn theo màn hình thay vì cố định 1200px */
+            height: calc(100vh - 200px); 
+            min-height: 600px;
             margin-bottom: 20px;
         }
 
@@ -110,33 +111,6 @@
             height: 100%;
             border: none;
             display: block;
-        }
-
-        /* Nút tải xuống */
-        .action-buttons {
-            display: flex;
-            justify-content: center;
-            padding: 15px;
-            background: #fff;
-            border-top: 1px solid #eee;
-        }
-
-        .btn-download {
-            background: var(--accent);
-            color: #fff;
-            text-decoration: none;
-            padding: 12px 25px;
-            border-radius: 30px;
-            font-weight: 600;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            box-shadow: 0 4px 15px rgba(255, 143, 0, 0.3);
-        }
-
-        .btn-download svg {
-            width: 20px;
-            height: 20px;
         }
 
         /* Footer */
@@ -169,8 +143,7 @@
 <body>
 
     <header class="header">
-        <!-- Đã sửa nút Trở về cho an toàn, tránh lỗi trang trắng -->
-        <a href="#" onclick="history.back(); return false;" class="btn-back" title="Trở về trang trước">
+        <a href="javascript:history.back()" class="btn-back" title="Trở về trang trước">
             <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="20" height="20">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
             </svg>
@@ -185,23 +158,12 @@
 
     <main class="main-container">
         <div class="pdf-card">
-            
             <div class="pdf-wrapper">
-                <!-- Bỏ src mặc định ở đây, Javascript bên dưới sẽ tự động chèn đúng link tùy thiết bị -->
-                <iframe id="pdf-frame" title="Hướng dẫn sử dụng trang web">
-                    <p style="text-align: center; padding: 20px;">Đang tải tài liệu...</p>
+                <!-- Thuộc tính toolbar=0 sẽ ẩn các thanh công cụ mặc định (bao gồm cả nút tải xuống) của trình duyệt -->
+                <iframe src="huongdan.pdf?v=2#toolbar=0&navpanes=0&view=FitH" title="Hướng dẫn sử dụng trang web">
+                    <p style="text-align: center; padding: 20px;">Trình duyệt của bạn không hỗ trợ xem trực tiếp.</p>
                 </iframe>
             </div>
-
-            <div class="action-buttons">
-                <a href="huongdan.pdf" download class="btn-download">
-                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
-                    </svg>
-                    Tải tài liệu về máy
-                </a>
-            </div>
-
         </div>
     </main>
 
@@ -209,26 +171,6 @@
         &copy; 2026 Bản quyền thuộc về <strong>Trường THPT Phan Đình Phùng - Quảng Trị</strong><br>
         Website học tập và giải trí của <strong>cô Lê Huyền Sinh</strong>
     </footer>
-
-    <!-- Script xử lý nhúng PDF để đọc trực tiếp trên điện thoại -->
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            var iframe = document.getElementById('pdf-frame');
-            
-            // Nhận diện thiết bị đang xem là Điện thoại hay Máy tính
-            var isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-            
-            if (isMobile) {
-                // Trên điện thoại: Sử dụng công cụ Google Docs Viewer để ép hiển thị văn bản PDF
-                // Lấy đường dẫn link web tuyệt đối để gửi cho Google Docs xử lý
-                var absoluteUrl = new URL("huongdan.pdf", window.location.href).href;
-                iframe.src = "https://docs.google.com/viewer?url=" + encodeURIComponent(absoluteUrl) + "&embedded=true";
-            } else {
-                // Trên máy tính: Hiển thị bằng công cụ đọc PDF mặc định cho mượt và rõ nét
-                iframe.src = "huongdan.pdf?v=2#toolbar=0&navpanes=0&view=FitH";
-            }
-        });
-    </script>
 
 </body>
 </html>
