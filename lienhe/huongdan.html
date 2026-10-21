@@ -68,7 +68,7 @@
             font-size: 1.4rem;
             font-weight: 700;
             margin-bottom: 5px;
-            padding: 0 100px; /* Nhường chỗ cho nút Trở về không bị đè lên chữ */
+            padding: 0 100px; 
         }
 
         .header p {
@@ -93,7 +93,8 @@
             overflow: hidden;
             display: flex;
             flex-direction: column;
-            height: 1200px; 
+            height: 80vh; /* Điều chỉnh chiều cao cho vừa màn hình */
+            min-height: 500px;
             margin-bottom: 20px;
         }
 
@@ -157,7 +158,7 @@
                 padding: 0 40px; 
             }
             .btn-back span {
-                display: none; /* Trên điện thoại nhỏ ẩn chữ "Trở về", chỉ giữ lại Icon mũi tên */
+                display: none; 
             }
             .btn-back {
                 padding: 8px;
@@ -168,8 +169,8 @@
 <body>
 
     <header class="header">
-        <!-- Nút Trở về trang trước (Sử dụng JavaScript lịch sử trình duyệt) -->
-        <a href="javascript:history.back()" class="btn-back" title="Trở về trang trước">
+        <!-- Đã sửa nút Trở về cho an toàn, tránh lỗi trang trắng -->
+        <a href="#" onclick="history.back(); return false;" class="btn-back" title="Trở về trang trước">
             <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="20" height="20">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
             </svg>
@@ -186,9 +187,9 @@
         <div class="pdf-card">
             
             <div class="pdf-wrapper">
-                <!-- Thêm ?v=2 để làm mới bộ nhớ đệm, đảm bảo tải mượt -->
-                <iframe src="huongdan.pdf?v=2#toolbar=0&navpanes=0&view=FitH" title="Hướng dẫn sử dụng trang web">
-                    <p style="text-align: center; padding: 20px;">Trình duyệt của bạn không hỗ trợ xem trực tiếp. Vui lòng tải xuống!</p>
+                <!-- Bỏ src mặc định ở đây, Javascript bên dưới sẽ tự động chèn đúng link tùy thiết bị -->
+                <iframe id="pdf-frame" title="Hướng dẫn sử dụng trang web">
+                    <p style="text-align: center; padding: 20px;">Đang tải tài liệu...</p>
                 </iframe>
             </div>
 
@@ -208,6 +209,26 @@
         &copy; 2026 Bản quyền thuộc về <strong>Trường THPT Phan Đình Phùng - Quảng Trị</strong><br>
         Website học tập và giải trí của <strong>cô Lê Huyền Sinh</strong>
     </footer>
+
+    <!-- Script xử lý nhúng PDF để đọc trực tiếp trên điện thoại -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var iframe = document.getElementById('pdf-frame');
+            
+            // Nhận diện thiết bị đang xem là Điện thoại hay Máy tính
+            var isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+            
+            if (isMobile) {
+                // Trên điện thoại: Sử dụng công cụ Google Docs Viewer để ép hiển thị văn bản PDF
+                // Lấy đường dẫn link web tuyệt đối để gửi cho Google Docs xử lý
+                var absoluteUrl = new URL("huongdan.pdf", window.location.href).href;
+                iframe.src = "https://docs.google.com/viewer?url=" + encodeURIComponent(absoluteUrl) + "&embedded=true";
+            } else {
+                // Trên máy tính: Hiển thị bằng công cụ đọc PDF mặc định cho mượt và rõ nét
+                iframe.src = "huongdan.pdf?v=2#toolbar=0&navpanes=0&view=FitH";
+            }
+        });
+    </script>
 
 </body>
 </html>
