@@ -8,6 +8,7 @@
         :root {
             --primary: #004d40;
             --primary-light: #00796b;
+            --accent: #ff8f00;
             --bg-gradient: linear-gradient(135deg, #e0f2f1 0%, #f4f7f6 100%);
             --text-main: #2c3e50;
         }
@@ -22,15 +23,13 @@
             font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             background: var(--bg-gradient);
             color: var(--text-main);
-            /* Khóa cuộn trang nền để khi vuốt PDF không bị kéo cả trang web */
-            overscroll-behavior: none; 
         }
 
         /* Header */
         .header {
             background: linear-gradient(90deg, var(--primary) 0%, var(--primary-light) 100%);
             color: white;
-            padding: 15px;
+            padding: 20px 15px;
             text-align: center;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
             position: relative;
@@ -39,9 +38,10 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            min-height: 70px;
+            min-height: 85px;
         }
 
+        /* Nút Trở Về */
         .btn-back {
             position: absolute;
             left: 15px;
@@ -60,15 +60,19 @@
             transition: all 0.3s ease;
         }
 
+        .btn-back:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
         .header h1 {
-            font-size: 1.3rem;
+            font-size: 1.4rem;
             font-weight: 700;
-            margin-bottom: 3px;
-            padding: 0 40px;
+            margin-bottom: 5px;
+            padding: 0 100px; 
         }
 
         .header p {
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             font-style: italic;
         }
 
@@ -77,21 +81,21 @@
             width: 100%;
             max-width: 1000px;
             margin: 0 auto;
-            padding: 15px;
+            padding: 20px 15px;
         }
 
         /* KHUNG PDF */
         .pdf-card {
             background: #ffffff;
-            border-radius: 12px;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
             border: 1px solid rgba(255, 255, 255, 0.5);
             overflow: hidden;
             display: flex;
             flex-direction: column;
-            /* Dùng dvh để khung tự co giãn vừa khít màn hình, không bị chòng chềnh */
-            height: calc(100dvh - 160px); 
-            height: calc(100vh - 160px); /* Fallback cho trình duyệt cũ */
+            height: 80vh; /* Điều chỉnh chiều cao cho vừa màn hình */
+            min-height: 500px;
+            margin-bottom: 20px;
         }
 
         .pdf-wrapper {
@@ -108,10 +112,37 @@
             display: block;
         }
 
+        /* Nút tải xuống */
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            padding: 15px;
+            background: #fff;
+            border-top: 1px solid #eee;
+        }
+
+        .btn-download {
+            background: var(--accent);
+            color: #fff;
+            text-decoration: none;
+            padding: 12px 25px;
+            border-radius: 30px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 15px rgba(255, 143, 0, 0.3);
+        }
+
+        .btn-download svg {
+            width: 20px;
+            height: 20px;
+        }
+
         /* Footer */
         .footer {
             text-align: center;
-            padding: 10px 15px 20px;
+            padding: 20px;
             font-size: 0.85rem;
             color: #555;
         }
@@ -124,7 +155,7 @@
         @media (max-width: 480px) {
             .header h1 {
                 font-size: 1.1rem;
-                padding: 0 35px; 
+                padding: 0 40px; 
             }
             .btn-back span {
                 display: none; 
@@ -132,22 +163,14 @@
             .btn-back {
                 padding: 8px;
             }
-            .main-container {
-                padding: 10px;
-            }
-            .pdf-card {
-                /* Căn chỉnh lại khoảng trừ cho vừa vặn phần màn hình còn lại trên điện thoại */
-                height: calc(100dvh - 140px);
-                height: calc(100vh - 140px);
-                border-radius: 8px;
-            }
         }
     </style>
 </head>
 <body>
 
     <header class="header">
-        <a href="javascript:history.back()" class="btn-back" title="Trở về trang trước">
+        <!-- Đã sửa nút Trở về cho an toàn, tránh lỗi trang trắng -->
+        <a href="#" onclick="history.back(); return false;" class="btn-back" title="Trở về trang trước">
             <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="20" height="20">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
             </svg>
@@ -162,15 +185,40 @@
 
     <main class="main-container">
         <div class="pdf-card">
+            
             <div class="pdf-wrapper">
-                <iframe src="huongdan.pdf?v=2#toolbar=0&navpanes=0&view=FitH" title="Hướng dẫn sử dụng trang web">
-                    <p style="text-align: center; padding: 20px;">Trình duyệt của bạn không hỗ trợ xem trực tiếp.</p>
+                <!-- Bỏ src mặc định ở đây, Javascript bên dưới sẽ tự động chèn đúng link tùy thiết bị -->
+                <iframe id="pdf-frame" title="Hướng dẫn sử dụng trang web">
+                    <p style="text-align: center; padding: 20px;">Đang tải tài liệu...</p>
                 </iframe>
             </div>
+
+           
+
         </div>
     </main>
 
-  
+    
+
+    <!-- Script xử lý nhúng PDF để đọc trực tiếp trên điện thoại -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var iframe = document.getElementById('pdf-frame');
+            
+            // Nhận diện thiết bị đang xem là Điện thoại hay Máy tính
+            var isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+            
+            if (isMobile) {
+                // Trên điện thoại: Sử dụng công cụ Google Docs Viewer để ép hiển thị văn bản PDF
+                // Lấy đường dẫn link web tuyệt đối để gửi cho Google Docs xử lý
+                var absoluteUrl = new URL("huongdan.pdf", window.location.href).href;
+                iframe.src = "https://docs.google.com/viewer?url=" + encodeURIComponent(absoluteUrl) + "&embedded=true";
+            } else {
+                // Trên máy tính: Hiển thị bằng công cụ đọc PDF mặc định cho mượt và rõ nét
+                iframe.src = "huongdan.pdf?v=2#toolbar=0&navpanes=0&view=FitH";
+            }
+        });
+    </script>
 
 </body>
 </html>
