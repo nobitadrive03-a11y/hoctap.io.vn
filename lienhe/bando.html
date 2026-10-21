@@ -2,7 +2,7 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <!-- Dòng này cực kỳ quan trọng để web hiển thị to rõ, dễ bấm trên điện thoại -->
+    <!-- Cấu hình bắt buộc để web hiển thị chuẩn trên màn hình điện thoại di động -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bản Đồ Chỉ Đường - Hành Trình Số</title>
     <style>
@@ -28,7 +28,7 @@
             background-color: #f1f3f4;
             color: #333;
             text-decoration: none;
-            padding: 10px 18px; /* Tăng padding để dễ bấm trên điện thoại */
+            padding: 10px 18px; /* Nút to dễ bấm trên mobile */
             border-radius: 20px;
             font-weight: 600;
             font-size: 0.9rem;
@@ -36,6 +36,7 @@
             margin-bottom: 20px;
             border: 1px solid #ddd;
             float: left; 
+            cursor: pointer;
         }
 
         .btn-back-map:hover {
@@ -71,7 +72,7 @@
             background-color: #ff8f00; 
             color: #ffffff;
             text-decoration: none;
-            padding: 14px 25px; /* Nút to hơn cho màn hình cảm ứng */
+            padding: 14px 25px;
             border-radius: 30px;
             font-weight: bold;
             font-size: 1rem;
@@ -124,8 +125,8 @@
 
     <div class="location-section">
         
-        <!-- Đã sửa lại link thành index.html thay vì history.back() để không bị lỗi khi mở trực tiếp -->
-        <a href="index.html" class="btn-back-map" title="Trở về trang chủ">
+        <!-- Nút trở về đã được sửa lại lệnh history.back() để tự động quay lại trang trước đó -->
+        <a href="#" onclick="history.back(); return false;" class="btn-back-map" title="Trở về trang trước">
             <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="20" height="20">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
             </svg>
