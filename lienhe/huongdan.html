@@ -8,7 +8,6 @@
         :root {
             --primary: #004d40;
             --primary-light: #00796b;
-            --accent: #ff8f00;
             --bg-gradient: linear-gradient(135deg, #e0f2f1 0%, #f4f7f6 100%);
             --text-main: #2c3e50;
         }
@@ -23,13 +22,15 @@
             font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             background: var(--bg-gradient);
             color: var(--text-main);
+            /* Khóa cuộn trang nền để khi vuốt PDF không bị kéo cả trang web */
+            overscroll-behavior: none; 
         }
 
         /* Header */
         .header {
             background: linear-gradient(90deg, var(--primary) 0%, var(--primary-light) 100%);
             color: white;
-            padding: 20px 15px;
+            padding: 15px;
             text-align: center;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
             position: relative;
@@ -38,7 +39,7 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            min-height: 85px;
+            min-height: 70px;
         }
 
         .btn-back {
@@ -59,19 +60,15 @@
             transition: all 0.3s ease;
         }
 
-        .btn-back:hover {
-            background: rgba(255, 255, 255, 0.3);
-        }
-
         .header h1 {
-            font-size: 1.4rem;
+            font-size: 1.3rem;
             font-weight: 700;
-            margin-bottom: 5px;
-            padding: 0 50px;
+            margin-bottom: 3px;
+            padding: 0 40px;
         }
 
         .header p {
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             font-style: italic;
         }
 
@@ -80,59 +77,25 @@
             width: 100%;
             max-width: 1000px;
             margin: 0 auto;
-            padding: 20px 15px;
-        }
-
-        /* NÚT MỞ PDF DÀNH CHO ĐIỆN THOẠI */
-        .mobile-action {
-            text-align: center;
-            margin-bottom: 15px;
-        }
-
-        .btn-open-pdf {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            background-color: var(--accent);
-            color: #ffffff;
-            text-decoration: none;
-            padding: 12px 25px;
-            border-radius: 30px;
-            font-weight: bold;
-            font-size: 1rem;
-            box-shadow: 0 4px 15px rgba(255, 143, 0, 0.3);
-            transition: all 0.3s ease;
-            width: 100%;
-            max-width: 400px;
-        }
-
-        .btn-open-pdf:hover {
-            background-color: #e65c00;
-            transform: translateY(-2px);
-        }
-
-        .instruction-note {
-            font-size: 0.85rem;
-            color: #555;
-            margin-top: 8px;
-            font-style: italic;
+            padding: 15px;
         }
 
         /* KHUNG PDF */
         .pdf-card {
             background: #ffffff;
-            border-radius: 16px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
             border: 1px solid rgba(255, 255, 255, 0.5);
             overflow: hidden;
-            /* Đổi từ 100vh sang chiều cao cố định hoặc tỷ lệ phần trăm để chống giật chòng chềnh trên điện thoại */
-            height: 600px; 
-            margin-bottom: 20px;
-            position: relative;
+            display: flex;
+            flex-direction: column;
+            /* Dùng dvh để khung tự co giãn vừa khít màn hình, không bị chòng chềnh */
+            height: calc(100dvh - 160px); 
+            height: calc(100vh - 160px); /* Fallback cho trình duyệt cũ */
         }
 
         .pdf-wrapper {
+            flex: 1;
             width: 100%;
             height: 100%;
             -webkit-overflow-scrolling: touch; 
@@ -148,7 +111,7 @@
         /* Footer */
         .footer {
             text-align: center;
-            padding: 20px;
+            padding: 10px 15px 20px;
             font-size: 0.85rem;
             color: #555;
         }
@@ -161,6 +124,7 @@
         @media (max-width: 480px) {
             .header h1 {
                 font-size: 1.1rem;
+                padding: 0 35px; 
             }
             .btn-back span {
                 display: none; 
@@ -168,9 +132,14 @@
             .btn-back {
                 padding: 8px;
             }
-            /* Trên điện thoại, làm khung PDF nhỏ lại vì học sinh chủ yếu sẽ dùng nút Mở toàn màn hình */
+            .main-container {
+                padding: 10px;
+            }
             .pdf-card {
-                height: 400px; 
+                /* Căn chỉnh lại khoảng trừ cho vừa vặn phần màn hình còn lại trên điện thoại */
+                height: calc(100dvh - 140px);
+                height: calc(100vh - 140px);
+                border-radius: 8px;
             }
         }
     </style>
@@ -192,15 +161,6 @@
     </header>
 
     <main class="main-container">
-        
-        <!-- Nút dự phòng đặc biệt hữu ích trên điện thoại -->
-        <div class="mobile-action">
-            <a href="huongdan.pdf" target="_blank" rel="noopener noreferrer" class="btn-open-pdf">
-                📄 Mở File Hướng Dẫn
-            </a>
-          
-        </div>
-
         <div class="pdf-card">
             <div class="pdf-wrapper">
                 <iframe src="huongdan.pdf?v=2#toolbar=0&navpanes=0&view=FitH" title="Hướng dẫn sử dụng trang web">
@@ -208,9 +168,9 @@
                 </iframe>
             </div>
         </div>
-
     </main>
 
-    
+  
+
 </body>
 </html>
