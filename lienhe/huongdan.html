@@ -41,7 +41,6 @@
             min-height: 85px;
         }
 
-        /* Nút Trở Về */
         .btn-back {
             position: absolute;
             left: 15px;
@@ -68,7 +67,7 @@
             font-size: 1.4rem;
             font-weight: 700;
             margin-bottom: 5px;
-            padding: 0 100px;
+            padding: 0 50px;
         }
 
         .header p {
@@ -84,6 +83,42 @@
             padding: 20px 15px;
         }
 
+        /* NÚT MỞ PDF DÀNH CHO ĐIỆN THOẠI */
+        .mobile-action {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .btn-open-pdf {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            background-color: var(--accent);
+            color: #ffffff;
+            text-decoration: none;
+            padding: 12px 25px;
+            border-radius: 30px;
+            font-weight: bold;
+            font-size: 1rem;
+            box-shadow: 0 4px 15px rgba(255, 143, 0, 0.3);
+            transition: all 0.3s ease;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .btn-open-pdf:hover {
+            background-color: #e65c00;
+            transform: translateY(-2px);
+        }
+
+        .instruction-note {
+            font-size: 0.85rem;
+            color: #555;
+            margin-top: 8px;
+            font-style: italic;
+        }
+
         /* KHUNG PDF */
         .pdf-card {
             background: #ffffff;
@@ -91,16 +126,13 @@
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
             border: 1px solid rgba(255, 255, 255, 0.5);
             overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            /* Đã điều chỉnh chiều cao tự động co giãn theo màn hình thay vì cố định 1200px */
-            height: calc(100vh - 200px); 
-            min-height: 600px;
+            /* Đổi từ 100vh sang chiều cao cố định hoặc tỷ lệ phần trăm để chống giật chòng chềnh trên điện thoại */
+            height: 600px; 
             margin-bottom: 20px;
+            position: relative;
         }
 
         .pdf-wrapper {
-            flex: 1;
             width: 100%;
             height: 100%;
             -webkit-overflow-scrolling: touch; 
@@ -129,13 +161,16 @@
         @media (max-width: 480px) {
             .header h1 {
                 font-size: 1.1rem;
-                padding: 0 40px; 
             }
             .btn-back span {
                 display: none; 
             }
             .btn-back {
                 padding: 8px;
+            }
+            /* Trên điện thoại, làm khung PDF nhỏ lại vì học sinh chủ yếu sẽ dùng nút Mở toàn màn hình */
+            .pdf-card {
+                height: 400px; 
             }
         }
     </style>
@@ -157,20 +192,25 @@
     </header>
 
     <main class="main-container">
+        
+        <!-- Nút dự phòng đặc biệt hữu ích trên điện thoại -->
+        <div class="mobile-action">
+            <a href="huongdan.pdf" target="_blank" rel="noopener noreferrer" class="btn-open-pdf">
+                📄 Mở File Hướng Dẫn
+            </a>
+          
+        </div>
+
         <div class="pdf-card">
             <div class="pdf-wrapper">
-                <!-- Thuộc tính toolbar=0 sẽ ẩn các thanh công cụ mặc định (bao gồm cả nút tải xuống) của trình duyệt -->
                 <iframe src="huongdan.pdf?v=2#toolbar=0&navpanes=0&view=FitH" title="Hướng dẫn sử dụng trang web">
                     <p style="text-align: center; padding: 20px;">Trình duyệt của bạn không hỗ trợ xem trực tiếp.</p>
                 </iframe>
             </div>
         </div>
+
     </main>
 
-    <footer class="footer">
-        &copy; 2026 Bản quyền thuộc về <strong>Trường THPT Phan Đình Phùng - Quảng Trị</strong><br>
-        Website học tập và giải trí của <strong>cô Lê Huyền Sinh</strong>
-    </footer>
-
+    
 </body>
 </html>
