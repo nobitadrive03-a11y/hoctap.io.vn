@@ -2,11 +2,9 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <!-- Cực kỳ quan trọng cho điện thoại: Giúp trang web hiển thị vừa vặn, không bị tràn viền -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Bản Đồ Chỉ Đường - Hành Trình Số</title>
     <style>
-        /* CSS cho khu vực bản đồ và địa chỉ */
         body {
             background-color: #f8f9fa;
             margin: 0;
@@ -23,11 +21,9 @@
             margin: 10px auto;
             text-align: center;
             border-top: 5px solid #004d40;
-            position: relative;
             box-sizing: border-box;
         }
 
-        /* Nút Trở Về */
         .btn-back-map {
             display: inline-flex;
             align-items: center;
@@ -39,25 +35,15 @@
             border-radius: 20px;
             font-weight: 600;
             font-size: 0.95rem;
-            transition: all 0.3s ease;
             margin-bottom: 15px;
             border: 1px solid #ddd;
-            float: left; /* Đẩy nút về bên trái */
+            float: left;
         }
 
-        .btn-back-map:hover, .btn-back-map:active {
-            background-color: #e2e6ea;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
+        .clear { clear: both; }
 
-        /* Xóa float để nội dung bên dưới hiển thị bình thường */
-        .clear {
-            clear: both;
-        }
-
-        /* Định dạng màu sắc theo yêu cầu */
         .location-section h3 {
-            color: red; /* Tiêu đề màu đỏ */
+            color: red;
             font-size: 1.4rem;
             margin-top: 5px;
             margin-bottom: 10px;
@@ -65,14 +51,13 @@
         }
 
         .address-text {
-            color: blue; /* Chữ địa chỉ màu xanh blue */
+            color: blue;
             font-size: 1.05rem;
             margin-bottom: 20px;
             line-height: 1.5;
-            padding: 0 10px;
         }
 
-        /* Nút bấm chỉ đường tối ưu cho ngón tay trên điện thoại */
+        /* Nút Mở Tab Chỉ Đường Mới */
         .btn-directions {
             display: inline-flex;
             align-items: center;
@@ -80,36 +65,31 @@
             gap: 8px;
             background-color: #ff8f00; 
             color: #ffffff;
-            text-decoration: none;
             padding: 14px 20px;
             border-radius: 30px;
             font-weight: bold;
             font-size: 1rem;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(255, 143, 0, 0.3);
-            margin-bottom: 20px;
-            width: 100%; /* Trải dài trên điện thoại cho dễ bấm */
-            max-width: 300px;
-            box-sizing: border-box;
+            margin-bottom: 10px;
             border: none;
             cursor: pointer;
+            width: 100%;
+            max-width: 350px;
+            text-decoration: none;
+            box-shadow: 0 4px 15px rgba(255, 143, 0, 0.3);
         }
 
-        .btn-directions:hover, .btn-directions:active {
+        .btn-directions:hover {
             background-color: #e65c00;
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(255, 143, 0, 0.4);
         }
 
-        .instruction-text {
+        .instruction-note {
             font-size: 0.85rem;
-            color: #666;
-            margin-top: -10px;
+            color: #2e7d32;
             margin-bottom: 20px;
             font-style: italic;
         }
 
-        /* Khung hiển thị bản đồ trực tiếp */
         .map-container {
             border-radius: 12px;
             overflow: hidden;
@@ -117,7 +97,7 @@
             box-shadow: 0 4px 10px rgba(0,0,0,0.05);
             position: relative;
             width: 100%;
-            padding-top: 75%; /* Tỉ lệ 4:3 cho mobile */
+            padding-top: 75%; 
         }
 
         .map-container iframe {
@@ -127,65 +107,43 @@
             width: 100%;
             height: 100%;
             border: none;
-            display: block;
         }
 
-        /* Responsive cho thiết bị màn hình lớn hơn */
         @media (min-width: 600px) {
-            .map-container {
-                padding-top: 50%; /* Tỉ lệ màn hình rộng hơn */
-            }
-            .btn-directions {
-                width: auto;
-            }
+            .map-container { padding-top: 50%; }
         }
     </style>
 </head>
 <body>
 
     <div class="location-section">
-        
-        <!-- Nút Trở về trang trước -->
-        <a href="javascript:history.back()" class="btn-back-map" title="Trở về trang trước">
-            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="20" height="20">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
-            </svg>
-            <span>🏚️ Quay lại</span>
+        <!-- Nút Trở về trang trước của web -->
+        <a href="javascript:history.back()" class="btn-back-map">
+            <span>🏚️ Trở về trang trước</span>
         </a>
         <div class="clear"></div>
 
         <h3>📍 Địa Chỉ Của Chúng Tôi</h3>
-        
-        <!-- Địa chỉ màu xanh blue -->
         <p class="address-text">
             <strong>Trường THPT Phan Đình Phùng</strong><br>
             Số 14 Đường Xuân Diệu, Phường Đồng Hới, Quảng Trị
         </p>
         
-        <!-- Nút mở Google Maps chỉ đường (Dùng JS để đảm bảo mở tab mới an toàn) -->
-        <button onclick="openDirections()" class="btn-directions" title="Xem hướng dẫn đường đi">
-            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="22" height="22" xmlns="http://www.w3.org/2000/svg">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path>
-            </svg>
-            Nhấn vào đây để xem đường đi
-        </button>
-        <div class="instruction-text">(Bản đồ sẽ mở sang một cửa sổ mới)</div>
+        <!-- Nút Chỉ đường an toàn (Mở tab mới) -->
+        <a href="https://www.google.com/maps/dir/?api=1&destination=Trường+THPT+Phan+Đình+Phùng,+14+Xuân+Diệu,+Quảng+Trị" target="_blank" rel="noopener noreferrer" class="btn-directions">
+            📍 Xem đường đi chi tiết
+        </a>
+        
+        <!-- Hướng dẫn nhỏ gọn để người dùng hiểu -->
+        <div class="instruction-note">
+            (Mở sang cửa sổ mới. Tắt cửa sổ bản đồ để quay lại trang này)
+        </div>
 
-        <!-- Nhúng bản đồ Google Maps (Cố định tỷ lệ bằng CSS) -->
+        <!-- Khung Bản Đồ Tĩnh -->
         <div class="map-container">
             <iframe src="https://maps.google.com/maps?q=Trường+THPT+Phan+Đình+Phùng,+14+Xuân+Diệu,+Quảng+Trị&t=&z=16&ie=UTF8&iwloc=&output=embed" allowfullscreen loading="lazy"></iframe>
         </div>
-        
     </div>
-
-    <script>
-        // Hàm mở bản đồ trong tab mới để không làm mất trang web hiện tại
-        function openDirections() {
-            var mapUrl = "https://www.google.com/maps/dir/?api=1&destination=Trường+THPT+Phan+Đình+Phùng,+14+Xuân+Diệu,+Quảng+Trị";
-            // window.open với '_blank' sẽ tạo tab mới, người dùng đóng tab bản đồ là sẽ thấy lại trang web
-            window.open(mapUrl, '_blank', 'noopener,noreferrer');
-        }
-    </script>
 
 </body>
 </html>
