@@ -23,6 +23,9 @@
             font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             background: var(--bg-gradient);
             color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
 
         /* Header */
@@ -68,7 +71,7 @@
             font-size: 1.4rem;
             font-weight: 700;
             margin-bottom: 5px;
-            padding: 0 100px; /* Nhường chỗ cho nút Trở về không bị đè lên chữ */
+            padding: 0 100px;
         }
 
         .header p {
@@ -82,9 +85,10 @@
             max-width: 1000px;
             margin: 0 auto;
             padding: 20px 15px;
+            flex: 1;
         }
 
-        /* KHUNG PDF */
+        /* KHUNG PDF - Đã đưa về chiều cao 85vh để vừa vặn màn hình */
         .pdf-card {
             background: #ffffff;
             border-radius: 16px;
@@ -93,7 +97,7 @@
             overflow: hidden;
             display: flex;
             flex-direction: column;
-            height: 1200px; 
+            height: 85vh; 
             margin-bottom: 20px;
         }
 
@@ -131,6 +135,12 @@
             align-items: center;
             gap: 8px;
             box-shadow: 0 4px 15px rgba(255, 143, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .btn-download:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 143, 0, 0.4);
         }
 
         .btn-download svg {
@@ -157,10 +167,13 @@
                 padding: 0 40px; 
             }
             .btn-back span {
-                display: none; /* Trên điện thoại nhỏ ẩn chữ "Trở về", chỉ giữ lại Icon mũi tên */
+                display: none; 
             }
             .btn-back {
                 padding: 8px;
+            }
+            .pdf-card {
+                height: 80vh;
             }
         }
     </style>
@@ -168,7 +181,6 @@
 <body>
 
     <header class="header">
-        <!-- Nút Trở về trang trước (Sử dụng JavaScript lịch sử trình duyệt) -->
         <a href="javascript:history.back()" class="btn-back" title="Trở về trang trước">
             <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="20" height="20">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
@@ -186,13 +198,14 @@
         <div class="pdf-card">
             
             <div class="pdf-wrapper">
-                <!-- Thêm ?v=2 để làm mới bộ nhớ đệm, đảm bảo tải mượt -->
-                <iframe src="huongdan.pdf?v=2#toolbar=0&navpanes=0&view=FitH" title="Hướng dẫn sử dụng trang web">
+                <!-- Tích hợp Google Docs Viewer để tối ưu xem trên mọi thiết bị (đặc biệt là điện thoại) -->
+                <iframe src="https://docs.google.com/viewer?url=https://hoctap.io.vn/huongdan.pdf&embedded=true" title="Hướng dẫn sử dụng trang web">
                     <p style="text-align: center; padding: 20px;">Trình duyệt của bạn không hỗ trợ xem trực tiếp. Vui lòng tải xuống!</p>
                 </iframe>
             </div>
 
             <div class="action-buttons">
+                <!-- Vẫn giữ nguyên tính năng tải file trực tiếp từ host của bạn -->
                 <a href="huongdan.pdf" download class="btn-download">
                     <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
