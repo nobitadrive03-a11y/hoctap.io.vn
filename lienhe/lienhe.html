@@ -287,7 +287,7 @@
                 <div class="info-icon" style="background: linear-gradient(120deg, #a1c4fd 0%, #c2e9fb 100%);">🏫</div>
                 <div class="info-text">
                     <span class="info-label">Đơn vị công tác</span>
-                    <span class="info-val">THPT Phan Đình Phùng</span>
+                    <span class="info-val">THPT Phan Đình Phùng - Quảng Trị</span>
                 </div>
             </div>
 
@@ -314,7 +314,7 @@
 
     <!-- KHUNG GỬI LỜI NHẮN -->
     <div class="card">
-        <h3 class="section-title">Gửi Lời Nhắn Trực Tuyến</h3>
+        <h3 class="section-title">Gửi lời nhắn trực tuyến</h3>
         
         <div class="tip-box">
             <span class="tip-icon">💡</span>
@@ -364,7 +364,7 @@
 
     <!-- KHU VỰC GIÁO VIÊN -->
     <button class="admin-toggle-btn" onclick="toggleAdminPanel()">
-        👁️ Khu Vực Giáo Viên (Nháy để xem tin nhắn)
+        👁️ Khu vực Giáo viên (Nháy để xem tin nhắn)
     </button>
 
     <div id="adminPanel" class="admin-panel">
@@ -437,7 +437,7 @@
 <div id="passwordModal" class="modal-overlay">
     <div class="modal-box">
         <div class="modal-icon">🔒</div>
-        <h3 style="color: #0f172a; margin-top: 0;">Khu Vực Bảo Mật</h3>
+        <h3 style="color: #0f172a; margin-top: 0;">Khu vực bảo mật</h3>
         <p style="color: #475569;">Vui lòng nhập mật khẩu để truy cập khu vực giáo viên.</p>
         
         <input type="password" id="adminPassword" class="form-control" placeholder="Nhập mật khẩu..." style="margin-bottom: 15px; text-align: center;" onkeypress="if(event.key === 'Enter') checkPassword()">
@@ -471,7 +471,7 @@
         }
     } catch(err) { console.error("Lỗi Firebase:", err); }
 
-    function goHome() { window.location.href = "index.html"; }
+function goHome() { window.history.back(); }
     function showWarning(msg) { document.getElementById('warningMsg').innerText = msg; document.getElementById('warningModal').style.display = 'flex'; }
     function closeWarning() { document.getElementById('warningModal').style.display = 'none'; }
     function closeSuccess() { document.getElementById('successModal').style.display = 'none'; document.getElementById('contactFormElement').reset(); }
