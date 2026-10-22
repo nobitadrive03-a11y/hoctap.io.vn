@@ -238,7 +238,7 @@
 <div class="container">
     
     <div class="card">
-        <h3 class="section-title">Gửi Lời Nhắn Trực Tuyến</h3>
+        <h3 class="section-title">Gửi lời nhắn trực tuyến</h3>
         
         <div class="tip-box">
             <span class="tip-icon">💡</span>
@@ -287,7 +287,7 @@
     </div>
 
     <button class="admin-toggle-btn" onclick="toggleAdminPanel()">
-        👁️ Khu Vực Giáo Viên (Nháy để xem tin nhắn)
+        👁️ Khu vực giáo viên (Nháy để xem tin nhắn)
     </button>
 
     <div id="adminPanel" class="admin-panel">
@@ -358,6 +358,23 @@
     </div>
 </div>
 
+<!-- Modal nhập mật khẩu Admin -->
+<div id="passwordModal" class="modal-overlay">
+    <div class="modal-box">
+        <div class="modal-icon">🔒</div>
+        <h3 style="color: #0f172a; margin-top: 0;">Khu Vực Bảo Mật</h3>
+        <p style="color: #475569;">Vui lòng nhập mật khẩu để truy cập khu vực giáo viên.</p>
+        
+        <input type="password" id="adminPassword" class="form-control" placeholder="Nhập mật khẩu..." style="margin-bottom: 15px; text-align: center;" onkeypress="if(event.key === 'Enter') checkPassword()">
+        
+        <div style="display: flex; gap: 10px; margin-top: 10px;">
+            <button class="btn-modal" style="background: #e2e8f0; color: #475569; margin-top: 0;" onclick="closePasswordModal()">Hủy</button>
+            <button class="btn-modal btn-modal-success" style="margin-top: 0;" onclick="checkPassword()">Xác nhận</button>
+        </div>
+        <p id="wrongPasswordMsg" style="color: #ef4444; margin-top: 15px; display: none; font-size: 15px; font-weight: bold;">Mật khẩu không đúng!</p>
+    </div>
+</div>
+
 <script>
     // ================= 1. CẤU HÌNH FIREBASE =================
     let database, contactRef;
@@ -417,16 +434,42 @@
     let currentPage = 1;
     let rowsPerPage = 50;
 
+    // --- CÁC HÀM XỬ LÝ MẬT KHẨU KHU VỰC GIÁO VIÊN ---
     function toggleAdminPanel() {
         const panel = document.getElementById('adminPanel');
+        // Nếu bảng đang ẩn thì hiện form nhập mật khẩu
         if (panel.style.display === 'none' || panel.style.display === '') {
+            document.getElementById('passwordModal').style.display = 'flex';
+            document.getElementById('adminPassword').value = '';
+            document.getElementById('wrongPasswordMsg').style.display = 'none';
+            document.getElementById('adminPassword').focus();
+        } else {
+            // Nếu bảng đang hiện thì đóng lại bình thường
+            panel.style.display = 'none';
+        }
+    }
+
+    function closePasswordModal() {
+        document.getElementById('passwordModal').style.display = 'none';
+    }
+
+    function checkPassword() {
+        const pass = document.getElementById('adminPassword').value;
+        const correctPass = "Sinh123456"; // 🔴 CÔ HÃY THAY ĐỔI MẬT KHẨU CỦA CÔ TẠI ĐÂY 🔴
+        
+        if (pass === correctPass) {
+            // Mật khẩu đúng: Đóng form mật khẩu và mở bảng dữ liệu
+            closePasswordModal();
+            const panel = document.getElementById('adminPanel');
             panel.style.display = 'block'; 
+            
             if (!isDataLoaded) { 
                 document.getElementById('messagesTableBody').innerHTML = '<tr><td colspan="7">Đang tải dữ liệu, vui lòng đợi...</td></tr>';
                 loadMessagesFromFirebase(); 
             }
         } else {
-            panel.style.display = 'none';
+            // Mật khẩu sai: Hiện cảnh báo
+            document.getElementById('wrongPasswordMsg').style.display = 'block';
         }
     }
 
