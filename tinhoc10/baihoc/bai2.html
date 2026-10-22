@@ -765,25 +765,11 @@
 
         tbody.innerHTML = pageItems.map((s) => {
             const isMe = s.deviceId === deviceId;
-            
-            // Chuyển đổi để hiển thị thời gian: Ngày/Tháng/Năm (không có giờ)
-            let timeDisplay = "";
-            if (s.thoiGian) {
-                const d = new Date(s.thoiGian);
-                if (!isNaN(d)) {
-                    timeDisplay = `${d.getDate().toString().padStart(2, '0')}/${(d.getMonth() + 1).toString().padStart(2, '0')}/${d.getFullYear()}`;
-                } else {
-                    timeDisplay = s.endTime ? s.endTime.split(' ').pop() : s.duration; // Fallback lấy ngày từ endTime
-                }
-            } else {
-                timeDisplay = s.endTime ? s.endTime.split(' ').pop() : s.duration;
-            }
-
             return `<tr class="${isMe ? 'my-score-row' : 'hover:bg-slate-50'} transition-colors border-b border-slate-100">
             <td class="px-4 py-5 font-black text-slate-500 text-base text-center">${s.absoluteRank}</td>
             <td class="px-4 py-5 font-extrabold text-slate-800 text-base">${s.hoTen} ${isMe ? '<span class="ml-2 bg-pink-500 text-white text-xs px-2 py-1 rounded-md shadow-sm">Bạn</span>' : ''}</td>
             <td class="px-4 py-5 font-black text-blue-600 text-base text-center">${s.lop}</td>
-            <td class="px-4 py-5 text-center font-black text-orange-600 text-sm whitespace-nowrap">${timeDisplay}</td>
+            <td class="px-4 py-5 text-center font-black text-orange-600 text-sm">${s.endTime ? s.endTime.split(' ')[1] : ''}</td>
             <td class="px-4 py-5 text-center"><span class="font-black text-2xl ${s.diem >= 5 ? 'text-emerald-600' : 'text-red-500'}">${s.diem}</span></td>
             <td class="px-4 py-5 text-center">
                 <button onclick="window.reviewStudentScore('${s.id}')" class="bg-indigo-100 text-indigo-700 hover:bg-indigo-200 px-4 py-2 rounded-lg font-bold text-sm transition-colors border border-indigo-200 shadow-sm cursor-pointer whitespace-nowrap">Xem lại</button>
