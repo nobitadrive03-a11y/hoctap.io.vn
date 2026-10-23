@@ -78,7 +78,7 @@
             padding: 15px; cursor: pointer; display: flex; justify-content: space-between;
             align-items: center; font-weight: bold; color: white; font-size: 18px;
             transition: background 0.3s; box-shadow: 0 4px 6px rgba(26,115,232,0.2);
-            margin-top: 15px;
+            margin-top: 15px; width: 100%;
         }
         .accordion-header:hover { background: linear-gradient(135deg, #1557b0, #3367d6); }
         
@@ -215,7 +215,33 @@
             <canvas id="resultChart"></canvas>
         </div>
 
-       
+        <!-- BỔ SUNG KHUNG HTML DANH SÁCH BỊ THIẾU Ở ĐÂY -->
+        <button class="accordion-header" onclick="toggleTable()">
+            <span>📋 Danh Sách Học Sinh Đã Đánh Giá</span>
+            <span id="toggleIcon">▼</span>
+        </button>
+
+        <div id="studentTableWrapper" class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th>STT</th>
+                        <th>Lớp</th>
+                        <th>Họ và Tên</th>
+                        <th>Góp ý thêm</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                    <tr><td colspan="4" style="text-align:center;">Chưa có dữ liệu khảo sát.</td></tr>
+                </tbody>
+            </table>
+            <div class="pagination">
+                <button class="btn btn-secondary" onclick="prevPage()">◀ Trước</button>
+                <span id="pageInfo" class="page-info">Trang 1 / 1</span>
+                <button class="btn btn-secondary" onclick="nextPage()">Sau ▶</button>
+            </div>
+        </div>
+    </div> <!-- ĐÓNG THẺ DASHBOARDVIEW Ở ĐÂY -->
 
     <!-- ================= VIEW 2: KHUNG ĐĂNG NHẬP ================= -->
     <div id="loginModal" class="modal-overlay">
