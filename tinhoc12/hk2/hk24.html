@@ -1,1 +1,694 @@
+<!doctype html>
+<html lang="vi" class="w-full h-full m-0 p-0">
+ <head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <title>Kiểm Tra Học Kỳ II - Tin học 12 - Mã đề 04</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
+<!-- MÃ GA4 -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-NSJCVSL9RM"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-NSJCVSL9RM'); 
+</script>
+
+<script>
+  setInterval(function() {
+    if (!document.hidden) { 
+      gtag('event', 'keep_alive', {
+        'event_category': 'Engagement',
+        'event_label': 'Học sinh đang làm bài',
+        'non_interaction': false
+      });
+    }
+  }, 30000); 
+</script>
+
+  <style>
+    * { -webkit-tap-highlight-color: transparent; }
+    html, body { width: 100%; min-height: 100vh; margin: 0; padding: 0; overflow-x: hidden; overflow-y: auto; }
+    
+    body { 
+      font-family: 'Be Vietnam Pro', sans-serif; 
+      background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+      background-size: 400% 400%;
+      animation: gradientBG 15s ease infinite;
+    }
+    
+    @keyframes gradientBG {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+    
+    #app { width: 100%; min-height: 100vh; display: flex; flex-direction: column; padding-bottom: 20px; }
+    
+    .glass-card {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    .option-label { transition: transform 0.15s ease, background-color 0.2s ease; cursor: pointer; border-color: #e2e8f0; }
+    .option-label:hover { background-color: #f0fdfa; border-color: #38bdf8; box-shadow: 0 4px 6px -1px rgba(56, 189, 248, 0.1); }
+    
+    input[type="radio"].single-radio:checked + .option-label {
+      background: linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%);
+      color: white; border-color: transparent;
+      box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+    }
+    input[type="radio"].single-radio:checked + .option-label span:first-child { background-color: rgba(255,255,255,0.25); border-color: transparent; color: white; }
+    input[type="radio"].single-radio:checked + .option-label span:last-child { color: white; }
+    
+    .tf-radio-T:checked + .tf-label-T, .tf-radio-S:checked + .tf-label-S {
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important; 
+        border-color: transparent !important; color: white !important;
+        box-shadow: 0 4px 10px rgba(16, 185, 129, 0.4);
+    }
+
+    .fade-in { animation: fadeIn 0.4s ease forwards; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+    
+    .my-score-row {
+      background: linear-gradient(to right, #fdf4ff, #ffffff) !important;
+      border-left: 4px solid #db2777 !important; font-weight: 700 !important;
+      color: #9d174d !important; box-shadow: 0 2px 8px rgba(0,0,0,0.05); position: relative; z-index: 10;
+    }
+    .my-score-row td { padding-top: 16px; padding-bottom: 16px; }
+    button:disabled { opacity: 0.5; cursor: not-allowed; transform: none !important; }
+
+    /* CSS làm nổi bật mã HTML/CSS */
+    .code-snippet {
+        display: inline-block;
+        background-color: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-left: 4px solid #2563eb;
+        border-radius: 6px;
+        padding: 2px 8px;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+        color: #1e3a8a;
+        font-weight: 700;
+        font-size: 0.95em;
+        margin: 0 4px;
+        word-break: break-word;
+    }
+
+    .code-block {
+        display: block;
+        background-color: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-left: 6px solid #2563eb;
+        border-radius: 8px;
+        padding: 12px 16px;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+        color: #1e3a8a;
+        font-weight: 700;
+        font-size: 1em;
+        margin: 8px 0;
+        overflow-x: auto;
+        white-space: pre-wrap;
+    }
+  </style>
+ </head>
+ <body oncopy="return false" oncut="return false" onpaste="return false">
+  <div id="app" class="p-0 sm:p-4 md:p-8 transition-all">
+   
+   <!-- SECTION: ĐĂNG NHẬP -->
+   <div id="login-section" class="w-full max-w-md mx-auto fade-in flex flex-col justify-center flex-grow">
+    <div class="glass-card rounded-none sm:rounded-3xl p-6 sm:p-8 flex flex-col justify-start shadow-2xl border-t-8 border-indigo-600 bg-white">
+     <div class="text-center mb-6 pt-4 sm:pt-0">
+      <div class="flex items-center justify-center w-20 h-20 mx-auto mb-4 rounded-full border-4 border-yellow-400 bg-red-600 shadow-lg transform transition-transform hover:scale-105">
+          <span class="text-white font-bold text-3xl tracking-tighter">HS</span>
+      </div>
+      <h1 class="text-1xl sm:text-3xl font-bold text-red-600 mb-1 leading-tight tracking-tight">KIỂM TRA HỌC KỲ 2</h1>
+      <h2 class="text-xl font-bold text-red-500 mb-2">Tin học 12 - Đề: 4</h2>
+     </div>
+     
+     <div id="login-form" class="space-y-4">
+      <div class="flex flex-col sm:flex-row gap-4">
+          <div class="w-full sm:flex-1">
+               <label class="block text-sm font-bold text-gray-700 mb-1">Họ và tên</label> 
+               <input type="text" id="hoTen" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-100 outline-none transition-all text-base touch-manipulation" placeholder="Nhập họ tên...">
+          </div>
+          <div class="w-full sm:w-1/3">
+               <label class="block text-sm font-bold text-gray-700 mb-1">Lớp</label> 
+               <input type="text" id="lop" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-100 outline-none transition-all text-base touch-manipulation" placeholder="Ví dụ: 12A1">
+          </div>
+      </div>
+      
+      <div id="login-error" class="hidden bg-red-100 border border-red-300 text-red-700 font-bold text-sm p-3 rounded-xl text-center shadow-sm"></div>
+
+      <button type="button" onclick="window.startQuizAction()" id="start-btn" class="w-full py-3 mt-4 bg-gradient-to-r from-blue-600 to-cyan-500 text-white font-bold rounded-xl shadow-lg hover:shadow-xl transform transition-transform active:scale-95 touch-manipulation text-lg tracking-wide"> 🚀 BẮT ĐẦU THI </button>
+     </div>
+    </div>
+   </div>
+
+   <!-- SECTION: LÀM BÀI THI -->
+   <div id="quiz-section" class="w-full max-w-4xl mx-auto hidden flex-grow flex flex-col">
+    <div class="glass-card rounded-none sm:rounded-3xl p-4 sm:p-8 flex flex-col flex-grow relative border-t-8 border-blue-500 bg-white">
+     <div class="flex items-center justify-between mb-4 sm:mb-6 pb-4 border-b-2 border-gray-100">
+      <div>
+       <h2 id="quiz-title" class="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">Đề Kiểm Tra</h2>
+       <p id="student-info" class="text-sm font-semibold text-gray-500 mt-1 uppercase tracking-wide"></p>
+      </div>
+      <div class="text-right bg-blue-50 px-4 py-2 rounded-xl border border-blue-100" id="progress-container">
+       <div class="text-xs text-blue-500 font-bold uppercase tracking-wider mb-1">Tiến độ</div>
+       <div id="progress-text" class="text-xl font-bold text-blue-700">0/0</div>
+      </div>
+     </div>
+     
+     <div id="timer-banner" class="mb-6 p-4 bg-gradient-to-r from-orange-50 to-red-50 border-2 border-red-100 rounded-2xl flex items-center justify-between shadow-sm">
+        <span class="text-red-800 font-bold flex items-center gap-2"><span class="text-2xl animate-pulse">⏰</span> THỜI GIAN CÒN LẠI:</span> 
+        <span id="timer" class="text-3xl font-bold text-red-600 font-mono tracking-wider drop-shadow-sm">45:00</span>
+     </div>
+
+     <div id="question-container" class="mb-8 flex-grow"></div>
+     
+     <div id="network-error" class="hidden bg-red-100 text-red-700 p-4 rounded-xl mt-4 text-center font-bold text-sm border-2 border-red-300 mb-4 shadow-sm"></div>
+
+    <div id="nav-buttons" class="flex gap-4 pt-4 sm:pt-6 border-t-2 border-gray-100 mt-auto pb-4 sm:pb-0">
+        <button id="next-btn" onclick="window.nextQuestion()" class="flex-1 py-4 bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-bold text-xl rounded-2xl shadow-lg hover:shadow-xl transition-transform active:scale-95 touch-manipulation">Chọn đáp án & Tiếp theo ➔</button> 
+        <button id="submit-btn" onclick="window.submitQuiz()" class="flex-1 py-4 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-bold text-xl rounded-2xl shadow-lg hover:shadow-xl hidden transition-transform active:scale-95 touch-manipulation">✅ NỘP BÀI NGAY</button>
+     </div>
+    </div>
+   </div>
+
+   <!-- SECTION: KẾT QUẢ CÁ NHÂN -->
+   <div id="result-section" class="w-full max-w-md mx-auto hidden fade-in flex flex-col justify-center my-auto pb-8">
+    <div class="glass-card rounded-none sm:rounded-3xl p-6 sm:p-8 flex flex-col justify-start border-t-8 border-green-500 bg-white shadow-2xl" id="result-content"></div>
+   </div>
+
+   <!-- SECTION: BẢNG XẾP HẠNG -->
+   <div id="scores-section" class="w-full max-w-6xl mx-auto hidden flex-grow flex flex-col">
+    <div class="glass-card rounded-none sm:rounded-3xl p-4 sm:p-8 flex flex-col flex-grow border-t-8 border-orange-500 bg-white">
+     <div class="mb-6 flex items-center justify-between">
+ <h2 class="text-2xl sm:text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-red-600" style="font-family: system-ui, Arial, sans-serif;">🏆 BẢNG XẾP HẠNG</h2>
+      <button onclick="window.goHome()" class="px-5 py-2.5 bg-gray-100 text-gray-700 rounded-xl font-bold hover:bg-gray-200 transition-transform active:scale-95 shadow-sm border border-gray-200 touch-manipulation">🏠 Về trang chủ</button>
+     </div>
+     
+     <div id="my-score-summary" class="hidden bg-gradient-to-r from-blue-50 to-indigo-50 border-2 border-blue-200 rounded-2xl p-4 sm:p-6 mb-6 flex items-center justify-between shadow-md">
+         <div>
+             <div class="text-sm text-blue-500 font-extrabold uppercase tracking-wider mb-1">Thành tích của bạn</div>
+             <div class="font-black text-gray-800 text-xl sm:text-1xl" id="my-summary-name"></div>
+             <div class="text-base font-bold text-indigo-600 mt-1" id="my-summary-rank">Hạng: --</div>
+         </div>
+         <div class="text-right">
+             <div class="text-xs text-gray-500 font-bold uppercase mb-1">Điểm số</div>
+             <div class="text-4xl sm:text-3xl font-black text-blue-600 drop-shadow-sm" id="my-summary-score">0</div>
+         </div>
+     </div>
+
+     <div class="overflow-x-auto rounded-2xl border-2 border-gray-100 flex-grow shadow-lg bg-white/50 mb-4 min-h-[300px]">
+      <table class="w-full text-xs sm:text-sm whitespace-nowrap">
+       <thead class="bg-gradient-to-r from-orange-500 to-red-500 text-white">
+        <tr>
+         <th class="px-3 sm:px-4 py-4 text-center font-bold">STT</th>
+         <th class="px-3 sm:px-4 py-4 text-center font-bold">Lớp</th>
+         <th class="px-3 sm:px-4 py-4 text-left font-bold w-full">Họ tên</th>
+         <th class="px-3 sm:px-4 py-4 text-center font-bold">Điểm</th>
+         <th class="px-3 sm:px-4 py-4 text-center font-bold">Ngày nộp</th>
+        </tr>
+       </thead>
+       <tbody id="scores-tbody" class="bg-white/80 divide-y divide-gray-100"></tbody>
+      </table>
+      <div id="no-scores" class="text-center py-12 hidden text-gray-500 font-bold text-lg">Chưa có dữ liệu nộp bài 🥲</div>
+     </div>
+
+     <!-- Phân trang -->
+     <div id="pagination-controls" class="flex justify-between items-center mb-6 hidden">
+        <button id="prev-page-btn" onclick="window.prevPage()" class="px-4 py-3 bg-gray-100 text-gray-700 rounded-xl font-bold hover:bg-gray-200 transition-transform active:scale-95 shadow-sm border border-gray-200 touch-manipulation">⬅️ Trang trước</button>
+        <span id="page-info" class="font-bold text-gray-500 text-sm">Trang 1 / 1</span>
+        <button id="next-page-btn" onclick="window.nextPage()" class="px-4 py-3 bg-gray-100 text-gray-700 rounded-xl font-bold hover:bg-gray-200 transition-transform active:scale-95 shadow-sm border border-gray-200 touch-manipulation">Trang sau ➡️</button>
+     </div>
+    </div>
+   </div>
+
+  
+  </div>
+
+  
+
+  <script>
+    let database = null;
+    let scoresRef = null;
+    let currentIdx = 0;
+
+    try {
+        const firebaseConfig = {
+            apiKey: "AIzaSyBQ9Pos8awlh9j041qDWTPFRsVIjF-kPnk",
+            authDomain: "hoctap-91691.firebaseapp.com",
+            databaseURL: "https://hoctap-91691-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "hoctap-91691",
+            storageBucket: "hoctap-91691.firebasestorage.app",
+            messagingSenderId: "1004553425319",
+            appId: "1:1004553425319:web:45d15cbae393f614c56682",
+            measurementId: "G-Q6X1TL9PRV"
+        };
+        if (typeof firebase !== 'undefined') {
+            if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+            database = firebase.database();
+            scoresRef = database.ref('bxh_hk2_12_14');
+        }
+    } catch(err) { console.error("Lỗi Firebase:", err); }
+
+    let isQuizStarted = false; 
+    let isSubmitting = false;
+
+    // DỮ LIỆU ĐỀ THI - HỌC KỲ II - Mã đề 0122 (THPT Phan Đình Phùng)
+  const de_data = [
+        { id: "1_1", type: "single", question: "Khi thiết lập bộ chọn lớp trong CSS, cú pháp nào sau đây là đúng?", options: ["<code class='code-snippet'>#classname { color: red; }</code>", "<code class='code-snippet'>.classname { color: red; }</code>", "<code class='code-snippet'>classname { color: red; }</code>", "<code class='code-snippet'>*classname { color: red; }</code>"], correct: 1 },
+        { id: "1_2", type: "single", question: "Trong CSS, <code class='code-snippet'>pseudo-element</code> được sử dụng để làm gì?", options: ["Định dạng một phần của một phần tử HTML.", "Tạo một phần tử HTML mới trên trang web.", "Thay đổi nội dung của phần tử HTML.", "Chỉ áp dụng cho phần tử có trạng thái <code class='code-snippet'>hover</code>."], correct: 0 },
+        { id: "1_3", type: "single", question: "Phương án nào sau đây liên quan đến công việc thuộc nhóm bảo trì phần mềm máy tính?", options: ["Lắp đặt ổ cứng mới.", "Cài đặt và cập nhật phần mềm điều khiển thiết bị ngoại vi.", "Thay bo mạch chủ (mainboard).", "Kiểm tra kết nối dây nguồn."], correct: 1 },
+        { id: "1_4", type: "single", question: "Khi một tổ chức muốn mở rộng hệ thống, họ cần làm gì để đảm bảo an toàn mạng?", options: ["Nâng cấp thiết bị và áp dụng các biện pháp bảo mật mới.", "Cần tăng tốc độ mạng và trang bị thêm thiết bị mạng", "Không cần thêm biện pháp bảo mật.", "Cần mua thêm máy tính mới với cấu hình cao hơn"], correct: 0 },
+        { id: "1_5", type: "single", question: "Minh là học sinh lớp 12, yêu thích công nghệ và mong muốn làm việc trong môi trường doanh nghiệp để thiết lập, duy trì và bảo vệ hệ thống máy tính. Minh nên chọn ngành học nào sau đây để phù hợp nhất với định hướng nghề nghiệp của mình?", options: ["Khoa học máy tính – nghiên cứu giải thuật và phát triển phần mềm cơ bản", "Kỹ thuật phần mềm – tập trung vào xây dựng ứng dụng cho doanh nghiệp", "An toàn thông tin – chuyên sâu về bảo vệ hệ thống mạng và dữ liệu", "Công nghệ đa phương tiện – thiết kế nội dung số và truyền thông số"], correct: 2 },
+        { id: "1_6", type: "single", question: "Kiến thức nào sau đây là quan trọng đối với chuyên gia quản trị hệ thống?", options: ["Kiến thức về quản lý hệ điều hành và xử lý sự cố hệ thống.", "Chỉ cần biết cách sử dụng phần mềm văn phòng.", "Chỉ cần biết cài đặt phần mềm diệt virus.", "Không cần hiểu biết sâu về hệ điều hành."], correct: 0 },
+        { id: "1_7", type: "single", question: "Vì sao người làm việc trong nhóm nghề quản trị trong ngành Công nghệ thông tin cần có kiến thức về pháp luật và tuân thủ quy định?", options: ["Để nắm được cách xử lí hiệu quả các sự cố hệ thống, sửa lỗi phần mềm và phần cứng, đảm bảo sự ổn định của hệ thống.", "Để nắm được cấu trúc và hoạt động của mạng máy tính, bao gồm giao thức mạng, phân tích lưu lượng mạng và các thiết bị mạng.", "Để có hiểu biết và tuân thủ luật pháp, các quy định, cũng như các tiêu chuẩn quốc tế hiện hành về bảo mật thông tin và an ninh mạng.", "Để đảm bảo hệ thống công nghệ thông tin của tổ chức hoạt động đúng quy định pháp lý, tránh rủi ro vi phạm và bảo vệ quyền lợi của tổ chức và người dùng."], correct: 3 },
+        { id: "1_8", type: "single", question: "Trong ngành y tế, chuyên viên CNTT thường được phân công phụ trách nhiệm vụ:", options: ["Quản lí và phát triển hệ thống thông tin bệnh viện.", "Sao lưu và bảo mật dữ liệu điều trị của bệnh nhân.", "Hỗ trợ kỹ thuật trong quá trình vận hành các thiết bị y tế.", "Tất cả các nhiệm vụ trên."], correct: 3 },
+        { id: "1_9", type: "single", question: "Phần mềm hỗ trợ làm trang web của Google là", options: ["Google Slides.", "Google Express.", "Google Pay.", "Google Sites."], correct: 3 },
+        { id: "1_10", type: "single", question: "Khi thiết lập phần đầu trang trong Google Sites, khu vực nào sau đây cho phép nhập tên trang web và hiển thị logo?", options: ["Phần tiêu đề trang.", "Phần nhập tên trang web.", "Phần bảng chọn thanh điều hướng.", "Phần chân trang."], correct: 1 },
+        { id: "1_11", type: "single", question: "Khi chèn bản đồ vào trang web, làm cách nào để xác định một địa điểm cụ thể?", options: ["Nhập tên địa điểm vào ô tìm kiếm hoặc đặt dấu vị trí.", "Chỉ có thể chọn từ danh sách có sẵn.", "Chỉ nhập địa chỉ IP của địa điểm.", "Phải nhập tọa độ GPS."], correct: 0 },
+        { id: "1_12", type: "single", question: "Cấu trúc của một trang web thường được tổ chức theo dạng nào?", options: ["Đường thẳng", "Hình tròn", "Hình cây", "Hình lưới"], correct: 2 },
+        { id: "1_13", type: "single", question: "Lệnh \"Nhúng\" trong bảng chọn Chèn có chức năng gì?", options: ["Chèn văn bản từ Google Drive", "Chèn hình ảnh từ máy tính", "Chèn dữ liệu từ các ứng dụng internet khác", "Chèn liên kết đến các trang web khác"], correct: 2 },
+        { id: "1_14", type: "single", question: "Favicon thường xuất hiện ở vị trí nào sau đây trong trang web?", options: ["Giữa trang web, ngay trên tiêu đề chính", "Trước địa chỉ URL trên tab trình duyệt hoặc trong danh sách dấu trang", "Trên thanh cuộn (scroll bar) của trình duyệt", "Trong phần chân trang (footer) của website"], correct: 1 },
+        { id: "1_15", type: "single", question: "Trong Google Sites, để tạo liên kết từ trang chủ đến trang con, bước nào sau đây là đúng?", options: ["Nháy chuột phải vào đoạn văn bản → Chọn biểu tượng chèn liên kết → Chọn trang con → Áp dụng.", "Chỉ cần nhập tên trang con vào nội dung trang chủ.", "Không thể tạo liên kết giữa trang chủ và trang con.", "Phải tạo một trang web mới thay vì liên kết."], correct: 0 },
+        { id: "1_16", type: "single", question: "Forms là công cụ thường được sử dụng để tạo biểu mẫu và có thể tích hợp vào Google Sites. Phát biểu nào sau đây là sai?", options: ["Việc tạo biểu mẫu trên trang web để lấy ý kiến phản hồi của người dùng về bản chất là tạo biểu mẫu bằng ứng dụng Forms của Google rồi nhúng vào trang web được thiết kế bằng Google Sites", "Để tạo biểu mẫu mới, em nháy chuột vào biểu tượng Dấu cộng nhiều màu.", "Để nhập tiêu đề cho biểu mẫu, em nháy chuột vào Mô tả biểu mẫu.", "Google Forms cung cấp một số kiểu biểu mẫu được tạo sẵn như: Thông tin liên hệ, Trả lời sự kiện, Lời mời dự tiệc,…"], correct: 2 },
+        { id: "1_17", type: "single", question: "Em có thể tạo biểu mẫu bằng ứng dụng nào sau đây của Google?", options: ["Google Docs.", "Google Forms.", "Google Sheets.", "Google Finance."], correct: 1 },
+        { id: "1_18", type: "single", question: "Để thêm một câu hỏi mới trong Google Forms, người dùng cần làm gì?", options: ["Nháy chuột vào nút Thêm câu hỏi trong bảng chọn bên phải.", "Sử dụng phím tắt Ctrl + N.", "Xuất bản biểu mẫu trước khi thêm câu hỏi.", "Không thể thêm câu hỏi sau khi tạo biểu mẫu."], correct: 0 },
+        { id: "1_19", type: "single", question: "Để nhúng biểu mẫu vào cuối trang chủ, em thực hiện như thế nào?", options: ["Mở trang chủ → Chọn Biểu mẫu ở bảng chọn Trang → Chọn biểu mẫu và nháy chuột vào nút Chèn ở góc dưới bên phải", "Mở trang chủ → Chọn Biểu mẫu ở nhóm thứ ba của bảng chọn Giao diện → Chọn biểu mẫu và nháy chuột vào nút Chèn ở góc dưới bên phải", "Mở trang chủ → Chọn Biểu mẫu ở nhóm thứ ba của bảng chọn Chèn → Chọn biểu mẫu và nháy chuột vào nút Chèn ở góc dưới bên phải.", "Mở trang chủ → Chọn biểu tượng Forms trên trang chủ → Chọn Biểu mẫu → Chọn biểu mẫu và nháy chuột vào nút Chèn ở góc dưới bên phải"], correct: 2 },
+        { id: "1_20", type: "single", question: "Khi tạo khảo sát khách hàng về sản phẩm, điều quan trọng nhất là gì?", options: ["Đặt câu hỏi rõ ràng, phù hợp với mục tiêu khảo sát.", "Chỉ đặt câu hỏi trắc nghiệm để thuận tiện cho người được khảo sát", "Không cần giới hạn số lượng câu hỏi.", "Đặt câu hỏi càng dài càng tốt."], correct: 0 },
+        { id: "1_21", type: "single", question: "Khi thiết lập cấu trúc nội dung cho phần thân trang web, biểu tượng Bảng pha màu dùng để làm gì?", options: ["Thiết lập màu chữ cho phần nội dung của thân trang web.", "Thiết lập màu nền cho phần thân trang web.", "Thiết lập trang trí cho phần thân trang web.", "Thiết lập bố cục cho phần thân trang web."], correct: 1 },
+        { id: "1_22", type: "single", question: "Để thiết lập kích thước phần đầu trang, em thực hiện như thế nào?", options: ["Nháy chuột Loại kích thước và chọn một kích thước.", "Nháy chuột Tuỳ chọn tiêu đề và chọn một kích thước.", "Nháy chuột Thay đổi hình ảnh và chọn một kích thước.", "Nháy chuột Loại tiêu đề và chọn một kích thước."], correct: 3 },
+        { id: "1_23", type: "single", question: "Khi lựa chọn phần mềm để thiết kế trang web, cần quan tâm yếu tố nào sau đây?", options: ["Dễ sử dụng, hỗ trợ tốt và phù hợp với mục đích của trang web.", "Chỉ chọn phần mềm có giá thành cao nhất.", "Chỉ dùng phần mềm miễn phí mà không quan tâm đến tính năng.", "Không cần quan tâm đến phần mềm, chỉ cần tập trung vào nội dung."], correct: 0 },
+        { id: "1_24", type: "single", question: "Tại giao diện thiết lập phần đầu trang, dòng nào sau đây là nơi nhập nội dung tóm tắt (mô tả ngắn) của trang web?", options: ["Dòng Tiêu đề trang.", "Dòng “Mô tả trang” (hoặc vùng văn bản mô tả dưới tiêu đề).", "Dòng Nhập tên trang web.", "Dòng Loại tiêu đề"], correct: 1 },
+        { id: "1_25", type: "single", question: "Khi thiết kế trang web cho doanh nghiệp, tại sao nên thêm bản đồ?", options: ["Giúp khách hàng dễ dàng tìm đến địa chỉ doanh nghiệp.", "Chỉ để làm đẹp trang web.", "Không ảnh hưởng đến trải nghiệm người dùng.", "Không cần thiết nếu đã có thông tin liên hệ."], correct: 0 },
+        { id: "1_26", type: "single", question: "Để tạo trang con, em thực hiện như thế nào?", options: ["Chọn bảng chọn Trang → Chọn biểu tượng 3 dấu chấm cạnh Trang chủ → Chọn Thuộc tính → Chọn Thêm trang con → Nhập tên trang con → Chọn Xong.", "Chọn bảng chọn Trang → Chọn biểu tượng 3 dấu chấm cạnh Trang chủ → Chọn Thêm trang con → Nhập tên trang con → Chọn Xong.", "Chọn bảng chọn Giao diện → Chọn biểu tượng 3 dấu chấm cạnh Trang chủ → Chọn Thêm trang con → Nhập tên trang con → Chọn Xong.", "Chọn bảng chọn Chèn → Chọn biểu tượng 3 dấu chấm cạnh Trang chủ → Chọn Thêm trang con → Nhập tên trang con → Chọn Xong."], correct: 1 },
+        { id: "1_27", type: "single", question: "Nếu muốn người dùng dễ dàng truy cập trang Mù Cang Chải từ trang chủ, cần làm gì?", options: ["Chèn liên kết từ trang chủ đến trang con Mù Cang Chải.", "Chỉ ghi tên trang Mù Cang Chải mà không tạo liên kết.", "Không cần tạo trang con riêng cho Mù Cang Chải.", "Chỉ thêm nội dung về Mù Cang Chải trong trang chủ."], correct: 0 },
+        { id: "1_28", type: "single", question: "Để thiết lập chế độ Gửi cho người trả lời một bản sao phản hồi của họ, em thực hiện như thế nào?", options: ["Chọn Câu trả lời → Nháy chuột vào biểu tượng Mũi tên trỏ xuống trong mục Câu trả lời → Bật chế độ Thu thập địa chỉ email (Đã xác minh hoặc Thông tin về người trả lời) → Chọn chế độ Gửi cho người trả lời một bản sao phản hồi của họ (Khi được yêu cầu hoặc Luôn luôn).", "Chọn Cài đặt → Nháy chuột vào biểu tượng Mũi tên trỏ xuống trong mục Câu trả lời → Chọn chế độ Gửi cho người trả lời một bản sao phản hồi của họ (Khi được yêu cầu hoặc Luôn luôn).", "Chọn Cài đặt → Nháy chuột vào biểu tượng Mũi tên trỏ xuống trong mục Bản trình bày → Bật chế độ Thu thập địa chỉ email (Đã xác minh hoặc Thông tin về người trả lời) → Chọn chế độ Gửi cho người trả lời một bản sao phản hồi của họ (Khi được yêu cầu hoặc Luôn luôn).", "Chọn Cài đặt → Nháy chuột vào biểu tượng Mũi tên trỏ xuống trong mục Câu trả lời → Bật chế độ Thu thập địa chỉ email (Đã xác minh hoặc Thông tin về người trả lời) → Chọn chế độ Gửi cho người trả lời một bản sao phản hồi của họ (Khi được yêu cầu hoặc Luôn luôn)."], correct: 3 },
+        
+        { id: '1_c1', type: 'tf_cluster', question: "Câu 1. Trọng số CSS là một yếu tố quan trọng trong việc xác định mẫu định dạng nào sẽ được áp dụng khi có nhiều quy tắc xung đột.", subQuestions: [
+            { id: '1_d25a', text: "a) Bộ chọn ID (<code class='code-snippet'>#id</code>) có trọng số cao hơn bộ chọn class (<code class='code-snippet'>.class</code>).", correct: "Đúng" },
+            { id: '1_d25b', text: "b) Bộ chọn phần tử (<code class='code-snippet'>p</code>, <code class='code-snippet'>h1</code>, <code class='code-snippet'>div</code>) có trọng số cao hơn bộ chọn ID.", correct: "Sai" },
+            { id: '1_d25c', text: "c) Một phần tử <code class='code-snippet'>&lt;p id=\"title\"&gt;</code> được áp dụng hai quy tắc CSS: một quy tắc dùng bộ chọn <code class='code-snippet'>#title</code> (trọng số cao hơn) và một quy tắc khác dùng <code class='code-snippet'>p</code> nhưng có khai báo <code class='code-snippet'>!important</code>. Khi đó, quy tắc có trọng số cao hơn (<code class='code-snippet'>#title</code>) sẽ luôn được ưu tiên áp dụng.", correct: "Sai" },
+            { id: '1_d25d', text: "d) Một phần tử HTML có thuộc tính <code class='code-snippet'>class=\"box red bold\"</code>. Biết rằng mỗi class có cùng trọng số, khi áp dụng CSS, tổng trọng số của phần tử này sẽ bằng tổng trọng số của ba class đó.", correct: "Sai" }
+        ]},
+        { id: '1_c2', type: 'tf_cluster', question: "Câu 2. Một bạn học sinh thực hiện tạo website cá nhân gồm các trang web sau:\nTrang Giới thiệu cung cấp thông tin cá nhân gồm tên, ảnh đại diện và mô tả ngắn về bản thân; Trang Dự án cung cấp danh sách dự án mà bạn đã tham gia, trong đó có hình ảnh và video minh họa cho mỗi dự án; Trang Blog chia sẻ những suy nghĩ, trải nghiệm về các lĩnh vực mà bạn quan tâm. Các trang đều có liên kết tới trang mạng xã hội của bạn.\nBạn học sinh đó có một số nhận xét sau đây:", subQuestions: [
+            { id: '1_d26a', text: "a) Các phần mềm chỉ cho phép xem trước hoạt động của trang web trên thiết bị duy nhất là máy tính để bàn.", correct: "Sai" },
+            { id: '1_d26b', text: "b) Thanh điều hướng của trang web cần có ít nhất 3 mục (nội dung) tương ứng với 3 trang web Giới thiệu, Dự án và Blog.", correct: "Đúng" },
+            { id: '1_d26c', text: "c) Một giáo viên muốn khi thay đổi tên trang “Liên hệ” thành “Thông tin” thì thanh điều hướng trên tất cả các trang tự động cập nhật mà không cần sửa từng tệp HTML.", correct: "Sai" },
+            { id: '1_d26d', text: "d) Một giáo viên thiết kế trang web và muốn thanh điều hướng luôn hiển thị cố định ở góc trên bên phải của trang khi cuộn trang. Giáo viên cần sử dụng thuộc tính CSS phù hợp (ví dụ: <code class='code-snippet'>position: fixed</code> kết hợp với <code class='code-snippet'>top</code>, <code class='code-snippet'>right</code>) để thực hiện yêu cầu này.", correct: "Đúng" }
+        ]},
+        { id: '1_c3', type: 'tf_cluster', question: "Câu 3. Giả sử em đang chịu trách nhiệm tạo một biểu mẫu khảo sát mức độ hài lòng khách hàng cho một dịch vụ. Biểu mẫu cần bao gồm cả câu hỏi yêu cầu người dùng mô tả trải nghiệm của họ và các câu hỏi đánh giá mức độ hài lòng từ 1 đến 5. Để đảm bảo không có câu trả lời bị bỏ sót, em phải thiết lập một số câu hỏi là bắt buộc. Dựa trên tình huống này, hãy chọn những nhận định đúng về cách tạo và sử dụng biểu mẫu trên Google Forms:", subQuestions: [
+            { id: '1_d27a', text: "a) Google Forms không có chức năng cho phép thêm hình ảnh hoặc video minh họa vào từng câu hỏi để làm rõ nội dung khảo sát.", correct: "Sai" },
+            { id: '1_d27b', text: "b) Các câu hỏi trong biểu mẫu có thể được thiết lập là bắt buộc, giúp em thu thập dữ liệu đầy đủ từ tất cả người dùng.", correct: "Đúng" },
+            { id: '1_d27c', text: "c) Trong quá trình thiết kế biểu mẫu khảo sát, để tiết kiệm thời gian, em buộc phải chọn một mẫu có sẵn trên Google Forms và chỉnh sửa lại, vì Google Forms không cho phép tạo biểu mẫu hoàn toàn mới từ đầu.", correct: "Sai" },
+            { id: '1_d27d', text: "d) Sau khi thu thập phản hồi từ khách hàng bằng Google Forms, em cần phân tích mức độ hài lòng theo từng tiêu chí. Em có thể liên kết biểu mẫu với Google Sheets hoặc xuất dữ liệu ra tệp Excel để xử lý, tính toán và vẽ biểu đồ phục vụ đánh giá.", correct: "Đúng" }
+        ]}
+    ];
+
+    let currentQuestions = [];
+    let deviceId = '';
+    let allScores = [];
+    let currentStudent = {};
+    let userAnswers = {};
+    let timerInterval;
+    let quizStartTime, quizEndTime;
+    
+    let currentPage = 1;
+    const rowsPerPage = 10;
+    let sortedScoresList = [];
+
+    function shuffleArray(array) {
+        let curId = array.length;
+        while (0 !== curId) {
+            let randId = Math.floor(Math.random() * curId);
+            curId -= 1;
+            let tmp = array[curId];
+            array[curId] = array[randId];
+            array[randId] = tmp;
+        }
+        return array;
+    }
+
+   window.startQuizAction = function() {
+        const errDiv = document.getElementById('login-error');
+        errDiv.classList.add('hidden');
+        const name = document.getElementById('hoTen').value.trim();
+        const lop = document.getElementById('lop').value.trim().toUpperCase(); 
+        
+        if (!name || !lop) {
+            errDiv.innerText = "⚠️ Yêu cầu nhập đầy đủ Họ tên và Lớp!";
+            errDiv.classList.remove('hidden');
+            return;
+        }
+
+        currentStudent = { hoTen: name, lop: lop, maDe: '0121', tenDe: 'Kiểm Tra Giữa học kỳ II - Tin Học 12 - Đề 4' };
+        
+        let rawQuestions = JSON.parse(JSON.stringify(de_data));
+        
+        // CẬP NHẬT: Không trộn câu hỏi trắc nghiệm một lựa chọn
+        let part1 = rawQuestions.filter(q => q.type === 'single');
+        part1.forEach((q, idx) => {
+            q.displayQuestion = `Câu ${idx + 1}: ${q.question}`;
+            // Không trộn options, giữ nguyên thứ tự đáp án A, B, C, D gốc
+        });
+        
+        // CẬP NHẬT: Không trộn câu hỏi cụm Đúng/Sai
+        let part2 = rawQuestions.filter(q => q.type === 'tf_cluster');
+        part2.forEach((q, idx) => {
+            q.displayQuestion = q.question; // Giữ nguyên "Câu X." ở đầu
+        });
+        
+        currentQuestions = [...part1, ...part2];
+        quizStartTime = new Date();
+        
+        setTimeout(() => { isQuizStarted = true; }, 1000);
+        showSection('quiz');
+        document.getElementById('quiz-title').innerText = currentStudent.tenDe;
+        document.getElementById('student-info').innerText = `${currentStudent.hoTen} - Lớp ${currentStudent.lop}`;
+        currentIdx = 0;
+        userAnswers = {};
+        window.renderQuestion();
+        startTimer(45 * 60);
+    };
+    window.nextQuestion = function() {
+        if (currentIdx < currentQuestions.length - 1) { currentIdx++; window.renderQuestion(); }
+    };
+
+    window.viewScoresAction = function() {
+        if (database) {
+            scoresRef.once('value').then((snapshot) => {
+                const data = snapshot.val();
+                allScores = data ? Object.keys(data).map(key => ({...data[key], id: key})) : [];
+                currentPage = 1;
+                window.renderScores();
+                showSection('scores');
+            });
+        }
+    };
+
+    window.goHome = function() {
+        document.getElementById('result-section').classList.add('hidden');
+        document.getElementById('hoTen').value = ''; 
+        document.getElementById('lop').value = ''; 
+        clearInterval(timerInterval);
+        showSection('login');
+    };
+
+    function getTotalItems() {
+        let count = 0;
+        currentQuestions.forEach(q => {
+            if (q.type === 'tf_cluster') count += q.subQuestions.length;
+            else count++;
+        });
+        return count; 
+    }
+
+    function getAnsweredCount() {
+        let count = 0;
+        currentQuestions.forEach(q => {
+            if (q.type === 'tf_cluster') {
+                q.subQuestions.forEach(sub => { if (userAnswers[sub.id]) count++; });
+            } else {
+                if (userAnswers[q.id] !== undefined) count++;
+            }
+        });
+        return count;
+    }
+
+    window.selectAnswer = function(qId, val, type) {
+        userAnswers[qId] = val;
+        window.updateProgress();
+    };
+
+    window.renderQuestion = function() {
+        if (!currentQuestions || currentQuestions.length === 0) return;
+        const q = currentQuestions[currentIdx];
+        const container = document.getElementById('question-container');
+        
+        if (q.type === 'tf_cluster') {
+            container.innerHTML = `<div class="fade-in">
+                <div class="flex items-center gap-3 mb-6 border-b-2 border-orange-100 pb-3">
+                    <span class="bg-gradient-to-br from-orange-400 to-red-500 text-white w-10 h-10 flex items-center justify-center rounded-xl font-bold text-xl shadow-md">II</span>
+                    <h3 class="text-xl sm:text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-orange-600 to-red-600 tracking-wide uppercase">PHẦN TRẮC NGHIỆM ĐÚNG/SAI</h3>
+                </div>
+                <div class="bg-red-50 border-2 border-red-200 p-4 sm:p-6 rounded-2xl mb-6 text-red-700 text-lg sm:text-xl font-bold leading-relaxed shadow-inner">
+                    ${q.displayQuestion.replace(/\n/g, '<br/>')}
+                </div>
+                <div class="space-y-4 md:pl-6">
+                    ${q.subQuestions.map(sub => `
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between bg-white p-5 sm:p-6 border-2 border-gray-100 hover:border-red-300 rounded-2xl gap-4 shadow-sm hover:shadow-md transition-all">
+                        <span class="flex-1 text-gray-800 font-bold text-lg sm:text-xl leading-relaxed">${sub.text}</span>
+                        <div class="flex gap-3 flex-shrink-0 w-full sm:w-auto mt-3 sm:mt-0 justify-between sm:justify-end">
+                            <input type="radio" id="q_${sub.id}_T" name="q_${sub.id}" value="Đúng" class="hidden tf-radio-T" onchange="window.selectAnswer('${sub.id}', 'Đúng', 'tf')" ${userAnswers[sub.id] === 'Đúng' ? 'checked' : ''}>
+                            <label for="q_${sub.id}_T" class="tf-label-T flex-1 sm:flex-none px-4 py-4 border-2 border-gray-200 rounded-xl cursor-pointer font-bold text-gray-500 text-base sm:text-lg text-center w-full sm:w-32 transition-all hover:bg-gray-50 uppercase tracking-wide active:scale-95 touch-manipulation">Đúng</label>
+                            
+                            <input type="radio" id="q_${sub.id}_S" name="q_${sub.id}" value="Sai" class="hidden tf-radio-S" onchange="window.selectAnswer('${sub.id}', 'Sai', 'tf')" ${userAnswers[sub.id] === 'Sai' ? 'checked' : ''}>
+                            <label for="q_${sub.id}_S" class="tf-label-S flex-1 sm:flex-none px-4 py-4 border-2 border-gray-200 rounded-xl cursor-pointer font-bold text-gray-500 text-base sm:text-lg text-center w-full sm:w-32 transition-all hover:bg-gray-50 uppercase tracking-wide active:scale-95 touch-manipulation">Sai</label>
+                        </div>
+                    </div>`).join('')}
+                </div>
+            </div>`;
+        } else {
+            container.innerHTML = `<div class="fade-in">
+                ${currentIdx === 0 ? `<div class="flex items-center gap-3 mb-6 border-b-2 border-blue-100 pb-3"><span class="bg-gradient-to-br from-blue-400 to-cyan-500 text-white w-10 h-10 flex items-center justify-center rounded-xl font-bold text-xl shadow-md">I</span><h3 class="text-xl sm:text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-600 tracking-wide uppercase">PHẦN TRẮC NGHIỆM MỘT LỰA CHỌN</h3></div>` : ''}
+                <div class="flex gap-4 mb-5">
+                    <div class="w-full">
+                        <p class="text-xl sm:text-2xl font-bold text-red-600 mt-1 leading-snug tracking-tight">${q.displayQuestion}</p>
+                    </div>
+                </div>
+                <div class="space-y-4 md:pl-14 mt-6">
+                    ${q.options.map((opt, i) => `
+                    <div class="flex items-center">
+                        <input type="radio" id="opt_${i}" name="q_${q.id}" value="${i}" class="hidden single-radio" ${userAnswers[q.id] === i ? 'checked' : ''} onchange="window.selectAnswer('${q.id}',${i}, 'single')">
+                        <label for="opt_${i}" class="option-label w-full p-4 sm:p-5 border-2 border-gray-200 rounded-2xl flex items-center gap-4 bg-white shadow-sm font-semibold text-lg sm:text-xl active:scale-[0.98] touch-manipulation">
+                            <span class="w-12 h-12 sm:w-10 sm:h-10 rounded-xl border-2 border-gray-300 flex items-center justify-center text-lg sm:text-base font-bold text-gray-400 flex-shrink-0 bg-gray-50 transition-colors">${String.fromCharCode(65 + i)}</span>
+                            <span class="text-gray-700 leading-relaxed">${opt}</span>
+                        </label>
+                    </div>`).join('')}
+                </div>
+            </div>`;
+        }
+        window.updateNav();
+        window.updateProgress();
+    };
+
+    window.updateNav = function() {
+        document.getElementById('next-btn').style.display = (currentIdx === currentQuestions.length - 1) ? 'none' : 'block';
+        document.getElementById('submit-btn').style.display = (currentIdx === currentQuestions.length - 1) ? 'block' : 'none';
+    };
+
+    window.updateProgress = function() {
+        document.getElementById('progress-text').innerText = `${getAnsweredCount()}/${getTotalItems()} ý`;
+    };
+
+    function formatDuration(sec) {
+        const m = Math.floor(sec / 60); const s = sec % 60;
+        return `${m}p ${s}s`;
+    }
+
+    window.submitQuiz = function() {
+        if (!isQuizStarted) return; 
+        isQuizStarted = false; 
+        
+        quizEndTime = new Date();
+        clearInterval(timerInterval);
+
+        let totalScore = 0;
+        let correctSubItems = 0;
+        let totalItems = getTotalItems();
+
+        currentQuestions.forEach(q => {
+            if (q.type === 'tf_cluster') {
+                let subCorrectCount = 0;
+                q.subQuestions.forEach(sub => {
+                    if (userAnswers[sub.id] === sub.correct) {
+                        subCorrectCount++;
+                        correctSubItems++;
+                    }
+                });
+                
+                if (subCorrectCount === 1) totalScore += 0.1;
+                else if (subCorrectCount === 2) totalScore += 0.25;
+                else if (subCorrectCount === 3) totalScore += 0.5;
+                else if (subCorrectCount === 4) totalScore += 1.0;
+
+            } else {
+                if (userAnswers[q.id] === q.correct) {
+                    totalScore += 0.25; 
+                    correctSubItems++;
+                }
+            }
+        });
+
+        // CHỐT CHẶN: Đảm bảo không bị sai số thập phân nếu học sinh làm đúng 100% số ý
+        if (correctSubItems === totalItems) {
+            totalScore = 10.0;
+        }
+
+        const score = totalScore.toFixed(2);
+
+        const record = {
+            hoTen: currentStudent.hoTen, lop: currentStudent.lop, tenDe: currentStudent.tenDe,
+            diem: parseFloat(score), soCauDung: correctSubItems, tongCau: totalItems,
+            startTime: quizStartTime.toLocaleTimeString(), endTime: quizEndTime.toLocaleTimeString(),
+            duration: formatDuration(Math.floor((quizEndTime - quizStartTime) / 1000)),
+            thoiGian: new Date().toISOString(), deviceId: deviceId
+        };
+        
+        if(database) {
+            scoresRef.push(record, () => { window.showModalResult(score, correctSubItems, totalItems, record.duration); });
+        } else {
+            // Hiển thị tạm nếu Firebase bị lỗi
+            window.showModalResult(score, correctSubItems, totalItems, record.duration);
+        }
+    };
+
+    window.showModalResult = function(score, correct, total, dur) {
+        ['login', 'quiz', 'scores'].forEach(s => document.getElementById(s+'-section').classList.add('hidden'));
+        document.getElementById('result-section').classList.remove('hidden');
+        document.getElementById('result-content').innerHTML = `<div class="text-6xl sm:text-7xl mb-4 animate-bounce">🎉</div><h3 class="text-2xl sm:text-3xl font-bold text-green-600 mb-2">Hoàn thành bài thi!</h3><p class="text-gray-600 mb-6 mt-2"><span class="font-bold text-blue-700 text-lg sm:text-xl uppercase tracking-wider">${currentStudent.hoTen} - Lớp ${currentStudent.lop}</span><br><span class="text-sm font-semibold text-gray-400 mt-1 block">${currentStudent.tenDe}</span></p><div class="bg-blue-50 border-2 border-blue-100 rounded-3xl p-6 mb-6 shadow-inner relative"><div class="text-sm text-blue-500 font-bold mb-2 uppercase tracking-widest">ĐIỂM SỐ CỦA BẠN</div><div class="text-6xl sm:text-7xl font-bold text-blue-600 drop-shadow-sm">${score} <span class="text-2xl text-gray-400">/ 10</span></div><div class="text-base sm:text-lg font-bold text-indigo-600 mt-4 bg-white inline-block px-5 py-2 rounded-full shadow-sm">Trả lời đúng ${correct}/${total} ý | TG: ${dur}</div></div><div class="grid grid-cols-2 gap-3 mb-4"><button onclick="window.goHome()" class="w-full py-4 bg-gray-100 text-gray-800 rounded-xl font-bold shadow-sm hover:bg-gray-200 transition-transform active:scale-95 touch-manipulation text-lg border-2 border-gray-200">🏠 Trang chủ</button><button onclick="document.getElementById('result-section').classList.add('hidden'); window.viewScoresAction();" class="w-full py-4 bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-xl font-bold shadow-sm hover:shadow-md transition-transform active:scale-95 touch-manipulation text-lg">🏆 Bảng điểm</button></div>`;
+    };
+
+    window.renderScores = function() {
+        const tbody = document.getElementById('scores-tbody');
+        const paginationControls = document.getElementById('pagination-controls');
+        
+        if (allScores.length === 0) { 
+            tbody.innerHTML = ''; 
+            document.getElementById('no-scores').classList.remove('hidden'); 
+            paginationControls.classList.add('hidden');
+            document.getElementById('my-score-summary').classList.add('hidden');
+            return; 
+        }
+        
+        document.getElementById('no-scores').classList.add('hidden');
+        paginationControls.classList.remove('hidden');
+        
+        const getTen = (fullName) => {
+            if (!fullName) return '';
+            const words = fullName.trim().split(' ');
+            return words[words.length - 1].toLowerCase();
+        };
+
+        // Sắp xếp danh sách điểm giảm dần
+        sortedScoresList = [...allScores].sort((a, b) => {
+            // Sắp xếp theo điểm giảm dần
+            if (b.diem !== a.diem) return b.diem - a.diem;
+            
+            // Điểm bằng nhau thì sắp xếp theo tên
+            const tenA = getTen(a.hoTen);
+            const tenB = getTen(b.hoTen);
+            if (tenA !== tenB) return tenA.localeCompare(tenB, 'vi');
+            
+            return (a.hoTen || '').localeCompare(b.hoTen || '', 'vi');
+        });
+
+        // Áp dụng thuật toán xếp hạng theo điểm (Dense Ranking - Bằng điểm thì bằng hạng)
+        let currentRank = 1;
+        let prevScore = -1;
+        
+        sortedScoresList.forEach((s, i) => {
+            if (i === 0) {
+                s.absoluteRank = currentRank;
+            } else {
+                if (s.diem < prevScore) {
+                    currentRank++;
+                }
+                s.absoluteRank = currentRank;
+            }
+            prevScore = s.diem;
+        });
+
+        const myScoreIndex = sortedScoresList.findIndex(s => s.deviceId === deviceId);
+        if (myScoreIndex !== -1) {
+            const myScore = sortedScoresList[myScoreIndex];
+            document.getElementById('my-score-summary').classList.remove('hidden');
+            document.getElementById('my-summary-name').innerText = `${myScore.hoTen} (${(myScore.lop || '').toUpperCase()})`;
+            document.getElementById('my-summary-rank').innerText = `Hạng: #${myScore.absoluteRank}`;
+            document.getElementById('my-summary-score').innerText = `${myScore.diem}`;
+        } else {
+            document.getElementById('my-score-summary').classList.add('hidden');
+        }
+
+        const totalPages = Math.ceil(sortedScoresList.length / rowsPerPage) || 1;
+        if (currentPage > totalPages) currentPage = totalPages;
+        
+        document.getElementById('page-info').innerText = `Trang ${currentPage} / ${totalPages}`;
+        document.getElementById('prev-page-btn').disabled = currentPage === 1;
+        document.getElementById('next-page-btn').disabled = currentPage === totalPages;
+
+        const startIndex = (currentPage - 1) * rowsPerPage;
+        const endIndex = startIndex + rowsPerPage;
+        const pageData = sortedScoresList.slice(startIndex, endIndex);
+
+        tbody.innerHTML = pageData.map((s, idx) => {
+            let timeStr = "";
+            if (s.thoiGian) {
+                const dt = new Date(s.thoiGian);
+                timeStr = `${dt.getDate().toString().padStart(2, '0')}/${(dt.getMonth() + 1).toString().padStart(2, '0')}/${dt.getFullYear()}`;
+            } else {
+                timeStr = s.endTime ? s.endTime.split(' ').pop() : s.duration;
+            }
+
+            return `<tr class="${s.deviceId === deviceId ? 'my-score-row' : 'hover:bg-gray-50'} transition-colors border-b border-gray-100">
+                <td class="px-3 sm:px-4 py-4 text-center font-bold text-gray-500 text-sm">${s.absoluteRank}</td>
+                <td class="px-3 sm:px-4 py-4 font-bold text-blue-600 text-sm">${(s.lop || '').toUpperCase()}</td>
+                <td class="px-3 sm:px-4 py-4 font-semibold text-gray-800 text-sm">${s.hoTen} ${s.deviceId === deviceId ? '<span class="ml-2 bg-pink-500 text-white text-[10px] px-2 rounded-md">Bạn</span>' : ''}</td>
+                <td class="px-3 sm:px-4 py-4 text-center"><span class="font-bold text-lg ${s.diem >= 5 ? 'text-green-600' : 'text-red-500'}">${s.diem}</span></td>
+                <td class="px-3 sm:px-4 py-4 text-center text-gray-500 text-xs">${timeStr}</td>
+            </tr>`;
+        }).join('');
+    };
+
+    window.prevPage = function() {
+        if (currentPage > 1) {
+            currentPage--;
+            window.renderScores();
+        }
+    };
+
+    window.nextPage = function() {
+        const totalPages = Math.ceil(sortedScoresList.length / rowsPerPage);
+        if (currentPage < totalPages) {
+            currentPage++;
+            window.renderScores();
+        }
+    };
+
+    function showSection(id) {
+        ['login', 'quiz', 'scores', 'result'].forEach(s => document.getElementById(s+'-section').classList.add('hidden'));
+        document.getElementById(id+'-section').classList.remove('hidden');
+    }
+
+    function startTimer(seconds) {
+        const display = document.getElementById('timer');
+        let remaining = seconds;
+        timerInterval = setInterval(() => {
+            remaining--;
+            const m = Math.floor(remaining / 60).toString().padStart(2, '0');
+            const s = (remaining % 60).toString().padStart(2, '0');
+            display.innerText = `${m}:${s}`;
+            if (remaining <= 0) window.submitQuiz();
+        }, 1000);
+    }
+
+    try {
+        if (!localStorage.getItem('deviceId')) {
+            localStorage.setItem('deviceId', 'dev_' + Math.random().toString(36).substr(2) + Date.now());
+        }
+        deviceId = localStorage.getItem('deviceId');
+    } catch (e) { deviceId = 'dev_temp_' + Math.random().toString(36).substr(2); }
+  </script>
+ </body>
+</html>
