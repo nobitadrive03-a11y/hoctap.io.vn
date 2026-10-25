@@ -1,0 +1,734 @@
+<!doctype html>
+<html lang="vi" class="w-full h-full m-0 p-0">
+ <head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <title>Kiểm Tra Thường Xuyên 2- Đề 1 - Tin học 11</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+  <style>
+    * { -webkit-tap-highlight-color: transparent; }
+    html, body { width: 100%; min-height: 100vh; margin: 0; padding: 0; overflow-x: hidden; overflow-y: auto; }
+    
+    body { 
+      font-family: 'Be Vietnam Pro', sans-serif; 
+      background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+      background-size: 400% 400%;
+      animation: gradientBG 15s ease infinite;
+    }
+    
+    @keyframes gradientBG {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+    
+    #app { width: 100%; min-height: 100vh; display: flex; flex-direction: column; padding-bottom: 50px; }
+    
+    .glass-card {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    /* CSS ĐỊNH DẠNG MÃ LỆNH NỔI BẬT */
+    .code-inline {
+        background-color: #eff6ff; 
+        color: #2563eb; 
+        font-family: 'Courier New', Courier, monospace; 
+        font-weight: 800; 
+        padding: 0.15rem 0.5rem; 
+        border-radius: 0.5rem; 
+        border: 1px solid #bfdbfe; 
+        word-break: break-word; 
+        font-size: 0.95em; 
+        margin: 0 2px; 
+        box-shadow: 0 2px 2px rgba(37, 99, 235, 0.1);
+    }
+    .code-block {
+        background-color: #eff6ff; 
+        color: #2563eb; 
+        font-family: 'Courier New', Courier, monospace; 
+        font-weight: 800; 
+        padding: 1.25rem; 
+        border-radius: 1rem; 
+        border: 2px solid #bfdbfe; 
+        margin: 1rem 0; 
+        overflow-x: auto; 
+        font-size: 1.05em; 
+        line-height: 1.6; 
+        box-shadow: inset 0 2px 4px rgba(37, 99, 235, 0.05);
+        width: 100%;
+    }
+    
+    /* CSS ĐỊNH DẠNG BẢNG DỮ LIỆU ĐỀ BÀI */
+    .question-table {
+        width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.9rem;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.05); border-radius: 0.5rem; overflow: hidden;
+    }
+    .question-table th, .question-table td {
+        border: 1px solid #e2e8f0; padding: 0.75rem; text-align: left;
+    }
+    .question-table th { background-color: #f8fafc; font-weight: 700; color: #334155; }
+    .question-table tr:nth-child(even) { background-color: #fbfcfd; }
+
+    .option-label { transition: transform 0.15s ease, background-color 0.2s ease; cursor: pointer; border-color: #e2e8f0; }
+    .option-label:hover { background-color: #f0fdfa; border-color: #38bdf8; box-shadow: 0 4px 6px -1px rgba(56, 189, 248, 0.1); }
+    
+    input[type="radio"].single-radio:checked + .option-label {
+      background: linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%);
+      color: white; border-color: transparent;
+      box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+    }
+    input[type="radio"].single-radio:checked + .option-label span:first-child { background-color: rgba(255,255,255,0.25); border-color: transparent; color: white; }
+    input[type="radio"].single-radio:checked + .option-label span:last-child { color: white; }
+    input[type="radio"].single-radio:checked + .option-label .code-inline { background-color: rgba(255,255,255,0.9); color: #2563eb; border-color: transparent; }
+    
+    .tf-radio-T:checked + .tf-label-T, .tf-radio-S:checked + .tf-label-S {
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important; 
+        border-color: transparent !important; color: white !important;
+        box-shadow: 0 4px 10px rgba(16, 185, 129, 0.4);
+    }
+    .tf-radio-T:checked ~ .tf-label-T .code-inline, .tf-radio-S:checked ~ .tf-label-S .code-inline {
+        background-color: rgba(255,255,255,0.9); color: #059669; border-color: transparent;
+    }
+
+    .fade-in { animation: fadeIn 0.4s ease forwards; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+    
+    .my-score-row {
+      background: linear-gradient(to right, #fdf4ff, #ffffff) !important;
+      border-left: 4px solid #db2777 !important; font-weight: 700 !important;
+      color: #9d174d !important; box-shadow: 0 2px 8px rgba(0,0,0,0.05); position: relative; z-index: 10;
+    }
+    .my-score-row td { padding-top: 16px; padding-bottom: 16px; }
+    button:disabled { opacity: 0.5; cursor: not-allowed; transform: none !important; }
+  </style>
+ </head>
+ <body oncopy="return false" oncut="return false" onpaste="return false">
+  <div id="app" class="p-0 sm:p-4 md:p-8 transition-all">
+   
+   <!-- SECTION: ĐĂNG NHẬP -->
+   <div id="login-section" class="w-full max-w-md mx-auto fade-in flex flex-col justify-center flex-grow">
+    <div class="glass-card rounded-none sm:rounded-3xl p-6 sm:p-8 flex flex-col justify-start shadow-2xl border-t-8 border-indigo-600 bg-white">
+     <div class="text-center mb-6 pt-4 sm:pt-0">
+      <div class="flex items-center justify-center w-20 h-20 mx-auto mb-4 rounded-full border-4 border-yellow-400 bg-red-600 shadow-lg transform transition-transform hover:scale-105">
+          <span class="text-white font-bold text-3xl tracking-tighter">HS</span>
+      </div>
+      <h1 class="text-1xl sm:text-3xl font-bold text-red-600 mb-1 leading-tight tracking-tight">KIỂM TRA THƯỜNG XUYÊN HỌC KỲ 2</h1>
+      <h2 class="text-xl font-bold text-red-500 mb-2">Môn Tin Học 11 - Đề số 1</h2>
+     </div>
+     
+     <div id="login-form" class="space-y-4">
+      <div class="flex flex-col sm:flex-row gap-4">
+          <div class="w-full sm:flex-1">
+               <label class="block text-sm font-bold text-gray-700 mb-1">Họ và tên</label> 
+               <input type="text" id="hoTen" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-100 outline-none transition-all text-base touch-manipulation" placeholder="Nhập họ tên...">
+          </div>
+          <div class="w-full sm:w-1/3">
+               <label class="block text-sm font-bold text-gray-700 mb-1">Lớp</label> 
+               <input type="text" id="lop" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-100 outline-none transition-all text-base touch-manipulation" placeholder="Ví dụ: 10A1">
+          </div>
+      </div>
+      
+      <div id="login-error" class="hidden bg-red-100 border border-red-300 text-red-700 font-bold text-sm p-3 rounded-xl text-center shadow-sm"></div>
+
+      <button type="button" onclick="window.startQuizAction()" id="start-btn" class="w-full py-3 mt-4 bg-gradient-to-r from-blue-600 to-cyan-500 text-white font-bold rounded-xl shadow-lg hover:shadow-xl transform transition-transform active:scale-95 touch-manipulation text-lg tracking-wide"> 🚀 BẮT ĐẦU THI </button>
+     </div>
+    </div>
+   </div>
+
+   <!-- SECTION: LÀM BÀI THI -->
+   <div id="quiz-section" class="w-full max-w-4xl mx-auto hidden flex-grow flex flex-col">
+    <div class="glass-card rounded-none sm:rounded-3xl p-4 sm:p-8 flex flex-col flex-grow relative border-t-8 border-blue-500 bg-white">
+     <div class="flex items-center justify-between mb-4 sm:mb-6 pb-4 border-b-2 border-gray-100">
+      <div>
+       <h2 id="quiz-title" class="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">Đề Kiểm Tra</h2>
+       <p id="student-info" class="text-sm font-semibold text-gray-500 mt-1 uppercase tracking-wide"></p>
+      </div>
+      <div class="text-right bg-blue-50 px-4 py-2 rounded-xl border border-blue-100" id="progress-container">
+       <div class="text-xs text-blue-500 font-bold uppercase tracking-wider mb-1">Tiến độ</div>
+       <div id="progress-text" class="text-xl font-bold text-blue-700">0/0</div>
+      </div>
+     </div>
+     
+     <div id="timer-banner" class="mb-6 p-4 bg-gradient-to-r from-orange-50 to-red-50 border-2 border-red-100 rounded-2xl flex items-center justify-between shadow-sm">
+        <span class="text-red-800 font-bold flex items-center gap-2"><span class="text-2xl animate-pulse">⏰</span> THỜI GIAN CÒN LẠI:</span> 
+        <span id="timer" class="text-3xl font-bold text-red-600 font-mono tracking-wider drop-shadow-sm">20:00</span>
+     </div>
+
+     <div id="question-container" class="mb-8 flex-grow"></div>
+     
+     <div id="network-error" class="hidden bg-red-100 text-red-700 p-4 rounded-xl mt-4 text-center font-bold text-sm border-2 border-red-300 mb-4 shadow-sm"></div>
+
+     <!-- PHẦN NÚT BẤM VỮNG CHẮC TRÊN MOBILE -->
+     <div id="nav-buttons" class="w-full pt-5 sm:pt-6 border-t-2 border-gray-100 mt-6 pb-2">
+        <button id="next-btn" onclick="window.nextQuestion()" class="w-full py-4 bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-bold text-lg sm:text-xl rounded-2xl shadow-[0_5px_0_0_#312e81] active:shadow-none active:translate-y-[5px] transition-all touch-manipulation">Chọn đáp án & Tiếp theo ➔</button> 
+        <button id="submit-btn" onclick="window.submitQuiz()" class="w-full py-4 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-bold text-lg sm:text-xl rounded-2xl shadow-[0_5px_0_0_#064e3b] active:shadow-none active:translate-y-[5px] hidden transition-all touch-manipulation">✅ NỘP BÀI NGAY</button>
+     </div>
+    </div>
+   </div>
+
+   <!-- SECTION: KẾT QUẢ CÁ NHÂN -->
+   <div id="result-section" class="w-full max-w-md mx-auto hidden fade-in flex flex-col justify-center my-auto pb-8">
+    <div class="glass-card rounded-none sm:rounded-3xl p-6 sm:p-8 flex flex-col justify-start border-t-8 border-green-500 bg-white shadow-2xl" id="result-content"></div>
+   </div>
+
+   <!-- SECTION: BẢNG XẾP HẠNG -->
+   <div id="scores-section" class="w-full max-w-6xl mx-auto hidden flex-grow flex flex-col">
+    <div class="glass-card rounded-none sm:rounded-3xl p-4 sm:p-8 flex flex-col flex-grow border-t-8 border-orange-500 bg-white">
+     <div class="mb-6 flex items-center justify-between">
+<h2 class="text-2xl sm:text-3xl font-bold text-orange-600">🏆 BẢNG XẾP HẠNG</h2>
+      <button onclick="window.goHome()" class="px-5 py-2.5 bg-gray-100 text-gray-700 rounded-xl font-bold hover:bg-gray-200 transition-transform active:scale-95 shadow-sm border border-gray-200 touch-manipulation">🏠 Về trang chủ</button>
+     </div>
+     
+     <div id="my-score-summary" class="hidden bg-gradient-to-r from-blue-50 to-indigo-50 border-2 border-blue-200 rounded-2xl p-4 sm:p-6 mb-6 flex items-center justify-between shadow-md">
+         <div>
+             <div class="text-sm text-blue-500 font-extrabold uppercase tracking-wider mb-1">Thành tích của bạn</div>
+             <div class="font-black text-gray-800 text-xl sm:text-1xl" id="my-summary-name"></div>
+             <div class="text-base font-bold text-indigo-600 mt-1" id="my-summary-rank">Hạng: --</div>
+         </div>
+         <div class="text-right">
+             <div class="text-xs text-gray-500 font-bold uppercase mb-1">Điểm số</div>
+             <div class="text-4xl sm:text-3xl font-black text-blue-600 drop-shadow-sm" id="my-summary-score">0</div>
+         </div>
+     </div>
+
+     <div class="overflow-x-auto rounded-2xl border-2 border-gray-100 flex-grow shadow-lg bg-white/50 mb-4 min-h-[300px]">
+      <table class="w-full text-xs sm:text-sm whitespace-nowrap">
+       <thead class="bg-gradient-to-r from-orange-500 to-red-500 text-white">
+        <tr>
+         <th class="px-3 sm:px-4 py-4 text-center font-bold">STT</th>
+         <th class="px-3 sm:px-4 py-4 text-center font-bold">Lớp</th>
+         <th class="px-3 sm:px-4 py-4 text-left font-bold w-full">Họ tên</th>
+         <th class="px-3 sm:px-4 py-4 text-center font-bold">Điểm</th>
+         <th class="px-3 sm:px-4 py-4 text-center font-bold">Ngày tháng năm</th>
+        
+        </tr>
+       </thead>
+       <tbody id="scores-tbody" class="bg-white/80 divide-y divide-gray-100"></tbody>
+      </table>
+      <div id="no-scores" class="text-center py-12 hidden text-gray-500 font-bold text-lg">Chưa có dữ liệu nộp bài 🥲</div>
+     </div>
+
+     <!-- Phân trang -->
+     <div id="pagination-controls" class="flex justify-between items-center mb-6 hidden">
+        <button id="prev-page-btn" onclick="window.prevPage()" class="px-4 py-3 bg-gray-100 text-gray-700 rounded-xl font-bold hover:bg-gray-200 transition-transform active:scale-95 shadow-sm border border-gray-200 touch-manipulation">⬅️ Trang trước</button>
+        <span id="page-info" class="font-bold text-gray-500 text-sm">Trang 1 / 1</span>
+        <button id="next-page-btn" onclick="window.nextPage()" class="px-4 py-3 bg-gray-100 text-gray-700 rounded-xl font-bold hover:bg-gray-200 transition-transform active:scale-95 shadow-sm border border-gray-200 touch-manipulation">Trang sau ➡️</button>
+     </div>
+    </div>
+   </div>
+
+   <!-- MODAL CẢNH BÁO GIAN LẬN -->
+   <div id="cheat-modal" data-nosnippet class="fixed inset-0 bg-red-900/95 backdrop-blur-sm flex items-center justify-center p-4 hidden z-[9999]">
+      <div class="bg-white rounded-[2rem] shadow-2xl p-6 max-w-sm w-full text-center flex flex-col border-t-8 border-red-600 transform transition-all scale-100 max-h-[90vh] overflow-y-auto">
+        <div class="text-5xl mb-3 animate-bounce">🚨</div>
+        <h3 class="text-2xl sm:text-3xl font-black text-red-600 mb-2 uppercase tracking-wide">THÔNG BÁO!</h3>
+        <p class="text-gray-700 font-bold mb-4 text-sm sm:text-base leading-relaxed" id="cheat-message"></p>
+        <div class="bg-red-50 text-red-700 font-extrabold p-3 rounded-2xl border-2 border-red-100 mb-5">
+            Vi phạm làm bài lần thứ <span id="cheat-count-display" class="text-4xl font-black mx-1">1</span>
+        </div>
+        <button id="cheat-continue-btn" class="w-full py-4 bg-gradient-to-r from-red-600 to-red-800 text-white font-extrabold rounded-xl shadow-lg hover:shadow-xl transition-transform active:scale-95 touch-manipulation text-base tracking-wide uppercase shrink-0">TÔI ĐÃ HIỂU & TIẾP TỤC</button>
+      </div>
+   </div>
+
+  </div>
+
+  <script>
+    let database = null;
+    let scoresRef = null;
+    let currentIdx = 0;
+
+    try {
+        const firebaseConfig = {
+            apiKey: "AIzaSyBQ9Pos8awlh9j041qDWTPFRsVIjF-kPnk",
+            authDomain: "hoctap-91691.firebaseapp.com",
+            databaseURL: "https://hoctap-91691-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "hoctap-91691",
+            storageBucket: "hoctap-91691.firebasestorage.app",
+            messagingSenderId: "1004553425319",
+            appId: "1:1004553425319:web:45d15cbae393f614c56682",
+            measurementId: "G-Q6X1TL9PRV"
+        };
+        if (typeof firebase !== 'undefined') {
+            if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+            database = firebase.database();
+            scoresRef = database.ref('TinHoc11/tx2_De1');
+        }
+    } catch(err) { console.error("Lỗi Firebase:", err); }
+
+    let cheatCount = 0;
+    let isQuizStarted = false; 
+    let isPenalizing = false; 
+    let isSubmitting = false;
+
+    window.handleCheatAction = function(reason) {
+        if (!isQuizStarted || isPenalizing || isSubmitting) return; 
+        const isQuizActive = !document.getElementById('quiz-section').classList.contains('hidden');
+        
+        if (isQuizActive) {
+            isPenalizing = true;
+            cheatCount++;
+            document.getElementById('cheat-count-display').innerText = cheatCount;
+            const modal = document.getElementById('cheat-modal');
+            const msg = document.getElementById('cheat-message');
+            const btn = document.getElementById('cheat-continue-btn');
+            modal.classList.remove('hidden');
+            
+            const currentQ = currentQuestions[currentIdx];
+            if (currentQ) {
+                if (currentQ.type === 'tf_cluster') {
+                    currentQ.subQuestions.forEach(sub => {
+                        if (!userAnswers[sub.id]) userAnswers[sub.id] = "Gian lận"; 
+                    });
+                } else {
+                    if (userAnswers[currentQ.id] === undefined) userAnswers[currentQ.id] = -1; 
+                }
+                updateProgress();
+            }
+
+            if (cheatCount >= 2) {
+                msg.innerHTML = "Bạn đã vi phạm quy chế (Rời khỏi màn hình/Dùng phím cấm/Copy) quá 2 lần.<br>Hệ thống bắt buộc <b>TỰ ĐỘNG THU BÀI</b>!";
+                btn.innerText = "NỘP BÀI NGAY";
+                btn.onclick = () => {
+                    modal.classList.add('hidden');
+                    isPenalizing = false;
+                    window.submitQuiz();
+                };
+            } else {
+                msg.innerHTML = `Hệ thống phát hiện bạn vừa sử dụng thao tác : <b>${reason}</b>.<br><br><span class='text-red-600 font-black bg-red-50 px-3 py-1 rounded-lg border border-red-200 inline-block mt-2 mb-2'>Câu hỏi này bị bỏ qua (0 điểm).</span><br><br><i class='text-sm text-gray-500'>Vui lòng bấm nút bên dưới để tiếp tục.</i>`;
+                btn.innerText = "TÔI ĐÃ HIỂU & TIẾP TỤC";
+                btn.onclick = () => {
+                    modal.classList.add('hidden');
+                    if (currentIdx < currentQuestions.length - 1) {
+                        currentIdx++;
+                        window.renderQuestion();
+                    } else { window.submitQuiz(); }
+                    isPenalizing = false;
+                };
+            }
+        }
+    };
+
+    document.addEventListener("visibilitychange", () => {
+        if (document.visibilityState === 'hidden') {
+            window.handleCheatAction('Chuyển tab hoặc thu nhỏ trình duyệt');
+        }
+    });
+
+    window.addEventListener('keydown', (e) => {
+        const forbiddenKeys = ['PrintScreen', 'F12'];
+        if (forbiddenKeys.includes(e.key)) {
+            e.preventDefault();
+            window.handleCheatAction('Nhấn phím ' + e.key);
+        }
+        if (e.ctrlKey && (e.key === 'c' || e.key === 'v' || e.key === 'p' || e.key === 's')) {
+            e.preventDefault();
+            window.handleCheatAction('Dùng tổ hợp phím Ctrl + ' + e.key.toUpperCase());
+        }
+    });
+    window.addEventListener('keyup', (e) => {
+        if (e.key === 'PrintScreen') window.handleCheatAction('Chụp màn hình');
+    });
+
+    document.addEventListener('contextmenu', event => event.preventDefault()); 
+    document.addEventListener('selectstart', event => {
+        if (event.target.tagName !== 'INPUT' && event.target.tagName !== 'SELECT') { event.preventDefault(); }
+    });
+    document.addEventListener('dragstart', event => event.preventDefault()); 
+    document.addEventListener('copy', event => {
+        event.clipboardData.setData('text/plain', 'Tài liệu đã được bảo vệ!');
+        event.preventDefault();
+        window.handleCheatAction('Sao chép (Copy) văn bản');
+    });
+
+ const de_data = [
+        { id: "1_1", type: "single", question: "Lợi ích cốt lõi của việc triển khai quản trị cơ sở dữ liệu trên máy tính so với phương pháp quản lí thủ công truyền thống là gì?", options: ["Quản trị dữ liệu trên máy tính giúp lưu trữ an toàn, hỗ trợ truy xuất nhanh chóng và hạn chế tối đa các sai sót.", "Quản trị dữ liệu trên máy tính giúp loại bỏ hoàn toàn việc sử dụng giấy tờ lưu trữ trong mọi hoạt động văn phòng.", "Quản trị dữ liệu trên máy tính giúp người dùng cá nhân không bao giờ phải bận tâm đến việc bảo mật thông tin.", "Quản trị dữ liệu trên máy tính giúp tự động hóa toàn bộ công việc quản lí mà không cần bất kì sự can thiệp nào."], correct: 0 },
+        { id: "1_2", type: "single", question: "Hệ quản trị cơ sở dữ liệu nào sau đây được phân phối dưới dạng mã nguồn mở, cho phép sử dụng miễn phí và rất phổ biến hiện nay?", options: ["Microsoft Access là một hệ quản trị cơ sở dữ liệu mã nguồn mở, được sử dụng miễn phí và rất phổ biến hiện nay.", "Oracle là một hệ quản trị cơ sở dữ liệu mã nguồn mở, được sử dụng miễn phí và rất phổ biến hiện nay.", "MySQL là một hệ quản trị cơ sở dữ liệu mã nguồn mở, được sử dụng miễn phí và rất phổ biến hiện nay.", "Microsoft SQL Server là một hệ quản trị cơ sở dữ liệu mã nguồn mở, được sử dụng miễn phí và rất phổ biến hiện nay."], correct: 2 },
+        { id: "1_3", type: "single", question: "Trong phần mềm HeidiSQL, thao tác nào dưới đây được sử dụng để khởi tạo một cơ sở dữ liệu mới hoàn toàn?", options: ["Nháy nút phải chuột tại vùng danh sách bên trái, chọn lệnh \"Tạo mới\" rồi tiếp tục chọn mục \"Cơ sở dữ liệu\".", "Nháy nút phải chuột tại vùng danh sách bên trái, chọn lệnh \"Tạo mới\" rồi tiếp tục chọn mục \"Thư mục hệ thống\".", "Nháy đúp chuột vào biểu tượng máy chủ ở vùng bên trái, sau đó gõ trực tiếp tên cơ sở dữ liệu cần tạo mới.", "Nháy đúp chuột vào vùng làm việc chính, chọn lệnh \"Thiết lập\" rồi tiếp tục chọn mục \"Cơ sở dữ liệu mới\"."], correct: 0 },
+        { id: "1_4", type: "single", question: "Trong mô hình cơ sở dữ liệu quan hệ, đặc điểm bắt buộc phải có đối với trường dữ liệu được chọn làm khóa chính (<span class='code-inline'>Primary Key</span>) của một bảng là gì?", options: ["Giá trị của trường khóa chính phải xác định duy nhất một bản ghi trong bảng và không được phép để trống.", "Giá trị của trường khóa chính phải luôn là những kí tự chữ cái in hoa và không được chứa các số nguyên.", "Giá trị của trường khóa chính có thể chứa các thông tin trùng lặp nhau nếu bảng đó có rất nhiều bản ghi.", "Giá trị của trường khóa chính chỉ dùng để sắp xếp giao diện hiển thị cho đẹp mắt chứ không mang ý nghĩa quản lí."], correct: 0 },
+        { id: "1_5", type: "single", question: "Cho bảng dữ liệu NhanVien với cấu trúc các trường và dữ liệu mẫu như sau:<div class='table-container'><table class='question-table'><tr><th>MaNV</th><th>HoTen</th><th>MaPhongBan</th></tr><tr><td>NV01</td><td>Trần Lê Tuấn</td><td>PB01</td></tr><tr><td>NV02</td><td>Đinh Thị Lan</td><td>PB02</td></tr></table></div>Trong bảng này, trường dữ liệu nào là lựa chọn phù hợp nhất để đóng vai trò làm khóa chính?", options: ["Trường <span class='code-inline'>MaNV</span> vì mã nhân viên luôn mang giá trị duy nhất, giúp phân biệt rõ ràng giữa các nhân viên khác nhau.", "Trường <span class='code-inline'>HoTen</span> vì tên của nhân viên rất dễ nhớ, thuận tiện cho việc tra cứu và quản lí trên màn hình máy tính.", "Trường <span class='code-inline'>MaPhongBan</span> vì phòng ban là yếu tố quan trọng nhất quyết định đến chức vụ của mỗi một người nhân viên.", "Cả ba trường <span class='code-inline'>MaNV</span>, <span class='code-inline'>HoTen</span> và <span class='code-inline'>MaPhongBan</span> phải kết hợp lại với nhau mới đủ điều kiện tạo thành một khóa chính."], correct: 0 },
+        { id: "1_6", type: "single", question: "Trường khóa ngoài (<span class='code-inline'>Foreign Key</span>) trong một bảng dữ liệu quan hệ mang ý nghĩa và chức năng chính là gì?", options: ["Là trường dữ liệu độc lập, hoàn toàn không có bất kì mối quan hệ nào với những bảng dữ liệu khác trong hệ thống.", "Là trường dữ liệu được thiết lập để tham chiếu trực tiếp đến trường khóa chính của một bảng dữ liệu khác có liên quan.", "Là trường dữ liệu được thiết lập để hệ thống luôn tự động điền các giá trị số nguyên tăng dần cho các bản ghi.", "Là trường dữ liệu bị giới hạn định dạng, tuyệt đối không cho phép người dùng nhập các kí tự chữ cái và kí hiệu."], correct: 1 },
+        { id: "1_7", type: "single", question: "Cho hai bảng dữ liệu trong một thư viện:<br>- Bảng <span class='code-inline'>Sach</span>: (MaSach, TenSach, NamXB, MaTacGia)<br>- Bảng <span class='code-inline'>TacGia</span>: (MaTacGia, TenTacGia, QuocTich)<br>Trường dữ liệu nào đóng vai trò là khóa ngoài để tạo nên sự liên kết chặt chẽ giữa hai bảng nêu trên?", options: ["Trường <span class='code-inline'>MaTacGia</span> nằm trong bảng <span class='code-inline'>Sach</span> là khóa ngoài được dùng để tham chiếu đến khóa chính của bảng <span class='code-inline'>TacGia</span>.", "Trường <span class='code-inline'>TenSach</span> nằm trong bảng <span class='code-inline'>Sach</span> là khóa ngoài được dùng để tham chiếu đến khóa chính của bảng <span class='code-inline'>TacGia</span>.", "Trường <span class='code-inline'>NamXB</span> nằm trong bảng <span class='code-inline'>Sach</span> là khóa ngoài được dùng để tham chiếu đến khóa chính của bảng <span class='code-inline'>TacGia</span>.", "Trường <span class='code-inline'>QuocTich</span> nằm trong bảng <span class='code-inline'>TacGia</span> là khóa ngoài được dùng để tham chiếu đến khóa chính của bảng <span class='code-inline'>Sach</span>."], correct: 0 },
+        { id: "1_8", type: "single", question: "Trong HeidiSQL, để bắt buộc người sử dụng phải nhập dữ liệu cho một trường cụ thể (trường đó không được phép để trống), ta cần thực hiện thao tác nào?", options: ["Người thiết kế cần bỏ dấu tích ở ô <span class='code-inline'>Allow NULL</span> tại dòng khai báo cấu trúc của trường dữ liệu tương ứng.", "Người thiết kế cần đánh dấu tích vào ô <span class='code-inline'>Unsigned</span> tại dòng khai báo cấu trúc của trường dữ liệu tương ứng.", "Người thiết kế cần đánh dấu tích vào ô <span class='code-inline'>Zerofill</span> tại dòng khai báo cấu trúc của trường dữ liệu tương ứng.", "Người thiết kế cần bỏ dấu tích ở ô <span class='code-inline'>AUTO_INCREMENT</span> tại dòng khai báo cấu trúc của trường dữ liệu tương ứng."], correct: 0 },
+        { id: "1_9", type: "single", question: "Cho bảng DiemThi với cấu trúc các trường và dữ liệu mẫu:<div class='table-container'><table class='question-table'><tr><th>SBD</th><th>HoTen</th><th>NgaySinh</th><th>DiemSo</th></tr><tr><td>001</td><td>Bùi Anh Tuấn</td><td>15/08/2007</td><td>8.5</td></tr></table></div>Kiểu dữ liệu nào sau đây là lựa chọn tối ưu nhất để khai báo cho trường <span class='code-inline'>HoTen</span> trong bảng nêu trên?", options: ["Kiểu <span class='code-inline'>VARCHAR(255)</span> vì đây là định dạng lưu trữ chuỗi kí tự có độ dài linh hoạt, phù hợp để lưu họ và tên người.", "Kiểu <span class='code-inline'>INT</span> vì đây là định dạng lưu trữ các số nguyên, giúp máy tính xử lí tên người một cách nhanh chóng nhất.", "Kiểu <span class='code-inline'>DATE</span> vì đây là định dạng chuyên dùng để lưu trữ các thông tin liên quan đến ngày tháng năm sinh của người.", "Kiểu <span class='code-inline'>FLOAT</span> vì đây là định dạng cho phép lưu trữ văn bản kết hợp với các con số thập phân có độ chính xác cao."], correct: 0 },
+        { id: "1_10", type: "single", question: "Khi thiết kế trường khóa chính có kiểu dữ liệu là số nguyên (<span class='code-inline'>INT</span>), việc đánh dấu vào tùy chọn <span class='code-inline'>AUTO_INCREMENT</span> sẽ mang lại tác dụng gì?", options: ["Hệ thống tự động điền giá trị số nguyên tăng dần cho trường này mỗi khi có một bản ghi mới được thêm vào bảng.", "Hệ thống tự động ngăn chặn việc nhập dữ liệu trùng lặp cho tất cả các trường dữ liệu còn lại ở bên trong bảng.", "Hệ thống tự động tạo thêm một bảng dữ liệu mới để tiến hành sao lưu dự phòng cho các bản ghi vừa được nhập.", "Hệ thống tự động xóa bỏ đi bản ghi có thời gian cũ nhất nếu người dùng vô tình nhập trùng mã khóa chính mới."], correct: 0 },
+        { id: "1_11", type: "single", question: "Để khai báo và thiết lập tính chất khóa ngoài trong phần mềm HeidiSQL, sau khi tạo trường dữ liệu xong, ta phải chuyển sang thẻ nào?", options: ["Chuyển sang thẻ <span class='code-inline'>Foreign keys</span>, ấn nút thêm mới, chọn cột hiện tại và thiết lập bảng tham chiếu đích.", "Chuyển sang thẻ <span class='code-inline'>Indexes</span>, ấn nút thêm mới, chọn cột hiện tại và thiết lập thuộc tính tự động tăng.", "Chuyển sang thẻ <span class='code-inline'>Basic</span>, nháy đúp chuột vào trường vừa tạo và tích chọn vào ô kiểm <span class='code-inline'>Reference table</span>.", "Chuyển sang thẻ <span class='code-inline'>Check constraints</span>, ấn nút thêm mới, gõ trực tiếp tên bảng tham chiếu vào ô giới hạn."], correct: 0 },
+        { id: "1_12", type: "single", question: "Cho bảng MuonTra có cấu trúc gồm các trường <span class='code-inline'>(MaPhieu, NgayMuon, MaHocSinh)</span>. Khi khai báo MaHocSinh là khóa ngoài tham chiếu đến bảng HocSinh, thao tác nhập liệu nào sau đây sẽ bị hệ thống chặn lại và báo lỗi?", options: ["Cố gắng nhập vào một mã học sinh chưa hề tồn tại trong cột khóa chính của bảng <span class='code-inline'>HocSinh</span> được tạo ban đầu.", "Cố gắng nhập vào một mã học sinh đã thực hiện việc mượn sách nhiều lần trong cùng một ngày tháng năm.", "Cố gắng nhập một bản ghi mượn sách mới mà không điền ghi chú cụ thể về tên của các cuốn sách đã mượn.", "Cố gắng xóa một phiếu mượn trả đã được lập từ hệ thống khi học sinh đó đã tốt nghiệp ra trường từ rất lâu."], correct: 0 },
+        { id: "1_13", type: "single", question: "Khóa cấm trùng lặp (<span class='code-inline'>UNIQUE</span>) có chức năng bảo vệ tính toàn vẹn dữ liệu như thế nào đối với các trường trong một bảng?", options: ["Bảo vệ hệ thống bằng cách đảm bảo giá trị của trường (hoặc cụm trường) đó không bao giờ xuất hiện hai lần trong bảng.", "Bảo vệ hệ thống bằng cách đảm bảo giá trị của trường (hoặc cụm trường) đó phải luôn bằng với khóa chính bảng khác.", "Bảo vệ hệ thống bằng cách đảm bảo giá trị của trường (hoặc cụm trường) đó phải luôn tự động tăng sau mỗi lần thêm.", "Bảo vệ hệ thống bằng cách đảm bảo giá trị của trường (hoặc cụm trường) đó tuyệt đối không được phép bỏ trống."], correct: 0 },
+        { id: "1_14", type: "single", question: "Giả sử bảng LopHoc có thiết kế: <span class='code-inline'>(MaLop, TenLop, GiaoVienCN)</span>. Để đảm bảo không có hai lớp học nào có cùng tên gọi giống hệt nhau, ta nên áp dụng thiết lập nào trong HeidiSQL?", options: ["Người dùng cần đặt <span class='code-inline'>PRIMARY KEY</span> cho trường TenLop để hệ thống quản lí thay cho trường mã số của lớp học.", "Người dùng cần tạo khóa cấm trùng lặp <span class='code-inline'>UNIQUE</span> riêng biệt dành cho trường TenLop bên trong bảng dữ liệu.", "Người dùng cần cài đặt tính năng <span class='code-inline'>AUTO_INCREMENT</span> cho trường GiaoVienCN để phân biệt các lớp học khác nhau.", "Người dùng cần thiết lập trường TenLop làm khóa ngoài và trỏ liên kết đến một bảng dữ liệu thứ ba độc lập."], correct: 1 },
+        { id: "1_15", type: "single", question: "Để chỉ định một trường cụ thể làm khóa chính (<span class='code-inline'>PRIMARY KEY</span>) trong giao diện HeidiSQL, người dùng cần thực hiện tuần tự các thao tác nào?", options: ["Nháy nút phải chuột vào trường đó, chọn lệnh \"Create new index\" rồi tiếp tục chọn mục <span class='code-inline'>PRIMARY</span> để hoàn tất.", "Nháy nút phải chuột vào trường đó, chọn lệnh \"Create new index\" rồi tiếp tục chọn mục <span class='code-inline'>UNIQUE</span> để hoàn tất.", "Nháy nút phải chuột vào trường đó, chọn lệnh \"Add column\" rồi tiếp tục chọn mục <span class='code-inline'>PRIMARY</span> để hoàn tất thiết lập.", "Nháy nút phải chuột vào trường đó, chọn lệnh \"Add to index\" rồi tiếp tục chọn mục <span class='code-inline'>FOREIGN KEY</span> để hoàn tất."], correct: 0 },
+        { id: "1_16", type: "single", question: "Khi sử dụng ngôn ngữ truy vấn có cấu trúc SQL, để trích xuất và hiển thị toàn bộ các cột dữ liệu từ bảng HocSinh, ta sử dụng lệnh nào?", options: ["Cú pháp câu lệnh <span class='code-inline'>SELECT * FROM HocSinh;</span> sẽ trích xuất và hiển thị toàn bộ thông tin bản ghi có trong bảng.", "Cú pháp câu lệnh <span class='code-inline'>UPDATE * FROM HocSinh;</span> sẽ trích xuất và hiển thị toàn bộ thông tin bản ghi có trong bảng.", "Cú pháp câu lệnh <span class='code-inline'>INSERT * FROM HocSinh;</span> sẽ trích xuất và hiển thị toàn bộ thông tin bản ghi có trong bảng.", "Cú pháp câu lệnh <span class='code-inline'>DELETE * FROM HocSinh;</span> sẽ trích xuất và hiển thị toàn bộ thông tin bản ghi có trong bảng."], correct: 0 },
+        { id: "1_17", type: "single", question: "Để lấy ra danh sách các học sinh có điểm trung bình từ 8.0 trở lên trong bảng HocSinh, ta sử dụng câu lệnh <span class='code-inline'>SELECT</span> kết hợp với thành phần nào sau đây?", options: ["Kết hợp với mệnh đề <span class='code-inline'>WHERE DiemTrungBinh >= 8.0</span> vào cuối câu lệnh để tiến hành lọc các bản ghi thỏa mãn điều kiện.", "Kết hợp với mệnh đề <span class='code-inline'>ORDER BY DiemTrungBinh >= 8.0</span> vào cuối câu lệnh để tiến hành lọc các bản ghi thỏa mãn điều kiện.", "Kết hợp với mệnh đề <span class='code-inline'>GROUP BY DiemTrungBinh >= 8.0</span> vào cuối câu lệnh để tiến hành lọc các bản ghi thỏa mãn điều kiện.", "Kết hợp với mệnh đề <span class='code-inline'>JOIN DiemTrungBinh >= 8.0</span> vào cuối câu lệnh để tiến hành lọc các bản ghi thỏa mãn điều kiện."], correct: 0 },
+        { id: "1_18", type: "single", question: "Cho bảng dữ liệu SanPham:<div class='table-container'><table class='question-table'><tr><th>MaSP</th><th>TenSP</th><th>GiaBan</th></tr><tr><td>SP01</td><td>Bút bi</td><td>5000</td></tr></table></div>Khi cần điều chỉnh giá bán của sản phẩm có mã 'SP01' thành 6000, câu lệnh SQL nào dưới đây được viết chuẩn xác nhất?", options: ["<span class='code-inline'>UPDATE SanPham SET GiaBan = 6000 WHERE MaSP = 'SP01';</span>", "<span class='code-inline'>INSERT INTO SanPham SET GiaBan = 6000 WHERE MaSP = 'SP01';</span>", "<span class='code-inline'>SELECT SanPham SET GiaBan = 6000 WHERE MaSP = 'SP01';</span>", "<span class='code-inline'>DELETE SanPham SET GiaBan = 6000 WHERE MaSP = 'SP01';</span>"], correct: 0 },
+        { id: "1_19", type: "single", question: "Cho bảng dữ liệu DonHang:<div class='table-container'><table class='question-table'><tr><th>MaDH</th><th>NgayLap</th><th>TongTien</th></tr><tr><td>DH005</td><td>10/10/2026</td><td>200000</td></tr></table></div>Nếu người quản trị muốn xóa vĩnh viễn đơn hàng mang mã số 'DH005', câu lệnh SQL nào sau đây cần được thực thi?", options: ["Câu lệnh <span class='code-inline'>DELETE FROM DonHang WHERE MaDH = 'DH005';</span> sẽ xóa chính xác bản ghi mang mã số đã được chỉ định.", "Câu lệnh <span class='code-inline'>DROP FROM DonHang WHERE MaDH = 'DH005';</span> sẽ xóa chính xác bản ghi mang mã số đã được chỉ định.", "Câu lệnh <span class='code-inline'>REMOVE FROM DonHang WHERE MaDH = 'DH005';</span> sẽ xóa chính xác bản ghi mang mã số đã được chỉ định.", "Câu lệnh <span class='code-inline'>CLEAR FROM DonHang WHERE MaDH = 'DH005';</span> sẽ xóa chính xác bản ghi mang mã số đã được chỉ định."], correct: 0 },
+        { id: "1_20", type: "single", question: "Khi có nhu cầu bổ sung thêm thông tin của một học sinh mới vào hệ thống cơ sở dữ liệu, ta cần sử dụng câu lệnh SQL cơ bản nào?", options: ["Cần sử dụng câu lệnh <span class='code-inline'>INSERT INTO</span> kết hợp với từ khóa <span class='code-inline'>VALUES</span> để chèn thêm một bản ghi dữ liệu hoàn toàn mới.", "Cần sử dụng câu lệnh <span class='code-inline'>UPDATE SET</span> kết hợp với từ khóa <span class='code-inline'>VALUES</span> để chèn thêm một bản ghi dữ liệu hoàn toàn mới.", "Cần sử dụng câu lệnh <span class='code-inline'>SELECT FROM</span> kết hợp với từ khóa <span class='code-inline'>VALUES</span> để chèn thêm một bản ghi dữ liệu hoàn toàn mới.", "Cần sử dụng câu lệnh <span class='code-inline'>ADD RECORD</span> kết hợp với từ khóa <span class='code-inline'>VALUES</span> để chèn thêm một bản ghi dữ liệu hoàn toàn mới."], correct: 0 },
+        { id: "1_21", type: "single", question: "Để ghép nối thông tin phối hợp từ hai bảng khác nhau (ví dụ: thông tin HocSinh và LopHoc), SQL cung cấp từ khóa nào chuyên dùng cho tác vụ liên kết?", options: ["Sử dụng từ khóa <span class='code-inline'>INNER JOIN</span> để tiến hành gộp dữ liệu từ hai bảng khác nhau dựa theo điều kiện khớp khóa chung.", "Sử dụng từ khóa <span class='code-inline'>INSERT INTO</span> để tiến hành gộp dữ liệu từ hai bảng khác nhau dựa theo điều kiện khớp khóa chung.", "Sử dụng từ khóa <span class='code-inline'>ORDER BY</span> để tiến hành gộp dữ liệu từ hai bảng khác nhau dựa theo điều kiện khớp khóa chung.", "Sử dụng từ khóa <span class='code-inline'>PRIMARY KEY</span> để tiến hành gộp dữ liệu từ hai bảng khác nhau dựa theo điều kiện khớp khóa chung."], correct: 0 },
+        { id: "1_22", type: "single", question: "Khi tiến hành khởi tạo một cơ sở dữ liệu bằng phần mềm HeidiSQL, nếu người dùng chọn bộ đối chiếu (Collation) mặc định là tiếng Anh thay vì <span class='code-inline'>utf8mb4_general_ci</span>, hậu quả phổ biến nào có thể xảy ra?", options: ["Các kí tự tiếng Việt có dấu khi nhập vào bảng dữ liệu sẽ bị hiển thị sai định dạng thành các kí hiệu lạ, không đọc được.", "Hệ thống sẽ ngay lập tức từ chối toàn bộ các câu lệnh khởi tạo bảng và tự động thoát khỏi phần mềm làm việc HeidiSQL.", "Máy tính sẽ tự động chuyển đổi tất cả các chuỗi văn bản tiếng Việt sang dạng số thập phân có dấu âm để dễ lưu trữ.", "Cơ sở dữ liệu sẽ bị lỗi logic nghiêm trọng, không thể tạo được bất kì một trường khóa chính hay khóa ngoài nào."], correct: 0 },
+        { id: "1_23", type: "single", question: "Trong giao diện HeidiSQL, nếu vô tình thiết lập nhầm trường HoTen làm khóa chính thay vì trường MaHS, ta thực hiện thao tác nào để điều chỉnh lại cho đúng?", options: ["Mở thẻ Indexes, tìm mục <span class='code-inline'>PRIMARY KEY</span> ở danh sách phía trên màn hình, sau đó nháy chuột để chọn lại trường MaHS.", "Nháy nút phải chuột vào vùng bảng, chọn lệnh Delete Table để xóa bỏ toàn bộ bảng và tiến hành tạo lại từ đầu.", "Đổi tên trường HoTen thành MaHS để hệ thống tự động ghi nhận lại đó là trường khóa chính của bảng hiện tại.", "Đóng cửa sổ phần mềm HeidiSQL, khởi động lại hệ điều hành rồi tiếp tục mở phần mềm để khai báo khóa thứ hai."], correct: 0 },
+        { id: "1_24", type: "single", question: "Giả sử bảng ChiTietDatHang có chứa một khóa ngoài tham chiếu trực tiếp đến khóa chính của bảng SanPham. Hành động xóa một bản ghi bên trong bảng SanPham sẽ đối mặt với nguy cơ gì?", options: ["Nếu sản phẩm đó đang được lưu trong chi tiết đặt hàng, việc xóa sẽ vi phạm quy tắc liên kết dữ liệu và bị báo lỗi ngay lập tức.", "Hệ thống sẽ tự động khởi tạo ra một bản ghi sản phẩm mới để thay thế cho bản ghi vừa bị xóa khỏi cơ sở dữ liệu máy chủ.", "Tất cả các cơ sở dữ liệu hiện đang được mở trong phần mềm HeidiSQL sẽ bị ngắt kết nối và đóng lại hoàn toàn ngay lập tức.", "Bảng chi tiết đặt hàng sẽ ngay lập tức bị hệ thống tự động xóa đi toàn bộ dữ liệu hiện có để đảm bảo tính đồng bộ thông tin."], correct: 0 },
+        
+        { id: '1_c1', type: 'tf_cluster', question: "Bạn Tuấn được giao nhiệm vụ thiết lập một cơ sở dữ liệu để quản lí danh sách điểm thi cuối kì cho trường. Tuấn cài đặt hệ quản trị MySQL cùng phần mềm HeidiSQL. Sau khi thiết lập kết nối thành công, Tuấn bắt đầu khởi tạo CSDL mang tên <span class='code-inline'>QuanLyDiem</span>. Tiếp đó, Tuấn tạo bảng <span class='code-inline'>HocSinh</span> gồm các trường sau:<div class='table-container'><table class='question-table'><tr><th>MaHS</th><th>HoTen</th><th>NgaySinh</th><th>GioiTinh</th></tr><tr><td>HS01</td><td>Lê Khoa</td><td>15/04/2008</td><td>Nam</td></tr></table></div>", subQuestions: [
+            { id: '1_d25a', text: "Cơ sở dữ liệu là tập hợp các dữ liệu có sự liên quan chặt chẽ với nhau, được tổ chức và lưu trữ một cách khoa học trên máy tính để đáp ứng mọi nhu cầu khai thác thông tin.", correct: "Đúng" },
+            { id: '1_d25b', text: "Trong phần mềm HeidiSQL, để khởi tạo một bảng dữ liệu mới, Tuấn chỉ cần nháy đúp chuột trái trực tiếp vào biểu tượng màn hình nền rồi gõ nhập tên bảng là hệ thống hoàn tất.", correct: "Sai" },
+            { id: '1_d25c', text: "Khi tiến hành khai báo trường <span class='code-inline'>HoTen</span> cho bảng trên, Tuấn nên lựa chọn kiểu dữ liệu <span class='code-inline'>VARCHAR</span> để lưu trữ chuỗi kí tự có độ dài linh hoạt, góp phần tiết kiệm dung lượng bộ nhớ lưu trữ.", correct: "Đúng" },
+            { id: '1_d25d', text: "Do mã học sinh có chứa các kí tự chữ cái (ví dụ: <span class='code-inline'>HS01</span>), nên nếu Tuấn lựa chọn kiểu dữ liệu <span class='code-inline'>INT</span> và đánh dấu ô <span class='code-inline'>AUTO_INCREMENT</span> cho trường này thì hệ thống vẫn tự động sinh mã liên tục mà không báo lỗi.", correct: "Sai" }
+        ]},
+        { id: '1_c2', type: 'tf_cluster', question: "Sau khi tạo xong bảng <span class='code-inline'>HocSinh</span>, Tuấn tiếp tục tiến hành tạo bảng <span class='code-inline'>DiemThi</span> với các trường dữ liệu dự kiến như sau:<div class='table-container'><table class='question-table'><tr><th>MaPhieu</th><th>MaHS</th><th>MaMon</th><th>DiemSo</th></tr><tr><td>P001</td><td>HS01</td><td>TOAN</td><td>8.5</td></tr></table></div>Tuấn dự định thiết lập trường <span class='code-inline'>MaPhieu</span> làm khóa chính và thiết lập trường <span class='code-inline'>MaHS</span> làm khóa ngoài để tham chiếu trực tiếp về bảng <span class='code-inline'>HocSinh</span> đã được khởi tạo trước đó.", subQuestions: [
+            { id: '1_d26a', text: "Khóa chính của bảng <span class='code-inline'>DiemThi</span> (tức là trường <span class='code-inline'>MaPhieu</span>) có nhiệm vụ cực kì quan trọng là xác định phân biệt duy nhất mỗi một bản ghi lưu trữ kết quả điểm số khác nhau trong toàn bộ bảng.", correct: "Đúng" },
+            { id: '1_d26b', text: "Khóa ngoài <span class='code-inline'>MaHS</span> trong bảng <span class='code-inline'>DiemThi</span> đảm nhận chức năng tạo mối liên kết sang bảng <span class='code-inline'>HocSinh</span>, giúp người dùng xác định được điểm số ghi trên phiếu đó là thuộc về cá nhân học sinh nào.", correct: "Đúng" },
+            { id: '1_d26c', text: "Khi thực hiện thao tác khai báo khóa ngoài trong HeidiSQL, Tuấn bắt buộc phải làm việc trên thẻ <span class='code-inline'>Basic</span>, bằng cách nháy nút phải chuột vào tên cột rồi chọn trực tiếp bảng tham chiếu từ danh sách.", correct: "Sai" },
+            { id: '1_d26d', text: "Nếu Tuấn cố tình nhập một mã học sinh là <span class='code-inline'>\"HS99\"</span> vào bảng <span class='code-inline'>DiemThi</span> trong khi mã định danh này chưa hề tồn tại ở bảng <span class='code-inline'>HocSinh</span> gốc, hệ quản trị cơ sở dữ liệu sẽ hiển thị thông báo lỗi vi phạm liên kết.", correct: "Đúng" }
+        ]},
+        { id: '1_c3', type: 'tf_cluster', question: "Bạn Lan đang tiến hành thực hành các câu lệnh ngôn ngữ truy vấn SQL trên một bảng dữ liệu có tên là <span class='code-inline'>MonHoc</span>. Bảng này hiện đang chứa các bản ghi:<div class='table-container'><table class='question-table'><tr><th>MaMon</th><th>TenMon</th><th>SoTiet</th></tr><tr><td>TOAN</td><td>Toán học</td><td>105</td></tr><tr><td>VAN</td><td>Ngữ văn</td><td>105</td></tr></table></div>Lan có nhu cầu cập nhật số tiết của môn Toán thành 120, đồng thời sau đó sẽ dùng lệnh xóa bỏ những môn học nào có số tiết bằng 0 vì chúng đã bị đình chỉ giảng dạy.", subQuestions: [
+            { id: '1_d27a', text: "Ngôn ngữ truy vấn có cấu trúc SQL cung cấp một hệ thống câu lệnh chuẩn mực giúp người sử dụng dễ dàng thao tác định nghĩa, cập nhật và trích xuất dữ liệu từ các hệ quản trị CSDL quan hệ.", correct: "Đúng" },
+            { id: '1_d27b', text: "Lệnh <span class='code-inline'>UPDATE</span> được sử dụng rộng rãi để tiến hành thay đổi hoặc cập nhật lại giá trị dữ liệu bên trong các bản ghi hiện có của một bảng mà hoàn toàn không làm ảnh hưởng đến các bản ghi khác.", correct: "Đúng" },
+            { id: '1_d27c', text: "Để thực hiện thành công việc xóa toàn bộ những môn học không còn tổ chức giảng dạy (có số tiết bằng 0), Lan cần sử dụng câu lệnh có cấu trúc như sau: <span class='code-inline'>DROP TABLE MonHoc WHERE SoTiet = 0;</span>.", correct: "Sai" },
+            { id: '1_d27d', text: "Để thay đổi thông tin số tiết môn Toán thành 120, Lan cần gõ và thực thi câu lệnh SQL hoàn chỉnh như sau: <span class='code-inline'>UPDATE MonHoc SET SoTiet = 120 WHERE MaMon = 'TOAN';</span>, giúp hệ thống xác định đúng bản ghi.", correct: "Đúng" }
+        ]},
+        { id: '1_c4', type: 'tf_cluster', question: "Một doanh nghiệp đang quản lí hệ thống bán hàng thông qua hai bảng CSDL: Bảng <span class='code-inline'>KhachHang(MaKH, TenKH, DiaChi)</span> và bảng <span class='code-inline'>HoaDon(MaHD, NgayLap, TongTien, MaKH)</span>. Người quản trị cơ sở dữ liệu hiện đang phải xử lí hàng loạt yêu cầu truy xuất báo cáo từ ban giám đốc công ty.", subQuestions: [
+            { id: '1_d28a', text: "Để tìm và hiển thị tất cả hóa đơn có tổng tiền lớn hơn 5.000.000 VNĐ, người quản trị chỉ cần sử dụng mệnh đề <span class='code-inline'>WHERE TongTien > 5000000</span> trong câu lệnh <span class='code-inline'>SELECT</span> cơ bản.", correct: "Đúng" },
+            { id: '1_d28b', text: "Trường <span class='code-inline'>MaKH</span> trong bảng <span class='code-inline'>HoaDon</span> bắt buộc phải được thiết lập là Khóa chính (<span class='code-inline'>Primary Key</span>) để hệ thống tự động sinh mã ngẫu nhiên cho từng giao dịch mua bán của khách hàng.", correct: "Sai" },
+            { id: '1_d28c', text: "Để in ra một bản báo cáo đầy đủ thông tin bao gồm \"Tên khách hàng, Mã hóa đơn, Tổng tiền\", người quản trị bắt buộc phải sử dụng câu lệnh <span class='code-inline'>INNER JOIN</span> để gộp dữ liệu từ hai bảng lại với nhau.", correct: "Đúng" },
+            { id: '1_d28d', text: "Nếu muốn chèn thêm thông tin một khách hàng mới tên là \"Trần Bình\" ở \"Hà Nội\" mang mã số \"KH005\", câu lệnh đúng sẽ là: <span class='code-inline'>INSERT INTO KhachHang VALUES ('KH005', 'Trần Bình', 'Hà Nội');</span>", correct: "Đúng" }
+        ]}
+    ];n
+    let currentQuestions = [];
+    let deviceId = '';
+    let allScores = [];
+    let currentStudent = {};
+    let userAnswers = {};
+    let timerInterval;
+    let quizStartTime, quizEndTime;
+    
+    let currentPage = 1;
+    const rowsPerPage = 10;
+    let sortedScoresList = [];
+
+    window.startQuizAction = function() {
+        const errDiv = document.getElementById('login-error');
+        errDiv.classList.add('hidden');
+        const name = document.getElementById('hoTen').value.trim();
+        const lop = document.getElementById('lop').value.trim().toUpperCase(); 
+        
+        if (!name || !lop) {
+            errDiv.innerText = "⚠️ Yêu cầu nhập đầy đủ Họ tên và Lớp!";
+            errDiv.classList.remove('hidden');
+            return;
+        }
+
+        currentStudent = { hoTen: name, lop: lop, maDe: 'de_tin10', tenDe: 'Kiểm Tra Thường Xuyên Đề 1 - Tin Học 11' };
+        
+        let rawQuestions = JSON.parse(JSON.stringify(de_data));
+        
+        // Không trộn câu hỏi và không trộn đáp án
+        let part1 = rawQuestions.filter(q => q.type === 'single');
+        part1.forEach((q, idx) => {
+            q.displayQuestion = `Câu ${idx + 1}: ${q.question}`;
+        });
+        
+        let part2 = rawQuestions.filter(q => q.type === 'tf_cluster');
+        part2.forEach((q, idx) => {
+            q.displayQuestion = `Câu ${part1.length + idx + 1}: ${q.question}`;
+            const labels = ['a)', 'b)', 'c)', 'd)'];
+            q.subQuestions.forEach((sub, sIdx) => {
+                sub.text = `${labels[sIdx]} ${sub.text.replace(/^[a-d]\)\s*/i, '')}`;
+            });
+        });
+        
+        currentQuestions = [...part1, ...part2];
+        quizStartTime = new Date();
+        cheatCount = 0; 
+        setTimeout(() => { isQuizStarted = true; }, 1000);
+        showSection('quiz');
+        document.getElementById('quiz-title').innerText = currentStudent.tenDe;
+        document.getElementById('student-info').innerText = `${currentStudent.hoTen} - Lớp ${currentStudent.lop}`;
+        currentIdx = 0;
+        userAnswers = {};
+        window.renderQuestion();
+        startTimer(20 * 60);
+    };
+
+    window.nextQuestion = function() {
+        if (currentIdx < currentQuestions.length - 1) { currentIdx++; window.renderQuestion(); }
+    };
+
+    window.viewScoresAction = function() {
+        if (database) {
+            scoresRef.once('value').then((snapshot) => {
+                const data = snapshot.val();
+                allScores = data ? Object.keys(data).map(key => ({...data[key], id: key})) : [];
+                currentPage = 1;
+                window.renderScores();
+                showSection('scores');
+            });
+        }
+    };
+
+    window.goHome = function() {
+        document.getElementById('result-section').classList.add('hidden');
+        document.getElementById('hoTen').value = ''; 
+        document.getElementById('lop').value = ''; 
+        clearInterval(timerInterval);
+        showSection('login');
+    };
+
+    function getTotalItems() {
+        let count = 0;
+        currentQuestions.forEach(q => {
+            if (q.type === 'tf_cluster') count += q.subQuestions.length;
+            else count++;
+        });
+        return count; 
+    }
+
+    function getAnsweredCount() {
+        let count = 0;
+        currentQuestions.forEach(q => {
+            if (q.type === 'tf_cluster') {
+                q.subQuestions.forEach(sub => { if (userAnswers[sub.id]) count++; });
+            } else {
+                if (userAnswers[q.id] !== undefined) count++;
+            }
+        });
+        return count;
+    }
+
+    window.selectAnswer = function(qId, val, type) {
+        userAnswers[qId] = val;
+        window.updateProgress();
+    };
+
+    window.renderQuestion = function() {
+        if (!currentQuestions || currentQuestions.length === 0) return;
+        const q = currentQuestions[currentIdx];
+        const container = document.getElementById('question-container');
+        
+        if (q.type === 'tf_cluster') {
+            container.innerHTML = `<div class="fade-in">
+                <div class="flex items-center gap-3 mb-6 border-b-2 border-orange-100 pb-3">
+                    <span class="bg-gradient-to-br from-orange-400 to-red-500 text-white w-10 h-10 flex items-center justify-center rounded-xl font-bold text-xl shadow-md">II</span>
+                    <h3 class="text-xl sm:text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-orange-600 to-red-600 tracking-wide uppercase">PHẦN TRẮC NGHIỆM ĐÚNG/SAI</h3>
+                </div>
+                <div class="bg-red-50 border-2 border-red-200 p-4 sm:p-6 rounded-2xl mb-6 text-red-700 text-lg sm:text-xl font-bold leading-relaxed shadow-inner">
+                    ${q.displayQuestion.replace(/\n/g, '<br/>')}
+                </div>
+                <div class="space-y-4 md:pl-6">
+                    ${q.subQuestions.map(sub => `
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between bg-white p-5 sm:p-6 border-2 border-gray-100 hover:border-red-300 rounded-2xl gap-4 shadow-sm hover:shadow-md transition-all">
+                        <span class="flex-1 text-gray-800 font-bold text-lg sm:text-xl leading-relaxed">${sub.text}</span>
+                        <div class="flex gap-3 flex-shrink-0 w-full sm:w-auto mt-3 sm:mt-0 justify-between sm:justify-end">
+                            <input type="radio" id="q_${sub.id}_T" name="q_${sub.id}" value="Đúng" class="hidden tf-radio-T" onchange="window.selectAnswer('${sub.id}', 'Đúng', 'tf')" ${userAnswers[sub.id] === 'Đúng' ? 'checked' : ''}>
+                            <label for="q_${sub.id}_T" class="tf-label-T flex-1 sm:flex-none px-4 py-4 border-2 border-gray-200 rounded-xl cursor-pointer font-bold text-gray-500 text-base sm:text-lg text-center w-full sm:w-32 transition-all hover:bg-gray-50 uppercase tracking-wide active:scale-95 touch-manipulation">Đúng</label>
+                            
+                            <input type="radio" id="q_${sub.id}_S" name="q_${sub.id}" value="Sai" class="hidden tf-radio-S" onchange="window.selectAnswer('${sub.id}', 'Sai', 'tf')" ${userAnswers[sub.id] === 'Sai' ? 'checked' : ''}>
+                            <label for="q_${sub.id}_S" class="tf-label-S flex-1 sm:flex-none px-4 py-4 border-2 border-gray-200 rounded-xl cursor-pointer font-bold text-gray-500 text-base sm:text-lg text-center w-full sm:w-32 transition-all hover:bg-gray-50 uppercase tracking-wide active:scale-95 touch-manipulation">Sai</label>
+                        </div>
+                    </div>`).join('')}
+                </div>
+            </div>`;
+        } else {
+            container.innerHTML = `<div class="fade-in">
+                ${currentIdx === 0 ? `<div class="flex items-center gap-3 mb-6 border-b-2 border-blue-100 pb-3"><span class="bg-gradient-to-br from-blue-400 to-cyan-500 text-white w-10 h-10 flex items-center justify-center rounded-xl font-bold text-xl shadow-md">I</span><h3 class="text-xl sm:text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-600 tracking-wide uppercase">PHẦN TRẮC NGHIỆM MỘT LỰA CHỌN</h3></div>` : ''}
+                <div class="flex gap-4 mb-5">
+                    <div class="w-full">
+                        <p class="text-xl sm:text-2xl font-bold text-red-600 mt-1 leading-snug tracking-tight">${q.displayQuestion}</p>
+                    </div>
+                </div>
+                <div class="space-y-4 md:pl-14 mt-6">
+                    ${q.options.map((opt, i) => `
+                    <div class="flex items-center">
+                        <input type="radio" id="opt_${i}" name="q_${q.id}" value="${i}" class="hidden single-radio" ${userAnswers[q.id] === i ? 'checked' : ''} onchange="window.selectAnswer('${q.id}',${i}, 'single')">
+                        <label for="opt_${i}" class="option-label w-full p-4 sm:p-5 border-2 border-gray-200 rounded-2xl flex items-center gap-4 bg-white shadow-sm font-semibold text-lg sm:text-xl active:scale-[0.98] touch-manipulation">
+                            <span class="w-12 h-12 sm:w-10 sm:h-10 rounded-xl border-2 border-gray-300 flex items-center justify-center text-lg sm:text-base font-bold text-gray-400 flex-shrink-0 bg-gray-50 transition-colors">${String.fromCharCode(65 + i)}</span>
+                            <span class="text-gray-700 leading-relaxed">${opt}</span>
+                        </label>
+                    </div>`).join('')}
+                </div>
+            </div>`;
+        }
+        window.updateNav();
+        window.updateProgress();
+    };
+
+    window.updateNav = function() {
+        document.getElementById('next-btn').style.display = (currentIdx === currentQuestions.length - 1) ? 'none' : 'block';
+        document.getElementById('submit-btn').style.display = (currentIdx === currentQuestions.length - 1) ? 'block' : 'none';
+    };
+
+    window.updateProgress = function() {
+        document.getElementById('progress-text').innerText = `${getAnsweredCount()}/${getTotalItems()} ý`;
+    };
+
+    function formatDuration(sec) {
+        const m = Math.floor(sec / 60); const s = sec % 60;
+        return `${m}p ${s}s`;
+    }
+
+    window.submitQuiz = function() {
+        if (!isQuizStarted) return; 
+        isQuizStarted = false; 
+        
+        quizEndTime = new Date();
+        clearInterval(timerInterval);
+
+        let totalScore = 0;
+        let correctSubItems = 0;
+        let totalItems = getTotalItems();
+
+        currentQuestions.forEach(q => {
+            if (q.type === 'tf_cluster') {
+                let subCorrectCount = 0;
+                q.subQuestions.forEach(sub => {
+                    if (userAnswers[sub.id] === sub.correct) {
+                        subCorrectCount++;
+                        correctSubItems++;
+                    }
+                });
+                
+                if (subCorrectCount === 1) totalScore += 0.1;
+                else if (subCorrectCount === 2) totalScore += 0.25;
+                else if (subCorrectCount === 3) totalScore += 0.5;
+                else if (subCorrectCount === 4) totalScore += 1.0;
+
+            } else {
+                if (userAnswers[q.id] === q.correct) {
+                    totalScore += 0.25; 
+                    correctSubItems++;
+                }
+            }
+        });
+
+        const score = totalScore.toFixed(2);
+
+        const record = {
+            hoTen: currentStudent.hoTen, lop: currentStudent.lop, tenDe: currentStudent.tenDe,
+            diem: parseFloat(score), soCauDung: correctSubItems, tongCau: totalItems,
+            startTime: quizStartTime.toLocaleTimeString(), endTime: quizEndTime.toLocaleTimeString(),
+            duration: formatDuration(Math.floor((quizEndTime - quizStartTime) / 1000)),
+            thoiGian: new Date().toISOString(), deviceId: deviceId
+        };
+        if(database) {
+            scoresRef.push(record, () => { window.showModalResult(score, correctSubItems, totalItems, record.duration); });
+        }
+    };
+
+    window.showModalResult = function(score, correct, total, dur) {
+        ['login', 'quiz', 'scores'].forEach(s => document.getElementById(s+'-section').classList.add('hidden'));
+        document.getElementById('result-section').classList.remove('hidden');
+        document.getElementById('result-content').innerHTML = `<div class="text-6xl sm:text-7xl mb-4 animate-bounce">🎉</div><h3 class="text-2xl sm:text-3xl font-bold text-green-600 mb-2">Hoàn thành bài thi!</h3><p class="text-gray-600 mb-6 mt-2"><span class="font-bold text-blue-700 text-lg sm:text-xl uppercase tracking-wider">${currentStudent.hoTen} - Lớp ${currentStudent.lop}</span><br><span class="text-sm font-semibold text-gray-400 mt-1 block">${currentStudent.tenDe}</span></p><div class="bg-blue-50 border-2 border-blue-100 rounded-3xl p-6 mb-6 shadow-inner relative"><div class="text-sm text-blue-500 font-bold mb-2 uppercase tracking-widest">ĐIỂM SỐ CỦA BẠN</div><div class="text-6xl sm:text-7xl font-bold text-blue-600 drop-shadow-sm">${score} <span class="text-2xl text-gray-400">/ 10</span></div><div class="text-base sm:text-lg font-bold text-indigo-600 mt-4 bg-white inline-block px-5 py-2 rounded-full shadow-sm">Trả lời đúng ${correct}/${total} ý | TG: ${dur}</div></div><div class="grid grid-cols-2 gap-3 mb-4"><button onclick="window.goHome()" class="w-full py-4 bg-gray-100 text-gray-800 rounded-xl font-bold shadow-sm hover:bg-gray-200 transition-transform active:scale-95 touch-manipulation text-lg border-2 border-gray-200">🏠 Trang chủ</button><button onclick="document.getElementById('result-section').classList.add('hidden'); window.viewScoresAction();" class="w-full py-4 bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-xl font-bold shadow-sm hover:shadow-md transition-transform active:scale-95 touch-manipulation text-lg">🏆 Bảng điểm</button></div>`;
+    };
+
+    window.renderScores = function() {
+        const tbody = document.getElementById('scores-tbody');
+        const paginationControls = document.getElementById('pagination-controls');
+        
+        if (allScores.length === 0) { 
+            tbody.innerHTML = ''; 
+            document.getElementById('no-scores').classList.remove('hidden'); 
+            paginationControls.classList.add('hidden');
+            document.getElementById('my-score-summary').classList.add('hidden');
+            return; 
+        }
+        
+        document.getElementById('no-scores').classList.add('hidden');
+        paginationControls.classList.remove('hidden');
+        
+        // Sắp xếp điểm ưu tiên từ cao xuống thấp
+        sortedScoresList = [...allScores].sort((a, b) => {
+            if (b.diem !== a.diem) {
+                return b.diem - a.diem;
+            }
+            return (a.hoTen || '').localeCompare(b.hoTen || '');
+        });
+
+        const myScoreIndex = sortedScoresList.findIndex(s => s.deviceId === deviceId);
+        if (myScoreIndex !== -1) {
+            const myScore = sortedScoresList[myScoreIndex];
+            document.getElementById('my-score-summary').classList.remove('hidden');
+            document.getElementById('my-summary-name').innerText = `${myScore.hoTen} (${(myScore.lop || '').toUpperCase()})`;
+            document.getElementById('my-summary-rank').innerText = `Hạng: #${myScoreIndex + 1}`;
+            document.getElementById('my-summary-score').innerText = `${myScore.diem}`;
+        } else {
+            document.getElementById('my-score-summary').classList.add('hidden');
+        }
+
+        const totalPages = Math.ceil(sortedScoresList.length / rowsPerPage) || 1;
+        if (currentPage > totalPages) currentPage = totalPages;
+        
+        document.getElementById('page-info').innerText = `Trang ${currentPage} / ${totalPages}`;
+        document.getElementById('prev-page-btn').disabled = currentPage === 1;
+        document.getElementById('next-page-btn').disabled = currentPage === totalPages;
+
+        const startIndex = (currentPage - 1) * rowsPerPage;
+        const endIndex = startIndex + rowsPerPage;
+        const pageData = sortedScoresList.slice(startIndex, endIndex);
+
+        tbody.innerHTML = pageData.map((s, idx) => {
+            let timeStr = s.startTime;
+            if (s.thoiGian) {
+                const dt = new Date(s.thoiGian);
+                // Chỉ in ra định dạng ngày tháng năm
+                timeStr = dt.toLocaleDateString('vi-VN');
+            }
+            const globalIdx = startIndex + idx + 1;
+
+            return `<tr class="${s.deviceId === deviceId ? 'my-score-row' : 'hover:bg-gray-50'} transition-colors border-b border-gray-100">
+                <td class="px-3 sm:px-4 py-4 text-center font-bold text-gray-500 text-sm">#${globalIdx}</td>
+                <td class="px-3 sm:px-4 py-4 font-bold text-blue-600 text-sm">${(s.lop || '').toUpperCase()}</td>
+                <td class="px-3 sm:px-4 py-4 font-semibold text-gray-800 text-sm">${s.hoTen} ${s.deviceId === deviceId ? '<span class="ml-2 bg-pink-500 text-white text-[10px] px-2 rounded-md">Bạn</span>' : ''}</td>
+                <td class="px-3 sm:px-4 py-4 text-center"><span class="font-bold text-lg ${s.diem >= 5 ? 'text-green-600' : 'text-red-500'}">${s.diem}</span></td>
+                <td class="px-3 sm:px-4 py-4 text-center text-gray-500 text-xs">${timeStr}</td>
+            </tr>`;
+        }).join('');
+    };
+
+    window.prevPage = function() {
+        if (currentPage > 1) {
+            currentPage--;
+            window.renderScores();
+        }
+    };
+
+    window.nextPage = function() {
+        const totalPages = Math.ceil(sortedScoresList.length / rowsPerPage);
+        if (currentPage < totalPages) {
+            currentPage++;
+            window.renderScores();
+        }
+    };
+
+    function showSection(id) {
+        ['login', 'quiz', 'scores', 'result'].forEach(s => document.getElementById(s+'-section').classList.add('hidden'));
+        document.getElementById(id+'-section').classList.remove('hidden');
+    }
+
+    function startTimer(seconds) {
+        const display = document.getElementById('timer');
+        let remaining = seconds;
+        timerInterval = setInterval(() => {
+            remaining--;
+            const m = Math.floor(remaining / 60).toString().padStart(2, '0');
+            const s = (remaining % 60).toString().padStart(2, '0');
+            display.innerText = `${m}:${s}`;
+            if (remaining <= 0) window.submitQuiz();
+        }, 1000);
+    }
+
+    try {
+        if (!localStorage.getItem('deviceId')) {
+            localStorage.setItem('deviceId', 'dev_' + Math.random().toString(36).substr(2) + Date.now());
+        }
+        deviceId = localStorage.getItem('deviceId');
+    } catch (e) { deviceId = 'dev_temp_' + Math.random().toString(36).substr(2); }
+  </script>
+ </body>
+</html>
