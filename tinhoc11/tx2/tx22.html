@@ -1,0 +1,744 @@
+<!doctype html>
+<html lang="vi" class="w-full h-full m-0 p-0">
+ <head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <title>Kiểm Tra Thường Xuyên - Đề 2 - Tin học 11</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+  <style>
+    * { -webkit-tap-highlight-color: transparent; }
+    html, body { width: 100%; min-height: 100vh; margin: 0; padding: 0; overflow-x: hidden; overflow-y: auto; }
+    
+    body { 
+      font-family: 'Be Vietnam Pro', sans-serif; 
+      background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+      background-size: 400% 400%;
+      animation: gradientBG 15s ease infinite;
+    }
+    
+    @keyframes gradientBG {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+    
+    #app { width: 100%; min-height: 100vh; display: flex; flex-direction: column; padding-bottom: 50px; }
+    
+    .glass-card {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    /* CSS ĐỊNH DẠNG MÃ LỆNH NỔI BẬT */
+    .code-inline {
+        background-color: #eff6ff; 
+        color: #2563eb; 
+        font-family: 'Courier New', Courier, monospace; 
+        font-weight: 800; 
+        padding: 0.15rem 0.5rem; 
+        border-radius: 0.5rem; 
+        border: 1px solid #bfdbfe; 
+        word-break: break-word; 
+        font-size: 0.95em; 
+        margin: 0 2px; 
+        box-shadow: 0 2px 2px rgba(37, 99, 235, 0.1);
+    }
+    .code-block {
+        background-color: #eff6ff; 
+        color: #2563eb; 
+        font-family: 'Courier New', Courier, monospace; 
+        font-weight: 800; 
+        padding: 1.25rem; 
+        border-radius: 1rem; 
+        border: 2px solid #bfdbfe; 
+        margin: 1rem 0; 
+        overflow-x: auto; 
+        font-size: 1.05em; 
+        line-height: 1.6; 
+        box-shadow: inset 0 2px 4px rgba(37, 99, 235, 0.05);
+        width: 100%;
+    }
+    
+    /* CSS ĐỊNH DẠNG BẢNG DỮ LIỆU NỔI BẬT DẠNG BLOCK */
+    .table-container {
+        background-color: #f8fafc; 
+        padding: 1rem; 
+        border-radius: 1rem; 
+        border: 2px solid #e2e8f0; 
+        margin: 1rem 0; 
+        overflow-x: auto; 
+        box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+    }
+    .question-table {
+        width: 100%; border-collapse: collapse; font-size: 0.95rem; background: white; border-radius: 0.5rem; overflow: hidden;
+    }
+    .question-table th, .question-table td {
+        border: 1px solid #cbd5e1; padding: 0.75rem; text-align: left; color: #1e293b;
+    }
+    .question-table th { background-color: #e2e8f0; font-weight: 800; color: #0f172a; }
+    .question-table tr:nth-child(even) { background-color: #fbfcfd; }
+
+    .option-label { transition: transform 0.15s ease, background-color 0.2s ease; cursor: pointer; border-color: #e2e8f0; }
+    .option-label:hover { background-color: #f0fdfa; border-color: #38bdf8; box-shadow: 0 4px 6px -1px rgba(56, 189, 248, 0.1); }
+    
+    input[type="radio"].single-radio:checked + .option-label {
+      background: linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%);
+      color: white; border-color: transparent;
+      box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+    }
+    input[type="radio"].single-radio:checked + .option-label span:first-child { background-color: rgba(255,255,255,0.25); border-color: transparent; color: white; }
+    input[type="radio"].single-radio:checked + .option-label span:last-child { color: white; }
+    input[type="radio"].single-radio:checked + .option-label .code-inline { background-color: rgba(255,255,255,0.9); color: #2563eb; border-color: transparent; }
+    
+    .tf-radio-T:checked + .tf-label-T, .tf-radio-S:checked + .tf-label-S {
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important; 
+        border-color: transparent !important; color: white !important;
+        box-shadow: 0 4px 10px rgba(16, 185, 129, 0.4);
+    }
+    .tf-radio-T:checked ~ .tf-label-T .code-inline, .tf-radio-S:checked ~ .tf-label-S .code-inline {
+        background-color: rgba(255,255,255,0.9); color: #059669; border-color: transparent;
+    }
+
+    .fade-in { animation: fadeIn 0.4s ease forwards; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+    
+    .my-score-row {
+      background: linear-gradient(to right, #fdf4ff, #ffffff) !important;
+      border-left: 4px solid #db2777 !important; font-weight: 700 !important;
+      color: #9d174d !important; box-shadow: 0 2px 8px rgba(0,0,0,0.05); position: relative; z-index: 10;
+    }
+    .my-score-row td { padding-top: 16px; padding-bottom: 16px; }
+    button:disabled { opacity: 0.5; cursor: not-allowed; transform: none !important; }
+  </style>
+ </head>
+ <body oncopy="return false" oncut="return false" onpaste="return false">
+  <div id="app" class="p-0 sm:p-4 md:p-8 transition-all">
+   
+   <!-- SECTION: ĐĂNG NHẬP -->
+   <div id="login-section" class="w-full max-w-md mx-auto fade-in flex flex-col justify-center flex-grow">
+    <div class="glass-card rounded-none sm:rounded-3xl p-6 sm:p-8 flex flex-col justify-start shadow-2xl border-t-8 border-indigo-600 bg-white">
+     <div class="text-center mb-6 pt-4 sm:pt-0">
+      <div class="flex items-center justify-center w-20 h-20 mx-auto mb-4 rounded-full border-4 border-yellow-400 bg-red-600 shadow-lg transform transition-transform hover:scale-105">
+          <span class="text-white font-bold text-3xl tracking-tighter">HS</span>
+      </div>
+      <h2 class="text-1xl sm:text-3xl font-bold text-red-600 mb-1 leading-tight tracking-tight">KIỂM TRA THƯỜNG XUYÊN HỌC KỲ 2</h2>
+      <h2 class="text-xl font-bold text-red-500 mb-2">Môn Tin Học 11 - Đề số 2</h2>
+     </div>
+     
+     <div id="login-form" class="space-y-4">
+      <div class="flex flex-col sm:flex-row gap-4">
+          <div class="w-full sm:flex-1">
+               <label class="block text-sm font-bold text-gray-700 mb-1">Họ và tên</label> 
+               <input type="text" id="hoTen" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-100 outline-none transition-all text-base touch-manipulation" placeholder="Nhập họ tên...">
+          </div>
+          <div class="w-full sm:w-1/3">
+               <label class="block text-sm font-bold text-gray-700 mb-1">Lớp</label> 
+               <input type="text" id="lop" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-100 outline-none transition-all text-base touch-manipulation" placeholder="Ví dụ: 10A1">
+          </div>
+      </div>
+      
+      <div id="login-error" class="hidden bg-red-100 border border-red-300 text-red-700 font-bold text-sm p-3 rounded-xl text-center shadow-sm"></div>
+
+      <button type="button" onclick="window.startQuizAction()" id="start-btn" class="w-full py-3 mt-4 bg-gradient-to-r from-blue-600 to-cyan-500 text-white font-bold rounded-xl shadow-lg hover:shadow-xl transform transition-transform active:scale-95 touch-manipulation text-lg tracking-wide"> 🚀 BẮT ĐẦU THI </button>
+     </div>
+    </div>
+   </div>
+
+   <!-- SECTION: LÀM BÀI THI -->
+   <div id="quiz-section" class="w-full max-w-4xl mx-auto hidden flex-grow flex flex-col">
+    <div class="glass-card rounded-none sm:rounded-3xl p-4 sm:p-8 flex flex-col flex-grow relative border-t-8 border-blue-500 bg-white">
+     <div class="flex items-center justify-between mb-4 sm:mb-6 pb-4 border-b-2 border-gray-100">
+      <div>
+       <h2 id="quiz-title" class="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">Đề Kiểm Tra</h2>
+       <p id="student-info" class="text-sm font-semibold text-gray-500 mt-1 uppercase tracking-wide"></p>
+      </div>
+      <div class="text-right bg-blue-50 px-4 py-2 rounded-xl border border-blue-100" id="progress-container">
+       <div class="text-xs text-blue-500 font-bold uppercase tracking-wider mb-1">Tiến độ</div>
+       <div id="progress-text" class="text-xl font-bold text-blue-700">0/0</div>
+      </div>
+     </div>
+     
+     <div id="timer-banner" class="mb-6 p-4 bg-gradient-to-r from-orange-50 to-red-50 border-2 border-red-100 rounded-2xl flex items-center justify-between shadow-sm">
+        <span class="text-red-800 font-bold flex items-center gap-2"><span class="text-2xl animate-pulse">⏰</span> THỜI GIAN CÒN LẠI:</span> 
+        <span id="timer" class="text-3xl font-bold text-red-600 font-mono tracking-wider drop-shadow-sm">20:00</span>
+     </div>
+
+     <div id="question-container" class="mb-8 flex-grow"></div>
+     
+     <div id="network-error" class="hidden bg-red-100 text-red-700 p-4 rounded-xl mt-4 text-center font-bold text-sm border-2 border-red-300 mb-4 shadow-sm"></div>
+
+     <!-- PHẦN NÚT BẤM VỮNG CHẮC TRÊN MOBILE -->
+     <div id="nav-buttons" class="w-full pt-5 sm:pt-6 border-t-2 border-gray-100 mt-6 pb-2">
+        <button id="next-btn" onclick="window.nextQuestion()" class="w-full py-4 bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-bold text-lg sm:text-xl rounded-2xl shadow-[0_5px_0_0_#312e81] active:shadow-none active:translate-y-[5px] transition-all touch-manipulation">Chọn đáp án & Tiếp theo ➔</button> 
+        <button id="submit-btn" onclick="window.submitQuiz()" class="w-full py-4 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-bold text-lg sm:text-xl rounded-2xl shadow-[0_5px_0_0_#064e3b] active:shadow-none active:translate-y-[5px] hidden transition-all touch-manipulation">✅ NỘP BÀI NGAY</button>
+     </div>
+    </div>
+   </div>
+
+   <!-- SECTION: KẾT QUẢ CÁ NHÂN -->
+   <div id="result-section" class="w-full max-w-md mx-auto hidden fade-in flex flex-col justify-center my-auto pb-8">
+    <div class="glass-card rounded-none sm:rounded-3xl p-6 sm:p-8 flex flex-col justify-start border-t-8 border-green-500 bg-white shadow-2xl" id="result-content"></div>
+   </div>
+
+   <!-- SECTION: BẢNG XẾP HẠNG -->
+   <div id="scores-section" class="w-full max-w-6xl mx-auto hidden flex-grow flex flex-col">
+    <div class="glass-card rounded-none sm:rounded-3xl p-4 sm:p-8 flex flex-col flex-grow border-t-8 border-orange-500 bg-white">
+     <div class="mb-6 flex items-center justify-between">
+<h2 class="text-2xl sm:text-3xl font-bold text-orange-600">🏆 BẢNG XẾP HẠNG</h2>
+      <button onclick="window.goHome()" class="px-5 py-2.5 bg-gray-100 text-gray-700 rounded-xl font-bold hover:bg-gray-200 transition-transform active:scale-95 shadow-sm border border-gray-200 touch-manipulation">🏠 Về trang chủ</button>
+     </div>
+     
+     <div id="my-score-summary" class="hidden bg-gradient-to-r from-blue-50 to-indigo-50 border-2 border-blue-200 rounded-2xl p-4 sm:p-6 mb-6 flex items-center justify-between shadow-md">
+         <div>
+             <div class="text-sm text-blue-500 font-extrabold uppercase tracking-wider mb-1">Thành tích của bạn</div>
+             <div class="font-black text-gray-800 text-xl sm:text-1xl" id="my-summary-name"></div>
+             <div class="text-base font-bold text-indigo-600 mt-1" id="my-summary-rank">Hạng: --</div>
+         </div>
+         <div class="text-right">
+             <div class="text-xs text-gray-500 font-bold uppercase mb-1">Điểm số</div>
+             <div class="text-4xl sm:text-3xl font-black text-blue-600 drop-shadow-sm" id="my-summary-score">0</div>
+         </div>
+     </div>
+
+     <div class="overflow-x-auto rounded-2xl border-2 border-gray-100 flex-grow shadow-lg bg-white/50 mb-4 min-h-[300px]">
+      <table class="w-full text-xs sm:text-sm whitespace-nowrap">
+       <thead class="bg-gradient-to-r from-orange-500 to-red-500 text-white">
+        <tr>
+         <th class="px-3 sm:px-4 py-4 text-center font-bold">STT</th>
+         <th class="px-3 sm:px-4 py-4 text-center font-bold">Lớp</th>
+         <th class="px-3 sm:px-4 py-4 text-left font-bold w-full">Họ tên</th>
+         <th class="px-3 sm:px-4 py-4 text-center font-bold">Điểm</th>
+         <th class="px-3 sm:px-4 py-4 text-center font-bold">Ngày tháng năm</th>
+        
+        </tr>
+       </thead>
+       <tbody id="scores-tbody" class="bg-white/80 divide-y divide-gray-100"></tbody>
+      </table>
+      <div id="no-scores" class="text-center py-12 hidden text-gray-500 font-bold text-lg">Chưa có dữ liệu nộp bài 🥲</div>
+     </div>
+
+     <!-- Phân trang -->
+     <div id="pagination-controls" class="flex justify-between items-center mb-6 hidden">
+        <button id="prev-page-btn" onclick="window.prevPage()" class="px-4 py-3 bg-gray-100 text-gray-700 rounded-xl font-bold hover:bg-gray-200 transition-transform active:scale-95 shadow-sm border border-gray-200 touch-manipulation">⬅️ Trang trước</button>
+        <span id="page-info" class="font-bold text-gray-500 text-sm">Trang 1 / 1</span>
+        <button id="next-page-btn" onclick="window.nextPage()" class="px-4 py-3 bg-gray-100 text-gray-700 rounded-xl font-bold hover:bg-gray-200 transition-transform active:scale-95 shadow-sm border border-gray-200 touch-manipulation">Trang sau ➡️</button>
+     </div>
+    </div>
+   </div>
+
+   <!-- MODAL CẢNH BÁO GIAN LẬN -->
+   <div id="cheat-modal" data-nosnippet class="fixed inset-0 bg-red-900/95 backdrop-blur-sm flex items-center justify-center p-4 hidden z-[9999]">
+      <div class="bg-white rounded-[2rem] shadow-2xl p-6 max-w-sm w-full text-center flex flex-col border-t-8 border-red-600 transform transition-all scale-100 max-h-[90vh] overflow-y-auto">
+        <div class="text-5xl mb-3 animate-bounce">🚨</div>
+        <h3 class="text-2xl sm:text-3xl font-black text-red-600 mb-2 uppercase tracking-wide">THÔNG BÁO!</h3>
+        <p class="text-gray-700 font-bold mb-4 text-sm sm:text-base leading-relaxed" id="cheat-message"></p>
+        <div class="bg-red-50 text-red-700 font-extrabold p-3 rounded-2xl border-2 border-red-100 mb-5">
+            Vi phạm làm bài lần thứ <span id="cheat-count-display" class="text-4xl font-black mx-1">1</span>
+        </div>
+        <button id="cheat-continue-btn" class="w-full py-4 bg-gradient-to-r from-red-600 to-red-800 text-white font-extrabold rounded-xl shadow-lg hover:shadow-xl transition-transform active:scale-95 touch-manipulation text-base tracking-wide uppercase shrink-0">TÔI ĐÃ HIỂU & TIẾP TỤC</button>
+      </div>
+   </div>
+
+  </div>
+
+  <script>
+    let database = null;
+    let scoresRef = null;
+    let currentIdx = 0;
+
+    try {
+        const firebaseConfig = {
+            apiKey: "AIzaSyBQ9Pos8awlh9j041qDWTPFRsVIjF-kPnk",
+            authDomain: "hoctap-91691.firebaseapp.com",
+            databaseURL: "https://hoctap-91691-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "hoctap-91691",
+            storageBucket: "hoctap-91691.firebasestorage.app",
+            messagingSenderId: "1004553425319",
+            appId: "1:1004553425319:web:45d15cbae393f614c56682",
+            measurementId: "G-Q6X1TL9PRV"
+        };
+        if (typeof firebase !== 'undefined') {
+            if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+            database = firebase.database();
+            scoresRef = database.ref('TinHoc11/tx2De2');
+        }
+    } catch(err) { console.error("Lỗi Firebase:", err); }
+
+    let cheatCount = 0;
+    let isQuizStarted = false; 
+    let isPenalizing = false; 
+    let isSubmitting = false;
+
+    window.handleCheatAction = function(reason) {
+        if (!isQuizStarted || isPenalizing || isSubmitting) return; 
+        const isQuizActive = !document.getElementById('quiz-section').classList.contains('hidden');
+        
+        if (isQuizActive) {
+            isPenalizing = true;
+            cheatCount++;
+            document.getElementById('cheat-count-display').innerText = cheatCount;
+            const modal = document.getElementById('cheat-modal');
+            const msg = document.getElementById('cheat-message');
+            const btn = document.getElementById('cheat-continue-btn');
+            modal.classList.remove('hidden');
+            
+            const currentQ = currentQuestions[currentIdx];
+            if (currentQ) {
+                if (currentQ.type === 'tf_cluster') {
+                    currentQ.subQuestions.forEach(sub => {
+                        if (!userAnswers[sub.id]) userAnswers[sub.id] = "Gian lận"; 
+                    });
+                } else {
+                    if (userAnswers[currentQ.id] === undefined) userAnswers[currentQ.id] = -1; 
+                }
+                updateProgress();
+            }
+
+            if (cheatCount >= 2) {
+                msg.innerHTML = "Bạn đã vi phạm quy chế (Rời khỏi màn hình/Dùng phím cấm/Copy) quá 2 lần.<br>Hệ thống bắt buộc <b>TỰ ĐỘNG THU BÀI</b>!";
+                btn.innerText = "NỘP BÀI NGAY";
+                btn.onclick = () => {
+                    modal.classList.add('hidden');
+                    isPenalizing = false;
+                    window.submitQuiz();
+                };
+            } else {
+                msg.innerHTML = `Hệ thống phát hiện bạn vừa sử dụng thao tác : <b>${reason}</b>.<br><br><span class='text-red-600 font-black bg-red-50 px-3 py-1 rounded-lg border border-red-200 inline-block mt-2 mb-2'>Câu hỏi này bị bỏ qua (0 điểm).</span><br><br><i class='text-sm text-gray-500'>Vui lòng bấm nút bên dưới để tiếp tục.</i>`;
+                btn.innerText = "TÔI ĐÃ HIỂU & TIẾP TỤC";
+                btn.onclick = () => {
+                    modal.classList.add('hidden');
+                    if (currentIdx < currentQuestions.length - 1) {
+                        currentIdx++;
+                        window.renderQuestion();
+                    } else { window.submitQuiz(); }
+                    isPenalizing = false;
+                };
+            }
+        }
+    };
+
+    document.addEventListener("visibilitychange", () => {
+        if (document.visibilityState === 'hidden') {
+            window.handleCheatAction('Chuyển tab hoặc thu nhỏ trình duyệt');
+        }
+    });
+
+    window.addEventListener('keydown', (e) => {
+        const forbiddenKeys = ['PrintScreen', 'F12'];
+        if (forbiddenKeys.includes(e.key)) {
+            e.preventDefault();
+            window.handleCheatAction('Nhấn phím ' + e.key);
+        }
+        if (e.ctrlKey && (e.key === 'c' || e.key === 'v' || e.key === 'p' || e.key === 's')) {
+            e.preventDefault();
+            window.handleCheatAction('Dùng tổ hợp phím Ctrl + ' + e.key.toUpperCase());
+        }
+    });
+    window.addEventListener('keyup', (e) => {
+        if (e.key === 'PrintScreen') window.handleCheatAction('Chụp màn hình');
+    });
+
+    document.addEventListener('contextmenu', event => event.preventDefault()); 
+    document.addEventListener('selectstart', event => {
+        if (event.target.tagName !== 'INPUT' && event.target.tagName !== 'SELECT') { event.preventDefault(); }
+    });
+    document.addEventListener('dragstart', event => event.preventDefault()); 
+    document.addEventListener('copy', event => {
+        event.clipboardData.setData('text/plain', 'Tài liệu đã được bảo vệ!');
+        event.preventDefault();
+        window.handleCheatAction('Sao chép (Copy) văn bản');
+    });
+
+    // DỮ LIỆU ĐỀ THI MỚI (LỖI & KIỂM THỬ) - ĐÃ BỌC TẤT CẢ CODE-INLINE VÀ TABLE-CONTAINER
+    const de_data = [
+        { id: "1_1", type: "single", question: "Khi nhập dữ liệu cho các bảng có mối quan hệ tham chiếu (khóa chính - khóa ngoài), quy tắc nào sau đây là chuẩn xác nhất để tránh phát sinh lỗi hệ thống?", options: ["Người dùng bắt buộc phải tiến hành nhập toàn bộ dữ liệu vào bảng con (bảng chứa khóa ngoài) trước khi chuyển sang nhập dữ liệu cho bảng cha (bảng chứa khóa chính).", "Người dùng bắt buộc phải tiến hành nhập toàn bộ dữ liệu vào bảng cha (bảng chứa khóa chính) trước khi chuyển sang nhập dữ liệu cho bảng con (bảng chứa khóa ngoài).", "Người dùng có quyền nhập dữ liệu vào bất kì bảng nào trước cũng được vì hệ quản trị cơ sở dữ liệu sẽ tự động trì hoãn việc kiểm tra khóa ngoại cho đến lúc hoàn tất.", "Người dùng chỉ cần nhập dữ liệu vào một bảng duy nhất chứa các trường chung, sau đó hệ thống sẽ tự động phân tách và chuyển dữ liệu sang bảng còn lại một cách tự động."], correct: 1 },
+        { id: "1_2", type: "single", question: "Trong phần mềm HeidiSQL, khi bạn thực hiện xóa một bản ghi có chứa khóa chính đang được tham chiếu bởi một bản ghi khác ở bảng con, hệ thống sẽ xử lí thế nào?", options: ["Hệ thống sẽ tự động đồng bộ hóa và tiến hành xóa luôn tất cả các bản ghi ở bảng con có tham chiếu đến bản ghi bị xóa này để duy trì dữ liệu gọn gàng.", "Hệ thống sẽ phát ra một cảnh báo lỗi vi phạm ràng buộc khóa ngoài và lập tức từ chối thực hiện lệnh xóa nhằm bảo vệ tính toàn vẹn của dữ liệu hiện hành.", "Hệ thống sẽ bỏ qua cảnh báo và tiến hành xóa bản ghi ở bảng cha, đồng thời tự động điền các giá trị rỗng (<span class='code-inline'>NULL</span>) vào các trường khóa ngoài ở bảng con.", "Hệ thống sẽ yêu cầu người dùng phải gõ xác nhận lại mật khẩu quản trị viên, sau đó mới cho phép xóa vĩnh viễn cả hai bản ghi ở hai bảng cùng một lúc."], correct: 1 },
+        { id: "1_3", type: "single", question: "Từ khóa nào trong ngôn ngữ truy vấn có cấu trúc SQL được sử dụng phổ biến nhất để thực hiện phép ghép nối dữ liệu giữa hai hay nhiều bảng khác nhau?", options: ["Từ khóa <span class='code-inline'>PRIMARY KEY</span> được sử dụng để ghép nối các bản ghi của nhiều bảng lại với nhau nhằm phục vụ cho mục đích trích xuất và hiển thị dữ liệu tổng hợp.", "Từ khóa <span class='code-inline'>FOREIGN KEY</span> được sử dụng để ghép nối các bản ghi của nhiều bảng lại với nhau nhằm phục vụ cho mục đích trích xuất và hiển thị dữ liệu tổng hợp.", "Từ khóa <span class='code-inline'>INNER JOIN</span> được sử dụng để ghép nối các bản ghi của nhiều bảng lại với nhau nhằm phục vụ cho mục đích trích xuất và hiển thị dữ liệu tổng hợp.", "Từ khóa <span class='code-inline'>AUTO_INCREMENT</span> được sử dụng để ghép nối các bản ghi của nhiều bảng lại với nhau nhằm phục vụ cho mục đích trích xuất và hiển thị dữ liệu tổng hợp."], correct: 2 },
+        { id: "1_4", type: "single", question: "Việc thực hiện quy trình sao lưu toàn bộ cơ sở dữ liệu (Backup) thông qua phần mềm HeidiSQL thường sẽ xuất ra tệp tin có phần mở rộng mặc định là gì?", options: ["Hệ thống sẽ xuất ra một tệp tin văn bản thuần túy mang phần mở rộng là định dạng <span class='code-inline'>.sql</span> chứa toàn bộ các câu lệnh khởi tạo bảng và chèn dữ liệu.", "Hệ thống sẽ xuất ra một tệp tin tài liệu mang phần mở rộng là định dạng <span class='code-inline'>.docx</span> chứa toàn bộ các câu lệnh khởi tạo bảng và chèn dữ liệu.", "Hệ thống sẽ xuất ra một tệp tin bảng tính mang phần mở rộng là định dạng <span class='code-inline'>.xlsx</span> chứa toàn bộ các câu lệnh khởi tạo bảng và chèn dữ liệu.", "Hệ thống sẽ xuất ra một tệp tin trình chiếu mang phần mở rộng là định dạng <span class='code-inline'>.pptx</span> chứa toàn bộ các câu lệnh khởi tạo bảng và chèn dữ liệu."], correct: 0 },
+        { id: "1_5", type: "single", question: "Nguyên nhân nào giải thích cho việc người quản trị không thể thêm một chi tiết hóa đơn mới nếu mã hóa đơn đó chưa được tạo lập thành công trong bảng hóa đơn tổng?", options: ["Do hệ thống cơ sở dữ liệu quản lí các bảng theo cơ chế tự động xóa dữ liệu nếu nhận thấy không có thông tin tương thích ở phía các bảng danh mục tổng.", "Do hệ thống cơ sở dữ liệu thực thi cơ chế kiểm tra ràng buộc toàn vẹn khóa ngoài để bảo đảm mọi dữ liệu phát sinh ở bảng con đều thuộc về một đối tượng gốc có thật.", "Do hệ thống cơ sở dữ liệu đang tạm thời bị treo ứng dụng nên không thể tiếp nhận thêm bất kì thông tin nội dung văn bản nào từ phía bàn phím của người sử dụng.", "Do hệ thống cơ sở dữ liệu yêu cầu mọi bảng con phải luôn luôn sở hữu dung lượng lưu trữ ít hơn so với bảng cha nên việc thêm dữ liệu mới liên tục bị hệ thống chặn lại."], correct: 1 },
+        { id: "1_6", type: "single", question: "Trong câu lệnh <span class='code-inline'>SELECT A.Ten, B.Diem FROM A INNER JOIN B ON A.Ma = B.Ma</span>, mệnh đề <span class='code-inline'>ON A.Ma = B.Ma</span> đảm nhận vai trò kĩ thuật gì trong quá trình truy vấn?", options: ["Mệnh đề này đóng vai trò xác định chính xác tên của các cột dữ liệu cuối cùng sẽ được in ra trên màn hình kết quả máy tính để người dùng quan sát rõ hơn.", "Mệnh đề này đóng vai trò tự động tính toán tổng số điểm trung bình của tất cả các dòng dữ liệu hiện đang được lưu trữ bên trong bảng A và bảng B.", "Mệnh đề này đóng vai trò cung cấp điều kiện logic bắt buộc để hệ thống tiến hành kiểm tra và ghép nối chính xác các dòng dữ liệu tương ứng giữa hai bảng.", "Mệnh đề này đóng vai trò sắp xếp lại toàn bộ kết quả trả về theo trình tự bảng chữ cái alphabet đối với cột mã định danh của cả hai bảng A và B."], correct: 2 },
+        { id: "1_7", type: "single", question: "Tính năng <span class='code-inline'>Export database as SQL</span> được trang bị bên trong phần mềm HeidiSQL mang lại tác dụng vô cùng thiết thực nào đối với người làm công tác quản trị cơ sở dữ liệu?", options: ["Tính năng này cho phép phần mềm tự động rà soát cấu trúc bảng và tiến hành diệt trừ mọi loại virus độc hại có nguy cơ lây nhiễm vào bên trong hệ thống lưu trữ.", "Tính năng này cho phép người quản trị xuất toàn bộ cấu trúc bảng và các dữ liệu hiện hành ra một tệp tin riêng lẻ để lưu trữ dự phòng và phục hồi khi xảy ra sự cố.", "Tính năng này cho phép nâng cấp toàn diện tốc độ của mạng máy tính nội bộ thông qua việc nén gọn cấu trúc các câu lệnh tìm kiếm SQL thành các chuỗi kí tự ngắn.", "Tính năng này cho phép thay thế hoàn toàn công việc phân tích thiết kế cơ sở dữ liệu vì phần mềm sẽ tự động đoán nhận và kết nối những bảng thông tin có liên quan."], correct: 1 },
+        { id: "1_8", type: "single", question: "Cho hai bảng dữ liệu: Bảng <span class='code-inline'>Lop</span> (MaLop, TenLop) và bảng <span class='code-inline'>HocSinh</span> (MaHS, HoTen, MaLop). Lệnh SQL <span class='code-inline'>DELETE FROM Lop WHERE MaLop = '11A1';</span> sẽ bị hệ thống báo lỗi vi phạm nếu rơi vào trường hợp nào sau đây?", options: ["Trường hợp hiện tại bên trong bảng <span class='code-inline'>HocSinh</span> đang lưu trữ ít nhất một bản ghi của học sinh có chứa giá trị mã lớp tham chiếu trực tiếp đến mã số <span class='code-inline'>'11A1'</span>.", "Trường hợp hiện tại bên trong bảng <span class='code-inline'>Lop</span> chưa từng tồn tại bất kì một lớp học nào mang tên gọi hay chứa thông số định danh mã số giống với <span class='code-inline'>'11A1'</span>.", "Trường hợp quản trị viên hệ thống đã quên mất việc thiết lập tùy chọn số đếm tự động tăng dần <span class='code-inline'>AUTO_INCREMENT</span> cho trường khóa chính bên trong bảng <span class='code-inline'>Lop</span>.", "Trường hợp toàn bộ các học sinh thuộc về lớp học mang mã định danh <span class='code-inline'>'11A1'</span> đã hoàn tất quá trình tốt nghiệp và được chuyển lưu trữ sang một cơ sở dữ liệu khác."], correct: 0 },
+        { id: "1_9", type: "single", question: "Cho hai bảng <span class='code-inline'>Sach</span>(MaSach, TenSach, MaTG) và <span class='code-inline'>TacGia</span>(MaTG, TenTG). Câu lệnh SQL nào dưới đây được viết đúng cú pháp và đáp ứng yêu cầu lấy ra danh sách tên sách cùng với tên tác giả tương ứng?", options: ["<span class='code-inline'>SELECT Sach.TenSach, TacGia.TenTG FROM Sach INNER JOIN TacGia ON Sach.MaTG = TacGia.MaTG;</span> là câu lệnh hoàn chỉnh đáp ứng chính xác mọi yêu cầu truy vấn dữ liệu.", "<span class='code-inline'>SELECT Sach.TenSach, TacGia.TenTG FROM Sach DELETE JOIN TacGia ON Sach.MaTG = TacGia.MaTG;</span> là câu lệnh hoàn chỉnh đáp ứng chính xác mọi yêu cầu truy vấn dữ liệu.", "<span class='code-inline'>SELECT Sach.TenSach, TacGia.TenTG FROM Sach INSERT JOIN TacGia ON Sach.MaTG = TacGia.MaTG;</span> là câu lệnh hoàn chỉnh đáp ứng chính xác mọi yêu cầu truy vấn dữ liệu.", "<span class='code-inline'>SELECT Sach.TenSach, TacGia.TenTG FROM Sach UPDATE JOIN TacGia ON Sach.MaTG = TacGia.MaTG;</span> là câu lệnh hoàn chỉnh đáp ứng chính xác mọi yêu cầu truy vấn dữ liệu."], correct: 0 },
+        { id: "1_10", type: "single", question: "Khi một cơ sở dữ liệu đang hoạt động bất ngờ bị hỏng hóc vật lí do sự cố chập cháy máy chủ, người quản trị tiến hành khởi chạy tính năng <span class='code-inline'>Load SQL file</span> trong HeidiSQL với mục đích gì?", options: ["Mục đích là để kích hoạt hệ thống tự động tìm kiếm trực tuyến và tải về phiên bản mới nhất của phần mềm HeidiSQL nhằm sửa chữa các lỗi bảo mật.", "Mục đích là để nạp lại tệp lệnh SQL dự phòng đã được xuất lưu trữ từ trước nhằm tái tạo cấu trúc bảng và khôi phục toàn bộ tình trạng dữ liệu ban đầu.", "Mục đích là để phần mềm khởi động trình rà soát cú pháp và xóa bỏ toàn bộ những dòng lệnh SQL bị viết sai nguyên tắc cấu trúc do người dùng thao tác.", "Mục đích là để máy tính xuất ra một thông báo cảnh báo khẩn cấp dạng SQL gửi thẳng đến mọi màn hình của các máy trạm đang tham gia trong hệ thống."], correct: 1 },
+        { id: "1_11", type: "single", question: "Để thực hiện công việc cập nhật hoặc sửa đổi nội dung của một dòng dữ liệu trực tiếp trên giao diện lưới (data grid) của phần mềm HeidiSQL, người sử dụng cần áp dụng thao tác nào?", options: ["Người sử dụng tiến hành nháy đúp chuột trái trực tiếp vào ô dữ liệu cần sửa, gõ nội dung mới hoàn chỉnh và cuối cùng nhấn phím Enter để hệ thống ghi nhận.", "Người sử dụng tiến hành nháy chuột phải vào một khoảng trống ngẫu nhiên trên màn hình, sau đó chọn lệnh tải lại bảng để bảng tự động sửa các lỗi chính tả.", "Người sử dụng tiến hành kéo thả biểu tượng của tệp văn bản từ bên ngoài màn hình Desktop vào thẳng phần mềm để hệ thống tự động dịch thuật và sửa đổi.", "Người sử dụng tiến hành ấn giữ phím Ctrl trên bàn phím và lăn con lăn chuột liên tục cho đến khi nội dung dữ liệu tự động thay đổi thành những kí tự mong muốn."], correct: 0 },
+        { id: "1_12", type: "single", question: "Kí hiệu dấu sao (*) xuất hiện bên trong đoạn câu lệnh <span class='code-inline'>SELECT * FROM ThongTinCaNhan;</span> mang ý nghĩa chỉ thị đặc biệt nào đối với hệ quản trị cơ sở dữ liệu?", options: ["Kí hiệu dấu sao mang ý nghĩa chỉ thị hệ quản trị cơ sở dữ liệu tiến hành mã hóa và che giấu tất cả các mật khẩu đang lưu trữ bên trong bảng truy vấn.", "Kí hiệu dấu sao mang ý nghĩa chỉ thị hệ quản trị cơ sở dữ liệu tạm thời dừng mọi hoạt động tìm kiếm thông tin để bảo vệ phần cứng máy tính khỏi bị quá tải.", "Kí hiệu dấu sao mang ý nghĩa chỉ thị hệ quản trị cơ sở dữ liệu tiến hành trích xuất và hiển thị hiển thị toàn bộ các trường dữ liệu hiện đang tồn tại bên trong bảng.", "Kí hiệu dấu sao mang ý nghĩa chỉ thị hệ quản trị cơ sở dữ liệu đánh dấu những bản ghi cực kì quan trọng để cấm không cho các người dùng khác truy cập vào."], correct: 2 },
+        { id: "1_13", type: "single", question: "Trong quy trình quản trị và duy trì tính ổn định của một hệ thống, hành động nào sau đây KHÔNG thuộc về nhiệm vụ bảo đảm an toàn dữ liệu định kì trên máy tính?", options: ["Thiết lập và sử dụng bộ lưu điện dự phòng (UPS) nhằm mục đích cấp điện ngay lập tức cho toàn hệ thống máy chủ mỗi khi bị cắt điện hoặc sụt áp đột ngột.", "Tiến hành sao lưu dữ liệu toàn bộ hệ thống định kì theo từng tuần, từng tháng và lưu trữ các tệp tin an toàn sang một khu vực lưu trữ hoàn toàn tách biệt.", "Tắt nguồn điện máy chủ một cách đột ngột bằng cách rút thẳng dây cắm điện để kiểm tra xem hệ điều hành có khả năng tự động khôi phục cấu trúc bảng hay không.", "Cấp quyền truy cập hệ thống ở mức giới hạn đối với những nhân sự không nằm trong tổ kĩ thuật để phòng tránh những hành vi cố ý phá hoại và chỉnh sửa dữ liệu."], correct: 2 },
+        { id: "1_14", type: "single", question: "Cảnh báo lỗi kĩ thuật có mã thông báo <span class='code-inline'>\"Foreign key constraint fails\"</span> thường xuất hiện trên màn hình hiển thị của phần mềm HeidiSQL trong tình huống người sử dụng đang thao tác điều gì?", options: ["Tình huống người sử dụng cố gắng thêm mới một mã định danh vào bảng con (bảng có chứa khóa ngoại) nhưng mã số này chưa từng được tạo lập ở phía bảng cha.", "Tình huống người sử dụng vô tình bấm nhầm vào nút thoát phần mềm trong khi quá trình lưu trữ thông tin xuống bộ nhớ ổ cứng của hệ thống chưa thực hiện xong.", "Tình huống người sử dụng cố gắng tạo ra một trường khóa chính mới bên trong bảng dữ liệu hiện hành nhưng lại vô tình điền thông tin toàn là các kí tự chữ cái.", "Tình huống người sử dụng yêu cầu hệ thống xuất báo cáo dữ liệu nhưng dung lượng ổ cứng lưu trữ của máy tính cá nhân đã hoàn toàn bị đầy từ trước đó rất lâu."], correct: 0 },
+        { id: "1_15", type: "single", question: "Cú pháp tham chiếu rõ ràng dạng <span class='code-inline'>TenBang.TenTruong</span> thường được vận dụng rất phổ biến trong các câu truy vấn có liên kết bảng (<span class='code-inline'>INNER JOIN</span>) nhằm mục đích giải quyết dứt điểm vấn đề nào sau đây?", options: ["Vấn đề giúp cho người lập trình tự động tính toán được số lượng khoảng trắng có bên trong chuỗi dữ liệu mà không cần phải gọi đến các hàm xử lí văn bản chuyên dụng.", "Vấn đề chỉ định rõ ràng trường dữ liệu đó thuộc về chính xác bảng thông tin nào, tránh gây ra tình trạng nhầm lẫn khi có từ hai bảng trở lên sở hữu các trường trùng tên nhau.", "Vấn đề tự động chuyển đổi toàn bộ ngôn ngữ tiếng Việt không có dấu bên trong máy tính thành ngôn ngữ tiếng Anh chuẩn quốc tế để phục vụ lưu trữ lâu dài trên mạng.", "Vấn đề hỗ trợ giao diện đồ họa của phần mềm có thể phối màu sắc hiển thị khác nhau cho từng dòng dữ liệu dựa trên thông số ngày tháng năm sinh của người dùng hiện tại."], correct: 1 },
+        { id: "1_16", type: "single", question: "Tệp tin máy tính mang đuôi <span class='code-inline'>.sql</span> do công cụ <span class='code-inline'>Export database</span> của phần mềm HeidiSQL tạo ra về bản chất là một loại tệp tin gì và nó chứa đựng những nội dung kĩ thuật cấu trúc nào bên trong?", options: ["Nó bản chất là một loại tệp tin hình ảnh đồ họa đa phương tiện chứa hàng loạt các bức ảnh chụp lại giao diện màn hình phần mềm tại thời điểm người quản trị nhấn nút sao lưu.", "Nó bản chất là một loại tệp tin văn bản thuần túy có chứa hàng loạt các câu lệnh truy vấn cấu trúc SQL được dùng để khởi tạo lại bảng và tiến hành chèn lại toàn bộ dữ liệu.", "Nó bản chất là một loại tệp tin âm thanh ghi lại toàn bộ các câu lệnh đọc bằng giọng nói của kĩ thuật viên hệ thống để tiện lợi cho việc phục hồi cơ sở dữ liệu qua đường truyền mạng.", "Nó bản chất là một loại tệp tin định dạng bảng tính kế toán của Microsoft Excel được tối ưu hóa đặc biệt nhằm tăng tốc độ truyền tải các con số sang một máy tính chủ mới."], correct: 1 },
+        { id: "1_17", type: "single", question: "Giả sử tổ chức của em đang quản lí cơ sở dữ liệu bao gồm bảng <span class='code-inline'>NhomNhac</span> (MaNhom, TenNhom) và bảng <span class='code-inline'>CaSi</span> (MaCS, TenCS, MaNhom). Để bổ sung thêm một ca sĩ mới vào nhóm nhạc sở hữu mã định danh là <span class='code-inline'>'N01'</span>, em cần phải tuân thủ điều kiện gì trước tiên?", options: ["Em bắt buộc phải đảm bảo rằng bản ghi nhóm nhạc mang mã số định danh <span class='code-inline'>'N01'</span> đã được khởi tạo và lưu trữ thành công bên trong bảng <span class='code-inline'>NhomNhac</span> từ trước thời điểm nhập.", "Em bắt buộc phải đảm bảo rằng bản ghi ca sĩ này đã từng có lịch sử lưu diễn tại rất nhiều quốc gia khác nhau để đáp ứng tiêu chí cấp chứng nhận số định danh âm nhạc toàn cầu.", "Em bắt buộc phải tự tay viết lập trình một chức năng phần mềm đồ họa hiện đại bằng ngôn ngữ Python để có thể chèn trực tiếp hình ảnh đại diện vào hệ thống dữ liệu đám mây.", "Em bắt buộc phải xóa hoàn toàn mọi thành viên ca sĩ cũ hiện đang tồn tại bên trong hệ thống bảng <span class='code-inline'>CaSi</span> trước khi tiến hành cập nhật bản ghi của ca sĩ thuộc thế hệ mới."], correct: 0 },
+        { id: "1_18", type: "single", question: "Nếu học sinh thực thi câu lệnh SQL: <span class='code-inline'>SELECT HocSinh.Ten, Lop.TenLop FROM HocSinh INNER JOIN Lop;</span> nhưng lại vô tình viết thiếu đi mệnh đề <span class='code-inline'>ON</span> quy định điều kiện, hệ quản trị cơ sở dữ liệu MySQL sẽ phản hồi như thế nào?", options: ["Hệ thống cơ sở dữ liệu sẽ vô cùng thông minh khi tự động tìm kiếm điều kiện thích hợp nhất và hoàn thành xuất sắc bản báo cáo chính xác tuyệt đối mà học sinh đang yêu cầu.", "Hệ thống cơ sở dữ liệu sẽ tự động chuyển đổi từ thao tác truy vấn hiển thị thông tin sang thao tác xóa vĩnh viễn toàn bộ các bảng dữ liệu vì tưởng lầm đây là lệnh giải phóng bộ nhớ.", "Hệ thống cơ sở dữ liệu sẽ lập tức cảnh báo phát hiện sự xâm nhập trái phép của tin tặc và đóng băng toàn bộ màn hình máy tính của học sinh cho đến khi giáo viên mở khóa.", "Hệ thống cơ sở dữ liệu sẽ tiến hành ghép nối sai lệch toàn bộ học sinh với mọi lớp học để tạo ra tích Đề-các (Cartesian product) hoặc thông báo lỗi cú pháp do sự thiếu sót điều kiện."], correct: 3 },
+        { id: "1_19", type: "single", question: "Để di chuyển an toàn toàn bộ một cơ sở dữ liệu quan trọng từ máy tính của một học sinh sang một máy tính khác trong phòng thực hành tin học, các em học sinh cần phải phối hợp thực hiện theo trình tự 2 bước kĩ thuật nào sau đây?", options: ["Học sinh sở hữu dữ liệu ban đầu sẽ tiến hành ấn giữ phím Ctrl+C ở thư mục ngoài màn hình, sau đó học sinh thứ hai dùng USB để cắm vào máy tính ấn Ctrl+V nhằm dán cơ sở dữ liệu mới.", "Học sinh sở hữu dữ liệu ban đầu sẽ thao tác thực hiện xuất sao lưu tệp SQL bằng công cụ <span class='code-inline'>Export</span>, sau đó mang tệp sang máy tính kia và học sinh thứ hai thao tác nạp tệp bằng công cụ <span class='code-inline'>Load SQL file</span>.", "Học sinh sở hữu dữ liệu ban đầu sẽ tiến hành nháy chuột phải xóa bỏ hệ quản trị MySQL trên máy tính của mình, sau đó cài đặt lại bộ phần mềm mới hoàn toàn sang phía máy tính của học sinh thứ hai.", "Học sinh sở hữu dữ liệu ban đầu sẽ lên mạng tìm kiếm trang web chia sẻ tệp trực tuyến miễn phí, tải hình ảnh bảng dữ liệu lên mạng để học sinh thứ hai thao tác gõ lại thông tin hoàn toàn bằng tay."], correct: 1 },
+        { id: "1_20", type: "single", question: "Khi đang tiến hành gõ nhập các thông số cho một hàng dữ liệu mới ngay trên lưới bảng của HeidiSQL, nếu đột nhiên phát hiện lỗi và muốn xóa bỏ toàn bộ thao tác thêm mới hàng đó trong lúc chưa lưu trữ, ta có thể nhanh chóng dùng thao tác nào?", options: ["Người sử dụng có thể tiến hành bấm phím <span class='code-inline'>Esc</span> nhiều lần liên tục trên bàn phím máy tính hoặc nháy chuột phải chọn hủy bỏ những thay đổi đối với dòng văn bản hiện hành trên lưới.", "Người sử dụng có thể tiến hành bấm phím Power trên thùng máy tính để hệ điều hành Windows tắt đi ngay lập tức nhằm cắt đứt quá trình lưu trữ thông tin đang được truyền tải ngầm.", "Người sử dụng có thể tiến hành mở bộ soạn thảo văn bản Word lên để gõ một yêu cầu cấp quyền xóa dòng văn bản, sau đó in ra giấy và trình lên cho người có thẩm quyền cao nhất kí duyệt.", "Người sử dụng có thể tiến hành nhập một cụm mật khẩu đặc biệt mang tên \"UNDO ALL\" vào ô tìm kiếm trên góc phần mềm để kích hoạt siêu tính năng tự động tua ngược thời gian thực."], correct: 0 },
+        { id: "1_21", type: "single", question: "Mệnh đề <span class='code-inline'>ORDER BY</span> cấu thành trong một câu lệnh ngôn ngữ truy vấn SQL chuyên dụng được áp dụng nhằm thực thi yêu cầu cốt lõi nào trong quá trình trình bày thông tin báo cáo?", options: ["Mệnh đề này được áp dụng nhằm mục đích thực thi yêu cầu sắp xếp danh sách kết quả truy vấn trả về theo trình tự tăng dần hoặc trình tự giảm dần dựa trên tiêu chí của một trường xác định.", "Mệnh đề này được áp dụng nhằm mục đích thực thi yêu cầu đổi toàn bộ văn bản của bảng dữ liệu đang hiển thị sang định dạng in nghiêng để tạo sự khác biệt thẩm mĩ giữa các cột dữ liệu với nhau.", "Mệnh đề này được áp dụng nhằm mục đích thực thi yêu cầu tính toán tự động các phép toán cộng trừ nhân chia phức tạp giữa các số thập phân có chứa rất nhiều thông tin kĩ thuật phức tạp.", "Mệnh đề này được áp dụng nhằm mục đích thực thi yêu cầu đếm nhẩm nhanh số lượng kí tự nguyên âm và phụ âm xuất hiện bên trong một xâu văn bản trước khi chuyển tệp tin qua mạng."], correct: 0 },
+        { id: "1_22", type: "single", question: "Khi thực hiện các thao tác trong hộp thoại thiết lập <span class='code-inline'>Export database</span> của phần mềm HeidiSQL, mục tùy chọn <span class='code-inline'>\"Data\"</span> thường cung cấp các hình thức nhằm hỗ trợ người quản trị xuất dữ liệu linh hoạt dưới hình thức nào?", options: ["Mục tùy chọn này cung cấp quyền thiết lập tự động chèn thêm biểu trưng logo điện tử của phần mềm vào từng tấm ảnh được lưu bên trong hệ quản trị máy tính nội bộ của công ty.", "Mục tùy chọn này cung cấp quyền chuyển ngữ toàn bộ các văn bản tiếng nước ngoài bên trong cơ sở dữ liệu sang định dạng một ngôn ngữ chuẩn xác khác dựa theo dịch thuật đám mây.", "Mục tùy chọn này cung cấp quyền giới hạn phần mềm chỉ được phép tiến hành sao lưu một bản ghi duy nhất, còn tất cả các bản ghi thông tin quan trọng khác sẽ bị hệ thống tự động xóa đi vĩnh viễn.", "Mục tùy chọn này cung cấp quyền lựa chọn hình thức xuất nội dung dữ liệu dưới dạng thức các câu lệnh <span class='code-inline'>INSERT</span> kết hợp nhiều dòng cùng một lúc hoặc <span class='code-inline'>INSERT</span> đơn lẻ dành cho từng dòng độc lập."], correct: 3 },
+        { id: "1_23", type: "single", question: "Việc cơ chế kiểm soát dữ liệu tại các trường khóa ngoài (<span class='code-inline'>Foreign Key</span>) được hệ quản trị cơ sở dữ liệu trực tiếp thực hiện một cách tự động mang lại ý nghĩa to lớn nào trong khoa học quản lí?", options: ["Cơ chế này tự động làm thay công việc của một người thiết kế đồ họa máy tính vì nó giúp cho giao diện hiển thị bảng biểu của ứng dụng trở nên đa sắc màu và dễ dàng quan sát hơn trong ban đêm.", "Cơ chế này đem lại khả năng ngăn chặn triệt để tình trạng mồ côi dữ liệu bên trong hệ thống lưu trữ, bảo đảm tuyệt đối rằng mọi chi tiết phát sinh ở bảng con đều phải thuộc về một đối tượng gốc có thực ở bảng cha.", "Cơ chế này ép buộc hệ thống máy tính phải tiến hành mua sắm và trang bị thêm dung lượng băng thông mạng nội bộ thật lớn để có thể truyền tải các video chất lượng cao từ thiết bị thông minh.", "Cơ chế này tạo ra một màng bọc mã hóa vững chắc giúp máy tính miễn nhiễm một trăm phần trăm đối với toàn bộ các phần mềm gián điệp đến từ mọi hệ thống mạng internet toàn cầu phức tạp nhất."], correct: 1 },
+        { id: "1_24", type: "single", question: "Khi một cá nhân học sinh thiết kế câu truy vấn thống kê tính năng điểm thi tổng hợp và có sử dụng hàm <span class='code-inline'>AVG()</span> (tính điểm trung bình) nhưng lại hoàn toàn quên mất không dùng mệnh đề kết hợp <span class='code-inline'>GROUP BY</span>, điều gì có thể sẽ xảy ra?", options: ["Hệ thống có thể sẽ tiến hành tính toán một cách dàn trải và chỉ trả về một dòng báo cáo duy nhất tính tổng trung bình chung của toàn bộ cả bảng dữ liệu mà không hề phân loại theo các nhóm riêng biệt.", "Hệ thống có thể sẽ phát ra một tiếng bíp cảnh báo từ bên trong phần cứng máy tính và ngay lập tức từ chối cung cấp bất kì dịch vụ kết nối cơ sở dữ liệu trực tuyến nào cho người dùng.", "Hệ thống có thể sẽ tự động chèn thêm một cột dữ liệu ảo hóa vào bên trong phần mềm báo cáo để tiến hành ghi chú điểm thành phần chuyên cần của từng học sinh học lớp công nghệ thông tin.", "Hệ thống có thể sẽ tự động thu hồi lại hoàn toàn mọi chứng chỉ khóa học cấp cho người quản trị mạng lưới vì đã vi phạm quy tắc khai báo dữ liệu bảo mật ở mức độ đặc biệt cực kì nghiêm trọng."], correct: 0 },
+        
+        { id: '1_c1', type: 'tf_cluster', question: "Để xây dựng CSDL quản lí bài hát trên một trang web, bạn Hoa tạo hai bảng:<br>Bảng <span class='code-inline'>TheLoai</span> (MaTL, TenTL) với dữ liệu mẫu:<div class='table-container'><table class='question-table'><tr><th>MaTL</th><th>TenTL</th></tr><tr><td>TL01</td><td>Nhạc Trẻ</td></tr><tr><td>TL02</td><td>Nhạc Đỏ</td></tr></table></div>Bảng <span class='code-inline'>BanNhac</span> (MaBN, TenBN, MaTL) với dữ liệu mẫu:<div class='table-container'><table class='question-table'><tr><th>MaBN</th><th>TenBN</th><th>MaTL</th></tr><tr><td>BN01</td><td>Nơi này có anh</td><td>TL01</td></tr></table></div>Hiện tại, Hoa đang sử dụng HeidiSQL để thực hành cập nhật dữ liệu. Bạn ấy nhận được yêu cầu phải thêm một bản nhạc mới mang tên \"Bèo dạt mây trôi\" thuộc thể loại \"Nhạc Dân Ca\" (mã định danh TL03).", subQuestions: [
+            { id: '1_d25a', text: "Việc thiết lập trường <span class='code-inline'>MaTL</span> trong bảng <span class='code-inline'>BanNhac</span> làm khóa ngoài tham chiếu trực tiếp đến trường <span class='code-inline'>MaTL</span> của bảng <span class='code-inline'>TheLoai</span> có vai trò giúp hệ thống tự động kiểm tra tính hợp lệ của mọi thông tin nhập vào.", correct: "Đúng" },
+            { id: '1_d25b', text: "Nếu bạn Hoa gõ lệnh <span class='code-inline'>DELETE FROM TheLoai WHERE MaTL = 'TL01';</span>, hệ thống phần mềm sẽ thực thi xóa thành công thể loại \"Nhạc Trẻ\" và tự động xóa luôn bản nhạc BN01 để duy trì bộ nhớ.", correct: "Sai" },
+            { id: '1_d25c', text: "Để có thể thêm thành công bản nhạc mới thuộc về thể loại \"Nhạc Dân Ca\" (<span class='code-inline'>TL03</span>) vào hệ thống mà không phát sinh lỗi báo hiệu vi phạm, Hoa bắt buộc phải khởi tạo bản ghi cho thể loại này trong bảng <span class='code-inline'>TheLoai</span> trước tiên.", correct: "Đúng" },
+            { id: '1_d25d', text: "Cú pháp lệnh SQL <span class='code-inline'>INSERT INTO BanNhac VALUES ('BN02', 'Bèo dạt mây trôi', 'TL04');</span> chắc chắn sẽ được phần mềm thực thi thành công mĩ mãn kể cả khi trong bảng <span class='code-inline'>TheLoai</span> chưa hề tồn tại mã thể loại <span class='code-inline'>TL04</span>.", correct: "Sai" }
+        ]},
+        { id: '1_c2', type: 'tf_cluster', question: "Tại một cửa hàng kinh doanh, CSDL quản lí hệ thống bán hàng bao gồm hai bảng sau:<br>Bảng <span class='code-inline'>KhachHang</span> (MaKH, HoTen, SoDienThoai) với dữ liệu mẫu:<div class='table-container'><table class='question-table'><tr><th>MaKH</th><th>HoTen</th><th>SoDienThoai</th></tr><tr><td>K01</td><td>Nguyễn Văn An</td><td>0912345678</td></tr><tr><td>K02</td><td>Trần Thị Bình</td><td>0987654321</td></tr></table></div>Bảng <span class='code-inline'>HoaDon</span> (MaHD, MaKH, NgayLap, TongTien) với dữ liệu mẫu:<div class='table-container'><table class='question-table'><tr><th>MaHD</th><th>MaKH</th><th>NgayLap</th><th>TongTien</th></tr><tr><td>H01</td><td>K01</td><td>10/10/2026</td><td>500000</td></tr></table></div>Để lập danh sách theo dõi những khách hàng đã mua sắm trong tháng, nhân viên cần trích xuất báo cáo bao gồm ba cột: Họ tên khách hàng, Số điện thoại và Ngày lập hóa đơn tương ứng. Nhân viên sử dụng câu lệnh SQL có kết hợp mệnh đề <span class='code-inline'>INNER JOIN</span>.", subQuestions: [
+            { id: '1_d26a', text: "Mệnh đề <span class='code-inline'>INNER JOIN</span> được đánh giá là một công cụ cốt lõi trong ngôn ngữ truy vấn SQL, cho phép lập trình viên kết nối và lấy ra dòng dữ liệu thích hợp từ hai bảng trở lên dựa trên điều kiện của một cột chung.", correct: "Đúng" },
+            { id: '1_d26b', text: "Để liên kết thành công hai bảng dữ liệu trong tình huống phía trên, người thiết kế hệ thống sẽ phải chỉ định cột dùng chung để kết nối chính là trường <span class='code-inline'>TongTien</span> và trường khóa ngoài <span class='code-inline'>NgayLap</span>.", correct: "Sai" },
+            { id: '1_d26c', text: "Cú pháp chuẩn mực và chính xác để kết nối hai bảng dữ liệu này sẽ bao hàm mệnh đề kết nối có dạng: <span class='code-inline'>ON KhachHang.MaKH = HoaDon.MaKH</span>.", correct: "Đúng" },
+            { id: '1_d26d', text: "Nếu trong bảng <span class='code-inline'>KhachHang</span> hiện đang có 100 khách hàng, nhưng chỉ mới có đúng 5 người từng thực hiện mua hàng (có mã xuất hiện trong bảng <span class='code-inline'>HoaDon</span>), thì câu lệnh <span class='code-inline'>INNER JOIN</span> sẽ trả về danh sách chứa toàn bộ 100 khách hàng.", correct: "Sai" }
+        ]},
+        { id: '1_c3', type: 'tf_cluster', question: "Hệ thống CSDL quản lí điểm của một nhà trường đang được lưu trữ tập trung trên máy chủ sử dụng hệ quản trị MySQL. Hằng tuần, tổ công nghệ thông tin đều đặn mở công cụ HeidiSQL để xuất toàn bộ các bảng thành tệp dự phòng. Cuối tuần vừa qua, sự cố mất điện đột ngột đã làm cháy chập hỏng hoàn toàn ổ cứng của máy chủ nhà trường. Nhân viên kĩ thuật tiến hành thay thế thiết bị ổ cứng và cài lại phần mềm để chuẩn bị phục hồi.", subQuestions: [
+            { id: '1_d27a', text: "Thao tác xuất tạo tệp dự phòng sao lưu cơ sở dữ liệu trên giao diện phần mềm HeidiSQL thường được thực hiện thông qua công cụ chức năng có tên gọi là <span class='code-inline'>\"Export database as SQL\"</span>.", correct: "Đúng" },
+            { id: '1_d27b', text: "Tệp tin sao lưu cơ sở dữ liệu do phần mềm HeidiSQL tự động xuất ra luôn luôn được mã hóa nhị phân rất phức tạp nên không thể mở và đọc nội dung văn bản thông qua các phần mềm soạn thảo thông dụng như Notepad.", correct: "Sai" },
+            { id: '1_d27c', text: "Việc duy trì thói quen thực hiện sao lưu định kì sẽ giúp cho nhà trường luôn sẵn sàng nhanh chóng khôi phục lại trạng thái CSDL gần như nguyên vẹn nhất trong các tình huống phần cứng thiết bị gặp sự cố vật lí bất ngờ.", correct: "Đúng" },
+            { id: '1_d27d', text: "Sau khi hoàn thiện việc thay ổ cứng và cấu hình lại MySQL, nhân viên kĩ thuật sẽ khởi động HeidiSQL, chọn lệnh <span class='code-inline'>\"Load SQL file\"</span> rồi tìm chọn đúng tệp đã sao lưu tuần trước để máy tính tái tạo các bảng và phục hồi toàn bộ điểm số.", correct: "Đúng" }
+        ]},
+        { id: '1_c4', type: 'tf_cluster', question: "Bạn Hải là một thực tập sinh tin học đang chỉnh sửa cơ sở dữ liệu nhân sự của công ty. Bạn ấy viết lệnh SQL để thao tác trên hai bảng dữ liệu đã có sẵn là <span class='code-inline'>PhongBan</span> và <span class='code-inline'>NhanVien</span>. Cấu trúc và dữ liệu hiện hành của hai bảng như sau:<br>Bảng <span class='code-inline'>PhongBan</span> (MaPB, TenPB):<div class='table-container'><table class='question-table'><tr><th>MaPB</th><th>TenPB</th></tr><tr><td>PB01</td><td>Nhân Sự</td></tr><tr><td>PB02</td><td>Kinh Doanh</td></tr></table></div>Bảng <span class='code-inline'>NhanVien</span> (MaNV, HoTen, MaPB):<div class='table-container'><table class='question-table'><tr><th>MaNV</th><th>HoTen</th><th>MaPB</th></tr><tr><td>NV01</td><td>Phạm Hùng</td><td>PB01</td></tr><tr><td>NV02</td><td>Đào Thảo</td><td>PB02</td></tr></table></div>Hải muốn tiến hành thay đổi tên gọi của phòng ban từ \"Nhân Sự\" thành \"Hành Chính\", sau đó xuất ra bản báo cáo chi tiết kèm theo điều kiện lọc dữ liệu cụ thể.", subQuestions: [
+            { id: '1_d28a', text: "Để cập nhật và đổi tên của phòng ban có mã <span class='code-inline'>PB01</span> từ văn bản \"Nhân Sự\" sang thành \"Hành Chính\", Hải cần sử dụng kết hợp giữa lệnh <span class='code-inline'>UPDATE</span> và mệnh đề điều kiện <span class='code-inline'>WHERE</span>.", correct: "Đúng" },
+            { id: '1_d28b', text: "Khi Hải gõ và khởi chạy nhanh một câu lệnh cơ bản <span class='code-inline'>SELECT * FROM NhanVien;</span>, màn hình báo cáo sẽ ngay lập tức tự động hiển thị luôn cả cột tên của phòng ban do hệ thống chủ động ngầm định phân tích sự liên kết.", correct: "Sai" },
+            { id: '1_d28c', text: "Nếu trong kết quả trả về, Hải muốn bảng báo cáo hiển thị cột <span class='code-inline'>HoTen</span> đổi tên tiêu đề thành dòng chữ \"Họ và Tên Nhân Viên\" cho dễ dàng theo dõi thì bạn ấy hoàn toàn có thể sử dụng từ khóa <span class='code-inline'>AS</span> lồng vào trong mệnh đề <span class='code-inline'>SELECT</span>.", correct: "Đúng" },
+            { id: '1_d28d', text: "Câu truy vấn: <span class='code-inline'>SELECT NhanVien.HoTen, PhongBan.TenPB FROM NhanVien INNER JOIN PhongBan ON NhanVien.MaPB = PhongBan.MaPB WHERE PhongBan.MaPB = 'PB01';</span> sẽ in ra danh sách toàn bộ các nhân sự đang trực thuộc làm việc tại phòng mang mã \"PB01\".", correct: "Đúng" }
+        ]}
+    ];
+
+    let currentQuestions = [];
+    let deviceId = '';
+    let allScores = [];
+    let currentStudent = {};
+    let userAnswers = {};
+    let timerInterval;
+    let quizStartTime, quizEndTime;
+    
+    let currentPage = 1;
+    const rowsPerPage = 10;
+    let sortedScoresList = [];
+
+    window.startQuizAction = function() {
+        const errDiv = document.getElementById('login-error');
+        errDiv.classList.add('hidden');
+        const name = document.getElementById('hoTen').value.trim();
+        const lop = document.getElementById('lop').value.trim().toUpperCase(); 
+        
+        if (!name || !lop) {
+            errDiv.innerText = "⚠️ Yêu cầu nhập đầy đủ Họ tên và Lớp!";
+            errDiv.classList.remove('hidden');
+            return;
+        }
+
+        currentStudent = { hoTen: name, lop: lop, maDe: 'de_tin10', tenDe: 'Kiểm Tra Thường Xuyên Đề 2 - Tin Học 11' };
+        
+        let rawQuestions = JSON.parse(JSON.stringify(de_data));
+        
+        // Không trộn câu hỏi và không trộn đáp án
+        let part1 = rawQuestions.filter(q => q.type === 'single');
+        part1.forEach((q, idx) => {
+            q.displayQuestion = `Câu ${idx + 1}: ${q.question}`;
+        });
+        
+        let part2 = rawQuestions.filter(q => q.type === 'tf_cluster');
+        part2.forEach((q, idx) => {
+            q.displayQuestion = `Câu ${part1.length + idx + 1}: ${q.question}`;
+            const labels = ['a)', 'b)', 'c)', 'd)'];
+            q.subQuestions.forEach((sub, sIdx) => {
+                sub.text = `${labels[sIdx]} ${sub.text.replace(/^[a-d]\)\s*/i, '')}`;
+            });
+        });
+        
+        currentQuestions = [...part1, ...part2];
+        quizStartTime = new Date();
+        cheatCount = 0; 
+        setTimeout(() => { isQuizStarted = true; }, 1000);
+        showSection('quiz');
+        document.getElementById('quiz-title').innerText = currentStudent.tenDe;
+        document.getElementById('student-info').innerText = `${currentStudent.hoTen} - Lớp ${currentStudent.lop}`;
+        currentIdx = 0;
+        userAnswers = {};
+        window.renderQuestion();
+        startTimer(20 * 60);
+    };
+
+    window.nextQuestion = function() {
+        if (currentIdx < currentQuestions.length - 1) { currentIdx++; window.renderQuestion(); }
+    };
+
+    window.viewScoresAction = function() {
+        if (database) {
+            scoresRef.once('value').then((snapshot) => {
+                const data = snapshot.val();
+                allScores = data ? Object.keys(data).map(key => ({...data[key], id: key})) : [];
+                currentPage = 1;
+                window.renderScores();
+                showSection('scores');
+            });
+        }
+    };
+
+    window.goHome = function() {
+        document.getElementById('result-section').classList.add('hidden');
+        document.getElementById('hoTen').value = ''; 
+        document.getElementById('lop').value = ''; 
+        clearInterval(timerInterval);
+        showSection('login');
+    };
+
+    function getTotalItems() {
+        let count = 0;
+        currentQuestions.forEach(q => {
+            if (q.type === 'tf_cluster') count += q.subQuestions.length;
+            else count++;
+        });
+        return count; 
+    }
+
+    function getAnsweredCount() {
+        let count = 0;
+        currentQuestions.forEach(q => {
+            if (q.type === 'tf_cluster') {
+                q.subQuestions.forEach(sub => { if (userAnswers[sub.id]) count++; });
+            } else {
+                if (userAnswers[q.id] !== undefined) count++;
+            }
+        });
+        return count;
+    }
+
+    window.selectAnswer = function(qId, val, type) {
+        userAnswers[qId] = val;
+        window.updateProgress();
+    };
+
+    window.renderQuestion = function() {
+        if (!currentQuestions || currentQuestions.length === 0) return;
+        const q = currentQuestions[currentIdx];
+        const container = document.getElementById('question-container');
+        
+        if (q.type === 'tf_cluster') {
+            container.innerHTML = `<div class="fade-in">
+                <div class="flex items-center gap-3 mb-6 border-b-2 border-orange-100 pb-3">
+                    <span class="bg-gradient-to-br from-orange-400 to-red-500 text-white w-10 h-10 flex items-center justify-center rounded-xl font-bold text-xl shadow-md">II</span>
+                    <h3 class="text-xl sm:text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-orange-600 to-red-600 tracking-wide uppercase">PHẦN TRẮC NGHIỆM ĐÚNG/SAI</h3>
+                </div>
+                <div class="bg-red-50 border-2 border-red-200 p-4 sm:p-6 rounded-2xl mb-6 text-red-700 text-lg sm:text-xl font-bold leading-relaxed shadow-inner">
+                    ${q.displayQuestion.replace(/\n/g, '<br/>')}
+                </div>
+                <div class="space-y-4 md:pl-6">
+                    ${q.subQuestions.map(sub => `
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between bg-white p-5 sm:p-6 border-2 border-gray-100 hover:border-red-300 rounded-2xl gap-4 shadow-sm hover:shadow-md transition-all">
+                        <span class="flex-1 text-gray-800 font-bold text-lg sm:text-xl leading-relaxed">${sub.text}</span>
+                        <div class="flex gap-3 flex-shrink-0 w-full sm:w-auto mt-3 sm:mt-0 justify-between sm:justify-end">
+                            <input type="radio" id="q_${sub.id}_T" name="q_${sub.id}" value="Đúng" class="hidden tf-radio-T" onchange="window.selectAnswer('${sub.id}', 'Đúng', 'tf')" ${userAnswers[sub.id] === 'Đúng' ? 'checked' : ''}>
+                            <label for="q_${sub.id}_T" class="tf-label-T flex-1 sm:flex-none px-4 py-4 border-2 border-gray-200 rounded-xl cursor-pointer font-bold text-gray-500 text-base sm:text-lg text-center w-full sm:w-32 transition-all hover:bg-gray-50 uppercase tracking-wide active:scale-95 touch-manipulation">Đúng</label>
+                            
+                            <input type="radio" id="q_${sub.id}_S" name="q_${sub.id}" value="Sai" class="hidden tf-radio-S" onchange="window.selectAnswer('${sub.id}', 'Sai', 'tf')" ${userAnswers[sub.id] === 'Sai' ? 'checked' : ''}>
+                            <label for="q_${sub.id}_S" class="tf-label-S flex-1 sm:flex-none px-4 py-4 border-2 border-gray-200 rounded-xl cursor-pointer font-bold text-gray-500 text-base sm:text-lg text-center w-full sm:w-32 transition-all hover:bg-gray-50 uppercase tracking-wide active:scale-95 touch-manipulation">Sai</label>
+                        </div>
+                    </div>`).join('')}
+                </div>
+            </div>`;
+        } else {
+            container.innerHTML = `<div class="fade-in">
+                ${currentIdx === 0 ? `<div class="flex items-center gap-3 mb-6 border-b-2 border-blue-100 pb-3"><span class="bg-gradient-to-br from-blue-400 to-cyan-500 text-white w-10 h-10 flex items-center justify-center rounded-xl font-bold text-xl shadow-md">I</span><h3 class="text-xl sm:text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-600 tracking-wide uppercase">PHẦN TRẮC NGHIỆM MỘT LỰA CHỌN</h3></div>` : ''}
+                <div class="flex gap-4 mb-5">
+                    <div class="w-full">
+                        <p class="text-xl sm:text-2xl font-bold text-red-600 mt-1 leading-snug tracking-tight">${q.displayQuestion}</p>
+                    </div>
+                </div>
+                <div class="space-y-4 md:pl-14 mt-6">
+                    ${q.options.map((opt, i) => `
+                    <div class="flex items-center">
+                        <input type="radio" id="opt_${i}" name="q_${q.id}" value="${i}" class="hidden single-radio" ${userAnswers[q.id] === i ? 'checked' : ''} onchange="window.selectAnswer('${q.id}',${i}, 'single')">
+                        <label for="opt_${i}" class="option-label w-full p-4 sm:p-5 border-2 border-gray-200 rounded-2xl flex items-center gap-4 bg-white shadow-sm font-semibold text-lg sm:text-xl active:scale-[0.98] touch-manipulation">
+                            <span class="w-12 h-12 sm:w-10 sm:h-10 rounded-xl border-2 border-gray-300 flex items-center justify-center text-lg sm:text-base font-bold text-gray-400 flex-shrink-0 bg-gray-50 transition-colors">${String.fromCharCode(65 + i)}</span>
+                            <span class="text-gray-700 leading-relaxed">${opt}</span>
+                        </label>
+                    </div>`).join('')}
+                </div>
+            </div>`;
+        }
+        window.updateNav();
+        window.updateProgress();
+    };
+
+    window.updateNav = function() {
+        document.getElementById('next-btn').style.display = (currentIdx === currentQuestions.length - 1) ? 'none' : 'block';
+        document.getElementById('submit-btn').style.display = (currentIdx === currentQuestions.length - 1) ? 'block' : 'none';
+    };
+
+    window.updateProgress = function() {
+        document.getElementById('progress-text').innerText = `${getAnsweredCount()}/${getTotalItems()} ý`;
+    };
+
+    function formatDuration(sec) {
+        const m = Math.floor(sec / 60); const s = sec % 60;
+        return `${m}p ${s}s`;
+    }
+
+    window.submitQuiz = function() {
+        if (!isQuizStarted) return; 
+        isQuizStarted = false; 
+        
+        quizEndTime = new Date();
+        clearInterval(timerInterval);
+
+        let totalScore = 0;
+        let correctSubItems = 0;
+        let totalItems = getTotalItems();
+
+        currentQuestions.forEach(q => {
+            if (q.type === 'tf_cluster') {
+                let subCorrectCount = 0;
+                q.subQuestions.forEach(sub => {
+                    if (userAnswers[sub.id] === sub.correct) {
+                        subCorrectCount++;
+                        correctSubItems++;
+                    }
+                });
+                
+                if (subCorrectCount === 1) totalScore += 0.1;
+                else if (subCorrectCount === 2) totalScore += 0.25;
+                else if (subCorrectCount === 3) totalScore += 0.5;
+                else if (subCorrectCount === 4) totalScore += 1.0;
+
+            } else {
+                if (userAnswers[q.id] === q.correct) {
+                    totalScore += 0.25; 
+                    correctSubItems++;
+                }
+            }
+        });
+
+        const score = totalScore.toFixed(2);
+
+        const record = {
+            hoTen: currentStudent.hoTen, lop: currentStudent.lop, tenDe: currentStudent.tenDe,
+            diem: parseFloat(score), soCauDung: correctSubItems, tongCau: totalItems,
+            startTime: quizStartTime.toLocaleTimeString(), endTime: quizEndTime.toLocaleTimeString(),
+            duration: formatDuration(Math.floor((quizEndTime - quizStartTime) / 1000)),
+            thoiGian: new Date().toISOString(), deviceId: deviceId
+        };
+        if(database) {
+            scoresRef.push(record, () => { window.showModalResult(score, correctSubItems, totalItems, record.duration); });
+        }
+    };
+
+    window.showModalResult = function(score, correct, total, dur) {
+        ['login', 'quiz', 'scores'].forEach(s => document.getElementById(s+'-section').classList.add('hidden'));
+        document.getElementById('result-section').classList.remove('hidden');
+        document.getElementById('result-content').innerHTML = `<div class="text-6xl sm:text-7xl mb-4 animate-bounce">🎉</div><h3 class="text-2xl sm:text-3xl font-bold text-green-600 mb-2">Hoàn thành bài thi!</h3><p class="text-gray-600 mb-6 mt-2"><span class="font-bold text-blue-700 text-lg sm:text-xl uppercase tracking-wider">${currentStudent.hoTen} - Lớp ${currentStudent.lop}</span><br><span class="text-sm font-semibold text-gray-400 mt-1 block">${currentStudent.tenDe}</span></p><div class="bg-blue-50 border-2 border-blue-100 rounded-3xl p-6 mb-6 shadow-inner relative"><div class="text-sm text-blue-500 font-bold mb-2 uppercase tracking-widest">ĐIỂM SỐ CỦA BẠN</div><div class="text-6xl sm:text-7xl font-bold text-blue-600 drop-shadow-sm">${score} <span class="text-2xl text-gray-400">/ 10</span></div><div class="text-base sm:text-lg font-bold text-indigo-600 mt-4 bg-white inline-block px-5 py-2 rounded-full shadow-sm">Trả lời đúng ${correct}/${total} ý | TG: ${dur}</div></div><div class="grid grid-cols-2 gap-3 mb-4"><button onclick="window.goHome()" class="w-full py-4 bg-gray-100 text-gray-800 rounded-xl font-bold shadow-sm hover:bg-gray-200 transition-transform active:scale-95 touch-manipulation text-lg border-2 border-gray-200">🏠 Trang chủ</button><button onclick="document.getElementById('result-section').classList.add('hidden'); window.viewScoresAction();" class="w-full py-4 bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-xl font-bold shadow-sm hover:shadow-md transition-transform active:scale-95 touch-manipulation text-lg">🏆 Bảng điểm</button></div>`;
+    };
+
+    window.renderScores = function() {
+        const tbody = document.getElementById('scores-tbody');
+        const paginationControls = document.getElementById('pagination-controls');
+        
+        if (allScores.length === 0) { 
+            tbody.innerHTML = ''; 
+            document.getElementById('no-scores').classList.remove('hidden'); 
+            paginationControls.classList.add('hidden');
+            document.getElementById('my-score-summary').classList.add('hidden');
+            return; 
+        }
+        
+        document.getElementById('no-scores').classList.add('hidden');
+        paginationControls.classList.remove('hidden');
+        
+        // Sắp xếp điểm ưu tiên từ cao xuống thấp
+        sortedScoresList = [...allScores].sort((a, b) => {
+            if (b.diem !== a.diem) {
+                return b.diem - a.diem;
+            }
+            return (a.hoTen || '').localeCompare(b.hoTen || '');
+        });
+
+        const myScoreIndex = sortedScoresList.findIndex(s => s.deviceId === deviceId);
+        if (myScoreIndex !== -1) {
+            const myScore = sortedScoresList[myScoreIndex];
+            document.getElementById('my-score-summary').classList.remove('hidden');
+            document.getElementById('my-summary-name').innerText = `${myScore.hoTen} (${(myScore.lop || '').toUpperCase()})`;
+            document.getElementById('my-summary-rank').innerText = `Hạng: #${myScoreIndex + 1}`;
+            document.getElementById('my-summary-score').innerText = `${myScore.diem}`;
+        } else {
+            document.getElementById('my-score-summary').classList.add('hidden');
+        }
+
+        const totalPages = Math.ceil(sortedScoresList.length / rowsPerPage) || 1;
+        if (currentPage > totalPages) currentPage = totalPages;
+        
+        document.getElementById('page-info').innerText = `Trang ${currentPage} / ${totalPages}`;
+        document.getElementById('prev-page-btn').disabled = currentPage === 1;
+        document.getElementById('next-page-btn').disabled = currentPage === totalPages;
+
+        const startIndex = (currentPage - 1) * rowsPerPage;
+        const endIndex = startIndex + rowsPerPage;
+        const pageData = sortedScoresList.slice(startIndex, endIndex);
+
+        tbody.innerHTML = pageData.map((s, idx) => {
+            let timeStr = s.startTime;
+            if (s.thoiGian) {
+                const dt = new Date(s.thoiGian);
+                // Chỉ in ra định dạng ngày tháng năm
+                timeStr = dt.toLocaleDateString('vi-VN');
+            }
+            const globalIdx = startIndex + idx + 1;
+
+            return `<tr class="${s.deviceId === deviceId ? 'my-score-row' : 'hover:bg-gray-50'} transition-colors border-b border-gray-100">
+                <td class="px-3 sm:px-4 py-4 text-center font-bold text-gray-500 text-sm">#${globalIdx}</td>
+                <td class="px-3 sm:px-4 py-4 font-bold text-blue-600 text-sm">${(s.lop || '').toUpperCase()}</td>
+                <td class="px-3 sm:px-4 py-4 font-semibold text-gray-800 text-sm">${s.hoTen} ${s.deviceId === deviceId ? '<span class="ml-2 bg-pink-500 text-white text-[10px] px-2 rounded-md">Bạn</span>' : ''}</td>
+                <td class="px-3 sm:px-4 py-4 text-center"><span class="font-bold text-lg ${s.diem >= 5 ? 'text-green-600' : 'text-red-500'}">${s.diem}</span></td>
+                <td class="px-3 sm:px-4 py-4 text-center text-gray-500 text-xs">${timeStr}</td>
+            </tr>`;
+        }).join('');
+    };
+
+    window.prevPage = function() {
+        if (currentPage > 1) {
+            currentPage--;
+            window.renderScores();
+        }
+    };
+
+    window.nextPage = function() {
+        const totalPages = Math.ceil(sortedScoresList.length / rowsPerPage);
+        if (currentPage < totalPages) {
+            currentPage++;
+            window.renderScores();
+        }
+    };
+
+    function showSection(id) {
+        ['login', 'quiz', 'scores', 'result'].forEach(s => document.getElementById(s+'-section').classList.add('hidden'));
+        document.getElementById(id+'-section').classList.remove('hidden');
+    }
+
+    function startTimer(seconds) {
+        const display = document.getElementById('timer');
+        let remaining = seconds;
+        timerInterval = setInterval(() => {
+            remaining--;
+            const m = Math.floor(remaining / 60).toString().padStart(2, '0');
+            const s = (remaining % 60).toString().padStart(2, '0');
+            display.innerText = `${m}:${s}`;
+            if (remaining <= 0) window.submitQuiz();
+        }, 1000);
+    }
+
+    try {
+        if (!localStorage.getItem('deviceId')) {
+            localStorage.setItem('deviceId', 'dev_' + Math.random().toString(36).substr(2) + Date.now());
+        }
+        deviceId = localStorage.getItem('deviceId');
+    } catch (e) { deviceId = 'dev_temp_' + Math.random().toString(36).substr(2); }
+  </script>
+ </body>
+</html>
