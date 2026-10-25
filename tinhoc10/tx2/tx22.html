@@ -1,0 +1,724 @@
+<!doctype html>
+<html lang="vi" class="w-full h-full m-0 p-0">
+ <head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <title>Kiểm Tra Thường Xuyên 2- Đề 2 - Tin học 10</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+  <style>
+    * { -webkit-tap-highlight-color: transparent; }
+    html, body { width: 100%; min-height: 100vh; margin: 0; padding: 0; overflow-x: hidden; overflow-y: auto; }
+    
+    body { 
+      font-family: 'Be Vietnam Pro', sans-serif; 
+      background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+      background-size: 400% 400%;
+      animation: gradientBG 15s ease infinite;
+    }
+    
+    @keyframes gradientBG {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+    
+    #app { width: 100%; min-height: 100vh; display: flex; flex-direction: column; padding-bottom: 50px; }
+    
+    .glass-card {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    /* CSS ĐỊNH DẠNG MÃ LỆNH PYTHON NỔI BẬT */
+    .code-inline {
+        background-color: #eff6ff; 
+        color: #2563eb; 
+        font-family: 'Courier New', Courier, monospace; 
+        font-weight: 800; 
+        padding: 0.15rem 0.5rem; 
+        border-radius: 0.5rem; 
+        border: 1px solid #bfdbfe; 
+        word-break: break-word; 
+        font-size: 0.95em; 
+        margin: 0 2px; 
+        box-shadow: 0 2px 2px rgba(37, 99, 235, 0.1);
+    }
+    .code-block {
+        background-color: #eff6ff; 
+        color: #2563eb; 
+        font-family: 'Courier New', Courier, monospace; 
+        font-weight: 800; 
+        padding: 1.25rem; 
+        border-radius: 1rem; 
+        border: 2px solid #bfdbfe; 
+        margin: 1rem 0; 
+        overflow-x: auto; 
+        font-size: 1.05em; 
+        line-height: 1.6; 
+        box-shadow: inset 0 2px 4px rgba(37, 99, 235, 0.05);
+        width: 100%;
+    }
+
+    .option-label { transition: transform 0.15s ease, background-color 0.2s ease; cursor: pointer; border-color: #e2e8f0; }
+    .option-label:hover { background-color: #f0fdfa; border-color: #38bdf8; box-shadow: 0 4px 6px -1px rgba(56, 189, 248, 0.1); }
+    
+    input[type="radio"].single-radio:checked + .option-label {
+      background: linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%);
+      color: white; border-color: transparent;
+      box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+    }
+    input[type="radio"].single-radio:checked + .option-label span:first-child { background-color: rgba(255,255,255,0.25); border-color: transparent; color: white; }
+    input[type="radio"].single-radio:checked + .option-label span:last-child { color: white; }
+    input[type="radio"].single-radio:checked + .option-label .code-inline { background-color: rgba(255,255,255,0.9); color: #2563eb; border-color: transparent; }
+    
+    .tf-radio-T:checked + .tf-label-T, .tf-radio-S:checked + .tf-label-S {
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important; 
+        border-color: transparent !important; color: white !important;
+        box-shadow: 0 4px 10px rgba(16, 185, 129, 0.4);
+    }
+    .tf-radio-T:checked ~ .tf-label-T .code-inline, .tf-radio-S:checked ~ .tf-label-S .code-inline {
+        background-color: rgba(255,255,255,0.9); color: #059669; border-color: transparent;
+    }
+
+    .fade-in { animation: fadeIn 0.4s ease forwards; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+    
+    .my-score-row {
+      background: linear-gradient(to right, #fdf4ff, #ffffff) !important;
+      border-left: 4px solid #db2777 !important; font-weight: 700 !important;
+      color: #9d174d !important; box-shadow: 0 2px 8px rgba(0,0,0,0.05); position: relative; z-index: 10;
+    }
+    .my-score-row td { padding-top: 16px; padding-bottom: 16px; }
+    button:disabled { opacity: 0.5; cursor: not-allowed; transform: none !important; }
+  </style>
+ </head>
+ <body oncopy="return false" oncut="return false" onpaste="return false">
+  <div id="app" class="p-0 sm:p-4 md:p-8 transition-all">
+   
+   <!-- SECTION: ĐĂNG NHẬP -->
+   <div id="login-section" class="w-full max-w-md mx-auto fade-in flex flex-col justify-center flex-grow">
+    <div class="glass-card rounded-none sm:rounded-3xl p-6 sm:p-8 flex flex-col justify-start shadow-2xl border-t-8 border-indigo-600 bg-white">
+     <div class="text-center mb-6 pt-4 sm:pt-0">
+      <div class="flex items-center justify-center w-20 h-20 mx-auto mb-4 rounded-full border-4 border-yellow-400 bg-red-600 shadow-lg transform transition-transform hover:scale-105">
+          <span class="text-white font-bold text-3xl tracking-tighter">HS</span>
+      </div>
+      <h1 class="text-1xl sm:text-3xl font-bold text-red-600 mb-1 leading-tight tracking-tight">KIỂM TRA THƯỜNG XUYÊN KỲ 2</h1>
+      <h2 class="text-xl font-bold text-red-500 mb-2">Môn Tin Học 10 - Đề số 2</h2>
+     </div>
+     
+     <div id="login-form" class="space-y-4">
+      <div class="flex flex-col sm:flex-row gap-4">
+          <div class="w-full sm:flex-1">
+               <label class="block text-sm font-bold text-gray-700 mb-1">Họ và tên</label> 
+               <input type="text" id="hoTen" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-100 outline-none transition-all text-base touch-manipulation" placeholder="Nhập họ tên...">
+          </div>
+          <div class="w-full sm:w-1/3">
+               <label class="block text-sm font-bold text-gray-700 mb-1">Lớp</label> 
+               <input type="text" id="lop" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-100 outline-none transition-all text-base touch-manipulation" placeholder="Ví dụ: 10A1">
+          </div>
+      </div>
+      
+      <div id="login-error" class="hidden bg-red-100 border border-red-300 text-red-700 font-bold text-sm p-3 rounded-xl text-center shadow-sm"></div>
+
+      <button type="button" onclick="window.startQuizAction()" id="start-btn" class="w-full py-3 mt-4 bg-gradient-to-r from-blue-600 to-cyan-500 text-white font-bold rounded-xl shadow-lg hover:shadow-xl transform transition-transform active:scale-95 touch-manipulation text-lg tracking-wide"> 🚀 BẮT ĐẦU THI </button>
+     </div>
+    </div>
+   </div>
+
+   <!-- SECTION: LÀM BÀI THI -->
+   <div id="quiz-section" class="w-full max-w-4xl mx-auto hidden flex-grow flex flex-col">
+    <div class="glass-card rounded-none sm:rounded-3xl p-4 sm:p-8 flex flex-col flex-grow relative border-t-8 border-blue-500 bg-white">
+     <div class="flex items-center justify-between mb-4 sm:mb-6 pb-4 border-b-2 border-gray-100">
+      <div>
+       <h2 id="quiz-title" class="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">Đề Kiểm Tra</h2>
+       <p id="student-info" class="text-sm font-semibold text-gray-500 mt-1 uppercase tracking-wide"></p>
+      </div>
+      <div class="text-right bg-blue-50 px-4 py-2 rounded-xl border border-blue-100" id="progress-container">
+       <div class="text-xs text-blue-500 font-bold uppercase tracking-wider mb-1">Tiến độ</div>
+       <div id="progress-text" class="text-xl font-bold text-blue-700">0/0</div>
+      </div>
+     </div>
+     
+     <div id="timer-banner" class="mb-6 p-4 bg-gradient-to-r from-orange-50 to-red-50 border-2 border-red-100 rounded-2xl flex items-center justify-between shadow-sm">
+        <span class="text-red-800 font-bold flex items-center gap-2"><span class="text-2xl animate-pulse">⏰</span> THỜI GIAN CÒN LẠI:</span> 
+        <span id="timer" class="text-3xl font-bold text-red-600 font-mono tracking-wider drop-shadow-sm">20:00</span>
+     </div>
+
+     <div id="question-container" class="mb-8 flex-grow"></div>
+     
+     <div id="network-error" class="hidden bg-red-100 text-red-700 p-4 rounded-xl mt-4 text-center font-bold text-sm border-2 border-red-300 mb-4 shadow-sm"></div>
+
+     <div id="nav-buttons" class="w-full pt-5 sm:pt-6 border-t-2 border-gray-100 mt-6 pb-2">
+        <button id="next-btn" onclick="window.nextQuestion()" class="w-full py-4 bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-bold text-lg sm:text-xl rounded-2xl shadow-[0_5px_0_0_#312e81] active:shadow-none active:translate-y-[5px] transition-all touch-manipulation">Chọn đáp án & Tiếp theo ➔</button> 
+        <button id="submit-btn" onclick="window.submitQuiz()" class="w-full py-4 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-bold text-lg sm:text-xl rounded-2xl shadow-[0_5px_0_0_#064e3b] active:shadow-none active:translate-y-[5px] hidden transition-all touch-manipulation">✅ NỘP BÀI NGAY</button>
+     </div>
+    </div>
+   </div>
+
+   <!-- SECTION: KẾT QUẢ CÁ NHÂN -->
+   <div id="result-section" class="w-full max-w-md mx-auto hidden fade-in flex flex-col justify-center my-auto pb-8">
+    <div class="glass-card rounded-none sm:rounded-3xl p-6 sm:p-8 flex flex-col justify-start border-t-8 border-green-500 bg-white shadow-2xl" id="result-content"></div>
+   </div>
+
+   <!-- SECTION: BẢNG XẾP HẠNG -->
+   <div id="scores-section" class="w-full max-w-6xl mx-auto hidden flex-grow flex flex-col">
+    <div class="glass-card rounded-none sm:rounded-3xl p-4 sm:p-8 flex flex-col flex-grow border-t-8 border-orange-500 bg-white">
+     <div class="mb-6 flex items-center justify-between">
+<h2 class="text-2xl sm:text-3xl font-bold text-orange-600">🏆 BẢNG XẾP HẠNG</h2>
+      <button onclick="window.goHome()" class="px-5 py-2.5 bg-gray-100 text-gray-700 rounded-xl font-bold hover:bg-gray-200 transition-transform active:scale-95 shadow-sm border border-gray-200 touch-manipulation">🏠 Về trang chủ</button>
+     </div>
+     
+     <div id="my-score-summary" class="hidden bg-gradient-to-r from-blue-50 to-indigo-50 border-2 border-blue-200 rounded-2xl p-4 sm:p-6 mb-6 flex items-center justify-between shadow-md">
+         <div>
+             <div class="text-sm text-blue-500 font-extrabold uppercase tracking-wider mb-1">Thành tích của bạn</div>
+             <div class="font-black text-gray-800 text-xl sm:text-1xl" id="my-summary-name"></div>
+             <div class="text-base font-bold text-indigo-600 mt-1" id="my-summary-rank">Hạng: --</div>
+         </div>
+         <div class="text-right">
+             <div class="text-xs text-gray-500 font-bold uppercase mb-1">Điểm số</div>
+             <div class="text-4xl sm:text-3xl font-black text-blue-600 drop-shadow-sm" id="my-summary-score">0</div>
+         </div>
+     </div>
+
+     <div class="overflow-x-auto rounded-2xl border-2 border-gray-100 flex-grow shadow-lg bg-white/50 mb-4 min-h-[300px]">
+      <table class="w-full text-xs sm:text-sm whitespace-nowrap">
+       <thead class="bg-gradient-to-r from-orange-500 to-red-500 text-white">
+        <tr>
+         <th class="px-3 sm:px-4 py-4 text-center font-bold">STT</th>
+         <th class="px-3 sm:px-4 py-4 text-center font-bold">Lớp</th>
+         <th class="px-3 sm:px-4 py-4 text-left font-bold w-full">Họ tên</th>
+         <th class="px-3 sm:px-4 py-4 text-center font-bold">Điểm</th>
+         <th class="px-3 sm:px-4 py-4 text-center font-bold">Ngày tháng năm</th>
+        
+        </tr>
+       </thead>
+       <tbody id="scores-tbody" class="bg-white/80 divide-y divide-gray-100"></tbody>
+      </table>
+      <div id="no-scores" class="text-center py-12 hidden text-gray-500 font-bold text-lg">Chưa có dữ liệu nộp bài 🥲</div>
+     </div>
+
+     <!-- Phân trang -->
+     <div id="pagination-controls" class="flex justify-between items-center mb-6 hidden">
+        <button id="prev-page-btn" onclick="window.prevPage()" class="px-4 py-3 bg-gray-100 text-gray-700 rounded-xl font-bold hover:bg-gray-200 transition-transform active:scale-95 shadow-sm border border-gray-200 touch-manipulation">⬅️ Trang trước</button>
+        <span id="page-info" class="font-bold text-gray-500 text-sm">Trang 1 / 1</span>
+        <button id="next-page-btn" onclick="window.nextPage()" class="px-4 py-3 bg-gray-100 text-gray-700 rounded-xl font-bold hover:bg-gray-200 transition-transform active:scale-95 shadow-sm border border-gray-200 touch-manipulation">Trang sau ➡️</button>
+     </div>
+    </div>
+   </div>
+
+   <!-- MODAL CẢNH BÁO GIAN LẬN -->
+   <div id="cheat-modal" data-nosnippet class="fixed inset-0 bg-red-900/95 backdrop-blur-sm flex items-center justify-center p-4 hidden z-[9999]">
+      <div class="bg-white rounded-[2rem] shadow-2xl p-6 max-w-sm w-full text-center flex flex-col border-t-8 border-red-600 transform transition-all scale-100 max-h-[90vh] overflow-y-auto">
+        <div class="text-5xl mb-3 animate-bounce">🚨</div>
+        <h3 class="text-2xl sm:text-3xl font-black text-red-600 mb-2 uppercase tracking-wide">THÔNG BÁO!</h3>
+        <p class="text-gray-700 font-bold mb-4 text-sm sm:text-base leading-relaxed" id="cheat-message"></p>
+        <div class="bg-red-50 text-red-700 font-extrabold p-3 rounded-2xl border-2 border-red-100 mb-5">
+            Vi phạm làm bài lần thứ <span id="cheat-count-display" class="text-4xl font-black mx-1">1</span>
+        </div>
+        <button id="cheat-continue-btn" class="w-full py-4 bg-gradient-to-r from-red-600 to-red-800 text-white font-extrabold rounded-xl shadow-lg hover:shadow-xl transition-transform active:scale-95 touch-manipulation text-base tracking-wide uppercase shrink-0">TÔI ĐÃ HIỂU & TIẾP TỤC</button>
+      </div>
+   </div>
+
+  </div>
+
+  <script>
+    let database = null;
+    let scoresRef = null;
+    let currentIdx = 0;
+
+    try {
+        const firebaseConfig = {
+            apiKey: "AIzaSyBQ9Pos8awlh9j041qDWTPFRsVIjF-kPnk",
+            authDomain: "hoctap-91691.firebaseapp.com",
+            databaseURL: "https://hoctap-91691-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "hoctap-91691",
+            storageBucket: "hoctap-91691.firebasestorage.app",
+            messagingSenderId: "1004553425319",
+            appId: "1:1004553425319:web:45d15cbae393f614c56682",
+            measurementId: "G-Q6X1TL9PRV"
+        };
+        if (typeof firebase !== 'undefined') {
+            if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+            database = firebase.database();
+            scoresRef = database.ref('TinHoc10/tx2_De2');
+        }
+    } catch(err) { console.error("Lỗi Firebase:", err); }
+
+    let cheatCount = 0;
+    let isQuizStarted = false; 
+    let isPenalizing = false; 
+    let isSubmitting = false;
+
+    window.handleCheatAction = function(reason) {
+        if (!isQuizStarted || isPenalizing || isSubmitting) return; 
+        const isQuizActive = !document.getElementById('quiz-section').classList.contains('hidden');
+        
+        if (isQuizActive) {
+            isPenalizing = true;
+            cheatCount++;
+            document.getElementById('cheat-count-display').innerText = cheatCount;
+            const modal = document.getElementById('cheat-modal');
+            const msg = document.getElementById('cheat-message');
+            const btn = document.getElementById('cheat-continue-btn');
+            modal.classList.remove('hidden');
+            
+            const currentQ = currentQuestions[currentIdx];
+            if (currentQ) {
+                if (currentQ.type === 'tf_cluster') {
+                    currentQ.subQuestions.forEach(sub => {
+                        if (!userAnswers[sub.id]) userAnswers[sub.id] = "Gian lận"; 
+                    });
+                } else {
+                    if (userAnswers[currentQ.id] === undefined) userAnswers[currentQ.id] = -1; 
+                }
+                updateProgress();
+            }
+
+            if (cheatCount >= 2) {
+                msg.innerHTML = "Bạn đã vi phạm quy chế (Rời khỏi màn hình/Dùng phím cấm/Copy) quá 2 lần.<br>Hệ thống bắt buộc <b>TỰ ĐỘNG THU BÀI</b>!";
+                btn.innerText = "NỘP BÀI NGAY";
+                btn.onclick = () => {
+                    modal.classList.add('hidden');
+                    isPenalizing = false;
+                    window.submitQuiz();
+                };
+            } else {
+                msg.innerHTML = `Hệ thống phát hiện bạn vừa sử dụng thao tác : <b>${reason}</b>.<br><br><span class='text-red-600 font-black bg-red-50 px-3 py-1 rounded-lg border border-red-200 inline-block mt-2 mb-2'>Câu hỏi này bị bỏ qua (0 điểm).</span><br><br><i class='text-sm text-gray-500'>Vui lòng bấm nút bên dưới để tiếp tục.</i>`;
+                btn.innerText = "TÔI ĐÃ HIỂU & TIẾP TỤC";
+                btn.onclick = () => {
+                    modal.classList.add('hidden');
+                    if (currentIdx < currentQuestions.length - 1) {
+                        currentIdx++;
+                        window.renderQuestion();
+                    } else { window.submitQuiz(); }
+                    isPenalizing = false;
+                };
+            }
+        }
+    };
+
+    document.addEventListener("visibilitychange", () => {
+        if (document.visibilityState === 'hidden') {
+            window.handleCheatAction('Chuyển tab hoặc thu nhỏ trình duyệt');
+        }
+    });
+
+    window.addEventListener('keydown', (e) => {
+        const forbiddenKeys = ['PrintScreen', 'F12'];
+        if (forbiddenKeys.includes(e.key)) {
+            e.preventDefault();
+            window.handleCheatAction('Nhấn phím ' + e.key);
+        }
+        if (e.ctrlKey && (e.key === 'c' || e.key === 'v' || e.key === 'p' || e.key === 's')) {
+            e.preventDefault();
+            window.handleCheatAction('Dùng tổ hợp phím Ctrl + ' + e.key.toUpperCase());
+        }
+    });
+    window.addEventListener('keyup', (e) => {
+        if (e.key === 'PrintScreen') window.handleCheatAction('Chụp màn hình');
+    });
+
+    document.addEventListener('contextmenu', event => event.preventDefault()); 
+    document.addEventListener('selectstart', event => {
+        if (event.target.tagName !== 'INPUT' && event.target.tagName !== 'SELECT') { event.preventDefault(); }
+    });
+    document.addEventListener('dragstart', event => event.preventDefault()); 
+    document.addEventListener('copy', event => {
+        event.clipboardData.setData('text/plain', 'Tài liệu đã được bảo vệ!');
+        event.preventDefault();
+        window.handleCheatAction('Sao chép (Copy) văn bản');
+    });
+
+    // DỮ LIỆU ĐỀ THI PYTHON MỚI (ĐÃ ÁP DỤNG CODE-INLINE VÀ CODE-BLOCK)
+    const de_data = [
+        { id: "1_1", type: "single", question: "Trong ngôn ngữ lập trình Python, thao tác nào sau đây được sử dụng để truy xuất chính xác kí tự nằm ở vị trí cuối cùng của một xâu kí tự <span class='code-inline'>S</span> có độ dài bất kì?", options: ["Cú pháp truy xuất <span class='code-inline'>S[len(S) - 1]</span> hoặc <span class='code-inline'>S[-1]</span> sẽ ra lệnh cho hệ thống tự động tìm và trích xuất đúng kí tự nằm ở vị trí cuối cùng của xâu văn bản hiện tại.", "Cú pháp truy xuất <span class='code-inline'>S[len(S)]</span> hoặc <span class='code-inline'>S[0]</span> sẽ ra lệnh cho hệ thống tự động tìm và trích xuất đúng kí tự nằm ở vị trí cuối cùng của xâu văn bản hiện tại.", "Cú pháp truy xuất <span class='code-inline'>S.last()</span> hoặc <span class='code-inline'>S[1]</span> sẽ ra lệnh cho hệ thống tự động tìm và trích xuất đúng kí tự nằm ở vị trí cuối cùng của xâu văn bản hiện tại.", "Cú pháp truy xuất <span class='code-inline'>S.end()</span> hoặc <span class='code-inline'>S[6]</span> sẽ ra lệnh cho hệ thống tự động tìm và trích xuất đúng kí tự nằm ở vị trí cuối cùng của xâu văn bản hiện tại."], correct: 0 },
+        { id: "1_2", type: "single", question: "Khẳng định nào sau đây diễn tả chuẩn xác nhất về đặc tính cấu trúc bộ nhớ của kiểu dữ liệu xâu kí tự (<span class='code-inline'>str</span>) bên trong môi trường phần mềm Python?", options: ["Ngôn ngữ Python hoàn toàn cho phép thay đổi trực tiếp một kí tự bất kì bên trong xâu bằng cách sử dụng phép gán thông thường thông qua chỉ số mảng.", "Kiểu dữ liệu xâu kí tự trong Python có tính bất biến, do đó người dùng tuyệt đối không thể thay đổi trực tiếp giá trị của từng kí tự sau khi đã khởi tạo.", "Hệ thống chỉ cho phép thay đổi kí tự trong xâu nếu như xâu văn bản đó được khai báo bên trong một danh sách mảng dữ liệu đa chiều phức tạp.", "Lập trình viên bắt buộc phải sử dụng các từ khóa đặc biệt của hệ điều hành để ghi đè và chỉnh sửa các kí tự chữ cái bên trong bộ nhớ máy tính."], correct: 1 },
+        { id: "1_3", type: "single", question: "Toán tử <span class='code-inline'>in</span> mang lại chức năng thao tác kiểm tra dữ liệu vô cùng quan trọng nào khi người lập trình làm việc với các xâu kí tự văn bản?", options: ["Toán tử <span class='code-inline'>in</span> được sử dụng để nối hai xâu văn bản lại với nhau thành một xâu duy nhất và tự động chèn thêm một dấu cách ở vị trí chính giữa.", "Toán tử <span class='code-inline'>in</span> được sử dụng để đếm tổng số lượng các kí tự chữ cái đang xuất hiện bên trong một xâu văn bản trước khi in kết quả ra màn hình.", "Toán tử <span class='code-inline'>in</span> được sử dụng để kiểm tra xem một xâu con có xuất hiện bên trong một xâu mẹ hay không và luôn trả về kết quả dạng dữ liệu logic.", "Toán tử <span class='code-inline'>in</span> được sử dụng để xóa bỏ hoàn toàn các khoảng trắng bị thừa nằm ở đầu và cuối của một xâu văn bản do người sử dụng nhập vào."], correct: 2 },
+        { id: "1_4", type: "single", question: "Phương thức <span class='code-inline'>split()</span> cung cấp giải pháp xử lí chuỗi kĩ thuật nào vô cùng thiết thực cho quá trình bóc tách dữ liệu thô của một chương trình máy tính?", options: ["Phương thức <span class='code-inline'>split()</span> tiến hành tách xâu kí tự ban đầu thành một danh sách chứa nhiều xâu con riêng biệt dựa trên kí tự phân cách được chỉ định.", "Phương thức <span class='code-inline'>split()</span> tiến hành gộp một danh sách các xâu con riêng lẻ lại thành một xâu văn bản duy nhất dựa trên kí tự nối được cấu hình.", "Phương thức <span class='code-inline'>split()</span> tiến hành chuyển đổi toàn bộ các kí tự chữ cái in thường bên trong xâu thành các kí tự chữ cái in hoa một cách tự động.", "Phương thức <span class='code-inline'>split()</span> tiến hành tìm kiếm và thay thế một từ khóa cụ thể bên trong xâu văn bản bằng một cụm từ mới do người dùng cung cấp."], correct: 0 },
+        { id: "1_5", type: "single", question: "Nguyên lí hoạt động cốt lõi của phương thức xử lí văn bản <span class='code-inline'>join()</span> bên trong ngôn ngữ Python là thực thi quy trình ghép nối thông tin như thế nào?", options: ["Phương thức <span class='code-inline'>join()</span> đảm nhận nhiệm vụ chia nhỏ một văn bản dài thành nhiều đoạn văn bản ngắn để dễ dàng lưu trữ vào cơ sở dữ liệu hệ thống.", "Phương thức <span class='code-inline'>join()</span> đảm nhận nhiệm vụ xóa bỏ tất cả các dấu câu và kí tự đặc biệt ra khỏi một danh sách chứa các từ khóa tìm kiếm trên mạng.", "Phương thức <span class='code-inline'>join()</span> đảm nhận nhiệm vụ kết nối các phần tử của một danh sách thành một xâu kí tự duy nhất thông qua một xâu phân cách làm cầu nối.", "Phương thức <span class='code-inline'>join()</span> đảm nhận nhiệm vụ đếm số lượng từ vựng xuất hiện bên trong một danh sách đa chiều và trả về kết quả là một số nguyên dương."], correct: 2 },
+        { id: "1_6", type: "single", question: "Khi gọi lệnh <span class='code-inline'>find()</span> để truy tìm một xâu con nằm bên trong một xâu mẹ rộng lớn, phần mềm Python sẽ xử lí tình huống không tìm thấy kết quả ra sao?", options: ["Lệnh <span class='code-inline'>find()</span> tìm kiếm xâu con và nếu hoàn toàn không tìm thấy thì sẽ lập tức báo lỗi cú pháp đỏ rực khiến cho toàn bộ hệ thống phải dừng chạy.", "Lệnh <span class='code-inline'>find()</span> tìm kiếm xâu con và trả về chỉ số vị trí xuất hiện đầu tiên, nếu hoàn toàn không tìm thấy thì hệ thống sẽ trả về giá trị mặc định là -1.", "Lệnh <span class='code-inline'>find()</span> tìm kiếm xâu con và tự động xóa bỏ xâu con đó ra khỏi xâu mẹ, nếu không tìm thấy thì hệ thống sẽ trả về một xâu văn bản rỗng không.", "Lệnh <span class='code-inline'>find()</span> tìm kiếm xâu con và thay thế xâu con đó bằng một chuỗi kí tự mới, nếu không tìm thấy thì tự động bỏ qua và chạy lệnh bên dưới."], correct: 1 },
+        { id: "1_7", type: "single", question: "Đặc điểm xử lí dữ liệu của cú pháp <span class='code-inline'>S.replace(\"A\", \"B\")</span> khi áp dụng trên một xâu kí tự gốc <span class='code-inline'>S</span> đang tồn tại là gì?", options: ["Cú pháp <span class='code-inline'>S.replace(\"A\", \"B\")</span> sẽ tìm và thay thế tất cả các xâu con \"A\" xuất hiện trong xâu <span class='code-inline'>S</span> thành xâu con \"B\" và trả về một xâu văn bản hoàn toàn mới.", "Cú pháp <span class='code-inline'>S.replace(\"A\", \"B\")</span> sẽ tìm và thay thế tất cả các xâu con \"B\" xuất hiện trong xâu <span class='code-inline'>S</span> thành xâu con \"A\" và cập nhật trực tiếp thẳng vào xâu <span class='code-inline'>S</span>.", "Cú pháp <span class='code-inline'>S.replace(\"A\", \"B\")</span> sẽ tìm và thay thế chỉ duy nhất một xâu con \"A\" đầu tiên trong xâu <span class='code-inline'>S</span> thành xâu con \"B\" rồi dừng lại ngay lập tức.", "Cú pháp <span class='code-inline'>S.replace(\"A\", \"B\")</span> sẽ kiểm tra xem xâu \"A\" có độ dài bằng với xâu \"B\" hay không, nếu bằng nhau thì mới tiến hành quá trình thay thế chữ."], correct: 0 },
+        { id: "1_8", type: "single", question: "Theo chuẩn mực cú pháp của ngôn ngữ lập trình Python, thao tác định nghĩa và khởi tạo một chương trình con (hàm) mới phải bắt đầu bằng cấu trúc nào?", options: ["Lập trình viên sử dụng từ khóa <span class='code-inline'>function</span> đặt trước tên hàm và truyền các tham số vào bên trong cặp dấu ngoặc vuông để tiến hành khởi tạo máy ảo.", "Lập trình viên sử dụng từ khóa <span class='code-inline'>def</span> đặt trước tên hàm, theo sau là cặp dấu ngoặc đơn chứa danh sách tham số và kết thúc bằng một dấu hai chấm.", "Lập trình viên sử dụng từ khóa <span class='code-inline'>void</span> đặt trước tên hàm, theo sau là cặp dấu ngoặc nhọn chứa toàn bộ các câu lệnh thực thi của hệ điều hành.", "Lập trình viên sử dụng từ khóa <span class='code-inline'>create</span> đặt trước tên hàm và truyền các biến số vào bên trong một danh sách dữ liệu để tiến hành khởi tạo lệnh."], correct: 1 },
+        { id: "1_9", type: "single", question: "Trong quá trình triển khai các dự án phần mềm có quy mô lớn, việc đóng gói mã nguồn thành các hàm (<span class='code-inline'>function</span>) mang lại lợi ích kĩ thuật cốt lõi nào?", options: ["Việc sử dụng hàm giúp chương trình tự động dịch mã nguồn sang ngôn ngữ máy một cách nhanh chóng mà không cần bất kì một phần mềm trung gian nào.", "Việc sử dụng hàm giúp gia tăng kích thước của tệp tin mã nguồn để bảo vệ chương trình khỏi sự tấn công của các loại virus sao chép phần mềm lậu.", "Việc sử dụng hàm giúp chia nhỏ chương trình phức tạp thành các khối logic dễ quản lí, tăng tính tái sử dụng và hạn chế triệt để việc viết lặp lại mã.", "Việc sử dụng hàm giúp ép buộc bộ vi xử lí phải chạy toàn bộ các đoạn mã song song cùng một lúc để tiết kiệm thời gian chờ đợi xuất tệp dữ liệu."], correct: 2 },
+        { id: "1_10", type: "single", question: "Sự phân biệt rõ ràng về mặt khái niệm giữa hai thuật ngữ \"tham số\" (<span class='code-inline'>parameter</span>) và \"đối số\" (<span class='code-inline'>argument</span>) trong thiết kế hàm máy tính là gì?", options: ["Tham số là giá trị thực tế được truyền vào khi gọi hàm hoạt động, còn đối số là các biến ảo được khai báo bên trong dấu ngoặc đơn khi định nghĩa.", "Tham số là các biến ảo được khai báo bên trong dấu ngoặc đơn khi định nghĩa hàm, còn đối số là giá trị thực tế được truyền vào khi gọi hàm đó.", "Tham số và đối số là hai khái niệm hoàn toàn giống hệt nhau về mọi mặt, đều dùng để chỉ định kiểu dữ liệu trả về của hàm sau khi tính toán xong.", "Tham số là biến hệ thống dùng để lưu trữ kết quả đầu ra của hàm, còn đối số là biến phần cứng dùng để lưu trữ toàn bộ mã nguồn của máy tính."], correct: 1 },
+        { id: "1_11", type: "single", question: "Từ khóa <span class='code-inline'>return</span> được lập trình viên bố trí ở bên trong nội dung của một hàm nhằm mục đích điều hướng luồng dữ liệu như thế nào?", options: ["Từ khóa <span class='code-inline'>return</span> được sử dụng để in trực tiếp mọi kết quả tính toán ra màn hình console để người dùng quan sát mà không cần bộ nhớ lưu trữ lại.", "Từ khóa <span class='code-inline'>return</span> được sử dụng để kết thúc việc thực thi hàm ngay lập tức và trả về một giá trị cụ thể cho vị trí mà lệnh gọi hàm đó vừa được ban hành.", "Từ khóa <span class='code-inline'>return</span> được sử dụng để ra lệnh cho chương trình lặp lại quá trình chạy hàm thêm một lần nữa nếu phát hiện ra có những lỗi cú pháp sai.", "Từ khóa <span class='code-inline'>return</span> được sử dụng để tự động đóng phần mềm lập trình Python khi máy tính cá nhân đã hoàn thành xong tất cả các công việc được giao."], correct: 1 },
+        { id: "1_12", type: "single", question: "Biến cục bộ (<span class='code-inline'>Local Variable</span>) bị giới hạn vòng đời và phạm vi cho phép thao tác ở khu vực nào trong một đoạn mã nguồn chương trình?", options: ["Biến cục bộ là loại biến được khai báo và khởi tạo bên trong thân của một hàm, nó chỉ có thể được sử dụng và truy cập ở bên trong phạm vi hàm đó.", "Biến cục bộ là loại biến được khai báo và khởi tạo ở bên ngoài tất cả các hàm, nó có thể được sử dụng tự do ở bất kì đâu bên trong chương trình.", "Biến cục bộ là loại biến do hệ điều hành tự động sinh ra để quản lí bộ nhớ ram, người lập trình hoàn toàn không có quyền thao tác với loại biến này.", "Biến cục bộ là loại biến chỉ có thể lưu trữ được các giá trị số nguyên siêu nhỏ và tuyệt đối không bao giờ được phép lưu trữ các xâu kí tự văn bản."], correct: 0 },
+        { id: "1_13", type: "single", question: "Biến toàn cục (<span class='code-inline'>Global Variable</span>) mang đặc tính tầm vực rộng lớn cho phép khả năng chia sẻ thông tin dữ liệu diễn ra như thế nào?", options: ["Biến toàn cục là biến được định nghĩa ở bên trong một khối vòng lặp <span class='code-inline'>for</span> và sẽ bị hệ thống xóa ngay lập tức khi vòng lặp đó kết thúc quá trình chạy.", "Biến toàn cục là biến được định nghĩa ở cấp độ cao nhất bên ngoài các hàm, có thể được truy cập và đọc giá trị từ mọi nơi trong suốt chương trình.", "Biến toàn cục là biến chỉ có thể được truy cập và sửa đổi bởi các tài khoản người dùng có quyền quản trị viên cao cấp nhất trên máy tính cá nhân.", "Biến toàn cục là biến được thiết kế để kết nối trực tiếp với mạng internet toàn cầu nhằm mục đích liên tục tải về các bản cập nhật phần mềm mới."], correct: 1 },
+        { id: "1_14", type: "single", question: "Từ khóa <span class='code-inline'>global</span> cần được triệu gọi bên trong khu vực của một hàm khi lập trình viên có nhu cầu thực hiện tác vụ thay đổi giá trị nào?", options: ["Từ khóa <span class='code-inline'>global</span> được dùng ở bên ngoài hàm để ngăn chặn không cho các hàm bên trong truy cập vào các biến toàn cục đang có mặt trên hệ thống.", "Từ khóa <span class='code-inline'>global</span> được dùng ở bên trong hàm để thông báo rằng biến được sử dụng chính là biến toàn cục và cấp phép trực tiếp thay đổi giá trị của nó.", "Từ khóa <span class='code-inline'>global</span> được dùng để tạo ra một không gian lưu trữ đám mây khổng lồ giúp sao lưu toàn bộ mã nguồn của dự án đang lập trình dang dở.", "Từ khóa <span class='code-inline'>global</span> được dùng để ép buộc hệ thống phần mềm phải khai báo tất cả các biến đang có thành các hằng số không bao giờ bị biến đổi giá trị."], correct: 1 },
+        { id: "1_15", type: "single", question: "Giả sử đang tồn tại lệnh gán <span class='code-inline'>S = \"12345\"</span>. Khi máy tính thực thi dòng lệnh <span class='code-inline'>print(S[1:4])</span>, kết quả hiển thị cuối cùng thu được trên màn hình là gì?", options: ["Lệnh trích xuất vùng cắt <span class='code-inline'>S[1:4]</span> sẽ trả về một xâu con bao gồm các kí tự từ chỉ số 1 đến chỉ số 4 và kết quả in ra màn hình máy tính là \"1234\".", "Lệnh trích xuất vùng cắt <span class='code-inline'>S[1:4]</span> sẽ trả về một xâu con bao gồm các kí tự từ chỉ số 1 đến chỉ số 3 và kết quả in ra màn hình máy tính là \"234\".", "Lệnh trích xuất vùng cắt <span class='code-inline'>S[1:4]</span> sẽ trả về một xâu con bao gồm các kí tự từ chỉ số 0 đến chỉ số 4 và kết quả in ra màn hình máy tính là \"12345\".", "Lệnh trích xuất vùng cắt <span class='code-inline'>S[1:4]</span> sẽ trả về một xâu con bao gồm các kí tự từ chỉ số 2 đến chỉ số 5 và kết quả in ra màn hình máy tính là \"345\"."], correct: 1 },
+        { id: "1_16", type: "single", question: "Để triển khai một quá trình duyệt qua toàn bộ mọi vị trí kí tự của xâu văn bản <span class='code-inline'>S</span>, cấu trúc lặp nào sau đây thao tác chính xác dựa trên độ dài chuỗi?", options: ["Lệnh lặp <span class='code-inline'>for i in range(len(S)):</span> sẽ duyệt qua từng chỉ số vị trí của xâu <span class='code-inline'>S</span>, cho phép lập trình viên truy cập lấy kí tự thông qua cú pháp chỉ mục <span class='code-inline'>S[i]</span>.", "Lệnh lặp <span class='code-inline'>for i in range(len(S)):</span> sẽ tự động nối tất cả các kí tự bên trong xâu <span class='code-inline'>S</span> lại với nhau thành một kí tự đại diện duy nhất là chữ cái in thường i.", "Lệnh lặp <span class='code-inline'>for i in range(len(S)):</span> sẽ tiến hành đếm số lần xuất hiện của biến i bên trong xâu <span class='code-inline'>S</span> và tự động in ra màn hình kết quả máy tính đếm được.", "Lệnh lặp <span class='code-inline'>for i in range(len(S)):</span> sẽ tự động xóa bỏ toàn bộ các kí tự khoảng trắng thừa thãi bên trong xâu <span class='code-inline'>S</span> để tối ưu hóa không gian lưu trữ tệp."], correct: 0 },
+        { id: "1_17", type: "single", question: "Đoạn mã <span class='code-inline'>A = [\"Học\", \"Python\", \"vui\"]</span> và <span class='code-inline'>print(\" \".join(A))</span> phối hợp với nhau tạo ra định dạng văn bản hiển thị nào ở cuối quá trình?", options: ["Đoạn mã này sẽ thực hiện thao tác nối các phần tử của danh sách <span class='code-inline'>A</span> lại với nhau bằng dấu cách và cho ra kết quả hiển thị trên màn hình là \"Học Python vui\".", "Đoạn mã này sẽ thực hiện thao tác nối các phần tử của danh sách <span class='code-inline'>A</span> lại với nhau bằng dấu phẩy và cho ra kết quả hiển thị trên màn hình là \"Học,Python,vui\".", "Đoạn mã này sẽ thực hiện thao tác cắt danh sách <span class='code-inline'>A</span> thành ba danh sách con hoàn toàn riêng biệt và hiển thị độc lập trên ba dòng lệnh lệnh hoàn toàn khác nhau.", "Đoạn mã này sẽ thực hiện thao tác đảo ngược vị trí thứ tự các phần tử bên trong danh sách <span class='code-inline'>A</span> trước khi in ra và cho kết quả hiển thị là \"vui Python Học\"."], correct: 0 },
+        { id: "1_18", type: "single", question: "Việc áp dụng cú pháp cắt chuỗi <span class='code-inline'>A = S.split(\",\")</span> lên trên biến xâu gốc <span class='code-inline'>S = \"Một,Hai,Ba\"</span> sẽ khởi tạo ra cấu trúc dữ liệu lưu trữ nào cho biến <span class='code-inline'>A</span>?", options: ["Cú pháp này sẽ lấy xâu văn bản <span class='code-inline'>S</span> làm chuẩn, phân tách nó bằng dấu phẩy để tạo thành một biến danh sách chứa ba phần tử tách biệt là <span class='code-inline'>[\"Một\", \"Hai\", \"Ba\"]</span>.", "Cú pháp này sẽ lấy xâu văn bản <span class='code-inline'>S</span> làm chuẩn, loại bỏ tất cả các chữ cái và chỉ giữ lại duy nhất hai dấu phẩy bên trong một biến danh sách hoàn toàn rỗng.", "Cú pháp này sẽ lấy xâu văn bản <span class='code-inline'>S</span> làm chuẩn, phân tách nó bằng khoảng trắng để tạo thành một biến danh sách chứa đúng một phần tử là <span class='code-inline'>[\"Một,Hai,Ba\"]</span>.", "Cú pháp này sẽ lấy xâu văn bản <span class='code-inline'>S</span> làm chuẩn, thay thế toàn bộ các kí hiệu dấu phẩy bằng khoảng trắng để trả về một xâu mới có nội dung là \"Một Hai Ba\"."], correct: 0 },
+        { id: "1_19", type: "single", question: "Khả năng tái sử dụng độc lập của một hàm (<span class='code-inline'>function</span>) lập trình được thể hiện rõ nét nhất qua đặc tính hoạt động kĩ thuật nào dưới đây?", options: ["Sau khi định nghĩa hàm bằng từ khóa <span class='code-inline'>def</span>, người lập trình chỉ được phép gọi và sử dụng hàm đó đúng một lần duy nhất trong toàn bộ hệ thống tập lệnh.", "Sau khi định nghĩa hàm bằng từ khóa <span class='code-inline'>def</span>, người lập trình có thể gọi hàm đó hoạt động nhiều lần tại bất kì vị trí nào trong mã nguồn để thực thi tác vụ.", "Sau khi định nghĩa hàm bằng từ khóa <span class='code-inline'>def</span>, chương trình sẽ tự động gọi hàm đó chạy lặp đi lặp lại liên tục cho đến khi người dùng tiến hành tắt nguồn máy tính.", "Sau khi định nghĩa hàm bằng từ khóa <span class='code-inline'>def</span>, người lập trình bắt buộc phải sao chép toàn bộ mã nguồn của hàm dán vào đúng vị trí cần thiết thì mới chạy được."], correct: 1 },
+        { id: "1_20", type: "single", question: "Nguyên tắc xử lí luồng điều khiển của Python khi phải đối mặt với một hàm có thiết kế chứa nhiều câu lệnh <span class='code-inline'>return</span> ở các nhánh <span class='code-inline'>if - else</span> là gì?", options: ["Một hàm trong Python bắt buộc chỉ được phép thiết kế sử dụng duy nhất một câu lệnh <span class='code-inline'>return</span> đặt ở dòng lệnh cuối cùng của toàn bộ cấu trúc khối lệnh.", "Một hàm trong Python có thể chứa nhiều câu lệnh <span class='code-inline'>return</span> ở các nhánh điều kiện khác nhau, và hàm sẽ tự động chấm dứt khi gặp lệnh <span class='code-inline'>return</span> đầu tiên.", "Một hàm trong Python sẽ tự động tập hợp tất cả các giá trị của mọi câu lệnh <span class='code-inline'>return</span> có mặt trong hàm và trả về một danh sách kết quả tổng hợp lại.", "Một hàm trong Python nếu hoàn toàn không có chứa bất kì câu lệnh <span class='code-inline'>return</span> nào thì hệ thống sẽ lập tức báo lỗi cú pháp nghiêm trọng và không cho chạy."], correct: 1 },
+        { id: "1_21", type: "single", question: "Nếu lập trình viên thiết lập một biến cục bộ bên trong hàm có tên gọi hoàn toàn trùng lặp với một biến toàn cục ở bên ngoài, Python sẽ ưu tiên xử lí như thế nào?", options: ["Python sẽ ngầm định thiết lập liên kết đồng bộ hóa hai biến này lại, bất kì sự thay đổi nào trên biến cục bộ cũng sẽ ảnh hưởng ngay đến biến toàn cục.", "Python sẽ tạo ra một không gian nhớ cục bộ mới hoàn toàn độc lập che khuất đi biến toàn cục, do đó hàm sẽ ưu tiên thao tác trực tiếp với biến cục bộ.", "Python sẽ tiến hành phát ra cảnh báo lỗi trùng lặp tên định danh biến ngay lập tức và buộc quá trình biên dịch mã nguồn của phần mềm phải hủy bỏ.", "Python sẽ tiến hành khóa chết chức năng đọc ghi của cả hai biến để bảo vệ bộ nhớ máy tính không bị ghi đè thông tin gây ra sự cố treo hệ điều hành."], correct: 1 },
+        { id: "1_22", type: "single", question: "Để máy tính có khả năng cộng trừ nhân chia một số dữ liệu thô ban đầu mang hình thức xâu kí tự văn bản (ví dụ <span class='code-inline'>\"10\"</span>), lập trình viên bắt buộc phải xử lí ép kiểu ra sao?", options: ["Lập trình viên bắt buộc phải sử dụng hàm ép kiểu <span class='code-inline'>int(\"10\")</span> để hướng dẫn hệ thống chuyển đổi chuỗi văn bản cứng nhắc này thành cấu trúc dữ liệu số nguyên.", "Lập trình viên bắt buộc phải sử dụng hàm ép kiểu <span class='code-inline'>str(\"10\")</span> để hướng dẫn hệ thống chuyển đổi chuỗi văn bản cứng nhắc này thành cấu trúc dữ liệu số nguyên.", "Lập trình viên bắt buộc phải sử dụng hàm ép kiểu <span class='code-inline'>list(\"10\")</span> để hướng dẫn hệ thống chuyển đổi chuỗi văn bản cứng nhắc này thành cấu trúc dữ liệu số nguyên.", "Lập trình viên bắt buộc phải sử dụng hàm ép kiểu <span class='code-inline'>bool(\"10\")</span> để hướng dẫn hệ thống chuyển đổi chuỗi văn bản cứng nhắc này thành cấu trúc dữ liệu số nguyên."], correct: 0 },
+        { id: "1_23", type: "single", question: "Bản chất cốt lõi của khái niệm \"hàm\" (<span class='code-inline'>function</span>) khi áp dụng vào việc xây dựng và thiết kế các ứng dụng phần mềm bằng ngôn ngữ Python là gì?", options: ["Hàm thực chất chính là một chương trình con độc lập được đóng gói hoàn chỉnh bằng các khối lệnh nhằm mục đích giải quyết trọn vẹn một tác vụ cụ thể.", "Hàm thực chất chính là một hệ quản trị cơ sở dữ liệu cỡ nhỏ được nhúng trực tiếp vào phần mềm Python để liên tục lưu trữ các bảng biểu kế toán văn phòng.", "Hàm thực chất chính là một công cụ đồ họa trực quan chuyên dùng để vẽ nhanh các đường thẳng và đường tròn nghệ thuật trên màn hình hiển thị của máy tính.", "Hàm thực chất chính là một lớp bảo mật không gian mạng được thiết kế đặc biệt nhằm ngăn chặn triệt để mọi loại virus độc hại xâm nhập vào hệ thống ổ cứng."], correct: 0 },
+        { id: "1_24", type: "single", question: "Để quá trình giao tiếp dữ liệu giữa lệnh gọi hàm và phần định nghĩa hàm diễn ra trơn tru, yếu tố số lượng thông tin truyền vào bị ràng buộc bởi quy tắc nào?", options: ["Lời gọi hàm nói chung cần phải tiến hành truyền vào số lượng đối số (<span class='code-inline'>arguments</span>) hoàn toàn trùng khớp với số lượng tham số (<span class='code-inline'>parameters</span>) đã được định nghĩa.", "Lời gọi hàm bắt buộc phải tiến hành truyền vào số lượng đối số (<span class='code-inline'>arguments</span>) luôn luôn nhiều gấp đôi số lượng tham số (<span class='code-inline'>parameters</span>) đã được định nghĩa ban đầu.", "Lời gọi hàm không cần thiết phải truyền vào bất kì đối số (<span class='code-inline'>arguments</span>) nào vì hệ thống máy tính sẽ chủ động tự sinh ra các giá trị ngẫu nhiên để thay thế tạm.", "Lời gọi hàm chỉ được phép truyền vào tối đa duy nhất một đối số (<span class='code-inline'>arguments</span>) cho dù hàm đó được thiết kế đồ sộ để tiếp nhận hàng chục tham số (<span class='code-inline'>parameters</span>)."], correct: 0 },
+        
+        { id: '1_c1', type: 'tf_cluster', question: "Bạn Tuấn đang viết một chương trình Python để xử lí dữ liệu họ và tên của học sinh. Biến xâu kí tự hiện hành được khởi tạo với nội dung là <span class='code-inline'>HoTen = \" Nguyễn Văn An \"</span>. Tuấn cần lập trình để loại bỏ khoảng trắng thừa ở hai bên, thay thế chữ \"Văn\" thành \"Đức\" và tiến hành tách họ tên đó thành một danh sách chứa các từ riêng lẻ.", subQuestions: [
+            { id: '1_d25a', text: "Kiểu dữ liệu xâu kí tự (<span class='code-inline'>str</span>) trong Python là một dãy các kí tự có tính bất biến, nghĩa là Tuấn không thể trực tiếp thay đổi một kí tự cụ thể nào thông qua việc gán chỉ số (ví dụ: lệnh <span class='code-inline'>HoTen[1] = \"A\"</span> sẽ bị báo lỗi).", correct: "Đúng" },
+            { id: '1_d25b', text: "Để loại bỏ nhanh chóng các khoảng trắng bị thừa ở cả hai đầu của xâu <span class='code-inline'>HoTen</span>, Tuấn có thể sử dụng phương thức <span class='code-inline'>strip()</span> được tích hợp sẵn dành riêng cho kiểu dữ liệu xử lí văn bản.", correct: "Đúng" },
+            { id: '1_d25c', text: "Lệnh <span class='code-inline'>HoTen.replace(\"Văn\", \"Đức\")</span> khi được gọi sẽ ngay lập tức thay đổi vĩnh viễn cấu trúc của biến <span class='code-inline'>HoTen</span> ban đầu ở trong bộ nhớ mà không cần phải gán lại kết quả vào một biến nào cả.", correct: "Sai" },
+            { id: '1_d25d', text: "Để tách xâu họ tên đã được làm sạch khoảng trắng thành một biến danh sách chứa ba phần tử văn bản là <span class='code-inline'>[\"Nguyễn\", \"Đức\", \"An\"]</span>, Tuấn hoàn toàn có thể sử dụng phương thức <span class='code-inline'>split()</span>.", correct: "Đúng" }
+        ]},
+        { id: '1_c2', type: 'tf_cluster', question: "Nhóm học tập của Mai đang xây dựng một hàm tự động tính toán cước phí taxi dựa trên số ki-lô-mét di chuyển. Mai thiết kế định nghĩa hàm trên máy tính như sau:<div class='code-block'>def TinhTien(SoKm, GiaTien):<br>&nbsp;&nbsp;&nbsp;&nbsp;Tong = SoKm * GiaTien<br>&nbsp;&nbsp;&nbsp;&nbsp;return Tong</div>Sau đó, Mai chạy thử chương trình bằng câu lệnh gọi hàm: <span class='code-inline'>ThanhToan = TinhTien(10, 15000)</span>.", subQuestions: [
+            { id: '1_d26a', text: "Từ khóa <span class='code-inline'>def</span> là một cú pháp bắt buộc trong ngôn ngữ Python để báo hiệu cho hệ thống phần mềm biết rằng lập trình viên đang bắt đầu định nghĩa cấu trúc của một chương trình con mới.", correct: "Đúng" },
+            { id: '1_d26b', text: "Trong phần khối định nghĩa hàm của Mai, <span class='code-inline'>SoKm</span> và <span class='code-inline'>GiaTien</span> được gọi là các tham số (<span class='code-inline'>parameters</span>), đóng vai trò như những biến ảo để tiếp nhận dữ liệu đầu vào khi hàm hoạt động.", correct: "Đúng" },
+            { id: '1_d26c', text: "Trong câu lệnh gọi hàm <span class='code-inline'>TinhTien(10, 15000)</span>, các con số <span class='code-inline'>10</span> và <span class='code-inline'>15000</span> được gọi là các đối số (<span class='code-inline'>arguments</span>) thực tế và được truyền vào theo đúng thứ tự tương ứng cho hàm xử lí.", correct: "Đúng" },
+            { id: '1_d26d', text: "Câu lệnh <span class='code-inline'>return Tong</span> mang ý nghĩa là phần mềm sẽ tự động in kết quả biến <span class='code-inline'>Tong</span> ra màn hình để người dùng đọc trực tiếp mà không cần thiết phải gán giá trị đó lại cho biến <span class='code-inline'>ThanhToan</span> bên ngoài.", correct: "Sai" }
+        ]},
+        { id: '1_c3', type: 'tf_cluster', question: "Trong một tiết thực hành trên phòng máy, bạn Dũng viết một chương trình Python có chứa các biến mang tên giống nhau để kiểm tra sự ưu tiên. Cấu trúc mã nguồn như sau:<div class='code-block'>HeSo = 2<br>def TinhDiem(DiemThi):<br>&nbsp;&nbsp;&nbsp;&nbsp;HeSo = 3<br>&nbsp;&nbsp;&nbsp;&nbsp;DiemTong = DiemThi * HeSo<br>&nbsp;&nbsp;&nbsp;&nbsp;return DiemTong</div>Dũng đang thắc mắc về việc hệ thống sẽ sử dụng giá trị <span class='code-inline'>HeSo</span> nào để thực hiện phép toán nhân khi lệnh <span class='code-inline'>print(TinhDiem(8))</span> được gọi chạy.", subQuestions: [
+            { id: '1_d27a', text: "Biến <span class='code-inline'>HeSo = 2</span> do được khai báo ở khu vực bên ngoài tất cả các hàm nên nó mang đặc tính của một biến toàn cục (<span class='code-inline'>global variable</span>) và có thể được nhìn thấy từ toàn bộ môi trường chương trình.", correct: "Đúng" },
+            { id: '1_d27b', text: "Biến <span class='code-inline'>HeSo = 3</span> do được khởi tạo trực tiếp ở bên trong hàm <span class='code-inline'>TinhDiem</span> nên nó đóng vai trò là một biến cục bộ (<span class='code-inline'>local variable</span>) và giới hạn chỉ có tác dụng sống trong phạm vi của hàm này.", correct: "Đúng" },
+            { id: '1_d27c', text: "Khi hệ thống máy tính tiến hành thực thi phép tính <span class='code-inline'>DiemThi * HeSo</span> ở bên trong hàm, nó sẽ ưu tiên sử dụng biến toàn cục <span class='code-inline'>HeSo = 2</span> nên kết quả trả về của hàm tính điểm sẽ là con số 16.", correct: "Sai" },
+            { id: '1_d27d', text: "Nếu Dũng thực sự có ý định sử dụng và làm thay đổi giá trị của biến toàn cục <span class='code-inline'>HeSo</span> ngay từ bên trong phạm vi của hàm, bạn ấy bắt buộc phải khai báo bổ sung thêm câu lệnh <span class='code-inline'>global HeSo</span>.", correct: "Đúng" }
+        ]},
+        { id: '1_c4', type: 'tf_cluster', question: "Đội lập trình viên của Lan cần viết một hàm nhận vào một xâu văn bản chứa số điện thoại đang mang định dạng cũ là <span class='code-inline'>\"091-234-5678\"</span> và trả về một xâu mới liền mạch dạng <span class='code-inline'>\"0912345678\"</span>. Lan thiết kế khối hàm xử lí như sau:<div class='code-block'>def LamSachSDT(sdt):<br>&nbsp;&nbsp;&nbsp;&nbsp;DanhSach = sdt.split(\"-\")<br>&nbsp;&nbsp;&nbsp;&nbsp;KetQua = \"\".join(DanhSach)<br>&nbsp;&nbsp;&nbsp;&nbsp;return KetQua</div>Lan khởi chạy lệnh gọi <span class='code-inline'>SoMoi = LamSachSDT(\"091-234-5678\")</span> để thử nghiệm tính năng.", subQuestions: [
+            { id: '1_d28a', text: "Ở ngay bên trong hàm, câu lệnh <span class='code-inline'>sdt.split(\"-\")</span> thực hiện quy trình bẻ gãy xâu kí tự số điện thoại tại các vị trí có chứa dấu gạch ngang nhằm tạo thành một danh sách gồm ba xâu con phân biệt.", correct: "Đúng" },
+            { id: '1_d28b', text: "Câu lệnh <span class='code-inline'>\"\".join(DanhSach)</span> sẽ đảm nhận chức năng kĩ thuật là kết nối toàn bộ các xâu con trong danh sách lại với nhau thành một xâu liền mạch duy nhất và hoàn toàn không tồn tại khoảng trắng.", correct: "Đúng" },
+            { id: '1_d28c', text: "Biến <span class='code-inline'>DanhSach</span> và biến <span class='code-inline'>KetQua</span> là hai biến cục bộ được khởi tạo bên trong hàm <span class='code-inline'>LamSachSDT</span>, do đó lập trình viên hoàn toàn có thể trực tiếp lấy giá trị của chúng in ra màn hình từ bên ngoài hàm.", correct: "Sai" },
+            { id: '1_d28d', text: "Thiết kế cấu trúc hàm của Lan giúp chia nhỏ một vấn đề dữ liệu thành các khối logic rất rõ ràng, điều này hỗ trợ mã nguồn dễ dàng được tái sử dụng để làm sạch hàng vạn số điện thoại khác về sau.", correct: "Đúng" }
+        ]}
+    ];
+
+    let currentQuestions = [];
+    let deviceId = '';
+    let allScores = [];
+    let currentStudent = {};
+    let userAnswers = {};
+    let timerInterval;
+    let quizStartTime, quizEndTime;
+    
+    let currentPage = 1;
+    const rowsPerPage = 10;
+    let sortedScoresList = [];
+
+    window.startQuizAction = function() {
+        const errDiv = document.getElementById('login-error');
+        errDiv.classList.add('hidden');
+        const name = document.getElementById('hoTen').value.trim();
+        const lop = document.getElementById('lop').value.trim().toUpperCase(); 
+        
+        if (!name || !lop) {
+            errDiv.innerText = "⚠️ Yêu cầu nhập đầy đủ Họ tên và Lớp!";
+            errDiv.classList.remove('hidden');
+            return;
+        }
+
+        currentStudent = { hoTen: name, lop: lop, maDe: 'de_tin10', tenDe: 'Kiểm Tra Thường Xuyên Đề 2 - Tin Học 10' };
+        
+        let rawQuestions = JSON.parse(JSON.stringify(de_data));
+        
+        // Không trộn câu hỏi và không trộn đáp án
+        let part1 = rawQuestions.filter(q => q.type === 'single');
+        part1.forEach((q, idx) => {
+            q.displayQuestion = `Câu ${idx + 1}: ${q.question}`;
+        });
+        
+        let part2 = rawQuestions.filter(q => q.type === 'tf_cluster');
+        part2.forEach((q, idx) => {
+            q.displayQuestion = `Câu ${part1.length + idx + 1}: ${q.question}`;
+            const labels = ['a)', 'b)', 'c)', 'd)'];
+            q.subQuestions.forEach((sub, sIdx) => {
+                sub.text = `${labels[sIdx]} ${sub.text.replace(/^[a-d]\)\s*/i, '')}`;
+            });
+        });
+        
+        currentQuestions = [...part1, ...part2];
+        quizStartTime = new Date();
+        cheatCount = 0; 
+        setTimeout(() => { isQuizStarted = true; }, 1000);
+        showSection('quiz');
+        document.getElementById('quiz-title').innerText = currentStudent.tenDe;
+        document.getElementById('student-info').innerText = `${currentStudent.hoTen} - Lớp ${currentStudent.lop}`;
+        currentIdx = 0;
+        userAnswers = {};
+        window.renderQuestion();
+        startTimer(20 * 60);
+    };
+
+    window.nextQuestion = function() {
+        if (currentIdx < currentQuestions.length - 1) { currentIdx++; window.renderQuestion(); }
+    };
+
+    window.viewScoresAction = function() {
+        if (database) {
+            scoresRef.once('value').then((snapshot) => {
+                const data = snapshot.val();
+                allScores = data ? Object.keys(data).map(key => ({...data[key], id: key})) : [];
+                currentPage = 1;
+                window.renderScores();
+                showSection('scores');
+            });
+        }
+    };
+
+    window.goHome = function() {
+        document.getElementById('result-section').classList.add('hidden');
+        document.getElementById('hoTen').value = ''; 
+        document.getElementById('lop').value = ''; 
+        clearInterval(timerInterval);
+        showSection('login');
+    };
+
+    function getTotalItems() {
+        let count = 0;
+        currentQuestions.forEach(q => {
+            if (q.type === 'tf_cluster') count += q.subQuestions.length;
+            else count++;
+        });
+        return count; 
+    }
+
+    function getAnsweredCount() {
+        let count = 0;
+        currentQuestions.forEach(q => {
+            if (q.type === 'tf_cluster') {
+                q.subQuestions.forEach(sub => { if (userAnswers[sub.id]) count++; });
+            } else {
+                if (userAnswers[q.id] !== undefined) count++;
+            }
+        });
+        return count;
+    }
+
+    window.selectAnswer = function(qId, val, type) {
+        userAnswers[qId] = val;
+        window.updateProgress();
+    };
+
+    window.renderQuestion = function() {
+        if (!currentQuestions || currentQuestions.length === 0) return;
+        const q = currentQuestions[currentIdx];
+        const container = document.getElementById('question-container');
+        
+        if (q.type === 'tf_cluster') {
+            container.innerHTML = `<div class="fade-in">
+                <div class="flex items-center gap-3 mb-6 border-b-2 border-orange-100 pb-3">
+                    <span class="bg-gradient-to-br from-orange-400 to-red-500 text-white w-10 h-10 flex items-center justify-center rounded-xl font-bold text-xl shadow-md">II</span>
+                    <h3 class="text-xl sm:text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-orange-600 to-red-600 tracking-wide uppercase">PHẦN TRẮC NGHIỆM ĐÚNG/SAI</h3>
+                </div>
+                <div class="bg-red-50 border-2 border-red-200 p-4 sm:p-6 rounded-2xl mb-6 text-red-700 text-lg sm:text-xl font-bold leading-relaxed shadow-inner">
+                    ${q.displayQuestion.replace(/\n/g, '<br/>')}
+                </div>
+                <div class="space-y-4 md:pl-6">
+                    ${q.subQuestions.map(sub => `
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between bg-white p-5 sm:p-6 border-2 border-gray-100 hover:border-red-300 rounded-2xl gap-4 shadow-sm hover:shadow-md transition-all">
+                        <span class="flex-1 text-gray-800 font-bold text-lg sm:text-xl leading-relaxed">${sub.text}</span>
+                        <div class="flex gap-3 flex-shrink-0 w-full sm:w-auto mt-3 sm:mt-0 justify-between sm:justify-end">
+                            <input type="radio" id="q_${sub.id}_T" name="q_${sub.id}" value="Đúng" class="hidden tf-radio-T" onchange="window.selectAnswer('${sub.id}', 'Đúng', 'tf')" ${userAnswers[sub.id] === 'Đúng' ? 'checked' : ''}>
+                            <label for="q_${sub.id}_T" class="tf-label-T flex-1 sm:flex-none px-4 py-4 border-2 border-gray-200 rounded-xl cursor-pointer font-bold text-gray-500 text-base sm:text-lg text-center w-full sm:w-32 transition-all hover:bg-gray-50 uppercase tracking-wide active:scale-95 touch-manipulation">Đúng</label>
+                            
+                            <input type="radio" id="q_${sub.id}_S" name="q_${sub.id}" value="Sai" class="hidden tf-radio-S" onchange="window.selectAnswer('${sub.id}', 'Sai', 'tf')" ${userAnswers[sub.id] === 'Sai' ? 'checked' : ''}>
+                            <label for="q_${sub.id}_S" class="tf-label-S flex-1 sm:flex-none px-4 py-4 border-2 border-gray-200 rounded-xl cursor-pointer font-bold text-gray-500 text-base sm:text-lg text-center w-full sm:w-32 transition-all hover:bg-gray-50 uppercase tracking-wide active:scale-95 touch-manipulation">Sai</label>
+                        </div>
+                    </div>`).join('')}
+                </div>
+            </div>`;
+        } else {
+            container.innerHTML = `<div class="fade-in">
+                ${currentIdx === 0 ? `<div class="flex items-center gap-3 mb-6 border-b-2 border-blue-100 pb-3"><span class="bg-gradient-to-br from-blue-400 to-cyan-500 text-white w-10 h-10 flex items-center justify-center rounded-xl font-bold text-xl shadow-md">I</span><h3 class="text-xl sm:text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-600 tracking-wide uppercase">PHẦN TRẮC NGHIỆM MỘT LỰA CHỌN</h3></div>` : ''}
+                <div class="flex gap-4 mb-5">
+                    <div class="w-full">
+                        <p class="text-xl sm:text-2xl font-bold text-red-600 mt-1 leading-snug tracking-tight">${q.displayQuestion}</p>
+                    </div>
+                </div>
+                <div class="space-y-4 md:pl-14 mt-6">
+                    ${q.options.map((opt, i) => `
+                    <div class="flex items-center">
+                        <input type="radio" id="opt_${i}" name="q_${q.id}" value="${i}" class="hidden single-radio" ${userAnswers[q.id] === i ? 'checked' : ''} onchange="window.selectAnswer('${q.id}',${i}, 'single')">
+                        <label for="opt_${i}" class="option-label w-full p-4 sm:p-5 border-2 border-gray-200 rounded-2xl flex items-center gap-4 bg-white shadow-sm font-semibold text-lg sm:text-xl active:scale-[0.98] touch-manipulation">
+                            <span class="w-12 h-12 sm:w-10 sm:h-10 rounded-xl border-2 border-gray-300 flex items-center justify-center text-lg sm:text-base font-bold text-gray-400 flex-shrink-0 bg-gray-50 transition-colors">${String.fromCharCode(65 + i)}</span>
+                            <span class="text-gray-700 leading-relaxed">${opt}</span>
+                        </label>
+                    </div>`).join('')}
+                </div>
+            </div>`;
+        }
+        window.updateNav();
+        window.updateProgress();
+    };
+
+    window.updateNav = function() {
+        document.getElementById('next-btn').style.display = (currentIdx === currentQuestions.length - 1) ? 'none' : 'block';
+        document.getElementById('submit-btn').style.display = (currentIdx === currentQuestions.length - 1) ? 'block' : 'none';
+    };
+
+    window.updateProgress = function() {
+        document.getElementById('progress-text').innerText = `${getAnsweredCount()}/${getTotalItems()} ý`;
+    };
+
+    function formatDuration(sec) {
+        const m = Math.floor(sec / 60); const s = sec % 60;
+        return `${m}p ${s}s`;
+    }
+
+    window.submitQuiz = function() {
+        if (!isQuizStarted) return; 
+        isQuizStarted = false; 
+        
+        quizEndTime = new Date();
+        clearInterval(timerInterval);
+
+        let totalScore = 0;
+        let correctSubItems = 0;
+        let totalItems = getTotalItems();
+
+        currentQuestions.forEach(q => {
+            if (q.type === 'tf_cluster') {
+                let subCorrectCount = 0;
+                q.subQuestions.forEach(sub => {
+                    if (userAnswers[sub.id] === sub.correct) {
+                        subCorrectCount++;
+                        correctSubItems++;
+                    }
+                });
+                
+                if (subCorrectCount === 1) totalScore += 0.1;
+                else if (subCorrectCount === 2) totalScore += 0.25;
+                else if (subCorrectCount === 3) totalScore += 0.5;
+                else if (subCorrectCount === 4) totalScore += 1.0;
+
+            } else {
+                if (userAnswers[q.id] === q.correct) {
+                    totalScore += 0.25; 
+                    correctSubItems++;
+                }
+            }
+        });
+
+        const score = totalScore.toFixed(2);
+
+        const record = {
+            hoTen: currentStudent.hoTen, lop: currentStudent.lop, tenDe: currentStudent.tenDe,
+            diem: parseFloat(score), soCauDung: correctSubItems, tongCau: totalItems,
+            startTime: quizStartTime.toLocaleTimeString(), endTime: quizEndTime.toLocaleTimeString(),
+            duration: formatDuration(Math.floor((quizEndTime - quizStartTime) / 1000)),
+            thoiGian: new Date().toISOString(), deviceId: deviceId
+        };
+        if(database) {
+            scoresRef.push(record, () => { window.showModalResult(score, correctSubItems, totalItems, record.duration); });
+        }
+    };
+
+    window.showModalResult = function(score, correct, total, dur) {
+        ['login', 'quiz', 'scores'].forEach(s => document.getElementById(s+'-section').classList.add('hidden'));
+        document.getElementById('result-section').classList.remove('hidden');
+        document.getElementById('result-content').innerHTML = `<div class="text-6xl sm:text-7xl mb-4 animate-bounce">🎉</div><h3 class="text-2xl sm:text-3xl font-bold text-green-600 mb-2">Hoàn thành bài thi!</h3><p class="text-gray-600 mb-6 mt-2"><span class="font-bold text-blue-700 text-lg sm:text-xl uppercase tracking-wider">${currentStudent.hoTen} - Lớp ${currentStudent.lop}</span><br><span class="text-sm font-semibold text-gray-400 mt-1 block">${currentStudent.tenDe}</span></p><div class="bg-blue-50 border-2 border-blue-100 rounded-3xl p-6 mb-6 shadow-inner relative"><div class="text-sm text-blue-500 font-bold mb-2 uppercase tracking-widest">ĐIỂM SỐ CỦA BẠN</div><div class="text-6xl sm:text-7xl font-bold text-blue-600 drop-shadow-sm">${score} <span class="text-2xl text-gray-400">/ 10</span></div><div class="text-base sm:text-lg font-bold text-indigo-600 mt-4 bg-white inline-block px-5 py-2 rounded-full shadow-sm">Trả lời đúng ${correct}/${total} ý | TG: ${dur}</div></div><div class="grid grid-cols-2 gap-3 mb-4"><button onclick="window.goHome()" class="w-full py-4 bg-gray-100 text-gray-800 rounded-xl font-bold shadow-sm hover:bg-gray-200 transition-transform active:scale-95 touch-manipulation text-lg border-2 border-gray-200">🏠 Trang chủ</button><button onclick="document.getElementById('result-section').classList.add('hidden'); window.viewScoresAction();" class="w-full py-4 bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-xl font-bold shadow-sm hover:shadow-md transition-transform active:scale-95 touch-manipulation text-lg">🏆 Bảng điểm</button></div>`;
+    };
+
+    window.renderScores = function() {
+        const tbody = document.getElementById('scores-tbody');
+        const paginationControls = document.getElementById('pagination-controls');
+        
+        if (allScores.length === 0) { 
+            tbody.innerHTML = ''; 
+            document.getElementById('no-scores').classList.remove('hidden'); 
+            paginationControls.classList.add('hidden');
+            document.getElementById('my-score-summary').classList.add('hidden');
+            return; 
+        }
+        
+        document.getElementById('no-scores').classList.add('hidden');
+        paginationControls.classList.remove('hidden');
+        
+        // Sắp xếp điểm ưu tiên từ cao xuống thấp
+        sortedScoresList = [...allScores].sort((a, b) => {
+            if (b.diem !== a.diem) {
+                return b.diem - a.diem;
+            }
+            return (a.hoTen || '').localeCompare(b.hoTen || '');
+        });
+
+        const myScoreIndex = sortedScoresList.findIndex(s => s.deviceId === deviceId);
+        if (myScoreIndex !== -1) {
+            const myScore = sortedScoresList[myScoreIndex];
+            document.getElementById('my-score-summary').classList.remove('hidden');
+            document.getElementById('my-summary-name').innerText = `${myScore.hoTen} (${(myScore.lop || '').toUpperCase()})`;
+            document.getElementById('my-summary-rank').innerText = `Hạng: #${myScoreIndex + 1}`;
+            document.getElementById('my-summary-score').innerText = `${myScore.diem}`;
+        } else {
+            document.getElementById('my-score-summary').classList.add('hidden');
+        }
+
+        const totalPages = Math.ceil(sortedScoresList.length / rowsPerPage) || 1;
+        if (currentPage > totalPages) currentPage = totalPages;
+        
+        document.getElementById('page-info').innerText = `Trang ${currentPage} / ${totalPages}`;
+        document.getElementById('prev-page-btn').disabled = currentPage === 1;
+        document.getElementById('next-page-btn').disabled = currentPage === totalPages;
+
+        const startIndex = (currentPage - 1) * rowsPerPage;
+        const endIndex = startIndex + rowsPerPage;
+        const pageData = sortedScoresList.slice(startIndex, endIndex);
+
+        tbody.innerHTML = pageData.map((s, idx) => {
+            let timeStr = s.startTime;
+            if (s.thoiGian) {
+                const dt = new Date(s.thoiGian);
+                // Chỉ in ra định dạng ngày tháng năm
+                timeStr = dt.toLocaleDateString('vi-VN');
+            }
+            const globalIdx = startIndex + idx + 1;
+
+            return `<tr class="${s.deviceId === deviceId ? 'my-score-row' : 'hover:bg-gray-50'} transition-colors border-b border-gray-100">
+                <td class="px-3 sm:px-4 py-4 text-center font-bold text-gray-500 text-sm">#${globalIdx}</td>
+                <td class="px-3 sm:px-4 py-4 font-bold text-blue-600 text-sm">${(s.lop || '').toUpperCase()}</td>
+                <td class="px-3 sm:px-4 py-4 font-semibold text-gray-800 text-sm">${s.hoTen} ${s.deviceId === deviceId ? '<span class="ml-2 bg-pink-500 text-white text-[10px] px-2 rounded-md">Bạn</span>' : ''}</td>
+                <td class="px-3 sm:px-4 py-4 text-center"><span class="font-bold text-lg ${s.diem >= 5 ? 'text-green-600' : 'text-red-500'}">${s.diem}</span></td>
+                <td class="px-3 sm:px-4 py-4 text-center text-gray-500 text-xs">${timeStr}</td>
+            </tr>`;
+        }).join('');
+    };
+
+    window.prevPage = function() {
+        if (currentPage > 1) {
+            currentPage--;
+            window.renderScores();
+        }
+    };
+
+    window.nextPage = function() {
+        const totalPages = Math.ceil(sortedScoresList.length / rowsPerPage);
+        if (currentPage < totalPages) {
+            currentPage++;
+            window.renderScores();
+        }
+    };
+
+    function showSection(id) {
+        ['login', 'quiz', 'scores', 'result'].forEach(s => document.getElementById(s+'-section').classList.add('hidden'));
+        document.getElementById(id+'-section').classList.remove('hidden');
+    }
+
+    function startTimer(seconds) {
+        const display = document.getElementById('timer');
+        let remaining = seconds;
+        timerInterval = setInterval(() => {
+            remaining--;
+            const m = Math.floor(remaining / 60).toString().padStart(2, '0');
+            const s = (remaining % 60).toString().padStart(2, '0');
+            display.innerText = `${m}:${s}`;
+            if (remaining <= 0) window.submitQuiz();
+        }, 1000);
+    }
+
+    try {
+        if (!localStorage.getItem('deviceId')) {
+            localStorage.setItem('deviceId', 'dev_' + Math.random().toString(36).substr(2) + Date.now());
+        }
+        deviceId = localStorage.getItem('deviceId');
+    } catch (e) { deviceId = 'dev_temp_' + Math.random().toString(36).substr(2); }
+  </script>
+ </body>
+</html>
