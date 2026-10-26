@@ -1,0 +1,633 @@
+<!doctype html>
+<html lang="vi" class="w-full h-full m-0 p-0">
+ <head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <title>Tin Học 11 - Bài 9</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-NSJCVSL9RM"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-NSJCVSL9RM'); 
+  </script>
+
+  <script>
+    setInterval(function() {
+      if (!document.hidden) { 
+        gtag('event', 'keep_alive', {
+          'event_category': 'Engagement',
+          'event_label': 'Học sinh đang làm bài',
+          'non_interaction': false
+        });
+      }
+    }, 30000); 
+  </script>
+
+  <style>
+    * { 
+        -webkit-tap-highlight-color: transparent; 
+        -webkit-touch-callout: none !important; 
+        touch-action: manipulation;
+    }
+    html, body { width: 100%; min-height: 100vh; margin: 0; padding: 0; overflow-x: hidden; }
+    body { 
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
+      background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+      background-size: 400% 400%;
+      animation: gradientBG 15s ease infinite;
+    }
+    @keyframes gradientBG {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+    #app { width: 100%; min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden; }
+    .glass-card {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+    .option-label { transition: background-color 0.1s ease, border-color 0.1s ease; cursor: pointer; border-color: #e2e8f0; }
+    .option-label:hover { background-color: #f0fdfa; border-color: #38bdf8; }
+    input[type="radio"].single-radio:checked + .option-label {
+      background: linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%);
+      color: white; border-color: transparent;
+      box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+    }
+    input[type="radio"].single-radio:checked + .option-label div:first-child { background-color: rgba(255,255,255,0.25); border-color: transparent; color: white; }
+    input[type="radio"].single-radio:checked + .option-label div:last-child { color: white; }
+    .fade-in { animation: fadeIn 0.4s ease forwards; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    .my-score-row {
+      background: linear-gradient(to right, #fdf4ff, #ffffff) !important;
+      border-left: 4px solid #db2777 !important; font-weight: 700 !important;
+      color: #9d174d !important; box-shadow: 0 2px 8px rgba(0,0,0,0.05); position: relative; z-index: 10;
+    }
+    .my-score-row td { padding-top: 16px; padding-bottom: 16px; }
+    .btn-tf { transition: background-color 0.1s ease; border-width: 2px; }
+    .btn-tf.selected { background-color: #2563eb; color: white; border-color: #1d4ed8; }
+    .btn-tf:not(.selected) { background-color: white; color: #4b5563; border-color: #e5e7eb; }
+    .btn-tf:not(:disabled):active { transform: scale(0.95); }
+    .math-scroll { overflow-x: auto; min-width: 0; padding-bottom: 4px; scrollbar-width: none; -ms-overflow-style: none; }
+    .math-scroll::-webkit-scrollbar { display: none; }
+  </style>
+ </head>
+ <body>
+  <div id="app" class="p-0 sm:p-4 md:p-8 transition-all">
+   
+   <div id="login-section" class="w-full max-w-md mx-auto fade-in flex flex-col justify-center flex-grow">
+    <div class="glass-card rounded-none sm:rounded-3xl p-6 sm:p-8 flex flex-col justify-start shadow-2xl border-t-8 border-indigo-600 bg-white">
+     <div class="text-center mb-6 pt-4 sm:pt-0">
+      <div class="flex items-center justify-center w-24 h-24 mx-auto mb-4 rounded-full border-4 border-yellow-400 bg-red-600 shadow-lg transform transition-transform hover:scale-105">
+          <span class="text-white font-black text-4xl tracking-tighter">HS</span>
+      </div>
+      <h1 class="text-2xl sm:text-3xl font-bold text-red-500 mb-3"> ĐỀ KIỂM TRA TIN HỌC 11 - BÀI 9 </h1>
+     </div>
+      <div id="login-form" class="space-y-4">
+      <div class="flex flex-col gap-4">
+          <div class="w-full">
+               <label class="block text-lg font-bold text-gray-700 mb-1">Họ và tên</label> 
+               <input type="text" id="hoTen" class="w-full px-4 py-4 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-100 outline-none transition-all font-semibold text-lg" placeholder="Nhập họ tên...">
+          </div>
+          <div class="w-full">
+               <label class="block text-lg font-bold text-gray-700 mb-1">Lớp</label> 
+               <input type="text" id="lop" class="w-full px-4 py-4 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-100 outline-none transition-all font-semibold text-lg" placeholder="11A1">
+          </div>
+      </div>
+      <div id="login-error" class="hidden bg-red-100 border border-red-300 text-red-700 font-bold text-base p-3 rounded-xl text-center shadow-sm"></div>
+      <button type="button" onclick="window.startQuizAction()" id="start-btn" class="w-full py-5 mt-6 bg-gradient-to-r from-blue-500 to-cyan-400 text-white font-extrabold rounded-2xl shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all text-2xl tracking-wide"> 🚀 BẮT ĐẦU THI </button>
+     </div>
+    </div>
+   </div>
+
+   <div id="quiz-section" class="w-full max-w-4xl mx-auto hidden flex-grow flex flex-col">
+    <div class="glass-card rounded-none sm:rounded-3xl p-4 sm:p-8 flex flex-col flex-grow relative border-t-8 border-blue-500 bg-white shadow-2xl">
+     <div class="flex items-center justify-between mb-4 sm:mb-6 pb-4 border-b-2 border-gray-100">
+      <div class="flex items-center gap-3">
+       <div class="flex items-center justify-center w-12 h-12 rounded-full border-2 border-yellow-400 bg-red-600 shadow-sm flex-shrink-0">
+           <span class="text-white font-black text-xl tracking-tighter">HS</span>
+       </div>
+       <div>
+        <h2 id="quiz-title" class="text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">Đề Kiểm Tra</h2>
+        <p id="student-info" class="text-base font-bold text-gray-500 mt-1 uppercase tracking-wide"></p>
+       </div>
+      </div>
+      <div class="text-right bg-blue-50 px-4 py-2 rounded-xl border border-blue-100" id="progress-container">
+       <div class="text-sm text-blue-500 font-bold uppercase tracking-wider mb-1">Tiến độ</div>
+       <div id="progress-text" class="text-2xl font-black text-blue-700">0/28</div>
+      </div>
+     </div>
+     
+     <div id="timer-banner" class="mb-6 p-4 bg-gradient-to-r from-orange-50 to-red-50 border-2 border-red-100 rounded-2xl flex items-center justify-between shadow-sm sticky top-2 z-40">
+        <span class="text-red-800 font-extrabold flex items-center gap-2 text-lg"><span class="text-2xl animate-pulse">⏰</span> THỜI GIAN:</span> 
+        <span id="timer" class="text-4xl font-black text-red-600 font-mono tracking-wider drop-shadow-sm">45:00</span>
+     </div>
+
+     <div id="question-container" class="mb-8 flex-grow w-full max-w-full"></div>
+     <div id="network-error" class="hidden bg-red-100 text-red-700 p-4 rounded-xl mt-4 text-center font-bold text-sm border-2 border-red-300 mb-4 shadow-sm"></div>
+
+    <div class="flex pt-4 sm:pt-6 border-t-2 border-gray-100 mt-auto pb-4 sm:pb-0">
+        <button id="submit-btn" onclick="window.promptSubmit()" class="w-full py-5 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-bold text-2xl rounded-2xl shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1">✅ NỘP BÀI NGAY</button>
+     </div>
+    </div>
+   </div>
+
+   <div id="confirm-submit-modal" class="fixed inset-0 hidden flex items-center justify-center bg-black/60 backdrop-blur-sm z-50 transition-opacity">
+       <div class="bg-white rounded-3xl w-full max-w-sm shadow-2xl p-6 text-center transform transition-all scale-100 mx-4 border-2 border-gray-100">
+           <div class="text-yellow-400 mb-4 flex justify-center">
+               <svg xmlns="http://www.w3.org/2000/svg" class="h-24 w-24" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+               </svg>
+           </div>
+           <h3 class="text-3xl font-black text-gray-800 mb-2 uppercase tracking-wide">Xác nhận nộp</h3>
+           <p class="text-gray-600 mb-6 font-medium text-xl">Đã làm <span id="confirm-answered" class="text-red-600 font-black text-2xl">0</span>/<span id="confirm-total" class="font-black text-2xl">28</span> câu. Có chắc chắn muốn nộp bài?</p>
+           <div class="flex flex-col gap-3">
+               <button onclick="window.closeConfirmModal()" class="w-full py-4 bg-gray-100 text-gray-800 font-extrabold text-xl rounded-xl hover:bg-gray-200 border border-gray-200">Quay lại làm tiếp</button>
+               <button onclick="window.executeSubmit()" class="w-full py-4 bg-emerald-600 text-white font-extrabold text-xl rounded-xl hover:bg-emerald-700 shadow-md">Vẫn Nộp Luôn</button>
+           </div>
+       </div>
+   </div>
+
+   <div id="result-section" class="w-full max-w-2xl mx-auto hidden fade-in flex flex-col justify-center flex-grow pb-8">
+    <div class="glass-card rounded-none sm:rounded-3xl p-6 sm:p-8 flex flex-col justify-start border-t-8 border-green-500 bg-white shadow-2xl" id="result-content"></div>
+   </div>
+
+   <div id="review-section" class="w-full max-w-4xl mx-auto hidden flex-grow flex flex-col">
+    <div class="glass-card rounded-none sm:rounded-3xl p-4 sm:p-8 flex flex-col flex-grow border-t-8 border-indigo-500 bg-white overflow-hidden shadow-2xl">
+     <div class="flex flex-col-reverse sm:flex-row items-start sm:items-center justify-between mb-6 pb-4 border-b-2 border-gray-100 gap-4">
+      <div class="flex flex-wrap gap-2">
+          <button onclick="window.goHome()" class="px-5 py-3 bg-gray-100 text-gray-700 rounded-xl font-bold hover:bg-gray-200 text-lg shadow-sm border border-gray-200">🏠 Trang chủ</button>
+          <button onclick="window.backFromReview()" class="px-5 py-3 bg-indigo-50 text-indigo-700 rounded-xl font-bold hover:bg-indigo-100 text-lg shadow-sm border border-indigo-200">🔙 Quay lại</button>
+          <button onclick="window.viewScoresAction()" class="px-5 py-3 bg-orange-50 text-orange-700 rounded-xl font-bold hover:bg-orange-100 text-lg shadow-sm border border-orange-200">🏆 Bảng điểm</button>
+      </div>
+      <h2 class="text-3xl sm:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">📝 Xem Lại Bài Làm</h2>
+     </div>
+     <div id="review-content" class="space-y-8 w-full max-w-full"></div>
+    </div>
+   </div>
+
+   <div id="scores-section" class="w-full max-w-6xl mx-auto hidden flex-grow flex flex-col">
+    <div class="glass-card rounded-none sm:rounded-3xl p-4 sm:p-8 flex flex-col flex-grow border-t-8 border-orange-500 bg-white w-full max-w-full shadow-2xl">
+     <div class="mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b-2 border-gray-100 pb-4">
+      <button onclick="window.goHome()" class="px-5 py-3 bg-gray-100 text-gray-700 rounded-xl font-bold hover:bg-gray-200 text-lg shadow-sm border border-gray-200 whitespace-nowrap">🏠 Trang chủ</button>
+      <h2 class="text-3xl sm:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-red-600 text-center flex-grow">🏆 BẢNG XẾP HẠNG</h2>
+     </div>
+     
+     <div class="flex flex-col sm:flex-row justify-between items-center mb-4 gap-4 bg-gray-50 p-4 rounded-xl border border-gray-200">
+         <div id="my-rank-display" class="text-xl font-bold text-gray-700">STT của bạn: <span class="text-gray-400">--</span></div>
+         <div class="w-full sm:w-auto flex-grow max-w-sm">
+             <input type="text" id="search-student" oninput="window.searchStudent(this.value)" placeholder="🔍 Nhập tên học sinh để tìm..." class="w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm focus:border-orange-500 focus:ring-2 focus:ring-orange-200 outline-none transition-all font-medium">
+         </div>
+     </div>
+
+     <div class="overflow-x-auto rounded-xl border border-slate-200 flex-grow shadow-inner bg-white/50 w-full">
+      <table class="w-full text-sm sm:text-base whitespace-nowrap min-w-max">
+       <thead class="bg-gradient-to-r from-orange-500 to-red-500 text-white">
+        <tr>
+         <th class="px-3 sm:px-4 py-4 text-center font-extrabold w-16">STT</th>
+         <th class="px-3 sm:px-4 py-4 text-left font-extrabold">Họ tên</th>
+         <th class="px-3 sm:px-4 py-4 text-center font-extrabold">Lớp</th>
+         <th class="px-3 sm:px-4 py-4 text-center font-extrabold">Thời gian</th>
+         <th class="px-3 sm:px-4 py-4 text-center font-extrabold">Điểm</th>
+         <th class="px-2 sm:px-4 py-4 text-center font-extrabold">Xem lại</th>
+        </tr>
+       </thead>
+       <tbody id="scores-tbody" class="bg-white/80 divide-y divide-gray-100"></tbody>
+      </table>
+      <div id="no-scores" class="text-center py-12 hidden text-gray-500 font-bold text-xl">Không tìm thấy dữ liệu thi 🥲</div>
+     </div>
+     <div id="pagination-controls" class="w-full flex justify-center mt-6"></div>
+    </div>
+  </div>
+
+  <script>
+    let database = null;
+    let scoresRef = null;
+
+    try {
+        const firebaseConfig = {
+            apiKey: "AIzaSyBQ9Pos8awlh9j041qDWTPFRsVIjF-kPnk",
+            authDomain: "hoctap-91691.firebaseapp.com",
+            databaseURL: "https://hoctap-91691-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "hoctap-91691",
+            storageBucket: "hoctap-91691.firebasestorage.app",
+            messagingSenderId: "1004553425319",
+            appId: "1:1004553425319:web:45d15cbae393f614c56682",
+            measurementId: "G-Q6X1TL9PRV"
+        };
+        if (typeof firebase !== 'undefined') {
+            if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+            database = firebase.database();
+            scoresRef = database.ref('bxh_tin_11_bai_9');
+        }
+    } catch(err) { console.error("Lỗi Firebase:", err); }
+
+    let isQuizStarted = false; 
+    let currentQuestions = [];
+    let deviceId = '';
+    let allScores = [];
+    let currentStudent = {};
+    let userAnswers = {};
+    let timerInterval;
+    let quizStartTime, quizEndTime;
+    let searchTerm = '';
+    let currentPage = 1;
+    const itemsPerPage = 10;
+
+    const exam_data = [
+        { id: "q1", type: "single", question: "Câu 1: Nguyên tắc đầu tiên trong 3 nguyên tắc nhận biết và phòng tránh lừa đảo trên không gian số là gì?", options: ["Kiểm tra ngay", "Hãy chậm lại", "Dừng lại, không gửi", "Xóa tin nhắn"], correct: 1, explanation: "Theo Cẩm nang Bảo đảm An toàn thông tin, 3 nguyên tắc vàng là: Chậm lại, Kiểm tra ngay, Dừng lại không gửi. Trong đó 'Hãy chậm lại' là nguyên tắc đầu tiên giúp tránh các quyết định vội vã dưới áp lực tâm lý của kẻ gian." },
+        { id: "q2", type: "single", question: "Câu 2: Quy tắc nào sau đây yêu cầu mọi hành vi, ứng xử trên mạng xã hội phải phù hợp với các giá trị đạo đức, văn hóa truyền thống tốt đẹp của dân tộc Việt Nam?", options: ["Quy tắc trách nhiệm", "Quy tắc an toàn, bảo mật thông tin", "Quy tắc tôn trọng, tuân thủ pháp luật", "Quy tắc lành mạnh"], correct: 3, explanation: "Quy tắc Lành mạnh quy định người dùng phải có hành vi, ứng xử phù hợp với các giá trị đạo đức, văn hóa, truyền thống tốt đẹp của dân tộc." },
+        { id: "q3", type: "single", question: "Câu 3: Đặc điểm chung của các thủ đoạn lừa đảo trên mạng là thường tạo ra cảm giác gì để nạn nhân mất khả năng nhận định sáng suốt?", options: ["Cấp bách, khẩn cấp", "Thư giãn, thoải mái", "Tự hào, hãnh diện", "An toàn, tin cậy"], correct: 0, explanation: "Kẻ lừa đảo thường tạo ra áp lực thời gian (cảm giác cấp bách, khẩn cấp) để làm nạn nhân hoảng sợ và không có thời gian suy nghĩ thấu đáo." },
+        { id: "q4", type: "single", question: "Câu 4: Quy tắc \"Trách nhiệm\" trong Bộ Quy tắc ứng xử trên mạng xã hội yêu cầu người dùng phải làm gì?", options: ["Chịu trách nhiệm về hành vi của mình và phối hợp với cơ quan chức năng khi có yêu cầu.", "Chịu trách nhiệm thanh toán mọi khoản phí trực tuyến.", "Chia sẻ toàn bộ thông tin cá nhân cho cộng đồng mạng.", "Trực tiếp đi bắt những kẻ lừa đảo trên không gian mạng."], correct: 0, explanation: "Quy tắc Trách nhiệm quy định người dùng phải tự chịu trách nhiệm pháp lý về các hành vi của bản thân và chủ động hợp tác với cơ quan thẩm quyền để xử lý rủi ro an ninh mạng." },
+        { id: "q5", type: "single", question: "Câu 5: Đâu là một trong những việc KHÔNG NÊN làm khi tham gia môi trường số?", options: ["Quản lý, bảo mật thông tin cá nhân.", "Tung tin giả, sai sự thật hoặc xúc phạm cá nhân, tổ chức.", "Tuyên truyền, hướng dẫn sử dụng mạng xã hội an toàn.", "Quảng bá hình ảnh tốt đẹp của con người Việt Nam."], correct: 1, explanation: "Tung tin giả, sai sự thật hoặc xúc phạm người khác là hành vi vi phạm nghiêm trọng Luật An ninh mạng và bị nghiêm cấm hoàn toàn." },
+        { id: "q6", type: "single", question: "Câu 6: Đâu là một trong những việc NÊN làm khi tham gia mạng xã hội?", options: ["Sử dụng từ ngữ gây thù hận, kích động bạo lực.", "Sử dụng ngôn ngữ phản cảm, vô văn hóa.", "Chia sẻ thông tin chính thống, thông tin tích cực.", "Đăng tải nội dung vi phạm pháp luật."], correct: 2, explanation: "Lan truyền thông tin chính thống, tích cực là hành động góp phần xây dựng môi trường số văn minh và an toàn cho toàn xã hội." },
+        { id: "q7", type: "single", question: "Câu 7: Đối với bất kỳ yêu cầu thanh toán tiền nào qua mạng mà cảm thấy không đáng tin, bạn cần áp dụng ngay nguyên tắc nào?", options: ["Hãy thử thanh toán một ít", "Gọi điện mắng kẻ lừa đảo", "Dừng lại, không gửi", "Hãy chậm lại"], correct: 2, explanation: "Khi gặp yêu cầu chuyển tiền đáng ngờ, áp dụng ngay nguyên tắc 'Dừng lại, không gửi' giúp ngăn chặn hoàn toàn việc rò rỉ tài chính và dữ liệu nhạy cảm." },
+        { id: "q8", type: "single", question: "Câu 8: Bộ Quy tắc ứng xử trên mạng xã hội do Bộ Thông tin và Truyền thông ban hành (ngày 17/6/2021) gồm bao nhiêu quy tắc chính?", options: ["3 quy tắc", "4 quy tắc", "5 quy tắc", "6 quy tắc"], correct: 1, explanation: "Bộ Quy tắc ứng xử gồm 4 quy tắc chung: Tôn trọng, tuân thủ pháp luật; Lành mạnh; An toàn, bảo mật thông tin; Trách nhiệm." },
+        { id: "q9", type: "single", question: "Câu 9: Việc tra cứu số điện thoại hoặc địa chỉ cơ quan mà người gửi thông báo tự xưng thuộc về nguyên tắc phòng tránh lừa đảo nào?", options: ["Hãy chậm lại", "Kiểm tra ngay", "Dừng lại, không gửi", "Không tin ai"], correct: 1, explanation: "Hành động tra cứu và đối chiếu thông tin (Cross-check) trực tiếp thể hiện rõ nhất nguyên tắc 'Kiểm tra ngay' nhằm lật tẩy các chiêu trò mạo danh." },
+        { id: "q10", type: "single", question: "Câu 10: Bạn nhận được thông báo qua email rằng mình đã trúng một chiếc điện thoại đắt tiền, nhưng cần nộp 500 nghìn đồng phí bưu điện để nhận giải. Bản chất của thông báo này thường là gì?", options: ["Lừa đảo hỗ trợ kỹ thuật", "Lừa đảo dưới dạng thông báo tin xấu", "Lừa đảo dưới dạng thông báo tin tốt", "Thông báo trúng thưởng hợp pháp"], correct: 2, explanation: "Kẻ gian lợi dụng mồi nhử lòng tham bằng cách thông báo tin tốt (trúng giải thưởng lớn) để yêu cầu chuyển trước các khoản phí không có thật nhằm chiếm đoạt tài sản." },
+        { id: "q11", type: "single", question: "Câu 11: Việc bạn chia sẻ một bài báo từ trang thông tin điện tử của Chính phủ về cách phòng chống dịch bệnh thể hiện việc thực hiện hành động nào?", options: ["Chia sẻ thông tin chính thống, thông tin tích cực.", "Tuyên truyền hướng dẫn sử dụng mạng xã hội an toàn.", "Quảng cáo, kinh doanh dịch vụ trực tuyến.", "Quản lý thông tin cá nhân."], correct: 0, explanation: "Thông tin từ trang của Chính phủ là nguồn tài liệu chính thống. Việc lan truyền thông tin này là minh chứng rõ nét cho hành vi chia sẻ thông tin tích cực." },
+        { id: "q12", type: "single", question: "Câu 12: Kẻ gian gọi điện tự xưng là Cảnh sát giao thông, thông báo bạn có biên lai phạt nguội và yêu cầu chuyển tiền ngay để không bị truy tố. Đây là hình thức lừa đảo nào?", options: ["Lừa đảo hỗ trợ kỹ thuật", "Lừa đảo dưới dạng thông báo tin xấu", "Lừa đảo qua website giả mạo", "Lừa đảo dưới dạng thông báo tin tốt"], correct: 1, explanation: "Đóng giả cơ quan công quyền để thông báo vi phạm (tin xấu) là chiêu trò gây hoang mang, sợ hãi để nạn nhân ngoan ngoãn làm theo hướng dẫn chuyển tiền." },
+        { id: "q13", type: "single", question: "Câu 13: Tại sao những trang web lừa đảo, giả mạo các thương hiệu lớn thường có nhiều lỗi chính tả hoặc nội dung sơ sài?", options: ["Vì họ muốn thiết kế web đơn giản cho dễ nhìn.", "Vì kẻ lừa đảo thường không có thời gian và sự chăm chút cẩn trọng cho trang web.", "Vì các thương hiệu lớn yêu cầu phải làm web sơ sài.", "Vì đó là xu hướng thiết kế web mới."], correct: 1, explanation: "Các chiến dịch lừa đảo (Phishing campaign) thường lập web rất vội vàng và hoạt động trong thời gian ngắn để né tránh sự truy quét của hệ thống an ninh, dẫn đến giao diện cẩu thả, sai chính tả." },
+        { id: "q14", type: "single", question: "Câu 14: Việc sử dụng những từ ngữ chửi bới, miệt thị vùng miền trên mạng xã hội vi phạm rõ nhất quy tắc ứng xử nào?", options: ["Quy tắc bảo mật thông tin", "Quy tắc tôn trọng, tuân thủ pháp luật", "Quy tắc an toàn", "Quy tắc lành mạnh"], correct: 3, explanation: "Ngôn từ thù hận (Hate speech) và miệt thị vi phạm trực tiếp Quy tắc Lành mạnh - quy tắc đòi hỏi sự văn minh, phù hợp với đạo đức trong giao tiếp mạng." },
+        { id: "q15", type: "single", question: "Câu 15: Nếu phát hiện tài khoản mạng xã hội của mình bị mất quyền kiểm soát, hành động lập tức thông báo cho người thân và cơ quan chức năng thể hiện điều gì?", options: ["Quảng bá hình ảnh tốt đẹp của bản thân.", "Tuyên truyền sử dụng mạng xã hội có văn hóa.", "Quản lý, bảo mật thông tin cá nhân và xử lý kịp thời khi gặp rủi ro.", "Đăng tải nội dung vi phạm pháp luật."], correct: 2, explanation: "Hành động báo động ngay lập tức (Incident Response) là minh chứng cho kỹ năng xử lý khủng hoảng và tuân thủ quy tắc bảo mật thông tin nhằm ngăn ngừa thiệt hại lan rộng." },
+        { id: "q16", type: "single", question: "Câu 16: Dấu hiệu đặc trưng nhất của hình thức lừa đảo \"hỗ trợ kỹ thuật\" là gì?", options: ["Gửi tin nhắn đe dọa sẽ tung ảnh nóng.", "Thông báo trúng xổ số giải đặc biệt.", "Cố gắng thuyết phục máy tính bạn bị lỗi và yêu cầu trả tiền để khắc phục sự cố không có thật đó.", "Đóng giả làm người bán hàng trực tuyến."], correct: 2, explanation: "Lừa đảo hỗ trợ kỹ thuật (Tech Support Scam) phổ biến qua việc hiển thị cảnh báo virus giả, từ đó lừa nạn nhân mua phần mềm diệt virus rởm hoặc trả tiền công sửa chữa." },
+        { id: "q17", type: "single", question: "Câu 17: Bạn nhận được một email thông báo trúng thưởng xe máy nhưng yêu cầu chuyển 1 triệu đồng tiền làm hồ sơ. Cách xử lý nào sau đây là an toàn nhất?", options: ["Chuyển ngay 1 triệu để nhanh chóng nhận xe.", "Bỏ qua email, không chuyển bất cứ khoản phí trước nào để nhận phần thưởng.", "Cung cấp số tài khoản ngân hàng và mật khẩu cho họ tự trừ tiền phí.", "Nhắn tin chửi bới người gửi email."], correct: 1, explanation: "Tuyệt đối không chuyển tiền trước. Bất cứ chương trình khuyến mãi, quay thưởng hợp pháp nào cũng không được phép yêu cầu người trúng thưởng nộp tiền trước để làm thủ tục nhận giải." },
+        { id: "q18", type: "single", question: "Câu 18: Thấy một người bạn chia sẻ bài viết bôi nhọ một cá nhân khác chưa được kiểm chứng, bạn nên làm gì?", options: ["Bấm chia sẻ lại ngay lập tức để lan truyền thông tin.", "Không chia sẻ lại và khuyên bạn nên kiểm chứng nguồn tin trước khi đăng.", "Bình luận góp vui bằng những từ ngữ xúc phạm.", "Lưu bài viết đó về máy tính để dành đọc sau."], correct: 1, explanation: "Kiểm chứng sự thật (Fact-checking) là trách nhiệm cốt lõi của công dân số. Khuyên bạn gỡ bài giúp ngăn chặn vòng lặp phát tán thông tin sai lệch." },
+        { id: "q19", type: "single", question: "Câu 19: Đang lướt web tìm tài liệu học tập, bỗng nhiên có một bảng thông báo màu đỏ hiện lên: \"Máy tính bạn đã nhiễm virus nặng, bấm vào đây để quét ngay!\". Bạn nên xử lý thế nào?", options: ["Bấm ngay vào nút \"Quét\" trên màn hình để diệt virus.", "Tải phần mềm mà trang web đó gợi ý về cài đặt.", "Đóng ngay thẻ (tab) trình duyệt đó lại, tự dùng phần mềm diệt virus sẵn có trong máy để kiểm tra.", "Cung cấp thông tin thẻ tín dụng để mua phần mềm của trang đó."], correct: 2, explanation: "Đây là dạng Adware lừa đảo cực kỳ phổ biến. Việc tắt ngay tab đó và dùng trình diệt virus uy tín có sẵn trong hệ thống là cách giải quyết an toàn và mang tính khoa học nhất." },
+        { id: "q20", type: "single", question: "Câu 20: Muốn mua một đôi giày giảm giá 80% trên một trang web lạ gửi qua SMS, bạn nên thực hiện việc gì để tránh bị lừa đảo qua website giả mạo?", options: ["Nhập nhanh số thẻ tín dụng để kẻo lỡ đợt giảm giá.", "Kiểm tra xem địa chỉ (URL) trang web có uy tín không, đọc đánh giá của người mua trước.", "Chuyển khoản ngay toàn bộ số tiền mua giày vào tài khoản cá nhân được cung cấp.", "Giới thiệu ngay đường link đó cho nhiều người cùng mua."], correct: 1, explanation: "Xác minh độ tin cậy của tên miền (URL), tìm kiếm đánh giá từ cộng đồng là bước kiểm tra cần thiết (Nguyên tắc Kiểm tra ngay) để tránh rơi vào bẫy của các website lừa đảo." },
+        { id: "q21", type: "single", question: "Câu 21: Nếu vô tình phát hiện bạn mình đang dùng tài khoản ảo để bình luận xúc phạm các bạn khác trong trường, bạn nên khuyên bạn mình tuân thủ quy tắc nào?", options: ["Quy tắc Tôn trọng, tuân thủ pháp luật và quy tắc Lành mạnh.", "Quy tắc Bảo mật thông tin (nên đổi mật khẩu tài khoản ảo thường xuyên).", "Khuyên bạn nên lập thêm nhiều tài khoản ảo nữa để không bị phát hiện.", "Không khuyên gì cả vì đó là quyền tự do ngôn luận."], correct: 0, explanation: "Mọi hành vi mạo danh, dùng tài khoản ẩn danh để nhục mạ người khác đều vi phạm nghiêm trọng tính Lành mạnh và Tôn trọng pháp luật, có thể chịu chế tài kỷ luật." },
+        { id: "q22", type: "single", question: "Câu 22: Một người lạ nhắn tin đe dọa sẽ tung hình ảnh nhạy cảm ghép mặt bạn lên mạng nếu không chuyển 500 nghìn đồng cho hắn. Bạn cần làm gì?", options: ["Vay tiền chuyển ngay cho hắn để được yên thân.", "Chuyển tiền và năn nỉ hắn xóa ảnh.", "Tuyệt đối không chuyển tiền, lưu lại bằng chứng, chặn tài khoản đó và báo cho gia đình, nhà trường hoặc cơ quan công an.", "Chửi lại người lạ bằng những lời lẽ thô tục."], correct: 2, explanation: "Hành vi tống tiền (Sextortion/Blackmail) không bao giờ kết thúc sau một lần chuyển khoản. Việc chặn liên lạc, thu thập chứng cứ kỹ thuật số và báo cáo cơ quan chức năng là quy trình bảo vệ bản thân đúng đắn nhất." },
+        { id: "q23", type: "single", question: "Câu 23: Bạn thấy một bài đăng quảng cáo dịch vụ làm giấy tờ, văn bằng giả trên Facebook. Hành động đúng đắn của một công dân số có trách nhiệm là gì?", options: ["Chia sẻ bài viết đó về trang cá nhân để cảnh báo mọi người.", "Bình luận hỏi giá cả xem có đắt không.", "Báo cáo (Report) bài viết vi phạm với nền tảng mạng xã hội.", "Lưu số điện thoại lại phòng khi cần dùng đến."], correct: 2, explanation: "Chức năng Báo cáo (Report) là công cụ mà các nền tảng trang bị để người dùng góp phần thanh lọc nội dung vi phạm pháp luật, bảo vệ hệ sinh thái thông tin chung." },
+        { id: "q24", type: "single", question: "Câu 24: Khi tranh luận một vấn đề học tập trên nhóm chat của lớp và bị một bạn khác có ý kiến trái chiều gay gắt, bạn nên ứng xử thế nào để đảm bảo văn hóa mạng?", options: ["Dùng những từ ngữ nặng nề để công kích lại bạn đó.", "Tranh luận bằng lý lẽ lịch sự, tôn trọng ý kiến khác biệt, không công kích cá nhân.", "Chụp màn hình và đăng lên trang cá nhân để nhờ cộng đồng mạng phân xử.", "Rời khỏi nhóm chat ngay lập tức."], correct: 1, explanation: "Sự khác biệt về quan điểm là bình thường. Tuy nhiên, việc áp dụng tư duy logic để phản biện một cách lịch sự, không công kích cá nhân (Ad hominem) mới thể hiện tính Lành mạnh trên không gian mạng." },
+
+        { id: "qII_1", type: "tf_cluster", context: "Câu 1: Bạn Minh nhận được một tin nhắn lạ qua ứng dụng nhắn tin có nội dung: \"Tài khoản ngân hàng của bạn vừa có giao dịch bất thường. Vui lòng bấm vào đường link http://ngan-hang-xyz.com và đăng nhập để xác minh, nếu không tài khoản sẽ bị khóa trong 2 tiếng tới\". Minh rất lo lắng vì trong tài khoản đang có tiền đóng học phí.", items: [
+            { id: "a", text: "a) Theo nguyên tắc phòng tránh lừa đảo, hành động đầu tiên Minh cần làm là \"Hãy chậm lại\", không nên hoảng hốt và vội vàng làm theo yêu cầu trong tin nhắn.", correct: true, expl: "Nguyên tắc \"Hãy chậm lại\" giúp giữ bình tĩnh, triệt tiêu cảm giác hoảng loạn và tránh đưa ra các quyết định sai lầm dưới áp lực thao túng tâm lý." },
+            { id: "b", text: "b) Tin nhắn Minh nhận được mang tính chất lừa đảo dưới dạng thông báo tin tốt.", correct: false, expl: "Đây là dạng lừa đảo thông báo tin xấu (đe dọa tài khoản có giao dịch lạ, dọa khóa tài khoản) nhằm tạo tâm lý sợ hãi, lo âu cho nạn nhân." },
+            { id: "c", text: "c) Việc thông báo yêu cầu đăng nhập ngay để tránh bị khóa tài khoản là thủ đoạn tạo cảm giác cấp bách, nhằm đánh lừa khả năng nhận định sáng suốt của nạn nhân.", correct: true, expl: "Việc đưa ra hạn chót (chỉ có 2 tiếng) là thủ thuật phổ biến để vô hiệu hóa khả năng kiểm chứng chéo (cross-check) thông tin của người dùng." },
+            { id: "d", text: "d) Để đảm bảo an toàn, Minh nên trực tiếp bấm vào đường link đó để kiểm tra xem giao diện có giống ngân hàng thật không, sau đó mới gọi lên tổng đài để hỏi.", correct: false, expl: "Tuyệt đối không được nhấp vào các liên kết đáng ngờ (Phishing link). Thao tác này có thể khiến thiết bị tải mã độc ngầm hoặc lừa bạn nhập thông tin nhạy cảm vào một giao diện web giả mạo." }
+        ]},
+        { id: "qII_2", type: "tf_cluster", context: "Câu 2: Lớp trưởng lớp 11A2 là bạn Tuấn vừa lập một nhóm chat trên Messenger để các bạn trao đổi bài tập và thông báo của trường. Tuy nhiên, một số thành viên trong nhóm thường xuyên dùng từ ngữ thô tục, chửi thề và gửi các đường link quảng cáo cá cược bóng đá.", items: [
+            { id: "a", text: "a) Việc sử dụng từ ngữ thô tục, chửi thề trong nhóm chat là hành vi vi phạm quy tắc \"Lành mạnh\" khi giao tiếp trên môi trường số.", correct: true, expl: "Quy tắc Lành mạnh đòi hỏi ứng xử chuẩn mực đạo đức, do đó, ngôn ngữ thô tục phản cảm là hoàn toàn trái với quy định bảo vệ văn hóa học đường trên mạng." },
+            { id: "b", text: "b) Đăng quảng cáo các dịch vụ cá cược bóng đá là một trong những việc nên làm để làm phong phú nội dung nhóm chat.", correct: false, expl: "Quảng bá dịch vụ cờ bạc, cá cược trực tuyến là hành vi tuyên truyền cho các hoạt động vi phạm pháp luật nghiêm trọng, cần bị ngăn chặn ngay lập tức." },
+            { id: "c", text: "c) Hành vi gửi link cá cược trực tuyến vào nhóm chat của lớp là vi phạm quy định pháp luật và có thể gây hệ lụy xấu cho các học sinh khác.", correct: true, expl: "Việc phát tán các liên kết tổ chức đánh bạc qua mạng không chỉ vi phạm Luật An ninh mạng mà còn làm tha hóa đạo đức, lôi kéo học sinh vào các tệ nạn." },
+            { id: "d", text: "d) Là quản trị viên của nhóm, Tuấn nên chủ động nhắc nhở, xây dựng quy định cấm nói bậy, cấm quảng cáo trái phép và có biện pháp xử lý những thành viên cố tình vi phạm.", correct: true, expl: "Quản trị viên (Admin) đóng vai trò như người kiểm duyệt nội dung (Moderator), có trách nhiệm cao nhất trong việc định hình chuẩn mực và giữ gìn một không gian số an toàn." }
+        ]},
+        { id: "qII_3", type: "tf_cluster", context: "Câu 3: Bạn Lan đang lướt mạng xã hội thì thấy một bài đăng kèm hình ảnh cắt ghép sai sự thật về một vụ tai nạn giao thông ở địa phương, gây hoang mang dư luận. Bài viết này đang thu hút rất nhiều lượt thích và chia sẻ.", items: [
+            { id: "a", text: "a) Hành vi \"Tung tin giả, sai sự thật\" thuộc danh mục những việc KHÔNG NÊN làm khi tham gia mạng xã hội.", correct: true, expl: "Chế tạo và rêu rao tin giả mạo (Fake News) gây xáo trộn đời sống xã hội là hành vi bị cấm triệt để trên mọi không gian số." },
+            { id: "b", text: "b) Theo quy tắc ứng xử trên không gian số, người dùng chỉ cần chịu trách nhiệm pháp lý với những bài viết do chính tay mình soạn thảo, không cần chịu trách nhiệm khi chia sẻ lại bài của người khác.", correct: false, expl: "Luật pháp quy định người chia sẻ, lan truyền tin giả (share) cũng có lỗi và phải chịu trách nhiệm pháp lý tương đương với mức độ gây hệ lụy của hành vi lan truyền." },
+            { id: "c", text: "c) Nếu Lan chia sẻ bài viết này với dòng trạng thái \"Mọi người cẩn thận nhé\", Lan vẫn đang vô tình tiếp tay lan truyền thông tin độc hại, vi phạm trách nhiệm của công dân số.", correct: true, expl: "Dù ý định ban đầu là cảnh báo, hành động chia sẻ lại nguyên văn bài viết giả mạo sẽ khiến thuật toán tiếp tục phân phối nó đến hàng nghìn người khác, gây tác hại thực tế." },
+            { id: "d", text: "d) Cách xử lý tốt nhất của Lan là tải bức ảnh giả mạo đó về máy tính, dùng phần mềm chèn thêm chữ \"Tin giả\" rồi tự đăng lại lên trang cá nhân của mình để cảnh báo.", correct: false, expl: "Việc xử lý và tải hình ảnh nhạy cảm về tự đăng lại rất dễ gây hiểu lầm. Giải pháp an toàn nhất là lờ đi (không tương tác) và sử dụng chức năng Báo cáo (Report) ẩn của nền tảng." }
+        ]},
+        { id: "qII_4", type: "tf_cluster", context: "Câu 4: Hùng có sở thích mua đồ điện tử giá rẻ trên các trang mạng. Gần đây, Hùng thấy một quảng cáo bán tai nghe không dây giảm giá 90% hiển thị từ một trang web lạ. Trang web yêu cầu người mua phải điền thông tin thẻ tín dụng để thanh toán trước vì lý do \"số lượng có hạn, chỉ còn 2 sản phẩm duy nhất\".", items: [
+            { id: "a", text: "a) Dựa trên các dấu hiệu đáng ngờ, đây rất có thể là hình thức lừa đảo qua website giả mạo các trang thương mại điện tử phổ biến.", correct: true, expl: "Mức giảm giá siêu thực (90%) trên một nền tảng không tên tuổi là dấu hiệu cảnh báo cao nhất của các trang web chuyên đánh cắp dữ liệu tài khoản ngân hàng." },
+            { id: "b", text: "b) Yêu cầu thanh toán trước với mức \"giảm 90%\" và nhấn mạnh \"chỉ còn 2 sản phẩm\" là một thủ đoạn tạo sự khan hiếm giả tạo để thúc giục người tiêu dùng vội vã rút hầu bao.", correct: true, expl: "Lợi dụng hiệu ứng sợ bị bỏ lỡ (FOMO - Fear of Missing Out), kẻ gian tạo sự khan hiếm giả để ép nạn nhân chốt đơn trước khi lý trí kịp nhận ra sự bất thường." },
+            { id: "c", text: "c) Dựa trên nguyên tắc \"Dừng lại, không gửi\", Hùng nên lập tức dùng dịch vụ chuyển tiền nhanh để chuyển tiền giữ chỗ món hàng trước khi có người khác mua mất.", correct: false, expl: "Bản chất của nguyên tắc \"Dừng lại, không gửi\" là chặn đứng mọi hành vi chuyển tiền, cung cấp mã OTP, thông tin nhạy cảm cho đến khi xác minh thành công 100%." },
+            { id: "d", text: "d) Để xác minh độ tin cậy của trang web này, Hùng nên kiểm tra kỹ địa chỉ URL, tìm kiếm các đánh giá (review) thực tế và luôn ưu tiên chọn phương thức thanh toán \"nhận hàng - trả tiền\" (COD) nếu có cơ hội.", correct: true, expl: "Soi kỹ SSL/HTTPS trên đường link, tra soát bình luận cộng đồng và giữ dòng tiền an toàn thông qua dịch vụ COD là giao thức giao dịch chuẩn mực để phòng chống mọi rủi ro thương mại điện tử." }
+        ]}
+    ];
+
+   window.startQuizAction = function() {
+        try {
+            const errDiv = document.getElementById('login-error');
+            if(errDiv) errDiv.classList.add('hidden');
+            const name = document.getElementById('hoTen').value.trim();
+            const lop = document.getElementById('lop').value.trim();
+            if (!name || !lop) {
+                if(errDiv) { errDiv.innerText = "⚠️ Vui lòng nhập đầy đủ Họ tên và Lớp!"; errDiv.classList.remove('hidden'); } 
+                else { alert("⚠️ Vui lòng nhập đầy đủ Họ tên và Lớp!"); }
+                return;
+            }
+            currentStudent = { hoTen: name, lop: lop, maDe: 'bai9', tenDe: 'Tin học 11 - Bài 9' };
+            currentQuestions = JSON.parse(JSON.stringify(exam_data));
+            quizStartTime = new Date();
+            setTimeout(() => { isQuizStarted = true; }, 1000);
+            showSection('quiz');
+            userAnswers = {};
+            window.renderAllQuestions();
+            startTimer(45 * 60); 
+        } catch (error) { console.error(error); }
+    };
+
+    window.viewScoresAction = function() {
+        searchTerm = ''; 
+        document.getElementById('search-student').value = '';
+        currentPage = 1;
+        if (database) {
+            scoresRef.once('value').then((snapshot) => {
+                const data = snapshot.val();
+                allScores = data ? Object.keys(data).map(key => ({...data[key], id: key})) : [];
+                window.renderScores();
+                showSection('scores');
+            });
+        }
+    };
+
+    window.searchStudent = function(val) { searchTerm = val.toLowerCase(); currentPage = 1; window.renderScores(); };
+    window.changePage = function(page) { currentPage = page; window.renderScores(); };
+    window.goHome = function() {
+        if(document.getElementById('hoTen')) document.getElementById('hoTen').value = ''; 
+        if(document.getElementById('lop')) document.getElementById('lop').value = ''; 
+        clearInterval(timerInterval); showSection('login');
+    };
+
+    function getTotalScoreItems() { return currentQuestions.length; }
+
+    function getAnsweredCount() {
+        let count = 0;
+        currentQuestions.forEach(q => {
+            if (q.type === 'single') {
+                if (userAnswers[q.id] !== undefined) count++;
+            } else if (q.type === 'tf_cluster') {
+                let answeredItems = 0;
+                q.items.forEach(item => { if (userAnswers[q.id + '_' + item.id] !== undefined) answeredItems++; });
+                if (answeredItems === 4) count++; 
+            }
+        });
+        return count;
+    }
+
+   window.selectAnswer = function(qId, val, type) {
+        if (type === 'tf') {
+            userAnswers[qId] = val;
+            const btnT = document.getElementById(`btnT_${qId}`);
+            const btnF = document.getElementById(`btnF_${qId}`);
+            if (val === true) { btnT.classList.add('selected'); btnT.classList.remove('bg-white'); btnF.classList.remove('selected'); btnF.classList.add('bg-white'); } 
+            else { btnF.classList.add('selected'); btnF.classList.remove('bg-white'); btnT.classList.remove('selected'); btnT.classList.add('bg-white'); }
+        } else if (type === 'single') { userAnswers[qId] = val; }
+        requestAnimationFrame(() => {
+            const pgText = document.getElementById('progress-text');
+            if(pgText) pgText.innerText = `${getAnsweredCount()}/${getTotalScoreItems()}`;
+        });
+    };
+
+    window.renderAllQuestions = function() {
+        if (!currentQuestions || currentQuestions.length === 0) return;
+        const container = document.getElementById('question-container');
+        if(!container) return;
+        let html = ''; let currentType = '';
+        currentQuestions.forEach((q) => {
+            if (q.type !== currentType) {
+                currentType = q.type;
+                let headerText = ''; let roman = '';
+                if(currentType === 'single') { headerText = 'TRẮC NGHIỆM MỘT LỰA CHỌN'; roman = 'I'; }
+                if(currentType === 'tf_cluster') { headerText = 'TRẮC NGHIỆM ĐÚNG/SAI'; roman = 'II'; }
+                html += `<div class="flex items-center gap-3 mt-8 mb-4 border-b-2 border-blue-100 pb-3"><span class="bg-gradient-to-br from-blue-500 to-indigo-600 text-white w-14 h-14 flex items-center justify-center rounded-xl font-black text-2xl shadow-md">${roman}</span><h3 class="text-2xl sm:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-700 to-indigo-700 tracking-wide uppercase">${headerText}</h3></div>`;
+            }
+            html += `<div class="fade-in w-full bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-blue-100 relative mb-6 hover:shadow-md transition-shadow">`;
+            if (q.type === 'single') {
+                const uAns = userAnswers[q.id];
+                html += `<div class="flex gap-4 mb-5"><div class="w-full math-scroll"><p class="text-xl font-bold text-red-600 mt-1 leading-snug tracking-tight">${q.question}</p></div></div>`;
+                html += `<div class="space-y-4 md:pl-6 mt-6">`;
+                q.options.forEach((opt, i) => {
+                    const isChecked = (uAns === i) ? 'checked' : '';
+                    html += `<div class="flex items-center"><input type="radio" id="opt_${q.id}_${i}" name="q_${q.id}" value="${i}" class="hidden single-radio" ${isChecked} onchange="window.selectAnswer('${q.id}', ${i}, 'single')"><label for="opt_${q.id}_${i}" class="option-label w-full p-4 border-2 border-gray-200 rounded-2xl flex items-center gap-4 bg-white shadow-sm font-bold text-lg hover:border-blue-300"><div class="w-12 h-12 rounded-xl border-2 border-gray-300 flex items-center justify-center text-lg font-black text-gray-400 flex-shrink-0 bg-gray-50">${String.fromCharCode(65 + i)}</div><div class="text-gray-700 leading-relaxed math-scroll flex-1">${opt}</div></label></div>`;
+                });
+                html += `</div>`;
+            } else if (q.type === 'tf_cluster') {
+                html += `<div class="bg-red-50 text-red-700 p-5 rounded-xl font-bold mb-4 border-2 border-red-100 text-xl leading-relaxed math-scroll">${q.context}</div><div class="space-y-4 mt-6">`;
+                q.items.forEach((item) => {
+                    const combinedId = q.id + '_' + item.id;
+                    let ans = userAnswers[combinedId];
+                    let btnT = ans === true ? 'selected' : 'bg-white'; let btnF = ans === false ? 'selected' : 'bg-white';
+                    html += `<div class="p-5 border-2 border-gray-100 rounded-2xl bg-white shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4 transition-all hover:border-blue-200"><div class="font-bold text-gray-800 flex-1 text-lg math-scroll">${item.text}</div><div class="flex gap-3 shrink-0"><button id="btnT_${combinedId}" onclick="window.selectAnswer('${combinedId}', true, 'tf')" class="btn-tf w-24 sm:w-28 py-3 rounded-xl font-extrabold text-lg ${btnT}">ĐÚNG</button><button id="btnF_${combinedId}" onclick="window.selectAnswer('${combinedId}', false, 'tf')" class="btn-tf w-24 sm:w-28 py-3 rounded-xl font-extrabold text-lg ${btnF}">SAI</button></div></div>`;
+                });
+                html += `</div>`;
+            } 
+            html += `</div>`;
+        });
+        container.innerHTML = html;
+        const pgText = document.getElementById('progress-text');
+        if(pgText) pgText.innerText = `${getAnsweredCount()}/${getTotalScoreItems()}`;
+    };
+
+    function formatDuration(sec) {
+        const m = Math.floor(sec / 60); const s = sec % 60; return `${m}p ${s}s`;
+    }
+
+    window.promptSubmit = function() {
+        if (!isQuizStarted) return;
+        document.getElementById('confirm-answered').innerText = getAnsweredCount();
+        document.getElementById('confirm-total').innerText = getTotalScoreItems();
+        document.getElementById('confirm-submit-modal').classList.remove('hidden');
+    };
+
+    window.closeConfirmModal = function() { document.getElementById('confirm-submit-modal').classList.add('hidden'); };
+
+    window.executeSubmit = function() {
+        window.closeConfirmModal();
+        isQuizStarted = false; 
+        quizEndTime = new Date();
+        clearInterval(timerInterval);
+        
+        let score = 0;
+        currentQuestions.forEach(q => {
+            if (q.type === 'single') {
+                if (userAnswers[q.id] === q.correct) score += 0.25;
+            } else if (q.type === 'tf_cluster') {
+                let correctCount = 0;
+                q.items.forEach(item => { if (userAnswers[q.id + '_' + item.id] === item.correct) { correctCount++; } });
+                if (correctCount === 1) score += 0.1;
+                else if (correctCount === 2) score += 0.25;
+                else if (correctCount === 3) score += 0.5;
+                else if (correctCount === 4) score += 1.0;
+            }
+        });
+
+        score = score.toFixed(2); 
+
+        const record = {
+            hoTen: currentStudent.hoTen, lop: currentStudent.lop, tenDe: currentStudent.tenDe, maDe: currentStudent.maDe, diem: parseFloat(score),
+            startTime: quizStartTime.toISOString(), thoiGian: quizEndTime.toISOString(), deviceId: deviceId, userAnswers: userAnswers 
+        };
+        
+        if(database) { scoresRef.push(record, () => { window.showModalResult(score, formatDuration(Math.floor((quizEndTime - quizStartTime) / 1000))); }); } 
+        else { window.showModalResult(score, formatDuration(Math.floor((quizEndTime - quizStartTime) / 1000))); }
+    };
+
+    window.showModalResult = function(score, dur) {
+        ['login', 'quiz', 'scores', 'review'].forEach(s => { const el = document.getElementById(s+'-section'); if(el) el.classList.add('hidden'); });
+        const resEl = document.getElementById('result-section'); if(resEl) resEl.classList.remove('hidden');
+        document.getElementById('result-content').innerHTML = `
+        <div class="flex justify-start mb-4"><button onclick="window.goHome()" class="px-5 py-3 bg-gray-100 text-gray-700 rounded-xl font-bold hover:bg-gray-200 transition-colors shadow-sm border border-gray-200 text-lg">🏠 Trang chủ</button></div>
+        <div class="text-center"><div class="text-7xl mb-4 animate-bounce">🎉</div><h3 class="text-3xl font-black text-emerald-600 mb-2">Hoàn thành bài thi!</h3><p class="text-gray-600 mb-6 mt-2"><span class="font-extrabold text-blue-700 text-xl uppercase tracking-wider">${currentStudent.hoTen} - Lớp ${currentStudent.lop}</span></p></div>
+        <div class="bg-blue-50 border-2 border-blue-100 rounded-3xl p-8 mb-6 shadow-inner relative text-center"><div class="text-base text-blue-500 font-extrabold mb-2 uppercase tracking-widest">ĐIỂM SỐ CỦA BẠN</div><div class="text-7xl font-black text-blue-600 drop-shadow-sm">${score} <span class="text-3xl text-gray-400">/ 10</span></div></div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4"><button onclick="window.reviewQuiz()" class="w-full py-4 bg-gradient-to-r from-indigo-500 to-purple-500 text-white rounded-xl font-extrabold shadow-sm hover:shadow-md transition-colors text-xl">📝 Xem lại bài</button><button onclick="window.viewScoresAction()" class="w-full py-4 bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-xl font-extrabold shadow-sm hover:shadow-md transition-colors text-xl">🏆 Bảng điểm</button></div>`;
+    };
+
+    function getStatusBadge(isCorrect, isUnanswered) {
+        if (isUnanswered) return `<div class="mt-4 mb-2 inline-block px-4 py-2 bg-yellow-100 text-yellow-800 text-base font-black rounded-lg border border-yellow-300 shadow-sm">⚠️ CHƯA LÀM</div>`;
+        if (isCorrect) return `<div class="mt-4 mb-2 inline-block px-4 py-2 bg-emerald-100 text-emerald-800 text-base font-black rounded-lg border border-emerald-300 shadow-sm">✅ ĐÚNG</div>`;
+        return `<div class="mt-4 mb-2 inline-block px-4 py-2 bg-red-100 text-red-800 text-base font-black rounded-lg border border-red-300 shadow-sm">❌ SAI</div>`;
+    }
+
+    window.reviewQuiz = function() {
+        showSection('review');
+        const container = document.getElementById('review-content');
+        if(!container) return; let html = '';
+        let currentType = '';
+
+        currentQuestions.forEach((q) => {
+            if (q.type !== currentType) {
+                currentType = q.type;
+                let headerText = ''; let roman = '';
+                if(currentType === 'single') { headerText = 'TRẮC NGHIỆM MỘT LỰA CHỌN'; roman = 'I'; }
+                if(currentType === 'tf_cluster') { headerText = 'TRẮC NGHIỆM ĐÚNG/SAI'; roman = 'II'; }
+                html += `<div class="flex items-center gap-3 mt-8 mb-4 border-b-2 border-indigo-100 pb-3"><span class="bg-gradient-to-br from-indigo-500 to-purple-600 text-white w-14 h-14 flex items-center justify-center rounded-xl font-black text-2xl shadow-md">${roman}</span><h3 class="text-2xl sm:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-indigo-700 to-purple-700 tracking-wide uppercase">${headerText}</h3></div>`;
+            }
+
+            if (q.type === 'single') {
+                let uAns = userAnswers[q.id]; let isUnanswered = (uAns === undefined); let isCorrect = (uAns === q.correct);
+                let borderColor = isCorrect ? 'border-emerald-300 bg-emerald-50' : 'border-red-300 bg-red-50';
+                html += `<div class="p-6 border-2 rounded-2xl shadow-sm mb-6 ${borderColor}"><div class="font-bold text-xl text-red-600 mb-5 leading-relaxed math-scroll">${q.question}</div><div class="space-y-3">`;
+                q.options.forEach((opt, i) => {
+                    let optBg = ''; let iconHtml = '';
+                    if (q.correct === i) { optBg = 'bg-emerald-100 text-emerald-900 border-emerald-400 border-2'; iconHtml = '✅'; } 
+                    else if (uAns === i && !isCorrect) { optBg = 'bg-red-100 text-red-900 line-through border-red-400 border-2'; iconHtml = '❌'; } 
+                    else { optBg = 'bg-white text-slate-700 border border-slate-200'; }
+                    html += `<div class="p-4 rounded-xl ${optBg} flex items-center gap-4"><div class="w-10 h-10 flex items-center justify-center rounded-lg bg-white/50 text-base font-black shadow-sm flex-shrink-0">${String.fromCharCode(65 + i)}</div><div class="${(q.correct === i || uAns === i) ? 'font-semibold' : 'font-medium'} flex-1 text-lg math-scroll">${opt}</div><div class="text-3xl drop-shadow-sm ml-auto pl-2 flex-shrink-0">${iconHtml}</div></div>`;
+                });
+                html += `</div>${getStatusBadge(isCorrect, isUnanswered)}`;
+                
+                if (q.explanation) {
+                    html += `<div class="review-explanation mt-3 pt-3 border-t-2 border-gray-200"><p class="text-base font-black uppercase tracking-widest text-blue-600 mb-2">💡 Giải chi tiết:</p><p class="text-black font-medium text-lg leading-loose math-scroll">${q.explanation}</p></div>`;
+                }
+                html += `</div>`;
+            } 
+            else if (q.type === 'tf_cluster') {
+                html += `<div class="p-6 border-2 border-indigo-200 bg-indigo-50 rounded-2xl shadow-sm mb-6"><div class="font-bold text-xl text-indigo-800 mb-5 math-scroll">${q.context}</div><div class="space-y-5">`;
+                q.items.forEach(item => {
+                    let uAns = userAnswers[q.id + '_' + item.id]; let isUnanswered = (uAns === undefined); let isCorrect = (uAns === item.correct);
+                    let iconHtml = isCorrect ? '✅' : '❌'; let ansText = item.correct ? 'ĐÚNG' : 'SAI';
+                    
+                    html += `<div class="p-5 bg-white border border-indigo-100 rounded-xl shadow-sm"><div class="font-bold text-gray-800 text-lg math-scroll">${item.text}</div><div class="mt-3 flex items-center justify-between border-b border-gray-100 pb-3"><span class="text-base font-bold text-gray-500">Bạn chọn: <span class="${isUnanswered ? 'text-gray-400' : 'text-blue-600'} font-black uppercase">${isUnanswered ? 'Chưa trả lời' : (uAns?'Đúng':'Sai')}</span></span><span class="font-black text-xl ${isCorrect ? 'text-emerald-500' : 'text-red-500'}">Đáp án: ${ansText} ${iconHtml}</span></div>${getStatusBadge(isCorrect, isUnanswered)}`;
+                    
+                    if (item.expl) {
+                        html += `<div class="review-explanation mt-4 p-4 bg-indigo-50 border-l-4 border-indigo-500 rounded-r-xl text-lg text-gray-700 font-medium leading-relaxed math-scroll">
+                            <span class="text-indigo-700 font-black uppercase tracking-widest block mb-2">💡 Giải chi tiết:</span>
+                            <span class="text-black">${item.expl}</span>
+                        </div>`;
+                    }
+                    html += `</div>`;
+                });
+                html += `</div></div>`;
+            }
+        });
+        container.innerHTML = html;
+    };
+
+    window.backToResult = function() { showSection('result'); };
+    let isReviewingFromLeaderboard = false;
+    window.backFromReview = function() {
+        if (isReviewingFromLeaderboard) { showSection('scores'); isReviewingFromLeaderboard = false; } 
+        else { window.backToResult(); }
+    };
+
+    window.reviewStudentScore = function(scoreId) {
+        const record = allScores.find(x => x.id === scoreId);
+        if (!record) return;
+        currentStudent = { hoTen: record.hoTen, lop: record.lop, tenDe: record.tenDe, maDe: record.maDe };
+        userAnswers = record.userAnswers || {}; 
+        currentQuestions = JSON.parse(JSON.stringify(exam_data)); 
+        isReviewingFromLeaderboard = true;
+        window.reviewQuiz();
+    };
+
+    window.renderScores = function() {
+        const tbody = document.getElementById('scores-tbody');
+        const noScore = document.getElementById('no-scores');
+        const myRankDisplay = document.getElementById('my-rank-display');
+        const paginationContainer = document.getElementById('pagination-controls');
+        if(!tbody) return;
+
+        const sortedAll = [...allScores].sort((a, b) => b.diem - a.diem);
+        
+        sortedAll.forEach((s, i) => s.absoluteRank = i + 1);
+
+        const myRankIndex = sortedAll.findIndex(s => s.deviceId === deviceId);
+        if (myRankDisplay) {
+            if (myRankIndex !== -1) { myRankDisplay.innerHTML = `STT của bạn: <span class="text-red-600 font-black">${sortedAll[myRankIndex].absoluteRank}</span>`; } 
+            else { myRankDisplay.innerHTML = `STT của bạn: <span class="text-gray-400">Chưa thi</span>`; }
+        }
+
+        const filteredScores = searchTerm ? sortedAll.filter(s => s.hoTen.toLowerCase().includes(searchTerm)) : sortedAll;
+        if (filteredScores.length === 0) {
+            tbody.innerHTML = ''; noScore.classList.remove('hidden'); paginationContainer.innerHTML = ''; return; 
+        }
+        
+        noScore.classList.add('hidden');
+        const totalPages = Math.ceil(filteredScores.length / itemsPerPage);
+        if (currentPage > totalPages) currentPage = totalPages; if (currentPage < 1) currentPage = 1;
+        const startIndex = (currentPage - 1) * itemsPerPage; const endIndex = startIndex + itemsPerPage;
+        const pageItems = filteredScores.slice(startIndex, endIndex);
+
+        tbody.innerHTML = pageItems.map((s) => {
+            const isMe = s.deviceId === deviceId;
+            let timeDisplay = "";
+            if (s.thoiGian) {
+                const d = new Date(s.thoiGian);
+                if (!isNaN(d)) {
+                    timeDisplay = `${d.getDate().toString().padStart(2, '0')}/${(d.getMonth() + 1).toString().padStart(2, '0')}/${d.getFullYear()}`;
+                }
+            }
+
+            return `<tr class="${isMe ? 'my-score-row' : 'hover:bg-slate-50'} transition-colors border-b border-slate-100">
+            <td class="px-4 py-5 font-black text-slate-500 text-base text-center">${s.absoluteRank}</td>
+            <td class="px-4 py-5 font-extrabold text-slate-800 text-base">${s.hoTen} ${isMe ? '<span class="ml-2 bg-pink-500 text-white text-xs px-2 py-1 rounded-md shadow-sm">Bạn</span>' : ''}</td>
+            <td class="px-4 py-5 font-black text-blue-600 text-base text-center">${s.lop}</td>
+            <td class="px-4 py-5 text-center font-black text-orange-600 text-sm whitespace-nowrap">${timeDisplay}</td>
+            <td class="px-4 py-5 text-center"><span class="font-black text-2xl ${s.diem >= 5 ? 'text-emerald-600' : 'text-red-500'}">${s.diem}</span></td>
+            <td class="px-4 py-5 text-center">
+                <button onclick="window.reviewStudentScore('${s.id}')" class="bg-indigo-100 text-indigo-700 hover:bg-indigo-200 px-4 py-2 rounded-lg font-bold text-sm transition-colors border border-indigo-200 shadow-sm cursor-pointer whitespace-nowrap">Xem lại</button>
+            </td>
+        </tr>`;
+        }).join('');
+        renderPagination(totalPages);
+    };
+
+    function renderPagination(totalPages) {
+        const container = document.getElementById('pagination-controls');
+        if (!container) return;
+        if (totalPages <= 1) { container.innerHTML = ''; return; }
+        let html = '<div class="flex flex-wrap items-center justify-center gap-2">';
+        html += `<button onclick="window.changePage(${currentPage - 1})" class="px-4 py-2 rounded-xl font-bold transition-colors ${currentPage === 1 ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 shadow-sm'}" ${currentPage === 1 ? 'disabled' : ''}>&laquo; Trước</button>`;
+        let startPage = Math.max(1, currentPage - 1); let endPage = Math.min(totalPages, currentPage + 1);
+        if (startPage > 1) { html += `<button onclick="window.changePage(1)" class="px-4 py-2 rounded-xl font-bold bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 shadow-sm">1</button>`; if (startPage > 2) html += `<span class="px-2 text-gray-400 font-black">...</span>`; }
+        for (let i = startPage; i <= endPage; i++) { html += `<button onclick="window.changePage(${i})" class="px-4 py-2 rounded-xl font-bold transition-all ${i === currentPage ? 'bg-orange-500 text-white shadow-md border-orange-600' : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 shadow-sm'}">${i}</button>`; }
+        if (endPage < totalPages) { if (endPage < totalPages - 1) html += `<span class="px-2 text-gray-400 font-black">...</span>`; html += `<button onclick="window.changePage(${totalPages})" class="px-4 py-2 rounded-xl font-bold bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 shadow-sm">${totalPages}</button>`; }
+        html += `<button onclick="window.changePage(${currentPage + 1})" class="px-4 py-2 rounded-xl font-bold transition-colors ${currentPage === totalPages ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 shadow-sm'}" ${currentPage === totalPages ? 'disabled' : ''}>Sau &raquo;</button>`;
+        html += '</div>'; container.innerHTML = html;
+    }
+
+    function showSection(id) {
+        ['login', 'quiz', 'scores', 'result', 'review'].forEach(s => { const el = document.getElementById(s+'-section'); if(el) el.classList.add('hidden'); });
+        const tgt = document.getElementById(id+'-section'); if(tgt) tgt.classList.remove('hidden');
+    }
+
+    function startTimer(seconds) {
+        const display = document.getElementById('timer'); if(!display) return;
+        let remaining = seconds;
+        timerInterval = setInterval(() => {
+            remaining--;
+            const m = Math.floor(remaining / 60).toString().padStart(2, '0');
+            const s = (remaining % 60).toString().padStart(2, '0');
+            display.innerText = `${m}:${s}`;
+            if (remaining <= 0) window.submitQuiz();
+        }, 1000);
+    }
+
+    try {
+        if (!localStorage.getItem('deviceId')) localStorage.setItem('deviceId', 'dev_' + Math.random().toString(36).substr(2) + Date.now());
+        deviceId = localStorage.getItem('deviceId');
+    } catch (e) { deviceId = 'dev_temp_' + Math.random().toString(36).substr(2); }
+  </script>
+ </body>
+</html>
