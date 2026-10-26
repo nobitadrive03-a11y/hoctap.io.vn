@@ -1,0 +1,635 @@
+<!doctype html>
+<html lang="vi" class="w-full h-full m-0 p-0">
+ <head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <title>Tin Học 11 - Bài 8</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-NSJCVSL9RM"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-NSJCVSL9RM'); 
+  </script>
+
+  <script>
+    setInterval(function() {
+      if (!document.hidden) { 
+        gtag('event', 'keep_alive', {
+          'event_category': 'Engagement',
+          'event_label': 'Học sinh đang làm bài',
+          'non_interaction': false
+        });
+      }
+    }, 30000); 
+  </script>
+
+  <style>
+    * { 
+        -webkit-tap-highlight-color: transparent; 
+        -webkit-touch-callout: none !important; 
+        touch-action: manipulation;
+    }
+    html, body { width: 100%; min-height: 100vh; margin: 0; padding: 0; overflow-x: hidden; }
+    body { 
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
+      background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+      background-size: 400% 400%;
+      animation: gradientBG 15s ease infinite;
+    }
+    @keyframes gradientBG {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+    #app { width: 100%; min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden; }
+    .glass-card {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+    .option-label { transition: background-color 0.1s ease, border-color 0.1s ease; cursor: pointer; border-color: #e2e8f0; }
+    .option-label:hover { background-color: #f0fdfa; border-color: #38bdf8; }
+    input[type="radio"].single-radio:checked + .option-label {
+      background: linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%);
+      color: white; border-color: transparent;
+      box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+    }
+    input[type="radio"].single-radio:checked + .option-label div:first-child { background-color: rgba(255,255,255,0.25); border-color: transparent; color: white; }
+    input[type="radio"].single-radio:checked + .option-label div:last-child { color: white; }
+    .fade-in { animation: fadeIn 0.4s ease forwards; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    .my-score-row {
+      background: linear-gradient(to right, #fdf4ff, #ffffff) !important;
+      border-left: 4px solid #db2777 !important; font-weight: 700 !important;
+      color: #9d174d !important; box-shadow: 0 2px 8px rgba(0,0,0,0.05); position: relative; z-index: 10;
+    }
+    .my-score-row td { padding-top: 16px; padding-bottom: 16px; }
+    .btn-tf { transition: background-color 0.1s ease; border-width: 2px; }
+    .btn-tf.selected { background-color: #2563eb; color: white; border-color: #1d4ed8; }
+    .btn-tf:not(.selected) { background-color: white; color: #4b5563; border-color: #e5e7eb; }
+    .btn-tf:not(:disabled):active { transform: scale(0.95); }
+    .math-scroll { overflow-x: auto; min-width: 0; padding-bottom: 4px; scrollbar-width: none; -ms-overflow-style: none; }
+    .math-scroll::-webkit-scrollbar { display: none; }
+  </style>
+ </head>
+ <body>
+  <div id="app" class="p-0 sm:p-4 md:p-8 transition-all">
+   
+   <div id="login-section" class="w-full max-w-md mx-auto fade-in flex flex-col justify-center flex-grow">
+    <div class="glass-card rounded-none sm:rounded-3xl p-6 sm:p-8 flex flex-col justify-start shadow-2xl border-t-8 border-indigo-600 bg-white">
+     <div class="text-center mb-6 pt-4 sm:pt-0">
+      <div class="flex items-center justify-center w-24 h-24 mx-auto mb-4 rounded-full border-4 border-yellow-400 bg-red-600 shadow-lg transform transition-transform hover:scale-105">
+          <span class="text-white font-black text-4xl tracking-tighter">HS</span>
+      </div>
+      <h1 class="text-2xl sm:text-3xl font-bold text-red-500 mb-3"> ĐỀ KIỂM TRA TIN HỌC 11 - BÀI 8 </h1>
+     </div>
+      <div id="login-form" class="space-y-4">
+      <div class="flex flex-col gap-4">
+          <div class="w-full">
+               <label class="block text-lg font-bold text-gray-700 mb-1">Họ và tên</label> 
+               <input type="text" id="hoTen" class="w-full px-4 py-4 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-100 outline-none transition-all font-semibold text-lg" placeholder="Nhập họ tên...">
+          </div>
+          <div class="w-full">
+               <label class="block text-lg font-bold text-gray-700 mb-1">Lớp</label> 
+               <input type="text" id="lop" class="w-full px-4 py-4 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-100 outline-none transition-all font-semibold text-lg" placeholder="11A1">
+          </div>
+      </div>
+      <div id="login-error" class="hidden bg-red-100 border border-red-300 text-red-700 font-bold text-base p-3 rounded-xl text-center shadow-sm"></div>
+      <button type="button" onclick="window.startQuizAction()" id="start-btn" class="w-full py-5 mt-6 bg-gradient-to-r from-blue-500 to-cyan-400 text-white font-extrabold rounded-2xl shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all text-2xl tracking-wide"> 🚀 BẮT ĐẦU THI </button>
+     </div>
+    </div>
+   </div>
+
+   <div id="quiz-section" class="w-full max-w-4xl mx-auto hidden flex-grow flex flex-col">
+    <div class="glass-card rounded-none sm:rounded-3xl p-4 sm:p-8 flex flex-col flex-grow relative border-t-8 border-blue-500 bg-white shadow-2xl">
+     <div class="flex items-center justify-between mb-4 sm:mb-6 pb-4 border-b-2 border-gray-100">
+      <div class="flex items-center gap-3">
+       <div class="flex items-center justify-center w-12 h-12 rounded-full border-2 border-yellow-400 bg-red-600 shadow-sm flex-shrink-0">
+           <span class="text-white font-black text-xl tracking-tighter">HS</span>
+       </div>
+       <div>
+        <h2 id="quiz-title" class="text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">Đề Kiểm Tra</h2>
+        <p id="student-info" class="text-base font-bold text-gray-500 mt-1 uppercase tracking-wide"></p>
+       </div>
+      </div>
+      <div class="text-right bg-blue-50 px-4 py-2 rounded-xl border border-blue-100" id="progress-container">
+       <div class="text-sm text-blue-500 font-bold uppercase tracking-wider mb-1">Tiến độ</div>
+       <div id="progress-text" class="text-2xl font-black text-blue-700">0/28</div>
+      </div>
+     </div>
+     
+     <div id="timer-banner" class="mb-6 p-4 bg-gradient-to-r from-orange-50 to-red-50 border-2 border-red-100 rounded-2xl flex items-center justify-between shadow-sm sticky top-2 z-40">
+        <span class="text-red-800 font-extrabold flex items-center gap-2 text-lg"><span class="text-2xl animate-pulse">⏰</span> THỜI GIAN:</span> 
+        <span id="timer" class="text-4xl font-black text-red-600 font-mono tracking-wider drop-shadow-sm">45:00</span>
+     </div>
+
+     <div id="question-container" class="mb-8 flex-grow w-full max-w-full"></div>
+     <div id="network-error" class="hidden bg-red-100 text-red-700 p-4 rounded-xl mt-4 text-center font-bold text-sm border-2 border-red-300 mb-4 shadow-sm"></div>
+
+    <div class="flex pt-4 sm:pt-6 border-t-2 border-gray-100 mt-auto pb-4 sm:pb-0">
+        <button id="submit-btn" onclick="window.promptSubmit()" class="w-full py-5 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-bold text-2xl rounded-2xl shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1">✅ NỘP BÀI NGAY</button>
+     </div>
+    </div>
+   </div>
+
+   <div id="confirm-submit-modal" class="fixed inset-0 hidden flex items-center justify-center bg-black/60 backdrop-blur-sm z-50 transition-opacity">
+       <div class="bg-white rounded-3xl w-full max-w-sm shadow-2xl p-6 text-center transform transition-all scale-100 mx-4 border-2 border-gray-100">
+           <div class="text-yellow-400 mb-4 flex justify-center">
+               <svg xmlns="http://www.w3.org/2000/svg" class="h-24 w-24" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+               </svg>
+           </div>
+           <h3 class="text-3xl font-black text-gray-800 mb-2 uppercase tracking-wide">Xác nhận nộp</h3>
+           <p class="text-gray-600 mb-6 font-medium text-xl">Đã làm <span id="confirm-answered" class="text-red-600 font-black text-2xl">0</span>/<span id="confirm-total" class="font-black text-2xl">28</span> câu. Có chắc chắn muốn nộp bài?</p>
+           <div class="flex flex-col gap-3">
+               <button onclick="window.closeConfirmModal()" class="w-full py-4 bg-gray-100 text-gray-800 font-extrabold text-xl rounded-xl hover:bg-gray-200 border border-gray-200">Quay lại làm tiếp</button>
+               <button onclick="window.executeSubmit()" class="w-full py-4 bg-emerald-600 text-white font-extrabold text-xl rounded-xl hover:bg-emerald-700 shadow-md">Vẫn Nộp Luôn</button>
+           </div>
+       </div>
+   </div>
+
+   <div id="result-section" class="w-full max-w-2xl mx-auto hidden fade-in flex flex-col justify-center flex-grow pb-8">
+    <div class="glass-card rounded-none sm:rounded-3xl p-6 sm:p-8 flex flex-col justify-start border-t-8 border-green-500 bg-white shadow-2xl" id="result-content"></div>
+   </div>
+
+   <div id="review-section" class="w-full max-w-4xl mx-auto hidden flex-grow flex flex-col">
+    <div class="glass-card rounded-none sm:rounded-3xl p-4 sm:p-8 flex flex-col flex-grow border-t-8 border-indigo-500 bg-white overflow-hidden shadow-2xl">
+     <div class="flex flex-col-reverse sm:flex-row items-start sm:items-center justify-between mb-6 pb-4 border-b-2 border-gray-100 gap-4">
+      <div class="flex flex-wrap gap-2">
+          <button onclick="window.goHome()" class="px-5 py-3 bg-gray-100 text-gray-700 rounded-xl font-bold hover:bg-gray-200 text-lg shadow-sm border border-gray-200">🏠 Trang chủ</button>
+          <button onclick="window.backFromReview()" class="px-5 py-3 bg-indigo-50 text-indigo-700 rounded-xl font-bold hover:bg-indigo-100 text-lg shadow-sm border border-indigo-200">🔙 Quay lại</button>
+          <button onclick="window.viewScoresAction()" class="px-5 py-3 bg-orange-50 text-orange-700 rounded-xl font-bold hover:bg-orange-100 text-lg shadow-sm border border-orange-200">🏆 Bảng điểm</button>
+      </div>
+      <h2 class="text-3xl sm:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">📝 Xem Lại Bài Làm</h2>
+     </div>
+     <div id="review-content" class="space-y-8 w-full max-w-full"></div>
+    </div>
+   </div>
+
+   <div id="scores-section" class="w-full max-w-6xl mx-auto hidden flex-grow flex flex-col">
+    <div class="glass-card rounded-none sm:rounded-3xl p-4 sm:p-8 flex flex-col flex-grow border-t-8 border-orange-500 bg-white w-full max-w-full shadow-2xl">
+     <div class="mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b-2 border-gray-100 pb-4">
+      <button onclick="window.goHome()" class="px-5 py-3 bg-gray-100 text-gray-700 rounded-xl font-bold hover:bg-gray-200 text-lg shadow-sm border border-gray-200 whitespace-nowrap">🏠 Trang chủ</button>
+      <h2 class="text-3xl sm:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-red-600 text-center flex-grow">🏆 BẢNG XẾP HẠNG</h2>
+     </div>
+     
+     <div class="flex flex-col sm:flex-row justify-between items-center mb-4 gap-4 bg-gray-50 p-4 rounded-xl border border-gray-200">
+         <div id="my-rank-display" class="text-xl font-bold text-gray-700">STT của bạn: <span class="text-gray-400">--</span></div>
+         <div class="w-full sm:w-auto flex-grow max-w-sm">
+             <input type="text" id="search-student" oninput="window.searchStudent(this.value)" placeholder="🔍 Nhập tên học sinh để tìm..." class="w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm focus:border-orange-500 focus:ring-2 focus:ring-orange-200 outline-none transition-all font-medium">
+         </div>
+     </div>
+
+     <div class="overflow-x-auto rounded-xl border border-slate-200 flex-grow shadow-inner bg-white/50 w-full">
+      <table class="w-full text-sm sm:text-base whitespace-nowrap min-w-max">
+       <thead class="bg-gradient-to-r from-orange-500 to-red-500 text-white">
+        <tr>
+         <th class="px-3 sm:px-4 py-4 text-center font-extrabold w-16">STT</th>
+         <th class="px-3 sm:px-4 py-4 text-left font-extrabold">Họ tên</th>
+         <th class="px-3 sm:px-4 py-4 text-center font-extrabold">Lớp</th>
+         <th class="px-3 sm:px-4 py-4 text-center font-extrabold">Thời gian</th>
+         <th class="px-3 sm:px-4 py-4 text-center font-extrabold">Điểm</th>
+         <th class="px-2 sm:px-4 py-4 text-center font-extrabold">Xem lại</th>
+        </tr>
+       </thead>
+       <tbody id="scores-tbody" class="bg-white/80 divide-y divide-gray-100"></tbody>
+      </table>
+      <div id="no-scores" class="text-center py-12 hidden text-gray-500 font-bold text-xl">Không tìm thấy dữ liệu thi 🥲</div>
+     </div>
+     <div id="pagination-controls" class="w-full flex justify-center mt-6"></div>
+    </div>
+  </div>
+
+  <script>
+    let database = null;
+    let scoresRef = null;
+
+    try {
+        const firebaseConfig = {
+            apiKey: "AIzaSyBQ9Pos8awlh9j041qDWTPFRsVIjF-kPnk",
+            authDomain: "hoctap-91691.firebaseapp.com",
+            databaseURL: "https://hoctap-91691-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "hoctap-91691",
+            storageBucket: "hoctap-91691.firebasestorage.app",
+            messagingSenderId: "1004553425319",
+            appId: "1:1004553425319:web:45d15cbae393f614c56682",
+            measurementId: "G-Q6X1TL9PRV"
+        };
+        if (typeof firebase !== 'undefined') {
+            if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+            database = firebase.database();
+            scoresRef = database.ref('bxh_tin_11_bai_8');
+        }
+    } catch(err) { console.error("Lỗi Firebase:", err); }
+
+    let isQuizStarted = false; 
+    let currentQuestions = [];
+    let deviceId = '';
+    let allScores = [];
+    let currentStudent = {};
+    let userAnswers = {};
+    let timerInterval;
+    let quizStartTime, quizEndTime;
+    let searchTerm = '';
+    let currentPage = 1;
+    const itemsPerPage = 10;
+
+    const exam_data = [
+        { id: "q1", type: "single", question: "Câu 1: Trong Gmail, dấu hiệu nào cho biết một thư điện tử được hệ thống tự động đánh giá là quan trọng?", options: ["Dấu chấm than màu đỏ", "Dấu sao màu vàng", "Dấu quan trọng màu vàng", "Dấu tích màu xanh"], correct: 2, explanation: "Trí tuệ nhân tạo của Google tự động phân tích hành vi người dùng, tần suất tương tác và nội dung để gắn thẻ màu vàng (Important marker) cho các thư quan trọng." },
+        { id: "q2", type: "single", question: "Câu 2: Chức năng nào trong Gmail hỗ trợ hiệu quả nhất cho việc phân loại và sắp xếp các thư điện tử?", options: ["Dấu sao (Star)", "Nhãn (Label)", "Thùng rác (Trash)", "Lưu trữ (Archive)"], correct: 1, explanation: "Nhãn (Label) hoạt động linh hoạt hơn thư mục, cho phép gán nhiều nhãn cho một thư duy nhất, giúp việc phân tích, lọc và truy vấn dữ liệu trở nên logic, khoa học." },
+        { id: "q3", type: "single", question: "Câu 3: Trên nền tảng Facebook, trang nào sau đây được thiết kế chuyên biệt để giúp các tổ chức, doanh nghiệp quảng bá hình ảnh, thương hiệu?", options: ["Fanpage", "Trang cá nhân (Profile)", "Nhóm kín (Private Group)", "Nhóm công khai (Public Group)"], correct: 0, explanation: "Fanpage được thiết kế riêng với các công cụ phân tích dữ liệu (Insights), chạy quảng cáo và quản lý cộng đồng diện rộng, phân tách hoàn toàn với Profile cá nhân." },
+        { id: "q4", type: "single", question: "Câu 4: Để tạo một Fanpage mới trên Facebook, người dùng cần truy cập vào biểu tượng Menu và chọn mục nào sau đây?", options: ["Tạo -> Nhóm", "Tạo -> Bài viết", "Tạo -> Quảng cáo", "Tạo -> Trang"], correct: 3, explanation: "Theo kiến trúc giao diện tiêu chuẩn của Facebook, để khởi tạo một không gian số công cộng cho tổ chức, người dùng phải điều hướng tới mục 'Trang' (Page) trong trình đơn 'Tạo'." },
+        { id: "q5", type: "single", question: "Câu 5: Chế độ chia sẻ quyền riêng tư nào trên Facebook cho phép tất cả mọi người (kể cả những người không dùng Facebook) đều có thể xem được nội dung?", options: ["Công khai (Public)", "Bạn bè (Friends)", "Chỉ mình tôi (Only me)", "Bạn bè ngoại trừ (Friends except)"], correct: 0, explanation: "Chế độ 'Công khai' loại bỏ mọi rào cản xác thực (Authentication), cho phép nội dung được lập chỉ mục trên các máy chủ tìm kiếm và ai cũng có thể truy cập thông qua liên kết URL." },
+        { id: "q6", type: "single", question: "Câu 6: Trong phần cài đặt của Facebook, để thiết lập xem ai có quyền viết lên dòng thời gian của mình, người dùng truy cập vào mục nào?", options: ["Bảo mật và đăng nhập", "Quyền riêng tư", "Trang cá nhân và gắn thẻ", "Chặn"], correct: 2, explanation: "Module quản trị 'Trang cá nhân và gắn thẻ' (Profile and Tagging) là nơi cấp phát hoặc thu hồi quyền ghi (Write Permission) dữ liệu đầu vào lên tường nhà của tài khoản chủ thể." },
+        { id: "q7", type: "single", question: "Câu 7: Một trong những tiêu chí mà Gmail dùng để xác định và đánh dấu một thư là quan trọng là gì?", options: ["Màu sắc của văn bản trong thư", "Tần suất gửi thư cho một người", "Thư có chứa tệp đính kèm lớn", "Thư được gửi từ một địa chỉ mới"], correct: 1, explanation: "Mô hình học máy (Machine Learning) của Gmail liên tục phân tích lịch sử tương tác như tần suất trao đổi, thói quen đọc và trả lời thư giữa các nút mạng để tính toán điểm mức độ quan trọng." },
+        { id: "q8", type: "single", question: "Câu 8: Khẳng định nào sau đây là đúng khi nói về tính năng Nhãn (Label) trong Gmail?", options: ["Nhãn là một dạng thư mục độc lập trên ổ cứng.", "Mỗi thư điện tử chỉ được phép gán duy nhất một nhãn.", "Nhãn khác với thư mục, khi xóa thư sẽ xóa khỏi mọi nhãn đính kèm.", "Xóa nhãn sẽ tự động xóa tất cả các thư bên trong nhãn đó."], correct: 2, explanation: "Kiến trúc cơ sở dữ liệu của Gmail áp dụng thẻ Metadata (siêu dữ liệu) cho email thay vì di chuyển tệp tin vật lý; do đó, khi xóa thư gốc (xóa bản ghi), mọi liên kết nhãn trỏ tới thư đó đều bị hủy." },
+        { id: "q9", type: "single", question: "Câu 9: Việc phân loại thư bằng Nhãn trong Gmail mang lại lợi ích chính nào cho người sử dụng?", options: ["Tăng dung lượng lưu trữ của hộp thư.", "Tiết kiệm thời gian tìm kiếm và tránh thất lạc thông tin.", "Tự động trả lời các thư điện tử quan trọng.", "Chặn đứng hoàn toàn các thư rác (spam)."], correct: 1, explanation: "Việc chuẩn hóa không gian lưu trữ số bằng hệ thống Nhãn sẽ tối ưu hóa thuật toán truy vấn cơ sở dữ liệu (Search Query), ngăn chặn tình trạng quá tải thông tin và thất lạc luồng dữ liệu." },
+        { id: "q10", type: "single", question: "Câu 10: Khi bạn xóa một bức thư điện tử đã được gán nhãn, bức thư đó sẽ ở trạng thái nào?", options: ["Bức thư bị xóa khỏi nhãn nhưng vẫn nằm trong Hộp thư đến.", "Bức thư tự động chuyển sang nhãn khác.", "Bức thư bị xóa khỏi mọi nhãn đính kèm và Hộp thư đến.", "Bức thư được tải về máy tính để sao lưu."], correct: 2, explanation: "Thao tác Delete sẽ chuyển bản ghi thư điện tử vào bộ nhớ đệm Thùng rác (Trash). Lúc này, hệ thống sẽ tự động gỡ bỏ thuộc tính hiển thị mặc định ở Hộp thư đến (Inbox) và mọi Nhãn đính kèm." },
+        { id: "q11", type: "single", question: "Câu 11: Làm thế nào để biết được lý do cụ thể khiến Gmail tự động đánh dấu một thư điện tử là quan trọng?", options: ["Di chuyển con trỏ chuột vào dấu quan trọng màu vàng.", "Nháy đúp chuột vào tiêu đề của bức thư.", "Tìm kiếm trong phần Cài đặt nâng cao của Gmail.", "Soạn một thư mới gửi cho bộ phận hỗ trợ của Google."], correct: 0, explanation: "Giao diện người dùng (UI) của Gmail được lập trình để hiển thị cửa sổ nhỏ (Tooltip) nhằm minh bạch hóa dữ kiện đầu vào khiến thuật toán AI đánh giá và gắn cờ quan trọng cho thư đó." },
+        { id: "q12", type: "single", question: "Câu 12: Mục đích chính của việc tạo ra Fanpage lớp học trên mạng xã hội Facebook là gì?", options: ["Để giáo viên gửi bài tập về nhà cho từng cá nhân.", "Để lưu trữ vĩnh viễn các tập tin tài liệu dung lượng lớn.", "Để đăng tải, quảng bá các bài viết, hình ảnh, sự kiện chung của trường, lớp.", "Để học sinh thi trực tuyến và tự động chấm điểm."], correct: 2, explanation: "Fanpage hoạt động như một cổng thông tin điện tử thu nhỏ (mini-portal), phục vụ việc phát sóng luồng thông tin và tăng cường tính tương tác đa chiều về các chuỗi sự kiện của tập thể." },
+        { id: "q13", type: "single", question: "Câu 13: Khi thiết lập chế độ \"Chỉ mình tôi\" cho mục \"Ai có thể đăng lên trang cá nhân của bạn?\", điều gì sẽ xảy ra?", options: ["Bạn bè của bạn vẫn có thể đăng bài nhưng phải chờ phê duyệt.", "Không một ai khác (ngoài bạn) có quyền viết bài lên trang cá nhân của bạn.", "Mọi người có thể đăng bài nhưng không ai xem được.", "Tài khoản của bạn sẽ bị tạm khóa không cho người lạ tìm kiếm."], correct: 1, explanation: "Thiết lập này thực thi lệnh thay đổi biến số Quyền ghi (Write Permission) trên cơ sở dữ liệu Facebook, lập tức thu hồi quyền đăng tải nội dung mới từ toàn bộ các tài khoản khác ngoài hệ thống." },
+        { id: "q14", type: "single", question: "Câu 14: Tính năng \"Xem lại thẻ mọi người thêm vào bài viết của bạn trước khi thẻ xuất hiện trên Facebook\" giúp người dùng:", options: ["Kiểm soát nội dung mình bị gắn thẻ trước khi nó hiển thị trên trang cá nhân.", "Tự động gắn thẻ bạn bè vào tất cả các bài viết của mình.", "Ẩn hoàn toàn tất cả các bài viết cũ trên trang cá nhân.", "Ngăn chặn người lạ kết bạn với mình."], correct: 0, explanation: "Chức năng này đưa các bài đăng bị gắn thẻ vào một hàng đợi kiểm duyệt (Moderation Queue), yêu cầu lệnh xác thực cấp phép (Approve) từ chủ tài khoản thì mới được chèn vào dòng thời gian." },
+        { id: "q15", type: "single", question: "Câu 15: Khác biệt cốt lõi giữa Nhãn (Label) của Gmail và Thư mục (Folder) truyền thống là gì?", options: ["Thư mục cho phép tìm kiếm nhanh hơn Nhãn.", "Nhãn chỉ áp dụng được cho các thư chưa đọc.", "Thư mục có thể chứa thư đính kèm còn Nhãn thì không.", "Một thư có thể được gán nhiều Nhãn cùng lúc nhưng nếu xóa thư thì nó biến mất khỏi tất cả."], correct: 3, explanation: "Cấu trúc Thư mục mang tính phân cấp tuyến tính (một thư chỉ nằm ở một vị trí duy nhất). Ngược lại, kiến trúc Nhãn sử dụng thẻ Metadata (Tagging), cho phép gán N (nhiều) thẻ phân loại trên cùng một thực thể." },
+        { id: "q16", type: "single", question: "Câu 16: Khi nhập từ khóa `is:important` vào thanh tìm kiếm của Gmail, hệ thống sẽ thực hiện thao tác gì?", options: ["Hiển thị danh sách tất cả các thư điện tử được đánh dấu là quan trọng.", "Chuyển tất cả các thư trong Hộp thư đến thành thư quan trọng.", "Xóa tất cả các thư được đánh dấu quan trọng.", "Tạo một Nhãn mới tên là \"Important\"."], correct: 0, explanation: "Cú pháp này đóng vai trò là một toán tử truy vấn (Search Operator) dựa trên logic Boolean, ra lệnh cho máy chủ truy xuất và hiển thị riêng tập hợp các bản ghi có chứa cờ Important." },
+        { id: "q17", type: "single", question: "Câu 17: Một học sinh muốn lập một trang trên mạng xã hội để quảng bá cho câu lạc bộ sách của trường. Bước đầu tiên học sinh này cần thực hiện trên giao diện Facebook là:", options: ["Nháy chuột vào Trang cá nhân, chọn Đăng ảnh.", "Vào biểu tượng Menu, ở mục Tạo, chọn Trang.", "Nháy chuột vào mục Tìm kiếm, gõ tên câu lạc bộ.", "Vào mục Nhắn tin, tạo một đoạn chat mới."], correct: 1, explanation: "Thao tác này sẽ kích hoạt quy trình hướng dẫn khởi tạo (Setup Wizard) của nền tảng để cấp phát một không gian cơ sở dữ liệu chuyên biệt dành cho Fanpage mới." },
+        { id: "q18", type: "single", question: "Câu 18: Lớp trưởng muốn nhóm tất cả các email thông báo từ nhà trường vào một nơi để dễ dàng tra cứu, nhưng vẫn muốn các thư này nằm trong Hộp thư đến. Giải pháp nào sau đây là tối ưu nhất trên Gmail?", options: ["Chuyển toàn bộ email thông báo vào Thùng rác.", "Xóa và yêu cầu nhà trường gửi lại bằng tin nhắn.", "Tạo một Nhãn mang tên \"Thông báo Trường\" và gán nhãn cho các email đó.", "Đánh dấu thư chưa đọc cho toàn bộ email."], correct: 2, explanation: "Giải pháp sử dụng chức năng Nhãn (Label) giúp gán luồng siêu dữ liệu phân loại cho email mà không làm mất đi thuộc tính hiển thị mặc định của chúng trên Hộp thư đến (Inbox)." },
+        { id: "q19", type: "single", question: "Câu 19: Một bạn học sinh nhận thấy có một thư quảng cáo không cần thiết nhưng hệ thống Gmail lại tự động gắn dấu quan trọng màu vàng. Thao tác nhanh nhất để loại bỏ dấu hiệu này là gì?", options: ["Nháy chuột trực tiếp vào dấu quan trọng màu vàng để tắt.", "Chuyển thư đó sang hộp thư rác (Spam).", "Khởi động lại trình duyệt web.", "Đổi mật khẩu tài khoản Gmail."], correct: 0, explanation: "Hành động nhấp chuột sẽ gửi một lệnh API đảo ngược (toggle) trạng thái cờ Important; đồng thời, nền tảng sẽ dùng dữ liệu này để huấn luyện lại (re-train) thuật toán AI về sở thích cá nhân của người dùng." },
+        { id: "q20", type: "single", question: "Câu 20: Nam muốn đăng hình ảnh về chuyến đi chơi lên Facebook nhưng không muốn cho một người bạn tên Hùng xem được. Nam cần chọn chế độ hiển thị nào cho bài viết?", options: ["Công khai.", "Bạn bè.", "Bạn bè ngoại trừ...", "Chỉ mình tôi."], correct: 2, explanation: "Thuật toán này áp dụng cơ chế lọc danh sách điều khiển truy cập (Access Control List - ACL), cấp quyền đọc dữ liệu cho tập hợp Bạn bè nhưng loại trừ hiển thị đối với phần tử mảng mang định danh 'Hùng'." },
+        { id: "q21", type: "single", question: "Câu 21: Một nhóm học sinh đang tạo Fanpage cho phong trào bảo vệ môi trường, nhưng trang yêu cầu phải phân loại chủ đề. Họ cần thực hiện thao tác nào để hoàn thành bước này?", options: ["Chọn \"Hạng mục\" phù hợp trong danh sách có sẵn khi tạo Trang.", "Bỏ qua và nhập thông tin đó vào phần bình luận.", "Tải lên một bức ảnh đại diện thật đẹp.", "Báo cáo lỗi kỹ thuật cho nhà cung cấp."], correct: 0, explanation: "Hạng mục (Category) là trường siêu dữ liệu (Metadata) bắt buộc, đóng vai trò then chốt giúp thuật toán phân phối nội dung của Facebook điều hướng Fanpage tiếp cận đúng tệp người dùng tiềm năng." },
+        { id: "q22", type: "single", question: "Câu 22: Chị C thường xuyên bị bạn bè gắn thẻ (tag) vào các bài quảng cáo bán hàng khiến trang cá nhân trở nên lộn xộn. Cách thiết lập nào sau đây giúp chị C giải quyết triệt để vấn đề này?", options: ["Chuyển tài khoản Facebook sang chế độ ngoại tuyến.", "Bật tính năng Xét duyệt bài viết có gắn thẻ trước khi xuất hiện trên trang cá nhân.", "Đổi ảnh đại diện sang màu đen.", "Tắt vĩnh viễn tính năng nhận thông báo tin nhắn."], correct: 1, explanation: "Chế độ xét duyệt hoạt động như một bức tường lửa nội dung (Content Firewall), chặn đứng quá trình hệ thống tự động hợp nhất các bài viết rác từ bên thứ ba vào cấu trúc dòng thời gian của chủ thể." },
+        { id: "q23", type: "single", question: "Câu 23: Bạn D muốn đổi tên Nhãn \"Bài tập Toán\" thành \"Toán Học\" trong hộp thư Gmail. Bạn D cần thực hiện thao tác nào trên giao diện danh sách Nhãn?", options: ["Nháy đúp chuột trái vào tên Nhãn và nhấn phím Xóa.", "Kéo thả Nhãn vào biểu tượng Thùng rác.", "Nháy chuột vào dấu ba chấm cạnh tên Nhãn và chọn Chỉnh sửa.", "Tạo lại tài khoản Gmail mới."], correct: 2, explanation: "Menu dấu ba chấm (Menu More) cung cấp các hàm điều khiển CRUD (Cập nhật dữ liệu). Việc đổi tên sẽ kích hoạt lệnh đồng bộ hóa toàn cục, tự động cập nhật tên mới cho toàn bộ email mang thẻ meta cũ." },
+        { id: "q24", type: "single", question: "Câu 24: Quản trị viên của Fanpage lớp 11A muốn nhờ thêm bí thư chi đoàn cùng quản lý và duyệt bài viết. Quản trị viên này cần thực hiện chức năng nào?", options: ["Vào phần cài đặt Trang, cấp quyền quản lý trang cho tài khoản của bí thư.", "Gửi mật khẩu Facebook cá nhân của mình cho bí thư.", "Thay đổi ảnh bìa Fanpage thành hình của bí thư.", "Nhắn tin qua Messenger yêu cầu mọi người tự gửi bài cho bí thư."], correct: 0, explanation: "Chức năng này ứng dụng mô hình Phân quyền dựa trên vai trò (Role-Based Access Control - RBAC), giúp chia sẻ quyền thao tác cơ sở dữ liệu trên Fanpage mà vẫn bảo mật tuyệt đối các chứng chỉ đăng nhập cá nhân." },
+
+        { id: "qII_1", type: "tf_cluster", context: "Câu 1: Bạn An đang quản lý một khối lượng lớn thư điện tử trong tài khoản Gmail cá nhân. Nhằm thuận tiện cho việc học tập, An quyết định tạo một Nhãn có tên \"Học tập\" và gán nhãn này cho tất cả các thư liên quan đến bài tập và dự án nhóm.", items: [
+            { id: "a", text: "a) Tính năng Nhãn (Label) trong Gmail đóng vai trò hoàn toàn giống như một Thư mục lưu trữ cố định trên hệ điều hành của máy tính.", correct: false, expl: "Nhãn hoạt động theo cơ chế siêu dữ liệu (tagging metadata) đa chiều, không phải là cơ chế thư mục vật lý lưu trữ cố định phân cấp nghiêm ngặt như trên ổ cứng máy tính." },
+            { id: "b", text: "b) An hoàn toàn có thể gán Nhãn \"Học tập\" cho một bức thư điện tử mà vẫn giữ bức thư đó hiện diện trong Hộp thư đến (Inbox).", correct: true, expl: "Hệ thống cơ sở dữ liệu cho phép một email mang thuộc tính gắn nhãn mà không bị lưu trữ (Archive), do đó luồng dữ liệu của nó vẫn đồng thời tồn tại trong Hộp thư đến." },
+            { id: "c", text: "c) Trong trường hợp An xóa một bức thư đã được gán Nhãn \"Học tập\", bức thư đó chỉ bị xóa khỏi Nhãn \"Học tập\" nhưng vẫn còn lưu trữ an toàn trong Hộp thư đến.", correct: false, expl: "Xóa thư (Delete) là thao tác xóa bản ghi gốc ở cấp độ hệ thống; do đó thư sẽ bị gỡ bỏ khỏi Hộp thư đến, mất mọi liên kết nhãn và bị cô lập thẳng vào bộ nhớ đệm Thùng rác (Trash)." },
+            { id: "d", text: "d) Nếu tham gia thêm hoạt động ngoại khóa, An có thể tạo thêm Nhãn \"Câu lạc bộ\" và gán cả hai Nhãn \"Học tập\" và \"Câu lạc bộ\" cho cùng một bức thư điện tử.", correct: true, expl: "Kiến trúc logic của Gmail ưu việt hơn cấu trúc tuyến tính vì nó hỗ trợ gán hệ số N (nhiều) thẻ phân loại trên cùng 1 (một) phần tử dữ liệu, giúp quy hoạch luồng thông tin đa chiều." }
+        ]},
+        { id: "qII_2", type: "tf_cluster", context: "Câu 2: Hệ thống hộp thư điện tử Gmail của văn phòng trường trung học phổ thông thường xuyên nhận được hàng trăm email mỗi ngày. Để thuận tiện, hệ thống tự động phân loại một số thư bằng dấu quan trọng màu vàng.", items: [
+            { id: "a", text: "a) Quản trị viên hộp thư có thể tự tay đánh dấu quan trọng hoặc bỏ đánh dấu quan trọng (màu vàng) cho bất kỳ thư điện tử nào.", correct: true, expl: "Hệ thống cung cấp cơ chế can thiệp thủ công (Manual Override) giúp người dùng nhấp trực tiếp vào biểu tượng cờ để ghi đè hoặc chỉnh sửa trạng thái của thuật toán phân loại." },
+            { id: "b", text: "b) Người dùng có thể sử dụng cú pháp `is:important` trong ô tìm kiếm của Gmail để tìm lại các bức thư đã vô tình chuyển vào thùng rác.", correct: false, expl: "Toán tử `is:important` là câu lệnh chuyên dụng để trích xuất các bản ghi mang thẻ quan trọng trong Hộp thư đến, không phải cú pháp dành cho truy vấn dữ liệu đã xóa trong Trash." },
+            { id: "c", text: "c) Gmail tự động đánh dấu một thư điện tử là quan trọng dựa vào duy nhất một tiêu chí là các từ khóa đặc biệt có chứa trong tiêu đề thư.", correct: false, expl: "Thuật toán học máy (AI) của bộ lọc dựa trên tập hợp đa biến số: hành vi tương tác, người nhận thường xuyên, tỷ lệ mở và phản hồi thư, hoàn toàn không chỉ phụ thuộc một biến từ khóa." },
+            { id: "d", text: "d) Bằng cách di chuyển con trỏ chuột vào dấu quan trọng màu vàng trên một bức thư, nhân viên văn phòng có thể lập tức biết được lý do tại sao hệ thống Gmail lại đánh giá bức thư đó là quan trọng.", correct: true, expl: "Giao diện Front-end (UI) sẽ xuất ra một bảng chú giải hiển thị nổi (Tooltip), cung cấp chuỗi lý do logic (cơ sở dữ kiện đầu vào) khiến thuật toán AI đánh giá lá thư là Important." }
+        ]},
+        { id: "qII_3", type: "tf_cluster", context: "Câu 3: Minh vừa lập một tài khoản Facebook mới nhằm giao lưu, kết nối với bạn bè cùng lớp. Tuy nhiên, Minh là người khá kín tiếng, không muốn các bài viết của mình bị người lạ đọc được và cũng không muốn ai tự ý đăng bài quảng cáo lên trang cá nhân của mình.", items: [
+            { id: "a", text: "a) Để giải quyết vấn đề, Minh có thể truy cập vào Cài đặt -> Quyền riêng tư trên Facebook để thiết lập những đối tượng có thể xem bài viết của mình.", correct: true, expl: "Module quản trị Quyền riêng tư (Privacy Settings) chứa tập lệnh điều khiển cốt lõi (Access Control), cho phép người dùng tùy biến phân lớp quyền đọc (Read Access) lên từng khối dữ liệu cá nhân." },
+            { id: "b", text: "b) Nếu Minh chọn tùy chọn \"Công khai\" cho bài viết, điều đó có nghĩa là chỉ những người đã kết bạn với Minh trên Facebook mới có thể xem được nội dung.", correct: false, expl: "Chế độ cấu hình 'Công khai' (Public) sẽ gỡ bỏ hoàn toàn mọi giao thức kiểm tra phân quyền, đồng nghĩa với việc bất cứ thực thể mạng nào (kể cả không đăng nhập) đều truy cập đọc được." },
+            { id: "c", text: "c) Để ngăn chặn hoàn toàn người lạ tiếp cận các bài đăng mới, Minh nên điều chỉnh cài đặt ở mục \"Ai sẽ nhìn thấy nội dung này?\" sang chế độ \"Bạn bè\".", correct: true, expl: "Lệnh tùy chọn 'Bạn bè' (Friends) giúp mã hóa danh sách điều khiển truy cập, chỉ cho phép các nút mạng (tài khoản) đã vượt qua giao thức xác lập quan hệ đồ thị bạn bè được cấp quyền xem." },
+            { id: "d", text: "d) Để không cho bất kỳ ai (kể cả những người bạn thân thiết nhất) đăng bài lên trang cá nhân của mình, Minh cần thiết lập mục \"Ai có thể đăng lên trang cá nhân của bạn?\" thành \"Chỉ mình tôi\".", correct: true, expl: "Lệnh thiết lập trạng thái 'Chỉ mình tôi' (Only Me) thực thi việc vô hiệu hóa đồng loạt biến số Quyền ghi (Write Permission) của mọi thực thể bên ngoài lên cơ sở dữ liệu luồng tường nhà." }
+        ]},
+        { id: "qII_4", type: "tf_cluster", context: "Câu 4: Ban chủ nhiệm Câu lạc bộ Âm nhạc của trường chuẩn bị tổ chức một buổi biểu diễn gây quỹ cuối năm. Để truyền thông hiệu quả, Ban chủ nhiệm quyết định lập một Fanpage chính thức để quảng bá sự kiện, đồng thời phân công Trưởng câu lạc bộ quản lý trang và kiểm duyệt nội dung bị gắn thẻ (tag).", items: [
+            { id: "a", text: "a) Fanpage trên nền tảng Facebook là công cụ chuyên dụng được thiết kế để đại diện cho một nhóm, tổ chức hoặc doanh nghiệp trong việc quảng bá hình ảnh ra cộng đồng.", correct: true, expl: "Về mặt thiết kế kiến trúc số, Fanpage là không gian đại diện chuyên biệt, được tối ưu hóa giao diện và nhúng sâu các module công cụ doanh nghiệp nhằm phục vụ chiến lược truyền thông đại chúng." },
+            { id: "b", text: "b) Trong quá trình điền thông tin khởi tạo Fanpage, bước chọn \"Hạng mục\" cho trang là một thao tác có thể bỏ qua và không cần thiết.", correct: false, expl: "Trường siêu dữ liệu Hạng mục (Category) là trường dữ liệu khai báo bắt buộc, thuật toán phân phối nội dung của Facebook dùng tham số này để điều hướng đề xuất Fanpage đến tệp đối tượng chuẩn xác." },
+            { id: "c", text: "c) Tính năng \"Xem lại thẻ mọi người thêm vào bài viết của bạn trước khi thẻ xuất hiện trên Facebook\" chỉ áp dụng cho trang cá nhân, không thể dùng để kiểm soát việc gắn thẻ trang Fanpage.", correct: false, expl: "Nền tảng Fanpage hiện đại vẫn trang bị đầy đủ module cài đặt tường lửa hiển thị, cho phép các quản trị viên phân hệ kiểm duyệt toàn bộ luồng nội dung ngoại vi từ các nút mạng thứ ba tự ý gắn thẻ." },
+            { id: "d", text: "d) Để chiến dịch truyền thông hiệu quả và tránh bị làm phiền bởi những bài viết rác từ người dùng tự ý gắn thẻ, Trưởng câu lạc bộ nên chủ động cài đặt chế độ xét duyệt bài viết có gắn thẻ để bảo vệ hình ảnh chuyên nghiệp của Câu lạc bộ.", correct: true, expl: "Cơ chế đưa vào hàng đợi kiểm duyệt thẻ (Tag Moderation Queue) đóng vai trò là một màng lọc thông tin mạnh mẽ, chặn đứng sự xuất hiện tự động của các luồng bản ghi rác, bảo vệ không gian số." }
+        ]}
+    ];
+
+   window.startQuizAction = function() {
+        try {
+            const errDiv = document.getElementById('login-error');
+            if(errDiv) errDiv.classList.add('hidden');
+            const name = document.getElementById('hoTen').value.trim();
+            const lop = document.getElementById('lop').value.trim();
+            if (!name || !lop) {
+                if(errDiv) { errDiv.innerText = "⚠️ Vui lòng nhập đầy đủ Họ tên và Lớp!"; errDiv.classList.remove('hidden'); } 
+                else { alert("⚠️ Vui lòng nhập đầy đủ Họ tên và Lớp!"); }
+                return;
+            }
+            currentStudent = { hoTen: name, lop: lop, maDe: 'bai8', tenDe: 'Tin học 11 - Bài 8' };
+            currentQuestions = JSON.parse(JSON.stringify(exam_data));
+            quizStartTime = new Date();
+            setTimeout(() => { isQuizStarted = true; }, 1000);
+            showSection('quiz');
+            userAnswers = {};
+            window.renderAllQuestions();
+            startTimer(45 * 60); 
+        } catch (error) { console.error(error); }
+    };
+
+    window.viewScoresAction = function() {
+        searchTerm = ''; 
+        document.getElementById('search-student').value = '';
+        currentPage = 1;
+        if (database) {
+            scoresRef.once('value').then((snapshot) => {
+                const data = snapshot.val();
+                allScores = data ? Object.keys(data).map(key => ({...data[key], id: key})) : [];
+                window.renderScores();
+                showSection('scores');
+            });
+        }
+    };
+
+    window.searchStudent = function(val) { searchTerm = val.toLowerCase(); currentPage = 1; window.renderScores(); };
+    window.changePage = function(page) { currentPage = page; window.renderScores(); };
+    window.goHome = function() {
+        if(document.getElementById('hoTen')) document.getElementById('hoTen').value = ''; 
+        if(document.getElementById('lop')) document.getElementById('lop').value = ''; 
+        clearInterval(timerInterval); showSection('login');
+    };
+
+    function getTotalScoreItems() { return currentQuestions.length; }
+
+    function getAnsweredCount() {
+        let count = 0;
+        currentQuestions.forEach(q => {
+            if (q.type === 'single') {
+                if (userAnswers[q.id] !== undefined) count++;
+            } else if (q.type === 'tf_cluster') {
+                let answeredItems = 0;
+                q.items.forEach(item => { if (userAnswers[q.id + '_' + item.id] !== undefined) answeredItems++; });
+                if (answeredItems === 4) count++; 
+            }
+        });
+        return count;
+    }
+
+   window.selectAnswer = function(qId, val, type) {
+        if (type === 'tf') {
+            userAnswers[qId] = val;
+            const btnT = document.getElementById(`btnT_${qId}`);
+            const btnF = document.getElementById(`btnF_${qId}`);
+            if (val === true) { btnT.classList.add('selected'); btnT.classList.remove('bg-white'); btnF.classList.remove('selected'); btnF.classList.add('bg-white'); } 
+            else { btnF.classList.add('selected'); btnF.classList.remove('bg-white'); btnT.classList.remove('selected'); btnT.classList.add('bg-white'); }
+        } else if (type === 'single') { userAnswers[qId] = val; }
+        requestAnimationFrame(() => {
+            const pgText = document.getElementById('progress-text');
+            if(pgText) pgText.innerText = `${getAnsweredCount()}/${getTotalScoreItems()}`;
+        });
+    };
+
+    window.renderAllQuestions = function() {
+        if (!currentQuestions || currentQuestions.length === 0) return;
+        const container = document.getElementById('question-container');
+        if(!container) return;
+        let html = ''; let currentType = '';
+        currentQuestions.forEach((q) => {
+            if (q.type !== currentType) {
+                currentType = q.type;
+                let headerText = ''; let roman = '';
+                if(currentType === 'single') { headerText = 'TRẮC NGHIỆM MỘT LỰA CHỌN'; roman = 'I'; }
+                if(currentType === 'tf_cluster') { headerText = 'TRẮC NGHIỆM ĐÚNG/SAI'; roman = 'II'; }
+                html += `<div class="flex items-center gap-3 mt-8 mb-4 border-b-2 border-blue-100 pb-3"><span class="bg-gradient-to-br from-blue-500 to-indigo-600 text-white w-14 h-14 flex items-center justify-center rounded-xl font-black text-2xl shadow-md">${roman}</span><h3 class="text-2xl sm:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-700 to-indigo-700 tracking-wide uppercase">${headerText}</h3></div>`;
+            }
+            html += `<div class="fade-in w-full bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-blue-100 relative mb-6 hover:shadow-md transition-shadow">`;
+            if (q.type === 'single') {
+                const uAns = userAnswers[q.id];
+                html += `<div class="flex gap-4 mb-5"><div class="w-full math-scroll"><p class="text-xl font-bold text-red-600 mt-1 leading-snug tracking-tight">${q.question}</p></div></div>`;
+                html += `<div class="space-y-4 md:pl-6 mt-6">`;
+                q.options.forEach((opt, i) => {
+                    const isChecked = (uAns === i) ? 'checked' : '';
+                    html += `<div class="flex items-center"><input type="radio" id="opt_${q.id}_${i}" name="q_${q.id}" value="${i}" class="hidden single-radio" ${isChecked} onchange="window.selectAnswer('${q.id}', ${i}, 'single')"><label for="opt_${q.id}_${i}" class="option-label w-full p-4 border-2 border-gray-200 rounded-2xl flex items-center gap-4 bg-white shadow-sm font-bold text-lg hover:border-blue-300"><div class="w-12 h-12 rounded-xl border-2 border-gray-300 flex items-center justify-center text-lg font-black text-gray-400 flex-shrink-0 bg-gray-50">${String.fromCharCode(65 + i)}</div><div class="text-gray-700 leading-relaxed math-scroll flex-1">${opt}</div></label></div>`;
+                });
+                html += `</div>`;
+            } else if (q.type === 'tf_cluster') {
+                html += `<div class="bg-red-50 text-red-700 p-5 rounded-xl font-bold mb-4 border-2 border-red-100 text-xl leading-relaxed math-scroll">${q.context}</div><div class="space-y-4 mt-6">`;
+                q.items.forEach((item) => {
+                    const combinedId = q.id + '_' + item.id;
+                    let ans = userAnswers[combinedId];
+                    let btnT = ans === true ? 'selected' : 'bg-white'; let btnF = ans === false ? 'selected' : 'bg-white';
+                    html += `<div class="p-5 border-2 border-gray-100 rounded-2xl bg-white shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4 transition-all hover:border-blue-200"><div class="font-bold text-gray-800 flex-1 text-lg math-scroll">${item.text}</div><div class="flex gap-3 shrink-0"><button id="btnT_${combinedId}" onclick="window.selectAnswer('${combinedId}', true, 'tf')" class="btn-tf w-24 sm:w-28 py-3 rounded-xl font-extrabold text-lg ${btnT}">ĐÚNG</button><button id="btnF_${combinedId}" onclick="window.selectAnswer('${combinedId}', false, 'tf')" class="btn-tf w-24 sm:w-28 py-3 rounded-xl font-extrabold text-lg ${btnF}">SAI</button></div></div>`;
+                });
+                html += `</div>`;
+            } 
+            html += `</div>`;
+        });
+        container.innerHTML = html;
+        const pgText = document.getElementById('progress-text');
+        if(pgText) pgText.innerText = `${getAnsweredCount()}/${getTotalScoreItems()}`;
+    };
+
+    function formatDuration(sec) {
+        const m = Math.floor(sec / 60); const s = sec % 60; return `${m}p ${s}s`;
+    }
+
+    window.promptSubmit = function() {
+        if (!isQuizStarted) return;
+        document.getElementById('confirm-answered').innerText = getAnsweredCount();
+        document.getElementById('confirm-total').innerText = getTotalScoreItems();
+        document.getElementById('confirm-submit-modal').classList.remove('hidden');
+    };
+
+    window.closeConfirmModal = function() { document.getElementById('confirm-submit-modal').classList.add('hidden'); };
+
+    window.executeSubmit = function() {
+        window.closeConfirmModal();
+        isQuizStarted = false; 
+        quizEndTime = new Date();
+        clearInterval(timerInterval);
+        
+        let score = 0;
+        currentQuestions.forEach(q => {
+            if (q.type === 'single') {
+                if (userAnswers[q.id] === q.correct) score += 0.25;
+            } else if (q.type === 'tf_cluster') {
+                let correctCount = 0;
+                q.items.forEach(item => { if (userAnswers[q.id + '_' + item.id] === item.correct) { correctCount++; } });
+                if (correctCount === 1) score += 0.1;
+                else if (correctCount === 2) score += 0.25;
+                else if (correctCount === 3) score += 0.5;
+                else if (correctCount === 4) score += 1.0;
+            }
+        });
+
+        score = score.toFixed(2); 
+
+        const record = {
+            hoTen: currentStudent.hoTen, lop: currentStudent.lop, tenDe: currentStudent.tenDe, maDe: currentStudent.maDe, diem: parseFloat(score),
+            startTime: quizStartTime.toISOString(), thoiGian: quizEndTime.toISOString(), deviceId: deviceId, userAnswers: userAnswers 
+        };
+        
+        if(database) { scoresRef.push(record, () => { window.showModalResult(score, formatDuration(Math.floor((quizEndTime - quizStartTime) / 1000))); }); } 
+        else { window.showModalResult(score, formatDuration(Math.floor((quizEndTime - quizStartTime) / 1000))); }
+    };
+
+    window.showModalResult = function(score, dur) {
+        ['login', 'quiz', 'scores', 'review'].forEach(s => { const el = document.getElementById(s+'-section'); if(el) el.classList.add('hidden'); });
+        const resEl = document.getElementById('result-section'); if(resEl) resEl.classList.remove('hidden');
+        document.getElementById('result-content').innerHTML = `
+        <div class="flex justify-start mb-4"><button onclick="window.goHome()" class="px-5 py-3 bg-gray-100 text-gray-700 rounded-xl font-bold hover:bg-gray-200 transition-colors shadow-sm border border-gray-200 text-lg">🏠 Trang chủ</button></div>
+        <div class="text-center"><div class="text-7xl mb-4 animate-bounce">🎉</div><h3 class="text-3xl font-black text-emerald-600 mb-2">Hoàn thành bài thi!</h3><p class="text-gray-600 mb-6 mt-2"><span class="font-extrabold text-blue-700 text-xl uppercase tracking-wider">${currentStudent.hoTen} - Lớp ${currentStudent.lop}</span></p></div>
+        <div class="bg-blue-50 border-2 border-blue-100 rounded-3xl p-8 mb-6 shadow-inner relative text-center"><div class="text-base text-blue-500 font-extrabold mb-2 uppercase tracking-widest">ĐIỂM SỐ CỦA BẠN</div><div class="text-7xl font-black text-blue-600 drop-shadow-sm">${score} <span class="text-3xl text-gray-400">/ 10</span></div></div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4"><button onclick="window.reviewQuiz()" class="w-full py-4 bg-gradient-to-r from-indigo-500 to-purple-500 text-white rounded-xl font-extrabold shadow-sm hover:shadow-md transition-colors text-xl">📝 Xem lại bài</button><button onclick="window.viewScoresAction()" class="w-full py-4 bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-xl font-extrabold shadow-sm hover:shadow-md transition-colors text-xl">🏆 Bảng điểm</button></div>`;
+    };
+
+    function getStatusBadge(isCorrect, isUnanswered) {
+        if (isUnanswered) return `<div class="mt-4 mb-2 inline-block px-4 py-2 bg-yellow-100 text-yellow-800 text-base font-black rounded-lg border border-yellow-300 shadow-sm">⚠️ CHƯA LÀM</div>`;
+        if (isCorrect) return `<div class="mt-4 mb-2 inline-block px-4 py-2 bg-emerald-100 text-emerald-800 text-base font-black rounded-lg border border-emerald-300 shadow-sm">✅ ĐÚNG</div>`;
+        return `<div class="mt-4 mb-2 inline-block px-4 py-2 bg-red-100 text-red-800 text-base font-black rounded-lg border border-red-300 shadow-sm">❌ SAI</div>`;
+    }
+
+    window.reviewQuiz = function() {
+        showSection('review');
+        const container = document.getElementById('review-content');
+        if(!container) return; let html = '';
+        let currentType = '';
+
+        currentQuestions.forEach((q) => {
+            // Tự động thêm tiêu đề Phần I và Phần II vào giao diện Xem lại bài
+            if (q.type !== currentType) {
+                currentType = q.type;
+                let headerText = ''; let roman = '';
+                if(currentType === 'single') { headerText = 'TRẮC NGHIỆM MỘT LỰA CHỌN'; roman = 'I'; }
+                if(currentType === 'tf_cluster') { headerText = 'TRẮC NGHIỆM ĐÚNG/SAI'; roman = 'II'; }
+                html += `<div class="flex items-center gap-3 mt-8 mb-4 border-b-2 border-indigo-100 pb-3"><span class="bg-gradient-to-br from-indigo-500 to-purple-600 text-white w-14 h-14 flex items-center justify-center rounded-xl font-black text-2xl shadow-md">${roman}</span><h3 class="text-2xl sm:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-indigo-700 to-purple-700 tracking-wide uppercase">${headerText}</h3></div>`;
+            }
+
+            if (q.type === 'single') {
+                let uAns = userAnswers[q.id]; let isUnanswered = (uAns === undefined); let isCorrect = (uAns === q.correct);
+                let borderColor = isCorrect ? 'border-emerald-300 bg-emerald-50' : 'border-red-300 bg-red-50';
+                html += `<div class="p-6 border-2 rounded-2xl shadow-sm mb-6 ${borderColor}"><div class="font-bold text-xl text-red-600 mb-5 leading-relaxed math-scroll">${q.question}</div><div class="space-y-3">`;
+                q.options.forEach((opt, i) => {
+                    let optBg = ''; let iconHtml = '';
+                    if (q.correct === i) { optBg = 'bg-emerald-100 text-emerald-900 border-emerald-400 border-2'; iconHtml = '✅'; } 
+                    else if (uAns === i && !isCorrect) { optBg = 'bg-red-100 text-red-900 line-through border-red-400 border-2'; iconHtml = '❌'; } 
+                    else { optBg = 'bg-white text-slate-700 border border-slate-200'; }
+                    html += `<div class="p-4 rounded-xl ${optBg} flex items-center gap-4"><div class="w-10 h-10 flex items-center justify-center rounded-lg bg-white/50 text-base font-black shadow-sm flex-shrink-0">${String.fromCharCode(65 + i)}</div><div class="${(q.correct === i || uAns === i) ? 'font-semibold' : 'font-medium'} flex-1 text-lg math-scroll">${opt}</div><div class="text-3xl drop-shadow-sm ml-auto pl-2 flex-shrink-0">${iconHtml}</div></div>`;
+                });
+                html += `</div>${getStatusBadge(isCorrect, isUnanswered)}`;
+                
+                if (q.explanation) {
+                    html += `<div class="review-explanation mt-3 pt-3 border-t-2 border-gray-200"><p class="text-base font-black uppercase tracking-widest text-blue-600 mb-2">💡 Giải chi tiết:</p><p class="text-black font-medium text-lg leading-loose math-scroll">${q.explanation}</p></div>`;
+                }
+                html += `</div>`;
+            } 
+            else if (q.type === 'tf_cluster') {
+                html += `<div class="p-6 border-2 border-indigo-200 bg-indigo-50 rounded-2xl shadow-sm mb-6"><div class="font-bold text-xl text-indigo-800 mb-5 math-scroll">${q.context}</div><div class="space-y-5">`;
+                q.items.forEach(item => {
+                    let uAns = userAnswers[q.id + '_' + item.id]; let isUnanswered = (uAns === undefined); let isCorrect = (uAns === item.correct);
+                    let iconHtml = isCorrect ? '✅' : '❌'; let ansText = item.correct ? 'ĐÚNG' : 'SAI';
+                    
+                    html += `<div class="p-5 bg-white border border-indigo-100 rounded-xl shadow-sm"><div class="font-bold text-gray-800 text-lg math-scroll">${item.text}</div><div class="mt-3 flex items-center justify-between border-b border-gray-100 pb-3"><span class="text-base font-bold text-gray-500">Bạn chọn: <span class="${isUnanswered ? 'text-gray-400' : 'text-blue-600'} font-black uppercase">${isUnanswered ? 'Chưa trả lời' : (uAns?'Đúng':'Sai')}</span></span><span class="font-black text-xl ${isCorrect ? 'text-emerald-500' : 'text-red-500'}">Đáp án: ${ansText} ${iconHtml}</span></div>${getStatusBadge(isCorrect, isUnanswered)}`;
+                    
+                    // Xóa phần (Ý A/B/C/D) ra khỏi tiêu đề, chỉ để lại "💡 Giải chi tiết:"
+                    if (item.expl) {
+                        html += `<div class="review-explanation mt-4 p-4 bg-indigo-50 border-l-4 border-indigo-500 rounded-r-xl text-lg text-gray-700 font-medium leading-relaxed math-scroll">
+                            <span class="text-indigo-700 font-black uppercase tracking-widest block mb-2">💡 Giải chi tiết:</span>
+                            <span class="text-black">${item.expl}</span>
+                        </div>`;
+                    }
+                    html += `</div>`;
+                });
+                html += `</div></div>`;
+            }
+        });
+        container.innerHTML = html;
+    };
+
+    window.backToResult = function() { showSection('result'); };
+    let isReviewingFromLeaderboard = false;
+    window.backFromReview = function() {
+        if (isReviewingFromLeaderboard) { showSection('scores'); isReviewingFromLeaderboard = false; } 
+        else { window.backToResult(); }
+    };
+
+    window.reviewStudentScore = function(scoreId) {
+        const record = allScores.find(x => x.id === scoreId);
+        if (!record) return;
+        currentStudent = { hoTen: record.hoTen, lop: record.lop, tenDe: record.tenDe, maDe: record.maDe };
+        userAnswers = record.userAnswers || {}; 
+        currentQuestions = JSON.parse(JSON.stringify(exam_data)); 
+        isReviewingFromLeaderboard = true;
+        window.reviewQuiz();
+    };
+
+    window.renderScores = function() {
+        const tbody = document.getElementById('scores-tbody');
+        const noScore = document.getElementById('no-scores');
+        const myRankDisplay = document.getElementById('my-rank-display');
+        const paginationContainer = document.getElementById('pagination-controls');
+        if(!tbody) return;
+
+        const sortedAll = [...allScores].sort((a, b) => b.diem - a.diem);
+        
+        sortedAll.forEach((s, i) => s.absoluteRank = i + 1);
+
+        const myRankIndex = sortedAll.findIndex(s => s.deviceId === deviceId);
+        if (myRankDisplay) {
+            if (myRankIndex !== -1) { myRankDisplay.innerHTML = `STT của bạn: <span class="text-red-600 font-black">${sortedAll[myRankIndex].absoluteRank}</span>`; } 
+            else { myRankDisplay.innerHTML = `STT của bạn: <span class="text-gray-400">Chưa thi</span>`; }
+        }
+
+        const filteredScores = searchTerm ? sortedAll.filter(s => s.hoTen.toLowerCase().includes(searchTerm)) : sortedAll;
+        if (filteredScores.length === 0) {
+            tbody.innerHTML = ''; noScore.classList.remove('hidden'); paginationContainer.innerHTML = ''; return; 
+        }
+        
+        noScore.classList.add('hidden');
+        const totalPages = Math.ceil(filteredScores.length / itemsPerPage);
+        if (currentPage > totalPages) currentPage = totalPages; if (currentPage < 1) currentPage = 1;
+        const startIndex = (currentPage - 1) * itemsPerPage; const endIndex = startIndex + itemsPerPage;
+        const pageItems = filteredScores.slice(startIndex, endIndex);
+
+        tbody.innerHTML = pageItems.map((s) => {
+            const isMe = s.deviceId === deviceId;
+            let timeDisplay = "";
+            if (s.thoiGian) {
+                const d = new Date(s.thoiGian);
+                if (!isNaN(d)) {
+                    timeDisplay = `${d.getDate().toString().padStart(2, '0')}/${(d.getMonth() + 1).toString().padStart(2, '0')}/${d.getFullYear()}`;
+                }
+            }
+
+            return `<tr class="${isMe ? 'my-score-row' : 'hover:bg-slate-50'} transition-colors border-b border-slate-100">
+            <td class="px-4 py-5 font-black text-slate-500 text-base text-center">${s.absoluteRank}</td>
+            <td class="px-4 py-5 font-extrabold text-slate-800 text-base">${s.hoTen} ${isMe ? '<span class="ml-2 bg-pink-500 text-white text-xs px-2 py-1 rounded-md shadow-sm">Bạn</span>' : ''}</td>
+            <td class="px-4 py-5 font-black text-blue-600 text-base text-center">${s.lop}</td>
+            <td class="px-4 py-5 text-center font-black text-orange-600 text-sm whitespace-nowrap">${timeDisplay}</td>
+            <td class="px-4 py-5 text-center"><span class="font-black text-2xl ${s.diem >= 5 ? 'text-emerald-600' : 'text-red-500'}">${s.diem}</span></td>
+            <td class="px-4 py-5 text-center">
+                <button onclick="window.reviewStudentScore('${s.id}')" class="bg-indigo-100 text-indigo-700 hover:bg-indigo-200 px-4 py-2 rounded-lg font-bold text-sm transition-colors border border-indigo-200 shadow-sm cursor-pointer whitespace-nowrap">Xem lại</button>
+            </td>
+        </tr>`;
+        }).join('');
+        renderPagination(totalPages);
+    };
+
+    function renderPagination(totalPages) {
+        const container = document.getElementById('pagination-controls');
+        if (!container) return;
+        if (totalPages <= 1) { container.innerHTML = ''; return; }
+        let html = '<div class="flex flex-wrap items-center justify-center gap-2">';
+        html += `<button onclick="window.changePage(${currentPage - 1})" class="px-4 py-2 rounded-xl font-bold transition-colors ${currentPage === 1 ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 shadow-sm'}" ${currentPage === 1 ? 'disabled' : ''}>&laquo; Trước</button>`;
+        let startPage = Math.max(1, currentPage - 1); let endPage = Math.min(totalPages, currentPage + 1);
+        if (startPage > 1) { html += `<button onclick="window.changePage(1)" class="px-4 py-2 rounded-xl font-bold bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 shadow-sm">1</button>`; if (startPage > 2) html += `<span class="px-2 text-gray-400 font-black">...</span>`; }
+        for (let i = startPage; i <= endPage; i++) { html += `<button onclick="window.changePage(${i})" class="px-4 py-2 rounded-xl font-bold transition-all ${i === currentPage ? 'bg-orange-500 text-white shadow-md border-orange-600' : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 shadow-sm'}">${i}</button>`; }
+        if (endPage < totalPages) { if (endPage < totalPages - 1) html += `<span class="px-2 text-gray-400 font-black">...</span>`; html += `<button onclick="window.changePage(${totalPages})" class="px-4 py-2 rounded-xl font-bold bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 shadow-sm">${totalPages}</button>`; }
+        html += `<button onclick="window.changePage(${currentPage + 1})" class="px-4 py-2 rounded-xl font-bold transition-colors ${currentPage === totalPages ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 shadow-sm'}" ${currentPage === totalPages ? 'disabled' : ''}>Sau &raquo;</button>`;
+        html += '</div>'; container.innerHTML = html;
+    }
+
+    function showSection(id) {
+        ['login', 'quiz', 'scores', 'result', 'review'].forEach(s => { const el = document.getElementById(s+'-section'); if(el) el.classList.add('hidden'); });
+        const tgt = document.getElementById(id+'-section'); if(tgt) tgt.classList.remove('hidden');
+    }
+
+    function startTimer(seconds) {
+        const display = document.getElementById('timer'); if(!display) return;
+        let remaining = seconds;
+        timerInterval = setInterval(() => {
+            remaining--;
+            const m = Math.floor(remaining / 60).toString().padStart(2, '0');
+            const s = (remaining % 60).toString().padStart(2, '0');
+            display.innerText = `${m}:${s}`;
+            if (remaining <= 0) window.submitQuiz();
+        }, 1000);
+    }
+
+    try {
+        if (!localStorage.getItem('deviceId')) localStorage.setItem('deviceId', 'dev_' + Math.random().toString(36).substr(2) + Date.now());
+        deviceId = localStorage.getItem('deviceId');
+    } catch (e) { deviceId = 'dev_temp_' + Math.random().toString(36).substr(2); }
+  </script>
+ </body>
+</html>
