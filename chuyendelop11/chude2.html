@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Chủ đề 2: Lưu trữ, tìm kiếm và chia sẻ thông tin - Hành Trình Số</title>
+    <title>Chuyên đề Học tập Tin học 11 - Hành Trình Số</title>
     <!-- Tích hợp Font chữ Google -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -59,10 +59,9 @@
             min-height: 100vh;
             overflow-x: hidden;
             -webkit-font-smoothing: antialiased;
-            padding: 15px;
+            padding: 15px; 
         }
 
-        /* ----- MÀN HÌNH ĐỌC SÁCH TRỰC TIẾP ----- */
         #reader-view {
             display: block; 
             max-width: 1000px;
@@ -80,7 +79,7 @@
             color: var(--white);
             padding: 15px 20px;
             display: flex;
-            justify-content: space-between;
+            justify-content: space-between; 
             align-items: center;
             position: sticky;
             top: 0;
@@ -103,6 +102,7 @@
             gap: 8px; 
             transition: 0.3s; 
             font-weight: 500;
+            border: none;
         }
         .btn-small:hover { background: rgba(0,0,0,0.4); transform: translateX(-2px); }
 
@@ -127,27 +127,6 @@
             margin-bottom: 8px;
         }
 
-        .obj-box {
-            background: linear-gradient(to right, #f0f9ff, #e0f2fe);
-            border: 1px solid #bae6fd;
-            padding: 20px 15px;
-            border-radius: var(--radius-md);
-            margin-bottom: 30px;
-        }
-        
-        .obj-box strong { color: #0284c7; display: flex; align-items: center; gap: 8px; font-size: 1.05rem; margin-bottom: 12px;}
-        .obj-box ul { list-style: none; padding-left: 0; margin: 0;}
-        .obj-box ul li { position: relative; padding-left: 25px; margin-bottom: 10px; font-size: 0.95rem; line-height: 1.6;}
-        .obj-box ul li::before {
-            content: '\f00c';
-            font-family: 'Font Awesome 6 Free';
-            font-weight: 900;
-            color: #0ea5e9;
-            position: absolute;
-            left: 0;
-            top: 2px;
-        }
-
         h2.part-title {
             background: #f1f5f9;
             color: var(--primary-dark);
@@ -160,22 +139,21 @@
             align-items: flex-start;
             flex-direction: column;
             gap: 8px;
+            font-weight: bold;
         }
         
-        h3.lesson-title {
-            color: var(--primary);
-            font-size: 1.1rem;
+        h3 {
+            color: #334155;
             margin: 20px 0 10px 0;
-            border-bottom: 1px dashed #cbd5e1;
-            padding-bottom: 6px;
+            font-size: 1.05rem;
         }
 
         p { margin-bottom: 12px; text-align: justify; font-size: 0.95rem; line-height: 1.7; }
         
-        /* Cấu trúc danh sách gạch đầu dòng */
         .reader-content > ul {
             list-style-type: none;
             padding-left: 0;
+            margin-bottom: 15px;
         }
         .reader-content > ul > li {
             position: relative;
@@ -199,17 +177,6 @@
             top: 14px;
             font-size: 1rem;
         }
-        
-        .code-tag {
-            background: #f1f5f9;
-            padding: 2px 5px;
-            border-radius: 4px;
-            font-family: monospace;
-            color: #dc2626;
-            font-weight: bold;
-            font-size: 0.9em;
-            word-break: break-word;
-        }
 
         .logic-box {
             background: #f0fdf4;
@@ -220,7 +187,6 @@
             border: 1px solid #bbf7d0;
             border-left: 5px solid #22c55e;
             font-size: 0.95rem;
-            line-height: 1.7;
         }
         .logic-box strong { 
             color: #166534; 
@@ -229,44 +195,12 @@
             align-items: center; 
             gap: 8px; 
             margin-bottom: 10px;
+            margin-top: 15px;
         }
-
-        .table-wrapper {
-            background: var(--white);
-            border-radius: var(--radius-md);
-            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
-            margin: 20px 0;
-            border: 1px solid #e2e8f0;
+        .logic-box strong:first-child {
+            margin-top: 0;
         }
-
-        .modern-table { 
-            width: 100%; 
-            border-collapse: collapse; 
-            min-width: 500px; 
-        }
-
-        .modern-table th, .modern-table td {
-            padding: 12px 15px;
-            border-bottom: 1px solid #f1f5f9;
-            text-align: left;
-            font-size: 0.9rem;
-        }
-
-        .modern-table th {
-            background: #f8fafc;
-            color: var(--primary-dark);
-            font-weight: 600;
-            text-transform: uppercase;
-            font-size: 0.85rem;
-            letter-spacing: 1px;
-            white-space: nowrap;
-        }
-        
-        .modern-table tr:last-child td { border-bottom: none; }
-        .modern-table tr:hover { background: #f8fafc; }
-        .modern-table td strong { color: var(--primary); }
+        .logic-box p { margin-bottom: 8px; }
 
         .footer-credit {
             text-align: center;
@@ -286,7 +220,7 @@
             .reader-content { padding: 40px; }
             h1.main-title { font-size: 2.2rem; }
             h2.part-title { flex-direction: row; align-items: center; }
-            p, .reader-content > ul > li, .obj-box ul li, .logic-box { font-size: 1.05rem; }
+            p, .reader-content > ul > li, .logic-box { font-size: 1.05rem; }
             .reader-content > ul > li { padding-left: 45px; }
             .reader-content > ul > li::before { left: 15px; top: 15px; }
             #reader-view { border-radius: var(--radius-lg); }
@@ -298,8 +232,7 @@
 
     <div id="reader-view">
         <div class="reader-header">
-            <h2><i class="fa-solid fa-cloud"></i> Không gian học tập Hành Trình Số</h2>
-            <!-- Nút Quay lại tự động lùi về trang trước đó -->
+            <h2><i class="fa-solid fa-laptop-code"></i> Không gian học tập Hành Trình Số</h2>
             <button class="btn-small" onclick="window.history.back()">
                 <i class="fa-solid fa-arrow-left"></i> Thoát
             </button>
@@ -307,78 +240,221 @@
 
         <div class="reader-content">
             <h1 class="main-title">
-                <span>Chuyên đề Tin học 11 - Chủ đề 2</span>
-                LƯU TRỮ, TÌM KIẾM VÀ CHIA SẺ THÔNG TIN TRÊN INTERNET
+                <span>Chuyên đề Tin học 11</span>
+                ĐỀ CƯƠNG HỌC TẬP CHI TIẾT
             </h1>
 
-            <div class="obj-box">
-                <strong><i class="fa-solid fa-route"></i> Mục tiêu chuyên đề:</strong>
-                <ul>
-                    <li>Làm chủ các công cụ lưu trữ đám mây để đồng bộ và chia sẻ dữ liệu an toàn.</li>
-                    <li>Sử dụng thành thạo các toán tử tìm kiếm nâng cao để tra cứu thông tin nhanh chóng, chính xác.</li>
-                    <li>Biết cách phân loại, đánh dấu quản lý thư điện tử (Email) và khai thác các tính năng hữu ích của mạng xã hội.</li>
-                </ul>
-            </div>
-
             <!-- BÀI 6 -->
-            <h2 class="part-title"><i class="fa-solid fa-cloud-arrow-up"></i> Bài 6: Lưu trữ và chia sẻ tệp tin trên Internet</h2>
+            <h2 class="part-title"><i class="fa-brands fa-google-drive"></i> Bài 6. Hướng dẫn cách sử dụng các dịch vụ lưu trữ đám mây như Google Drive để lưu trữ, tổ chức thư mục và chia sẻ tệp tin trực tuyến.</h2>
             
-            <h3 class="lesson-title">1. Khái niệm Ổ đĩa trực tuyến</h3>
-            <p><strong>Lưu trữ đám mây</strong> là dịch vụ cho phép người dùng lưu trữ, quản lý và sao lưu dữ liệu trên các máy chủ ảo do các nhà cung cấp dịch vụ Internet duy trì. Các dịch vụ phổ biến hiện nay bao gồm: Google Drive, Microsoft OneDrive, Dropbox.</p>
-            <p>Ưu điểm vượt trội: Dữ liệu được đồng bộ liên tục, có thể truy cập từ bất kỳ thiết bị nào có Internet (điện thoại, máy tính bảng, PC) và dễ dàng phục hồi khi thiết bị cá nhân bị hỏng.</p>
-
-            <h3 class="lesson-title">2. Thực hành: Lưu trữ và chia sẻ</h3>
-            <p>Khi chia sẻ một tệp tin trên ổ đĩa trực tuyến, ta không gửi bản sao của tệp tin đó đi, mà cấp quyền truy cập vào chính bản gốc đang nằm trên đám mây. Có 3 mức phân quyền cơ bản:</p>
+            <h3>1. Lưu trữ và chia sẻ tệp tin trên Internet – Ổ đĩa trực tuyến</h3>
+            <p><strong>Hoạt động 1. Khám phá dịch vụ lưu trữ và chia sẻ tệp tin trên Internet</strong></p>
+            <p><strong>Câu hỏi:</strong> Quan sát Hình 6.1 (SGK), thảo luận và đưa ra mô tả tính năng cơ bản của dịch vụ lưu trữ và chia sẻ tệp tin trên Internet (còn được gọi là dịch vụ “lưu trữ đám mây”).</p>
+            <p><strong>Gợi ý trả lời:</strong><br>Tính năng cơ bản nhất của dịch vụ lưu trữ và chia sẻ tệp tin trên Internet được thể hiện qua Hình 6.1 bao gồm hai thao tác hai chiều:</p>
             <ul>
-                <li><strong>Người xem:</strong> Chỉ được phép đọc/xem nội dung và tải về.</li>
-                <li><strong>Người nhận xét:</strong> Có thể xem và để lại các ghi chú, góp ý nhưng không làm thay đổi nội dung gốc.</li>
-                <li><strong>Người chỉnh sửa:</strong> Có toàn quyền thay đổi nội dung, xóa tệp, hoặc chia sẻ lại cho người khác.</li>
+                <li>Tải lên (Upload): Cho phép người dùng chuyển dữ liệu (tệp, thư mục) từ thiết bị cục bộ (máy tính, điện thoại) lên hệ thống máy chủ trên Internet để lưu trữ.</li>
+                <li>Tải xuống (Download): Cho phép người dùng lấy dữ liệu đã lưu trữ trên mạng về máy tính cục bộ bất cứ lúc nào, chỉ cần có kết nối Internet.</li>
+                <li>Chia sẻ: Các tệp tin sau khi được tải lên mạng có thể dễ dàng chia sẻ đường dẫn cho người khác cùng xem hoặc chỉnh sửa.</li>
+            </ul>
+            
+            <p>Cùng với sự phát triển của công nghệ thông tin và Internet, nhu cầu lưu trữ và chia sẻ dữ liệu ngày càng lớn. Việc lưu trữ dữ liệu bằng các tài nguyên cục bộ (ổ cứng máy tính, thiết bị nhớ ngoài) bộc lộ nhiều hạn chế. Do đó, các dịch vụ lưu trữ và chia sẻ tệp tin trên Internet (dịch vụ lưu trữ đám mây) đã ra đời và giải quyết được các rào cản đó.</p>
+            <p>Có nhiều nhà cung cấp dịch vụ này, ví dụ: Google với Google Drive, Microsoft với OneDrive, Apple với iCloud, Dropbox với ứng dụng cùng tên. Người dùng đăng kí sẽ được cấp một không gian nhớ trực tuyến, gọi là “ổ đĩa trực tuyến”, với các tính năng cơ bản sau:</p>
+            
+            <p><strong>a) Tải tệp lên ổ đĩa trực tuyến</strong></p>
+            <p>Cho phép tải các tệp hay thư mục từ máy tính lên ổ đĩa trực tuyến để lưu trữ và sử dụng.</p>
+            
+            <p><strong>b) Tạo mới và quản lí thư mục, tệp trên ổ đĩa trực tuyến</strong></p>
+            <p>Cho phép tạo mới thư mục, tệp và quản lí, sắp xếp chúng trên ổ đĩa trực tuyến. Một số nhà cung cấp dịch vụ cung cấp sẵn các tính năng cho phép mở và chỉnh sửa trực tuyến các tệp được tạo ra bởi các ứng dụng văn phòng (soạn thảo văn bản, bảng tính, trình chiếu,…).</p>
+            <p>Kĩ năng số: Để tổ chức, lưu trữ và truy xuất thông tin dễ dàng hơn (thuộc NL 1.3), nên phân loại dữ liệu theo từng dự án hoặc môn học, sau đó tạo các thư mục tương ứng trên ổ đĩa trực tuyến trước khi tải tệp lên, tránh để tệp tràn lan ở thư mục gốc.</p>
+            
+            <p><strong>c) Chia sẻ thư mục và tệp</strong></p>
+            <p>Ưu điểm nổi bật của việc lưu trữ trực tuyến là cho phép người dùng chia sẻ thư mục, tệp cho những người dùng khác. Người chủ sở hữu có quyền thiết lập các chế độ chia sẻ (phân quyền) như sau:</p>
+            <ul>
+                <li>(1) Quyền chỉ xem (Người xem).</li>
+                <li>(2) Quyền được nhận xét (Người nhận xét): được xem và ghi chú, nhận xét.</li>
+                <li>(3) Quyền chỉnh sửa (Người chỉnh sửa): quyền cao nhất cho phép xem, nhận xét và thực hiện mọi thao tác với thư mục và tệp (chỉnh sửa, xoá, tạo mới, đổi tên,…).</li>
+            </ul>
+            <p>Sau khi chia sẻ, người dùng có thể huỷ bỏ việc chia sẻ này hoặc thay đổi chế độ chia sẻ bất cứ lúc nào.</p>
+            <p>Kĩ năng số: Việc nắm rõ và sử dụng đúng các chế độ phân quyền (Người xem, Người nhận xét, Người chỉnh sửa) là thao tác quan trọng để chia sẻ dữ liệu và nội dung số một cách an toàn và phù hợp (thuộc NL 2.2), giúp bảo vệ dữ liệu gốc khỏi những chỉnh sửa không mong muốn.</p>
+            
+            <p><strong>Nêu một vài ưu điểm và nhược điểm của việc lưu trữ và chia sẻ tệp trên Internet.</strong></p>
+            <p>Ưu điểm:</p>
+            <ul>
+                <li>Thao tác nhanh chóng, truy cập được từ bất kì đâu chỉ cần có Internet.</li>
+                <li>Không gặp rủi ro hỏng hóc vật lí như với thiết bị nhớ ngoài (USB, ổ cứng).</li>
+                <li>Thuận tiện làm việc nhóm: cập nhật dữ liệu tức thì, không bị phân mảnh thành nhiều phiên bản tệp khi gửi qua lại.</li>
+            </ul>
+            <p>Nhược điểm:</p>
+            <ul>
+                <li>Bắt buộc phải có kết nối Internet mới sử dụng được.</li>
+                <li>Giới hạn dung lượng miễn phí; phải trả phí nếu muốn lưu trữ lượng dữ liệu lớn.</li>
+                <li>Tính bảo mật và an toàn dữ liệu phụ thuộc một phần vào nhà cung cấp dịch vụ.</li>
             </ul>
 
+            <h3>2. Thực hành: Lưu trữ và chia sẻ tệp tin trên ổ đĩa trực tuyến</h3>
+            <p><strong>Nhiệm vụ 1. Lưu trữ tệp tin trên ổ đĩa trực tuyến</strong></p>
+            <ul>
+                <li>Bước 1. Mở trình duyệt, truy cập Google Drive tại địa chỉ: http://drive.google.com.</li>
+                <li>Bước 2. Đăng nhập bằng tài khoản Google để truy cập ổ đĩa trực tuyến.</li>
+                <li>Bước 3. Tải tệp từ máy tính lên lưu trữ tại ổ đĩa trực tuyến bằng cách:<br>
+                - Nháy chuột vào lệnh + Mới ở góc trên bên trái.<br>
+                - Trong bảng chọn hiện ra, chọn lệnh Tải tệp lên.<br>
+                - Trong hộp thoại Open xuất hiện, chọn tệp cần tải và nháy chọn Open để bắt đầu tải tệp lên.<br>
+                - Tệp tải lên sẽ xuất hiện trong khu vực hiển thị thư mục và tệp trên ổ đĩa.</li>
+            </ul>
+
+            <p><strong>Nhiệm vụ 2. Chia sẻ tệp tin cho các thành viên trong nhóm</strong></p>
+            <ul>
+                <li>Bước 1. Nháy nút phải chuột vào tệp tin cần chia sẻ trên ổ đĩa trực tuyến, bảng lệnh hiện ra, chọn Chia sẻ.</li>
+                <li>Bước 2. Thực hiện các bước cấu hình chia sẻ như minh hoạ trong Hình 6.5:<br>
+                - Nhập địa chỉ thư điện tử của người nhận.<br>
+                - Đánh dấu tích vào tuỳ chọn Thông báo cho những người này để hệ thống tự động gửi email báo cho người nhận.<br>
+                - Soạn thông điệp lời nhắn.<br>
+                - Chọn chế độ chia sẻ (phân quyền: Người xem, Người nhận xét hoặc Người chỉnh sửa).<br>
+                - Nháy chọn Gửi.</li>
+                <li>Bước 3. Kiểm tra thông tin chia sẻ của tệp tại khu vực hiển thị các thông tin chi tiết của tệp, thư mục đang được chọn.</li>
+            </ul>
+
+            <p><strong>Ghi nhớ</strong></p>
+            <ul>
+                <li>Dịch vụ lưu trữ đám mây cung cấp không gian trên Internet (ổ đĩa trực tuyến) giúp lưu trữ, quản lí và chia sẻ dữ liệu thuận tiện.</li>
+                <li>Việc truy cập, chỉnh sửa tệp có thể được thực hiện ở bất kì đâu có kết nối Internet, hỗ trợ làm việc nhóm hiệu quả.</li>
+                <li>Khi chia sẻ tệp/thư mục, có ba mức phân quyền cơ bản: Người xem (chỉ đọc), Người nhận xét (đọc và góp ý) và Người chỉnh sửa (toàn quyền thay đổi nội dung).</li>
+            </ul>
+
+            <!-- Khối Tình huống vận dụng Bài 6 -->
             <div class="logic-box">
-                <strong><i class="fa-solid fa-microscope"></i> Phân tích logic khoa học: Điện toán đám mây</strong> 
-                Hệ thống lưu trữ đám mây vận hành dựa trên kiến trúc hệ thống tệp phân tán và công nghệ ảo hóa. Dữ liệu thực chất được lưu trữ trên các mảng ổ cứng vật lý quy mô lớn tại các Trung tâm dữ liệu. Khi tiến hành chia sẻ liên kết, hệ thống áp dụng cơ chế Danh sách kiểm soát truy cập nhằm trỏ các luồng truy cập tới cùng một vùng nhớ gốc, giúp giảm thiểu độ trễ mạng và loại bỏ sự dư thừa dữ liệu.
+                <strong><i class="fa-solid fa-microscope"></i> Tình huống vận dụng Bài 6 - Tình huống 1</strong>
+                <p><strong>Tình huống:</strong> Nhóm học sinh làm chung một bài báo cáo. Nhóm trưởng tải tệp lên Google Drive và chia sẻ cho các bạn. Tuy nhiên, các bạn chỉ có thể đọc mà không thể gõ thêm nội dung vào tệp. Nhóm trưởng đã thao tác thiếu bước nào?</p>
+                <p><strong>Trả lời khoa học:</strong> Nhóm trưởng đã thiết lập sai chế độ phân quyền chia sẻ. Thay vì cấp quyền "Người chỉnh sửa" (cho phép xem, nhận xét và thực hiện mọi thao tác chỉnh sửa, thêm nội dung), nhóm trưởng lại chỉ cấp quyền "Người xem" (chỉ đọc). Để khắc phục, nhóm trưởng cần vào mục Chia sẻ và thay đổi quyền của các thành viên từ "Người xem" thành "Người chỉnh sửa".</p>
+                
+                <strong><i class="fa-solid fa-microscope"></i> Tình huống vận dụng Bài 6 - Tình huống 2</strong>
+                <p><strong>Tình huống:</strong> Trong một chuyến dã ngoại trên vùng núi cao không có sóng điện thoại hay Wi-Fi, một học sinh muốn mở tệp tài liệu đã lưu trên Google Drive ra để xem nhưng không được. Tại sao lại xảy ra hiện tượng này?</p>
+                <p><strong>Trả lời khoa học:</strong> Đây là một trong những nhược điểm cốt lõi của dịch vụ lưu trữ đám mây. Dữ liệu được lưu trữ trên hệ thống máy chủ trên Internet chứ không nằm trong bộ nhớ vật lí của thiết bị (như ổ cứng, bộ nhớ điện thoại). Do đó, người dùng bắt buộc phải có kết nối Internet thì mới có thể thực hiện thao tác truy cập hoặc tải xuống (Download) tệp tin.</p>
             </div>
 
             <!-- BÀI 7 -->
-            <h2 class="part-title"><i class="fa-solid fa-magnifying-glass"></i> Bài 7: Thực hành tìm kiếm thông tin trên Internet</h2>
+            <h2 class="part-title"><i class="fa-solid fa-magnifying-glass"></i> Bài 7 thực hành tìm kiếm thông tin trên Internet bằng máy tìm kiếm, sử dụng từ khoá gõ phím hoặc giọng nói và nâng cao hiệu quả tìm kiếm.</h2>
             
-            <p>Internet là một "đại dương" dữ liệu. Máy tìm kiếm (Search Engine) như Google, Bing, Yahoo chính là chiếc la bàn giúp ta điều hướng và chắt lọc thông tin.</p>
-
+            <h3>1. Nhiệm vụ 1. Tìm kiếm thông tin trên Internet bằng máy tìm kiếm</h3>
             <ul>
-                <li><strong>Nhiệm vụ 1 & 2: Tìm kiếm văn bản và tiếng nói:</strong> Ngoài việc gõ văn bản truyền thống, tính năng Voice Search (Tìm kiếm bằng giọng nói) ngày càng phổ biến nhờ công nghệ AI nhận diện ngôn ngữ tự nhiên. Rất hữu ích khi thao tác trên thiết bị di động.</li>
-                <li><strong>Nhiệm vụ 3: Sử dụng toán tử tìm kiếm nâng cao:</strong> Để tránh việc máy tìm kiếm trả về hàng triệu kết quả "rác", học sinh cần nắm vững các từ khóa đặc biệt:
-                    <br><br>
-                    - Cụm từ chính xác: Đặt trong dấu ngoặc kép <span class="code-tag">"Trường THPT Phan Đình Phùng"</span><br>
-                    - Tìm theo định dạng tệp: Sử dụng <span class="code-tag">filetype:pdf</span> hoặc <span class="code-tag">filetype:pptx</span><br>
-                    - Tìm trong một trang web cụ thể: <span class="code-tag">site:edu.vn</span>
-                </li>
-                <li><strong>Nhiệm vụ 4: Trải nghiệm các máy tìm kiếm:</strong> Cùng một từ khóa, Google có thể trả về kết quả khác với Microsoft Bing, do thuật toán đánh giá và sắp xếp trang web của mỗi hãng là khác nhau.</li>
+                <li>Bước 1. Khởi động công cụ tìm kiếm.Mở trình duyệt Internet trên máy tính. Gõ địa chỉ URL máy tìm kiếm, chẳng hạn Google.com.</li>
+                <li>Bước 2. Tìm kiếm bằng từ khoá nhập từ bàn phím.Nhập từ khoá bằng bàn phím (chẳng hạn "tuyển sinh Đại học Dược Hà Nội 2022") rồi nhấn phím Enter.</li>
+                <li>Bước 3. Đọc kết quả tìm kiếm. Nếu kết quả tìm kiếm chưa được như ý muốn, quay lại bước 2 với từ khoá khác để việc tìm kiếm hiệu quả hơn.</li>
+            </ul>
+            <p>Kĩ năng số: Để truy xuất thông tin chính xác hơn, người dùng có thể áp dụng các kỹ thuật tìm kiếm như điều chỉnh từ khóa, sử dụng tính năng lọc có sẵn trên giao diện máy tìm kiếm để tiết kiệm thời gian.</p>
+
+            <h3>2. Nhiệm vụ 2. Khám phá cách thực hiện tìm kiếm bằng tiếng nói</h3>
+            <ul>
+                <li>Bước 1. Khởi động công cụ tìm kiếm.</li>
+                <li>Bước 2. Tìm kiếm bằng từ khoá nhập bằng tiếng nói. Nháy chuột vào biểu tượng micro cạnh ô nhập từ khoá tìm kiếm, sau đó, đọc từ khoá tìm kiếm, sau khi dừng đọc, máy tìm kiếm sẽ hiển thị kết quả tìm kiếm.</li>
+                <li>Bước 3. Kiểm tra từ khoá được tự động điền sau khi đọc. Nếu không khớp, thực hiện lại Bước 2 để đọc lại từ khoá.</li>
+                <li>Bước 4. Đọc kết quả tìm kiếm. Nếu kết quả tìm kiếm chưa được như mong muốn, quay lại Bước 2 với từ khoá khác để việc tìm kiếm hiệu quả hơn.</li>
+            </ul>
+            <p>Lưu ý: Cần có micro để thực hiện tìm kiếm bằng tiếng nói.</p>
+
+            <h3>3. Nhiệm vụ 3. Xác lập được các lựa chọn theo tiêu chí tìm kiếm để nâng cao hiệu quả tìm kiếm thông tin</h3>
+            <p>Có nhiều tiêu chí giúp nâng cao hiệu quả tìm kiếm thông tin. Có thể tìm kiếm thông tin dạng hình ảnh, tin tức hay video bằng cách chọn dạng phân loại kết quả tìm kiếm tương ứng, hoặc quy định dạng tệp chứa thông tin cần tìm. Chẳng hạn, khi tìm kiếm thông tin về thông báo của một tổ chức, đơn vị nào đó (ví dụ thông báo tuyển sinh của một trường Đại học), để nâng cao tính chính xác và hiệu quả tìm kiếm, người dùng có thể yêu cầu tìm dưới dạng tệp tin .pdf để xem được nội dung thông báo đó bằng văn bản.</p>
+            <ul>
+                <li>Bước 1. Khởi động công cụ tìm kiếm.</li>
+                <li>Bước 2. Nhập từ khoá cần tìm và bổ sung cụm từ filetype:pdf</li>
+                <li>Bước 3. Đọc kết quả tìm kiếm. Nếu kết quả tìm kiếm chưa được như mong muốn, quay lại Bước 2 với từ khoá khác để việc tìm kiếm hiệu quả hơn.</li>
+            </ul>
+            <p>Gợi ý: Kết quả tìm kiếm có thể bao gồm thông báo tuyển sinh của các trường Đại học khác nữa. Để tìm chính xác hơn, tên trường Đại học cần tìm nên đặt trong dấu nháy kép, cụ thể: tuyển sinh 2022 "đại học Dược Hà Nội" + filetype:pdf.</p>
+            <p>Việc đặt từ khoá cần tìm trong dấu nháy kép là một trong những cách thông dụng để thu hẹp phạm vi tìm kiếm, cho kết quả tìm kiếm chính xác hơn. Bên cạnh đó, xây dựng từ khoá tìm kiếm cũng là một trong những kĩ năng quan trọng làm tăng độ chính xác, hiệu quả và tiết kiệm thời gian tìm kiếm.</p>
+
+            <h3>4. Nhiệm vụ 4. Trải nghiệm và so sánh giữa các máy tìm kiếm phổ biến</h3>
+            <p>Hướng dẫn thực hiện nhiệm vụ thực hành – SGK Tin học 7 Kết nối tri thức, trang 38.</p>
+            <ul>
+                <li>Bước 1. Chọn máy tìm kiếm để trải nghiệm.<br>
+                Khởi động công cụ tìm kiếm quen sử dụng.<br>
+                Nhập từ khoá cần tìm. Gợi ý: sử dụng từ khoá "máy tìm kiếm" hay "công cụ tìm kiếm", kết hợp với các từ khoá "tốt nhất" hay "phổ biến nhất".<br>
+                Đọc thông tin từ các kết quả tìm được, chọn và ghi lại địa chỉ URL của ba công cụ/máy tìm kiếm được đánh giá là phổ biến nhất hoặc tốt nhất.</li>
+                <li>Bước 2. Trải nghiệm các máy tìm kiếm đã chọn.<br>
+                Khởi động trình duyệt trên máy tính.<br>
+                Gõ địa chỉ URL của máy tìm kiếm muốn trải nghiệm.<br>
+                Gõ từ khoá để tìm một thông tin quan tâm (đội bóng, ban nhạc, thời tiết hay kì quan thiên nhiên,…).<br>
+                Quan sát và nhận xét về kết quả tìm kiếm.<br>
+                Lập bảng so sánh tính năng cơ bản của các máy tìm kiếm rồi điền thông tin vào bảng. Ví dụ: Có cho phép tìm kiếm bằng giọng nói hay không? Có phân loại kết quả tìm kiếm như tin tức, hình ảnh, video,… hay không? Có cho phép tìm dưới dạng tệp tin, chẳng hạn .pdf hay không?<br>
+                Lặp lại các thao tác trên với hai máy tìm kiếm còn lại.</li>
+                <li>Bước 3. Đọc lại bảng so sánh đã được điền đầy đủ các thông tin sau Bước 2 và rút ra kết luận về các máy tìm kiếm đã trải nghiệm. Chia sẻ với bạn bè các thông tin thu được.</li>
             </ul>
 
+            <p><strong>Ghi nhớ</strong></p>
+            <ul>
+                <li>Để quá trình tìm kiếm đạt hiệu quả cao, cần biết cách xây dựng từ khoá cốt lõi.</li>
+                <li>Người dùng có thể tìm kiếm thông tin bằng cách gõ văn bản hoặc sử dụng tính năng nhận diện giọng nói qua micro.</li>
+                <li>Để kết quả trả về chính xác hơn, có thể dùng dấu nháy kép cho các cụm từ cần tìm nguyên văn, hoặc thêm từ khoá filetype:&lt;đuôi tệp&gt; để lọc ra các tệp tài liệu định dạng cụ thể.</li>
+            </ul>
+
+            <!-- Khối Tình huống vận dụng Bài 7 -->
             <div class="logic-box">
-                <strong><i class="fa-solid fa-microscope"></i> Phân tích logic khoa học: Thuật toán tìm kiếm</strong> 
-                Máy tìm kiếm không duyệt toàn bộ mạng Internet theo thời gian thực khi có yêu cầu truy vấn. Quá trình này được thực hiện trước đó qua ba giai đoạn kỹ thuật cốt lõi: 1) Thu thập dữ liệu bằng các tác tử phần mềm, 2) Tổ chức dữ liệu thông qua cấu trúc Chỉ mục đảo ngược, và 3) Xếp hạng sử dụng các thuật toán đánh giá độ tin cậy. Khi người dùng nhập từ khóa, hệ thống thực chất đang đối chiếu truy vấn đó với cơ sở dữ liệu chỉ mục nội bộ để xuất ra kết quả tức thời.
+                <strong><i class="fa-solid fa-microscope"></i> Tình huống vận dụng Bài 7 - Tình huống 1</strong>
+                <p><strong>Tình huống:</strong> Bạn An muốn tìm chính xác tệp văn bản quy định về đồng phục của trường THPT Lê Lợi dưới dạng tệp PDF. An gõ từ khóa: <em>quy định đồng phục THPT Lê Lợi</em>, nhưng kết quả ra quá nhiều trang web tin tức không liên quan. An cần điều chỉnh từ khóa như thế nào để tối ưu?</p>
+                <p><strong>Trả lời khoa học:</strong> Để thu hẹp phạm vi và tăng tính chính xác, An cần sử dụng dấu nháy kép cho cụm từ bắt buộc và thêm lệnh lọc định dạng loại tệp. Từ khóa tối ưu nên là: <em>"quy định đồng phục" "THPT Lê Lợi" + filetype:pdf</em>. Thao tác này buộc máy tìm kiếm chỉ trả về các tệp đúng định dạng .pdf và bắt buộc chứa chính xác các cụm từ nằm trong ngoặc kép.</p>
+                
+                <strong><i class="fa-solid fa-microscope"></i> Tình huống vận dụng Bài 7 - Tình huống 2</strong>
+                <p><strong>Tình huống:</strong> Máy tính của bạn Bình bị hỏng bàn phím, nhưng Bình đang rất cần tìm kiếm thông tin về "dự báo thời tiết ngày mai" trên máy tìm kiếm Google. Bình có thể sử dụng chức năng nào để thay thế việc gõ phím?</p>
+                <p><strong>Trả lời khoa học:</strong> Bình có thể sử dụng chức năng "Tìm kiếm bằng tiếng nói". Bằng cách nháy chuột vào biểu tượng micro cạnh ô nhập từ khóa trên máy tìm kiếm và đọc từ khóa "dự báo thời tiết ngày mai", hệ thống trí tuệ nhân tạo sẽ tự động nhận diện giọng nói, chuyển đổi thành văn bản và trả về kết quả nhanh chóng mà không cần bất kỳ thao tác gõ phím nào (yêu cầu máy tính phải có kết nối micro).</p>
             </div>
 
             <!-- BÀI 8 -->
-            <h2 class="part-title"><i class="fa-solid fa-envelope-open-text"></i> Bài 8: Nâng cao sử dụng Thư điện tử & Mạng xã hội</h2>
+            <h2 class="part-title"><i class="fa-solid fa-envelope"></i> Bài 8. thực hành cách đánh dấu, phân loại thư điện tử bằng nhãn trong Gmail; cách tạo Fanpage và thiết lập các tuỳ chọn quyền riêng tư, bảo mật trên Facebook.</h2>
             
-            <h3 class="lesson-title">1. Phân loại và đánh dấu Thư điện tử (Email)</h3>
-            <p>Hộp thư đến (Inbox) quá tải là nguyên nhân làm trôi mất các thông báo quan trọng. Để quản lý khoa học, ta sử dụng các công cụ:</p>
+            <h3>1. Đánh dấu và phân loại thư điện tử</h3>
+            <p>Hướng dẫn thực hiện nhiệm vụ thực hành – SGK Tin học 11 Kết nối tri thức, trang 39.</p>
+            <p>Thư điện tử trong hộp thư thường được hiển thị theo trình tự thời gian. Để dễ dàng tìm lại thư quan trọng, có thể sử dụng các chức năng đánh dấu và phân loại.</p>
+            
+            <p><strong>a) Nhiệm vụ 1. Tìm hiểu dấu hiệu thư quan trọng trong Gmail</strong></p>
+            <p>Gmail hỗ trợ tự động xác định và đánh dấu thư thuộc loại quan trọng bằng dấu mũi tên màu vàng. Các dấu hiệu này dựa vào tần suất gửi, thư thường xuyên đọc, thư được gắn dấu sao, lưu trữ hoặc xoá,…</p>
+            <p>Hướng dẫn thực hiện Nhiệm vụ 1: Tìm hiểu dấu hiệu thư quan trọng</p>
+
+            <p><strong>b) Nhiệm vụ 2. Sắp xếp, phân loại thư trong Gmail bằng Nhãn</strong></p>
+            <p>Sử dụng Nhãn (Label) để sắp xếp, phân loại thư trong hộp thư đến giúp tiết kiệm thời gian khi tìm kiếm, tránh thất lạc thông tin.</p>
+            <p>Lưu ý quan trọng: Nhãn khác với thư mục. Một thư có thể được gán nhiều nhãn. Khi xoá một thư, thư đó sẽ bị xoá khỏi mọi nhãn đính kèm cũng như trong hộp thư đến. Tuy nhiên, việc xoá một nhãn không làm xoá các thư được gắn nhãn đó.</p>
+            <p>Kĩ năng số: Để quản lí hộp thư gọn gàng, hãy tạo các nhãn theo môn học hoặc dự án. Khi thư mới đến, hãy gán nhãn ngay lập tức để dễ dàng tìm lại bằng công cụ tìm kiếm của email.</p>
+
+            <h3>2. Khai thác một số chức năng nâng cao của mạng xã hội</h3>
+            <p>Hướng dẫn thực hiện nhiệm vụ thực hành – SGK Tin học 11 Kết nối tri thức, trang 40.</p>
+            
+            <p><strong>a) Nhiệm vụ 3. Tạo Fanpage trên Facebook</strong></p>
+            <p>Fanpage là trang web trên Facebook giúp các tổ chức, doanh nghiệp, tập thể quảng bá hình ảnh, thương hiệu và sản phẩm.</p>
+            <p>Hướng dẫn thực hiện Nhiệm vụ 3: Tạo Fanpage</p>
+
+            <p><strong>b) Nhiệm vụ 4. Tìm hiểu và cài đặt quyền riêng tư trên Facebook</strong></p>
+            <p>Cài đặt quyền riêng tư giúp kiểm soát ai có thể xem nội dung, ai có thể gắn thẻ và tăng cường bảo mật cho tài khoản cá nhân.</p>
+            <p>Kĩ năng số: Hãy thường xuyên kiểm tra phần “Cài đặt & quyền riêng tư” trên mạng xã hội. Bật tính năng “Xét duyệt bài viết có gắn thẻ” để kiểm soát những gì người khác đăng lên dòng thời gian của bản thân, giúp bảo vệ hình ảnh trực tuyến an toàn.</p>
+            <p>Thiết lập những người có thể xem các bài viết trong tương lai:</p>
             <ul>
-                <li><strong>Gắn sao (Starred):</strong> Đánh dấu các email khẩn cấp cần xử lý ngay.</li>
-                <li><strong>Gắn nhãn (Labels/Folders):</strong> Phân loại email vào các ngăn tủ như "Học tập", "Công việc", "Cá nhân".</li>
-                <li><strong>Tạo bộ lọc (Filters):</strong> Tự động hóa việc phân loại. Ví dụ: Cài đặt để mọi email gửi từ giáo viên tự động được dán nhãn "Quan trọng".</li>
+                <li>Bước 1: Đăng nhập Facebook. Chọn Cài đặt & quyền riêng tư → Cài đặt → Quyền riêng tư.</li>
+                <li>Bước 2: Tại phần “Hoạt động của bạn”, tìm đến “Ai có thể xem các bài viết của bạn trong tương lai?” và chọn đối tượng phù hợp (Công khai, Bạn bè, Chỉ mình tôi…).</li>
+            </ul>
+            <p>Thiết lập các quyền liên quan đến trang cá nhân và gắn thẻ:</p>
+            <ul>
+                <li>Bước 1: Chọn Cài đặt → Trang cá nhân và gắn thẻ.</li>
+                <li>Bước 2: Tại đây có thể thiết lập:<br>
+                Ai có thể đăng lên trang cá nhân của bạn.<br>
+                Ai có thể xem những gì người khác đăng lên trang cá nhân của bạn.<br>
+                Bật tính năng “Xét duyệt bài viết có gắn thẻ bạn trước khi bài viết đó xuất hiện trên trang cá nhân của bạn”.</li>
             </ul>
 
-            <h3 class="lesson-title">2. Khai thác Mạng xã hội chuyên sâu</h3>
-            <p>Mạng xã hội không chỉ để giải trí mà còn là công cụ học tập và làm việc mạnh mẽ nếu biết cách khai thác:</p>
+            <p><strong>Ghi nhớ</strong></p>
             <ul>
-                <li>Sử dụng tính năng <strong>Nhóm </strong> để tạo không gian thảo luận bài tập kín.</li>
-                <li>Thiết lập <strong>Quyền riêng tư </strong> khắt khe để bảo vệ hình ảnh cá nhân, giới hạn người xem bài viết.</li>
-                <li>Biết cách báo cáo  hoặc chặn các nội dung xấu độc, bắt nạt trên không gian mạng.</li>
+                <li>Tính năng đánh dấu quan trọng và sử dụng Nhãn (Label) giúp sắp xếp, phân loại, tìm kiếm thư điện tử một cách nhanh chóng, khoa học. Xoá nhãn không làm xoá thư, nhưng xoá thư sẽ xoá nó khỏi mọi nhãn.</li>
+                <li>Việc tạo Fanpage giúp tập thể, tổ chức quảng bá hoạt động hiệu quả.</li>
+                <li>Thiết lập quyền riêng tư và bảo mật (xét duyệt gắn thẻ, xác thực 2 yếu tố, cảnh báo đăng nhập) là rất cần thiết để bảo vệ dữ liệu, danh tính số trên mạng xã hội.</li>
             </ul>
+
+            <!-- Khối Tình huống vận dụng Bài 8 -->
+            <div class="logic-box">
+                <strong><i class="fa-solid fa-microscope"></i> Tình huống vận dụng Bài 8 - Tình huống 1</strong>
+                <p><strong>Tình huống:</strong> Bạn C có một email rất quan trọng thuộc cả hai dự án là "Hội trại" và "Văn nghệ". Bạn Hà gắn cả hai nhãn này cho email. Sau khi dự án "Hội trại" kết thúc, C xóa nhãn "Hội trại" đi. Liệu email đó có bị mất khỏi hộp thư đến và mất luôn khỏi nhãn "Văn nghệ" không?</p>
+                <p><strong>Trả lời khoa học:</strong> Không. Dựa trên cơ sở kiến trúc dữ liệu của Gmail, Nhãn (Label) khác với thư mục vật lí, một thư có thể được gán nhiều nhãn cùng lúc (Metadata). Việc xóa một nhãn sẽ chỉ hủy bỏ thẻ phân loại đó trên hệ thống, hoàn toàn không làm xóa các thư được gắn nhãn đó, thư vẫn tồn tại nguyên vẹn trong Hộp thư đến và vẫn còn giữ nhãn "Văn nghệ".</p>
+                
+                <strong><i class="fa-solid fa-microscope"></i> Tình huống vận dụng Bài 8 - Tình huống 2</strong>
+                <p><strong>Tình huống:</strong> Gần đây, trang cá nhân Facebook của bạn Dũng liên tục xuất hiện các bài viết quảng cáo bán hàng do người lạ tự ý gắn thẻ (tag) Dũng vào, gây ảnh hưởng đến hình ảnh của Dũng. Dũng cần thiết lập tính năng nào để ngăn chặn triệt để tình trạng này?</p>
+                <p><strong>Trả lời khoa học:</strong> Dũng cần truy cập vào phần Cài đặt -> Trang cá nhân và gắn thẻ, sau đó bật tính năng "Xét duyệt bài viết có gắn thẻ bạn trước khi bài viết đó xuất hiện trên trang cá nhân của bạn". Khi bật tính năng này, nó hoạt động như một màng lọc bảo mật; mọi bài viết bị người khác gắn thẻ sẽ bị đưa vào hàng chờ, chỉ khi Dũng xác nhận phê duyệt thì bài viết mới được phép hiển thị trên dòng thời gian cá nhân.</p>
+            </div>
 
             <div class="footer-credit">
                 Hệ thống tài liệu điện tử | <strong>Hành Trình Số</strong> <br>

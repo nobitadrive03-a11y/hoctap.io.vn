@@ -4,24 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Chuyên đề Học tập Tin học 11 - Hành Trình Số</title>
-    <!-- Tích hợp Font chữ Google -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&family=Merriweather:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
-    <!-- Tích hợp thư viện Icon -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-<!-- 1. MÃ GA4 GỐC (Kết nối với Google Analytics) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-NSJCVSL9RM"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
-
   gtag('config', 'G-NSJCVSL9RM'); 
 </script>
 
-<!-- 2. MÃ NHỊP TIM 30 GIÂY -->
 <script>
   setInterval(function() {
     if (!document.hidden) { 
@@ -62,7 +57,6 @@
             padding: 15px; 
         }
 
-        /* ----- MÀN HÌNH ĐỌC SÁCH TRỰC TIẾP ----- */
         #reader-view {
             display: block; 
             max-width: 1000px;
@@ -126,28 +120,7 @@
             letter-spacing: 1px;
             margin-bottom: 8px;
         }
-
-        .obj-box {
-            background: linear-gradient(to right, #f0f9ff, #e0f2fe);
-            border: 1px solid #bae6fd;
-            padding: 20px 15px;
-            border-radius: var(--radius-md);
-            margin-bottom: 30px;
-        }
         
-        .obj-box strong { color: #0284c7; display: flex; align-items: center; gap: 8px; font-size: 1.05rem; margin-bottom: 12px;}
-        .obj-box ul { list-style: none; padding-left: 0; margin: 0;}
-        .obj-box ul li { position: relative; padding-left: 25px; margin-bottom: 10px; font-size: 0.95rem;}
-        .obj-box ul li::before {
-            content: '\f00c';
-            font-family: 'Font Awesome 6 Free';
-            font-weight: 900;
-            color: #0ea5e9;
-            position: absolute;
-            left: 0;
-            top: 2px;
-        }
-
         h2.part-title {
             background: #f1f5f9;
             color: var(--primary-dark);
@@ -160,11 +133,17 @@
             align-items: flex-start;
             flex-direction: column;
             gap: 8px;
+            font-weight: bold;
+        }
+        
+        h3 {
+            color: #334155;
+            margin: 20px 0 10px 0;
+            font-size: 1.05rem;
         }
 
         p { margin-bottom: 12px; text-align: justify; font-size: 0.95rem; line-height: 1.7; }
         
-        /* Cấu trúc danh sách gạch đầu dòng */
         .reader-content > ul {
             list-style-type: none;
             padding-left: 0;
@@ -192,7 +171,6 @@
             font-size: 1rem;
         }
 
-        /* Hộp logic khoa học */
         .logic-box {
             background: #f0fdf4;
             border-radius: var(--radius-md);
@@ -206,48 +184,13 @@
         .logic-box strong { 
             color: #166534; 
             font-size: 1.05rem; 
-            display: flex; 
+            display: inline-flex; 
             align-items: center; 
             gap: 8px; 
             margin-bottom: 10px;
+            margin-top: 10px;
         }
-
-        .table-wrapper {
-            background: var(--white);
-            border-radius: var(--radius-md);
-            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
-            margin: 20px 0;
-            border: 1px solid #e2e8f0;
-        }
-
-        .modern-table { 
-            width: 100%; 
-            border-collapse: collapse; 
-            min-width: 500px; 
-        }
-
-        .modern-table th, .modern-table td {
-            padding: 12px 15px;
-            border-bottom: 1px solid #f1f5f9;
-            text-align: left;
-            font-size: 0.9rem;
-        }
-
-        .modern-table th {
-            background: #f8fafc;
-            color: var(--primary-dark);
-            font-weight: 600;
-            text-transform: uppercase;
-            font-size: 0.85rem;
-            letter-spacing: 1px;
-            white-space: nowrap;
-        }
-        
-        .modern-table tr:last-child td { border-bottom: none; }
-        .modern-table tr:hover { background: #f8fafc; }
-        .modern-table td strong { color: var(--primary); }
+        .logic-box p { margin-bottom: 8px; }
 
         .footer-credit {
             text-align: center;
@@ -261,14 +204,13 @@
 
         @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Media Query cho màn hình lớn (Tablet/PC) */
         @media (min-width: 640px) {
             body { padding: 40px 20px; }
             .reader-header { padding: 20px 40px; }
             .reader-content { padding: 40px; }
             h1.main-title { font-size: 2.2rem; }
             h2.part-title { flex-direction: row; align-items: center; }
-            p, .reader-content > ul > li, .obj-box ul li, .logic-box { font-size: 1.05rem; }
+            p, .reader-content > ul > li, .logic-box { font-size: 1.05rem; }
             .reader-content > ul > li { padding-left: 45px; }
             .reader-content > ul > li::before { left: 15px; top: 15px; }
             #reader-view { border-radius: var(--radius-lg); }
@@ -281,7 +223,6 @@
     <div id="reader-view">
         <div class="reader-header">
             <h2><i class="fa-solid fa-laptop-code"></i> Không gian học tập Hành Trình Số</h2>
-            <!-- Nút Quay lại tự động lùi về trang trước đó -->
             <button class="btn-small" onclick="window.history.back()">
                 <i class="fa-solid fa-arrow-left"></i> Thoát
             </button>
@@ -290,103 +231,443 @@
         <div class="reader-content">
             <h1 class="main-title">
                 <span>Chuyên đề Tin học 11</span>
-                MÁY TÍNH, XÃ HỘI VÀ TRI THỨC
+                ĐỀ CƯƠNG HỌC TẬP CHI TIẾT
             </h1>
 
-            <div class="obj-box">
-                <strong><i class="fa-solid fa-route"></i> Mục tiêu chuyên đề:</strong>
-                <ul>
-                    <li>Hiểu và thao tác thành thạo trên môi trường Hệ điều hành máy tính cá nhân và thiết bị di động.</li>
-                    <li>Phân biệt và khai thác hiệu quả hệ sinh thái phần mềm (thương mại, nguồn mở, trực tuyến).</li>
-                    <li>Nắm vững cấu trúc vi mô của phần cứng (CPU, RAM, Ổ cứng, Mạch lôgic) và nguyên lý kết nối thiết bị số.</li>
-                </ul>
-            </div>
-
-            <!-- PHẦN 1 -->
-            <h2 class="part-title"><i class="fa-brands fa-windows"></i> Phần 1: Nền tảng Điều hành và Hệ sinh thái Phần mềm</h2>
-            <p><strong>Hệ điều hành (HĐH)</strong> là tập hợp các chương trình điều khiển hoạt động của máy tính, đóng vai trò trung gian giao tiếp giữa phần cứng và người dùng. Lịch sử HĐH đi từ giao diện dòng lệnh văn bản (MS-DOS) tiến lên giao diện đồ họa trực quan (Windows, macOS) và mở rộng sang các hệ điều hành tối ưu cho thao tác chạm, tiết kiệm năng lượng trên thiết bị di động (Android, iOS).</p>
+            <!-- BÀI 1 -->
+            <h2 class="part-title"><i class="fa-solid fa-desktop"></i> Bài 1. Hệ điều hành</h2>
             
-            <div class="logic-box">
-                <strong><i class="fa-solid fa-microscope"></i> Phân tích logic khoa học:</strong> 
-                Hệ điều hành hoạt động như một nền tảng trừu tượng hóa (Abstraction Layer). Nó che giấu sự phức tạp của phần cứng bên dưới và cung cấp các giao diện lập trình ứng dụng (API) chuẩn hóa. Nhờ đó, các phần mềm ứng dụng có thể tương tác với phần cứng (như cấp phát bộ nhớ, truy xuất ổ đĩa) một cách an toàn và đồng bộ mà không cần phải can thiệp trực tiếp vào mã máy vật lý của hệ thống.
-            </div>
-
-            <p>Khi sử dụng hệ thống, việc <strong>Quản lý tệp và thư mục</strong> là kỹ năng sống còn. Hệ thống tệp được tổ chức theo cấu trúc hình cây (Directory Tree). Phân vùng hệ thống (thường là ổ C:) là nơi chứa các tập tin vận hành của HĐH, không nên can thiệp hoặc lưu trữ dữ liệu cá nhân tại đây để tránh rủi ro mất dữ liệu khi lỗi hệ thống.</p>
-            
-            <p>Về hệ sinh thái phần mềm, không gian số hiện nay được chia thành ba mô hình phân phối chính:</p>
-            
-            <div class="table-wrapper">
-                <table class="modern-table">
-                    <thead>
-                        <tr>
-                            <th>Tiêu chí</th>
-                            <th>Phần mềm Thương mại</th>
-                            <th>Nguồn mở (Open Source)</th>
-                            <th>Trên Internet (Cloud App)</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><strong>Bản chất</strong></td>
-                            <td>Sản phẩm đóng gói, mã nguồn bị ẩn.</td>
-                            <td>Công khai mã nguồn, cho phép tùy chỉnh.</td>
-                            <td>Chạy trực tiếp trên trình duyệt, lưu đám mây.</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Chi phí</strong></td>
-                            <td>Mua bản quyền (đứt hoặc thuê bao).</td>
-                            <td>Thường miễn phí.</td>
-                            <td>Trả phí theo gói hoặc miễn phí kèm quảng cáo.</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Bảo trì</strong></td>
-                            <td>Hỗ trợ kỹ thuật từ nhà phát triển.</td>
-                            <td>Phụ thuộc vào cộng đồng lập trình.</td>
-                            <td>Tự động cập nhật bởi nhà cung cấp.</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Ví dụ</strong></td>
-                            <td>Microsoft Office, Adobe Photoshop.</td>
-                            <td>Linux, Python, GIMP.</td>
-                            <td>Google Docs, Padlet, Canva.</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <!-- PHẦN 2 -->
-            <h2 class="part-title"><i class="fa-solid fa-microchip"></i> Phần 2: Cấu trúc Vi mô và Nguyên lý Hoạt động</h2>
-            <p>Một hệ thống máy tính hoàn chỉnh được cấu thành từ các linh kiện phần cứng giao tiếp chặt chẽ với nhau thông qua <strong>Bo mạch chủ (Mainboard)</strong>. Các thành phần cốt lõi bao gồm:</p>
+            <h3>1. Lịch sử phát triển của hệ điều hành máy tính cá nhân</h3>
+            <p><strong>Nêu các nhóm chức năng chính của hệ điều hành. Nhóm chức năng nào thể hiện rõ nhất đặc thù của hệ điều hành máy tính cá nhân?</strong></p>
+            <p>Các nhóm chức năng chính của hệ điều hành bao gồm:</p>
             <ul>
-                <li><strong>CPU (Bộ vi xử lý trung tâm):</strong> Đóng vai trò là bộ não, thực hiện tính toán và điều phối mọi hoạt động của hệ thống.</li>
-                <li><strong>Bộ nhớ trong (RAM/ROM):</strong> ROM chứa các chương trình hệ thống cơ sở không bị mất khi tắt máy. RAM là nơi lưu trữ tạm thời dữ liệu đang được CPU xử lý.</li>
-                <li><strong>Thiết bị lưu trữ ngoài (HDD/SSD):</strong> Nơi lưu trữ vĩnh viễn hệ điều hành, phần mềm và dữ liệu cá nhân.</li>
+                <li>Quản lí thiết bị (CPU, bộ nhớ hay thiết bị ngoại vi).</li>
+                <li>Quản lí việc lưu trữ dữ liệu (quản lí tệp và thư mục).</li>
+                <li>Tổ chức thực hiện các chương trình, điều phối tài nguyên cho các tiến trình xử lí trên máy tính.</li>
+                <li>Cung cấp môi trường giao tiếp với người sử dụng.</li>
+                <li>Cung cấp một số tiện ích giúp nâng cao hiệu quả sử dụng máy tính như định dạng đĩa, nén tệp, kiểm tra lỗi đĩa cứng, cấu hình kết nối mạng...</li>
+            </ul>
+            <p>Nhóm chức năng thể hiện rõ nhất đặc thù của hệ điều hành máy tính cá nhân là Cung cấp môi trường giao tiếp với người sử dụng (giao diện đồ hoạ) và Cơ chế nhận diện thiết bị ngoại vi (plug & play).</p>
+            <p>Quá trình hình thành và phát triển của hệ điều hành máy tính cá nhân có liên quan chặt chẽ tới tiêu chí thân thiện, dễ sử dụng, thể hiện ở hai điểm chính: giao diện đồ hoạ và cơ chế plug & play.</p>
+            <ul>
+                <li>Giao diện đồ hoạ: ban đầu sử dụng giao diện dòng lệnh, đòi hỏi người dùng nhớ cú pháp. Sau này phát triển giao diện đồ hoạ với cửa sổ, biểu tượng và dùng chuột chỉ định.</li>
+                <li>Cơ chế plug & play: giúp hệ điều hành nhận biết thiết bị ngoại vi ngay khi cắm vào máy và có thể cài đặt tự động.</li>
+            </ul>
+
+            <p><strong>a) Hệ điều hành Windows</strong></p>
+            <p>Windows của Microsoft là một trong những hệ điều hành máy tính cá nhân phổ biến nhất. Các dấu mốc quan trọng:</p>
+            <ul>
+                <li>Phiên bản 1 (1985) có giao diện đồ hoạ cơ bản.</li>
+                <li>Phiên bản 3 (1990) có khả năng đa nhiệm, cho phép chạy nhiều chương trình cùng lúc.</li>
+                <li>Windows 95 (1995) tích hợp nhiều tính năng cơ bản, có giao diện đẹp và nút Start, cơ chế plug & play lần đầu được sử dụng.</li>
+                <li>Các phiên bản sau như Windows XP (2001), Windows 7 (2009), Windows 10 (2015) cải tiến về bảo mật, tính ổn định và hiệu suất.</li>
+            </ul>
+
+            <p><strong>b) Hệ điều hành LINUX và các phiên bản</strong></p>
+            <p>LINUX là hệ điều hành đa nhiệm được Linus Torvalds khởi xướng vào năm 1991, phát triển dưới dạng mã nguồn mở. LINUX được dùng cho cả máy tính cá nhân, máy chủ và thiết bị nhúng. Nhiều phiên bản phổ biến bao gồm Red Hat, Suse, Ubuntu.</p>
+
+            <p><strong>Nêu các đặc điểm cơ bản của hệ điều hành máy tính cá nhân.</strong></p>
+            <p>Đặc điểm cơ bản của hệ điều hành máy tính cá nhân:</p>
+            <ul>
+                <li>Thân thiện, dễ sử dụng (giao diện đồ hoạ, thao tác bằng chuột).</li>
+                <li>Hỗ trợ cài đặt nhanh chóng và tự động cấu hình các thiết bị phần cứng ngoại vi (plug & play).</li>
+                <li>Đa nhiệm (hỗ trợ chạy nhiều ứng dụng cùng lúc).</li>
+                <li>Đa dạng tiện ích, hỗ trợ kết nối mạng tốt.</li>
+            </ul>
+
+            <h3>2. Hệ điều hành cho thiết bị di động</h3>
+            <p>Điện thoại thông minh, máy tính bảng (gọi chung là thiết bị di động) thực chất là các máy tính cá nhân. Sự khác nhau giữa hệ điều hành máy tính thiết bị di động và hệ điều hành của máy tính có nguồn gốc từ sự khác biệt về tính năng, tác dụng của hai loại thiết bị này. Hãy thảo luận để chỉ ra những điểm khác nhau đó.</p>
+            <p>Những điểm khác nhau giữa hệ điều hành cho thiết bị di động và máy tính cá nhân:</p>
+            <ul>
+                <li>Tính ưu tiên kết nối: Thiết bị di động ưu tiên hỗ trợ kết nối mạng không dây (Wi-Fi, 4G, 5G, Bluetooth).</li>
+                <li>Giao diện: Thiết bị di động sử dụng giao diện tối ưu cho thao tác vuốt, chạm trên màn hình cảm ứng, tích hợp các cảm biến (gia tốc kế, la bàn, ánh sáng).</li>
+                <li>Tiện ích: Có sẵn nhiều ứng dụng hỗ trợ tính năng cá nhân như định vị, chụp ảnh, quản lí danh bạ trực tiếp, tiết kiệm pin.</li>
+            </ul>
+            <p>Một số khác biệt của hệ điều hành thiết bị di động so với máy tính cá nhân:</p>
+            <ul>
+                <li>Giao diện đặc biệt thân thiện nhờ nhận dạng hành vi của người dùng thông qua các cảm biến.</li>
+                <li>Dễ dàng kết nối mạng di động.</li>
+                <li>Nhiều tiện ích hỗ trợ cá nhân.</li>
+            </ul>
+            <p>Hai hệ điều hành phổ biến nhất cho thiết bị di động là iOS của Apple và Android của Google.</p>
+
+            <p><strong>Vì sao hệ điều hành di động ưu tiên cao cho giao tiếp thân thiện và kết nối mạng di động?</strong></p>
+            <p>Thiết bị di động như điện thoại thông minh phục vụ mọi tầng lớp, đặc biệt là người dùng phổ thông, do đó tính thân thiện, dễ thao tác (chạm, vuốt) là yếu tố hàng đầu. Đồng thời, thiết bị này luôn phải di chuyển cùng người dùng, nên việc kết nối không dây (3G, 4G, 5G, Wi-Fi) mọi lúc mọi nơi là nhu cầu cốt lõi.</p>
+
+            <p><strong>Kể tên ba tiện ích thường có trên thiết bị di động và chức năng của nó.</strong></p>
+            <p>Ba tiện ích phổ biến trên thiết bị di động:</p>
+            <ul>
+                <li>Bản đồ/Định vị (GPS): Giúp người dùng xác định vị trí hiện tại và chỉ đường di chuyển.</li>
+                <li>Quản lí danh bạ: Lưu trữ, tìm kiếm và liên lạc nhanh với các số điện thoại.</li>
+                <li>Camera: Ứng dụng chụp ảnh, quay video kết hợp cảm biến, xử lí hình ảnh và chia sẻ nhanh qua mạng.</li>
+            </ul>
+
+            <h3>3. Quan hệ giữa hệ điều hành, phần cứng và phần mềm ứng dụng</h3>
+            <p><strong>Có hay không trường hợp phần mềm chạy trên một thiết bị không có hệ điều hành? Khi nào cần phải có hệ điều hành?</strong></p>
+            <p>Có trường hợp phần mềm chạy trên thiết bị không có hệ điều hành. Đó thường là những thiết bị chuyên dụng, chỉ làm một nhiệm vụ duy nhất (ví dụ: bộ điều khiển trong máy giặt, điều hoà, hệ thống nhúng đơn giản).</p>
+            <p>Cần có hệ điều hành khi máy tính là thiết bị đa năng, người dùng có nhu cầu nạp nhiều phần mềm ứng dụng khác nhau, xử lí dữ liệu phức tạp, điều khiển nhiều thiết bị ngoại vi, hoặc cần có giao diện để tương tác dễ dàng.</p>
+            <p>Phần cứng máy tính cung cấp tài nguyên vật lí. Phần mềm ứng dụng khai thác phần cứng này. Tuy nhiên, thay vì điều khiển phần cứng một cách chi tiết, phần mềm ứng dụng gọi các dịch vụ do hệ điều hành cung cấp.Hệ điều hành đóng vai trò là môi trường trung gian, giúp phần mềm ứng dụng khai thác phần cứng một cách hiệu quả, an toàn, và cung cấp môi trường chung để người dùng chạy nhiều ứng dụng khác nhau.</p>
+            
+            <p><strong>Nêu lí do thiết bị xử lí đa năng cần có hệ điều hành.</strong></p>
+            <p>Thiết bị đa năng cần chạy nhiều ứng dụng khác nhau đồng thời. Nếu không có hệ điều hành, mỗi phần mềm sẽ phải tự giải quyết việc phân chia bộ nhớ, điều khiển màn hình, đọc/ghi đĩa cứng, dẫn đến sự xung đột và sai sót. Hệ điều hành cung cấp môi trường chung, quản lí tài nguyên và cung cấp dịch vụ chuẩn để các ứng dụng chạy ổn định.</p>
+
+            <p><strong>Nêu mối quan hệ giữa phần cứng, phần mềm ứng dụng và hệ điều hành.</strong></p>
+            <p>Hệ điều hành đóng vai trò trung gian giữa phần cứng và phần mềm ứng dụng. Phần cứng cung cấp tài nguyên, hệ điều hành quản lí và tổ chức các tài nguyên đó, sau đó cung cấp các dịch vụ cho phần mềm ứng dụng. Nhờ vậy, phần mềm ứng dụng có thể khai thác phần cứng một cách hiệu quả mà không cần tương tác trực tiếp với các thiết bị vật lí.</p>
+            <p>Kĩ năng số: Khi máy tính hoạt động chậm hoặc không nhận diện thiết bị ngoại vi, có thể kiểm tra cập nhật hệ điều hành để cài đặt các trình điều khiển (driver) mới nhất, giúp khắc phục lỗi kĩ thuật.</p>
+            
+            <p><strong>Ghi nhớ</strong></p>
+            <ul>
+                <li>Hệ điều hành máy tính cá nhân ngày càng thân thiện nhờ giao diện đồ hoạ và tính năng tự động nhận dạng thiết bị ngoại vi (plug & play).</li>
+                <li>Hệ điều hành cho thiết bị di động ưu tiên cao nhất cho tính tiện dụng nhờ giao diện vuốt chạm, hỗ trợ cảm biến và kết nối không dây.</li>
+                <li>Hệ điều hành là môi trường trung gian kết nối phần cứng và phần mềm ứng dụng, quản lí tài nguyên và cung cấp dịch vụ để hệ thống hoạt động ổn định.</li>
             </ul>
 
             <div class="logic-box">
-                <strong><i class="fa-solid fa-microscope"></i> Phân tích logic khoa học:</strong> 
-                Dựa trên kiến trúc bộ nhớ phân cấp (Memory Hierarchy), quá trình xử lý của CPU đòi hỏi tốc độ truy xuất dữ liệu cực cao mà ổ cứng không thể đáp ứng. Vì vậy, RAM đóng vai trò là vùng đệm truy xuất ngẫu nhiên với tốc độ siêu tốc. Dữ liệu từ thiết bị lưu trữ ngoài phải được nạp lên RAM trước khi đưa vào thanh ghi (Registers) để CPU xử lý. Tuy nhiên, RAM sử dụng công nghệ bán dẫn khả biến nên sẽ mất toàn bộ trạng thái dữ liệu khi ngưng cấp nguồn điện.
+                <strong><i class="fa-solid fa-microscope"></i> II. Tình huống vận dụng Bài 1</strong>
+                <p>Tình huống 1: Tại sao một thiết bị xử lí đa năng (như máy tính xách tay) bắt buộc phải cài đặt một hệ điều hành, trong khi bảng mạch điều khiển của máy giặt lại không cần?</p>
+                <p>Trả lời khoa học: Bảng mạch máy giặt là thiết bị chuyên dụng, chỉ làm một nhiệm vụ duy nhất nên phần mềm có thể chạy trực tiếp mà không cần hệ điều hành. Ngược lại, máy tính là thiết bị đa năng cần chạy nhiều ứng dụng khác nhau đồng thời; nếu không có hệ điều hành làm môi trường trung gian quản lí tài nguyên và cung cấp dịch vụ chuẩn, các phần mềm sẽ phải tự phân chia bộ nhớ, đọc/ghi đĩa cứng, dẫn đến sự xung đột và sai sót nghiêm trọng.</p>
+                <p>Tình huống 2: Khi kết nối một thiết bị ngoại vi mới vào máy tính nhưng hệ thống máy tính hoạt động chậm hoặc không nhận diện được thiết bị đó. Cách xử lí kĩ thuật là gì?</p>
+                <p>Trả lời khoa học: Người dùng có thể kiểm tra cập nhật hệ điều hành để cài đặt các trình điều khiển (driver) mới nhất, giúp HĐH nhận diện thiết bị ngoại vi và khắc phục lỗi kĩ thuật.</p>
             </div>
 
-            <p>Ở cấp độ vi mạch, mọi luồng thông tin phức tạp đều được CPU xử lý thông qua các <strong>Mạch lôgic cơ bản</strong>. Các mạch này hoạt động dựa trên đại số Boole với hai trạng thái 0 (Sai/Tắt) và 1 (Đúng/Bật):</p>
+            <!-- BÀI 2 -->
+            <h2 class="part-title"><i class="fa-solid fa-folder-tree"></i> Bài 2 . Thực hành các chức năng cơ bản của hệ điều hành máy tính (quản lí tệp, hợp mảnh đĩa cứng) và thiết bị di động (quản lí danh bạ, cài đặt báo thức).</h2>
+            
+            <h3>1. Sử dụng một số chức năng cơ bản của hệ điều hành cho máy tính cá nhân</h3>
+            <p><strong>Nêu các thao tác thực hành sử dụng chức năng cơ bản của hệ điều hành trên máy tính cá nhân.</strong></p>
+            <p>a) Cung cấp môi trường giao tiếp với người sử dụng:</p>
             <ul>
-                <li><strong>Cổng AND:</strong> Chỉ xuất tín hiệu 1 khi <em>tất cả</em> đầu vào là 1 (Ví dụ: Thẻ ATM hợp lệ AND đúng mã PIN thì mới nhả tiền).</li>
-                <li><strong>Cổng OR:</strong> Xuất tín hiệu 1 khi <em>ít nhất một</em> đầu vào là 1 (Ví dụ: Mở khóa bằng Vân tay OR Mật khẩu đều được).</li>
-                <li><strong>Cổng NOT:</strong> Đảo ngược trạng thái đầu vào (Từ 0 thành 1 và ngược lại).</li>
+                <li>Quan sát giao diện đồ hoạ: nhận biết các thành phần như biểu tượng (tệp, thư mục, thùng rác), cửa sổ ứng dụng, thanh trạng thái (Status bar), thanh công việc (Taskbar).</li>
+                <li>Thực hiện các thao tác với chuột: nháy chuột, nháy đúp chuột (để kích hoạt ứng dụng/mở tệp), nháy nút phải chuột (để mở bảng chọn ngữ cảnh), kéo thả chuột.</li>
             </ul>
+            <p>b) Quản lí tệp và thư mục:</p>
+            <ul>
+                <li>Sử dụng tiện ích File Explorer (trên Windows) hoặc trình quản lí tệp tương đương (trên Ubuntu) để duyệt cây thư mục.</li>
+                <li>Thực hiện các thao tác: tạo mới thư mục, đổi tên, xoá, sao chép và di chuyển thư mục/tệp.</li>
+            </ul>
+            <p>Kĩ năng số: Để dễ dàng tìm kiếm và làm việc, nên tổ chức thư mục trên máy tính theo cấu trúc phân cấp logic (ví dụ: chia theo năm học, môn học). Hãy thường xuyên dọn dẹp các tệp không còn sử dụng để quản lí dữ liệu hiệu quả hơn.</p>
 
-            <!-- PHẦN 3 -->
-            <h2 class="part-title"><i class="fa-brands fa-usb"></i> Phần 3: Kết nối Máy tính với Thiết bị số</h2>
-            <p>Để giao tiếp với thế giới bên ngoài, máy tính sử dụng các <strong>Thiết bị vào - ra (I/O)</strong>.</p>
+            <h3>2. Sử dụng một số tiện ích trên hệ điều hành máy tính cá nhân nhằm nâng cao hiệu quả sử dụng máy</h3>
+            <p><strong>Trình bày các bước thực hiện sử dụng tiện ích kiểm tra đĩa và hợp mảnh trên đĩa cứng Windows.</strong></p>
+            <p>Tiện ích hợp mảnh (Defragment) giúp sắp xếp lại các liên cung của một tệp nằm liên tục nhau, giảm thời gian di chuyển đầu từ, qua đó tăng tốc độ truy cập dữ liệu. Các bước thực hiện:</p>
             <ul>
-                <li><strong>Thiết bị vào (Input):</strong> Bàn phím, chuột, micro, máy quét – số hóa thông tin từ môi trường vật lý đưa vào máy tính.</li>
-                <li><strong>Thiết bị ra (Output):</strong> Màn hình, máy in, loa – chuyển đổi dữ liệu số thành hình thức con người có thể tiếp nhận.</li>
+                <li>Bước 1: Mở File Explorer và tìm danh sách các ổ đĩa. Nháy nút phải chuột vào ổ đĩa muốn xử lí rồi chọn Properties.</li>
+                <li>Bước 2: Trong cửa sổ Properties của đĩa cứng, chọn thẻ Tools.</li>
+                <li>Bước 3:<br>
+                Chọn Check để hệ thống kiểm tra và khắc phục các lỗi vật lí/logic của đĩa.<br>
+                Chọn Optimize để chạy tiện ích tối ưu hoá và hợp mảnh đĩa cứng. Lưu ý quá trình này có thể mất nhiều thời gian tuỳ thuộc vào dung lượng ổ đĩa.</li>
             </ul>
-            <p>Máy tính kết nối với các thiết bị số thông qua các cổng giao tiếp vật lý (USB, HDMI) hoặc giao thức không dây (Wi-Fi, Bluetooth).</p>
+            <p>Kĩ năng số: Khi gặp sự cố máy tính chạy chậm bất thường hoặc báo lỗi tệp tin, hãy thử sử dụng các công cụ chẩn đoán hệ thống tích hợp sẵn (như công cụ kiểm tra ổ đĩa) trước khi quyết định cài đặt lại phần mềm hoặc can thiệp phần cứng.</p>
+
+            <h3>3. Sử dụng một số tiện ích của hệ điều hành cho thiết bị di động</h3>
+            <p>Hướng dẫn thực hiện nhiệm vụ thực hành – SGK Tin học 11 Kết nối tri thức, trang 13.</p>
+            <p><strong>Kể tên một số tiện ích của hệ điều hành Android hoặc iOS và nêu thao tác sử dụng các tiện ích đó.</strong></p>
+            <p>Một số tiện ích quen thuộc:</p>
+            <ul>
+                <li>Quản lí danh bạ: Hiển thị danh bạ; thêm, sửa, xoá thông tin liên hệ; chia sẻ liên hệ hoặc truy cập nhanh để gọi điện.</li>
+                <li>Đồng hồ (Đặt lịch, hẹn giờ): Sử dụng các chức năng như báo thức (đặt lịch đổ chuông), bấm giờ (đếm thời gian tiến từ 0), hoặc hẹn giờ (đếm lùi).</li>
+                <li>Quản lí ứng dụng: Truy cập phần Cài đặt, xem danh sách các ứng dụng đã tải về và thực hiện gỡ bỏ (Uninstall) các ứng dụng không cần thiết để giải phóng bộ nhớ.</li>
+            </ul>
+            
+            <p><strong>Ghi nhớ</strong></p>
+            <ul>
+                <li>Hệ điều hành máy tính và di động đều cung cấp giao diện đồ hoạ, giúp người dùng quản lí tệp, thư mục và khởi chạy ứng dụng dễ dàng.</li>
+                <li>Máy tính cá nhân có các tiện ích hệ thống quan trọng như kiểm tra đĩa (Check disk), hợp mảnh đĩa cứng (Defragment) và dọn rác (Disk Cleanup) để nâng cao hiệu suất hoạt động.</li>
+                <li>Thiết bị di động tích hợp sẵn các tiện ích hỗ trợ công việc và đời sống như quản lí danh bạ, đồng hồ (bấm giờ, báo thức) và công cụ quản lí (cài đặt, gỡ bỏ) ứng dụng.</li>
+            </ul>
 
             <div class="logic-box">
-                <strong><i class="fa-solid fa-microscope"></i> Phân tích logic khoa học:</strong> 
-                Sự tương thích về mặt vật lý (như cùng chuẩn cổng cắm USB) chỉ là điều kiện cần. Để trao đổi dữ liệu, hệ thống đòi hỏi sự đồng nhất về giao thức truyền thông. Trình điều khiển (Device Driver) là một module phần mềm hoạt động ở tầng nhân (Kernel), làm nhiệm vụ biên dịch các lệnh tiêu chuẩn của hệ điều hành thành các tập lệnh đặc thù (Microcode) mà thiết bị ngoại vi có thể hiểu và thực thi. Tính năng Plug-and-Play phổ biến hiện nay là do hệ điều hành đã được nhà sản xuất tích hợp sẵn các tập tin điều khiển phổ quát.
+                <strong><i class="fa-solid fa-microscope"></i> II. Tình huống vận dụng Bài 2</strong>
+                <p>Tình huống 1: Một học sinh lưu rất nhiều video học tập vào ổ đĩa D, gần đây khi mở các video này lên xem thì tốc độ truy xuất dữ liệu rất chậm, máy có dấu hiệu giật lag. Học sinh này nên thực hiện công cụ nào trong hệ điều hành Windows?</p>
+                <p>Trả lời khoa học: Học sinh nên mở cửa sổ Properties của ổ đĩa D, chọn thẻ Tools và chạy tiện ích Optimize (hợp mảnh đĩa cứng). Công cụ này sẽ sắp xếp lại các liên cung của tệp tin bị phân mảnh để chúng nằm liên tục nhau, giúp giảm thời gian di chuyển đầu từ, từ đó tăng tốc độ truy cập dữ liệu đáng kể.</p>
+                <p>Tình huống 2: Chiếc điện thoại thông minh liên tục báo dung lượng lưu trữ đầy khiến hệ thống hoạt động chậm chạp. Thao tác tiện ích nào trên thiết bị di động giúp xử lí vấn đề này?</p>
+                <p>Trả lời khoa học: Cần sử dụng chức năng "Quản lí ứng dụng" bằng cách truy cập vào phần Cài đặt. Tại đây, người dùng xem danh sách các ứng dụng đã tải về và thực hiện lệnh gỡ bỏ (Uninstall) đối với các phần mềm không còn sử dụng để giải phóng triệt để dung lượng bộ nhớ.</p>
+            </div>
+
+            <!-- BÀI 3 -->
+            <h2 class="part-title"><i class="fa-solid fa-box-open"></i> Bài 3. Khái niệm về phần mềm thương mại, phần mềm nguồn mở, giấy phép GNU GPL và lợi ích của phần mềm chạy trên Internet.</h2>
+            
+            <h3>1. Phần mềm nguồn mở</h3>
+            <p>a) Phân loại phần mềm theo cách chuyển giao sử dụng</p>
+            <p>Dựa vào cách thức chuyển giao, phần mềm được chia thành các loại chính sau:</p>
+            <ul>
+                <li>Phần mềm thương mại (commercial software): Là phần mềm được sản xuất nhằm mục đích để bán. Phần mềm này thường được chuyển giao dưới dạng mã máy (phần mềm nguồn đóng). Người dùng phải mua và không có quyền tự sửa đổi.</li>
+                <li>Phần mềm tự do (free software): Là phần mềm không chỉ miễn phí mà còn cho phép người dùng tự do sử dụng, sao chép và phân phối mà không phải xin phép. Nó có thể ở dạng mã máy hoặc mã nguồn.</li>
+                <li>Phần mềm nguồn mở (open-source software): Là phần mềm được cung cấp kèm theo mã nguồn, cho phép người dùng tự do sửa đổi, cải tiến, phát triển và phân phối lại theo một quy định gọi là giấy phép.</li>
+            </ul>
+
+            <p><strong>Lợi ích của người dùng được tăng dần như thế nào theo hướng mở dần của các cách thức chuyển giao phần mềm?</strong></p>
+            <p>Lợi ích của người dùng tăng dần theo các mức độ:</p>
+            <ul>
+                <li>Mức 1 (Bán mã máy): Người dùng chỉ được sử dụng các tính năng đã được lập trình sẵn, không có quyền can thiệp hay sao chép (bị hạn chế quyền nhất).</li>
+                <li>Mức 2 (Miễn phí mã máy): Người dùng không tốn chi phí mua phần mềm nhưng vẫn không có quyền sửa đổi hay phát triển thêm.</li>
+                <li>Mức 3 (Cung cấp mã nguồn): Người dùng được toàn quyền sử dụng, xem cấu trúc bên trong, tùy chỉnh tính năng theo nhu cầu cá nhân và chia sẻ lại cho cộng đồng (quyền lợi cao nhất).</li>
+            </ul>
+
+            <p>b) Giấy phép đối với phần mềm nguồn mở</p>
+            <p>Khi sử dụng phần mềm nguồn mở, người dùng vẫn phải tuân thủ các điều kiện được quy định trong giấy phép (license). Giấy phép không chỉ đề cập đến quyền sử dụng mà còn ràng buộc một số vấn đề liên quan đến bản quyền và chia sẻ.</p>
+            <p>Một trong những giấy phép phổ biến nhất là giấy phép công cộng GNU GPL (General Public License) với các nội dung đáng chú ý:</p>
+            <ul>
+                <li>Được quyền sao chép và phân phối phần mềm (kể cả yêu cầu trả phí cho việc chuyển giao) nhưng phải thông báo rõ về bản quyền gốc và miễn trừ trách nhiệm bảo hành.</li>
+                <li>Người sửa đổi phần mềm phải công bố rõ ràng mã nguồn của bản sửa đổi. Bản sửa đổi khi phân phối lại cũng bắt buộc phải áp dụng giấy phép GNU GPL.</li>
+            </ul>
+            <p>Kĩ năng số: Khi tải và sử dụng các tài nguyên, phần mềm trên mạng, cần kiểm tra kĩ loại giấy phép đi kèm (như GNU GPL, MIT, Apache) để đảm bảo chia sẻ hoặc sử dụng lại mã nguồn đúng quy định bản quyền, tránh vi phạm pháp luật.</p>
+
+            <p><strong>Nêu ý nghĩa của yêu cầu "người sửa đổi, nâng cấp phần mềm nguồn mở phải công bố rõ ràng phần nào đã sửa, sửa thế nào so với bản gốc".</strong></p>
+            <p>Yêu cầu này giúp đảm bảo tính minh bạch, ghi nhận chính xác phần đóng góp của người sửa đổi so với công sức của tác giả gốc. Điều này cũng giúp cộng đồng dễ dàng theo dõi quá trình phát triển của phần mềm và quản lí lỗi phát sinh.</p>
+            
+            <p><strong>Ý nghĩa của yêu cầu "phần mềm sửa đổi một phần mềm nguồn mở theo GPL cũng phải mở theo giấy phép của GPL" là gì?</strong></p>
+            <p>Yêu cầu này nhằm đảm bảo mục tiêu phát triển bền vững của cộng đồng: những ai đã hưởng lợi từ việc sử dụng mã nguồn mở chung thì phải có trách nhiệm đóng góp ngược lại các kết quả phát triển của mình cho cộng đồng dưới cùng một hình thức tự do, ngăn chặn việc biến phần mềm chung thành sản phẩm thương mại đóng kín.</p>
+
+            <h3>2. Vai trò của phần mềm thương mại và phần mềm nguồn mở</h3>
+            <p>Phần mềm thương mại được chia thành hai loại:</p>
+            <ul>
+                <li>Phần mềm “đặt hàng”: Được thiết kế riêng theo yêu cầu của từng tổ chức hoặc khách hàng cụ thể (ví dụ: phần mềm quản lí trạm thu phí, phần mềm giao dịch ngân hàng). Phần mềm này thường có chi phí rất cao và được bảo hành theo hợp đồng.</li>
+                <li>Phần mềm “đóng gói”: Được thiết kế dựa trên các nhu cầu chung, phổ biến của nhiều người (ví dụ: Microsoft Word, Adobe Photoshop). Người bán không có trách nhiệm tùy chỉnh theo yêu cầu cá biệt của từng cá nhân.</li>
+            </ul>
+            <p>Phần mềm nguồn mở đã trở thành cơ hội giúp cung cấp các giải pháp phần mềm tốt với chi phí đầu tư thấp, khắc phục được tình trạng lệ thuộc vào nhà cung cấp độc quyền.</p>
+            
+            <p><strong>Phần mềm thương mại và phần mềm nguồn mở có thể thay thế hoàn toàn cho nhau hay không? Tại sao?</strong></p>
+            <p>Không thể thay thế hoàn toàn cho nhau, vì mỗi loại phục vụ một mục đích khác nhau:</p>
+            <ul>
+                <li>Phần mềm thương mại (nhất là loại đặt hàng) có thể đáp ứng chính xác những nhu cầu nghiệp vụ đặc thù, bảo mật cao và có cam kết hỗ trợ kĩ thuật, bảo hành chặt chẽ từ nhà cung cấp.</li>
+                <li>Phần mềm nguồn mở thích hợp cho các nhu cầu chung, cần sự linh hoạt, tiết kiệm chi phí nhưng đôi khi thiếu các tính năng chuyên biệt hoặc đội ngũ hỗ trợ kĩ thuật chuyên nghiệp trong những tình huống khẩn cấp.</li>
+            </ul>
+
+            <p><strong>Cho ví dụ về phần mềm đóng gói và phần mềm đặt hàng. Ưu điểm của phần mềm thương mại là gì?</strong></p>
+            <ul>
+                <li>Phần mềm đóng gói: Microsoft Excel, Adobe Premiere.</li>
+                <li>Phần mềm đặt hàng: Phần mềm điều khiển dây chuyền lắp ráp ô tô của một hãng xe cụ thể, phần mềm quản lí sổ điểm của một trường học riêng biệt.</li>
+                <li>Ưu điểm của phần mềm thương mại: Có tính hoàn chỉnh cao, dễ cài đặt và sử dụng (đối với phần mềm đóng gói); đáp ứng chính xác yêu cầu nghiệp vụ chuyên sâu và luôn có đội ngũ hỗ trợ kĩ thuật bảo hành, bảo trì chuyên nghiệp (đối với phần mềm đặt hàng).</li>
+            </ul>
+
+            <p><strong>Cho ví dụ về một phần mềm thương mại và một phần mềm nguồn mở có thể thay thế. Ưu điểm của phần mềm nguồn mở là gì?</strong></p>
+            <ul>
+                <li>Ví dụ: Phần mềm nguồn mở LibreOffice Writer có thể thay thế cho phần mềm thương mại Microsoft Word.</li>
+                <li>Ưu điểm của phần mềm nguồn mở: Chi phí thấp (hoặc miễn phí); tính minh bạch cao (người dùng có thể kiểm soát và kiểm tra mã nguồn để tránh các tính năng ẩn nguy hiểm); không bị phụ thuộc hoàn toàn vào một nhà cung cấp duy nhất vì mã nguồn được cộng đồng chung tay phát triển.</li>
+            </ul>
+
+            <h3>3. Phần mềm chạy trên Internet</h3>
+            <p>Phần mềm chạy trên Internet (phần mềm trực tuyến) là loại phần mềm cho phép người dùng khai thác trực tiếp thông qua trình duyệt web mà không cần phải tải về và cài đặt trên máy tính cá nhân.</p>
+            <p>Ví dụ: Google Docs (soạn thảo văn bản), Google Sheets (bảng tính), các ứng dụng mạng xã hội, thư điện tử nền web.</p>
+            <p>Lợi ích nổi bật: Có thể sử dụng ở bất cứ đâu, bất cứ khi nào, trên bất kì thiết bị nào miễn là có kết nối Internet; chi phí rẻ hoặc miễn phí; không tốn thời gian và dung lượng lưu trữ cục bộ để cài đặt.</p>
+            
+            <p><strong>Nêu những ưu điểm của phần mềm chạy trên Internet.</strong></p>
+            <p>Ưu điểm của phần mềm chạy trên Internet:</p>
+            <ul>
+                <li>Linh hoạt: Có thể truy cập từ bất kì máy tính, điện thoại nào có kết nối Internet mà không bị giới hạn về không gian.</li>
+                <li>Tiện lợi: Người dùng không cần thực hiện các thao tác tải về, cài đặt hay cập nhật phiên bản mới một cách thủ công.</li>
+                <li>Dễ dàng làm việc nhóm: Hỗ trợ nhiều người cùng truy cập và thao tác trên cùng một tệp dữ liệu theo thời gian thực.</li>
+            </ul>
+
+            <p><strong>Nêu tên một phần mềm trực tuyến khác với các phần mềm đã nêu trong bài.</strong></p>
+            <p>Một số phần mềm trực tuyến khác: Canva (thiết kế đồ họa), Figma (thiết kế giao diện), Microsoft Teams hoặc Zoom phiên bản chạy trực tiếp trên web (họp trực tuyến).</p>
+
+            <div class="logic-box">
+                <strong><i class="fa-solid fa-microscope"></i> II. Tình huống vận dụng Bài 3</strong>
+                <p>Tình huống 1: Một nhóm học sinh cần thiết kế gấp một bài thuyết trình chung, nhưng các em lại dùng các loại máy tính khác nhau (có máy rất cũ không đủ dung lượng cài đặt phần mềm nặng) và đang ở nhà riêng. Nhóm nên dùng giải pháp phần mềm nào?</p>
+                <p>Trả lời khoa học: Nhóm nên sử dụng các "Phần mềm chạy trên Internet" (ví dụ Google Docs, Figma). Nhờ tính linh hoạt, các em không cần tải hay cài đặt phần mềm lên những máy tính có dung lượng thấp, chỉ cần trình duyệt web. Đồng thời, các phần mềm này cho phép cả nhóm cùng truy cập và thao tác thiết kế trên cùng một tệp dữ liệu theo thời gian thực rất dễ dàng.</p>
+                <p>Tình huống 2: Một lập trình viên sử dụng một phần mềm nguồn mở theo giấy phép GNU GPL để tối ưu hóa và thêm tính năng mới. Sau đó, người này đóng gói sản phẩm lại và bán ra thị trường nhưng từ chối chia sẻ đoạn mã nguồn mà mình đã sửa đổi. Hành vi này đúng hay sai?</p>
+                <p>Trả lời khoa học: Hành vi này vi phạm hoàn toàn giấy phép GNU GPL. Theo yêu cầu của giấy phép, người sửa đổi bắt buộc phải công bố rõ ràng mã nguồn của bản sửa đổi, phần nào đã sửa và sửa thế nào. Đặc biệt, phần mềm sửa đổi từ một phần mềm nguồn mở theo GPL cũng bắt buộc phải tiếp tục mở theo giấy phép GPL khi phân phối lại, nhằm đóng góp ngược lại cho cộng đồng và ngăn chặn việc biến phần mềm chung thành sản phẩm đóng kín.</p>
+            </div>
+
+            <!-- BÀI 4 -->
+            <h2 class="part-title"><i class="fa-solid fa-microchip"></i> Bài 4 trình bày về chức năng, thông số của các thiết bị bên trong máy</h2>
+            
+            <h3>1. Các thiết bị bên trong máy tính</h3>
+            <p><strong>a) Bộ xử lí trung tâm</strong></p>
+            <p>Bộ xử lí trung tâm (CPU – Central Processing Unit) đảm nhận việc thực hiện các chương trình máy tính. CPU gồm hai bộ phận chính:</p>
+            <ul>
+                <li>Bộ số học và lôgic (ALU): thực hiện tất cả các phép tính số học và lôgic.</li>
+                <li>Bộ điều khiển (CU): phối hợp đồng bộ các thiết bị, đảm bảo máy tính thực hiện đúng chương trình.</li>
+            </ul>
+            <p>Ngoài ra, CPU còn có các thanh ghi (register) để lưu trữ tạm thời lệnh và dữ liệu đang được xử lí, cùng bộ nhớ đệm (cache) lưu dữ liệu được nạp trước từ bộ nhớ trong để giảm thời gian chờ của CPU.Tốc độ của CPU thường được đánh giá bằng tần số xung nhịp đồng hồ, đo bằng GHz (tỉ xung một giây). Ngày nay, CPU thường có cấu trúc đa lõi (multi-core) cho phép xử lí song song nhiều công việc.</p>
+
+            <p><strong>b) Bộ nhớ trong ROM và RAM</strong></p>
+            <ul>
+                <li>RAM (Random Access Memory): bộ nhớ có thể đọc/ghi dữ liệu, dùng để lưu tạm thời chương trình và dữ liệu đang chạy. Dữ liệu trong RAM sẽ bị mất khi tắt máy.</li>
+                <li>ROM (Read Only Memory): bộ nhớ chỉ đọc, không mất dữ liệu khi tắt điện. Thường chứa các chương trình hệ thống cố định hoặc chương trình khởi động máy tính.</li>
+            </ul>
+            <p>Các thông số hiệu năng của bộ nhớ trong gồm:</p>
+            <ul>
+                <li>Dung lượng: tính theo MB, GB (ví dụ: 8 GB, 16 GB).</li>
+                <li>Thời gian truy cập trung bình: thời gian cần thiết để ghi hoặc đọc thông tin. ROM thường có dung lượng nhỏ hơn và thời gian truy cập bình lớn hơn RAM.</li>
+            </ul>
+
+            <p><strong>c) Bộ nhớ ngoài</strong></p>
+            <p>Thường là đĩa từ (HDD), đĩa thể rắn (SSD) hoặc đĩa quang. Bộ nhớ ngoài dùng để lưu trữ lâu dài, không cần nguồn điện nuôi, giá thành rẻ hơn và dung lượng lớn hơn bộ nhớ trong.Thông số đo hiệu năng gồm dung lượng (tính theo GB, TB) và thời gian truy cập trung bình. Ổ đĩa thể rắn có tốc độ truy cập nhanh hơn nhiều so với đĩa từ cơ học.</p>
+            <p>Kĩ năng số: Khi chọn mua hoặc nâng cấp máy tính, cần xác định rõ nhu cầu cá nhân. Nếu thường xuyên mở nhiều ứng dụng cùng lúc, nên ưu tiên máy tính có dung lượng RAM lớn; nếu cần khởi động máy và mở phần mềm nhanh, nên trang bị ổ đĩa SSD.</p>
+
+            <p><strong>1. Có thể đo tốc độ của CPU bằng số phép tính thực hiện trong một giây không? 2. Giá tiền của mỗi thiết bị nhớ có phải là một thông số đo chất lượng không?</strong></p>
+            <p>Có thể. Đối với nhiều loại máy tính (đặc biệt là máy tính dùng trong khoa học kĩ thuật), tốc độ của CPU thường được đo bằng số phép toán dấu phẩy động thực hiện trong một giây (đơn vị là flops).</p>
+            <p>Giá tiền của mỗi thiết bị nhớ không phải là thông số kĩ thuật trực tiếp đo chất lượng, nhưng phản ánh một phần chất lượng của thiết bị. Giá tiền còn phụ thuộc vào thương hiệu, công nghệ sản xuất, dung lượng và các yếu tố cung cầu của thị trường.</p>
+
+            <h3>2. Mạch lôgic và vai trò của mạch lôgic</h3>
+            <p>CPU xử lí dữ liệu nhị phân dựa trên hoạt động của các mạch điện tử, bản chất là mạch thực hiện các phép biến đổi lôgic.</p>
+            <p><strong>a) Một số phép toán lôgic và thể hiện vật lí của chúng</strong></p>
+            <p>Đại lượng lôgic chỉ nhận giá trị “Đúng” (bit 1) hoặc “Sai” (bit 0).</p>
+            <ul>
+                <li>Phép nhân lôgic (AND, ∧): cho kết quả 1 khi và chỉ khi cả hai đại lượng đều bằng 1. (Thể hiện vật lí: 2 công tắc mắc nối tiếp).</li>
+                <li>Phép cộng lôgic (OR, ∨): cho kết quả 1 khi ít nhất một đại lượng bằng 1. (Thể hiện vật lí: 2 công tắc mắc song song).</li>
+                <li>Phép phủ định lôgic (NOT, x): đảo ngược giá trị lôgic, 1 thành 0 và 0 thành 1.</li>
+                <li>Phép hoặc loại trừ (XOR, ⊕): cho kết quả 1 khi hai đại lượng có giá trị khác nhau. Có thể được tổng hợp từ các cổng AND, OR, NOT.</li>
+            </ul>
+            <p>Mạch điện tử thể hiện các phép toán trên gọi là cổng lôgic.</p>
+
+            <p><strong>b) Phép cộng trên hệ nhị phân</strong></p>
+            <p>Phép cộng nhị phân tuân theo nguyên tắc: 0+0=0; 0+1=1; 1+0=1; 1+1=10 (ghi 0 nhớ 1 sang hàng bên trái).</p>
+
+            <p><strong>c) Minh hoạ cách dùng mạch lôgic xây dựng mạch điện thực hiện phép cộng 2 bit</strong></p>
+            <p>Mạch điện thực hiện phép cộng hai bit x và y tạo ra hai đầu ra: kết quả t và số nhớ z.</p>
+            <ul>
+                <li>Kết quả nhớ z = x ∧ y (dùng cổng AND).</li>
+                <li>Kết quả cộng tại chỗ t = x ⊕ y (dùng cổng XOR).</li>
+            </ul>
+            <p>[Vị trí chèn Hình 4.10: Hình 4.10. Mạch lôgic thực hiện phép cộng][Từ khóa tìm kiếm: “Hình 4.10 SGK Tin học 11 – mạch lôgic thực hiện phép cộng half adder”, “Mạch cộng 2 bit”, “Half adder logic circuit”.]</p>
+
+            <p><strong>Bảng cộng trong Hình 4.8 cho thấy kết quả là số 2 bit nếu phép cộng có nhớ. Hãy cho biết z và t là kết quả của phép toán lôgic nào của x và y.</strong></p>
+            <p>Đối chiếu Bảng 4.8:</p>
+            <ul>
+                <li>Cột số nhớ znhận giá trị 1 khi và chỉ khi cả xvà yđều bằng 1. Đây là kết quả của phép nhân lôgic (AND): z=x∧y.</li>
+                <li>Cột kết quả tại chỗ tnhận giá trị 1 khi xvà ykhác nhau. Đây là kết quả của phép hoặc loại trừ (XOR): t=xy.</li>
+            </ul>
+
+            <p><strong>1. Thế nào là một mạch lôgic? 2. Nêu tầm quan trọng của mạch lôgic.</strong></p>
+            <p>Mạch lôgic là các mạch điện hay điện tử có đầu vào và đầu ra thể hiện các giá trị lôgic, dùng để thực hiện các phép biến đổi lôgic.</p>
+            <p>Tầm quan trọng: Mạch lôgic là thành phần cốt lõi xây dựng nên mọi thiết bị xử lí số học và lôgic trong máy tính. Tất cả các thiết bị số, gồm cả máy tính, đều được chế tạo từ các mạch lôgic.</p>
+
+            <p><strong>Ghi nhớ</strong></p>
+            <ul>
+                <li>CPU thực hiện xử lí lệnh, RAM lưu trữ dữ liệu tạm thời, đĩa cứng/SSD lưu trữ dữ liệu lâu dài.</li>
+                <li>Hiệu năng máy tính phụ thuộc vào nhiều thông số như xung nhịp CPU, dung lượng RAM, tốc độ ổ cứng.</li>
+                <li>Cổng lôgic (AND, OR, NOT, XOR) là nền tảng điện tử tạo nên khả năng tính toán của CPU, biến đổi dữ liệu nhị phân. Mọi hoạt động phức tạp của máy tính đều bắt nguồn từ sự kết hợp của các mạch lôgic cơ bản này.</li>
+            </ul>
+
+            <div class="logic-box">
+                <strong><i class="fa-solid fa-microscope"></i> II. Tình huống vận dụng Bài 4</strong>
+                <p>Tình huống 1: Đang tiến hành làm bài tập lớn trên máy tính nhưng hệ thống điện đột ngột bị cúp. Khi mở máy tính lại, toàn bộ dữ liệu đang làm việc đều biến mất. Hiện tượng này xảy ra do đặc tính kĩ thuật của linh kiện bộ nhớ nào?</p>
+                <p>Trả lời khoa học: Hiện tượng này xảy ra do đặc tính kĩ thuật của bộ nhớ trong RAM. RAM có chức năng lưu trữ tạm thời chương trình và dữ liệu đang chạy để CPU xử lí, tuy nhiên, đặc tính của RAM là dữ liệu bên trong nó sẽ bị mất hoàn toàn khi tắt máy hoặc không có nguồn điện nuôi.</p>
+                <p>Tình huống 2: Trong kĩ thuật thiết kế mạch điện tử bên trong bộ xử lí, kĩ sư phải thiết lập một mạch điện kiểm tra tính đúng sai của phép cộng nhị phân 2 bit. Làm thế nào để mạch điện phát ra kết quả số nhớ (z = 1) chính xác dựa trên các cổng lôgic?</p>
+                <p>Trả lời khoa học: Để tính toán và phát ra kết quả số nhớ (z), kĩ sư phải thiết kế dựa trên sự vận hành của cổng lôgic AND (Phép nhân lôgic). Kết quả số nhớ (z) mang giá trị 1 khi và chỉ khi cả hai giá trị đầu vào (x và y) đều mang giá trị bằng 1 (z = x ∧ y).</p>
+            </div>
+
+            <!-- BÀI 5 -->
+            <h2 class="part-title"><i class="fa-solid fa-plug"></i> Bài 5 trình bày các thiết bị vào – ra thông dụng</h2>
+            
+            <h3>1. Một số thiết bị vào – ra thông dụng</h3>
+            <p><strong>Kể ra một số thiết bị có thể kết nối với máy tính và nêu chức năng của nó.</strong></p>
+            <p>Một số thiết bị có thể kết nối với máy tính:</p>
+            <ul>
+                <li>Bàn phím, chuột, màn hình cảm ứng: Dùng để nhập dữ liệu, điều khiển hoạt động của máy tính.</li>
+                <li>Màn hình, máy in, loa: Dùng để xuất thông tin, hình ảnh, âm thanh từ máy tính ra bên ngoài.</li>
+                <li>Ổ cứng di động, USB: Dùng để lưu trữ và truyền tải dữ liệu.</li>
+            </ul>
+            <p>Các thiết bị vào – ra là nhóm các thiết bị ngoại vi đa dạng và phong phú nhất của máy tính, cho phép nhập dữ liệu (như bàn phím, chuột, máy quét ảnh, camera) và xuất thông tin ra ngoài (như màn hình, máy in, máy chiếu). Một số thiết bị có khả năng trao đổi thông tin hai chiều qua cổng USB được coi vừa là thiết bị vào, vừa là thiết bị ra.</p>
+
+            <p><strong>a) Một số thiết bị vào thông dụng</strong></p>
+            <ul>
+                <li>Bàn phím: Thiết bị thông dụng nhất để nhập dữ liệu. Có thể kết nối không dây hoặc có dây với máy tính.</li>
+                <li>Chuột: Thuộc nhóm thiết bị chỉ định đối tượng làm việc trên màn hình (pointing device). Hai thông số quan trọng nhất của chuột là:
+                    <ul>
+                        <li>Phương thức kết nối: Có dây hoặc không dây.</li>
+                        <li>Độ phân giải: Đo bằng dpi (dots per inch), là số điểm riêng rẽ mà chuột xác định được khi dịch chuyển được một inch.</li>
+                    </ul>
+                </li>
+            </ul>
+            <p>Kĩ năng số: Khi thao tác đồ hoạ hoặc chơi game cần sự chính xác, nên kiểm tra và chọn chuột có chỉ số dpi phù hợp. Nếu chuột di chuyển quá nhanh hoặc quá chậm so với thao tác tay, có thể điều chỉnh thông số này trong phần cài đặt của hệ điều hành để khắc phục.</p>
+
+            <p><strong>b) Thiết bị ra</strong></p>
+            <p>Màn hình: Là thiết bị ra phổ biến nhất. Dù sử dụng nhiều công nghệ khác nhau (CRT, LCD, LED, plasma), chúng đều có một số thông số chung:</p>
+            <ul>
+                <li>Kích thước: Được đo bằng độ dài đường chéo màn hình, tính theo inch.</li>
+                <li>Độ phân giải: Thể hiện bởi số điểm ảnh theo chiều ngang và chiều dọc (Ví dụ: Full HD là 1920 × 1080 pixel). Điểm ảnh càng lớn thì màn hình càng nét.</li>
+                <li>Khả năng thể hiện màu: Loại 24 bit có thể thể hiện được khoảng 16,7 triệu sắc màu khác nhau.</li>
+                <li>Tần số quét (Hz): Số lần hiển thị lại hình ảnh trong một giây. Tần số quét thường là 50 Hz, 60 Hz, 75 Hz hay 100 Hz.</li>
+                <li>Thời gian phản hồi: Khoảng thời gian cần thiết để có thể đổi màu một điểm ảnh (thường là 1 ms với màn hình chất lượng tốt).</li>
+            </ul>
+            <p>Máy in: Có nhiều loại máy in khác nhau:</p>
+            <ul>
+                <li>Máy in kim: Sử dụng một hàng kim gõ vào băng mực để lại vết trên giấy.</li>
+                <li>Máy in laser: Dùng tia laser tạo ra sự thay đổi điện áp trên mặt trống tĩnh điện để hút hạt mực siêu nhỏ rồi ép vào giấy, đốt nóng để tạo thành bản in.</li>
+                <li>Máy in phun: Phun các hạt mực màu nước siêu nhỏ để tạo ảnh, thích hợp in ảnh màu.</li>
+                <li>Máy in nhiệt: In trên giấy cảm ứng nhiệt, vùng giấy bị làm nóng đổi sang màu đen. Thường dùng để in hoá đơn bán hàng.</li>
+            </ul>
+            <p>Các máy in đều có những thông số chung:</p>
+            <ul>
+                <li>Độ phân giải: Tính bằng dpi (số điểm ảnh trên một inch theo cả hai chiều).</li>
+                <li>Kích thước giấy có thể in được: Khổ giấy A4 phổ biến nhất.</li>
+                <li>Tốc độ in: Thường tính theo số trang in được trong một phút.</li>
+                <li>Khả năng in màu.</li>
+                <li>Cách kết nối với máy tính: Có dây hoặc không dây, một số máy cần cài đặt trình điều khiển (driver) từ nhà sản xuất trong lần kết nối đầu tiên.</li>
+            </ul>
+
+            <p><strong>Nêu và giải thích ý nghĩa các thông số của màn hình.</strong></p>
+            <p>Các thông số của màn hình gồm:</p>
+            <ul>
+                <li>Kích thước: Đo bằng độ dài đường chéo (inch), thể hiện độ lớn vật lý của màn hình.</li>
+                <li>Độ phân giải: Số điểm ảnh (pixel) theo chiều ngang và dọc, quyết định độ sắc nét của hình ảnh.</li>
+                <li>Tần số quét: Số lần màn hình vẽ lại hình ảnh trong 1 giây (Hz), tần số cao giúp chuyển động mượt mà, đỡ mỏi mắt.</li>
+                <li>Khả năng thể hiện màu: Số lượng màu sắc màn hình có thể hiển thị.</li>
+                <li>Thời gian phản hồi: Thời gian đổi màu một điểm ảnh, thời gian càng ngắn giúp hạn chế hiện tượng bóng mờ khi xem hình ảnh chuyển động nhanh.</li>
+            </ul>
+
+            <p><strong>Nêu và giải thích ý nghĩa các thông số của máy in.</strong></p>
+            <p>Các thông số của máy in gồm:</p>
+            <ul>
+                <li>Độ phân giải (dpi): Quyết định độ sắc nét của bản in, thông số càng cao bản in càng chi tiết.</li>
+                <li>Kích thước giấy: Xác định khổ giấy tối đa mà máy hỗ trợ in (A4, A3...).</li>
+                <li>Tốc độ in: Số trang in được trong một phút, ảnh hưởng đến hiệu suất làm việc.</li>
+                <li>Khả năng in màu: Khả năng in bản đen trắng hoặc bản màu.</li>
+            </ul>
+
+            <h3>2. Kết nối máy tính với thiết bị số</h3>
+            <p><strong>Quan sát hình các cổng kết nối và cho biết tên của chúng.</strong></p>
+            <p>Tên của các cổng kết nối máy tính trong SGK:</p>
+            <ul>
+                <li>Cổng A: Cổng mạng RJ45 (dùng để cắm cáp mạng LAN).</li>
+                <li>Cổng B: Cổng VGA (truyền tín hiệu hình ảnh).</li>
+                <li>Cổng C: Cổng USB Type-A (phổ biến nhất cho chuột, bàn phím, USB...).</li>
+                <li>Cổng D: Cổng USB Type-C (chuẩn kết nối mới, đa năng, cắm được hai chiều).</li>
+                <li>Cổng E: Cổng HDMI (truyền cả hình ảnh và âm thanh kĩ thuật số chất lượng cao).</li>
+                <li>Cổng F: Cổng mạng LAN (tương tự cổng A).</li>
+            </ul>
+
+            <p><strong>a) Các cổng kết nối</strong></p>
+            <p>Các thiết bị số kết nối với máy tính bằng cáp tín hiệu qua các cổng kết nối vật lý hoặc kết nối không dây.</p>
+            <ul>
+                <li>Cổng VGA: Truyền tín hiệu hình ảnh tương tự.</li>
+                <li>Cổng HDMI: Truyền tín hiệu số, truyền đồng thời cả âm thanh và hình ảnh với băng thông lớn.</li>
+                <li>Các cổng USB (Universal Serial Bus): Phương thức truyền tuần tự, đa năng. Tốc độ truyền nhanh, giúp thay thế nhiều cổng khác.</li>
+                <li>Cổng mạng RJ45: Dùng để kết nối máy tính với mạng cục bộ có dây.</li>
+            </ul>
+
+            <p><strong>b) Kết nối máy tính với thiết bị số</strong></p>
+            <p>Không có một phương thức kết nối chung nào cho mọi thiết bị số với máy tính. Người dùng cần đọc kĩ tài liệu kĩ thuật của thiết bị để biết cách sử dụng tốt nhất. Nhờ cơ chế Plug & Play (Cắm và Chạy), việc kết nối thiết bị số thông qua các cổng ngày nay dễ dàng hơn, nhiều trường hợp chỉ cần cắm cáp kết nối là có thể sử dụng ngay (ví dụ: chuột, USB).</p>
+            <p>Ví dụ 1: Kết nối máy tính với máy ảnhMáy ảnh số có thể hỗ trợ nhiều cách kết nối: qua cáp USB, Wi-Fi hoặc Bluetooth. Khi cắm cáp nối với máy tính, máy ảnh sẽ hiện thông báo về chế độ kết nối (như USB Mode, Mass Storage). Sau đó, máy tính nhận máy ảnh như một bộ nhớ ngoài và người dùng có thể dùng File Explorer để mở thư mục DCIM sao chép ảnh.</p>
+            <p>Ví dụ 2: Kết nối máy tính với thiết bị số qua BluetoothBluetooth là phương thức kết nối không dây trong khoảng cách gần (dưới 10 m). Trước khi kết nối, máy tính và thiết bị cần phải ghép đôi (pairing) để trao đổi tham số kết nối.<br>
+            Trên Windows: mở cài đặt Bluetooth & others devices.<br>
+            Trên thiết bị (loa, tai nghe): bật chế độ Bluetooth.<br>
+            Chọn Add Bluetooth or other device, tìm tên thiết bị và tiến hành ghép đôi.</p>
+
+            <p><strong>Cách kết nối thiết bị số với máy tính có phụ thuộc vào loại thiết bị không?</strong></p>
+            <p>Có, cách kết nối hoàn toàn phụ thuộc vào loại thiết bị và các chuẩn giao tiếp mà nhà sản xuất trang bị cho thiết bị đó. Ví dụ: Chuột và bàn phím thường dùng cổng USB hoặc kết nối Bluetooth; màn hình dùng cổng HDMI hoặc VGA; máy in có thể dùng cáp USB chuyên dụng hoặc kết nối mạng Wi-Fi.</p>
+
+            <p><strong>Hiểu thế nào về tham số kết nối?</strong></p>
+            <p>Tham số kết nối là các thông tin kĩ thuật cần thiết để máy tính và thiết bị ngoại vi có thể nhận diện, xác thực và thiết lập kênh truyền dữ liệu một cách chính xác với nhau. Ví dụ trong kết nối Bluetooth, tham số kết nối bao gồm tên thiết bị, mã PIN xác thực để đảm bảo việc ghép đôi diễn ra an toàn.</p>
+
+            <p><strong>Ghi nhớ</strong></p>
+            <ul>
+                <li>Máy tính có nhiều thiết bị vào – ra đa dạng với các thông số kĩ thuật đặc trưng (DPI của chuột, độ phân giải màn hình, tốc độ máy in). Có thể tuỳ chỉnh một số thiết bị thông qua hệ điều hành.</li>
+                <li>Có nhiều loại cổng kết nối vật lý (USB, HDMI, VGA, RJ45) và kết nối không dây (Bluetooth, Wi-Fi) để ghép nối máy tính với các thiết bị số.</li>
+                <li>Cơ chế Plug and Play giúp máy tính tự động nhận diện thiết bị ngoại vi, tuy nhiên ở một số trường hợp vẫn cần thiết lập tham số kết nối hoặc cài đặt trình điều khiển (driver) từ nhà sản xuất.</li>
+            </ul>
+
+            <div class="logic-box">
+                <strong><i class="fa-solid fa-microscope"></i> II. Tình huống vận dụng Bài 5</strong>
+                <p>Tình huống 1: Một kĩ sư thiết kế đồ họa sử dụng một con chuột máy tính mới nhưng cảm thấy tốc độ trỏ chuột di chuyển quá nhanh hoặc không chính xác trên màn hình bản vẽ. Kĩ sư đó cần điều chỉnh lại thông số kĩ thuật nào?</p>
+                <p>Trả lời khoa học: Người kĩ sư cần kiểm tra và điều chỉnh thông số độ phân giải của chuột - đo bằng dpi (dots per inch) thông qua phần cài đặt của hệ điều hành. Chỉ số dpi thể hiện số điểm riêng rẽ mà chuột xác định được khi dịch chuyển vật lí một inch, thông số này quyết định độ nhạy và sự chính xác của thiết bị chỉ định.</p>
+                <p>Tình huống 2: Bạn Tuấn đã bật Bluetooth trên máy tính xách tay và trên chiếc tai nghe mới, nhưng âm thanh vẫn không thể truyền qua tai nghe. Tuấn cần thực hiện thao tác gì tiếp theo dựa trên nguyên lí kết nối không dây?</p>
+                <p>Trả lời khoa học: Tuấn bắt buộc phải thực hiện thao tác ghép đôi (pairing) trên máy tính. Việc kết nối Bluetooth yêu cầu 2 thiết bị tiến hành ghép đôi để trao đổi tham số kết nối (xác thực tên thiết bị, trao đổi mã PIN) nhằm thiết lập kênh truyền tín hiệu an toàn trước khi sử dụng.</p>
             </div>
 
             <div class="footer-credit">
