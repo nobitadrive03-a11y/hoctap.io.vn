@@ -111,10 +111,12 @@
     .content-wrap {
       flex: 1; overflow-y: auto; padding-right: 4px; display: flex; flex-direction: column; justify-content: flex-start;
     }
-    .page-text { font-size: clamp(1.05rem, 2.2vh, 1.25rem); line-height: 1.7; color: var(--text-main); text-align: justify; }
+    
+    /* ĐÃ TĂNG CỠ CHỮ LÊN MỘT MỨC */
+    .page-text { font-size: clamp(1.15rem, 2.4vh, 1.35rem); line-height: 1.7; color: var(--text-main); text-align: justify; }
     
     .dropcap::first-letter { 
-      float: left; font-family: 'Be Vietnam Pro', sans-serif; font-size: 2.8em; line-height: 0.8; 
+      float: left; font-family: 'Be Vietnam Pro', sans-serif; font-size: 2.9em; line-height: 0.8; 
       padding-right: 12px; padding-top: 8px; color: var(--primary); font-weight: 800; 
     }
 
@@ -209,9 +211,9 @@
       .page-body { padding: 16px 20px 12px 20px; }
       .cover-page { padding: 24px 16px; }
       
-      /* Chữ hiển thị */
-      .page-text { font-size: clamp(0.9rem, 2.1vh, 1.15rem); line-height: 1.5; }
-      .dropcap::first-letter { font-size: 2.3em; padding-top: 4px; padding-right: 8px;}
+      /* ĐÃ TĂNG CỠ CHỮ LÊN MỘT MỨC DÀNH CHO ĐIỆN THOẠI */
+      .page-text { font-size: clamp(1.0rem, 2.3vh, 1.25rem); line-height: 1.5; }
+      .dropcap::first-letter { font-size: 2.4em; padding-top: 4px; padding-right: 8px;}
       .cover-main-title { font-size: clamp(1.4rem, 3.8vh, 1.9rem); }
       .cover-tag { padding: 6px 16px; font-size: 0.75rem; }
       
@@ -222,7 +224,7 @@
       
       /* Hộp trích dẫn ở trang 10 */
       .quote-box { padding: 16px; margin-top: 5px; }
-      .quote-box p { font-size: clamp(0.9rem, 2vh, 1.05rem) !important; line-height: 1.45 !important; }
+      .quote-box p { font-size: clamp(1.0rem, 2.2vh, 1.15rem) !important; line-height: 1.45 !important; }
       .quote-box::before { font-size: 3rem; top: 0px; left: 10px; }
     }
   </style>
@@ -388,7 +390,7 @@
         <div class="page-body">
           <div class="content-wrap">
             <div class="quote-box">
-              <p style="font-family: 'Lora', serif; font-weight: 700; color: var(--primary); font-style: italic;">
+              <p style="font-family: 'Lora', serif; font-size: 1.2rem; font-weight: 700; color: var(--primary); line-height: 1.6; font-style: italic;">
                 Sự biết ơn sâu sắc ấy trở thành động lực để Hùng luôn sẵn lòng giúp đỡ những người xung quanh, giống như cách mà Minh đã từng dành trọn tâm huyết để thay đổi số phận của cậu học trò tự ti năm nào.
               </p>
             </div>
