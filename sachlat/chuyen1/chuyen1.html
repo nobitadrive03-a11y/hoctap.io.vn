@@ -181,7 +181,7 @@
       100% { opacity: 1; transform: scale(1) translateY(0); }
     }
 
-    /* Hình ảnh minh họa trên từng trang */
+    /* CSS cho vùng hiển thị hình ảnh và chữ giữ chỗ (Placeholder) */
     .page-visual {
       width: 100%;
       height: 41%;
@@ -191,13 +191,29 @@
       background: #e0f2fe;
     }
 
-    .page-visual img {
+    .placeholder-text {
+      position: absolute;
+      color: #64748b;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 600;
+      z-index: 0;
+      text-align: center;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 100%;
+    }
+
+    .page-visual img, .cover-hero img {
       width: 100%;
       height: 100%;
       object-fit: cover;
       object-position: center;
       filter: brightness(1.05) saturate(1.12);
       transition: transform 5s ease;
+      position: relative;
+      z-index: 1;
     }
 
     .page.visible .page-visual img { transform: scale(1.04); }
@@ -208,6 +224,7 @@
       inset: auto 0 0 0;
       height: 28px;
       background: linear-gradient(to top, var(--paper-bg) 5%, transparent 100%);
+      z-index: 2;
     }
 
     /* Phần thân chữ */
@@ -246,7 +263,7 @@
       font-weight: 700;
     }
 
-    /* Trang 6: Châm Ngôn */
+    /* Trang Châm Ngôn */
     .maxim-box {
       margin-top: 14px;
       padding: 18px 20px;
@@ -287,15 +304,9 @@
       height: 52%;
       position: relative;
       overflow: hidden;
+      background: #e0f2fe;
     }
     .back-cover-hero { height: 46%; }
-
-    .cover-hero img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      filter: brightness(1.06) saturate(1.15);
-    }
 
     .cover-hero::after {
       content: "";
@@ -303,6 +314,7 @@
       inset: auto 0 0 0;
       height: 45px;
       background: linear-gradient(to top, #fffdf9 10%, transparent 100%);
+      z-index: 2;
     }
 
     .cover-content {
@@ -456,29 +468,20 @@
     }
     .dot.active { width: 24px; border-radius: 10px; background: #d97706; }
 
-    /* ==============================================================
-       TỐI ƯU HÓA RIÊNG CHO MÀN HÌNH ĐIỆN THOẠI (KHÔNG PHẢI CUỘN TRANG)
-       ============================================================== */
+    /* TỐI ƯU HÓA CHO ĐIỆN THOẠI */
     @media (max-width: 859px) {
-      /* Thu nhỏ chiều cao ảnh để nhường chỗ cho phần chữ */
       .page-visual { height: 32%; }
       .cover-hero { height: 40%; }
       .back-cover-hero { height: 35%; }
 
-      /* Giảm padding các khu vực để chữ được kéo dãn hết màn hình */
       .page-body { padding: 10px 18px 10px 18px; }
       .cover-content { padding: 8px 18px 12px 18px; }
       .bottom-bar { padding: 0 10px 8px 10px; height: 50px; }
       .top-bar { padding: 0 12px; height: 45px; }
 
-      /* Cỡ chữ nội dung điều chỉnh linh hoạt theo chiều cao (vh) */
-      .page-text {
-        font-size: clamp(0.9rem, 2.1vh, 1.15rem);
-        line-height: 1.48;
-      }
+      .page-text { font-size: clamp(0.95rem, 2.2vh, 1.25rem); line-height: 1.5; }
       .dropcap::first-letter { font-size: 2.1em; padding-top: 2px; }
 
-      /* Bìa và Châm ngôn */
       .cover-title { font-size: clamp(1.4rem, 3.2vh, 1.8rem); }
       .back-title { font-size: clamp(1.2rem, 2.8vh, 1.6rem); }
       .cover-subtitle { font-size: clamp(0.9rem, 1.9vh, 1.1rem); }
@@ -487,12 +490,11 @@
       .maxim-box { padding: 12px 14px; margin-top: 6px; }
       .maxim-text { font-size: clamp(0.9rem, 2vh, 1.15rem); }
 
-      /* Làm gọn nút bấm */
       .open-book-btn { padding: 10px 20px; font-size: 0.85rem; }
       .nav-btn { padding: 0 14px; font-size: 0.85rem; height: 38px; }
-      .dots-container { padding: 6px 10px; gap: 6px; }
+      .dots-container { padding: 6px 8px; gap: 4px; }
       .dot { width: 6px; height: 6px; }
-      .dot.active { width: 18px; }
+      .dot.active { width: 16px; }
     }
   </style>
 </head>
@@ -517,7 +519,8 @@
       <!-- MỤC 0: TRANG BÌA ĐẦU -->
       <section class="page cover-page" data-index="0">
         <div class="cover-hero">
-          <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1000&q=85" alt="Bình minh tươi sáng trên biển" />
+          <span class="placeholder-text">🖼️ Ảnh bìa trước</span>
+          <img src="anh-bia-truoc.jpg" alt="" onerror="this.style.opacity='0'" />
         </div>
         <div class="cover-content">
           <span class="cover-badge">Truyện Ngắn Truyền Cảm Hứng</span>
@@ -541,7 +544,8 @@
       <!-- MỤC 1: TRANG 1 -->
       <section class="page" data-index="1">
         <div class="page-visual">
-          <img src="https://images.unsplash.com/photo-1559592413-7cec4d0cae2b?auto=format&fit=crop&w=1000&q=85" alt="Làng chài ven biển Việt Nam" />
+          <span class="placeholder-text">🖼️ Ảnh trang 1</span>
+          <img src="anh-trang-1.jpg" alt="" onerror="this.style.opacity='0'" />
         </div>
         <div class="page-body">
           <div class="content-wrap">
@@ -551,7 +555,7 @@
           </div>
           <div class="page-footer">
             <span>Ánh Sáng Từ Đôi Vai Gầy</span>
-            <span>Trang 1 / 6</span>
+            <span>Trang 1 / 10</span>
           </div>
         </div>
       </section>
@@ -559,7 +563,8 @@
       <!-- MỤC 2: TRANG 2 -->
       <section class="page" data-index="2">
         <div class="page-visual">
-          <img src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1000&q=85" alt="Bình minh sớm mai nơi bờ đê làng quê" />
+          <span class="placeholder-text">🖼️ Ảnh trang 2</span>
+          <img src="anh-trang-2.jpg" alt="" onerror="this.style.opacity='0'" />
         </div>
         <div class="page-body">
           <div class="content-wrap">
@@ -569,7 +574,7 @@
           </div>
           <div class="page-footer">
             <span>Ánh Sáng Từ Đôi Vai Gầy</span>
-            <span>Trang 2 / 6</span>
+            <span>Trang 2 / 10</span>
           </div>
         </div>
       </section>
@@ -577,7 +582,27 @@
       <!-- MỤC 3: TRANG 3 -->
       <section class="page" data-index="3">
         <div class="page-visual">
-          <img src="https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?auto=format&fit=crop&w=1000&q=85" alt="Những trang sách học trò bên ánh đèn" />
+          <span class="placeholder-text">🖼️ Ảnh trang 3</span>
+          <img src="anh-trang-3.jpg" alt="" onerror="this.style.opacity='0'" />
+        </div>
+        <div class="page-body">
+          <div class="content-wrap">
+            <p class="page-text dropcap">
+              Đến trường với bộ quần áo sờn rách và đôi dép đứt quai, Minh từng nhiều lần trở thành tâm điểm của những ánh nhìn ái ngại. Sách vở cũng chỉ là những cuốn cũ xin lại từ các anh chị khóa trước. Nhưng vượt lên tất cả sự mặc cảm, cậu luôn là người giơ tay phát biểu đầu tiên trong mỗi giờ học.
+            </p>
+          </div>
+          <div class="page-footer">
+            <span>Ánh Sáng Từ Đôi Vai Gầy</span>
+            <span>Trang 3 / 10</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- MỤC 4: TRANG 4 -->
+      <section class="page" data-index="4">
+        <div class="page-visual">
+          <span class="placeholder-text">🖼️ Ảnh trang 4</span>
+          <img src="anh-trang-4.jpg" alt="" onerror="this.style.opacity='0'" />
         </div>
         <div class="page-body">
           <div class="content-wrap">
@@ -587,25 +612,7 @@
           </div>
           <div class="page-footer">
             <span>Ánh Sáng Từ Đôi Vai Gầy</span>
-            <span>Trang 3 / 6</span>
-          </div>
-        </div>
-      </section>
-
-      <!-- MỤC 4: TRANG 4 -->
-      <section class="page" data-index="4">
-        <div class="page-visual">
-          <img src="https://images.unsplash.com/photo-1516627145497-ae6968895b74?auto=format&fit=crop&w=1000&q=85" alt="Đôi bàn tay tần tảo và niềm hy vọng" />
-        </div>
-        <div class="page-body">
-          <div class="content-wrap">
-            <p class="page-text dropcap">
-              Đã có lúc, vì quá thương mẹ vất vả, Minh định thắt lòng xin nghỉ học để đi làm thuê. Nhưng nhìn vào đôi mắt đầy kỳ vọng và đôi bàn tay thô ráp của mẹ, cậu lại tự nhủ phải cố gắng gấp bội. Minh hiểu rằng, chỉ có con chữ mới là con đường ngắn nhất để giúp gia đình thoát khỏi cảnh nghèo khó và những cơn sóng dữ của cuộc đời.
-            </p>
-          </div>
-          <div class="page-footer">
-            <span>Ánh Sáng Từ Đôi Vai Gầy</span>
-            <span>Trang 4 / 6</span>
+            <span>Trang 4 / 10</span>
           </div>
         </div>
       </section>
@@ -613,17 +620,18 @@
       <!-- MỤC 5: TRANG 5 -->
       <section class="page" data-index="5">
         <div class="page-visual">
-          <img src="https://images.unsplash.com/photo-1505118380757-91f5f5632de0?auto=format&fit=crop&w=1000&q=85" alt="Đứng trước những con sóng biển vỗ bờ" />
+          <span class="placeholder-text">🖼️ Ảnh trang 5</span>
+          <img src="anh-trang-5.jpg" alt="" onerror="this.style.opacity='0'" />
         </div>
         <div class="page-body">
           <div class="content-wrap">
             <p class="page-text dropcap">
-              Sự nỗ lực không mệt mỏi ấy cuối cùng đã nở hoa. Trong kỳ thi học sinh giỏi cấp quốc gia, Minh đã xuất sắc giành giải Nhất trong sự ngỡ ngàng và khâm phục của thầy cô, bạn bè. Ngày nhận được học bổng toàn phần vào một trường đại học danh tiếng, Minh đứng trước biển, nhìn những con sóng vỗ bờ mà trào nước mắt. Đôi vai gầy ấy giờ đây không còn chỉ gánh vác nỗi lo toan cơm áo, mà đã đủ vững chãi để nâng đỡ cả những ước mơ lớn lao.
+              Có những ngày mẹ ốm nặng, gánh cá ế ẩm góc chợ, Minh phải nghỉ học nhiều ngày liền để nấu cháo, bón thuốc cho mẹ và chăm sóc bà. Nhìn gia cảnh túng quẫn, cậu từng gục mặt vào đôi bàn tay chai sần của mình mà khóc nấc lên trong đêm tối vì sự bất lực.
             </p>
           </div>
           <div class="page-footer">
             <span>Ánh Sáng Từ Đôi Vai Gầy</span>
-            <span>Trang 5 / 6</span>
+            <span>Trang 5 / 10</span>
           </div>
         </div>
       </section>
@@ -631,7 +639,84 @@
       <!-- MỤC 6: TRANG 6 -->
       <section class="page" data-index="6">
         <div class="page-visual">
-          <img src="https://images.unsplash.com/photo-1470252649378-9c29740c9fa8?auto=format&fit=crop&w=1000&q=85" alt="Mặt trời rực rỡ trên bầu trời tri thức" />
+          <span class="placeholder-text">🖼️ Ảnh trang 6</span>
+          <img src="anh-trang-6.jpg" alt="" onerror="this.style.opacity='0'" />
+        </div>
+        <div class="page-body">
+          <div class="content-wrap">
+            <p class="page-text dropcap">
+              Đã có lúc, vì quá thương mẹ vất vả, Minh định thắt lòng xin nghỉ học để đi làm thuê. Nhưng nhìn vào đôi mắt đầy kỳ vọng và đôi bàn tay thô ráp của mẹ, cậu lại tự nhủ phải cố gắng gấp bội. Minh hiểu rằng, chỉ có con chữ mới là con đường duy nhất cứu lấy cuộc đời mình.
+            </p>
+          </div>
+          <div class="page-footer">
+            <span>Ánh Sáng Từ Đôi Vai Gầy</span>
+            <span>Trang 6 / 10</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- MỤC 7: TRANG 7 -->
+      <section class="page" data-index="7">
+        <div class="page-visual">
+          <span class="placeholder-text">🖼️ Ảnh trang 7</span>
+          <img src="anh-trang-7.jpg" alt="" onerror="this.style.opacity='0'" />
+        </div>
+        <div class="page-body">
+          <div class="content-wrap">
+            <p class="page-text dropcap">
+              Thầy cô ở trường biết hoàn cảnh đã xúm lại động viên, gom góp mua cho Minh bộ sách mới và chiếc đèn bàn. Sự ấm áp ấy thắp lại ngọn lửa khát vọng. Cậu thức trắng nhiều đêm liền để ôn luyện cho kỳ thi học sinh giỏi, dồn hết tâm huyết vào từng con số, từng phương trình.
+            </p>
+          </div>
+          <div class="page-footer">
+            <span>Ánh Sáng Từ Đôi Vai Gầy</span>
+            <span>Trang 7 / 10</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- MỤC 8: TRANG 8 -->
+      <section class="page" data-index="8">
+        <div class="page-visual">
+          <span class="placeholder-text">🖼️ Ảnh trang 8</span>
+          <img src="anh-trang-8.jpg" alt="" onerror="this.style.opacity='0'" />
+        </div>
+        <div class="page-body">
+          <div class="content-wrap">
+            <p class="page-text dropcap">
+              Sự nỗ lực không mệt mỏi ấy cuối cùng đã nở hoa. Trong kỳ thi cấp quốc gia, Minh đã xuất sắc giành giải Nhất. Ngày nhận được học bổng toàn phần vào một trường đại học danh tiếng, Minh đứng trước biển, nhìn những con sóng vỗ bờ mà trào nước mắt.
+            </p>
+          </div>
+          <div class="page-footer">
+            <span>Ánh Sáng Từ Đôi Vai Gầy</span>
+            <span>Trang 8 / 10</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- MỤC 9: TRANG 9 -->
+      <section class="page" data-index="9">
+        <div class="page-visual">
+          <span class="placeholder-text">🖼️ Ảnh trang 9</span>
+          <img src="anh-trang-9.jpg" alt="" onerror="this.style.opacity='0'" />
+        </div>
+        <div class="page-body">
+          <div class="content-wrap">
+            <p class="page-text dropcap">
+              Ngày xách ba lô lên thành phố nhập học, Minh ôm chặt lấy người mẹ hao gầy. Gió biển hôm ấy thổi lồng lộng như đang hát khúc ca tự hào tiễn bước chân chàng thanh niên. Đôi vai nhỏ bé ngày nào giờ đã vươn mình trở thành điểm tựa vững chãi cho cả gia đình.
+            </p>
+          </div>
+          <div class="page-footer">
+            <span>Ánh Sáng Từ Đôi Vai Gầy</span>
+            <span>Trang 9 / 10</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- MỤC 10: TRANG 10 -->
+      <section class="page" data-index="10">
+        <div class="page-visual">
+          <span class="placeholder-text">🖼️ Ảnh trang 10</span>
+          <img src="anh-trang-10.jpg" alt="" onerror="this.style.opacity='0'" />
         </div>
         <div class="page-body">
           <div class="content-wrap">
@@ -646,15 +731,16 @@
           </div>
           <div class="page-footer">
             <span>Lời Kết Truyền Cảm Hứng</span>
-            <span>Trang 6 / 6</span>
+            <span>Trang 10 / 10</span>
           </div>
         </div>
       </section>
 
-      <!-- MỤC 7: TRANG BÌA CUỐI -->
-      <section class="page cover-page" data-index="7">
+      <!-- MỤC 11: TRANG BÌA CUỐI -->
+      <section class="page cover-page" data-index="11">
         <div class="cover-hero back-cover-hero">
-          <img src="https://images.unsplash.com/photo-1518837695005-2083093ee35b?auto=format&fit=crop&w=1000&q=85" alt="Biển êm đềm lúc hoàng hôn" />
+          <span class="placeholder-text">🖼️ Ảnh bìa sau</span>
+          <img src="anh-bia-sau.jpg" alt="" onerror="this.style.opacity='0'" />
         </div>
         <div class="cover-content">
           <span class="cover-badge">Khép Lại Trang Sách</span>
@@ -712,14 +798,16 @@
       function getViews() {
         if (isDesktop()) {
           return [
-            [0],
-            [1, 2],
-            [3, 4],
-            [5, 6],
-            [7]
+            [0],         // Bìa trước
+            [1, 2],      // Trang 1-2
+            [3, 4],      // Trang 3-4
+            [5, 6],      // Trang 5-6
+            [7, 8],      // Trang 7-8
+            [9, 10],     // Trang 9-10
+            [11]         // Bìa sau
           ];
         } else {
-          return [[0], [1], [2], [3], [4], [5], [6], [7]];
+          return [[0], [1], [2], [3], [4], [5], [6], [7], [8], [9], [10], [11]];
         }
       }
 
