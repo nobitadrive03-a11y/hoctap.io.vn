@@ -158,20 +158,21 @@
         .reader-content > ul { list-style-type: none; }
         .reader-content > ol { list-style-type: decimal; margin-left: 15px; }
 
-        .reader-content > ul > li::before {
-    content: '\2022'; /* Mã kí tự chấm tròn mặc định */
-    font-family: Arial, sans-serif; /* Dùng font hệ thống để chấm tròn luôn hiển thị */
-    color: var(--primary);
-    position: absolute;
-    left: 14px;
-    top: 10px;
-    font-size: 1.2rem; /* Độ lớn của dấu chấm */
+       .reader-content > ul > li {
+    position: relative;
+    padding-left: 30px;
+    margin-bottom: 12px;
+    background: #f8fafc;
+    padding: 12px 12px 12px 30px;
+    border-radius: 10px;
+    border: 1px solid #e2e8f0;
+    font-size: 0.95rem;
+    text-align: justify;
+    line-height: 1.6;
 }
-            text-align: justify;
-            line-height: 1.6;
-        }
-        .reader-content > ul > li::before {
-            content: '\f105';
+
+.reader-content > ul > li::before {
+    content: '\2022';
             font-family: 'Font Awesome 6 Free';
             font-weight: 900;
             color: var(--primary);
