@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Chuyên đề Học tập Tin học 12 - Hành Trình Số</title>
+    <!-- Tích hợp Font chữ Google -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&family=Merriweather:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <!-- Tích hợp thư viện Icon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+<!-- 1. MÃ GA4 GỐC (Kết nối với Google Analytics) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-NSJCVSL9RM"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-NSJCVSL9RM'); 
+</script>
+
+<!-- 2. MÃ NHỊP TIM 30 GIÂY -->
+<script>
+  setInterval(function() {
+    if (!document.hidden) { 
+      gtag('event', 'keep_alive', {
+        'event_category': 'Engagement',
+        'event_label': 'Học sinh đang làm bài',
+        'non_interaction': false
+      });
+    }
+  }, 30000); 
+</script>
+
+    <style id="main-style">
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1e40af;
+            --tech-gradient: linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%);
+            --accent: #f59e0b;
+            --bg-body: #e0f2fe;
+            --text-main: #334155;
+            --text-muted: #64748b;
+            --white: #ffffff;
+            --shadow-lg: 0 20px 40px -5px rgba(0, 0, 0, 0.15);
+            --radius-md: 12px;
+            --radius-lg: 24px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-body);
+            color: var(--text-main);
+            line-height: 1.6;
+            min-height: 100vh;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            padding: 15px; 
+        }
+
+        #reader-view {
+            display: block; 
+            max-width: 1000px;
+            margin: 0 auto;
+            background: #f8fafc;
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+            animation: slideUp 0.6s ease-out;
+            border: 1px solid rgba(255,255,255,0.5);
+        }
+
+        .reader-header {
+            background: var(--tech-gradient);
+            color: var(--white);
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between; 
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .reader-header h2 { font-size: 1.1rem; font-weight: 600; margin: 0; display: flex; align-items: center; gap: 8px; }
+        
+        .btn-small { 
+            padding: 8px 16px; 
+            font-size: 0.9rem; 
+            border-radius: 8px; 
+            background: rgba(0,0,0,0.2); 
+            color: white; 
+            border: 1px solid rgba(255,255,255,0.4); 
+            cursor: pointer; 
+            display: flex; 
+            align-items: center; 
+            gap: 8px; 
+            transition: 0.3s; 
+            font-weight: 500;
+            border: none;
+        }
+        .btn-small:hover { background: rgba(0,0,0,0.4); transform: translateX(-2px); }
+
+        .reader-content { padding: 25px 15px; background: var(--white); }
+
+        h1.main-title {
+            font-family: 'Merriweather', serif;
+            color: var(--primary-dark);
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 1.6rem;
+            line-height: 1.4;
+        }
+
+        h1.main-title span {
+            display: block;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.95rem;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        h2.part-title {
+            background: #f1f5f9;
+            color: var(--primary-dark);
+            padding: 12px 15px;
+            border-radius: 10px;
+            border-left: 5px solid var(--primary);
+            margin: 30px 0 20px 0;
+            font-size: 1.15rem;
+            display: flex;
+            align-items: flex-start;
+            flex-direction: column;
+            gap: 8px;
+            font-weight: bold;
+        }
+        
+        h3 {
+            color: #334155;
+            margin: 20px 0 10px 0;
+            font-size: 1.05rem;
+        }
+
+        p { margin-bottom: 12px; text-align: justify; font-size: 0.95rem; line-height: 1.7; }
+        
+        .reader-content > ul, .reader-content > ol {
+            padding-left: 0;
+            margin-bottom: 15px;
+        }
+        
+        .reader-content > ul { list-style-type: none; }
+        .reader-content > ol { list-style-type: decimal; margin-left: 15px; }
+
+           .reader-content > ul > li {
+    position: relative;
+    padding-left: 30px;
+    margin-bottom: 12px;
+    background: #f8fafc;
+    padding: 12px 12px 12px 30px;
+    border-radius: 10px;
+    border: 1px solid #e2e8f0;
+    font-size: 0.95rem;
+    text-align: justify;
+    line-height: 1.6;
+}
+
+.reader-content > ul > li::before {
+    content: '\2022';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            color: var(--primary);
+            position: absolute;
+            left: 10px;
+            top: 14px;
+            font-size: 1rem;
+        }
+        
+        .reader-content > ol > li {
+            margin-bottom: 12px;
+            background: #f8fafc;
+            padding: 12px;
+            border-radius: 10px;
+            border: 1px solid #e2e8f0;
+            font-size: 0.95rem;
+            text-align: justify;
+            line-height: 1.6;
+        }
+
+
+        .logic-box {
+            background: #f0fdf4;
+            border-radius: var(--radius-md);
+            padding: 20px 15px;
+            margin: 25px 0;
+            box-shadow: 0 4px 10px -3px rgba(34, 197, 94, 0.1);
+            border: 1px solid #bbf7d0;
+            border-left: 5px solid #22c55e;
+            font-size: 0.95rem;
+        }
+        .logic-box strong { 
+            color: #166534; 
+            font-size: 1.05rem; 
+            display: flex; 
+            align-items: center; 
+            gap: 8px; 
+            margin-bottom: 10px;
+            margin-top: 15px;
+        }
+        .logic-box strong:first-child {
+            margin-top: 0;
+        }
+        .logic-box p { margin-bottom: 8px; }
+
+        .footer-credit {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 2px dashed #e2e8f0;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+        .footer-credit i { color: #ef4444; }
+        
+        .sql-block {
+            background-color: #eff6ff;
+            padding: 12px 15px;
+            border-radius: 8px;
+            border-left: 4px solid blue;
+            color: blue;
+            font-family: 'Courier New', Courier, monospace;
+            font-weight: bold;
+            font-size: 1.05rem;
+            overflow-x: auto;
+            margin: 10px 0;
+            white-space: pre-wrap;
+            line-height: 1.5;
+        }
+        
+        table.data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            font-size: 0.95rem;
+        }
+        table.data-table th, table.data-table td {
+            border: 1px solid #cbd5e1;
+            padding: 10px;
+            text-align: left;
+        }
+        table.data-table th {
+            background-color: #f1f5f9;
+            color: var(--primary-dark);
+            font-weight: 600;
+        }
+
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        @media (min-width: 640px) {
+            body { padding: 40px 20px; }
+            .reader-header { padding: 20px 40px; }
+            .reader-content { padding: 40px; }
+            h1.main-title { font-size: 2.2rem; }
+            h2.part-title { flex-direction: row; align-items: center; }
+            p, .reader-content > ul > li, .reader-content > ol > li, .logic-box { font-size: 1.05rem; }
+            .reader-content > ul > li { padding-left: 45px; }
+            .reader-content > ul > li::before { left: 15px; top: 15px; }
+            #reader-view { border-radius: var(--radius-lg); }
+            .logic-box { padding: 25px 30px; }
+        }
+    
+        code {
+            background-color: #eff6ff;
+            color: blue;
+            font-family: 'Courier New', Courier, monospace;
+            font-weight: bold;
+            padding: 2px 6px;
+            border-radius: 4px;
+            word-break: break-word;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="reader-view">
+        <div class="reader-header">
+            <h2><i class="fa-solid fa-laptop-code"></i> Không gian học tập Hành Trình Số</h2>
+            <button class="btn-small" onclick="window.history.back()">
+                <i class="fa-solid fa-arrow-left"></i> Thoát
+            </button>
+        </div>
+
+        <div class="reader-content">
+            <h1 class="main-title">
+                <span>Chuyên đề Tin học 12</span>
+                ĐỀ CƯƠNG HỌC TẬP CHI TIẾT
+            </h1>
+
+            <!-- BÀI 13 -->
+            <h2 class="part-title"><i class="fa-brands fa-css3-alt"></i> Bài 13. Vai trò của CSS (Cascading Style Sheets) trong thiết kế web.</h2>
+            
+            <h3>1. Khái niệm mẫu định dạng CSS</h3>
+            <p>CSS (Cascading Style Sheets) là ngôn ngữ được sử dụng để tìm và định dạng các phần tử hiển thị trên trang web; giúp tách biệt phần nội dung (viết bằng HTML) và phần trình bày (viết bằng CSS).</p>
+            <p><strong>Đặc điểm:</strong></p>
+            <ul>
+                <li>Một mẫu định dạng có thể áp dụng cho hàng loạt phần tử trên một hoặc nhiều trang web.</li>
+                <li>CSS là ngôn ngữ mô tả kiểu dáng, độc lập với HTML.</li>
+                <li>Giúp thiết lập các thuộc tính như: màu sắc, phông chữ, kích thước, khung viền…</li>
+            </ul>
+            <p><strong>Nhận xét về mã nguồn:</strong> Trong HTML, các định dạng CSS nội bộ thường được đặt trong thẻ <code>&lt;style&gt;</code> nằm trong phần <code>&lt;head&gt;</code>. Các định dạng này được viết tập trung một chỗ và áp dụng tự động cho các thẻ tương ứng bên dưới phần <code>&lt;body&gt;</code>.</p>
+
+            <h3>2. Cấu trúc CSS</h3>
+            <p>Cấu trúc tổng quát của một mẫu định dạng CSS gồm hai phần chính: <strong>Bộ chọn (Selector)</strong> và <strong>Vùng mô tả (Declaration block)</strong>.</p>
+            <div class="sql-block">Bộ chọn { thuộc tính : giá trị; }</div>
+            <p>Giải thích:</p>
+            <ul>
+                <li><strong>Bộ chọn:</strong> Xác định phần tử HTML nào sẽ chịu tác động của định dạng (ví dụ: <code>h1</code>, <code>p</code>, <code>body</code>…).</li>
+                <li><strong>Vùng mô tả:</strong> Nằm trong cặp dấu ngoặc nhọn <code>{}</code>, bao gồm các khai báo. Mỗi khai báo gồm thuộc tính và giá trị, phân cách nhau bởi dấu hai chấm <code>:</code>, kết thúc bằng dấu chấm phẩy <code>;</code>.</li>
+            </ul>
+            <p>Ví dụ:</p>
+            <ul>
+                <li><strong>Đơn giản:</strong> <code>h1 { color: red; }</code> (Bộ chọn là thẻ h1, thuộc tính là color, giá trị là red).</li>
+                <li><strong>Gộp nhóm:</strong> <code>h1, h2, h3 { color: red; }</code> (Áp dụng màu đỏ cho cả 3 loại thẻ tiêu đề).</li>
+                <li><strong>Nhiều thuộc tính:</strong> <code>p { text-indent: 15px; color: blue; }</code> (Vừa thụt đầu dòng, vừa có màu chữ xanh).</li>
+            </ul>
+
+            <h3>3. Các cách thiết lập CSS</h3>
+            <p>Có 3 phương pháp chính để chèn CSS vào trang web:</p>
+            <p><strong>a) Cách thiết lập CSS trong (Internal CSS)</strong></p>
+            <p>Toàn bộ mã CSS được đặt bên trong thẻ <code>&lt;style&gt; ... &lt;/style&gt;</code>, thường nằm trong phần <code>&lt;head&gt;</code> của tệp HTML.</p>
+            <p><em>Ưu điểm:</em> Phù hợp cho các trang web đơn lẻ, dễ quản lý khi trang web nhỏ.</p>
+            
+            <p><strong>b) Cách thiết lập CSS ngoài (External CSS)</strong></p>
+            <p>Mã CSS được viết trong một tệp văn bản riêng biệt có đuôi mở rộng là <code>.css</code> (ví dụ: <code>styles.css</code>). Tệp HTML liên kết với tệp CSS này thông qua thẻ <code>&lt;link&gt;</code> đặt trong phần <code>&lt;head&gt;</code>.</p>
+            <div class="sql-block">&lt;link href="styles.css" rel="stylesheet" type="text/css"&gt;</div>
+            <p><em>Ưu điểm:</em> Tách biệt hoàn toàn nội dung và định dạng. Một tệp CSS có thể dùng chung cho cả website, giúp việc chỉnh sửa giao diện đồng bộ và nhanh chóng.</p>
+            
+            <p><strong>c) Cách thiết lập CSS nội tuyến (Inline CSS)</strong></p>
+            <p>Định dạng trực tiếp trong thẻ HTML bằng thuộc tính <code>style</code>. Ví dụ: <code>&lt;h1 style="color: red;"&gt;Tiêu đề&lt;/h1&gt;</code></p>
+            <p><em>Ưu điểm:</em> Nhanh, tiện lợi để thử nghiệm hoặc sửa lỗi cục bộ.<br><em>Nhược điểm:</em> Khó quản lý, mã nguồn rối, không tận dụng được khả năng tái sử dụng của CSS.</p>
+
+            <h3>4. Vai trò, ý nghĩa của CSS</h3>
+            <p>CSS đóng vai trò quan trọng trong phát triển web hiện đại:</p>
+            <ul>
+                <li><strong>Tách biệt nội dung và hình thức:</strong> Giúp mã nguồn HTML trong sáng, dễ đọc hơn.</li>
+                <li><strong>Tiết kiệm thời gian và công sức:</strong> Viết CSS một lần và áp dụng cho nhiều trang. Khi cần thay đổi giao diện, chỉ cần sửa một tệp CSS duy nhất.</li>
+                <li><strong>Tăng tốc độ tải trang:</strong> Trình duyệt có thể lưu bộ nhớ đệm (cache) tệp CSS, giúp tải các trang sau nhanh hơn.</li>
+                <li><strong>Thống nhất giao diện:</strong> Đảm bảo sự đồng bộ về màu sắc, phông chữ trên toàn bộ website.</li>
+            </ul>
+
+            <div class="logic-box">
+                <strong><i class="fa-solid fa-microscope"></i> Tình huống vận dụng Bài 13 - Tình huống 1</strong>
+                <p><strong>Tình huống:</strong> Học sinh thắc mắc: "Ngôn ngữ CSS có phải là một phiên bản nâng cấp của HTML không? Các mẫu định dạng CSS thường được viết như thế nào?"</p>
+                <p><strong>Trả lời khoa học:</strong> CSS không phải là HTML. CSS là một ngôn ngữ định dạng độc lập, có cú pháp riêng biệt so với HTML. Các mẫu định dạng CSS thường được mô tả trên nhiều hàng để dễ đọc và quản lý (tuy nhiên có thể viết trên một hàng). Cấu trúc thường bao gồm bộ chọn (Selector) và các thuộc tính nằm trong dấu ngoặc nhọn.</p>
+                
+                <strong><i class="fa-solid fa-microscope"></i> Tình huống vận dụng Bài 13 - Tình huống 2</strong>
+                <p><strong>Tình huống:</strong> Khi thiết kế trang web, nếu muốn thiết lập một mẫu CSS để áp dụng cho toàn bộ tệp HTML hiện tại thì làm cách nào? Và nếu muốn áp dụng đồng thời định dạng đó cho hàng loạt trang web khác nhau thì phải làm sao?</p>
+                <p><strong>Trả lời khoa học:</strong> Để áp dụng cho toàn bộ tệp HTML, ta sử dụng cách thiết lập CSS trong (Internal CSS) đặt trong thẻ <code>&lt;style&gt;</code> hoặc sử dụng CSS ngoài (External CSS). Để áp dụng đồng thời cho nhiều trang web khác nhau, bắt buộc phải sử dụng cách thiết lập CSS ngoài (External CSS) bằng cách tạo một tệp <code>.css</code> riêng biệt và dùng thẻ <code>&lt;link&gt;</code> để nhúng vào tất cả các trang web cần định dạng.</p>
+            </div>
+
+            <!-- BÀI 14 -->
+            <h2 class="part-title"><i class="fa-solid fa-font"></i> Bài 14. Định dạng văn bản bằng CSS</h2>
+            
+            <h3>1. Định dạng văn bản bằng CSS</h3>
+            <p>Các thuộc tính CSS dùng để định dạng văn bản được chia thành 3 nhóm chính: phông chữ, màu chữ và dòng văn bản.</p>
+            
+            <p><strong>a) CSS định dạng phông chữ</strong></p>
+            <ul>
+                <li><strong>font-family:</strong> Chọn phông chữ. Các nhóm phông cơ bản: <code>serif</code> (có chân), <code>sans-serif</code> (không chân), <code>monospace</code> (độ rộng đều), <code>cursive</code> (viết tay), <code>fantasy</code> (trừu tượng). Cú pháp ưu tiên: <code>font-family: "Times New Roman", Times, serif;</code> (Nếu không có phông đầu tiên, trình duyệt sẽ tìm phông tiếp theo).</li>
+                <li><strong>font-size:</strong> Chọn cỡ chữ. Đơn vị tuyệt đối (px, pt), đơn vị tương đối (%, em, rem). <code>em</code> là so với cỡ chữ phần tử hiện thời, <code>rem</code> so với phần tử gốc.</li>
+                <li><strong>font-style:</strong> Kiểu chữ. Nhận giá trị <code>normal</code> (bình thường), <code>italic</code> (in nghiêng).</li>
+                <li><strong>font-weight:</strong> Độ dày nét chữ. Nhận giá trị <code>normal</code>, <code>bold</code>, hoặc giá trị số từ 100 đến 900.</li>
+            </ul>
+
+            <p><strong>b) CSS định dạng màu chữ</strong></p>
+            <p>Sử dụng thuộc tính <code>color</code>. Giá trị có thể là tên màu tiếng Anh (black, red, blue...), mã Hex, RGB, HSL. Lưu ý: Kí tự <code>*</code> là bộ chọn đại diện cho tất cả các phần tử HTML trên trang web.</p>
+            
+            <p><strong>c) CSS định dạng dòng văn bản</strong></p>
+            <ul>
+                <li><strong>line-height:</strong> Chiều cao dòng. Ví dụ: <code>line-height: 1.5;</code> hoặc <code>line-height: 200%;</code></li>
+                <li><strong>text-align:</strong> Căn lề văn bản. Giá trị: <code>left</code> (trái), <code>right</code> (phải), <code>center</code> (giữa), <code>justify</code> (căn đều hai bên).</li>
+                <li><strong>text-decoration:</strong> Trang trí. Giá trị: <code>none</code>, <code>underline</code> (gạch dưới), <code>overline</code> (gạch trên đầu), <code>line-through</code> (gạch ngang chữ).</li>
+                <li><strong>text-indent:</strong> Thụt lề dòng đầu tiên (dương: thụt vào, âm: thụt lùi ra ngoài).</li>
+            </ul>
+
+            <h3>2. Tính kế thừa và cách lựa chọn theo thứ tự của CSS</h3>
+            <p><strong>a) Tính kế thừa của CSS</strong></p>
+            <p>Một mẫu CSS áp dụng cho một phần tử cha thì sẽ tự động được áp dụng cho tất cả các phần tử con, cháu bên trong nó. (Ngoại lệ: Một số thuộc tính không được kế thừa mặc định hoặc có hành vi riêng, ví dụ thẻ <code>a</code> thường không kế thừa màu sắc và gạch chân từ cha).</p>
+            
+            <p><strong>b) Thứ tự ưu tiên (Cascading - Xếp chồng)</strong></p>
+            <p>Tính chất "Cascading": Mẫu định dạng được viết cuối cùng (trong mã nguồn hoặc file CSS) sẽ được ưu tiên áp dụng nếu các điều kiện khác (như độ ưu tiên của bộ chọn) ngang nhau.</p>
+            
+            <p><strong>c) Sử dụng kí hiệu * và !important</strong></p>
+            <ul>
+                <li>Kí hiệu <code>*</code> (Universal selector): Có mức độ ưu tiên thấp nhất.</li>
+                <li>Kí hiệu <code>!important</code>: Có mức độ ưu tiên cao nhất tuyệt đối. Nếu một thuộc tính có <code>!important</code>, nó sẽ ghi đè tất cả các quy tắc khác, bất kể vị trí hay độ đặc hiệu của bộ chọn.</li>
+            </ul>
+
+            <div class="logic-box">
+                <strong><i class="fa-solid fa-microscope"></i> Tình huống vận dụng Bài 14 - Tình huống 1</strong>
+                <p><strong>Tình huống:</strong> Cho mẫu định dạng CSS sau: <code>p {font-size: 1.2em;}</code> và <code>html {font-size: 100%;}</code>. Ý nghĩa khoa học của hai dòng lệnh này là gì?</p>
+                <p><strong>Trả lời khoa học:</strong> Dòng <code>p {font-size: 1.2em;}</code> thiết lập cho toàn bộ các phần tử đoạn văn <code>&lt;p&gt;</code> có cỡ chữ bằng 1,2 lần cỡ chữ hiện thời của trình duyệt (hoặc của phần tử cha trực tiếp chứa nó). Dòng <code>html {font-size: 100%;}</code> thiết lập cỡ chữ mặc định cho toàn bộ trang web (phần tử gốc) theo đúng chế độ mặc định của trình duyệt (thường là 16px).</p>
+                
+                <strong><i class="fa-solid fa-microscope"></i> Tình huống vận dụng Bài 14 - Tình huống 2</strong>
+                <p><strong>Tình huống:</strong> Một đoạn mã CSS được viết như sau: <code>h1 {color: blue; text-align: center !important;} h1 {text-align: left; color: red;}</code>. Khi hiển thị, thẻ h1 sẽ có màu gì và được căn lề như thế nào?</p>
+                <p><strong>Trả lời khoa học:</strong> Kết quả áp dụng cho thẻ h1 sẽ là: Chữ có màu đỏ (red) và được căn lề giữa (center). Về màu sắc, quy tắc <code>color: red</code> được viết sau nên có tính chất xếp chồng (Cascading) ghi đè lên quy tắc màu xanh ở trên. Về căn lề, mặc dù <code>text-align: left</code> viết sau, nhưng <code>text-align: center</code> ở trên có từ khóa <code>!important</code> nên nó chiếm độ ưu tiên cao nhất tuyệt đối.</p>
+            </div>
+
+            <!-- BÀI 15 -->
+            <h2 class="part-title"><i class="fa-solid fa-palette"></i> Bài 15. Tạo màu cho chữ và nền</h2>
+            
+            <h3>1. Hệ thống màu của CSS</h3>
+            <p>HTML và CSS hỗ trợ biểu diễn màu sắc thông qua ba cách thông dụng nhất:</p>
+            <ul>
+                <li><strong>Sử dụng tên màu (Color Names):</strong> Dùng tên tiếng Anh có sẵn như red, green, blue, white, black… Phiên bản CSS3 hỗ trợ khoảng 140 tên màu tiêu chuẩn.</li>
+                <li><strong>Hệ màu RGB (Red - Green - Blue):</strong> Mô hình trộn 3 màu cơ bản Đỏ (Red), Lục (Green), Lam (Blue). Cú pháp hàm <code>rgb(r, g, b)</code> với giá trị là số nguyên từ 0 đến 255. Cú pháp Hex (thập lục phân) viết là <code>#rrggbb</code>.</li>
+                <li><strong>Hệ màu HSL (Hue - Saturation - Lightness):</strong> Gồm H (Hue - Tông màu từ 0-360 độ), S (Saturation - Độ bão hòa %), L (Lightness - Độ sáng %).</li>
+            </ul>
+
+            <h3>2. Thiết lập màu chữ và màu nền bằng CSS</h3>
+            <p>CSS cung cấp các thuộc tính để định dạng màu sắc cho các thành phần:</p>
+            <ul>
+                <li><strong>Màu chữ:</strong> Thuộc tính <code>color</code>. Có tính kế thừa sang phần tử con.</li>
+                <li><strong>Màu nền:</strong> Thuộc tính <code>background-color</code>.</li>
+                <li><strong>Màu đường viền:</strong> Thuộc tính <code>border</code> (bao gồm border-color, border-width, border-style). Thuộc tính này <strong>không</strong> có tính kế thừa.</li>
+            </ul>
+
+            <h3>3. Thiết lập bộ chọn là tổ hợp các phần tử có quan hệ</h3>
+            <p>CSS cho phép kết hợp các bộ chọn dựa trên mối quan hệ giữa các phần tử trong cây HTML:</p>
+            <table class="data-table">
+                <tr>
+                    <th>Loại quan hệ</th>
+                    <th>Ký hiệu</th>
+                    <th>Ý nghĩa</th>
+                    <th>Ví dụ</th>
+                </tr>
+                <tr>
+                    <td>Con và cháu (Descendant)</td>
+                    <td>E F</td>
+                    <td>Chọn tất cả F nằm bên trong E (bất kể cấp độ nào).</td>
+                    <td><code>div p { color: blue; }</code></td>
+                </tr>
+                <tr>
+                    <td>Cha con trực tiếp (Child)</td>
+                    <td>E &gt; F</td>
+                    <td>Chỉ chọn F là con trực tiếp (cấp 1) của E.</td>
+                    <td><code>p &gt; em { color: red; }</code></td>
+                </tr>
+                <tr>
+                    <td>Anh em liền kề (Adjacent)</td>
+                    <td>E + F</td>
+                    <td>Chọn F nằm ngay sau E và có cùng cha.</td>
+                    <td><code>em + strong { color: red; }</code></td>
+                </tr>
+                <tr>
+                    <td>Anh em (General Sibling)</td>
+                    <td>E ~ F</td>
+                    <td>Chọn tất cả F nằm sau E và có cùng cha.</td>
+                    <td><code>em ~ strong { color: red; }</code></td>
+                </tr>
+            </table>
+
+            <div class="logic-box">
+                <strong><i class="fa-solid fa-microscope"></i> Tình huống vận dụng Bài 15 - Tình huống 1</strong>
+                <p><strong>Tình huống:</strong> Trong hệ màu định dạng web RGB, màu trắng và màu đen được biểu diễn như thế nào? Trong hệ màu HSL, tham số nào quyết định màu sắc sẽ biến mất chỉ còn lại màu xám?</p>
+                <p><strong>Trả lời khoa học:</strong> Trong hệ màu RGB, màu trắng được biểu diễn là <code>rgb(255, 255, 255)</code> hoặc <code>#FFFFFF</code>; màu đen là <code>rgb(0, 0, 0)</code> hoặc <code>#000000</code>. Trong hệ màu HSL, tham số S (Saturation - Độ bão hòa) là yếu tố quyết định. Khi S = 0%, màu sắc sẽ bị triệt tiêu hoàn toàn và chỉ trở thành màu xám (tùy thuộc vào mức độ sáng L).</p>
+                
+                <strong><i class="fa-solid fa-microscope"></i> Tình huống vận dụng Bài 15 - Tình huống 2</strong>
+                <p><strong>Tình huống:</strong> Sự khác biệt chính giữa bộ chọn <code>E F</code> và <code>E &gt; F</code> là gì? Nếu thiết lập màu chữ cho thẻ <code>&lt;body&gt;</code> thì thẻ <code>&lt;p&gt;</code> bên trong có nhận màu đó không?</p>
+                <p><strong>Trả lời khoa học:</strong> Bộ chọn <code>E F</code> (Con và cháu) áp dụng cho tất cả phần tử F nằm bên trong E, dù ở bất kỳ cấp độ sâu nào. Bộ chọn <code>E &gt; F</code> (Con trực tiếp) nghiêm ngặt hơn, chỉ áp dụng cho phần tử F là con trực tiếp (ngay cấp độ phía dưới) của E. Đối với ý thứ hai, thẻ <code>&lt;p&gt;</code> có nhận màu, vì thuộc tính <code>color</code> có tính kế thừa tự động từ thẻ cha (body) sang thẻ con (nếu thẻ p không được định nghĩa màu riêng).</p>
+            </div>
+
+            <!-- BÀI 16 -->
+            <h2 class="part-title"><i class="fa-regular fa-square"></i> Bài 16. Định dạng khung</h2>
+            
+            <h3>1. Phân loại phần tử khối và nội tuyến</h3>
+            <p>Các phần tử HTML được chia làm hai loại chính dựa trên cách hiển thị mặc định:</p>
+            <ul>
+                <li><strong>Phần tử khối (Block level):</strong> Luôn bắt đầu trên một dòng mới và chiếm toàn bộ chiều rộng có sẵn của phần tử cha (kéo dài từ trái sang phải). Ví dụ: <code>&lt;h1&gt;</code> đến <code>&lt;h6&gt;</code>, <code>&lt;p&gt;</code>, <code>&lt;div&gt;</code>, <code>&lt;table&gt;</code>, <code>&lt;ul&gt;</code>.</li>
+                <li><strong>Phần tử nội tuyến (Inline level):</strong> Không bắt đầu dòng mới, nằm chung dòng với các nội dung khác. Chỉ chiếm chiều rộng vừa đủ với nội dung của nó. Ví dụ: <code>&lt;span&gt;</code>, <code>&lt;a&gt;</code>, <code>&lt;img&gt;</code>, <code>&lt;strong&gt;</code>.</li>
+            </ul>
+            <p>Ta có thể thay đổi cách hiển thị mặc định bằng thuộc tính CSS <code>display</code> (giá trị: <code>block</code>, <code>inline</code>, <code>none</code>).</p>
+
+            <h3>2. Thiết lập định dạng khung bằng CSS (Box Model)</h3>
+            <p>Mọi phần tử HTML đều có thể được coi là một “chiếc hộp” hình chữ nhật. CSS sử dụng mô hình hộp (Box Model) để định dạng. Các thành phần chính bao gồm:</p>
+            <ul>
+                <li><strong>Phần nội dung (Content):</strong> Vùng chứa văn bản hoặc hình ảnh. Kích thước xác định bởi <code>width</code> và <code>height</code>.</li>
+                <li><strong>Vùng đệm (Padding):</strong> Khoảng cách từ nội dung đến đường viền.</li>
+                <li><strong>Đường viền (Border):</strong> Đường bao quanh nội dung và vùng đệm (sử dụng <code>border-width</code>, <code>border-style</code>, <code>border-color</code>).</li>
+                <li><strong>Lề (Margin):</strong> Khoảng cách từ đường viền ra đến các phần tử xung quanh.</li>
+            </ul>
+
+            <h3>3. Một số bộ chọn đặc biệt của CSS</h3>
+            <ul>
+                <li><strong>Bộ chọn lớp (Class Selector):</strong> Áp dụng cho một nhóm các phần tử có chung kiểu dáng. Khai báo CSS bắt đầu bằng dấu chấm (Ví dụ: <code>.warning</code>).</li>
+                <li><strong>Bộ chọn định danh (ID Selector):</strong> Áp dụng cho duy nhất một phần tử đặc biệt trên trang (không được trùng lặp). Khai báo CSS bắt đầu bằng dấu thăng (Ví dụ: <code>#header-main</code>).</li>
+                <li><strong>Bộ chọn thuộc tính:</strong> Chọn các phần tử có chứa một thuộc tính cụ thể (Ví dụ: <code>[href]</code>).</li>
+            </ul>
+
+            <div class="logic-box">
+                <strong><i class="fa-solid fa-microscope"></i> Tình huống vận dụng Bài 16 - Tình huống 1</strong>
+                <p><strong>Tình huống:</strong> Trong cấu trúc định dạng khung (Box Model) của một phần tử HTML, lề khung (margin) khác gì với vùng đệm (padding)? Khoảng cách từ vùng văn bản đến đường viền khung thuộc về loại nào?</p>
+                <p><strong>Trả lời khoa học:</strong> Lề khung (margin) là khoảng cách không gian tính từ đường viền đẩy ra các phần tử bên ngoài (nhằm tạo khoảng cách giữa các hộp). Vùng đệm (padding) là khoảng không gian tính từ đường viền ép vào nội dung bên trong (tạo sự thoáng đãng cho hộp). Do đó, khoảng cách từ vùng văn bản bên trong ra đến đường viền khung chính là vùng đệm (padding).</p>
+                
+                <strong><i class="fa-solid fa-microscope"></i> Tình huống vận dụng Bài 16 - Tình huống 2</strong>
+                <p><strong>Tình huống:</strong> Nêu sự khác biệt cơ bản giữa thuộc tính định danh (ID) và lớp (Class) của các phần tử HTML? Nêu ý nghĩa của bộ chọn <code>div#bat_dau &gt; p</code>.</p>
+                <p><strong>Trả lời khoa học:</strong> ID (Định danh) dùng để xác định tính độc nhất của một phần tử, mỗi ID chỉ được sử dụng duy nhất một lần trên toàn bộ trang web. Ngược lại, Class (Lớp) dùng để nhóm các phần tử có chung kiểu trình bày, một lớp có thể được gán tái sử dụng cho nhiều phần tử khác nhau. Đối với bộ chọn <code>div#bat_dau &gt; p</code>, bộ chọn này có ý nghĩa là: Chọn tất cả các thẻ <code>&lt;p&gt;</code> là con trực tiếp của thẻ <code>&lt;div&gt;</code> đang sở hữu ID là <code>bat_dau</code>.</p>
+            </div>
+
+            <!-- BÀI 17 -->
+            <h2 class="part-title"><i class="fa-solid fa-list-ol"></i> Bài 17. Các mức ưu tiên của bộ chọn</h2>
+            
+            <h3>1. Kiểu bộ chọn dạng Pseudo-class và Pseudo-element</h3>
+            <p><strong>a) Bộ chọn pseudo-class (Lớp giả)</strong></p>
+            <p>Là các trạng thái đặc biệt của phần tử HTML (động). Các trạng thái này được coi như có sẵn trong CSS. Cú pháp: <code>:pseudo-class</code>.</p>
+            <ul>
+                <li><code>:link</code>: Liên kết chưa được kích hoạt.</li>
+                <li><code>:visited</code>: Liên kết đã được kích hoạt một lần.</li>
+                <li><code>:hover</code>: Trạng thái khi di chuyển con trỏ chuột lên đối tượng.</li>
+            </ul>
+
+            <p><strong>b) Bộ chọn kiểu pseudo-element (Phần tử giả)</strong></p>
+            <p>Chỉ một phần (hoặc một thành phần) cấu trúc của phần tử bình thường. Cú pháp: <code>::pseudo-element</code>.</p>
+            <ul>
+                <li><code>::first-line</code>: Dòng đầu tiên của đối tượng văn bản.</li>
+                <li><code>::first-letter</code>: Kí tự đầu tiên của đối tượng văn bản.</li>
+                <li><code>::selection</code>: Phần nội dung đang được người dùng bôi đen.</li>
+            </ul>
+
+            <h3>2. Mức độ ưu tiên khi áp dụng CSS</h3>
+            <p>Khi có nhiều mẫu định dạng cùng áp dụng cho một phần tử, trình duyệt sẽ quyết định mẫu nào được ưu tiên dựa trên các mức sau (từ cao xuống thấp):</p>
+            <ol>
+                <li><strong>!important:</strong> Các thuộc tính có từ khoá này có mức ưu tiên cao nhất.</li>
+                <li><strong>CSS trực tiếp (Inline CSS):</strong> Định dạng nằm ngay trong thẻ HTML.</li>
+                <li><strong>Media Type:</strong> Định dạng CSS liên quan đến kích thước thiết bị.</li>
+                <li><strong>Trọng số CSS (Specificity):</strong> Mẫu định dạng có tổng trọng số cao hơn sẽ thắng.</li>
+                <li><strong>Nguyên tắc thứ tự cuối cùng:</strong> Nếu trọng số bằng nhau, định dạng viết sau cùng sẽ được áp dụng.</li>
+                <li><strong>Kế thừa:</strong> Nhận thuộc tính từ phần tử cha.</li>
+            </ol>
+            <p><strong>Cách tính trọng số (Specificity):</strong> ID (cộng 100 điểm); Class/Pseudo-class (cộng 10 điểm); Element/Pseudo-element (cộng 1 điểm); kí tự <code>*</code> (0 điểm).</p>
+
+            <div class="logic-box">
+                <strong><i class="fa-solid fa-microscope"></i> Tình huống vận dụng Bài 17 - Tình huống 1</strong>
+                <p><strong>Tình huống:</strong> Sự khác nhau cơ bản giữa Pseudo-class (Lớp giả) và Pseudo-element (Phần tử giả) trong cấu trúc bộ chọn CSS là gì?</p>
+                <p><strong>Trả lời khoa học:</strong> Pseudo-class (Lớp giả, 1 dấu hai chấm) dùng để chọn toàn bộ phần tử nhưng dựa trên trạng thái động của chúng (ví dụ: khi rê chuột, khi nhấp chuột). Pseudo-element (Phần tử giả, 2 dấu hai chấm) lại dùng để chọn và định dạng một cấu trúc phần tử nhỏ lẻ bên trong phần tử gốc (ví dụ: chỉ dòng đầu tiên, chỉ chữ cái đầu tiên) mà không cần phải bổ sung thêm các thẻ HTML thủ công để bọc chúng.</p>
+                
+                <strong><i class="fa-solid fa-microscope"></i> Tình huống vận dụng Bài 17 - Tình huống 2</strong>
+                <p><strong>Tình huống:</strong> Hãy giải thích sự khác nhau về ý nghĩa và mức độ ưu tiên giữa hai mẫu định dạng sau: <code>#p123 + p {color : red ;}</code> và <code>h2#p123 + p {color : red ;}</code></p>
+                <p><strong>Trả lời khoa học:</strong> Mẫu <code>#p123 + p</code> sẽ áp dụng cho các phần tử <code>&lt;p&gt;</code> nằm liền kề ngay sau một phần tử bất kì có mã định danh ID là <code>p123</code>. Trong khi đó, mẫu <code>h2#p123 + p</code> mang tính cụ thể cao hơn (đồng nghĩa với trọng số Specificity cao hơn một chút): Nó bắt buộc phải áp dụng cho thẻ <code>&lt;p&gt;</code> nằm liền kề ngay sau một phần tử <code>&lt;h2&gt;</code>, và bản thân thẻ <code>&lt;h2&gt;</code> này phải sở hữu ID là <code>p123</code>.</p>
+            </div>
+
+            <div class="footer-credit">
+                Hệ thống tài liệu điện tử | <strong>Hành Trình Số</strong> <br>
+                Biên soạn chuẩn khoa học bởi Cô Lê Huyền Sinh <i class="fa-solid fa-heart"></i>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
