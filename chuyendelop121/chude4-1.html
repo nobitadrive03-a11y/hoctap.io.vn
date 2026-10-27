@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Chuyên đề Học tập Tin học 11 - Hành Trình Số</title>
+    <!-- Tích hợp Font chữ Google -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&family=Merriweather:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <!-- Tích hợp thư viện Icon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+<!-- 1. MÃ GA4 GỐC (Kết nối với Google Analytics) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-NSJCVSL9RM"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-NSJCVSL9RM'); 
+</script>
+
+<!-- 2. MÃ NHỊP TIM 30 GIÂY -->
+<script>
+  setInterval(function() {
+    if (!document.hidden) { 
+      gtag('event', 'keep_alive', {
+        'event_category': 'Engagement',
+        'event_label': 'Học sinh đang làm bài',
+        'non_interaction': false
+      });
+    }
+  }, 30000); 
+</script>
+
+    <style id="main-style">
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1e40af;
+            --tech-gradient: linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%);
+            --accent: #f59e0b;
+            --bg-body: #e0f2fe;
+            --text-main: #334155;
+            --text-muted: #64748b;
+            --white: #ffffff;
+            --shadow-lg: 0 20px 40px -5px rgba(0, 0, 0, 0.15);
+            --radius-md: 12px;
+            --radius-lg: 24px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-body);
+            color: var(--text-main);
+            line-height: 1.6;
+            min-height: 100vh;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            padding: 15px; 
+        }
+
+        #reader-view {
+            display: block; 
+            max-width: 1000px;
+            margin: 0 auto;
+            background: #f8fafc;
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+            animation: slideUp 0.6s ease-out;
+            border: 1px solid rgba(255,255,255,0.5);
+        }
+
+        .reader-header {
+            background: var(--tech-gradient);
+            color: var(--white);
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between; 
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .reader-header h2 { font-size: 1.1rem; font-weight: 600; margin: 0; display: flex; align-items: center; gap: 8px; }
+        
+        .btn-small { 
+            padding: 8px 16px; 
+            font-size: 0.9rem; 
+            border-radius: 8px; 
+            background: rgba(0,0,0,0.2); 
+            color: white; 
+            border: 1px solid rgba(255,255,255,0.4); 
+            cursor: pointer; 
+            display: flex; 
+            align-items: center; 
+            gap: 8px; 
+            transition: 0.3s; 
+            font-weight: 500;
+            border: none;
+        }
+        .btn-small:hover { background: rgba(0,0,0,0.4); transform: translateX(-2px); }
+
+        .reader-content { padding: 25px 15px; background: var(--white); }
+
+        h1.main-title {
+            font-family: 'Merriweather', serif;
+            color: var(--primary-dark);
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 1.6rem;
+            line-height: 1.4;
+        }
+
+        h1.main-title span {
+            display: block;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.95rem;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        h2.part-title {
+            background: #f1f5f9;
+            color: var(--primary-dark);
+            padding: 12px 15px;
+            border-radius: 10px;
+            border-left: 5px solid var(--primary);
+            margin: 30px 0 20px 0;
+            font-size: 1.15rem;
+            display: flex;
+            align-items: flex-start;
+            flex-direction: column;
+            gap: 8px;
+            font-weight: bold;
+        }
+        
+        h3 {
+            color: #334155;
+            margin: 20px 0 10px 0;
+            font-size: 1.05rem;
+        }
+
+        p { margin-bottom: 12px; text-align: justify; font-size: 0.95rem; line-height: 1.7; }
+        
+        .reader-content > ul, .reader-content > ol {
+            padding-left: 0;
+            margin-bottom: 15px;
+        }
+        
+        .reader-content > ul { list-style-type: none; }
+        .reader-content > ol { list-style-type: decimal; margin-left: 15px; }
+
+        .reader-content > ul > li {
+            position: relative;
+            padding-left: 30px;
+            margin-bottom: 12px;
+            background: #f8fafc;
+            padding: 12px 12px 12px 30px;
+            border-radius: 10px;
+            border: 1px solid #e2e8f0;
+            font-size: 0.95rem;
+            text-align: justify;
+            line-height: 1.6;
+        }
+        .reader-content > ul > li::before {
+            content: '\f105';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            color: var(--primary);
+            position: absolute;
+            left: 10px;
+            top: 14px;
+            font-size: 1rem;
+        }
+        
+        .reader-content > ol > li {
+            margin-bottom: 12px;
+            background: #f8fafc;
+            padding: 12px;
+            border-radius: 10px;
+            border: 1px solid #e2e8f0;
+            font-size: 0.95rem;
+            text-align: justify;
+            line-height: 1.6;
+        }
+
+        .logic-box {
+            background: #f0fdf4;
+            border-radius: var(--radius-md);
+            padding: 20px 15px;
+            margin: 25px 0;
+            box-shadow: 0 4px 10px -3px rgba(34, 197, 94, 0.1);
+            border: 1px solid #bbf7d0;
+            border-left: 5px solid #22c55e;
+            font-size: 0.95rem;
+        }
+        .logic-box strong { 
+            color: #166534; 
+            font-size: 1.05rem; 
+            display: flex; 
+            align-items: center; 
+            gap: 8px; 
+            margin-bottom: 10px;
+            margin-top: 15px;
+        }
+        .logic-box strong:first-child {
+            margin-top: 0;
+        }
+        .logic-box p { margin-bottom: 8px; }
+
+        .footer-credit {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 2px dashed #e2e8f0;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+        .footer-credit i { color: #ef4444; }
+        
+        .sql-block {
+            background-color: #eff6ff;
+            padding: 12px 15px;
+            border-radius: 8px;
+            border-left: 4px solid blue;
+            color: blue;
+            font-family: 'Courier New', Courier, monospace;
+            font-weight: bold;
+            font-size: 1.05rem;
+            overflow-x: auto;
+            margin: 10px 0;
+            white-space: pre-wrap;
+            line-height: 1.5;
+        }
+        .sql-inline {
+            color: blue;
+            font-weight: bold;
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        @media (min-width: 640px) {
+            body { padding: 40px 20px; }
+            .reader-header { padding: 20px 40px; }
+            .reader-content { padding: 40px; }
+            h1.main-title { font-size: 2.2rem; }
+            h2.part-title { flex-direction: row; align-items: center; }
+            p, .reader-content > ul > li, .reader-content > ol > li, .logic-box { font-size: 1.05rem; }
+            .reader-content > ul > li { padding-left: 45px; }
+            .reader-content > ul > li::before { left: 15px; top: 15px; }
+            #reader-view { border-radius: var(--radius-lg); }
+            .logic-box { padding: 25px 30px; }
+        }
+    
+        code {
+            background-color: #eff6ff;
+            color: blue;
+            font-family: 'Courier New', Courier, monospace;
+            font-weight: bold;
+            padding: 2px 6px;
+            border-radius: 4px;
+            word-break: break-word;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="reader-view">
+        <div class="reader-header">
+            <h2><i class="fa-solid fa-laptop-code"></i> Không gian học tập Hành Trình Số</h2>
+            <button class="btn-small" onclick="window.history.back()">
+                <i class="fa-solid fa-arrow-left"></i> Thoát
+            </button>
+        </div>
+
+        <div class="reader-content">
+            <h1 class="main-title">
+                <span>Chuyên đề Tin học 11</span>
+                ĐỀ CƯƠNG HỌC TẬP CHI TIẾT
+            </h1>
+
+            <h2 class="part-title"><i class="fa-solid fa-code"></i> Bài 7. Trình bày các khái niệm cơ bản về ngôn ngữ HTML, thẻ và phần tử HTML, cấu trúc chuẩn của một tệp HTML, cùng các phần mềm hỗ trợ soạn thảo mã nguồn.</h2>
+            
+            <h3>1. Trang web và HTML</h3>
+            <p>Trang web được hiển thị bởi trình duyệt web (Cốc Cốc, FireFox, Chrome) thực chất được tạo ra từ các tệp văn bản. Các tệp này được gọi là trang nguồn (hay mã nguồn).</p>
+            <p>HTML là viết tắt của cụm từ Hypertext Markup Language (ngôn ngữ đánh dấu siêu văn bản), là một bộ quy tắc dùng để thiết lập cấu trúc và hiển thị nội dung trang web.</p>
+            <p>Trang web được thiết lập từ các tệp văn bản thường có phần mở rộng là .html hoặc .htm, bao gồm phần văn bản và các kí tự đánh dấu đặc biệt nằm trong cặp dấu <code>&lt; &gt;</code>. Các kí tự này gọi là thẻ đánh dấu HTML (còn gọi là thẻ HTML hay tag).</p>
+            
+            <p><strong>a) Thẻ đánh dấu HTML</strong></p>
+            <p>Thẻ đánh dấu HTML (tag) là các thành phần chính tạo thành ngôn ngữ đánh dấu siêu văn bản. Mỗi thẻ có tên riêng và ý nghĩa nhất định.</p>
+            <ul>
+                <li><code>&lt;p&gt;</code>: Đoạn văn bản (Ví dụ: <code>&lt;p&gt;Đây là đoạn văn bản.&lt;/p&gt;</code>)</li>
+                <li><code>&lt;h1&gt;</code>: Tiêu đề 1 của văn bản (Ví dụ: <code>&lt;h1&gt;Đây là tiêu đề 1&lt;/h1&gt;</code>)</li>
+            </ul>
+            <p>Lưu ý:</p>
+            <ul>
+                <li>Tên thẻ HTML không phân biệt chữ hoa, chữ thường nhưng mặc định tên thẻ được viết chữ thường.</li>
+                <li>Các thẻ có thể lồng nhau. Ví dụ thẻ <code>&lt;em&gt;</code> được lồng bên trong thẻ <code>&lt;p&gt;</code>: <code>&lt;p&gt;Trang này được lập bởi &lt;em&gt;nhóm bạn bè&lt;/em&gt; thân thiết&lt;/p&gt;</code></li>
+                <li>Mỗi thẻ có thể đi kèm các thông tin thuộc tính. Ví dụ thuộc tính quy định màu đỏ được gắn thêm cho thẻ <code>&lt;p&gt;</code>: <code>&lt;p style="color:red"&gt;This is a paragraph.&lt;/p&gt;</code></li>
+                <li>Phần lớn các thẻ đều là thẻ đôi, tức là có thẻ bắt đầu và thẻ kết thúc (có thêm dấu / chẳng hạn <code>&lt;/p&gt;</code>). Một số loại thẻ đơn chỉ có thẻ bắt đầu, ví dụ <code>&lt;hr&gt;</code> (dòng kẻ ngang), <code>&lt;br&gt;</code> (ngắt xuống dòng).</li>
+                <li>HTML và trình duyệt không nhận biết được nhiều dấu cách. Trình duyệt cũng không nhận biết dấu xuống dòng khi nhấn Enter trong quá trình soạn thảo văn bản thô.</li>
+            </ul>
+            
+            <p><strong>b) Phần tử HTML</strong></p>
+            <p>Phần tử HTML (element) là khái niệm cơ bản của trang HTML. Một phần tử được định nghĩa bởi thẻ bắt đầu, thẻ kết thúc và phần nội dung nằm giữa cặp thẻ.</p>
+            <p>Ví dụ: Vị trí bắt đầu (<code>&lt;tên thẻ&gt;</code>) + Nội dung + Vị trí kết thúc (<code>&lt;/tên thẻ&gt;</code>) tạo thành một Phần tử HTML. Các thẻ đơn cùng nội dung của nó cũng được gọi là phần tử HTML.</p>
+            <p>Kĩ năng số: Phân biệt rõ “thẻ HTML” (chỉ gồm phần dấu ngoặc <code>&lt; &gt;</code> làm nhiệm vụ đánh dấu) và “phần tử HTML” (bao gồm cả thẻ mở, nội dung bên trong và thẻ đóng). Hiểu rõ cấu trúc lồng nhau giúp tránh lỗi hiển thị sai định dạng trên trình duyệt.</p>
+            
+            <p>Hoạt động 1. Nêu sự giống và khác nhau giữa thẻ HTML và phần tử HTML.</p>
+            <ul>
+                <li>Giống nhau: Đều là các khái niệm và thành phần cơ bản cấu tạo nên trang web, có tác dụng định dạng nội dung hiển thị.</li>
+                <li>Khác nhau: Thẻ HTML là các từ khóa đặc biệt đóng vai trò cốt lõi của ngôn ngữ HTML, xác định định dạng cụ thể. Phần tử HTML bao gồm cả thẻ HTML và nội dung văn bản chịu tác động của thẻ đó, đóng vai trò là các đơn vị định dạng của toàn bộ trang web.</li>
+            </ul>
+
+            <h3>2. Cấu trúc cơ bản của một tệp HTML</h3>
+            <p>Mỗi tệp HTML là tập hợp các phần tử HTML. Các phần tử HTML có thể độc lập, rời nhau hoặc lồng nhau.</p>
+            <div class="sql-block">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+  &lt;head&gt;
+    &lt;meta charset="utf-8"&gt;
+    &lt;title&gt;Tên trang Web&lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;div&gt;
+      &lt;h1&gt;Trang Web và HTML&lt;/h1&gt;
+      &lt;p&gt;Đây là dòng đầu tiên&lt;/p&gt;
+      &lt;hr&gt;
+      &lt;p&gt;Đây là dòng cuối cùng&lt;/p&gt;
+    &lt;/div&gt;
+    &lt;p&gt;Trang này được lập bởi &lt;em&gt;nhóm bạn bè&lt;/em&gt;&lt;/p&gt;
+  &lt;/body&gt;
+&lt;/html&gt;</div>
+            <p>Ý nghĩa các dòng mã cấu trúc cơ bản:</p>
+            <ul>
+                <li>Dòng đầu tiên <code>&lt;!DOCTYPE html&gt;</code>: thông báo cho trình duyệt biết đây là tệp có định dạng HTML (không được coi là phần tử HTML).</li>
+                <li>Phần tử <code>&lt;html&gt;</code>: là bắt buộc, là phần tử gốc (root) chứa tất cả các phần tử HTML còn lại của trang web. Thường chứa hai phần tử con là <code>&lt;head&gt;</code> và <code>&lt;body&gt;</code>.</li>
+                <li>Phần tử <code>&lt;head&gt;</code>: chứa các phần tử có liên quan chung đến toàn bộ trang web như <code>&lt;title&gt;</code>, <code>&lt;meta&gt;</code>, <code>&lt;style&gt;</code>, <code>&lt;script&gt;</code>.</li>
+                <li>Phần tử <code>&lt;body&gt;</code>: chứa tất cả các phần tử còn lại là thông tin hiển thị của trang web.</li>
+                <li>Phần tử <code>&lt;meta&gt;</code>: dùng để mô tả thông tin bổ sung, ví dụ <code>&lt;meta charset="utf-8"&gt;</code> khai báo bảng mã kí tự tiếng Việt UTF-8.</li>
+                <li>Phần tử <code>&lt;title&gt;</code>: mô tả tên của trang web hiển thị trên thẻ (tab) của trình duyệt. Nằm trong phần tử <code>&lt;head&gt;</code>.</li>
+            </ul>
+            <p>Cấu trúc chung của một trang web có thể hình dung như một cây thông tin các phần tử HTML có quan hệ cha con (lồng nhau), nút gốc là phần tử <code>&lt;html&gt;</code>. Bên trong chia làm hai nhánh chính là <code>&lt;head&gt;</code> (chứa thông tin thiết lập trang) và <code>&lt;body&gt;</code> (chứa nội dung hiển thị).</p>
+            
+            <p>Ghi nhớ:</p>
+            <ul>
+                <li>HTML (Hypertext Markup Language) là ngôn ngữ đánh dấu siêu văn bản dùng để tạo cấu trúc và nội dung cho trang web.</li>
+                <li>Thành phần cốt lõi của HTML là các thẻ (tag) và phần tử (element). Phần tử HTML bao gồm thẻ mở, nội dung và thẻ đóng.</li>
+                <li>Cấu trúc cơ bản của tệp HTML có dạng cây, với phần tử gốc là <code>&lt;html&gt;</code>, chứa hai phần tử chính là <code>&lt;head&gt;</code> (thiết lập thông tin) và <code>&lt;body&gt;</code> (nội dung hiển thị).</li>
+                <li>Có thể soạn thảo HTML bằng Notepad, các công cụ lập trình chuyên dụng (Notepad++, Sublime Text) hoặc các trang web hỗ trợ trực tuyến.</li>
+            </ul>
+
+            <div class="logic-box">
+                <strong><i class="fa-solid fa-microscope"></i> Tình huống vận dụng Bài 7 - Tình huống 1</strong>
+                <p><strong>Tình huống:</strong> Khi học viên dùng thẻ để viết tiêu đề cho trang web, bạn Hoa viết đoạn code: <code>&lt;H1&gt;Chào mừng đến với trang web của Hoa&lt;/h1&gt;</code> nhưng sau đó bạn thắc mắc không biết chữ `H` viết hoa ở thẻ mở có gây lỗi so với chữ `h` viết thường ở thẻ đóng không.</p>
+                <p><strong>Trả lời khoa học:</strong> Câu trả lời là đoạn mã này hoàn toàn hợp lệ và không gây lỗi hiển thị. Trình duyệt hoạt động dựa trên quy tắc "Tên thẻ HTML không phân biệt chữ hoa, chữ thường" đối với HTML5. Do đó, <code>&lt;H1&gt;</code> hay <code>&lt;h1&gt;</code> đều được trình duyệt biên dịch và định dạng dưới dạng thẻ tiêu đề mức 1. Tuy nhiên, theo tiêu chuẩn viết mã nguồn hiện đại, các lập trình viên luôn được khuyến khích sử dụng chữ thường cho tất cả các thẻ để dễ đọc và đồng nhất.</p>
+                
+                <strong><i class="fa-solid fa-microscope"></i> Tình huống vận dụng Bài 7 - Tình huống 2</strong>
+                <p><strong>Tình huống:</strong> Trong quá trình soạn thảo, bạn Nam muốn đoạn văn hiển thị trên trình duyệt cách nhau thật xa nên đã cố tình gõ liên tiếp 5 phím Enter giữa các câu trong phần mềm Notepad. Khi chạy trên Chrome, đoạn văn vẫn hiển thị liền một khối, không có khoảng cách.</p>
+                <p><strong>Trả lời khoa học:</strong> Trình duyệt web và ngôn ngữ HTML không nhận biết được khoảng trắng dài hay dấu xuống dòng được tạo ra từ phím Enter (hoặc dấu cách liên tiếp) trong quá trình soạn thảo văn bản thô. HTML coi tất cả khoảng trắng liên tiếp chỉ là 1 dấu cách duy nhất. Để trình duyệt hiển thị việc ngắt dòng, Nam bắt buộc phải sử dụng các kí tự đánh dấu đặc biệt của HTML (như thẻ đơn <code>&lt;br&gt;</code> để ngắt dòng cưỡng bức, hoặc tách nội dung vào các thẻ khối <code>&lt;p&gt;</code> khác nhau).</p>
+            </div>
+
+            <!-- BÀI 8 -->
+            <h2 class="part-title"><i class="fa-solid fa-file-code"></i> Bài 8. Cách khai báo thuộc tính thẻ và sử dụng các thẻ định dạng tiêu đề, đoạn văn, phông chữ trong HTML.</h2>
+            
+            <h3>1. Thuộc tính thẻ</h3>
+            <p>Mọi phần tử HTML đều có thể có thuộc tính. Thuộc tính của thẻ có tác dụng bổ sung thông tin, làm rõ điều khiển được thẻ chỉ định.</p>
+            <p>Cú pháp khai báo thuộc tính: <code>tên_thuộc_tính="giá trị"</code>. Thuộc tính nằm trong thẻ bắt đầu, ngay sau tên thẻ. Trong trường hợp thẻ có nhiều hơn một thuộc tính thì các thuộc tính được ngăn cách bởi dấu cách.</p>
+            <p>Ví dụ với 2 thuộc tính: <code>&lt;Tên_thẻ thuộc_tính_1="giá_trị_1" thuộc_tính_2="giá_trị_2"&gt; Nội dung &lt;/Tên_thẻ&gt;</code></p>
+            <p>Một trong những thuộc tính được sử dụng thường xuyên nhất là thuộc tính <code>style</code>, dùng để thiết lập định dạng văn bản như chọn màu sắc, phông chữ, cỡ chữ, kiểu chữ, căn lề, tạo khung,… cho một phần tử HTML ngay tại vị trí được viết.</p>
+            <p>Ví dụ: Thẻ <code>&lt;html lang="vi"&gt;</code> và thẻ <code>&lt;meta charset="UTF-8"&gt;</code>. Các thuộc tính cung cấp thêm thông tin thiết lập cho phần tử, chẳng hạn xác định ngôn ngữ hiển thị (lang="vi") hoặc bảng mã kí tự (charset="UTF-8") để trình duyệt xử lí và hiển thị trang web chính xác.</p>
+            
+            <h3>2. Các thẻ định dạng trình bày văn bản</h3>
+            <p><strong>a) Định dạng tiêu đề</strong></p>
+            <p>Để định dạng tiêu đề, có thể sử dụng các thẻ dạng <code>&lt;hx&gt;</code> trong đó x nhận giá trị từ 1 đến 6. Thẻ <code>&lt;h1&gt;</code> được sử dụng cho tiêu đề chính, các tiêu đề mức thấp hơn dùng thẻ <code>&lt;h2&gt;</code> đến <code>&lt;h6&gt;</code>.</p>
+            
+            <p><strong>b) Định dạng đoạn văn bản</strong></p>
+            <p>Cách đơn giản nhất để xác định đoạn là đặt nội dung trong cặp thẻ <code>&lt;p&gt;Nội dung&lt;/p&gt;</code>. Trình duyệt sẽ hiển thị nội dung trên dòng mới kèm với khoảng trống nhỏ trước và sau đoạn.</p>
+            <p>Phần tử <code>&lt;div&gt;...&lt;/div&gt;</code> tạo một khối chứa nội dung bất kì, bắt đầu trên dòng mới (dạng khối).</p>
+            <p>Phần tử <code>&lt;span&gt;...&lt;/span&gt;</code> có tác dụng nhóm nội dung ở quy mô nhỏ hơn, nội dung khối hiển thị trên cùng dòng đang viết (dạng dòng).</p>
+            <p>Ngoài ra, còn có hai thẻ <code>&lt;br&gt;</code> (xuống dòng) và <code>&lt;hr&gt;</code> (tạo một đường kẻ ngang trên trang web).</p>
+
+            <h3>3. Các thẻ định dạng phông chữ</h3>
+            <p><strong>a) Định dạng kiểu chữ</strong></p>
+            <ul>
+                <li>Đậm: <code>&lt;b&gt;</code>, <code>&lt;strong&gt;</code></li>
+                <li>Nghiêng: <code>&lt;i&gt;</code>, <code>&lt;em&gt;</code></li>
+                <li>Gạch chân: <code>&lt;u&gt;</code></li>
+            </ul>
+            <p>Các thẻ <code>&lt;strong&gt;</code>, <code>&lt;em&gt;</code> có cùng tác dụng hiển thị chữ đậm, nghiêng nhưng các thẻ này có ý nghĩa nhấn mạnh vào ngữ nghĩa (Semantic) của nội dung đối với công cụ tìm kiếm và trình đọc màn hình.</p>
+            
+            <p><strong>b) Định dạng phông chữ</strong></p>
+            <p>Để định dạng phông chữ, sử dụng thuộc tính <code>style</code>. Các thuộc tính màu sắc, phông chữ, cỡ chữ được xác định như sau:</p>
+            <ul>
+                <li>Màu sắc: <code>&lt;p style="color:red"&gt;Nội dung.&lt;/p&gt;</code> hoặc mã hệ RGB.</li>
+                <li>Phông chữ: <code>&lt;p style="font-family:Tahoma"&gt;Nội dung.&lt;/p&gt;</code></li>
+                <li>Cỡ chữ: <code>&lt;p style="font-size:15px"&gt;Nội dung.&lt;/p&gt;</code></li>
+            </ul>
+            <p>Khi muốn thực hiện nhiều định dạng đồng thời, đặt các cặp tên:giá trị trong thuộc tính style, ngăn cách nhau bởi dấu <code>;</code>. Ví dụ: <code>style="color:red; font-size:15px; font-weight:bold;"</code></p>
+
+            <div class="logic-box">
+                <strong><i class="fa-solid fa-microscope"></i> Tình huống vận dụng Bài 8 - Tình huống 1</strong>
+                <p><strong>Tình huống:</strong> Bạn Khoa thiết kế một trang web tin tức. Khắp cả trang, bạn sử dụng thẻ <code>&lt;div&gt;</code> để chứa nội dung và dùng CSS để làm cho nó to, in đậm trông giống hệt một cái tiêu đề, mà nhất quyết không chịu dùng các thẻ từ <code>&lt;h1&gt;</code> đến <code>&lt;h6&gt;</code>.</p>
+                <p><strong>Trả lời khoa học:</strong> Hành động của Khoa sai về mặt cấu trúc ngữ nghĩa (Semantic) của HTML. Mặc dù giao diện hiển thị cho người xem (User Interface) trông giống hệt tiêu đề, nhưng các công cụ tìm kiếm (như Google Bot) và các phần mềm đọc màn hình cho người khiếm thị sử dụng cấu trúc phân cấp của thẻ <code>&lt;hx&gt;</code> để hiểu mức độ quan trọng và cấu trúc xương sống của trang web. Việc chỉ dùng thẻ <code>&lt;div&gt;</code> (vốn không mang ý nghĩa về cấu trúc nội dung) sẽ làm trang web bị tụt hạng khi SEO và gây khó khăn cho hệ thống phân tích dữ liệu.</p>
+                
+                <strong><i class="fa-solid fa-microscope"></i> Tình huống vận dụng Bài 8 - Tình huống 2</strong>
+                <p><strong>Tình huống:</strong> Bạn Oanh viết một câu chào trong HTML: <code>&lt;p style="color: blue" style="font-size: 20px"&gt;Xin chào!&lt;/p&gt;</code>. Khi mở lên trình duyệt, chữ hiển thị màu xanh (blue) nhưng kích thước vẫn bé xíu mặc định, không to lên thành 20px.</p>
+                <p><strong>Trả lời khoa học:</strong> Oanh đã vi phạm cú pháp khai báo thuộc tính thẻ HTML. Trong một thẻ, một thuộc tính (như <code>style</code>) chỉ được khai báo một lần duy nhất. Trình duyệt thường chỉ nhận diện giá trị của thuộc tính <code>style</code> đầu tiên mà nó gặp (màu xanh) và phớt lờ thuộc tính <code>style</code> bị trùng lặp phía sau (kích thước). Cách viết đúng khoa học và tuân thủ chuẩn HTML là gộp nhiều định dạng vào chung một thuộc tính style, phân cách bằng dấu chấm phẩy: <code>&lt;p style="color: blue; font-size: 20px"&gt;Xin chào!&lt;/p&gt;</code>.</p>
+            </div>
+
+            <!-- BÀI 9 -->
+            <h2 class="part-title"><i class="fa-solid fa-list"></i> Bài 9. Hướng dẫn cách sử dụng các thẻ HTML để tạo danh sách (có thứ tự, không có thứ tự, danh sách mô tả) và thiết lập bảng (tạo hàng, ô, gộp ô, thêm tiêu đề).</h2>
+            
+            <h3>1. Tạo danh sách</h3>
+            <p>HTML cung cấp các thẻ để nhóm và liệt kê các mục. Có ba loại danh sách chính: danh sách không có thứ tự, danh sách có thứ tự và danh sách mô tả.</p>
+            <p><strong>a) Danh sách có hoặc không có thứ tự</strong></p>
+            <p>Danh sách có thứ tự (Ordered List) được tạo bằng thẻ <code>&lt;ol&gt;</code> và <code>&lt;/ol&gt;</code>. Mỗi mục trong danh sách được đặt trong thẻ <code>&lt;li&gt;</code> và <code>&lt;/li&gt;</code>. Mặc định, các mục được đánh số 1, 2, 3…</p>
+            <p>Sử dụng thuộc tính <code>type</code> (chọn kiểu “1”, “A”, “a”, “I”, “i”) và <code>start</code> (giá trị bắt đầu là số nguyên) để thay đổi cách đánh số.</p>
+            <div class="sql-block">&lt;ol type="i"&gt;
+  &lt;li&gt;Mục 1&lt;/li&gt;
+  &lt;li&gt;Mục 2&lt;/li&gt;
+&lt;/ol&gt;</div>
+            <p>Danh sách không có thứ tự (Unordered List) được tạo bằng thẻ <code>&lt;ul&gt;</code> và <code>&lt;/ul&gt;</code>. Các kí hiệu đầu dòng mặc định là dấu chấm tròn đen. Có thể thay đổi bằng <code>style="list-style-type:..."</code> (ví dụ: circle, square, none).</p>
+            <div class="sql-block">&lt;ul style="list-style-type:square"&gt;
+  &lt;li&gt;Nội dung A&lt;/li&gt;
+  &lt;li&gt;Nội dung B&lt;/li&gt;
+&lt;/ul&gt;</div>
+            <p><strong>b) Danh sách mô tả</strong></p>
+            <p>Danh sách mô tả dùng để liệt kê các mục kèm theo mô tả. Cấu trúc được tạo bằng:</p>
+            <ul>
+                <li><code>&lt;dl&gt;</code>: Bắt đầu danh sách.</li>
+                <li><code>&lt;dt&gt;</code>: Tên mục (thuật ngữ).</li>
+                <li><code>&lt;dd&gt;</code>: Mô tả của mục tương ứng.</li>
+            </ul>
+
+            <h3>2. Thiết lập bảng</h3>
+            <p>Bảng được sử dụng khi cần sắp xếp dữ liệu dưới dạng hàng và cột. Bảng không nên được sử dụng để tạo bố cục trang web.</p>
+            <p>Các thẻ cơ bản để tạo bảng:</p>
+            <ul>
+                <li><code>&lt;table&gt;</code>: Tạo bảng.</li>
+                <li><code>&lt;tr&gt;</code>: Tạo một hàng (table row).</li>
+                <li><code>&lt;td&gt;</code>: Tạo một ô dữ liệu (table data).</li>
+                <li><code>&lt;th&gt;</code>: Tạo ô tiêu đề của cột/hàng (table header), thường in đậm và căn giữa.</li>
+            </ul>
+            <div class="sql-block">&lt;table border="1"&gt;
+  &lt;tr&gt; &lt;th&gt;Món ăn&lt;/th&gt; &lt;th&gt;Đơn giá&lt;/th&gt; &lt;/tr&gt;
+  &lt;tr&gt; &lt;td&gt;Thịt xiên&lt;/td&gt; &lt;td&gt;10K&lt;/td&gt; &lt;/tr&gt;
+&lt;/table&gt;</div>
+            <p><strong>Gộp ô (Rowspan và Colspan)</strong></p>
+            <ul>
+                <li><code>rowspan="số_hàng"</code>: Gộp nhiều hàng lại với nhau, dùng trong thẻ <code>&lt;th&gt;</code> hoặc <code>&lt;td&gt;</code>.</li>
+                <li><code>colspan="số_cột"</code>: Gộp nhiều cột lại với nhau.</li>
+            </ul>
+            <p>Lưu ý: Khi gộp ô, cần chú ý bỏ qua việc khai báo các thẻ <code>&lt;th&gt;</code> hoặc <code>&lt;td&gt;</code> bị dư thừa ở các hàng hoặc cột bị gộp.</p>
+
+            <div class="logic-box">
+                <strong><i class="fa-solid fa-microscope"></i> Tình huống vận dụng Bài 9 - Tình huống 1</strong>
+                <p><strong>Tình huống:</strong> Học viên Cường được giao thiết kế một danh sách các huy chương: Vàng, Bạc, Đồng. Cường muốn danh sách hiển thị là <code>A. Vàng</code>, <code>B. Bạc</code>, <code>C. Đồng</code>, nhưng khi thêm thuộc tính <code>start="A"</code> vào thẻ <code>&lt;ol type="A" start="A"&gt;</code> thì trình duyệt không nhận diện được và vẫn đánh số theo trật tự cũ.</p>
+                <p><strong>Trả lời khoa học:</strong> Cường đã sử dụng sai giá trị của thuộc tính <code>start</code>. Theo đặc tả kĩ thuật của HTML, thuộc tính <code>start</code> bắt buộc phải nhận giá trị là số nguyên (integer), dù cho kiểu đánh số (type) là chữ cái hay số La Mã. Để bắt đầu bằng chữ 'A' (chữ cái số 1 trong bảng), Cường phải thiết lập <code>start="1"</code>. Nếu muốn bắt đầu từ chữ 'C', Cường phải thiết lập <code>start="3"</code>. Trình duyệt sẽ tự động nội suy số nguyên này thành kiểu kí tự tương ứng do thuộc tính <code>type="A"</code> quy định.</p>
+                
+                <strong><i class="fa-solid fa-microscope"></i> Tình huống vận dụng Bài 9 - Tình huống 2</strong>
+                <p><strong>Tình huống:</strong> Bạn Diệp tạo một bảng gồm 2 hàng và 3 cột. Ở hàng đầu tiên, Diệp gộp toàn bộ 3 ô thành 1 ô lớn làm tiêu đề chung bằng <code>&lt;th colspan="3"&gt;</code>. Tuy nhiên, khi hiển thị, bảng của Diệp bị thò ra ngoài 2 ô dư thừa ở bên phải làm hỏng cấu trúc khung bảng.</p>
+                <p><strong>Trả lời khoa học:</strong> Diệp đã gặp lỗi cấu trúc dạng lưới (Grid) của thẻ <code>&lt;table&gt;</code>. Khi sử dụng thuộc tính <code>colspan="3"</code>, một ô tiêu đề đã tự động phình to ra chiếm diện tích tương đương 3 cột. Điều này đồng nghĩa với việc hàng đó đã "đủ" chỗ. Nếu Diệp vẫn tiếp tục khai báo thêm 2 thẻ <code>&lt;th&gt;</code> hoặc <code>&lt;td&gt;</code> bình thường ở ngay phía sau trong cùng hàng (tr) đó, trình duyệt sẽ đẩy 2 ô dư thừa này ra ngoài lưới 3 cột tiêu chuẩn. Nguyên tắc khoa học khi gộp ô là: đã gộp bao nhiêu ô thì phải xóa bỏ bấy nhiêu thẻ khai báo ô tương ứng ở các hàng/cột bị chiếm chỗ.</p>
+            </div>
+
+            <!-- BÀI 10 -->
+            <h2 class="part-title"><i class="fa-solid fa-link"></i> Bài 10 Trình bày khái niệm siêu văn bản, phân biệt đường dẫn tương đối, tuyệt đối và cách dùng thẻ HTML để tạo liên kết trong trang web.</h2>
+            
+            <h3>1. Siêu văn bản và đường dẫn</h3>
+            <p>Siêu văn bản (hypertext) là loại văn bản chứa nội dung đa phương tiện và các siêu liên kết (gọi tắt là liên kết). Người dùng có thể truy cập đến tài liệu khác bằng cách nháy chuột vào liên kết.</p>
+            <p>Trong HTML, thẻ <code>&lt;a&gt;</code> (anchor) được dùng để tạo liên kết. Cấu trúc chung:</p>
+            <div class="sql-block">&lt;a href="URL"&gt;Nội dung hiển thị tại vị trí đặt liên kết&lt;/a&gt;</div>
+            <p>URL (Uniform Resource Locator) là địa chỉ tham chiếu tới tài liệu. Có hai loại URL chính:</p>
+            <ul>
+                <li><strong>Đường dẫn tuyệt đối:</strong> Cung cấp địa chỉ đầy đủ bao gồm cả giao thức (như http:// hoặc https://), tên miền. Dùng khi liên kết đến tài liệu không nằm trên máy chủ của mình. (Ví dụ: <code>http://google.com</code>)</li>
+                <li><strong>Đường dẫn tương đối:</strong> Mô tả cách truy cập tài liệu dựa trên vị trí của tài liệu hiện tại (cấu trúc thư mục). Dùng khi liên kết đến tài liệu nằm trên cùng máy chủ hoặc cùng thư mục. (Ví dụ: <code>html/bai_tap.html</code>)</li>
+            </ul>
+
+            <h3>2. Các cách tạo liên kết tới một trang web</h3>
+            <p><strong>a) Liên kết tới một trang web khác (Liên kết ngoài)</strong></p>
+            <p>Sử dụng thẻ <code>&lt;a&gt;</code> và truyền đường dẫn tuyệt đối cho thuộc tính <code>href</code>.</p>
+            
+            <p><strong>b) Liên kết đến một vị trí khác trong cùng website</strong></p>
+            <p>Thường sử dụng đường dẫn tương đối. Căn cứ vào cấu trúc thư mục:</p>
+            <ul>
+                <li>Cùng thư mục: Cung cấp tên tệp (<code>href="thong_tin.html"</code>)</li>
+                <li>Thư mục con (dưới 1 cấp): <code>href="bai_tap/bai_tap_1.html"</code></li>
+                <li>Thư mục mẹ (trên 1 cấp): Sử dụng cụm kí tự <code>../</code> (<code>href="../index.html"</code>)</li>
+            </ul>
+
+            <p><strong>c) Liên kết tới vị trí khác trong cùng trang web</strong></p>
+            <p>Để tạo liên kết chuyển nhanh (nhảy) đến một vị trí cụ thể trong cùng trang web:</p>
+            <ul>
+                <li>Bước 1: Tạo thuộc tính <code>id</code> (mã định danh) tại vị trí đích. Ví dụ: <code>&lt;table id="Thong_tin"&gt;</code></li>
+                <li>Bước 2: Tạo liên kết tới mã định danh đó bằng kí tự <code>#</code>. Ví dụ: <code>&lt;a href="#Thong_tin"&gt;Tới thông tin&lt;/a&gt;</code></li>
+            </ul>
+
+            <p><strong>d) Liên kết tới hình ảnh</strong></p>
+            <p>Bao bọc thẻ <code>&lt;img&gt;</code> bên trong thẻ <code>&lt;a&gt;</code>. Khi người dùng nháy chuột vào bức ảnh, họ sẽ được chuyển hướng đến địa chỉ liên kết.</p>
+            <div class="sql-block">&lt;a href="thong_tin.html"&gt;
+  &lt;img src="images/sun.png"&gt;
+&lt;/a&gt;</div>
+
+            <div class="logic-box">
+                <strong><i class="fa-solid fa-microscope"></i> Tình huống vận dụng Bài 10 - Tình huống 1</strong>
+                <p><strong>Tình huống:</strong> Bạn Trung đang thiết kế một trang web trên máy tính cá nhân. Trung muốn tạo liên kết dẫn đến trang chủ trang web của trường đại học nên gõ đoạn mã: <code>&lt;a href="www.vnu.edu.vn"&gt;Đại học Quốc Gia&lt;/a&gt;</code>. Tuy nhiên khi nhấp vào liên kết, trình duyệt báo lỗi không tìm thấy tệp <code>C:/Users/Trung/www.vnu.edu.vn</code> thay vì mở trang web của trường.</p>
+                <p><strong>Trả lời khoa học:</strong> Trung đã hiểu sai về khái niệm đường dẫn tuyệt đối. Việc chỉ gõ "www.vnu.edu.vn" bị trình duyệt xem như một đường dẫn tương đối trỏ tới một tệp nội bộ nằm trên máy tính hiện tại. Để tạo một liên kết ngoài ra Internet (đường dẫn tuyệt đối), thuộc tính URL bắt buộc phải bắt đầu bằng phương thức giao thức truyền tải (Protocol) như <code>http://</code> hoặc <code>https://</code>. Mã sửa đúng khoa học là: <code>href="https://www.vnu.edu.vn"</code>.</p>
+                
+                <strong><i class="fa-solid fa-microscope"></i> Tình huống vận dụng Bài 10 - Tình huống 2</strong>
+                <p><strong>Tình huống:</strong> Bạn Nga tạo một trang web dài như một cuốn sách. Ở đầu trang, Nga tạo một mục lục để người xem nhấn vào sẽ trượt nhanh xuống chương 3 ở phía dưới. Nga đã thêm <code>id="chuong3"</code> vào tiêu đề, nhưng khi tạo liên kết, Nga viết: <code>&lt;a href="chuong3"&gt;Đến Chương 3&lt;/a&gt;</code> thì tính năng không hoạt động.</p>
+                <p><strong>Trả lời khoa học:</strong> Nga đã thiếu kí tự phân giải neo (Anchor Identifier) đặc biệt trong HTML. Khi truyền giá trị "chuong3" vào thẻ <code>href</code>, trình duyệt hiểu rằng Nga đang muốn điều hướng sang một tệp mới tên là "chuong3" ở trong cùng thư mục. Để trình duyệt hiểu đây là yêu cầu trượt/di chuyển nội bộ trong cùng một trang web đến định danh phần tử, giá trị của thuộc tính <code>href</code> bắt buộc phải có dấu thăng (<code>#</code>) đứng trước mã định danh. Mã chuẩn khoa học: <code>href="#chuong3"</code>.</p>
+            </div>
+
+            <!-- BÀI 11 -->
+            <h2 class="part-title"><i class="fa-solid fa-photo-film"></i> Bài 11. Hướng dẫn cách sử dụng thẻ HTML để chèn hình ảnh, âm thanh, video và khung nội tuyến (iframe) vào trang web.</h2>
+            
+            <h3>1. Chèn tệp ảnh vào trang web</h3>
+            <p>Để chèn ảnh, HTML sử dụng thẻ đơn <code>&lt;img&gt;</code>. Cú pháp cơ bản cần có thuộc tính <code>src</code> (chỉ định đường dẫn đến tệp ảnh).</p>
+            <div class="sql-block">&lt;img src="images/coffee.png" alt="Cốc cà phê" width="300"&gt;</div>
+            <p>Các thuộc tính quan trọng của thẻ <code>&lt;img&gt;</code>:</p>
+            <ul>
+                <li><strong>alt (văn bản thay thế):</strong> Cung cấp đoạn chữ hiển thị khi ảnh bị lỗi không tải được, và giúp các trình đọc màn hình hỗ trợ người dùng khiếm thị.</li>
+                <li><strong>width / height (kích thước):</strong> Tính bằng pixel. Nếu chỉ sử dụng một trong hai thuộc tính, chiều còn lại sẽ được trình duyệt tự động nội suy để giữ đúng tỉ lệ gốc của bức ảnh, tránh làm ảnh bị méo.</li>
+            </ul>
+
+            <h3>2. Chèn âm thanh và video vào trang web</h3>
+            <p>HTML sử dụng thẻ <code>&lt;video&gt;</code> và <code>&lt;audio&gt;</code> để chèn trực tiếp các đoạn phim và âm thanh. Các định dạng tệp phổ biến: mp4, webm (Video) và mp3, wav, ogg (Audio).</p>
+            <p>Các thuộc tính bổ sung quan trọng:</p>
+            <ul>
+                <li><strong>controls:</strong> Thuộc tính dạng boolean (chỉ cần ghi tên, không cần giá trị). Dùng để hiển thị các nút điều khiển như phát/tạm dừng, thanh trượt âm lượng.</li>
+                <li><strong>autoplay:</strong> Thuộc tính boolean. Cho phép video/audio tự động phát ngay khi hiển thị. (Lưu ý: Một số trình duyệt chặn tự động phát có âm thanh, nên thường kết hợp cùng thuộc tính <strong>muted</strong> – tắt tiếng).</li>
+                <li><strong>poster:</strong> Chỉ áp dụng cho thẻ <code>&lt;video&gt;</code>. Cung cấp đường dẫn đến một tệp ảnh để làm ảnh bìa hiển thị trên khung video khi chưa bắt đầu phát.</li>
+            </ul>
+            <p>Ví dụ chèn video có các thuộc tính điều khiển:</p>
+            <div class="sql-block">&lt;video width="320" controls autoplay muted poster="bia.jpg"&gt;
+  &lt;source src="movie.mp4" type="video/mp4"&gt;
+&lt;/video&gt;</div>
+
+            <h3>3. Tạo khung nội tuyến trong trang web</h3>
+            <p>Khung nội tuyến (<code>&lt;iframe&gt;</code>) tạo ra một khu vực chứa (khung nhìn) trên trang web hiện tại để nhúng một trang web khác hoặc tài nguyên bên ngoài vào (ví dụ: nhúng bản đồ từ Google Maps, video từ YouTube).</p>
+            <p>Các thuộc tính thường dùng của thẻ <code>&lt;iframe&gt;</code>:</p>
+            <ul>
+                <li><strong>src:</strong> Đường dẫn tới trang web hoặc tài nguyên cần nhúng.</li>
+                <li><strong>width, height:</strong> Kích thước chiều rộng và chiều cao của khung nội tuyến.</li>
+            </ul>
+            <div class="sql-block">&lt;iframe src="CLB.html" width="600" height="400"&gt;&lt;/iframe&gt;</div>
+            <p>Ghi nhớ:</p>
+            <ul>
+                <li>Thẻ <code>&lt;img&gt;</code> dùng để chèn ảnh, bắt buộc có <code>src</code>. Thuộc tính <code>alt</code> cực kì quan trọng cho trợ năng.</li>
+                <li>Thẻ <code>&lt;audio&gt;</code> và <code>&lt;video&gt;</code> dùng chèn âm thanh, phim, có các thẻ điều khiển nội suy thông minh.</li>
+                <li>Thẻ <code>&lt;iframe&gt;</code> như một cánh cửa không gian, cho phép hiển thị một nội dung web khác ngay bên trong giao diện web của bạn.</li>
+            </ul>
+
+            <div class="logic-box">
+                <strong><i class="fa-solid fa-microscope"></i> Tình huống vận dụng Bài 11 - Tình huống 1</strong>
+                <p><strong>Tình huống:</strong> Bạn Sơn chèn một bức ảnh chân dung rất đẹp lên trang web cá nhân. Để tiết kiệm thời gian, Sơn cố tình đặt ép kích thước <code>width="500"</code> và <code>height="200"</code> vào thẻ <code>&lt;img&gt;</code>. Kết quả là trên trình duyệt, khuôn mặt trong bức ảnh bị bẹp dúm lại, biến dạng hoàn toàn.</p>
+                <p><strong>Trả lời khoa học:</strong> Sơn đã can thiệp sai vào tỉ lệ khung hình (Aspect Ratio) của bức ảnh gốc. Bức ảnh gốc có tỉ lệ tự nhiên giữa chiều rộng và chiều cao. Khi khai báo cứng ép buộc cả <code>width</code> và <code>height</code> không tương xứng với tỉ lệ gốc, trình duyệt sẽ kéo giãn dữ liệu pixel làm hình ảnh bị biến dạng méo mó. Giải pháp khoa học là Sơn chỉ nên thiết lập một thuộc tính duy nhất (ví dụ chỉ <code>width="500"</code>), trình duyệt sẽ tự động kích hoạt thuật toán nội suy để tính ra chiều cao tương ứng, giữ nguyên được tỉ lệ bức ảnh đẹp đẽ ban đầu.</p>
+                
+                <strong><i class="fa-solid fa-microscope"></i> Tình huống vận dụng Bài 11 - Tình huống 2</strong>
+                <p><strong>Tình huống:</strong> Bạn Hà tạo một website quảng bá sản phẩm mới và muốn đoạn phim quảng cáo tự động phát lồng lộn ngay khi người dùng truy cập web. Hà viết đoạn mã <code>&lt;video src="quangcao.mp4" autoplay controls&gt;</code>. Tuy nhiên, khi kiểm tra trên trình duyệt Chrome, đoạn phim hoàn toàn im lìm, không tự động phát.</p>
+                <p><strong>Trả lời khoa học:</strong> Đoạn mã của Hà không lỗi, nhưng đã vấp phải chính sách Trải nghiệm người dùng (User Experience Policy) khắt khe của các trình duyệt web hiện đại. Hầu hết các trình duyệt (Chrome, Safari, Edge) đều chặn tự động phát (autoplay) đối với các file đa phương tiện có chứa âm thanh nhằm tránh làm ồn đột ngột và gây khó chịu cho người dùng. Để <code>autoplay</code> có thể hoạt động, theo chuẩn khoa học, Hà bắt buộc phải thêm thuộc tính tắt tiếng (<code>muted</code>) vào thẻ: <code>&lt;video src="quangcao.mp4" autoplay muted controls&gt;</code>.</p>
+            </div>
+
+            
+
+            <!-- BÀI 12 -->
+            <h2 class="part-title"><i class="fa-solid fa-list-check"></i> Bài 12. Trình bày khái niệm biểu mẫu (form) trên trang web và cách sử dụng các thẻ HTML như form, input, select, textarea để thu thập dữ liệu.</h2>
+            
+            <h3>1. Biểu mẫu web</h3>
+            <p>Biểu mẫu web hay phần tử form của HTML là một công cụ dùng để thu thập dữ liệu. Dữ liệu được người dùng nhập vào form và xử lí tại chỗ hoặc gửi về máy chủ. Biểu mẫu thường được sử dụng khi đăng kí tài khoản, mua hàng, tìm kiếm thông tin,…</p>
+            <p>Biểu mẫu web đầy đủ có hai thành phần:</p>
+            <ul>
+                <li>Thành phần thứ nhất là biểu mẫu hiển thị trên web được tạo thành bởi các đoạn mã HTML.</li>
+                <li>Thành phần thứ hai là các ứng dụng hoặc script xử lí dữ liệu, thường nằm trên máy chủ (không thuộc phạm vi bài này).</li>
+            </ul>
+            <p>Biểu mẫu web được tạo bởi thẻ form có cấu trúc chung như sau:</p>
+            <div class="sql-block">&lt;form&gt;
+  Các phần tử của biểu mẫu
+&lt;/form&gt;</div>
+            <p>Các phần tử của biểu mẫu thường dùng:</p>
+            <ul>
+                <li><code>&lt;input&gt;</code>: Dùng để nhập liệu như văn bản, mật khẩu, các lựa chọn, nút gửi yêu cầu. Thuộc tính <code>type</code> dùng để xác định loại thành phần. (Ví dụ: <code>&lt;input type="text"&gt;</code>)</li>
+                <li><code>&lt;label&gt;</code>: Gán nhãn cho một phần tử. Thuộc tính <code>for</code> của thẻ dùng để liên kết thẻ label với id của thành phần tương ứng. (Ví dụ: <code>&lt;label for="ht"&gt;Họ tên&lt;/label&gt;</code>)</li>
+                <li><code>&lt;select&gt;</code>: Tạo một menu thả xuống (drop-down menu). (Ví dụ: <code>&lt;select name="lop"&gt;</code>)</li>
+                <li><code>&lt;option&gt;</code>: Tạo ra danh sách các lựa chọn, nằm trong cặp thẻ select hoặc datalist. (Ví dụ: <code>&lt;option value="12A1"&gt;12A1&lt;/option&gt;</code>)</li>
+                <li><code>&lt;textarea&gt;</code>: Tạo một ô nhập văn bản có nhiều dòng, cột. (Ví dụ: <code>&lt;textarea rows="4"&gt;&lt;/textarea&gt;</code>)</li>
+                <li><code>&lt;button&gt;</code>: Tạo các nút bấm trong biểu mẫu. (Ví dụ: <code>&lt;button&gt;Gửi&lt;/button&gt;</code>)</li>
+                <li><code>&lt;fieldset&gt;</code>: Nhóm các dữ liệu có liên quan trong biểu mẫu thành một cụm. (Ví dụ: <code>&lt;fieldset&gt;...&lt;/fieldset&gt;</code>)</li>
+                <li><code>&lt;legend&gt;</code>: Tạo caption (tiêu đề) cho thẻ fieldset. (Ví dụ: <code>&lt;legend&gt;Thông tin cá nhân&lt;/legend&gt;</code>)</li>
+            </ul>
+            <p>Phần tử <code>&lt;input&gt;</code> xác định vùng nhập dữ liệu, được xác định bởi thẻ đơn. Thuộc tính <code>name</code> của input được sử dụng khi thực hiện xử lí; <code>id</code> dùng để liên kết với label.</p>
+            <p>Ví dụ cấu trúc input và label:</p>
+            <div class="sql-block">&lt;label for="hoten"&gt;Họ và tên:&lt;/label&gt;
+&lt;input id="hoten" type="text" name="hoten"&gt;</div>
+            <p>Thuộc tính <code>type</code> xác định loại dữ liệu mà phần tử input chứa:</p>
+            <ul>
+                <li><code>text</code>: Tạo ra trường nhập văn bản một dòng. (Ví dụ: <code>&lt;input type="text"&gt;</code>)</li>
+                <li><code>password</code>: Tạo trường nhập mật khẩu (che kí tự bằng dấu chấm/sao). (Ví dụ: <code>&lt;input type="password"&gt;</code>)</li>
+                <li><code>radio</code>: Tạo ra ô chọn 1 giá trị duy nhất trong các phần tử cùng tên (name). (Ví dụ: <code>&lt;input type="radio" name="gt" value="Nam"&gt;</code>)</li>
+                <li><code>checkbox</code>: Tạo ra ô lựa chọn giá trị có hoặc không. Mỗi ô ghi nhận 1 giá trị. (Ví dụ: <code>&lt;input type="checkbox" value="Toán"&gt;</code>)</li>
+                <li><code>button</code>: Tạo ra một nút bấm. Cần thêm thuộc tính value để hiện tên nút. (Ví dụ: <code>&lt;input type="button" value="Nút"&gt;</code>)</li>
+                <li><code>file</code>: Tạo ra nút để chọn một tệp tin tải lên máy chủ. (Ví dụ: <code>&lt;input type="file"&gt;</code>)</li>
+                <li><code>submit</code>: Tạo ra nút để gửi thông tin biểu mẫu tới đường dẫn ở thuộc tính action của form. (Ví dụ: <code>&lt;input type="submit" value="Gửi"&gt;</code>)</li>
+            </ul>
+            <p>Ví dụ phần tử select:</p>
+            <div class="sql-block">&lt;label for="class"&gt;Lớp:&lt;/label&gt;
+&lt;select id="class" name="class"&gt;
+  &lt;option value="10"&gt;10&lt;/option&gt;
+  &lt;option value="11"&gt;11&lt;/option&gt;
+  &lt;option value="12"&gt;12&lt;/option&gt;
+&lt;/select&gt;</div>
+            <p>Phần tử <code>&lt;textarea&gt;</code> tạo vùng nhập văn bản có nhiều dòng, cột. Phần tử <code>&lt;fieldset&gt;</code> dùng để nhóm các phần tử và tạo viền bao quanh, <code>&lt;legend&gt;</code> là tiêu đề của nhóm đó.</p>
+            <p>Câu hỏi 1. Điểm khác biệt giữa radio, checkbox và select là gì?</p>
+            <ul>
+                <li><code>radio</code> và <code>checkbox</code> là hai kiểu hiển thị trong phần tử <code>&lt;input&gt;</code> (hiển thị trực tiếp các lựa chọn ra màn hình), còn <code>&lt;select&gt;</code> là một phần tử riêng tạo danh sách thả xuống (ẩn các lựa chọn, bấm vào mới hiện ra).</li>
+                <li><code>radio</code> và <code>&lt;select&gt;</code> chỉ cho phép chọn MỘT giá trị trong danh sách các lựa chọn.</li>
+                <li><code>checkbox</code> dùng để chọn NHIỀU giá trị độc lập, mỗi giá trị dưới dạng có/không.</li>
+            </ul>
+            <p>Câu hỏi 2. Viết câu lệnh để thêm một nút có tên "Quên mật khẩu" vào biểu mẫu.</p>
+            <p>Có hai cách viết mã HTML để tạo nút này:</p>
+            <ul>
+                <li>Cách 1 dùng thẻ input: <br><code>&lt;input type="button" value="Quên mật khẩu"&gt;</code></li>
+                <li>Cách 2 dùng thẻ button: <br><code>&lt;button&gt;Quên mật khẩu&lt;/button&gt;</code></li>
+            </ul>
+            <p>Ghi nhớ:</p>
+            <ul>
+                <li>Biểu mẫu web (form) dùng để thu thập dữ liệu từ người dùng.</li>
+                <li>Thẻ <code>&lt;form&gt;</code> chứa các phần tử của biểu mẫu.</li>
+                <li>Thẻ <code>&lt;input&gt;</code> tạo các trường nhập liệu, thuộc tính <code>type</code> quyết định kiểu dữ liệu (text, password, radio, checkbox, file, button, submit…).</li>
+                <li>Thẻ <code>&lt;label&gt;</code> tạo nhãn mô tả, <code>&lt;select&gt;</code> và <code>&lt;option&gt;</code> tạo danh sách thả xuống, <code>&lt;textarea&gt;</code> tạo vùng văn bản nhiều dòng.</li>
+                <li>Thẻ <code>&lt;fieldset&gt;</code> và <code>&lt;legend&gt;</code> dùng để nhóm các phần tử có liên quan và tạo tiêu đề cho nhóm.</li>
+            </ul>
+
+            <div class="logic-box">
+                <strong><i class="fa-solid fa-microscope"></i> Tình huống vận dụng Bài 12 - Tình huống 1</strong>
+                <p><strong>Tình huống:</strong> Bạn Huy làm một trang đăng kí khảo sát sở thích môn học. Bạn ấy dùng đoạn mã: <code>&lt;input type="radio" name="monhoc" value="Toán"&gt;Toán</code> và <code>&lt;input type="radio" name="monhoc" value="Văn"&gt;Văn</code>. Tuy nhiên, khi nhấp thử thì người dùng chỉ được chọn đúng 1 môn, bấm Toán thì mất chọn Văn.</p>
+                <p><strong>Trả lời khoa học:</strong> Huy đã sử dụng nhầm kiểu dữ liệu trong thuộc tính <code>type</code>. Thuộc tính <code>type="radio"</code> kết hợp với cùng một <code>name</code> (là <code>monhoc</code>) có đặc thù là chỉ cho phép chọn MỘT giá trị duy nhất trong nhóm. Vì sở thích môn học có thể là nhiều môn (nhiều lựa chọn độc lập), theo nguyên tắc thiết kế giao diện khoa học, Huy phải sử dụng kiểu dữ liệu nhiều lựa chọn bằng cách thay <code>type="radio"</code> thành <code>type="checkbox"</code>.</p>
+                
+                <strong><i class="fa-solid fa-microscope"></i> Tình huống vận dụng Bài 12 - Tình huống 2</strong>
+                <p><strong>Tình huống:</strong> Bạn Trâm tạo một ô nhập mật khẩu đăng nhập: <code>&lt;input type="text" name="matkhau"&gt;</code>. Khi người dùng gõ mật khẩu vào thì tất cả các kí tự chữ và số đều hiển thị rõ ràng trên màn hình khiến ai đi ngang qua cũng nhìn thấy được.</p>
+                <p><strong>Trả lời khoa học:</strong> Bạn Trâm đã vi phạm quy tắc cơ bản về bảo mật dữ liệu ở giao diện người dùng do gán sai loại <code>type</code> cho trường thông tin nhạy cảm. Để tạo trường nhập mật khẩu chuẩn, Trâm bắt buộc phải sử dụng <code>type="password"</code>. Khi đó, trình duyệt web sẽ tự động kích hoạt cơ chế bảo vệ che giấu, chuyển tất cả các kí tự người dùng nhập vào thành dấu chấm (•) hoặc dấu sao (*), đảm bảo an toàn thông tin chống nhìn trộm (shoulder surfing).</p>
+            </div>
+
+            <div class="footer-credit">
+                Hệ thống tài liệu điện tử | <strong>Hành Trình Số</strong> <br>
+                Biên soạn chuẩn khoa học bởi Cô Lê Huyền Sinh <i class="fa-solid fa-heart"></i>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
