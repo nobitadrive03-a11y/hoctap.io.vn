@@ -139,8 +139,8 @@
     }
     
     .cover-main-title { 
-      font-family: 'Be Vietnam Pro', sans-serif; font-size: clamp(1.4rem, 4vh, 2.4rem); 
-      font-weight: 500; color: #ffffff; line-height: 1.15; text-shadow: 0 4px 15px rgba(0,0,0,0.3);
+      font-family: 'Be Vietnam Pro', sans-serif; font-size: clamp(1.8rem, 4vh, 2.4rem); 
+      font-weight: 800; color: #ffffff; line-height: 1.25; text-shadow: 0 4px 20px rgba(0,0,0,0.3);
     }
 
     .cover-visual {
@@ -188,14 +188,18 @@
     }
     .quote-box::before { content: '❝'; position: absolute; top: 10px; left: 16px; font-size: 4rem; color: var(--primary); opacity: 0.15; line-height: 1; font-family: serif; }
 
-    @media (max-width: 600px) {
+
+@media (max-width: 600px) {
       .page-visual { height: 35%; margin: 20px 20px 0 20px; width: calc(100% - 40px); }
       .page-body { padding: 32px 24px 16px 24px; }
       .page-text { font-size: clamp(1.05rem, 2.1vh, 1.15rem); }
-      .cover-main-title { font-size: 2.2rem; }
+      .cover-main-title { font-size: 1.2rem; } /* Đã giảm nhỏ kích thước chữ trên mobile */
       .bottom-bar { padding: 12px 16px 16px 16px; }
       .nav-btn { min-width: 100px; height: 46px; }
     }
+
+
+
   </style>
 </head>
 <body>
