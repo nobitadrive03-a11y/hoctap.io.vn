@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Chủ đề 4: Hệ cơ sở dữ liệu - Hành Trình Số</title>
+    <title>Chuyên đề Học tập Tin học 11 - Hành Trình Số</title>
     <!-- Tích hợp Font chữ Google -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -62,7 +62,6 @@
             padding: 15px; 
         }
 
-        /* ----- MÀN HÌNH ĐỌC SÁCH TRỰC TIẾP ----- */
         #reader-view {
             display: block; 
             max-width: 1000px;
@@ -103,45 +102,114 @@
             gap: 8px; 
             transition: 0.3s; 
             font-weight: 500;
+            border: none;
         }
         .btn-small:hover { background: rgba(0,0,0,0.4); transform: translateX(-2px); }
 
         .reader-content { padding: 25px 15px; background: var(--white); }
 
-        h1.main-title { font-family: 'Merriweather', serif; color: var(--primary-dark); text-align: center; margin-bottom: 30px; font-size: 1.6rem; line-height: 1.4; }
-        h1.main-title span { display: block; font-family: 'Inter', sans-serif; font-size: 0.95rem; color: var(--primary); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+        h1.main-title {
+            font-family: 'Merriweather', serif;
+            color: var(--primary-dark);
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 1.6rem;
+            line-height: 1.4;
+        }
 
-        .obj-box { background: linear-gradient(to right, #f0f9ff, #e0f2fe); border: 1px solid #bae6fd; padding: 20px 15px; border-radius: var(--radius-md); margin-bottom: 30px; }
-        .obj-box strong { color: #0284c7; display: flex; align-items: center; gap: 8px; font-size: 1.05rem; margin-bottom: 12px;}
-        .obj-box ul { list-style: none; padding-left: 0; margin: 0;}
-        .obj-box ul li { position: relative; padding-left: 25px; margin-bottom: 10px; font-size: 0.95rem;}
-        .obj-box ul li::before { content: '\f00c'; font-family: 'Font Awesome 6 Free'; font-weight: 900; color: #0ea5e9; position: absolute; left: 0; top: 2px; }
+        h1.main-title span {
+            display: block;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.95rem;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
 
-        h2.part-title { background: #f1f5f9; color: var(--primary-dark); padding: 12px 15px; border-radius: 10px; border-left: 5px solid var(--primary); margin: 30px 0 20px 0; font-size: 1.15rem; display: flex; align-items: flex-start; flex-direction: column; gap: 8px; }
+        h2.part-title {
+            background: #f1f5f9;
+            color: var(--primary-dark);
+            padding: 12px 15px;
+            border-radius: 10px;
+            border-left: 5px solid var(--primary);
+            margin: 30px 0 20px 0;
+            font-size: 1.15rem;
+            display: flex;
+            align-items: flex-start;
+            flex-direction: column;
+            gap: 8px;
+            font-weight: bold;
+        }
         
-        h3.lesson-title { color: var(--primary); font-size: 1.1rem; margin: 20px 0 10px 0; border-bottom: 1px dashed #cbd5e1; padding-bottom: 6px; }
+        h3 {
+            color: #334155;
+            margin: 20px 0 10px 0;
+            font-size: 1.05rem;
+        }
 
         p { margin-bottom: 12px; text-align: justify; font-size: 0.95rem; line-height: 1.7; }
         
-        .reader-content > ul { list-style-type: none; padding-left: 0; }
-        .reader-content > ul > li { position: relative; padding-left: 30px; margin-bottom: 12px; background: #f8fafc; padding: 12px 12px 12px 30px; border-radius: 10px; border: 1px solid #e2e8f0; font-size: 0.95rem; text-align: justify; line-height: 1.6; }
-        .reader-content > ul > li::before { content: '\f105'; font-family: 'Font Awesome 6 Free'; font-weight: 900; color: var(--primary); position: absolute; left: 10px; top: 14px; font-size: 1rem; }
+        .reader-content > ul {
+            list-style-type: none;
+            padding-left: 0;
+            margin-bottom: 15px;
+        }
+        .reader-content > ul > li {
+            position: relative;
+            padding-left: 30px;
+            margin-bottom: 12px;
+            background: #f8fafc;
+            padding: 12px 12px 12px 30px;
+            border-radius: 10px;
+            border: 1px solid #e2e8f0;
+            font-size: 0.95rem;
+            text-align: justify;
+            line-height: 1.6;
+        }
+        .reader-content > ul > li::before {
+            content: '\f105';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            color: var(--primary);
+            position: absolute;
+            left: 10px;
+            top: 14px;
+            font-size: 1rem;
+        }
 
-        /* Các lớp CSS riêng của CĐ 4 */
-        .code-tag { background: #f1f5f9; padding: 2px 5px; border-radius: 4px; font-family: monospace; color: #dc2626; font-weight: bold; border: 1px solid #cbd5e1; font-size: 0.9em; word-break: break-word; }
-        
-        .code-block { background: #1e293b; color: #e2e8f0; padding: 15px; border-radius: 10px; font-family: monospace; font-size: 0.85rem; margin: 15px 0; overflow-x: auto; border-left: 4px solid #3b82f6; -webkit-overflow-scrolling: touch; }
+        .logic-box {
+            background: #f0fdf4;
+            border-radius: var(--radius-md);
+            padding: 20px 15px;
+            margin: 25px 0;
+            box-shadow: 0 4px 10px -3px rgba(34, 197, 94, 0.1);
+            border: 1px solid #bbf7d0;
+            border-left: 5px solid #22c55e;
+            font-size: 0.95rem;
+        }
+        .logic-box strong { 
+            color: #166534; 
+            font-size: 1.05rem; 
+            display: flex; 
+            align-items: center; 
+            gap: 8px; 
+            margin-bottom: 10px;
+            margin-top: 15px;
+        }
+        .logic-box strong:first-child {
+            margin-top: 0;
+        }
+        .logic-box p { margin-bottom: 8px; }
 
-        .theory-note { background: #f8fafc; border-left: 4px solid var(--accent); padding: 15px; border-radius: 0 10px 10px 0; margin: 20px 0; border: 1px solid #e2e8f0; border-left-width: 4px; }
-        .theory-note strong { color: #b45309; display: block; margin-bottom: 8px; font-size: 1rem; }
-
-        .table-responsive { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 20px 0; border-radius: 8px; box-shadow: 0 0 0 1px #cbd5e1; }
-        
-        .scientific-table { width: 100%; border-collapse: collapse; background: white; min-width: 400px; }
-        .scientific-table th, .scientific-table td { padding: 10px 12px; border: 1px solid #cbd5e1; text-align: left; font-size: 0.9rem; }
-        .scientific-table th { background: #f1f5f9; color: var(--primary-dark); font-weight: 600; white-space: nowrap; }
-
-        .footer-credit { text-align: center; margin-top: 40px; padding-top: 20px; border-top: 2px dashed #e2e8f0; color: var(--text-muted); font-size: 0.85rem; }
+        .footer-credit {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 2px dashed #e2e8f0;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
         .footer-credit i { color: #ef4444; }
 
         @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
@@ -152,10 +220,31 @@
             .reader-content { padding: 40px; }
             h1.main-title { font-size: 2.2rem; }
             h2.part-title { flex-direction: row; align-items: center; }
-            p, .reader-content > ul > li, .obj-box ul li { font-size: 1.05rem; }
+            p, .reader-content > ul > li, .logic-box { font-size: 1.05rem; }
             .reader-content > ul > li { padding-left: 45px; }
             .reader-content > ul > li::before { left: 15px; top: 15px; }
             #reader-view { border-radius: var(--radius-lg); }
+            .logic-box { padding: 25px 30px; }
+        }
+    
+        .sql-block {
+            background-color: #eff6ff;
+            padding: 12px 15px;
+            border-radius: 8px;
+            border-left: 4px solid blue;
+            color: blue;
+            font-family: 'Courier New', Courier, monospace;
+            font-weight: bold;
+            font-size: 1.05rem;
+            overflow-x: auto;
+            margin: 10px 0;
+            white-space: pre-wrap;
+            line-height: 1.5;
+        }
+        .sql-inline {
+            color: blue;
+            font-weight: bold;
+            font-family: 'Courier New', Courier, monospace;
         }
     </style>
 </head>
@@ -163,8 +252,7 @@
 
     <div id="reader-view">
         <div class="reader-header">
-            <h2><i class="fa-solid fa-database"></i> Không gian học tập Hành Trình Số</h2>
-            <!-- Nút Quay lại tự động lùi về trang trước đó -->
+            <h2><i class="fa-solid fa-laptop-code"></i> Không gian học tập Hành Trình Số</h2>
             <button class="btn-small" onclick="window.history.back()">
                 <i class="fa-solid fa-arrow-left"></i> Thoát
             </button>
@@ -172,163 +260,504 @@
 
         <div class="reader-content">
             <h1 class="main-title">
-                <span>Chuyên đề Tin học 11 - Chủ đề 4</span>
-                HỆ CƠ SỞ DỮ LIỆU VÀ TRUY VẤN SQL
+                <span>Chuyên đề Tin học 11</span>
+                ĐỀ CƯƠNG HỌC TẬP CHI TIẾT
             </h1>
 
-            <div class="obj-box">
-                <strong><i class="fa-solid fa-bullseye"></i> Mục tiêu chuyên đề học tập:</strong>
-                <ul>
-                    <li>Hiểu rõ bản chất khoa học của việc lưu trữ và quản lý dữ liệu phục vụ quản lý hiện đại.</li>
-                    <li>Phân tích cấu trúc Cơ sở dữ liệu quan hệ, phân biệt rõ các loại trường, khóa chính và khóa ngoại.</li>
-                    <li>Thực hành thành thạo các nhóm lệnh SQL cơ bản trong việc khởi tạo, cập nhật và truy xuất dữ liệu.</li>
-                    <li>Nắm vững các nguyên tắc cốt lõi về bảo mật và an toàn hệ thống cơ sở dữ liệu.</li>
-                </ul>
+            <!-- BÀI 10 -->
+            <h2 class="part-title"><i class="fa-solid fa-database"></i> Bài 10 Giới thiệu sự cần thiết của lưu trữ dữ liệu, các khái niệm cập nhật, truy xuất, khai thác thông tin và lợi ích của thu thập dữ liệu tự động.</h2>
+            
+            <h3>1. Cập nhật dữ liệu</h3>
+            <p>Việc ghi điểm vào sổ điểm được thực hiện thường xuyên. Việc ghi chép này gọi là lưu trữ dữ liệu điểm.</p>
+            <p>Hoạt động 1. Giáo viên dạy môn Toán dùng cuốn sổ điểm môn học để ghi lại điểm của từng học sinh lớp 11A (Bảng 10.1). Hãy cùng thảo luận để xác định xem có thể khai thác được những thông tin gì từ sổ điểm môn học này. Ngoài việc ghi điểm vào sổ điểm, có thể có những công việc nào khác?</p>
+            <p>Những thông tin có thể khai thác từ sổ điểm:</p>
+            <ul>
+                <li>Điểm thành phần và kết quả học tập môn Toán của từng học sinh.</li>
+                <li>Xác định học sinh có điểm cao nhất/thấp nhất lớp.</li>
+                <li>Thống kê số lượng học sinh đạt loại Tốt, Khá, Đạt, Chưa đạt.</li>
+            </ul>
+            <p>Ngoài việc ghi điểm, có thể phát sinh các công việc: sửa lại điểm nếu ghi nhầm, xoá điểm của học sinh chuyển trường, thêm học sinh mới vào danh sách.</p>
+            <p>Việc ghi chép điểm thủ công có thể có sai sót, nhầm lẫn. Vì vậy:</p>
+            <ul>
+                <li>Có thể phải xoá một dữ liệu điểm. Chẳng hạn xoá điểm 0 trong điểm đánh giá thường xuyên của Nguyễn Kì Duyên vì nghỉ học có lí do.</li>
+                <li>Có thể phải sửa một dữ liệu nào đó. Chẳng hạn trong danh sách có tên Dương Hồng Anh nhưng thực tế tên chính xác phải là Dương Hoàng Anh.</li>
+                <li>Có thể phải thêm dữ liệu. Chẳng hạn thêm điểm của một học sinh mới chuyển đến lớp.</li>
+            </ul>
+            <p>Việc thêm, xoá và chỉnh sửa dữ liệu tương tự như trên là những công việc thường được thực hiện với dữ liệu của tất cả các bài toán quản lí và chúng được gọi chung là cập nhật dữ liệu.</p>
+            <p>Kĩ năng số: Cập nhật dữ liệu (thêm, xoá, sửa) là thao tác thường xuyên trong quản lí thông tin. Việc tổ chức và lưu trữ dữ liệu khoa học ngay từ đầu sẽ giúp quá trình truy xuất và cập nhật sau này diễn ra nhanh chóng, dễ dàng hơn.</p>
+
+            <h3>2. Truy xuất dữ liệu và khai thác thông tin</h3>
+            <p>Rõ ràng việc ghi chép điểm các môn học không chỉ nhằm mục đích lưu trữ. Từ dữ liệu lưu trữ này, có thể:</p>
+            <ul>
+                <li>Lập được danh sách học sinh với điểm học kì từ cao xuống thấp.</li>
+                <li>Tìm kiếm và lập danh sách học sinh có điểm học kì >= 7, >= 8.</li>
+            </ul>
+            <p>Việc tìm kiếm, sắp xếp hay lọc ra các dữ liệu theo những tiêu chí nào đó từ dữ liệu đã có thường được gọi là truy xuất dữ liệu.</p>
+            <p>Một ví dụ phức tạp hơn về truy xuất dữ liệu là lập bảng điểm cuối học kì I đòi hỏi ghép dữ liệu từ các bảng điểm môn học theo danh sách lớp.</p>
+            <p>Cũng có những công việc khác, chẳng hạn lập bảng phân loại kết quả học tập, đòi hỏi phải phân tích, thống kê, tính toán từ dữ liệu đã có để được thông tin cần thiết. Những công việc kiểu như vậy được gọi là khai thác thông tin từ dữ liệu đã có.</p>
+            <p>Quản lí kết quả học tập của học sinh chỉ là một ví dụ cho thấy nhu cầu lưu trữ dữ liệu và khai thác thông tin rất đa dạng. Trong thực tế, nhiều lĩnh vực khác có khối lượng dữ liệu khổng lồ: hồ sơ bệnh nhân tại bệnh viện, dữ liệu giao dịch ngân hàng, dữ liệu khí tượng… Chính vì thế, ngày nay dữ liệu đã trở thành đối tượng nghiên cứu của một lĩnh vực khoa học liên ngành mới nổi đó là Khoa học dữ liệu.</p>
+            <p>Câu hỏi củng cố. Cập nhật dữ liệu là gì? Tại sao dữ liệu cần được cập nhật thường xuyên?</p>
+            <p>Cập nhật dữ liệu là các công việc bao gồm: thêm dữ liệu mới, chỉnh sửa hoặc xoá dữ liệu đã có.</p>
+            <p>Dữ liệu cần được cập nhật thường xuyên, kịp thời và chính xác để phản ánh đúng thực tế. Nếu dữ liệu không được cập nhật đầy đủ, các thông tin khai thác được sẽ sai lệch, khiến công tác đánh giá và ra quyết định quản lí không đạt hiệu quả.</p>
+
+            <h3>3. Thu thập dữ liệu tự động</h3>
+            <p>Hầu hết các hoạt động quản lí truyền thống đều phải nhập dữ liệu thủ công. Trong bối cảnh tự động hoá trên cơ sở máy tính, đặc biệt là sự xuất hiện của các hệ thống kết nối vạn vật (IoT) và Cách mạng Công nghiệp 4.0, rất nhiều hoạt động quản lí đã thực hiện việc thu thập dữ liệu tự động.</p>
+            <p>Ở các siêu thị lớn, mỗi ngày có hàng nghìn khách mua hàng, số lượng mặt hàng khổng lồ. Nếu nhập dữ liệu thủ công, mất rất nhiều thời gian và gây tắc nghẽn. Để khắc phục, người ta dán mã vạch lên bao bì mặt hàng. Tại quầy thanh toán, máy quét đọc mã vạch, tự động lập đơn hàng và lưu dữ liệu doanh thu. Máy tính sau đó giúp thống kê, tổng hợp, phân tích để cải thiện kinh doanh và báo tồn kho.</p>
+            <p>Một ví dụ khác là lưu trữ chỉ số tiêu thụ điện. Thay vì nhân viên đi ghi số thủ công hằng tháng, công tơ điện tử có thể đều đặn tự động gửi về công ti điện lực cả lượng điện tiêu thụ lẫn thông tin điện áp, tần số liên tục.</p>
+            <p>Câu hỏi củng cố. Hãy nêu tầm quan trọng của việc thu thập và lưu trữ dữ liệu đối với các bài toán quản lí.</p>
+            <p>Thu thập và lưu trữ dữ liệu là cơ sở bắt buộc để thực hiện bất kì công tác quản lí nào. Không có dữ liệu, không thể tiến hành truy xuất hay khai thác thông tin.</p>
+            <p>Quá trình này cung cấp nguyên liệu đầu vào để hệ thống máy tính phân tích, thống kê, từ đó giúp con người đưa ra các quyết định quản lí chính xác và mang lại hiệu quả cao.</p>
+            <p>Ghi nhớ</p>
+            <ul>
+                <li>Quản lí là bài toán phổ biến trong thực tế. Cần phải tổ chức lưu trữ dữ liệu để phục vụ các yêu cầu quản lí đa dạng.</li>
+                <li>Dữ liệu lưu trữ có thể được cập nhật thường xuyên, được truy xuất theo nhiều tiêu chí khác nhau để thu được các thông tin hữu ích.</li>
+                <li>Việc thu thập dữ liệu tự động mang lại nhiều lợi ích, không chỉ giảm bớt công sức thu thập mà còn cung cấp một khối lượng dữ liệu lớn giúp nâng cao hiệu quả của việc ra các quyết định cần thiết.</li>
+            </ul>
+
+            <div class="logic-box">
+                <strong><i class="fa-solid fa-microscope"></i> Tình huống vận dụng Bài 10 - Tình huống 1</strong>
+                <p><strong>Tình huống:</strong> Giáo viên phát hiện điểm thi của một học sinh nhập vào phần mềm bị sai do trùng tên, nên tiến hành sửa lại từ 5 thành 8 điểm, đồng thời gạch tên một học sinh khác vừa chuyển trường.</p>
+                <p><strong>Trả lời khoa học:</strong> Các thao tác xóa, sửa và thêm thông tin này thuộc nhóm công việc "cập nhật dữ liệu". Dữ liệu của mọi bài toán quản lí cần được cập nhật thường xuyên, kịp thời và chính xác để phản ánh đúng thực tế, nếu không thông tin khai thác được sẽ bị sai lệch.</p>
+                
+                <strong><i class="fa-solid fa-microscope"></i> Tình huống vận dụng Bài 10 - Tình huống 2</strong>
+                <p><strong>Tình huống:</strong> Tại các siêu thị lớn có hàng nghìn khách hàng mỗi ngày, thu ngân không gõ tên từng món đồ lên máy tính mà dùng máy quét ánh sáng chiếu vào mã vạch trên bao bì sản phẩm để thanh toán.</p>
+                <p><strong>Trả lời khoa học:</strong> Đây là ứng dụng của việc "thu thập dữ liệu tự động". Thiết bị ngoại vi đọc mã vạch sẽ tự động ghi nhận mã sản phẩm, giúp phần mềm lập đơn hàng và lưu doanh thu tức thời, khắc phục hoàn toàn tình trạng mất thời gian và tắc nghẽn của việc nhập liệu thủ công.</p>
             </div>
 
-            <!-- BÀI 10 -->
-            <h2 class="part-title"><i class="fa-solid fa-server"></i> Bài 10: Lưu trữ dữ liệu và khai thác thông tin phục vụ quản lí</h2>
-            
-            <h3 class="lesson-title">1. Các hoạt động quản lý dữ liệu cơ bản</h3>
-            <p>Trong hệ thống thông tin của một tổ chức (như trường học, doanh nghiệp, cơ quan nhà nước), quá trình xử lý thông tin dựa trên cơ sở dữ liệu tuân theo chu trình khép kín:</p>
-            <ul>
-                <li><strong>Cập nhật dữ liệu :</strong> Bao gồm ba thao tác nghiệp vụ chính: <em>Thêm mới</em> (Insert) bản ghi khi có đối tượng phát sinh; <em>Chỉnh sửa</em> (Update) thông tin khi có sự thay đổi; và <em>Xóa</em> (Delete) các bản ghi không còn giá trị sử dụng.</li>
-                <li><strong>Truy xuất và khai thác thông tin:</strong> Trích xuất các tập dữ liệu theo những tiêu chí xác định, kết hợp xử lý logic để chuyển hóa dữ liệu thô thành tri thức hoặc báo cáo phục vụ công tác ra quyết định của nhà quản lý.</li>
-                <li><strong>Thu thập dữ liệu tự động:</strong> Giải pháp thay thế phương thức nhập liệu thủ công bằng cách ứng dụng công nghệ như mã vạch, mã QR, thẻ từ RFID, các trạm cảm biến IoT hoặc hệ thống nhận diện quang học, giúp tối ưu hóa tốc độ và độ chính xác của dữ liệu đầu vào.</li>
-            </ul>
-
             <!-- BÀI 11 -->
-            <h2 class="part-title"><i class="fa-solid fa-cubes"></i> Bài 11: Cơ sở dữ liệu</h2>
+            <h2 class="part-title"><i class="fa-solid fa-sitemap"></i> Bài 11 Trình bày những yêu cầu của việc tổ chức lưu trữ dữ liệu khoa học, khái niệm cơ sở dữ liệu và các thuộc tính cơ bản của nó.</h2>
             
-            <h3 class="lesson-title">1. Yêu cầu tổ chức lưu trữ dữ liệu khoa học</h3>
-            <p>Việc lưu trữ dữ liệu truyền thống trên các tệp văn bản độc lập thường dẫn đến tình trạng dư thừa dữ liệu, không nhất quán và khó khăn trong việc chia sẻ. Do đó, tổ chức dữ liệu theo định hướng cơ sở dữ liệu phải thỏa mãn các yêu cầu khoa học:</p>
+            <h3>1. Yêu cầu tổ chức lưu trữ dữ liệu một cách khoa học</h3>
+            <p>Hoạt động 1. Có cần lưu trữ bảng điểm lớp học không?</p>
+            <p>Không nhất thiết phải lưu trữ riêng bảng điểm lớp học. Khi dữ liệu đã được lưu trữ trên máy tính, việc lập bảng điểm lớp học từ dữ liệu cơ sở (các bảng điểm môn học) có thể được phần mềm thực hiện tự động. Bảng điểm lớp học lúc này chỉ là một khung nhìn tổng hợp từ dữ liệu cơ sở.</p>
+            
+            <p><strong>a) Hạn chế dư thừa trong lưu trữ dữ liệu</strong></p>
+            <p>Khi ghi chép trên giấy, việc lưu trữ cả bảng điểm môn học và bảng điểm lớp học sẽ dẫn đến dữ liệu bị lặp lại (dư thừa dữ liệu). Sự dư thừa này dễ gây ra tình trạng không nhất quán dữ liệu.</p>
+            <p>Ví dụ, điểm cuối kì môn Toán của một học sinh ở bảng điểm môn Toán là 9, nhưng khi ghi sang bảng điểm lớp học có thể bị ghi nhầm thành 8.</p>
+            <p>Yêu cầu chung đối với việc lưu trữ dữ liệu của mọi bài toán quản lí là cần tổ chức việc lưu trữ sao cho có thể hạn chế trùng lặp, khắc phục lỗi không nhất quán dữ liệu.</p>
+            
+            <p><strong>b) Sự phụ thuộc phần mềm và dữ liệu</strong></p>
+            <p>Việc lưu trữ dữ liệu không tách rời với việc khai thác thông tin nhờ các phần mềm ứng dụng. Tuy nhiên, nếu cách lưu trữ dữ liệu (cấu trúc tệp, dấu ngăn cách…) phụ thuộc quá chặt chẽ vào phần mềm, sẽ gây khó khăn lớn.</p>
+            <p>Ví dụ: Dữ liệu được lưu trong tệp văn bản (.txt), các thành phần cách nhau bởi dấu phẩy. Nếu quy định đổi thành dùng dấu phẩy cho phần thập phân của điểm và dùng dấu chấm phẩy để ngăn cách dữ liệu, người lập trình buộc phải sửa đổi lại toàn bộ mã lệnh đọc dữ liệu của phần mềm.</p>
+            <p>Tình trạng phụ thuộc giữa chương trình và dữ liệu dẫn tới việc nếu thay đổi cách lưu trữ dữ liệu phải sửa đổi phần mềm, gây tốn kém thời gian và công sức. Do vậy, việc tổ chức dữ liệu độc lập để phần mềm không cần “nhìn thấy” chi tiết về cách lưu trữ mà vẫn sử dụng được dữ liệu là một yêu cầu quan trọng.</p>
+            <p>Câu hỏi 1. Nêu và giải thích yêu cầu về tính nhất quán dữ liệu trong lưu trữ dữ liệu.</p>
+            <p>Tính nhất quán dữ liệu đòi hỏi dữ liệu không gây ra mâu thuẫn. Ví dụ, cùng một thông tin (như điểm thi của một học sinh) được lưu ở hai nơi khác nhau thì giá trị ở cả hai nơi phải hoàn toàn giống nhau, không được xuất hiện tình trạng một nơi ghi 8, một nơi ghi 9.</p>
+            <p>Câu hỏi 2. Tại sao cần tổ chức lưu trữ dữ liệu độc lập với phần mềm?</p>
+            <p>Cần tổ chức lưu trữ dữ liệu độc lập với phần mềm để khi có sự thay đổi về cấu trúc lưu trữ dữ liệu (ví dụ đổi cách phân cách các cột dữ liệu), người ta không phải tiến hành sửa đổi lại mã nguồn của phần mềm. Điều này giúp dễ dàng xây dựng, bảo trì và phát triển phần mềm một cách thuận lợi.</p>
+            
+            <h3>2. Cơ sở dữ liệu và một số thuộc tính cơ bản</h3>
+            <p><strong>a) Khái niệm CSDL</strong></p>
+            <p>Cơ sở dữ liệu (CSDL – Database) là một tập hợp các dữ liệu có liên quan với nhau, được lưu trữ một cách có tổ chức trên hệ thống máy tính.</p>
+            <p>Ví dụ: Bảng điểm các môn học khi được lưu trong máy tính có thể được xem là CSDL. Thông tin về tài khoản ngân hàng (tên chủ tài khoản, số căn cước, số dư…) được tổ chức thành CSDL để phục vụ khách hàng.</p>
+            
+            <p><strong>b) Một số thuộc tính cơ bản của CSDL</strong></p>
+            <p>Dữ liệu trong một CSDL cần đảm bảo một số thuộc tính cơ bản sau:</p>
             <ul>
-                <li>Giảm thiểu tối đa sự dư thừa dữ liệu nhằm tiết kiệm không gian lưu trữ và tránh mâu thuẫn thông tin.</li>
-                <li>Đảm bảo tính độc lập giữa dữ liệu và chương trình ứng dụng (sự thay đổi cấu trúc dữ liệu không làm tê liệt hệ thống phần mềm).</li>
-                <li>Đảm bảo tính toàn vẹn, tính nhất quán và khả năng chia sẻ đồng thời cho nhiều người dùng được phân quyền.</li>
+                <li><strong>Tính cấu trúc:</strong> Dữ liệu được lưu trữ theo một khuôn dạng nhất định (ví dụ lưu dưới dạng bảng gồm các hàng và các cột).</li>
+                <li><strong>Tính không dư thừa:</strong> Hạn chế việc lưu trữ dữ liệu trùng lặp, qua đó giúp tiết kiệm không gian lưu trữ và tránh sự mâu thuẫn thông tin.</li>
+                <li><strong>Tính độc lập dữ liệu:</strong> Khả năng các mô đun phần mềm ứng dụng không cần phải cập nhật khi thay đổi cách thức tổ chức lưu trữ dữ liệu.</li>
+                <li><strong>Tính toàn vẹn:</strong> Các giá trị dữ liệu được lưu trữ phải thoả mãn những ràng buộc cụ thể (ví dụ: điểm số không được âm và phải nhỏ hơn hoặc bằng 10).</li>
+                <li><strong>Tính nhất quán:</strong> Dữ liệu luôn đảm bảo tính đúng đắn sau các thao tác cập nhật (ví dụ: tiền đã trừ ở tài khoản chuyển phải xuất hiện ở tài khoản nhận).</li>
+                <li><strong>Tính bảo mật và an toàn:</strong> Dữ liệu được bảo vệ an toàn, không bị truy xuất trái phép, không bị thay đổi bởi người không có thẩm quyền, và không dễ bị sai lạc do sự cố.</li>
+            </ul>
+            <p>Câu hỏi. Hãy nêu ví dụ minh hoạ cho một vài thuộc tính cơ bản của CSDL.</p>
+            <ul>
+                <li>Tính toàn vẹn: Trong CSDL quản lí nhân sự, trường dữ liệu "Năm sinh" phải là số nguyên dương và không thể lớn hơn năm hiện tại.</li>
+                <li>Tính không dư thừa: Trong CSDL trường học, thông tin "Họ tên" và "Ngày sinh" của học sinh chỉ cần lưu ở bảng "Hồ sơ học sinh", không cần lặp lại ở các bảng điểm từng môn.</li>
+                <li>Tính bảo mật: Chỉ giáo viên bộ môn mới có quyền nhập và sửa điểm môn mình dạy; học sinh chỉ có quyền xem điểm, không có quyền sửa.</li>
+            </ul>
+            <p>Ghi nhớ</p>
+            <ul>
+                <li>Dữ liệu cần được tổ chức lưu trữ một cách độc lập với việc xây dựng phần mềm, đảm bảo dễ dàng chia sẻ, bảo trì và hạn chế tối đa dư thừa, mâu thuẫn dữ liệu.</li>
+                <li>CSDL là một tập hợp dữ liệu có liên quan với nhau, được lưu trữ một cách có tổ chức trên hệ thống máy tính.</li>
+                <li>Một số thuộc tính cơ bản của CSDL bao gồm: tính cấu trúc, tính không dư thừa, tính độc lập, tính toàn vẹn, tính nhất quán, tính bảo mật và an toàn.</li>
             </ul>
 
-            <h3 class="lesson-title">2. Khái niệm và các thuộc tính cơ bản của CSDL</h3>
-            <p><strong>Cơ sở dữ liệu (Database - CSDL)</strong> là một tập hợp các dữ liệu có cấu trúc, có liên quan logic với nhau, phản ánh các thực thể của một thế giới thực, được lưu trữ trên các thiết bị nhớ để đáp ứng nhu cầu khai thác thông tin đồng thời của nhiều người dùng.</p>
-            <p>Các thuộc tính cốt lõi của một CSDL chuẩn khoa học bao gồm: <em>Tính tích hợp</em> (dữ liệu được gom từ nhiều nguồn nhưng thống nhất về cấu trúc), <em>Tính chia sẻ</em> (nhiều người/nhiều ứng dụng cùng truy cập), và <em>Tính bền vững</em> (lưu trữ lâu dài, không bị mất khi ngắt nguồn điện).</p>
+            <div class="logic-box">
+                <strong><i class="fa-solid fa-microscope"></i> Tình huống vận dụng Bài 11 - Tình huống 1</strong>
+                <p><strong>Tình huống:</strong> Khi ghi điểm bằng sổ giấy, điểm thi môn Toán lưu ở sổ bộ môn là 9, nhưng khi lớp trưởng chép tay sang bảng tổng hợp chung của lớp lại lỡ viết nhầm thành 8.</p>
+                <p><strong>Trả lời khoa học:</strong> Tình huống này đã vi phạm "tính nhất quán dữ liệu", một hậu quả trực tiếp của việc dư thừa dữ liệu (lưu cùng một thông tin ở nhiều nơi khác nhau). Tính nhất quán yêu cầu dữ liệu không được gây ra mâu thuẫn; giá trị ở mọi nơi phải hoàn toàn giống nhau.</p>
+                
+                <strong><i class="fa-solid fa-microscope"></i> Tình huống vận dụng Bài 11 - Tình huống 2</strong>
+                <p><strong>Tình huống:</strong> Khi một học sinh nhập năm sinh của mình vào biểu mẫu đăng ký tài khoản là "2030" (lớn hơn năm hiện tại), hệ thống lập tức báo lỗi và từ chối lưu thông tin.</p>
+                <p><strong>Trả lời khoa học:</strong> Đây là cơ chế kiểm soát "tính toàn vẹn" của Cơ sở dữ liệu. Tính toàn vẹn yêu cầu các giá trị dữ liệu được lưu trữ phải thoả mãn những ràng buộc cụ thể về mặt logic (như năm sinh không thể nằm ở tương lai) để đảm bảo tính hợp lệ, chính xác của CSDL.</p>
+            </div>
 
             <!-- BÀI 12 -->
-            <h2 class="part-title"><i class="fa-solid fa-network-wired"></i> Bài 12: Hệ quản trị cơ sở dữ liệu và hệ cơ sở dữ liệu</h2>
+            <h2 class="part-title"><i class="fa-solid fa-server"></i> Bài 12 Tin học 11 Trình bày các khái niệm cơ bản về hệ quản trị cơ sở dữ liệu (QTCSDL), hệ cơ sở dữ liệu, đồng thời phân biệt hệ CSDL tập trung và phân tán.</h2>
             
-            <h3 class="lesson-title">1. Khái niệm Hệ quản trị cơ sở dữ liệu (DBMS)</h3>
-            <p><strong>Hệ quản trị cơ sở dữ liệu (Database Management System - DBMS)</strong> là một phần mềm hệ thống cung cấp môi trường để khởi tạo, khai thác, duy trì và kiểm soát quyền truy cập CSDL. DBMS đóng vai trò là tầng trung gian chịu trách nhiệm xử lý mọi yêu cầu truy xuất dữ liệu từ các chương trình ứng dụng hoặc người dùng.</p>
-
-            <h3 class="lesson-title">2. Hệ cơ sở dữ liệu (Database System)</h3>
-            <p>Một <strong>Hệ CSDL hoàn chỉnh</strong> là sự tích hợp của ba thành phần cơ bản: <em>Cơ sở dữ liệu (CSDL)</em>, <em>Hệ quản trị CSDL (DBMS)</em>, và <em>Các phần mềm ứng dụng</em> cùng đội ngũ quản trị, người dùng khai thác hệ thống.</p>
-
-            <h3 class="lesson-title">3. Hệ CSDL tập trung và phân tán</h3>
+            <h3>1. Khái niệm hệ quản trị cơ sở dữ liệu</h3>
+            <p>Hệ quản trị cơ sở dữ liệu (Database Management Systems – hệ QTCSDL) là phần mềm cung cấp phương thức để lưu trữ, cập nhật và truy xuất dữ liệu của CSDL, bảo mật và an toàn dữ liệu.</p>
+            <p>Hệ QTCSDL cung cấp các nhóm chức năng chính sau đây:</p>
             <ul>
-                <li><strong>Hệ CSDL tập trung:</strong> Toàn bộ dữ liệu và DBMS được cài đặt và lưu trữ trên một máy chủ duy nhất. Phù hợp với các tổ chức quy mô nhỏ, quản lý tập trung, dễ vận hành nhưng phụ thuộc hoàn toàn vào độ ổn định của máy chủ trung tâm.</li>
-                <li><strong>Hệ CSDL phân tán:</strong> Dữ liệu được chia nhỏ và lưu trữ tại nhiều máy tính khác nhau kết nối qua mạng máy tính. Hệ thống phân tán giúp tối ưu hiệu năng truy vấn cho các đơn vị ở xa, tăng khả năng chịu lỗi nhưng đòi hỏi cơ chế đồng bộ hóa dữ liệu phức tạp.</li>
+                <li><strong>Định nghĩa dữ liệu:</strong> Khai báo CSDL với tên gọi xác định; tạo lập, sửa đổi kiến trúc bên trong mỗi CSDL; cài đặt các ràng buộc toàn vẹn để kiểm soát tính đúng đắn của dữ liệu.</li>
+                <li><strong>Cập nhật và truy xuất dữ liệu:</strong> Cung cấp công cụ để thêm mới, xóa, sửa dữ liệu (cập nhật); tìm kiếm và lấy ra dữ liệu theo các tiêu chí khác nhau (truy xuất).</li>
+                <li><strong>Bảo mật, an toàn CSDL:</strong> Kiểm soát quyền truy cập dữ liệu của người dùng; kiểm soát các giao dịch để đảm bảo tính nhất quán khi nhiều người truy cập đồng thời; sao lưu dự phòng (backup) để khôi phục dữ liệu khi gặp sự cố.</li>
             </ul>
+            <p>Ngoài ba nhóm chức năng chính, các hệ QTCSDL còn cung cấp Giao diện lập trình ứng dụng (API) dưới dạng thư viện hàm riêng cho từng ngôn ngữ lập trình, giúp các nhà phát triển ứng dụng gửi truy vấn đến CSDL.</p>
+            <p>Các hệ QTCSDL phổ biến hiện nay: Oracle, MySQL, SQL Server, DB2, PostgreSQL, SQLite,… Microsoft Access cũng là một hệ QTCSDL nhưng có nhiều hạn chế về hiệu suất, không phù hợp cho các ứng dụng trực tuyến quy mô lớn.</p>
+            <p>Câu hỏi 1. Nêu những khó khăn trong việc khai thác CSDL nếu không có hệ QTCSDL.</p>
+            <p>Nếu không có hệ QTCSDL, việc khai thác CSDL sẽ gặp các khó khăn:</p>
+            <ul>
+                <li>Người dùng phải tự tổ chức lưu trữ dữ liệu, tự viết chương trình để tìm kiếm, thêm, xoá, sửa dữ liệu.</li>
+                <li>Rất khó khăn trong việc đảm bảo tính nhất quán của dữ liệu khi nhiều người truy cập cùng lúc.</li>
+                <li>Khó thực hiện các biện pháp bảo mật, phân quyền người dùng và sao lưu phục hồi dữ liệu.</li>
+            </ul>
+            <p>Câu hỏi 2. Tóm tắt các nhóm chức năng của hệ QTCSDL.</p>
+            <p>Hệ QTCSDL có 3 nhóm chức năng chính:</p>
+            <ul>
+                <li>Nhóm chức năng định nghĩa dữ liệu (tạo lập, sửa đổi cấu trúc, cài đặt ràng buộc).</li>
+                <li>Nhóm chức năng cập nhật và truy xuất dữ liệu (thêm, sửa, xoá, tìm kiếm dữ liệu).</li>
+                <li>Nhóm chức năng bảo mật, an toàn CSDL (phân quyền truy cập, kiểm soát tranh chấp, sao lưu dự phòng).</li>
+            </ul>
+            
+            <h3>2. Hệ cơ sở dữ liệu</h3>
+            <p>Hoạt động 2. Khi tra cứu điểm thi trực tuyến, sau khi nhập số báo danh, hệ thống ngay lập tức hiển thị thông tin thí sinh và kết quả xét tuyển. Hệ thống tra cứu trực tuyến cần có những gì để có thể cung cấp thông tin như vậy?</p>
+            <p>Hệ thống cần có:</p>
+            <ul>
+                <li>CSDL lưu trữ thông tin thí sinh và điểm thi.</li>
+                <li>Hệ QTCSDL để quản lí, tìm kiếm và truy xuất điểm thi từ CSDL.</li>
+                <li>Phần mềm ứng dụng (phần mềm tra cứu điểm thi) tạo giao diện cho người dùng nhập số báo danh và hiển thị kết quả.</li>
+                <li>Máy tính máy chủ và mạng kết nối để tiếp nhận yêu cầu từ người dùng.</li>
+            </ul>
+            <p>Các hệ QTCSDL nhiều người dùng thường được xây dựng theo mô hình hai thành phần:</p>
+            <ul>
+                <li>Thành phần “chủ” (máy chủ CSDL): Thực hiện các nhiệm vụ tính toán, xử lí dữ liệu (tìm kiếm, cập nhật).</li>
+                <li>Thành phần “khách” (phần mềm khách): Tổ chức giao diện tương tác với người dùng, nhận lệnh, gửi yêu cầu đến phần chủ và nhận lại kết quả để hiển thị.</li>
+            </ul>
+            <p>Hai thành phần này luôn được cung cấp trong cùng một gói cài đặt. Trong thực tế, thành phần chủ thường được gọi tắt là hệ QTCSDL.</p>
+
+            <div class="logic-box">
+                <strong><i class="fa-solid fa-microscope"></i> Tình huống vận dụng Bài 12 - Tình huống 1</strong>
+                <p><strong>Tình huống:</strong> Một trường học muốn học sinh có thể lên website gõ số báo danh là xem được điểm, nhưng họ chỉ có một tệp Excel chứa điểm chứ chưa có trang web hay phần mềm nào cả.</p>
+                <p><strong>Trả lời khoa học:</strong> Tệp Excel chỉ đóng vai trò là Dữ liệu, để tra cứu trực tuyến trường học cần xây dựng một "Hệ cơ sở dữ liệu" hoàn chỉnh bao gồm 3 thành phần: CSDL (chứa điểm thi), Hệ quản trị CSDL (máy chủ xử lý tìm kiếm) và Phần mềm ứng dụng (giao diện web để học sinh nhập số báo danh và xem kết quả).</p>
+                
+                <strong><i class="fa-solid fa-microscope"></i> Tình huống vận dụng Bài 12 - Tình huống 2</strong>
+                <p><strong>Tình huống:</strong> Công ty muốn cấp tài khoản cho 100 nhân viên, quy định nhân viên chỉ xem được mức lương của bản thân, còn Giám đốc được xem toàn bộ. Lập trình viên không cần phải tự viết mã khóa bảo mật từng dòng dữ liệu từ đầu.</p>
+                <p><strong>Trả lời khoa học:</strong> Nhờ sử dụng "Hệ quản trị CSDL" (như MySQL, SQL Server), phần mềm này đã cung cấp sẵn nhóm chức năng "Bảo mật, an toàn CSDL". Nhóm chức năng này giúp người quản trị dễ dàng thiết lập, phân quyền và kiểm soát quyền truy cập dữ liệu của từng tài khoản một cách tự động và chuyên nghiệp.</p>
+            </div>
 
             <!-- BÀI 13 -->
-            <h2 class="part-title"><i class="fa-solid fa-table-cells"></i> Bài 13: Cơ sở dữ liệu quan hệ</h2>
+            <h2 class="part-title"><i class="fa-solid fa-table"></i> Bài 13 Trình bày mô hình tổ chức dữ liệu phổ biến nhất: cơ sở dữ liệu quan hệ. Nội dung bài làm rõ các khái niệm bản ghi, trường, khóa chính, khóa ngoài, liên kết dữ liệu và kiểu dữ liệu.</h2>
             
-            <h3 class="lesson-title">1. Khái niệm Cơ sở dữ liệu quan hệ</h3>
-            <p><strong>Mô hình CSDL quan hệ (Relational Database Model)</strong> do Edgar Frank Codd đề xuất, trong đó dữ liệu được tổ chức dưới dạng các <em>Bảng (Table)</em> hai chiều. Đây là mô hình chuẩn mực và phổ biến nhất trong các hệ thống quản trị dữ liệu hiện đại (như MySQL, PostgreSQL, SQL Server).</p>
-
-            <h3 class="lesson-title">2. Các thuật ngữ và cấu trúc thành phần chi tiết</h3>
-            <p>Mỗi bảng trong CSDL quan hệ biểu diễn một thực thể hoặc một mối quan hệ giữa các thực thể, bao gồm các thành phần khoa học sau:</p>
+            <h3>1. Khái niệm cơ sở dữ liệu quan hệ</h3>
+            <p>Hoạt động 1. Tìm hiểu về một CSDL thông tin âm nhạc</p>
+            <p>Một CSDL các bản nhạc trên một website âm nhạc được tổ chức thành các bảng như Hình 13.1. Danh sách tên nhạc sĩ với mã định danh Aid (Hình 13.1a); danh sách tên ca sĩ với mã Sid (Hình 13.1b); danh sách bản nhạc với tên bản nhạc, mã nhạc sĩ tác giả và mã Mid (Hình 13.1c); danh sách bản thu âm gồm mã bản nhạc và mã ca sĩ (Hình 13.1d).</p>
+            <p>Hoạt động 1.1. Dựa vào Hình 13.1, nhạc sĩ sáng tác bản nhạc "Trường ca Sông Lô" là nhạc sĩ nào? Nhạc sĩ sáng tác bản nhạc "Xa khơi" là nhạc sĩ nào?</p>
             <ul>
-                <li><strong>Thuộc tính (Attribute / Cột / Field):</strong> Mỗi cột trong bảng đại diện cho một thuộc tính của thực thể (ví dụ: <em>MaHS</em>, <em>HoTen</em>, <em>NgaySinh</em>). Mỗi trường có một tên định danh và một <em>kiểu dữ liệu</em> xác định (Integer, Varchar, Date, Float...).</li>
-                <li><strong>Bản ghi (Tuple / Hàng / Record):</strong> Mỗi hàng trong bảng (ngoại trừ hàng tiêu đề) chứa tập hợp các giá trị cụ thể của các thuộc tính tương ứng với một đối tượng thực tế.</li>
-                <li><strong>Miền giá trị (Domain):</strong> Tập hợp các giá trị hợp lệ mà một thuộc tính có thể nhận (ví dụ: Miền giá trị của thuộc tính <em>GioiTinh</em> chỉ gồm {"Nam", "Nữ"}).</li>
-                <li><strong>Khóa chính (Primary Key - PK):</strong> Một hoặc một tập hợp các thuộc tính có giá trị duy nhất cho mỗi bản ghi trong bảng, dùng để định danh phân biệt các bản ghi với nhau. <em>Ví dụ:</em> Trong bảng <span class="code-tag">HOC_SINH</span>, thuộc tính <span class="code-tag">MaHS</span> là khóa chính vì không thể có hai học sinh trùng mã số.</li>
-                <li><strong>Khóa ngoại (Foreign Key - FK):</strong> Một hoặc tập hợp thuộc tính trong bảng này nhưng tham chiếu đến khóa chính của một bảng khác, dùng để thiết lập mối liên kết logic giữa hai bảng. <em>Ví dụ:</em> Trong bảng <span class="code-tag">DIEM_SO</span> có thuộc tính <span class="code-tag">MaHS</span> đóng vai trò là khóa ngoại liên kết ngược lại với bảng <span class="code-tag">HOC_SINH</span>.</li>
+                <li>Bản nhạc "Trường ca Sông Lô" có Aid = 2, tra bảng Nhạc sĩ tương ứng là nhạc sĩ Văn Cao.</li>
+                <li>Bản nhạc "Xa khơi" có Aid = 4, tra bảng Nhạc sĩ tương ứng là nhạc sĩ Nguyễn Tài Tuệ.</li>
+            </ul>
+            <p>Hoạt động 1.2. Bản thu âm trong Hình 13.1d tương ứng với dòng 0005 TN là bản thu âm của bản nhạc nào, do ca sĩ nào thể hiện?</p>
+            <ul>
+                <li>Dòng 0005 TN ở bảng Bản thu âm có Mid = 0005 và Sid = TN.</li>
+                <li>Tra bảng Bản nhạc, Mid = 0005 là bản nhạc "Việt Nam quê hương tôi".</li>
+                <li>Tra bảng Ca sĩ, Sid = TN là ca sĩ Tân Nhân.</li>
+                <li>Vậy đây là bản thu âm bài "Việt Nam quê hương tôi" do ca sĩ Tân Nhân thể hiện.</li>
+            </ul>
+            <p>CSDL âm nhạc được xây dựng nhằm đáp ứng nhu cầu tìm kiếm các bản nhạc, bản thu âm lưu trữ trong hệ thống theo tên bản nhạc, tên nhạc sĩ hay tên ca sĩ. Dữ liệu được tổ chức dưới dạng các bảng. Mỗi bảng có quan hệ với một số bảng còn lại thông qua một thuộc tính (cột) chung nào đó (Hình 13.2).</p>
+            <p>Ví dụ: Bảng Nhạc sĩ và bảng Bản nhạc có chung thuộc tính Aid (mã định danh nhạc sĩ).</p>
+            <p>Cơ sở dữ liệu quan hệ là CSDL lưu trữ dữ liệu dưới dạng các bảng có quan hệ với nhau. Từ đây về sau, nếu không gây nhầm lẫn, thuật ngữ CSDL thay cho CSDL quan hệ.</p>
+            <p>Kĩ năng số: Để dễ dàng truy xuất thông tin, dữ liệu trong máy tính nên được lưu trữ theo cấu trúc bảng phân minh, thay vì ghi chú lộn xộn trong các tệp văn bản.</p>
+            
+            <h3>2. Một số thuật ngữ, khái niệm liên quan</h3>
+            <p><strong>a) Bản ghi, trường</strong></p>
+            <p>Về mặt cấu trúc, CSDL quan hệ tổ chức lưu trữ dữ liệu dưới dạng các bảng gồm các hàng và cột.</p>
+            <p>Bản ghi (record): Mỗi hàng của bảng được gọi là một bản ghi, là tập hợp các thông tin về một đối tượng cụ thể được quản lí trong bảng. Tương ứng với một bộ giá trị ghi trong các trường của đối tượng.</p>
+            <p>Trường (field): Mỗi cột trong bảng được gọi là trường, thể hiện một thuộc tính của đối tượng được quản lí.</p>
+            <p>Ví dụ, bảng Nhạc sĩ (Hình 13.1a) có bốn bản ghi. Bản ghi đầu tiên là (1, Đỗ Nhuận). Bảng này có hai trường là Aid và TenNS.</p>
+            <p><strong>b) Khoá chính</strong></p>
+            <p>Mỗi bảng có thể có một hay một nhóm trường mà giá trị của chúng tại các bản ghi không trùng nhau, xác định duy nhất một bản ghi. Trường hay nhóm trường ấy được gọi là khoá của bảng.</p>
+            <p>Ví dụ: Ở bảng Nhạc sĩ, trường Aid có giá trị phân biệt tại mỗi bản ghi, nó là khoá của bảng Nhạc sĩ. Ở bảng Bản nhạc, nhóm ba trường Mid, Aid, TenBN cũng hợp thành một khoá, và trường Mid đứng độc lập cũng là một khoá.</p>
+            <p>Khoá chính (Primary Key): Một bảng có thể có nhiều khoá. Người ta chọn (chỉ định) một khoá trong các khoá đó làm khoá chính của bảng. Thường chọn khoá có số trường ít nhất (ví dụ chọn Mid thay vì nhóm ba trường). Khoá chính xác định duy nhất bản ghi nên có vai trò quan trọng trong sắp xếp, truy xuất dữ liệu.</p>
+            <p><strong>c) Khoá ngoài</strong></p>
+            <p>Mỗi bảng (A) có thể có trường hay nhóm các trường (k) làm thành khoá chính ở một bảng khác (B). Khi đó k được gọi là khoá ngoài (Foreign Key) của bảng A.</p>
+            <p>Hai bảng A và B được gọi là có quan hệ với nhau qua khoá ngoài k của bảng A.</p>
+            <p>Ví dụ: Trường Aid trong bảng Bản nhạc là một khoá ngoài của bảng này vì Aid là khoá chính ở bảng Nhạc sĩ.</p>
+            <p><strong>d) Liên kết dữ liệu</strong></p>
+            <p>Có thể dùng khoá ngoài của bảng để thực hiện ghép nối dữ liệu hai bảng với nhau, gọi là liên kết (join) dữ liệu theo khoá.</p>
+            <p>Lí do không lưu trữ bằng một bảng tổng hợp lớn (Bảng NBC):</p>
+            <ul>
+                <li>Dữ liệu (tên ca sĩ, tên nhạc sĩ, tên bản nhạc) bị lặp lại nhiều lần đối với các chuỗi kí tự dài.</li>
+                <li>Gây ra dư thừa dữ liệu, tiêu tốn không gian lưu trữ.</li>
+                <li>Dễ mắc lỗi làm mất tính nhất quán của dữ liệu (ví dụ: một dòng ghi là “Văn Cao”, dòng dưới lại ghi “Van Cao”).</li>
+                <li>Mỗi lần sửa đổi tên một ca sĩ chẳng hạn, cần phải tìm soát sửa đổi ở rất nhiều dòng khác.</li>
+            </ul>
+            <p>Giải pháp tối ưu là lập các bảng riêng biệt và sử dụng liên kết. Mỗi lần thay đổi, ta chỉ cần sửa đổi một lần ở bảng gốc (bảng Nhạc sĩ hay Ca sĩ), khi truy xuất liên kết sẽ có được dữ liệu chuẩn xác.</p>
+            <p><strong>e) Các trường và dữ liệu</strong></p>
+            <p>Việc lưu trữ dữ liệu của mỗi trường cần tuân theo một kiểu dữ liệu nhất định. Xét ví dụ bảng điểm thi tiếng Anh (Bảng 13.1):</p>
+            <ul>
+                <li><strong>sbd:</strong> Số nguyên.</li>
+                <li><strong>hoten:</strong> Xâu kí tự, độ dài giới hạn (ví dụ không quá 64 kí tự).</li>
+                <li><strong>gt (Giới tính):</strong> Chỉ hai giá trị (Nữ hoặc Nam), tương ứng kiểu logic (đúng/sai, 1/0).</li>
+                <li><strong>ngaysinh:</strong> Ngày/tháng/năm.</li>
+                <li><strong>diem:</strong> Kiểu số thập phân (có tối đa 5 chữ số với 2 chữ số sau dấu phẩy).</li>
+                <li><strong>makithi:</strong> Kiểu xâu với độ dài cố định 5 kí tự.</li>
+            </ul>
+            <p>Mục đích của việc xác định kiểu dữ liệu của các trường:</p>
+            <ul>
+                <li>Hạn chế việc lãng phí dung lượng lưu trữ dữ liệu.</li>
+                <li>Kiểm soát tính đúng đắn về lôgic của dữ liệu được nhập vào bảng. Chẳng hạn không thể nhập kí tự dạng chữ vào trường sbd, không thể nhập giá trị số vào trường ngaysinh.</li>
+            </ul>
+            <p>Ghi nhớ</p>
+            <ul>
+                <li>CSDL quan hệ lưu trữ dữ liệu dưới dạng các bảng có quan hệ với nhau.</li>
+                <li>Mỗi hàng là một bản ghi; mỗi cột là một trường.</li>
+                <li>Khoá chính là một hoặc một nhóm trường xác định duy nhất bản ghi.</li>
+                <li>Khoá ngoài của một bảng là trường làm khoá chính ở một bảng khác, dùng để liên kết dữ liệu giữa các bảng.</li>
+                <li>Xác định kiểu dữ liệu cho mỗi trường giúp tiết kiệm dung lượng và kiểm soát tính hợp lệ của dữ liệu nhập vào.</li>
             </ul>
 
-            <div class="theory-note">
-                <strong>Ví dụ minh họa cấu trúc quan hệ giữa hai bảng:</strong>
-                <p>Bảng 1: <span class="code-tag">LOP_HOC</span> (Khóa chính: <span class="code-tag">MaLop</span>)</p>
-                <div class="table-responsive">
-                    <table class="scientific-table">
-                        <tr><th>MaLop (PK)</th><th>TenLop</th><th>GiaoVienCN</th></tr>
-                        <tr><td>11A1</td><td>Lớp 11 Toán</td><td>Thầy Bình</td></tr>
-                        <tr><td>11A2</td><td>Lớp 11 Tin</td><td>Cô Sinh</td></tr>
-                    </table>
-                </div>
+            <div class="logic-box">
+                <strong><i class="fa-solid fa-microscope"></i> Tình huống vận dụng Bài 13 - Tình huống 1</strong>
+                <p><strong>Tình huống:</strong> Thay vì gõ đi gõ lại tên "Nhạc sĩ Văn Cao" ở hàng trăm bài hát, hệ thống chỉ lưu MÃ SỐ "2" ở bảng BANNHAC. Khi cần hiển thị, máy tính tự động tìm sang bảng NHACSI để lấy tên "Văn Cao".</p>
+                <p><strong>Trả lời khoa học:</strong> CSDL quan hệ lưu trữ bằng cách tách thành các bảng riêng biệt và dùng "Liên kết dữ liệu" (JOIN) thông qua "Khoá ngoài" (ở đây là MÃ NHẠC SĨ). Việc này giúp khắc phục triệt để tình trạng dư thừa dữ liệu, tiết kiệm không gian và tránh sai sót không nhất quán khi gõ văn bản.</p>
                 
-                <p>Bảng 2: <span class="code-tag">HOC_SINH</span> (Khóa chính: <span class="code-tag">MaHS</span>, Khóa ngoại: <span class="code-tag">MaLop</span>)</p>
-                <div class="table-responsive">
-                    <table class="scientific-table">
-                        <tr><th>MaHS (PK)</th><th>HoTen</th><th>MaLop (FK)</th></tr>
-                        <tr><td>HS001</td><td>Nguyễn Văn An</td><td>11A2</td></tr>
-                        <tr><td>HS002</td><td>Trần Thị Bình</td><td>11A1</td></tr>
-                    </table>
-                </div>
-                <p><em>Phân tích khoa học:</em> Thuộc tính <span class="code-tag">MaLop</span> ở bảng <span class="code-tag">HOC_SINH</span> là khóa ngoại, bắt buộc mọi giá trị của nó phải tồn tại trong tập giá trị khóa chính của bảng <span class="code-tag">LOP_HOC</span>. Điều này đảm bảo tính toàn vẹn tham chiếu.</p>
+                <strong><i class="fa-solid fa-microscope"></i> Tình huống vận dụng Bài 13 - Tình huống 2</strong>
+                <p><strong>Tình huống:</strong> Khi tạo bảng lưu thông tin giới tính (Nam/Nữ) của học sinh, người thiết kế CSDL chọn kiểu dữ liệu là BOOLEAN (Logic) thay vì kiểu VARCHAR (xâu kí tự).</p>
+                <p><strong>Trả lời khoa học:</strong> Việc xác định chính xác kiểu dữ liệu (Logic chỉ nhận giá trị Đúng/Sai hoặc 1/0) giúp hệ thống kiểm soát được tính hợp lệ của dữ liệu nhập vào (ngăn chặn việc nhập kí tự không hợp lệ vào ô giới tính), đồng thời hạn chế việc lãng phí dung lượng lưu trữ so với lưu chuỗi ký tự dài.</p>
             </div>
 
             <!-- BÀI 14 -->
-            <h2 class="part-title"><i class="fa-solid fa-code"></i> Bài 14: SQL - Ngôn ngữ truy vấn có cấu trúc</h2>
+            <h2 class="part-title"><i class="fa-solid fa-terminal"></i> Bài 14 Giúp tìm hiểu về SQL, ngôn ngữ truy vấn có cấu trúc</h2>
             
-            <h3 class="lesson-title">1. Lợi ích của ngôn ngữ truy vấn có cấu trúc (SQL)</h3>
-            <p><strong>SQL (Structured Query Language)</strong> là ngôn ngữ chuẩn quốc tế được thiết kế để giao tiếp, thao tác và quản trị các hệ cơ sở dữ liệu quan hệ. Lợi ích cốt lõi của SQL là tính độc lập hãng sản xuất (một câu lệnh chuẩn có thể chạy trên nhiều DBMS khác nhau), cú pháp gần gũi với ngôn ngữ tự nhiên, tính khai báo cao (chỉ định rõ lấy cái gì thay vì phải lập trình chi tiết cách lấy như thế nào).</p>
-
-            <h3 class="lesson-title">2. Các nhóm lệnh SQL cơ bản và ví dụ minh họa</h3>
+            <h3>1. Lợi ích của ngôn ngữ truy vấn</h3>
+            <p>Sự khác biệt cơ bản giữa cách truy vấn nhờ ngôn ngữ truy vấn (như SQL) so với lập trình trực tiếp là:</p>
             <ul>
-                <li><strong>Nhóm Định nghĩa dữ liệu (DDL - Data Definition Language):</strong> Dùng để khởi tạo và cấu trúc hóa cơ sở dữ liệu.
-                    <div class="code-block">
--- Khởi tạo cơ sở dữ liệu mới<br>
-CREATE DATABASE QuanLyHocSinh;<br><br>
--- Khởi tạo bảng dữ liệu<br>
-CREATE TABLE HOC_SINH (<br>
-&nbsp;&nbsp;&nbsp;&nbsp;MaHS VARCHAR(10) PRIMARY KEY,<br>
-&nbsp;&nbsp;&nbsp;&nbsp;HoTen VARCHAR(50) NOT NULL,<br>
-&nbsp;&nbsp;&nbsp;&nbsp;NgaySinh DATE<br>
-);
-                    </div>
-                </li>
-                <li><strong>Nhóm Thao tác dữ liệu (DML - Data Manipulation Language):</strong> Dùng để cập nhật và truy xuất thông tin bên trong bảng.
-                    <div class="code-block">
--- Thêm một bản ghi mới (INSERT)<br>
-INSERT INTO HOC_SINH VALUES ('HS003', 'Lê Hoàng Nam', '2009-05-12');<br><br>
--- Cập nhật dữ liệu (UPDATE)<br>
-UPDATE HOC_SINH SET HoTen = 'Lê Hoàng Minh' WHERE MaHS = 'HS003';<br><br>
--- Xóa bản ghi (DELETE)<br>
-DELETE FROM HOC_SINH WHERE MaHS = 'HS003';<br><br>
--- Truy xuất dữ liệu (SELECT): Lấy toàn bộ danh sách học sinh<br>
-SELECT * FROM HOC_SINH;<br><br>
--- Truy xuất có điều kiện: Lọc học sinh sinh năm 2009 trở đi<br>
-SELECT HoTen, NgaySinh FROM HOC_SINH WHERE NgaySinh >= '2009-01-01';
-                    </div>
-                </li>
-                <li><strong>Nhóm Kiểm soát dữ liệu (DCL - Data Control Language):</strong> Dùng để phân quyền truy cập cho người dùng.
-                    <div class="code-block">
--- Cấp quyền SELECT trên bảng HOC_SINH cho tài khoản giaoVien<br>
-GRANT SELECT ON HOC_SINH TO 'giaoVien';<br><br>
--- Thu hồi quyền<br>
-REVOKE SELECT ON HOC_SINH FROM 'giaoVien';
-                    </div>
-                </li>
+                <li><strong>Lập trình trực tiếp (theo thủ tục):</strong> Phải nắm rõ cấu trúc tệp, tự xây dựng thuật toán chi tiết (duyệt, kiểm tra, trích xuất). Dễ nhầm lẫn, tốn thời gian, và phải viết lại thuật toán cho mỗi yêu cầu khác nhau.</li>
+                <li><strong>Ngôn ngữ truy vấn (tổng quát, không thủ tục):</strong> Chỉ cần viết yêu cầu dữ liệu cần lấy (ví dụ: CHỌN ... TỪ ... VỚI ĐIỀU KIỆN ...). Hệ QTCSDL sẽ tự động xử lí và trả về kết quả. Không cần nghĩ cách lấy dữ liệu như thế nào.</li>
             </ul>
+            <p>Ngôn ngữ truy vấn có cấu trúc (SQL – Structured Query Language):Được phát triển từ những năm 1970, SQL đã trở thành ngôn ngữ truy vấn tiêu chuẩn được hầu hết các hệ QTCSDL (Oracle, SQL Server, MySQL…) hỗ trợ. SQL bao gồm ba thành phần chính:</p>
+            <ul>
+                <li><strong>DDL (Data Definition Language):</strong> Ngôn ngữ định nghĩa dữ liệu.</li>
+                <li><strong>DML (Data Manipulation Language):</strong> Ngôn ngữ thao tác dữ liệu.</li>
+                <li><strong>DCL (Data Control Language):</strong> Ngôn ngữ kiểm soát dữ liệu..</li>
+            </ul>
+            
+            <h3>2. Khởi tạo CSDL</h3>
+            <p>Thành phần DDL của SQL cung cấp các câu lệnh để khởi tạo CSDL, tạo bảng, thiết lập khoá.</p>
+            <p>Bảng các câu lệnh truy vấn định nghĩa CSDL (DDL)</p>
+            <ul>
+                <li><strong>CREATE DATABASE:</strong> Khởi tạo CSDL.</li>
+                <li><strong>CREATE TABLE:</strong> Khởi tạo bảng.</li>
+                <li><strong>ALTER TABLE:</strong> Thay đổi định nghĩa bảng.</li>
+                <li><strong>PRIMARY KEY:</strong> Khai báo khoá chính.</li>
+                <li><strong>FOREIGN KEY... REFERENCES...:</strong> Khai báo khoá ngoài.</li>
+            </ul>
+            <p>Bảng các kiểu dữ liệu thường dùng trong SQL</p>
+            <ul>
+                <li><strong>CHAR (n) hay CHARACTER (n):</strong> Xâu kí tự có độ dài cố định n kí tự.</li>
+                <li><strong>VARCHAR (n):</strong> Xâu kí tự có độ dài thay đổi, không vượt quá n kí tự.</li>
+                <li><strong>BOOLEAN:</strong> Kiểu lôgic có giá trị Đúng (1) hay Sai (0).</li>
+                <li><strong>INT hay INTEGER:</strong> Số nguyên.</li>
+                <li><strong>REAL:</strong> Số thực dấu phẩy động.</li>
+                <li><strong>DATE:</strong> Ngày tháng, dạng ‘YYYY-MM-DD’.</li>
+                <li><strong>TIME:</strong> Thời gian, dạng ‘HH:MM:SS’.</li>
+            </ul>
+            <p>Lưu ý: Các dấu chấm phẩy <code>;</code> được dùng để kết thúc một câu lệnh truy vấn SQL. Tên CSDL, tên bảng, tên trường chỉ gồm chữ cái La-tinh và chữ số, không chứa khoảng trống hay kí tự đặc biệt.</p>
+            <p>Ví dụ: Đoạn lệnh khởi tạo CSDL music và tạo các bảng nhạc sĩ, bản nhạc.</p>
+            <div class="sql-block">CREATE DATABASE music;
+CREATE TABLE bannhac (
+    Mid CHAR(4),
+    Aid INT,
+    TenBN VARCHAR(128)
+);
+ALTER TABLE bannhac ADD PRIMARY KEY (Mid);
+CREATE TABLE nhacsi (
+    Aid INT,
+    TenNS VARCHAR(64)
+);</div>
+            <p>Hoạt động củng cố</p>
+            <p>1. Viết câu truy vấn tạo bảng Ca sĩ như đã mô tả trong Bài 11 với tên bảng là casi. 2. Viết câu truy vấn thêm khoá chính Sid cho bảng casi.</p>
+            <p>Bảng casi cần lưu thông tin mã ca sĩ (kiểu số nguyên) và tên ca sĩ (kiểu xâu kí tự).</p>
+            <p>1. Khởi tạo bảng casi:</p>
+            <div class="sql-block">CREATE TABLE casi (
+    Sid INT,
+    TenCS VARCHAR(128)
+);</div>
+            <p>2. Thêm khoá chính Sid cho bảng casi:</p>
+            <div class="sql-block">ALTER TABLE casi ADD PRIMARY KEY (Sid);</div>
+            
+            <h3>3. Cập nhật và truy xuất dữ liệu</h3>
+            <p>Thành phần DML của SQL cung cấp các câu lệnh để cập nhật (thêm, sửa, xoá) và truy xuất dữ liệu.</p>
+            <p>Bảng các câu truy xuất dữ liệu</p>
+            <ul>
+                <li><strong>SELECT &lt;dữ liệu cần lấy&gt;:</strong> &lt;dữ liệu cần lấy&gt; là danh sách các trường hay hàm, dấu * đại diện cho tất cả các trường.</li>
+                <li><strong>FROM &lt;tên bảng&gt;:</strong> Chỉ định nguồn dữ liệu lấy từ bảng nào.</li>
+                <li><strong>WHERE &lt;điều kiện chọn&gt;:</strong> Chỉ định chọn các dòng thoả mãn điều kiện.</li>
+                <li><strong>ORDER BY &lt;tên trường&gt;:</strong> Sắp xếp các dòng kết quả theo thứ tự chỉ định.</li>
+                <li><strong>INNER JOIN:</strong> Liên kết các bảng theo điều kiện (khớp dữ liệu giữa hai bảng).</li>
+            </ul>
+            <p>Bảng các câu truy vấn cập nhật dữ liệu</p>
+            <ul>
+                <li><strong>INSERT INTO &lt;tên bảng&gt; VALUES &lt;danh sách giá trị&gt;:</strong> Thêm một bản ghi (dòng) mới vào bảng với các giá trị tương ứng.</li>
+                <li><strong>DELETE FROM &lt;tên bảng&gt; WHERE &lt;điều kiện&gt;:</strong> Xoá các dòng trong bảng thoả mãn điều kiện chỉ định.</li>
+                <li><strong>UPDATE &lt;tên bảng&gt; SET &lt;tên trường&gt; = &lt;giá trị&gt; WHERE &lt;điều kiện&gt;:</strong> Cập nhật giá trị mới cho trường dữ liệu tại các dòng thoả mãn điều kiện.</li>
+            </ul>
+            <p>Ví dụ một số câu lệnh DML:</p>
+            <ul>
+                <li><div class="sql-block">SELECT Mid, TenBN FROM bannhac WHERE Aid=1 ORDER BY TenBN;</div>→ Chọn cột Mid, TenBN từ bảng bannhac nơi có mã tác giả Aid bằng 1, kết quả sắp xếp theo tên bản nhạc.</li>
+                <li><div class="sql-block">INSERT INTO nhacsi VALUES (5, 'Phú Quang'), (6, 'Phan Huỳnh Điểu');</div>→ Thêm 2 dòng dữ liệu mới vào bảng nhacsi.</li>
+                <li><div class="sql-block">DELETE FROM bannhac WHERE Mid = '0005';</div>→ Xoá dòng có mã bản nhạc bằng ‘0005’ khỏi bảng bannhac.</li>
+                <li><div class="sql-block">UPDATE nhacsi SET TenNS = 'Hoàng Hiệp' WHERE Aid = 6;</div>→ Thay đổi tên nhạc sĩ thành ‘Hoàng Hiệp’ cho dòng có mã tác giả bằng 6.</li>
+            </ul>
+            <p>Hoạt động củng cố</p>
+            <p>1. Viết câu truy vấn lấy tất cả các dòng của bảng nhacsi. 2. Viết câu truy vấn thêm các dòng cho bảng casi với các giá trị là (‘TK’, ‘Nguyễn Trung Kiên’), (‘QD’, ‘Quý Dương’), (‘YM’, ‘Y Moan’).</p>
+            <p>1. Lấy tất cả các dòng của bảng nhacsi:Dùng dấu * để lấy toàn bộ các trường.</p>
+<div class="sql-block">SELECT * FROM nhacsi;</div>
+            <p>2. Thêm các dòng cho bảng casi:</p>
+<div class="sql-block">INSERT INTO casi VALUES ('TK', 'Nguyễn Trung Kiên'), ('QD', 'Quý Dương'), ('YM', 'Y Moan');</div>
+            
+            <h3>4. Kiểm soát quyền truy cập</h3>
+            <p>Thành phần DCL của SQL dùng để cấp phát hoặc thu hồi quyền truy cập đối với CSDL cho người dùng.</p>
+            <p>Bảng các câu truy vấn kiểm soát quyền</p>
+            <ul>
+                <li><strong>GRANT:</strong> Cấp quyền cho người dùng.</li>
+                <li><strong>REVOKE:</strong> Thu hồi quyền đối với người dùng.</li>
+            </ul>
+            <p>Cú pháp cơ bản:</p>
+            <ul>
+                <li>Cấp quyền: <div class="sql-block">GRANT &lt;danh sách quyền&gt; ON &lt;tên CSDL.tên bảng&gt; TO &lt;tài khoản người dùng&gt;;</div></li>
+                <li>Thu hồi quyền: <div class="sql-block">REVOKE &lt;danh sách quyền&gt; ON &lt;tên CSDL.tên bảng&gt; FROM &lt;tài khoản người dùng&gt;;</div></li>
+            </ul>
+            <p>Ví dụ:</p>
+            <ul>
+                <li><div class="sql-block">GRANT SELECT ON music.* TO guest;</div>→ Cấp quyền SELECT (truy xuất) đối với tất cả các bảng (kí hiệu *) trong CSDL music cho người dùng guest.</li>
+                <li><div class="sql-block">REVOKE CREATE, ALTER ON music.bannhac FROM mod;</div>→ Thu hồi quyền tạo mới và sửa cấu trúc bảng bannhac trong CSDL music đối với người dùng mod.</li>
+            </ul>
+            <p>Hoạt động củng cố</p>
+            <p>1. Viết câu truy vấn cấp quyền UPDATE đối với tất cả các bảng trong CSDL music cho người dùng mod.<br>Sử dụng kí hiệu * để chỉ tất cả các bảng.</p>
+<div class="sql-block">GRANT UPDATE ON music.* TO mod;</div>
+            <p>2. Viết câu truy vấn thu hồi quyền DELETE đối với bảng nhacsi trong CSDL music cho người dùng mod.</p>
+<div class="sql-block">REVOKE DELETE ON music.nhacsi FROM mod;</div>
+            <p>Ghi nhớ</p>
+            <ul>
+                <li>SQL là ngôn ngữ truy vấn tiêu chuẩn dành cho CSDL quan hệ.</li>
+                <li>Lợi ích chính của SQL là cho phép mô tả yêu cầu cần lấy dữ liệu gì thay vì phải lập trình thủ tục chi tiết để lấy nó.</li>
+                <li>SQL bao gồm 3 thành phần chính: DDL (Định nghĩa cấu trúc dữ liệu), DML (Thao tác dữ liệu), DCL (Kiểm soát quyền truy cập).</li>
+            </ul>
+
+            <div class="logic-box">
+                <strong><i class="fa-solid fa-microscope"></i> Tình huống vận dụng Bài 14 - Tình huống 1</strong>
+                <p><strong>Tình huống:</strong> Quản trị viên nhập dòng lệnh: <div class="sql-block">INSERT INTO NHACSI VALUES (5, 'Phú Quang');</div> vào cửa sổ điều khiển của hệ thống.</p>
+                <p><strong>Trả lời khoa học:</strong> Quản trị viên đang sử dụng ngôn ngữ thao tác dữ liệu (DML) thuộc ngôn ngữ truy vấn có cấu trúc SQL. Câu lệnh này ra lệnh cho hệ QTCSDL tự động thực hiện thao tác cập nhật: thêm một bản ghi (dòng) mới chứa thông tin nhạc sĩ Phú Quang vào bảng NHACSI.</p>
+                
+                <strong><i class="fa-solid fa-microscope"></i> Tình huống vận dụng Bài 14 - Tình huống 2</strong>
+                <p><strong>Tình huống:</strong> Để ngăn chặn nhân viên thực tập lỡ tay xóa mất dữ liệu quan trọng, giám đốc công nghệ chạy dòng lệnh: <div class="sql-block">REVOKE DELETE ON MUSIC.NHACSI FROM THUC_TAP_SINH;</div></p>
+                <p><strong>Trả lời khoa học:</strong> Đây là ứng dụng của nhóm lệnh DCL (Ngôn ngữ kiểm soát dữ liệu) trong SQL. Câu lệnh <code class="sql-inline">REVOKE</code> có chức năng thu hồi quyền hạn cụ thể (ở đây là quyền xoá dữ liệu - <code class="sql-inline">DELETE</code>) đối với bảng dữ liệu của một tài khoản người dùng, đảm bảo tính bảo mật và phân quyền rõ ràng.</p>
+            </div>
 
             <!-- BÀI 15 -->
-            <h2 class="part-title"><i class="fa-solid fa-shield-halved"></i> Bài 15: Bảo mật và an toàn hệ cơ sở dữ liệu</h2>
+            <h2 class="part-title"><i class="fa-solid fa-shield-halved"></i> Bài 15 Trình bày các biện pháp bảo mật hệ cơ sở dữ liệu, cách phân quyền người dùng và phương pháp bảo đảm an toàn dữ liệu trước sự cố.</h2>
             
-            <h3 class="lesson-title">1. Bảo mật hệ CSDL</h3>
-            <p>Bảo mật là tập hợp các biện pháp phòng chống sự truy cập trái phép, rò rỉ hoặc phá hoại dữ liệu từ phía con người. Các giải pháp kỹ thuật tiêu chuẩn gồm:</p>
+            <h3>1. Bảo mật hệ CSDL</h3>
+            <p>Việc lập danh sách và xác định quyền hạn của các nhóm người dùng đối với hệ CSDL là công việc đầu tiên để xây dựng chính sách bảo mật.</p>
+            <p>Hoạt động 1. Tất cả người dùng Internet đều có thể tìm kiếm, xem danh sách các bản nhạc mà không cần đăng nhập. Một số người dùng xác định có quyền nhập thêm dữ liệu bản nhạc mới. Cần phải tổ chức phân quyền truy cập CSDL như thế nào để đáp ứng các yêu cầu trên?</p>
+            <p>Cần chia người dùng thành các nhóm khác nhau và cấp quyền truy cập tương ứng:</p>
             <ul>
-                <li><strong>Phân quyền truy cập:</strong> Thiết lập chính sách người dùng dựa trên vai trò, giới hạn quyền thực thi trên từng bảng/cột cụ thể.</li>
-                <li><strong>Xác thực định danh:</strong> Sử dụng mật khẩu mạnh, xác thực đa yếu tố (MFA).</li>
-                <li><strong>Mã hóa dữ liệu:</strong> Mã hóa dữ liệu ngay cả khi lưu trữ trên ổ cứng  hoặc khi truyền tải trên mạng.</li>
+                <li>Nhóm không cần tài khoản (khách): chỉ có quyền tìm kiếm, xem dữ liệu đã có.</li>
+                <li>Nhóm có tài khoản được cấp quyền: có thể thêm dữ liệu mới (bản nhạc, ca sĩ), nhưng không có quyền xóa hoặc sửa dữ liệu.</li>
+                <li>Nhóm quản trị: có toàn quyền (thêm, sửa, xóa, cấp quyền cho người khác).</li>
+            </ul>
+            <p>Để quản lý người dùng, người quản trị thường thiết lập một bảng user bao gồm các cột: tên đăng nhập, mật khẩu và nhóm người dùng. Dựa vào ví dụ về website âm nhạc, hệ thống có thể chia thành các nhóm với quyền hạn khác nhau:</p>
+            <ul>
+                <li><strong>guest - Nhóm 1 (Khách):</strong> Chỉ có quyền SELECT (truy xuất, xem) đối với tất cả các bảng. Không cần đăng nhập.</li>
+                <li><strong>moderator - Nhóm 2:</strong> Có quyền SELECT, INSERT (thêm dữ liệu) đối với các bảng về bản nhạc và ca sĩ mới.</li>
+                <li><strong>master_mod - Nhóm 3:</strong> Có tất cả quyền SELECT, INSERT, UPDATE (sửa), DELETE (xóa) đối với tất cả các bảng trong CSDL. Không có quyền cập nhật cấu trúc CSDL.</li>
+                <li><strong>admin - Nhóm 4 (Quản trị):</strong> Có toàn quyền đối với tất cả các bảng và cấu trúc của CSDL.</li>
+            </ul>
+            <p>Chính sách bảo mật toàn diện: Bảo mật hệ CSDL không chỉ phụ thuộc vào hệ Quản trị CSDL (QTCSDL) mà còn phụ thuộc lớn vào ý thức của người dùng (bảo vệ tài khoản, tránh lộ mật khẩu). Công tác bảo mật CSDL cần được thực hiện với một chính sách toàn diện bao gồm:</p>
+            <ul>
+                <li>Quy định liên quan đến ý thức và trách nhiệm của người dùng đối với tài khoản và dữ liệu.</li>
+                <li>Quy định về tổ chức đảm bảo an ninh mạng cùng với hệ thống phần cứng và phần mềm cụ thể.</li>
+                <li>Danh sách các nhóm người dùng, tài khoản truy xuất với quyền hạn tương ứng.</li>
+                <li>Biện pháp giám sát trạng thái hoạt động của hệ thống (ví dụ: tạo biên bản lưu trữ – log file để ghi lại số người truy cập, tình trạng thiết bị nhằm kiểm tra, phân tích khi có sự cố).</li>
+            </ul>
+            <p>Kĩ năng số: Để bảo vệ tài khoản cá nhân, nên đặt mật khẩu mạnh, không chia sẻ mật khẩu với người khác và luôn đăng xuất khỏi hệ thống khi sử dụng máy tính công cộng.</p>
+            <p>Nêu tóm tắt các quyền của các tài khoản moderator và admin trong ví dụ website âm nhạc.</p>
+            <ul>
+                <li>Tài khoản moderator: Có quyền truy xuất (xem) và thêm dữ liệu mới về bản nhạc, ca sĩ, nhưng không có quyền xóa hay sửa dữ liệu đã có.</li>
+                <li>Tài khoản admin: Có toàn quyền đối với tất cả các bảng trong CSDL (thêm, sửa, xóa dữ liệu và thay đổi cấu trúc bảng), đồng thời quản trị các tài khoản khác.</li>
+            </ul>
+            
+            <h3>2. Bảo đảm an toàn dữ liệu</h3>
+            <p>Bảo đảm an toàn dữ liệu là việc đảm bảo để dữ liệu trong CSDL không bị sai lệch, mất mát khi hệ thống phần cứng, phần mềm gặp sự cố rủi ro.</p>
+            <p>Hoạt động 2. Hãy nêu một vài sự cố có thể xảy ra làm mất mát, sai lệch dữ liệu và cách hạn chế, khắc phục các sự cố này.</p>
+            <p>Một số sự cố và cách khắc phục:</p>
+            <ul>
+                <li>Mất điện đột ngột: Sử dụng bộ lưu điện (UPS) để cung cấp nguồn điện tạm thời, giúp lưu dữ liệu và tắt máy an toàn.</li>
+                <li>Hỏng ổ cứng lưu trữ: Thường xuyên sao lưu (backup) dữ liệu định kỳ và lưu trữ ở nhiều nơi khác nhau (như ổ cứng rời, điện toán đám mây).</li>
+                <li>Máy tính bị nhiễm virus: Cài đặt phần mềm diệt virus, không tải các tệp không rõ nguồn gốc.</li>
+            </ul>
+            <p>Một số sự cố phổ biến và giải pháp:</p>
+            <ul>
+                <li><strong>Sự cố về nguồn điện</strong> (Cấp điện không đủ công suất; Quá tải đột biến; Mất điện đột ngột): Xây dựng hệ thống điện đủ công suất; Kiểm tra định kỳ; Dùng bộ lưu điện để cấp điện ngay cho hệ thống máy chủ CSDL.</li>
+                <li><strong>Sự cố hư hỏng thiết bị lưu trữ</strong> (Ổ đĩa cứng hỏng do tuổi thọ hoặc các lý do vật lý khác): Quản lý thời gian sử dụng, thay thế trước khi đến hạn; Sao lưu dữ liệu định kỳ; Dùng các giải pháp lưu trữ dự phòng do hệ QTCSDL hỗ trợ.</li>
+            </ul>
+            <p>Kết luận về bảo đảm an toàn dữ liệu:</p>
+            <ul>
+                <li>Cần xây dựng chính sách an toàn dữ liệu cùng kế hoạch xử lý sự cố.</li>
+                <li>Chính sách phải bao gồm quy định về ý thức, trách nhiệm của người dùng và người vận hành.</li>
+                <li>Các hệ QTCSDL đều hỗ trợ chức năng sao lưu định kỳ và phục hồi dữ liệu từ bản sao lưu gần nhất.</li>
+            </ul>
+            <p>Vì sao cần phải sao lưu dữ liệu định kì?</p>
+            <p>Cần sao lưu dữ liệu định kì để có thể khôi phục lại dữ liệu từ bản sao lưu gần nhất trong trường hợp xảy ra sự cố (như mất điện đột ngột, hỏng ổ cứng, hệ thống bị tấn công) làm mất hoặc hỏng dữ liệu gốc.</p>
+            
+            <p>Phần mềm ứng dụng CSDL là phần mềm được xây dựng tương tác với hệ QTCSDL nhằm mục đích hỗ trợ người dùng khai thác thông tin từ CSDL một cách thuận tiện. Nhờ API, các hệ QTCSDL cung cấp công cụ để người dùng tự viết phần mềm ứng dụng chuyên biệt.</p>
+            <p>Hệ cơ sở dữ liệu (hệ CSDL) là một hệ thống gồm ba thành phần: CSDL, hệ QTCSDL và các phần mềm ứng dụng CSDL.</p>
+            <p>Câu hỏi. Hệ QTCSDL và hệ CSDL khác nhau như thế nào?</p>
+            <ul>
+                <li>Hệ QTCSDL: Là phần mềm hệ thống cung cấp phương thức để lưu trữ, cập nhật, truy xuất, bảo mật và an toàn dữ liệu.</li>
+                <li>Hệ CSDL: Là một hệ thống hoàn chỉnh bao gồm ba thành phần: dữ liệu (CSDL), phần mềm quản lí (hệ QTCSDL) và các phần mềm ứng dụng CSDL (giao diện hỗ trợ người dùng). Hệ QTCSDL là một thành phần cấu thành nên hệ CSDL.</li>
+            </ul>
+            
+            <h3>3. Hệ cơ sở dữ liệu tập trung và phân tán</h3>
+            <p>Dựa vào cách thức lưu trữ dữ liệu, hệ CSDL được chia thành hệ CSDL tập trung và hệ CSDL phân tán.</p>
+            <p><strong>a) Hệ CSDL tập trung</strong></p>
+            <p>Hệ cơ sở dữ liệu tập trung là hệ CSDL mà toàn bộ CSDL được lưu trữ tập trung trên một máy tính.</p>
+            <p>Đặc điểm: Có thể là CSDL một người dùng trên một máy tính (như MS Access), hoặc người dùng truy cập vào CSDL tập trung thông qua mạng từ các máy tính khác.</p>
+            <p>Ưu điểm: Dễ bảo trì phát triển, thuận lợi trong việc đảm bảo tính nhất quán của dữ liệu và an ninh.</p>
+            <p>Nhược điểm: Phụ thuộc vào một máy chủ duy nhất; khi triển khai trên diện rộng đòi hỏi đường truyền mạng có tốc độ đáp ứng đủ nhanh và máy chủ cấu hình mạnh.</p>
+            <p><strong>b) Hệ CSDL phân tán</strong></p>
+            <p>Hệ cơ sở dữ liệu phân tán cho phép người dùng truy cập dữ liệu được lưu trữ ở nhiều máy tính khác nhau (gọi là các trạm) của một mạng máy tính.</p>
+            <p>Đặc điểm: Cơ sở dữ liệu phân tán là tập hợp dữ liệu được phân tán trên các trạm. Dữ liệu tại mỗi trạm là một CSDL cục bộ.</p>
+            <p>Ứng dụng:</p>
+            <ul>
+                <li>Ứng dụng cục bộ: chạy tại một trạm và chỉ sử dụng dữ liệu cục bộ của trạm đó.</li>
+                <li>Ứng dụng toàn cục (ứng dụng phân tán): chạy tại một trạm nhưng yêu cầu sử dụng dữ liệu từ ít nhất hai trạm để ra kết quả.</li>
+            </ul>
+            <p>So với hệ CSDL tập trung, hệ CSDL phân tán có cấu trúc phức tạp hơn:</p>
+            <ul>
+                <li><strong>Ưu điểm:</strong> Dễ dàng mở rộng, bổ sung thêm trạm dữ liệu mà không làm ảnh hưởng đến hoạt động chung. Tính sẵn sàng và độ tin cậy được nâng cao: hệ thống vẫn hoạt động nếu một trạm gặp sự cố vì dữ liệu có thể được sao lưu ở nhiều trạm.</li>
+                <li><strong>Nhược điểm:</strong> Thiết kế và triển khai phức tạp. Khó khăn trong việc đảm bảo tính nhất quán dữ liệu (đồng bộ hoá) và bảo mật. Chi phí duy trì cao hơn.</li>
+            </ul>
+            <p>Kĩ năng số: Khái niệm “tập trung” hay “phân tán” trong CSDL nói đến vị trí lưu trữ dữ liệu vật lí, không phụ thuộc vào việc kiến trúc xử lí có phân tán hay không.</p>
+            <p>Câu hỏi. Hệ CSDL tập trung và hệ CSDL phân tán khác nhau như thế nào?</p>
+            <p>Khác biệt chính nằm ở vị trí lưu trữ CSDL:</p>
+            <ul>
+                <li>Hệ CSDL tập trung: Toàn bộ dữ liệu được lưu trữ trên một máy tính duy nhất.</li>
+                <li>Hệ CSDL phân tán: Dữ liệu được chia nhỏ và lưu trữ trên nhiều máy tính khác nhau (nhiều trạm) được kết nối qua mạng lưới. Sự khác biệt này kéo theo những điểm khác biệt về thiết kế, quản lí, mức độ an toàn, tính khả dụng và chi phí triển khai.</li>
+            </ul>
+            <p>Ghi nhớ</p>
+            <ul>
+                <li>Hệ QTCSDL là phần mềm cung cấp phương thức lưu trữ, cập nhật, truy xuất, bảo mật và an toàn dữ liệu. Ba nhóm chức năng chính gồm: định nghĩa dữ liệu; cập nhật và truy xuất; bảo mật và an toàn CSDL.</li>
+                <li>Hệ CSDL là hệ thống bao gồm 3 thành phần: CSDL, hệ QTCSDL và các phần mềm ứng dụng CSDL.</li>
+                <li>Hệ CSDL tập trung: CSDL được lưu trữ trên một máy tính duy nhất.</li>
+                <li>Hệ CSDL phân tán: Dữ liệu được lưu trữ phân tán ở nhiều máy tính khác nhau trên mạng máy tính. Dễ mở rộng, độ tin cậy cao nhưng thiết kế phức tạp và khó đồng bộ dữ liệu hơn CSDL tập trung.</li>
             </ul>
 
-            <h3 class="lesson-title">2. Bảo đảm an toàn dữ liệu)</h3>
-            <p>An toàn dữ liệu tập trung giải quyết các sự cố khách quan xuất phát từ lỗi phần cứng, sự cố nguồn điện, thiên tai hoặc sai sót thao tác của con người:</p>
-            <ul>
-                <li><strong>Sao lưu dự phòng (Backup):</strong> Định kỳ tạo các bản sao lưu toàn bộ hoặc gia tăng của CSDL lưu trữ tại các thiết bị hoặc vùng mây độc lập.</li>
-                <li><strong>Phục hồi dữ liệu:</strong> Khôi phục lại trạng thái ổn định gần nhất của CSDL dựa trên các tệp bản sao lưu và nhật ký giao dịch (Transaction Log) khi xảy ra sự cố sập hệ thống.</li>
-            </ul>
+            <div class="logic-box">
+                <strong><i class="fa-solid fa-microscope"></i> Tình huống vận dụng Bài 15 - Tình huống 1</strong>
+                <p><strong>Tình huống:</strong> Hệ thống máy chủ đang lưu trữ điểm thi học kì thì toàn khu vực bị mất điện lưới đột ngột. Máy chủ vẫn duy trì hoạt động thêm được 15 phút, đủ thời gian để hệ thống lưu trạng thái và tắt máy an toàn.</p>
+                <p><strong>Trả lời khoa học:</strong> Đây là giải pháp "bảo đảm an toàn dữ liệu" trước sự cố nguồn điện bằng cách sử dụng thiết bị phần cứng là Bộ lưu điện (UPS). UPS cung cấp nguồn điện dự phòng tạm thời, giúp ngăn ngừa rủi ro mất mát hoặc hỏng hóc cấu trúc cơ sở dữ liệu do ngắt điện đột biến.</p>
+                
+                <strong><i class="fa-solid fa-microscope"></i> Tình huống vận dụng Bài 15 - Tình huống 2</strong>
+                <p><strong>Tình huống:</strong> Khách hàng mở tài khoản ngân hàng tại chi nhánh Quảng Trị, nhưng khi đi công tác vào TP. Hồ Chí Minh, khách hàng thao tác trên máy ATM tại đây vẫn có thể rút tiền và kiểm tra số dư chính xác ngay lập tức.</p>
+                <p><strong>Trả lời khoa học:</strong> Ngân hàng đang vận hành trên kiến trúc "Hệ cơ sở dữ liệu phân tán". Dữ liệu được chia sẻ và lưu trữ ở nhiều máy tính (các trạm) kết nối với nhau qua mạng diện rộng. Ứng dụng phân tán sẽ chạy yêu cầu sử dụng dữ liệu liên kết giữa trạm TP. Hồ Chí Minh và trạm gốc để đồng bộ hóa và xử lý giao dịch một cách xuyên suốt.</p>
+            </div>
 
             <div class="footer-credit">
-                Hệ thống tài liệu điện tử chuyên sâu | <strong>Hành Trình Số</strong> <br>
+                Hệ thống tài liệu điện tử | <strong>Hành Trình Số</strong> <br>
                 Biên soạn chuẩn khoa học bởi Cô Lê Huyền Sinh <i class="fa-solid fa-heart"></i>
             </div>
         </div>
