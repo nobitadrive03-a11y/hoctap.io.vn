@@ -159,14 +159,14 @@
         .reader-content > ol { list-style-type: decimal; margin-left: 15px; }
 
         .reader-content > ul > li::before {
-    content: '\f111'; /* Đổi \f105 thành \f111 để dùng chấm tròn của Font Awesome */
-    font-family: 'Font Awesome 6 Free';
-    font-weight: 900;
+    content: '\2022'; /* Mã kí tự chấm tròn mặc định */
+    font-family: Arial, sans-serif; /* Dùng font hệ thống để chấm tròn luôn hiển thị */
     color: var(--primary);
     position: absolute;
-    left: 12px; /* Có thể căn chỉnh nhích sang phải một chút nếu cần */
-    top: 15px; 
-    font-size: 0.5rem; /* Giảm font-size xuống một chút để dấu chấm tròn vừa vặn, không bị quá to */
+    left: 14px;
+    top: 10px;
+    font-size: 1.2rem; /* Độ lớn của dấu chấm */
+}
 }
             text-align: justify;
             line-height: 1.6;
