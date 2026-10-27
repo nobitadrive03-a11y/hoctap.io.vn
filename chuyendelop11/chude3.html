@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Chuyên đề Học tập Tin học 11 - Hành Trình Số</title>
+    <!-- Tích hợp Font chữ Google -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&family=Merriweather:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <!-- Tích hợp thư viện Icon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+<!-- 1. MÃ GA4 GỐC (Kết nối với Google Analytics) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-NSJCVSL9RM"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-NSJCVSL9RM'); 
+</script>
+
+<!-- 2. MÃ NHỊP TIM 30 GIÂY -->
+<script>
+  setInterval(function() {
+    if (!document.hidden) { 
+      gtag('event', 'keep_alive', {
+        'event_category': 'Engagement',
+        'event_label': 'Học sinh đang làm bài',
+        'non_interaction': false
+      });
+    }
+  }, 30000); 
+</script>
+
+    <style id="main-style">
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1e40af;
+            --tech-gradient: linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%);
+            --accent: #f59e0b;
+            --bg-body: #e0f2fe;
+            --text-main: #334155;
+            --text-muted: #64748b;
+            --white: #ffffff;
+            --shadow-lg: 0 20px 40px -5px rgba(0, 0, 0, 0.15);
+            --radius-md: 12px;
+            --radius-lg: 24px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-body);
+            color: var(--text-main);
+            line-height: 1.6;
+            min-height: 100vh;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            padding: 15px; 
+        }
+
+        #reader-view {
+            display: block; 
+            max-width: 1000px;
+            margin: 0 auto;
+            background: #f8fafc;
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+            animation: slideUp 0.6s ease-out;
+            border: 1px solid rgba(255,255,255,0.5);
+        }
+
+        .reader-header {
+            background: var(--tech-gradient);
+            color: var(--white);
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between; 
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .reader-header h2 { font-size: 1.1rem; font-weight: 600; margin: 0; display: flex; align-items: center; gap: 8px; }
+        
+        .btn-small { 
+            padding: 8px 16px; 
+            font-size: 0.9rem; 
+            border-radius: 8px; 
+            background: rgba(0,0,0,0.2); 
+            color: white; 
+            border: 1px solid rgba(255,255,255,0.4); 
+            cursor: pointer; 
+            display: flex; 
+            align-items: center; 
+            gap: 8px; 
+            transition: 0.3s; 
+            font-weight: 500;
+            border: none;
+        }
+        .btn-small:hover { background: rgba(0,0,0,0.4); transform: translateX(-2px); }
+
+        .reader-content { padding: 25px 15px; background: var(--white); }
+
+        h1.main-title {
+            font-family: 'Merriweather', serif;
+            color: var(--primary-dark);
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 1.6rem;
+            line-height: 1.4;
+        }
+
+        h1.main-title span {
+            display: block;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.95rem;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        h2.part-title {
+            background: #f1f5f9;
+            color: var(--primary-dark);
+            padding: 12px 15px;
+            border-radius: 10px;
+            border-left: 5px solid var(--primary);
+            margin: 30px 0 20px 0;
+            font-size: 1.15rem;
+            display: flex;
+            align-items: flex-start;
+            flex-direction: column;
+            gap: 8px;
+            font-weight: bold;
+        }
+        
+        h3 {
+            color: #334155;
+            margin: 20px 0 10px 0;
+            font-size: 1.05rem;
+        }
+
+        p { margin-bottom: 12px; text-align: justify; font-size: 0.95rem; line-height: 1.7; }
+        
+        .reader-content > ul, .reader-content > ol {
+            padding-left: 0;
+            margin-bottom: 15px;
+        }
+        
+        .reader-content > ul { list-style-type: none; }
+        .reader-content > ol { list-style-type: decimal; margin-left: 15px; }
+
+        .reader-content > ul > li {
+            position: relative;
+            padding-left: 30px;
+            margin-bottom: 12px;
+            background: #f8fafc;
+            padding: 12px 12px 12px 30px;
+            border-radius: 10px;
+            border: 1px solid #e2e8f0;
+            font-size: 0.95rem;
+            text-align: justify;
+            line-height: 1.6;
+        }
+        .reader-content > ul > li::before {
+            content: '\f105';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            color: var(--primary);
+            position: absolute;
+            left: 10px;
+            top: 14px;
+            font-size: 1rem;
+        }
+        
+        .reader-content > ol > li {
+            margin-bottom: 12px;
+            background: #f8fafc;
+            padding: 12px;
+            border-radius: 10px;
+            border: 1px solid #e2e8f0;
+            font-size: 0.95rem;
+            text-align: justify;
+            line-height: 1.6;
+        }
+
+        .logic-box {
+            background: #f0fdf4;
+            border-radius: var(--radius-md);
+            padding: 20px 15px;
+            margin: 25px 0;
+            box-shadow: 0 4px 10px -3px rgba(34, 197, 94, 0.1);
+            border: 1px solid #bbf7d0;
+            border-left: 5px solid #22c55e;
+            font-size: 0.95rem;
+        }
+        .logic-box strong { 
+            color: #166534; 
+            font-size: 1.05rem; 
+            display: flex; 
+            align-items: center; 
+            gap: 8px; 
+            margin-bottom: 10px;
+            margin-top: 15px;
+        }
+        .logic-box strong:first-child {
+            margin-top: 0;
+        }
+        .logic-box p { margin-bottom: 8px; }
+
+        .footer-credit {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 2px dashed #e2e8f0;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+        .footer-credit i { color: #ef4444; }
+        
+        .sql-block {
+            background-color: #eff6ff;
+            padding: 12px 15px;
+            border-radius: 8px;
+            border-left: 4px solid blue;
+            color: blue;
+            font-family: 'Courier New', Courier, monospace;
+            font-weight: bold;
+            font-size: 1.05rem;
+            overflow-x: auto;
+            margin: 10px 0;
+            white-space: pre-wrap;
+            line-height: 1.5;
+        }
+        .sql-inline {
+            color: blue;
+            font-weight: bold;
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        @media (min-width: 640px) {
+            body { padding: 40px 20px; }
+            .reader-header { padding: 20px 40px; }
+            .reader-content { padding: 40px; }
+            h1.main-title { font-size: 2.2rem; }
+            h2.part-title { flex-direction: row; align-items: center; }
+            p, .reader-content > ul > li, .reader-content > ol > li, .logic-box { font-size: 1.05rem; }
+            .reader-content > ul > li { padding-left: 45px; }
+            .reader-content > ul > li::before { left: 15px; top: 15px; }
+            #reader-view { border-radius: var(--radius-lg); }
+            .logic-box { padding: 25px 30px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="reader-view">
+        <div class="reader-header">
+            <h2><i class="fa-solid fa-laptop-code"></i> Không gian học tập Hành Trình Số</h2>
+            <button class="btn-small" onclick="window.history.back()">
+                <i class="fa-solid fa-arrow-left"></i> Thoát
+            </button>
+        </div>
+
+        <div class="reader-content">
+            <h1 class="main-title">
+                <span>Chuyên đề Tin học 11</span>
+                ĐỀ CƯƠNG HỌC TẬP CHI TIẾT
+            </h1>
+
+            <h2 class="part-title"><i class="fa-solid fa-shield-virus"></i> Bài 9. Trình bày cách nhận biết, phòng tránh một số dạng lừa đảo phổ biến trên không gian số và 4 quy tắc ứng xử trong môi trường số.</h2>
+            
+            <h3>1. Nhận biết và phòng tránh một số dạng lừa đảo trên không gian số</h3>
+            <p>Hoạt động 1: Người dùng đã có khi nào gặp những tình huống tương tự như: (1) Nhận được tin nhắn yêu cầu chuyển tiền ngay vào tài khoản nếu không muốn gặp rắc rối pháp luật; (2) Nhận được thư điện tử lạ yêu cầu mở tài liệu đính kèm? Trong những tình huống ấy, nên xử lí như thế nào?</p>
+            <p>Gợi ý cách xử lí an toàn:</p>
+            <ul>
+                <li>Tình huống 1 (Tin nhắn đe dọa đòi tiền): Bỏ qua tin nhắn đó. Tuyệt đối không chuyển tiền theo yêu cầu. Nếu cần, chặn số điện thoại/tài khoản đó để tránh bị làm phiền.</li>
+                <li>Tình huống 2 (Email lạ có đính kèm): Không làm theo yêu cầu. Không bấm vào liên kết hay tải tệp đính kèm. Xóa thư điện tử đó ngay lập tức.</li>
+            </ul>
+            
+            <p>Kẻ lừa đảo thường hướng tới mục đích hưởng lợi tài chính hoặc gây ảnh hưởng tinh thần. Một số nguyên tắc mang tính định hướng chung để nhận biết và phòng tránh lừa đảo bao gồm:</p>
+            <ul>
+                <li>Nguyên tắc thứ nhất: Hãy chậm lại. Kẻ lừa đảo thường tạo ra cảm giác cấp bách (ví dụ: yêu cầu thực hiện chuyển tiền ngay nếu không sẽ bị khởi tố) để nạn nhân không có thời gian suy nghĩ thấu đáo. Hãy giữ bình tĩnh và không vội vã làm theo.</li>
+                <li>Nguyên tắc thứ hai: Kiểm tra ngay. Thực hiện tra cứu số điện thoại, địa chỉ cơ quan, tổ chức mà người gửi thông tin mang danh để liên hệ xác minh trực tiếp. Không gọi lại vào số điện thoại do kẻ gian cung cấp trong tin nhắn.</li>
+                <li>Nguyên tắc thứ ba: Dừng lại, không gửi. Mọi yêu cầu thanh toán hoặc gửi tiền ngay lập tức (dưới dạng thẻ cào, chuyển khoản) đều cần phải đặt dấu hỏi. Nếu cảm thấy giao dịch không đáng tin, hãy dừng lại vì đó có thể là lừa đảo.</li>
+            </ul>
+            <p>Những nguyên tắc này có thể được áp dụng vào các tình huống cụ thể như: Lừa đảo hỗ trợ kĩ thuật, Lừa đảo dưới dạng thông báo tin tốt, Lừa đảo dưới dạng thông báo tin xấu, Lừa đảo qua website giả mạo các trang thương mại điện tử.</p>
+
+            <h3>2. Giao tiếp và ứng xử trong môi trường số</h3>
+            <p>Hoạt động 2: Khi bắt đầu sử dụng mạng Internet, người dùng bắt đầu trở thành một công dân số. Hãy cùng trao đổi để chỉ ra một vài quy tắc ứng xử chung trong môi trường số.</p>
+            <p>Một số quy tắc ứng xử chung:</p>
+            <ul>
+                <li>Sử dụng ngôn từ lịch sự, văn minh, không dùng lời lẽ xúc phạm người khác.</li>
+                <li>Tôn trọng quyền riêng tư của bản thân và của bạn bè.</li>
+                <li>Không đăng tải, chia sẻ thông tin sai sự thật hoặc chưa được kiểm chứng.</li>
+                <li>Có ý thức bảo vệ tài khoản cá nhân (dùng mật khẩu mạnh, không chia sẻ mật khẩu).</li>
+            </ul>
+            
+            <p>Môi trường văn hoá của mạng xã hội phụ thuộc nhiều vào hành vi của mỗi người sử dụng. Việc xây dựng và hình thành các chuẩn mực đòi hỏi cá nhân tuân thủ Bốn quy tắc ứng xử chung:</p>
+            <ol>
+                <li><strong>Quy tắc tôn trọng, tuân thủ pháp luật:</strong> Tuân thủ pháp luật Việt Nam, tôn trọng quyền và lợi ích hợp pháp của tổ chức, cá nhân.</li>
+                <li><strong>Quy tắc lành mạnh:</strong> Hành vi, ứng xử trên mạng xã hội phải phù hợp với các giá trị đạo đức, văn hoá truyền thống tốt đẹp.</li>
+                <li><strong>Quy tắc an toàn, bảo mật thông tin:</strong> Tuân thủ các quy định và hướng dẫn về bảo vệ an toàn và bảo mật thông tin cá nhân, tổ chức.</li>
+                <li><strong>Quy tắc trách nhiệm:</strong> Chịu trách nhiệm về các hành vi, ứng xử trên mạng xã hội; phối hợp với cơ quan chức năng để xử lí hành vi vi phạm.</li>
+            </ol>
+            
+            <p>Khi tham gia mạng xã hội, người dùng cần ghi nhớ những việc NÊN LÀM và KHÔNG NÊN LÀM:</p>
+            <p>Những việc nên làm :</p>
+            <ul>
+                <li>Tìm hiểu và tuân thủ các điều khoản quy định khi tham gia mạng xã hội.</li>
+                <li>Tuyên truyền và tham gia hướng dẫn sử dụng mạng an toàn.</li>
+                <li>Chia sẻ thông tin chính thống, thông tin tích cực.</li>
+                <li>Quảng bá hình ảnh tốt đẹp của con người Việt Nam.</li>
+                <li>Quản lí, bảo mật thông tin cá nhân.</li>
+            </ul>
+            
+            <p>Những việc không nên làm :</p>
+            <ul>
+                <li>Đăng tải nội dung vi phạm pháp luật.</li>
+                <li>Sử dụng từ ngữ thù hận, kích động bạo lực.</li>
+                <li>Sử dụng ngôn ngữ phản cảm, vô văn hoá.</li>
+                <li>Tung tin giả, sai sự thật hoặc xúc phạm cá nhân, tổ chức.</li>
+                <li>Quảng cáo, kinh doanh dịch vụ trái phép.</li>
+            </ul>
+
+            <div class="logic-box">
+                <strong><i class="fa-solid fa-microscope"></i> Tình huống vận dụng Bài 9 - Tình huống 1</strong>
+                <p><strong>Tình huống:</strong> Bạn Minh nhận được một cuộc gọi tự xưng là cán bộ Công an, thông báo số Căn cước công dân của bạn có liên quan đến một đường dây rửa tiền xuyên quốc gia. Họ yêu cầu phải chuyển toàn bộ tiền trong tài khoản vào một "tài khoản tạm giữ của cơ quan nhà nước" để phục vụ điều tra, nếu không sẽ bị khởi tố ngay lập tức.</p>
+                <p><strong>Trả lời khoa học:</strong> Cần áp dụng nguyên tắc "Hãy chậm lại" và "Kiểm tra ngay". Cơ quan chức năng thực thi pháp luật không bao giờ làm việc qua điện thoại và hoàn toàn không tồn tại cái gọi là "tài khoản ngân hàng tạm giữ" mang tên cá nhân. Đây là kĩ thuật thao túng tâm lý bằng cách tạo ra sự sợ hãi và cảm giác cấp bách để nạn nhân mất tỉnh táo và chuyển tiền. Minh tuyệt đối không làm theo và cần ngắt máy lập tức.</p>
+                
+                <strong><i class="fa-solid fa-microscope"></i> Tình huống vận dụng Bài 9 - Tình huống 2</strong>
+                <p><strong>Tình huống:</strong> Bạn Lan nhận được email từ một địa chỉ nhìn có vẻ giống của ngân hàng (ví dụ: `cskh@vietcombank-security.com`), thông báo tài khoản đang bị xâm nhập và yêu cầu tải một tệp đính kèm tên `Xac-minh-tai-khoan.exe` về máy để bảo mật.</p>
+                <p><strong>Trả lời khoa học:</strong> Lan đang đối mặt với dạng lừa đảo qua mạng (Phishing) phát tán mã độc. Tệp đính kèm `.exe` thực chất là một chương trình độc hại (Malware/Trojan). Nếu nhấn tải xuống và mở tệp, máy tính sẽ bị nhiễm mã độc, giúp hacker truy cập trái phép, đánh cắp mật khẩu và thông tin cá nhân. Cách xử lí đúng là Lan không làm theo yêu cầu, không bấm bất kì liên kết nào và xóa thư ngay lập tức.</p>
+                
+                <strong><i class="fa-solid fa-microscope"></i> Tình huống vận dụng Bài 9 - Tình huống 3</strong>
+                <p><strong>Tình huống:</strong> Bạn Mai chuẩn bị đi du lịch và rất háo hức, nên đã chụp ảnh cận cảnh vé máy bay (chứa mã vạch) cùng thẻ Căn cước công dân và đăng tải ở chế độ Công khai trên mạng xã hội Facebook để khoe với mọi người.</p>
+                <p><strong>Trả lời khoa học:</strong> Hành vi này vi phạm "Quy tắc an toàn, bảo mật thông tin" trên môi trường số. Mã vạch trên vé máy bay và Căn cước chứa rất nhiều Dữ liệu định danh cá nhân (PII). Kẻ xấu có thể sử dụng các ứng dụng quét mã để giải mã lấy toàn bộ họ tên, ngày tháng năm sinh, số ghế chuyến bay nhằm huỷ chuyến, tống tiền hoặc dùng thông tin đó để lập tài khoản ảo vay tiền tín dụng đen.</p>
+                
+                <strong><i class="fa-solid fa-microscope"></i> Tình huống vận dụng Bài 9 - Tình huống 4</strong>
+                <p><strong>Tình huống:</strong> Trong thời điểm đang có dịch bệnh lây lan, bạn Tuấn thấy một bài viết trên mạng chia sẻ rằng "Uống nước chanh pha sả và gừng mỗi ngày sẽ tiêu diệt hoàn toàn 100% virus trong cơ thể". Tuấn liền chia sẻ bài viết này vào nhóm Zalo của lớp mà không cần kiểm chứng.</p>
+                <p><strong>Trả lời khoa học:</strong> Hành vi của Tuấn vi phạm "Quy tắc trách nhiệm" và thuộc nhóm việc "Không nên làm" (Tung tin giả, sai sự thật). Thông tin y tế chưa được các cơ quan y tế chính thống xác nhận là tin giả (Fake news). Việc chia sẻ tùy tiện sẽ gây hiểu lầm, ảnh hưởng trực tiếp đến sức khoẻ cộng đồng và có thể bị cơ quan chức năng xử phạt vi phạm hành chính.</p>
+                
+                <strong><i class="fa-solid fa-microscope"></i> Tình huống vận dụng Bài 9 - Tình huống 5</strong>
+                <p><strong>Tình huống:</strong> Do mâu thuẫn cá nhân với bạn bè ở lớp, bạn Hưng lập một tài khoản Facebook giả mạo, ẩn danh rồi vào diễn đàn của trường liên tục đăng bài chửi bới, sử dụng từ ngữ thù hận, bôi nhọ danh dự của bạn đó.</p>
+                <p><strong>Trả lời khoa học:</strong> Bạn Hưng đã vi phạm nghiêm trọng "Quy tắc lành mạnh" và "Quy tắc tôn trọng, tuân thủ pháp luật". Đây là hành vi Bạo lực mạng (Cyberbullying) và xúc phạm danh dự cá nhân. Mặc dù sử dụng tài khoản ẩn danh, nhưng mọi dấu vết kĩ thuật (như địa chỉ IP) đều được máy chủ mạng lưu lại. Hành vi này không chỉ vi phạm đạo đức mà còn vi phạm Luật An ninh mạng, người thực hiện sẽ phải chịu trách nhiệm trước pháp luật.</p>
+                
+                <strong><i class="fa-solid fa-microscope"></i> Tình huống vận dụng Bài 9 - Tình huống 6</strong>
+                <p><strong>Tình huống:</strong> Bạn Linh thấy quảng cáo trên TikTok với nội dung "Việc nhẹ lương cao - Xem video thả tim kiếm 500k/ngày". Khi nhắn tin xin việc, Linh bị yêu cầu nộp 200.000 VNĐ tiền "cọc mở tài khoản hệ thống" và hứa sẽ hoàn lại ngay kèm theo tiền công sau khi xong nhiệm vụ đầu tiên.</p>
+                <p><strong>Trả lời khoa học:</strong> Cần lập tức áp dụng nguyên tắc "Dừng lại, không gửi". Đây là hình thức lừa đảo tuyển dụng dưới dạng "làm nhiệm vụ" rất phổ biến hiện nay. Kẻ gian đánh vào tâm lí hám lợi của nạn nhân. Nếu Linh chuyển tiền, chúng sẽ tiếp tục bịa ra các lỗi hệ thống ảo để yêu cầu Linh nạp thêm các khoản tiền lớn hơn gấp nhiều lần cho đến khi nạn nhân cạn kiệt tài sản. Mọi yêu cầu gửi tiền trước khi làm việc trên mạng đều có dấu hiệu lừa đảo.</p>
+            </div>
+
+            <div class="footer-credit">
+                Hệ thống tài liệu điện tử | <strong>Hành Trình Số</strong> <br>
+                Biên soạn chuẩn khoa học bởi Cô Lê Huyền Sinh <i class="fa-solid fa-heart"></i>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
