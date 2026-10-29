@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Hành Trình Số - Khôi Phục Giao Diện Bài 8</title>
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-NSJCVSL9RM"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-NSJCVSL9RM'); 
+        
+        setInterval(function() {
+            if (!document.hidden) { 
+                gtag('event', 'keep_alive', {
+                    'event_category': 'Engagement',
+                    'event_label': 'Học sinh đang thực hành Bài 8 HTML',
+                    'non_interaction': false
+                });
+            }
+        }, 30000); 
+    </script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        body { font-family: 'Be Vietnam Pro', sans-serif; -webkit-tap-highlight-color: transparent; }
+
+        .login-bg { background-color: #1a2c5b; }
+        .login-card { border: 6px solid #ffd700; border-radius: 24px; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.4); }
+        .login-header { background: linear-gradient(180deg, #2563eb 0%, #0284c7 100%); }
+        .login-btn { background: linear-gradient(90deg, #ef4444 0%, #f97316 100%); box-shadow: 0 8px 20px rgba(239, 68, 68, 0.4); }
+
+        /* Vá lỗi thành công (Xanh) */
+        .patched-highlight { animation: patchGlow 2.5s ease-out forwards; display: inline-block;}
+        @keyframes patchGlow {
+            0% { background-color: #16a34a; color: white; transform: scale(1.02); box-shadow: 0 0 15px rgba(22, 163, 74, 0.6); }
+            30% { background-color: #22c55e; color: white; transform: scale(1.02); }
+            100% { background-color: #dcfce7; color: #14532d; transform: scale(1); }
+        }
+
+        /* Lỗi chớp nháy (Đỏ) */
+        .error-highlight { animation: errorGlow 0.6s ease-out forwards; display: inline-block;}
+        @keyframes errorGlow {
+            0% { background-color: #ef4444; color: white; transform: translateX(-5px); }
+            25% { transform: translateX(5px); }
+            50% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+            100% { background-color: #fee2e2; color: #991b1b; transform: translateX(0); border: 1px dashed #dc2626; }
+        }
+        
+        .preview-content { text-align: left !important; justify-content: flex-start !important; padding: 1.5rem !important; }
+        .preview-content h1 { font-size: 1.6em; font-weight: bold; margin: 0; }
+        .preview-content p { margin: 0; margin-bottom: 0.5rem; display: block; }
+
+        .option-box {
+            display: flex; align-items: center; width: 100%;
+            background-color: #ffffff; border: 2px solid #cbd5e1;
+            border-radius: 12px; padding: 14px; margin-bottom: 10px;
+            cursor: pointer; transition: all 0.2s ease;
+        }
+        .option-box:hover { border-color: #3b82f6; background-color: #f8fafc; }
+        .option-letter {
+            display: flex; align-items: center; justify-content: center;
+            width: 36px; height: 36px; background-color: #e0f2fe;
+            color: #0369a1; font-weight: bold; font-size: 16px;
+            border-radius: 8px; flex-shrink: 0; margin-right: 14px;
+        }
+        .option-text { font-size: 15px; font-weight: 700; color: #334155; text-align: left; word-break: break-word; font-family: monospace; }
+        
+        .option-box.selected { background-color: #3b82f6; border-color: #1d4ed8; }
+        .option-box.selected .option-letter { background-color: #1e3a8a; color: white; border-color: #1e3a8a; }
+        .option-box.selected .option-text { color: white; }
+
+        .option-box.wrong { background-color: #fee2e2; border-color: #dc2626; }
+        .option-box.wrong .option-letter { background-color: #dc2626; color: white; border-color: #991b1b; }
+        .option-box.wrong .option-text { color: #991b1b; }
+
+        #end-screen { display: none; position: fixed; inset: 0; background: #f1f5f9; z-index: 1000; flex-direction: column; align-items: center; justify-content: center; padding: 10px; overflow-y: auto; }
+        .lb-container { width: 100%; max-width: 900px; background: #ffffff; border-radius: 20px; padding: 24px; box-shadow: 0 10px 40px rgba(0,0,0,0.15); display: flex; flex-direction: column; gap: 16px; margin: auto; }
+        .table-responsive { width: 100%; overflow-x: auto; border-radius: 10px; border: 1px solid #e2e8f0; max-height: 50vh; }
+        .lb-table { width: 100%; border-collapse: collapse; min-width: 600px; text-align: center; }
+        .lb-table thead tr { background: #dc2626; color: white; position: sticky; top: 0; }
+        .lb-table th { padding: 12px 8px; }
+        .lb-table td { padding: 10px 8px; border-bottom: 1px solid #f1f5f9; font-weight: 600; color: #334155; }
+        .lb-table tbody tr.me-row { background: #dcfce7 !important; border-left: 4px solid #16a34a; }
+        .badge-class { background: #e0f2fe; color: #0369a1; padding: 4px 8px; border-radius: 6px; font-size: 13px; }
+        .badge-score { background: #fef2f2; color: #dc2626; padding: 4px 12px; border-radius: 20px; font-weight: 800; border: 1px solid #fecaca; }
+    </style>
+</head>
+<body class="bg-slate-800 text-gray-800">
+
+    <div id="login-screen" class="min-h-screen flex items-center justify-center p-4 login-bg">
+        <div class="w-full max-w-[440px] bg-white login-card flex flex-col">
+            <div class="login-header p-8 text-center relative">
+                <div class="w-[70px] h-[70px] bg-[#dc2626] border-[3px] border-[#ffd700] rounded-full mx-auto flex items-center justify-center shadow-lg mb-4">
+                    <span class="text-white font-bold text-3xl tracking-tighter">HS</span>
+                </div>
+                <h2 class="text-white font-black text-2xl uppercase mb-2 drop-shadow-md">THỰC HÀNH VÁ LỖI</h2>
+                <p class="text-[#ffd700] font-bold text-[13px] uppercase tracking-wide">TIN HỌC 11 • BÀI 8: ĐỊNH DẠNG HTML</p>
+            </div>
+            
+            <div class="p-6 md:p-8">
+                <div class="mb-5">
+                    <label class="block text-[#1e3a8a] font-bold text-sm mb-2">Họ và tên học sinh</label>
+                    <input type="text" id="username" placeholder="Nhập họ và tên..." class="w-full border-2 border-gray-300 rounded-[12px] px-4 py-3.5 focus:border-[#2563eb] outline-none text-gray-700 font-semibold bg-gray-50">
+                </div>
+                <div class="mb-8">
+                    <label class="block text-[#1e3a8a] font-bold text-sm mb-2">Lớp</label>
+                    <input type="text" id="userclass" placeholder="Nhập lớp (VD: 11A1...)" class="w-full border-2 border-gray-300 rounded-[12px] px-4 py-3.5 focus:border-[#2563eb] outline-none text-gray-700 font-semibold bg-gray-50">
+                </div>
+                <button onclick="startGame()" class="w-full login-btn text-white font-bold text-lg py-4 rounded-[12px] hover:scale-[1.02] transition transform active:scale-95 uppercase tracking-wide">
+                    🚀 Bắt đầu
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="game-screen" class="hidden min-h-screen flex flex-col items-center justify-center p-2 md:p-6 bg-slate-800">
+        <div class="w-full max-w-4xl bg-white rounded-2xl shadow-2xl overflow-hidden flex flex-col">
+            <div class="bg-gray-50 border-b-2 border-gray-200 p-4 flex justify-between items-center flex-wrap gap-2">
+                <div class="flex items-center gap-3">
+                    <div class="flex justify-center items-center w-10 h-10 bg-red-600 rounded-full border-2 border-yellow-400 shadow-sm">
+                        <span class="text-white font-bold text-sm">HS</span>
+                    </div>
+                    <div>
+                        <div class="text-[10px] text-gray-500 font-bold uppercase">Chuyên gia</div>
+                        <div id="hud-player" class="font-bold text-gray-800">...</div>
+                    </div>
+                    <div class="h-8 w-px bg-gray-300 mx-1"></div>
+                    <div>
+                        <div class="text-[10px] text-gray-500 font-bold uppercase">Tiến độ</div>
+                        <div id="hud-progress" class="font-extrabold text-blue-600">1/10</div>
+                    </div>
+                </div>
+                <div class="bg-red-100 px-4 py-1.5 rounded-lg border border-red-200 text-center">
+                    <div class="text-[10px] text-red-600 uppercase font-bold">Điểm số</div>
+                    <div id="hud-score" class="font-black text-red-600 text-xl">0</div>
+                </div>
+            </div>
+
+            <div class="p-4 md:p-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                    <div class="bg-gray-900 rounded-xl border-2 border-gray-700 overflow-hidden shadow-inner flex flex-col">
+                        <div class="bg-gray-800 text-xs text-gray-300 p-2.5 font-mono border-b border-gray-700 font-bold">
+                            &lt;/&gt; MÃ NGUỒN (HTML)
+                        </div>
+                        <div class="p-4 font-mono text-sm text-gray-200 whitespace-pre-wrap flex-1 leading-relaxed" id="code-display"></div>
+                    </div>
+                    <div class="bg-white rounded-xl border-2 border-gray-300 overflow-hidden shadow-inner flex flex-col">
+                        <div class="bg-green-50 text-xs text-green-700 p-2.5 font-sans border-b border-gray-300 font-bold">
+                            👁 GIAO DIỆN (XEM TRƯỚC)
+                        </div>
+                        <div class="bg-gray-50 text-gray-800 text-base md:text-lg flex-1 flex flex-col preview-content overflow-auto" id="preview-display"></div>
+                    </div>
+                </div>
+
+                <div class="bg-red-50 p-4 md:p-5 rounded-xl border-l-4 border-red-500 mb-6">
+                    <h2 id="question-text" class="text-lg md:text-xl font-bold text-red-700 leading-snug">
+                        Câu 1: Nội dung...
+                    </h2>
+                </div>
+                
+                <div id="options-container" class="grid grid-cols-1 md:grid-cols-2 gap-x-4"></div>
+                
+                <div id="action-area" class="text-center hidden pt-4 border-t-2 border-gray-100 mt-2">
+                    <p id="feedback-msg" class="font-black text-xl mb-4"></p>
+                    <button onclick="nextQuestion()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 px-10 rounded-xl transition shadow-lg text-lg uppercase w-full md:w-auto">
+                        Tiếp theo ➔
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="end-screen">
+        <div class="lb-container">
+            <div class="flex justify-between items-center flex-wrap gap-4">
+                <button onclick="location.reload()" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-lg">
+                    🏠 Trở về
+                </button>
+                <div class="text-xl md:text-2xl font-black text-red-600 uppercase">🏆 Bảng xếp hạng</div>
+            </div>
+
+            <div class="bg-red-50 border-2 border-red-200 rounded-xl p-4 flex justify-between items-center flex-wrap gap-2">
+                <div class="font-bold text-red-800 text-lg">🎉 Hoàn thành: <span id="end-player-info" class="text-black">...</span></div>
+                <div class="text-xl font-black text-red-600">ĐIỂM: <span id="final-score" class="text-3xl">0</span></div>
+            </div>
+
+            <div class="flex justify-between items-center gap-2 flex-wrap">
+                <input type="text" id="search-input" class="flex-1 min-w-[200px] px-4 py-2.5 border-2 border-gray-300 rounded-lg focus:border-red-500 outline-none font-semibold" placeholder="🔍 Tìm kiếm Học sinh, Lớp...">
+                <button id="find-me-btn" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2.5 px-4 rounded-lg">🎯 Vị trí của tôi</button>
+            </div>
+
+            <div class="table-responsive">
+                <table class="lb-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Lớp</th>
+                            <th style="text-align: left;">Họ tên</th>
+                            <th>Điểm</th>
+                        </tr>
+                    </thead>
+                    <tbody id="final-leaderboard-list">
+                        <tr><td colspan="4" class="p-8 text-gray-500 font-bold">Đang tải dữ liệu thời gian thực... ⏳</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="flex justify-between items-center pt-2 text-sm font-semibold text-gray-600">
+                <div>Xem <span id="showing-range">0 - 0</span> / <span id="showing-total">0</span></div>
+                <div class="flex items-center gap-2">
+                    <button id="prev-page-btn" class="px-3 py-1.5 bg-gray-200 rounded hover:bg-gray-300">◀</button>
+                    <span><span id="current-page-display">1</span>/<span id="total-pages-display">1</span></span>
+                    <button id="next-page-btn" class="px-3 py-1.5 bg-gray-200 rounded hover:bg-gray-300">▶</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const letters = ['A', 'B', 'C', 'D'];
+        
+        const missions = [
+            {
+                task: "Để hiển thị đoạn văn bản dưới đây trên trang web thành 3 dòng tách biệt (xuống hàng), em hãy chọn thẻ HTML điền vào chỗ trống!",
+                brokenCode: "Dòng 1: Trường THPT Phan Đình Phùng[target]...[/target]\nDòng 2: Tỉnh Quảng Trị[target]...[/target]\nDòng 3: Khối 11",
+                brokenPreview: "Dòng 1: Trường THPT Phan Đình Phùng Dòng 2: Tỉnh Quảng Trị Dòng 3: Khối 11",
+                fixedCode: "Dòng 1: Trường THPT Phan Đình Phùng<br>\nDòng 2: Tỉnh Quảng Trị<br>\nDòng 3: Khối 11",
+                fixedPreview: "Dòng 1: Trường THPT Phan Đình Phùng<br>Dòng 2: Tỉnh Quảng Trị<br>Dòng 3: Khối 11",
+                options: ["<br>", "<p>...</p>", "<h1>...</h1>", "<b>...</b>"],
+                correct: 0
+            },
+            {
+                task: "Đoạn chữ này đang dính liền. Hãy dùng thẻ ĐOẠN VĂN BẢN (Paragraph) để bao bọc, tách nó ra thành một đoạn riêng biệt!",
+                brokenCode: "Phía trên.\n[target]Đây là nội dung đoạn văn độc lập.[/target]\nPhía dưới.",
+                brokenPreview: "Phía trên. Đây là nội dung đoạn văn độc lập. Phía dưới.",
+                fixedCode: "Phía trên.\n<p>Đây là nội dung đoạn văn độc lập.</p>\nPhía dưới.",
+                fixedPreview: "Phía trên.<p style='margin-top:8px; margin-bottom:8px;'>Đây là nội dung đoạn văn độc lập.</p>Phía dưới.",
+                options: ["<p>...</p>", "<br>", "<font>...</font>", "<h1>...</h1>"],
+                correct: 0
+            },
+            {
+                task: "Tiêu đề trang đang quá nhỏ. Hãy dùng thẻ TIÊU ĐỀ CẤP 1 để phóng to nó!",
+                brokenCode: "[target]BÀI 8: ĐỊNH DẠNG HTML[/target]",
+                brokenPreview: "BÀI 8: ĐỊNH DẠNG HTML",
+                fixedCode: "<h1>BÀI 8: ĐỊNH DẠNG HTML</h1>",
+                fixedPreview: "<h1>BÀI 8: ĐỊNH DẠNG HTML</h1>",
+                options: ["<h6>...</h6>", "<p>...</p>", "<h1>...</h1>", "<b>...</b>"],
+                correct: 2
+            },
+            {
+                task: "Để định dạng phông chữ thành Arial cho đoạn văn bản này, em hãy dùng thuộc tính style nội tuyến trong thẻ p!",
+                brokenCode: "[target]Đoạn văn bản mẫu[/target]",
+                brokenPreview: "Đoạn văn bản mẫu",
+                fixedCode: '<p style="font-family: Arial;">Đoạn văn bản mẫu</p>',
+                fixedPreview: '<p style="font-family: Arial, sans-serif; margin:0;">Đoạn văn bản mẫu</p>',
+                options: ['<p font="Arial">...</p>', '<text style="font: Arial;">...</text>', '<p style="font-family: Arial;">...</p>', '<p face="Arial">...</p>'],
+                correct: 2
+            },
+            {
+                task: "Để thay đổi KÍCH THƯỚC (size) của phông chữ lên mức 5 bằng thẻ HTML cũ, em dùng thuộc tính nào?",
+                brokenCode: "Chào mừng [target]năm học mới[/target].",
+                brokenPreview: "Chào mừng năm học mới.",
+                fixedCode: 'Chào mừng <font size="5">năm học mới</font>.',
+                fixedPreview: 'Chào mừng <font size="5">năm học mới</font>.',
+                options: ['<font size="5">...</font>', '<font height="5">...</font>', '<font scale="5">...</font>', '<text size="5">...</text>'],
+                correct: 0
+            },
+            {
+                task: "Để chữ có MÀU ĐỎ (red) bằng thẻ font cơ bản, em sẽ viết lệnh như thế nào?",
+                brokenCode: "[target]CẢNH BÁO LỖI[/target]",
+                brokenPreview: "CẢNH BÁO LỖI",
+                fixedCode: '<font color="red">CẢNH BÁO LỖI</font>',
+                fixedPreview: '<font color="red">CẢNH BÁO LỖI</font>',
+                options: ['<font bg="red">...</font>', '<font style="red">...</font>', '<font color="red">...</font>', '<color="red">...</color>'],
+                correct: 2
+            },
+            {
+                task: "Hãy dùng thẻ cơ bản để IN ĐẬM dòng thông báo khẩn cấp này!",
+                brokenCode: "Chú ý: [target]THÔNG BÁO KHẨN[/target].",
+                brokenPreview: "Chú ý: THÔNG BÁO KHẨN.",
+                fixedCode: "Chú ý: <b>THÔNG BÁO KHẨN</b>.",
+                fixedPreview: "Chú ý: <b>THÔNG BÁO KHẨN</b>.",
+                options: ["<b>...</b>", "<i>...</i>", "<u>...</u>", "<h1>...</h1>"],
+                correct: 0
+            },
+            {
+                task: "Đường dẫn 'hoctap.io.vn' cần được GẠCH CHÂN để học sinh nhận diện link.",
+                brokenCode: "Truy cập: [target]hoctap.io.vn[/target]",
+                brokenPreview: "Truy cập: hoctap.io.vn",
+                fixedCode: "Truy cập: <u>hoctap.io.vn</u>",
+                fixedPreview: "Truy cập: <u>hoctap.io.vn</u>",
+                options: ["<del>...</del>", "<u>...</u>", "<strong>...</strong>", "<mark>...</mark>"],
+                correct: 1
+            },
+            {
+                task: "Có mã độc ẩn. Hãy ĐÁNH DẤU (bôi nền vàng) chữ 'MÃ ĐỘC' để cảnh báo!",
+                brokenCode: "Phát hiện [target]MÃ ĐỘC[/target].",
+                brokenPreview: "Phát hiện MÃ ĐỘC.",
+                fixedCode: "Phát hiện <mark>MÃ ĐỘC</mark>.",
+                fixedPreview: "Phát hiện <mark>MÃ ĐỘC</mark>.",
+                options: ["<u>...</u>", "<del>...</del>", "<mark>...</mark>", "<i>...</i>"],
+                correct: 2
+            },
+            {
+                task: "Tin tặc chèn link 'Tải hack'. Hãy GẠCH NGANG (xóa) đoạn chữ này!",
+                brokenCode: "Tài liệu môn Tin. [target]Tải hack[/target]",
+                brokenPreview: "Tài liệu môn Tin. Tải hack",
+                fixedCode: "Tài liệu môn Tin. <del>Tải hack</del>",
+                fixedPreview: "Tài liệu môn Tin. <del>Tải hack</del>",
+                options: ["<u>...</u>", "<b>...</b>", "<i>...</i>", "<del>...</del>"],
+                correct: 3
+            }
+        ];
+
+        let state = { name: '', cls: '', score: 0, current: 0, isAnswering: false, sessionID: "user_" + Date.now() };
+
+        function startGame() {
+            state.name = document.getElementById('username').value.trim();
+            state.cls = document.getElementById('userclass').value.trim().toUpperCase();
+            if (!state.name || !state.cls) { alert("Vui lòng nhập Họ tên và Lớp!"); return; }
+            
+            document.getElementById('login-screen').classList.add('hidden');
+            document.getElementById('game-screen').classList.remove('hidden');
+            document.getElementById('hud-player').innerText = `${state.name} (${state.cls})`;
+            
+            if(window.initFirebaseLeaderboard) window.initFirebaseLeaderboard();
+            loadMission();
+        }
+
+        function renderBroken(text) {
+            return text.replace(/\[target\]/g, '<span class="text-red-500 bg-red-900 bg-opacity-20 font-bold px-1 border border-red-500 border-dashed rounded">').replace(/\[\/target\]/g, '</span>');
+        }
+
+        function loadMission() {
+            state.isAnswering = false;
+            const m = missions[state.current];
+            
+            document.getElementById('hud-progress').innerText = `${state.current + 1}/10`;
+            document.getElementById('question-text').innerText = `Câu ${state.current + 1}: ${m.task}`;
+            
+            const codeDisplay = document.getElementById('code-display');
+            codeDisplay.innerHTML = renderBroken(m.brokenCode).replace(/</g, '&lt;').replace(/>/g, '&gt;') 
+                                    .replace(/&lt;span class="text-red-500 bg-red-900 bg-opacity-20 font-bold px-1 border border-red-500 border-dashed rounded"&gt;/g, '<span class="text-red-400 border-b-2 border-red-500 border-dashed pb-0.5">')
+                                    .replace(/&lt;\/span&gt;/g, '</span>');
+                                    
+            document.getElementById('preview-display').innerHTML = m.brokenPreview;
+            document.getElementById('action-area').classList.add('hidden');
+            
+            const container = document.getElementById('options-container');
+            container.innerHTML = '';
+            
+            m.options.forEach((optText, index) => {
+                const btn = document.createElement('div');
+                btn.className = "option-box shadow-sm";
+                
+                const letterDiv = document.createElement('div');
+                letterDiv.className = "option-letter";
+                letterDiv.innerText = letters[index];
+
+                const textDiv = document.createElement('div');
+                textDiv.className = "option-text";
+                textDiv.innerText = optText;
+
+                btn.appendChild(letterDiv);
+                btn.appendChild(textDiv);
+                
+                btn.onclick = () => checkAnswer(index, m.correct, btn, m);
+                container.appendChild(btn);
+            });
+        }
+
+        function checkAnswer(selected, correct, btn, m) {
+            if (state.isAnswering) return;
+            state.isAnswering = true;
+
+            const feedback = document.getElementById('feedback-msg');
+            const codeDisplay = document.getElementById('code-display');
+            const previewDisplay = document.getElementById('preview-display');
+
+            if (selected === correct) {
+                state.score += 10;
+                document.getElementById('hud-score').innerText = state.score;
+                
+                btn.classList.add('selected');
+                
+                feedback.innerText = "✨ CHÍNH XÁC! Lỗi đã được vá.";
+                feedback.className = "font-black text-xl mb-4 text-green-600";
+                
+                codeDisplay.innerHTML = `<span class="patched-highlight px-2 py-1 rounded inline-block font-bold">${m.fixedCode.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</span>`;
+                previewDisplay.innerHTML = `<span class="patched-highlight px-2 py-1 rounded inline-block">${m.fixedPreview}</span>`;
+            } else {
+                // CHỈ BÁO ĐỎ LÊN ĐÁP ÁN ĐÃ CHỌN SAI (Không hiện đáp án đúng)
+                btn.classList.add('wrong');
+
+                feedback.innerText = "❌ SAI RỒI! Hệ thống báo lỗi định dạng.";
+                feedback.className = "font-black text-xl mb-4 text-red-600";
+                
+                // Màn hình mã nhấp nháy báo lỗi đỏ, SAU ĐÓ VÁ LẠI KẾT QUẢ ĐÚNG CHO HỌC SINH HỌC
+                const plainBroken = m.brokenCode.replace(/\[target\]/g, '').replace(/\[\/target\]/g, '').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+                codeDisplay.innerHTML = `<span class="error-highlight px-2 py-1 rounded inline-block font-bold">${plainBroken}</span>`;
+                previewDisplay.innerHTML = `<span class="error-highlight px-2 py-1 rounded inline-block">${m.brokenPreview}</span>`;
+
+                // Tự động vá lại sau 0.6 giây (khi hiệu ứng đỏ kết thúc)
+                setTimeout(() => {
+                    codeDisplay.innerHTML = `<span class="patched-highlight px-2 py-1 rounded inline-block font-bold">${m.fixedCode.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</span>`;
+                    previewDisplay.innerHTML = `<span class="patched-highlight px-2 py-1 rounded inline-block">${m.fixedPreview}</span>`;
+                }, 600);
+            }
+            
+            document.getElementById('action-area').classList.remove('hidden');
+        }
+
+        function nextQuestion() {
+            state.current++;
+            if (state.current < missions.length) {
+                loadMission();
+            } else {
+                document.getElementById('game-screen').classList.add('hidden');
+                document.getElementById('end-screen').style.display = 'flex';
+                document.getElementById('final-score').innerText = state.score;
+                document.getElementById('end-player-info').innerText = `${state.name} (${state.cls})`;
+                if(window.saveDataToFirebase) window.saveDataToFirebase(state);
+            }
+        }
+    </script>
+
+    <!-- SCRIPT FIREBASE -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+        import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBQ9Pos8awlh9j041qDWTPFRsVIjF-kPnk",
+            authDomain: "hoctap-91691.firebaseapp.com",
+            databaseURL: "https://hoctap-91691-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "hoctap-91691"
+        };
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+        const LEADERBOARD_PATH = 'leaderboard_bai8_html_v2';
+        
+        let allPlayers = [], filtered = [], currentPage = 1, pageSize = 50, hasSubmitted = false;
+
+        window.initFirebaseLeaderboard = function() {
+            onValue(ref(db, LEADERBOARD_PATH), (snapshot) => {
+                const data = snapshot.val();
+                if (data) {
+                    let list = Object.values(data);
+                    list.sort((a, b) => {
+                        if (b.score !== a.score) return b.score - a.score;
+                        return (a.timestamp || 0) - (b.timestamp || 0);
+                    });
+                    list.forEach((item, idx) => item.rank = idx + 1);
+                    allPlayers = list;
+                }
+                applySearch(false);
+            });
+        }
+
+        window.saveDataToFirebase = async function(gameState) {
+            if (hasSubmitted) return;
+            hasSubmitted = true;
+            const d = new Date();
+            const dateStr = `${d.getDate().toString().padStart(2,'0')}-${(d.getMonth()+1).toString().padStart(2,'0')}-${d.getFullYear()}`;
+            const record = { id: gameState.sessionID, name: gameState.name, className: gameState.cls, score: gameState.score, timestamp: Date.now(), date: dateStr };
+            try {
+                await set(ref(db, `${LEADERBOARD_PATH}/${record.id}`), record);
+                setTimeout(jumpToMe, 500); 
+            } catch (e) { console.error("Lỗi", e); }
+        }
+
+        function applySearch(reset = true) {
+            const kw = document.getElementById('search-input').value.trim().toLowerCase();
+            filtered = kw === "" ? allPlayers : allPlayers.filter(p => (p.name && p.name.toLowerCase().includes(kw)) || (p.className && p.className.toLowerCase().includes(kw)));
+            if (reset) currentPage = 1;
+            renderTable();
+        }
+
+        function renderTable() {
+            const tbody = document.getElementById('final-leaderboard-list');
+            tbody.innerHTML = '';
+            const total = filtered.length;
+            const totalPages = Math.max(1, Math.ceil(total / pageSize));
+            if (currentPage > totalPages) currentPage = totalPages;
+            
+            const startIdx = (currentPage - 1) * pageSize, endIdx = Math.min(startIdx + pageSize, total);
+            const pageItems = filtered.slice(startIdx, endIdx);
+
+            document.getElementById('showing-range').innerText = total > 0 ? `${startIdx + 1} - ${endIdx}` : "0 - 0";
+            document.getElementById('showing-total').innerText = total;
+            document.getElementById('current-page-display').innerText = currentPage;
+            document.getElementById('total-pages-display').innerText = totalPages;
+
+            if (pageItems.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="4" class="p-8 text-gray-500 font-bold">Chưa có dữ liệu 📭</td></tr>`; return;
+            }
+
+            pageItems.forEach(p => {
+                const tr = document.createElement('tr');
+                tr.id = `row_${p.id}`;
+                if (window.state && p.id === window.state.sessionID) tr.classList.add('me-row');
+                
+                let rankStr = p.rank === 1 ? '🥇 1' : p.rank === 2 ? '🥈 2' : p.rank === 3 ? '🥉 3' : p.rank;
+                tr.innerHTML = `<td class="font-bold text-red-600">${rankStr}</td><td><span class="badge-class">${p.className || '---'}</span></td><td class="text-left font-bold">${p.name}</td><td><span class="badge-score">${p.score}</span></td>`;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function jumpToMe() {
+            document.getElementById('search-input').value = '';
+            filtered = allPlayers;
+            const myIdx = filtered.findIndex(p => p.id === state.sessionID);
+            if (myIdx === -1) return;
+            currentPage = Math.floor(myIdx / pageSize) + 1;
+            renderTable();
+            setTimeout(() => { const row = document.getElementById(`row_${state.sessionID}`); if (row) row.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 100);
+        }
+
+        document.getElementById('search-input').addEventListener('input', () => applySearch(true));
+        document.getElementById('find-me-btn').addEventListener('click', jumpToMe);
+        document.getElementById('prev-page-btn').addEventListener('click', () => { if (currentPage > 1) { currentPage--; renderTable(); } });
+        document.getElementById('next-page-btn').addEventListener('click', () => { if (currentPage < Math.ceil(filtered.length / pageSize)) { currentPage++; renderTable(); } });
+    </script>
+</body>
+</html>
