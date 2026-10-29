@@ -106,7 +106,7 @@
             <div class="p-6 md:p-8">
                 <div class="mb-5">
                     <label class="block text-[#1e3a8a] font-bold text-sm mb-2">Họ và tên học sinh</label>
-                    <input type="text" id="hoTen" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-100 outline-none transition-all text-base touch-manipulation" placeholder="Nhập họ tên...">
+                    <input type="text" id="hoten" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-100 outline-none transition-all text-base touch-manipulation" placeholder="Nhập họ tên...">
                 </div>
                 <div class="mb-8">
                     <label class="block text-[#1e3a8a] font-bold text-sm mb-2">Lớp</label>
@@ -321,7 +321,7 @@
         let state = { name: '', cls: '', score: 0, current: 0, isAnswering: false, sessionID: "user_" + Date.now() };
 
         function startGame() {
-            state.name = document.getElementById('username').value.trim();
+            state.name = document.getElementById('hoten').value.trim();
             state.cls = document.getElementById('userclass').value.trim().toUpperCase();
             if (!state.name || !state.cls) { alert("Vui lòng nhập Họ tên và Lớp!"); return; }
             
