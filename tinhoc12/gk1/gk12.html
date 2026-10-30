@@ -223,7 +223,6 @@
         if (typeof firebase !== 'undefined') {
             if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
             database = firebase.database();
-            // Đã đổi tên bảng để không bị trùng với đề 1
             scoresRef = database.ref('bxh_gk1_12_de2');
         }
     } catch(err) { console.error("Lỗi Firebase:", err); }
@@ -231,7 +230,6 @@
     let isQuizStarted = false; 
     let isSubmitting = false;
 
-    // NGÂN HÀNG CÂU HỎI ĐỀ 2 (TIN HỌC 12) - ĐÃ LOẠI BỎ CHỮ NHẬN BIẾT/THÔNG HIỂU/VẬN DỤNG VÀ MÃ HÓA HTML
     const de_data = [
         { id: "2_1", type: "single", question: "Đặc trưng nào sau đây của Trí tuệ nhân tạo thể hiện khả năng nắm bắt thông tin từ dữ liệu?", options: ["Khả năng học từ dữ liệu để thay đổi hành vi.", "Khả năng tự động sinh ra nguồn năng lượng.", "Khả năng lắp ráp các linh kiện cơ khí vật lý.", "Khả năng tự hủy khi phát hiện ra lỗi vi mạch."], correct: 0 },
         { id: "2_2", type: "single", question: "Ứng dụng \"Nhận dạng khuôn mặt\" trên điện thoại là minh chứng cho đặc trưng nào của AI?", options: ["Khả năng nhận thức môi trường qua hình ảnh.", "Khả năng in ấn các tài liệu văn bản phức tạp.", "Khả năng chia sẻ tài nguyên trên mạng Internet.", "Khả năng phát sóng tín hiệu vô tuyến tầm xa."], correct: 0 },
@@ -499,7 +497,6 @@
             }
         });
 
-        // CHỐT CHẶN: Đảm bảo không bị sai số thập phân nếu học sinh làm đúng 100% số ý
         if (correctSubItems === totalItems) {
             totalScore = 10.0;
         }
@@ -517,7 +514,6 @@
         if(database) {
             scoresRef.push(record, () => { window.showModalResult(score, correctSubItems, totalItems, record.duration); });
         } else {
-            // Hiển thị tạm nếu Firebase bị lỗi
             window.showModalResult(score, correctSubItems, totalItems, record.duration);
         }
     };
@@ -548,28 +544,14 @@
             return b.diem - a.diem;
         });
 
-        // Áp dụng thuật toán xếp hạng theo điểm (Dense Ranking - Bằng điểm thì bằng hạng)
-        let currentRank = 1;
-        let prevScore = -1;
-        
-        sortedScoresList.forEach((s, i) => {
-            if (i === 0) {
-                s.absoluteRank = currentRank;
-            } else {
-                if (s.diem < prevScore) {
-                    currentRank++;
-                }
-                s.absoluteRank = currentRank;
-            }
-            prevScore = s.diem;
-        });
-
         const myScoreIndex = sortedScoresList.findIndex(s => s.deviceId === deviceId);
         if (myScoreIndex !== -1) {
             const myScore = sortedScoresList[myScoreIndex];
+            // Tìm vị trí xếp hạng thực tế của học sinh (1-based index)
+            const myDisplayRank = myScoreIndex + 1;
             document.getElementById('my-score-summary').classList.remove('hidden');
             document.getElementById('my-summary-name').innerText = `${myScore.hoTen} (${(myScore.lop || '').toUpperCase()})`;
-            document.getElementById('my-summary-rank').innerText = `Hạng: #${myScore.absoluteRank}`;
+            document.getElementById('my-summary-rank').innerText = `Hạng: #${myDisplayRank}`;
             document.getElementById('my-summary-score').innerText = `${myScore.diem}`;
         } else {
             document.getElementById('my-score-summary').classList.add('hidden');
@@ -586,6 +568,7 @@
         const endIndex = startIndex + rowsPerPage;
         const pageData = sortedScoresList.slice(startIndex, endIndex);
 
+        // Hiển thị STT tăng dần 1, 2, 3... tương ứng với vị trí thực tế trong bảng xếp hạng đã sắp xếp
         tbody.innerHTML = pageData.map((s, idx) => {
             let timeStr = "";
             if (s.thoiGian) {
@@ -595,8 +578,10 @@
                 timeStr = s.endTime ? s.endTime.split(' ').pop() : s.duration;
             }
 
+            const absoluteIndex = startIndex + idx + 1;
+
             return `<tr class="${s.deviceId === deviceId ? 'my-score-row' : 'hover:bg-gray-50'} transition-colors border-b border-gray-100">
-                <td class="px-3 sm:px-4 py-4 text-center font-bold text-gray-500 text-sm">${s.absoluteRank}</td>
+                <td class="px-3 sm:px-4 py-4 text-center font-bold text-gray-500 text-sm">${absoluteIndex}</td>
                 <td class="px-3 sm:px-4 py-4 font-bold text-blue-600 text-sm">${(s.lop || '').toUpperCase()}</td>
                 <td class="px-3 sm:px-4 py-4 font-semibold text-gray-800 text-sm">${s.hoTen} ${s.deviceId === deviceId ? '<span class="ml-2 bg-pink-500 text-white text-[10px] px-2 rounded-md">Bạn</span>' : ''}</td>
                 <td class="px-3 sm:px-4 py-4 text-center"><span class="font-bold text-lg ${s.diem >= 5 ? 'text-green-600' : 'text-red-500'}">${s.diem}</span></td>
