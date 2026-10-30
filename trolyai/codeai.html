@@ -3,138 +3,187 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trợ lý AI - Hành Trình Số</title>
+    <title>Trợ lý AI - Cô Huyền Sinh</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body, html { width: 100%; height: 100%; overflow: hidden; background-color: #f0f2f5; }
+
+        .back-btn {
+            position: fixed; top: 12px; right: 20px; padding: 8px 16px;
+            background-color: #007bff; color: #fff; text-decoration: none;
+            font-weight: 700; font-size: 16px; border-radius: 12px;
+            z-index: 9999; display: flex; align-items: center; gap: 8px;
         }
-        body, html {
-            width: 100%;
-            height: 99%;
-            overflow: hidden; 
-            background-color: #f0f2f5; 
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+
+        #login-overlay {
+            position: fixed; inset: 0; z-index: 9998;
+            background: linear-gradient(135deg, #8960a3, #b85483);
+            display: flex; align-items: center; justify-content: center;
+        }
+
+        .login-card {
+            background: white; width: 90%; max-width: 450px;
+            border-radius: 20px; padding: 30px 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            text-align: center;
+        }
+
+        .logo-circle {
+            width: 70px; height: 70px;
+            background-color: #d32f2f; border: 4px solid #ffca28;
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            color: white; font-size: 28px; font-weight: bold;
+            margin: 0 auto 15px auto;
+        }
+
+        .title-main { color: #d32f2f; font-size: 24px; font-weight: 800; text-transform: uppercase; margin-bottom: 5px; }
+        .title-sub { color: #d32f2f; font-size: 18px; font-weight: 700; margin-bottom: 25px; }
+
+        /* Đã xóa .input-row chia cột, chuyển thành dạng khối xếp chồng */
+        .input-group { text-align: left; margin-bottom: 20px; } 
+
+        /* Tăng cỡ chữ lên +5 (từ 14px lên 19px) */
+        .input-label { display: block; font-size: 19px; color: #334155; font-weight: 700; margin-bottom: 8px; }
+        
+        /* Tăng cỡ chữ lên +5 (từ 15px lên 20px) và căn lề rộng hơn một chút */
+        .custom-input {
+            width: 100%; padding: 14px 15px; border: 1px solid #e2e8f0;
+            border-radius: 10px; font-size: 20px; outline: none;
         }
         
-        /* =========================================
-           NÚT TRANG CHỦ - THIẾT KẾ THEO MẪU CỦA BẠN
-           ========================================= */
-      
-            .back-btn {
-    position: fixed; /* Làm cho nút nổi cố định không bị trôi khi cuộn */
-    top: 12px;       /* Căn khoảng cách từ mép trên cùng của màn hình xuống */
-    right: 20px;     /* Ép nút nằm về phía bên phải, cách lề phải 15px */
-    padding: 8px 16px;
-    background-color: #007bff;
-            
-            color: #34495e; /* Màu chữ xám xanh đậm */
-            text-decoration: none;
-            font-weight: 700; /* In đậm chữ */
-            font-size: 16px;
-            border-radius: 12px; /* Bo góc mềm mại */
-            border: 1px solid #dcdfe6; /* Viền mờ */
-            z-index: 9999; 
-            display: flex;
-            align-items: center;
-            gap: 8px; /* Khoảng cách giữa icon và chữ */
-            transition: all 0.2s ease;
+        /* Tăng cỡ chữ nút bấm lên +5 (từ 16px lên 21px) */
+        .google-start-btn {
+            width: 100%; padding: 16px; margin-top: 15px;
+            background: #1d4ed8; color: white; border: none; border-radius: 12px;
+            font-size: 21px; font-weight: bold; cursor: pointer;
+            box-shadow: 0 4px 10px rgba(29, 78, 216, 0.3);
+            text-transform: uppercase; transition: transform 0.1s;
         }
-        
-        .back-btn:hover {
-            background-color: #e4e7ed; /* Nền đậm lên một chút khi rê chuột */
-            border-color: #c0c4cc;
-        }
+        .google-start-btn:active { transform: scale(0.98); }
 
-        /* Lớp bọc ngoài giúp căn giữa và phóng to */
-        .chat-wrapper {
-            width: 100%;
-            height: 100%;
-            display: flex;
-            justify-content: center; 
-            zoom: 1.25; 
-        }
-
-        /* Vùng chứa khung chat */
-        #chat-container {
-            width: 100%;
-            max-width: 1000px; 
-            height: 100%;
-            background-color: #fff;
-            box-shadow: 0 0 25px rgba(0,0,0,0.1); 
-        }
-
-        /* Ép Coze hiển thị vừa vặn trong vùng chứa */
-        #chat-container iframe,
-        #chat-container > div {
-            width: 100% !important;
-            height: 100% !important;
-            max-width: 100% !important;
-            max-height: 100% !important;
-            border: none !important;
-            border-radius: 0 !important;
-        }
+        .chat-wrapper { width: 100%; height: 100%; display: flex; justify-content: center; zoom: 1.25; }
+        #chat-container { width: 100%; max-width: 1000px; height: 100%; background: #fff; }
+        #chat-container iframe, #chat-container > div { width: 100% !important; height: 100% !important; border: none !important; }
     </style>
 </head>
 <body>
 
-    <!-- Nút quay lại với icon và chữ giống mẫu -->
-    <!-- Nhớ sửa 'index.html' thành link trang chủ thực tế của bạn nhé -->
-    <a href="https://hoctap.io.vn/" class="back-btn">
-        🏠
-    </a>
+    <a href="https://hoctap.io.vn/" class="back-btn">🏠</a>
 
-    <!-- Lớp bọc ngoài giúp căn giữa và phóng to -->
-    <div class="chat-wrapper">
+    <div id="login-overlay">
+        <div class="login-card">
+            <div class="logo-circle">HS</div>
+            <div class="title-main">TRỢ LÝ AI</div>
+            <div class="title-sub">Cô Huyền Sinh - Tin Học</div>
+
+            <!-- Các ô nhập liệu đã được tách riêng rẽ để nằm trên/dưới -->
+            <div class="input-group">
+                <label class="input-label">Họ và tên</label>
+                <input type="text" id="hsName" class="custom-input" placeholder="Nhập họ tên...">
+            </div>
+            
+            <div class="input-group">
+                <label class="input-label">Lớp</label>
+                <input type="text" id="hsClass" class="custom-input" placeholder="Ví dụ: 12A1">
+            </div>
+
+            <button class="google-start-btn" onclick="startAIWithGoogle()">🚀 Đăng nhập Google & Bắt đầu</button>
+        </div>
+    </div>
+
+    <div class="chat-wrapper hidden" id="main-chat-area" style="display: none;">
         <div id="chat-container"></div>
     </div>
 
-    <!-- Script nhúng Coze -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
     <script src="https://sf-cdn.coze.com/obj/unpkg-va/flow-platform/chat-app-sdk/1.2.0-beta.6/libs/oversea/index.js"></script>
-    <script>
-        const cozeClient = new CozeWebSDK.WebChatClient({
-            config: {
-                type: 'bot',
-                bot_id: '7692765017192038405',
-                isIframe: false,
-            },
-            auth: {
-                type: 'token',
-                token: 'pat_tltY3Cicy7bD9Ud6Ma4CeSgb5q1XNvmIivgXcG1ra82vgGgDR3Qwc23TzbgzsT8y',
-                onRefreshToken: async () => 'pat_tltY3Cicy7bD9Ud6Ma4CeSgb5q1XNvmIivgXcG1ra82vgGgDR3Qwc23TzbgzsT8y'
-            },
-            userInfo: {
-                id: 'user',
-                url: 'https://sf-coze-web-cdn.coze.com/obj/eden-sg/lm-lgvj/ljhwZthlaukjlkulzlp/coze/coze-logo.png',
-                nickname: 'Bạn',
-            },
-            ui: {
-                base: {
-                    icon: 'logo_bot.png',
-                    layout: 'pc', 
-                    lang: 'en', 
-                },
-                header: {
-                    isShow: true, 
-                    isNeedClose: false, 
-                },
-                asstBtn: {
-                    isNeed: false 
-                },
-                footer: {
-                    isShow: false,
-                },
-                chatBot: {
-                    title: '🤖 Trợ lý AI cô Huyền Sinh.',
-                    uploadable: true,
-                    width: '100%', 
-                    el: document.getElementById('chat-container'),
-                },
-            },
-        });
 
-        cozeClient.showChatBot();
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyBQ9Pos8awlh9j041qDWTPFRsVIjF-kPnk",
+            authDomain: "hoctap-91691.firebaseapp.com",
+            databaseURL: "https://hoctap-91691-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "hoctap-91691",
+            storageBucket: "hoctap-91691.firebasestorage.app",
+            messagingSenderId: "1004553425319",
+            appId: "1:1004553425319:web:45d15cbae393f614c56682",
+            measurementId: "G-Q6X1TL9PRV"
+        };
+        
+        try {
+            if (typeof firebase !== 'undefined') {
+                if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+            }
+        } catch(err) { console.error("Lỗi khởi tạo Firebase:", err); }
+        
+        const database = firebase.database();
+        const auth = firebase.auth();
+        const provider = new firebase.auth.GoogleAuthProvider();
+
+        function startAIWithGoogle() {
+            const name = document.getElementById('hsName').value.trim();
+            const className = document.getElementById('hsClass').value.trim();
+
+            if (!name || !className) {
+                alert("Em vui lòng điền Họ tên và Lớp trước nhé!");
+                return;
+            }
+
+            auth.signInWithPopup(provider)
+            .then((result) => {
+                const user = result.user;
+                const realEmail = user.email; 
+                const fullName = name + " - " + className;
+
+                const today = new Date();
+                const dateStr = today.getDate() + '/' + (today.getMonth() + 1) + '/' + today.getFullYear();
+
+                try {
+                    // Nhánh lưu trữ thử nghiệm
+                    database.ref('nhat_ky_ai_TEST/').push({
+                        hoc_sinh: fullName,
+                        email: realEmail,
+                        thoi_gian: dateStr
+                    });
+                } catch (error) {
+                    console.log("Lỗi lưu dữ liệu Firebase:", error);
+                }
+
+                document.getElementById('login-overlay').style.display = 'none';
+                document.getElementById('main-chat-area').style.display = 'flex';
+
+                const cozeClient = new CozeWebSDK.WebChatClient({
+                    config: { type: 'bot', bot_id: '7699805648761995317', isIframe: false },
+                    auth: {
+                        type: 'token',
+                        token: 'pat_IRJo3PG2K59y5cjkM7NZC6Llj3m8gaSx0cPjm7YPlKZz6e3THeiAMTnQyfWvWoPi',
+                        onRefreshToken: async () => 'pat_IRJo3PG2K59y5cjkM7NZC6Llj3m8gaSx0cPjm7YPlKZz6e3THeiAMTnQyfWvWoPi'
+                    },
+                    userInfo: { 
+                        id: realEmail, 
+                        nickname: fullName 
+                    },
+                    ui: {
+                        base: { icon: 'logo_bot.png', layout: 'pc', lang: 'vi' },
+                        header: { isShow: true, isNeedClose: false },
+                        asstBtn: { isNeed: false },
+                        footer: { isShow: false },
+                        chatBot: {
+                            title: '🤖 Trợ lý AI Cô Huyền Sinh',
+                            uploadable: true, width: '100%', 
+                            el: document.getElementById('chat-container'),
+                        },
+                    },
+                });
+                cozeClient.showChatBot();
+            })
+            .catch((error) => {
+                console.error("Lỗi xác thực Google: ", error);
+                alert("Em cần chọn tài khoản Google để bắt đầu trò chuyện nhé!");
+            });
+        }
     </script>
 </body>
 </html>
