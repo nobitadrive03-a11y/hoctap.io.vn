@@ -1,0 +1,951 @@
+<!doctype html>
+<html lang="vi" class="w-full h-full m-0 p-0">
+ <head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <title>Đề Kiểm Tra - Bài 8: Định Dạng văn bản</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+  <!-- 1. MÃ GA4 GỐC -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-NSJCVSL9RM"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-NSJCVSL9RM'); 
+  </script>
+
+  <!-- 2. MÃ NHỊP TIM 30 GIÂY -->
+  <script>
+    setInterval(function() {
+      if (!document.hidden) { 
+        gtag('event', 'keep_alive', {
+          'event_category': 'Engagement',
+          'event_label': 'Học sinh đang làm bài',
+          'non_interaction': false
+        });
+      }
+    }, 30000); 
+  </script>
+
+  <style>
+    * { 
+        -webkit-tap-highlight-color: transparent; 
+        -webkit-touch-callout: none !important; 
+        touch-action: manipulation;
+    }
+    html, body { width: 100%; min-height: 100vh; margin: 0; padding: 0; overflow-x: hidden; }
+    body { 
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
+      background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+      background-size: 400% 400%;
+      animation: gradientBG 15s ease infinite;
+    }
+    @keyframes gradientBG {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+    #app { width: 100%; min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden; }
+    
+    .glass-card {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+    .option-label { transition: background-color 0.1s ease, border-color 0.1s ease; cursor: pointer; border-color: #e2e8f0; }
+    .option-label:hover { background-color: #f0fdfa; border-color: #38bdf8; }
+    
+    input[type="radio"].single-radio:checked + .option-label {
+      background: linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%);
+      color: white; border-color: transparent;
+      box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+    }
+    input[type="radio"].single-radio:checked + .option-label div:first-child { background-color: rgba(255,255,255,0.25); border-color: transparent; color: white; }
+    input[type="radio"].single-radio:checked + .option-label div:last-child { color: white; }
+    
+    .fade-in { animation: fadeIn 0.4s ease forwards; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    
+    .my-score-row {
+      background: linear-gradient(to right, #fdf4ff, #ffffff) !important;
+      border-left: 4px solid #db2777 !important; font-weight: 700 !important;
+      color: #9d174d !important; box-shadow: 0 2px 8px rgba(0,0,0,0.05); position: relative; z-index: 10;
+    }
+    .my-score-row td { padding-top: 16px; padding-bottom: 16px; }
+    
+    .btn-tf { transition: background-color 0.1s ease; border-width: 2px; }
+    .btn-tf.selected { background-color: #2563eb; color: white; border-color: #1d4ed8; }
+    .btn-tf:not(.selected) { background-color: white; color: #4b5563; border-color: #e5e7eb; }
+    .btn-tf:not(:disabled):active { transform: scale(0.95); }
+    
+    .math-scroll { overflow-x: auto; min-width: 0; padding-bottom: 4px; scrollbar-width: none; -ms-overflow-style: none; }
+    .math-scroll::-webkit-scrollbar { display: none; }
+    
+    code.html-code {
+        background-color: #eff6ff;
+        color: #2563eb;
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+        font-weight: 700;
+        border: 1px solid #bfdbfe;
+    }
+  </style>
+ </head>
+  <body>
+  <div id="app" class="p-0 sm:p-4 md:p-8 transition-all">
+   
+   <div id="login-section" class="w-full max-w-md mx-auto fade-in flex flex-col justify-center flex-grow">
+    <div class="glass-card rounded-none sm:rounded-3xl p-6 sm:p-8 flex flex-col justify-start shadow-2xl border-t-8 border-indigo-600 bg-white">
+     <div class="text-center mb-6 pt-4 sm:pt-0">
+      <div class="flex items-center justify-center w-24 h-24 mx-auto mb-4 rounded-full border-4 border-yellow-400 bg-red-600 shadow-lg transform transition-transform hover:scale-105">
+          <span class="text-white font-black text-4xl tracking-tighter">HS</span>
+      </div>
+      <h1 class="text-2xl sm:text-3xl font-bold text-red-500 mb-3">BÀI 8: ĐỊNH DẠNG VĂN BẢN</h1>
+     </div>
+      <div id="login-form" class="space-y-4">
+      <div class="flex flex-col gap-4">
+          <div class="w-full">
+               <label class="block text-lg font-bold text-gray-700 mb-1">Họ và tên</label> 
+               <input type="text" id="hoTen" class="w-full px-4 py-4 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-100 outline-none transition-all font-semibold text-lg" placeholder="Nhập họ tên...">
+          </div>
+          <div class="w-full">
+               <label class="block text-lg font-bold text-gray-700 mb-1">Lớp</label> 
+               <input type="text" id="lop" class="w-full px-4 py-4 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-100 outline-none transition-all font-semibold text-lg" placeholder="12A1">
+          </div>
+      </div>
+      <div id="login-error" class="hidden bg-red-100 border border-red-300 text-red-700 font-bold text-base p-3 rounded-xl text-center shadow-sm"></div>
+      <button type="button" onclick="window.startQuizAction()" id="start-btn" class="w-full py-5 mt-6 bg-gradient-to-r from-blue-500 to-cyan-400 text-white font-extrabold rounded-2xl shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all text-2xl tracking-wide"> 🚀 BẮT ĐẦU THI </button>
+     </div>
+    </div>
+   </div>
+
+   <!-- PHẦN LÀM BÀI THI -->
+   <div id="quiz-section" class="w-full max-w-4xl mx-auto hidden flex-grow flex flex-col">
+    <div class="glass-card rounded-none sm:rounded-3xl p-4 sm:p-8 flex flex-col flex-grow relative border-t-8 border-blue-500 bg-white shadow-2xl">
+     <div class="flex items-center justify-between mb-4 sm:mb-6 pb-4 border-b-2 border-gray-100">
+      <div class="flex items-center gap-3">
+       <div class="flex items-center justify-center w-12 h-12 rounded-full border-2 border-yellow-400 bg-red-600 shadow-sm flex-shrink-0">
+           <span class="text-white font-black text-xl tracking-tighter">HS</span>
+       </div>
+       <div>
+        <h2 id="quiz-title" class="text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">Đề Kiểm Tra </h2>
+        <p id="student-info" class="text-base font-bold text-gray-500 mt-1 uppercase tracking-wide"></p>
+       </div>
+      </div>
+      <div class="text-right bg-blue-50 px-4 py-2 rounded-xl border border-blue-100" id="progress-container">
+       <div class="text-sm text-blue-500 font-bold uppercase tracking-wider mb-1">Tiến độ (Câu)</div>
+       <div id="progress-text" class="text-2xl font-black text-blue-700">0/28</div>
+      </div>
+     </div>
+     
+     <div id="timer-banner" class="mb-6 p-4 bg-gradient-to-r from-orange-50 to-red-50 border-2 border-red-100 rounded-2xl flex items-center justify-between shadow-sm sticky top-2 z-40">
+        <span class="text-red-800 font-extrabold flex items-center gap-2 text-lg"><span class="text-2xl animate-pulse">⏰</span> THỜI GIAN:</span> 
+        <span id="timer" class="text-4xl font-black text-red-600 font-mono tracking-wider drop-shadow-sm">45:00</span>
+     </div>
+
+     <div id="question-container" class="mb-8 flex-grow w-full max-w-full"></div>
+     
+     <div class="flex pt-4 sm:pt-6 border-t-2 border-gray-100 mt-auto pb-4 sm:pb-0">
+        <button id="submit-btn" onclick="window.promptSubmit()" class="w-full py-5 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-bold text-2xl rounded-2xl shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1">✅ NỘP BÀI NGAY</button>
+     </div>
+    </div>
+   </div>
+
+   <!-- MODAL XÁC NHẬN NỘP BÀI -->
+   <div id="confirm-submit-modal" class="fixed inset-0 hidden flex items-center justify-center bg-black/60 backdrop-blur-sm z-50 transition-opacity">
+       <div class="bg-white rounded-3xl w-full max-w-sm shadow-2xl p-6 text-center transform transition-all scale-100 mx-4 border-2 border-gray-100">
+           <div class="text-yellow-400 mb-4 flex justify-center">
+               <svg xmlns="http://www.w3.org/2000/svg" class="h-24 w-24" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+               </svg>
+           </div>
+           <h3 class="text-3xl font-black text-gray-800 mb-2 uppercase tracking-wide">Xác nhận nộp</h3>
+           <p class="text-gray-600 mb-6 font-medium text-xl">Các em mới làm <span id="confirm-answered" class="text-red-600 font-black text-2xl">0</span>/<span id="confirm-total" class="font-black text-2xl">28</span> câu. Có chắc chắn muốn nộp bài không? Những câu chưa làm sẽ bị tính là sai.</p>
+           <div class="flex flex-col gap-3">
+               <button onclick="window.closeConfirmModal()" class="w-full py-4 bg-gray-100 text-gray-800 font-extrabold text-xl rounded-xl hover:bg-gray-200 border border-gray-200">Quay lại làm tiếp</button>
+               <button onclick="window.executeSubmit()" class="w-full py-4 bg-emerald-600 text-white font-extrabold text-xl rounded-xl hover:bg-emerald-700 shadow-md">Vẫn Nộp Luôn</button>
+           </div>
+       </div>
+   </div>
+
+   <!-- KẾT QUẢ ĐIỂM SỐ -->
+   <div id="result-section" class="w-full max-w-2xl mx-auto hidden fade-in flex flex-col justify-center flex-grow pb-8">
+    <div class="glass-card rounded-none sm:rounded-3xl p-6 sm:p-8 flex flex-col justify-start border-t-8 border-green-500 bg-white shadow-2xl" id="result-content">
+    </div>
+   </div>
+
+   <!-- XEM LẠI BÀI LÀM -->
+   <div id="review-section" class="w-full max-w-4xl mx-auto hidden flex-grow flex flex-col">
+    <div class="glass-card rounded-none sm:rounded-3xl p-4 sm:p-8 flex flex-col flex-grow border-t-8 border-indigo-500 bg-white overflow-hidden shadow-2xl">
+     <div class="flex flex-col-reverse sm:flex-row items-start sm:items-center justify-between mb-6 pb-4 border-b-2 border-gray-100 gap-4">
+      <div class="flex flex-wrap gap-2">
+          <button onclick="window.goHome()" class="px-5 py-3 bg-gray-100 text-gray-700 rounded-xl font-bold hover:bg-gray-200 text-lg shadow-sm border border-gray-200">🏠 Trang chủ</button>
+          <button onclick="window.backFromReview()" class="px-5 py-3 bg-indigo-50 text-indigo-700 rounded-xl font-bold hover:bg-indigo-100 text-lg shadow-sm border border-indigo-200">🔙 Quay lại</button>
+          <button onclick="window.viewScoresAction()" class="px-5 py-3 bg-orange-50 text-orange-700 rounded-xl font-bold hover:bg-orange-100 text-lg shadow-sm border border-orange-200">🏆 Bảng điểm</button>
+      </div>
+      <h2 class="text-3xl sm:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">📝 Xem Lại Bài Làm</h2>
+     </div>
+     <div id="review-content" class="space-y-8 w-full max-w-full"></div>
+    </div>
+   </div>
+
+   <!-- BẢNG XẾP HẠNG -->
+   <div id="scores-section" class="w-full max-w-6xl mx-auto hidden flex-grow flex flex-col">
+    <div class="glass-card rounded-none sm:rounded-3xl p-4 sm:p-8 flex flex-col flex-grow border-t-8 border-orange-500 bg-white w-full max-w-full shadow-2xl">
+     <div class="mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b-2 border-gray-100 pb-4">
+      <button onclick="window.goHome()" class="px-5 py-3 bg-gray-100 text-gray-700 rounded-xl font-bold hover:bg-gray-200 text-lg shadow-sm border border-gray-200 whitespace-nowrap">🏠 Trang chủ</button>
+      <h2 class="text-3xl sm:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-red-600 text-center flex-grow">🏆 BẢNG XẾP HẠNG</h2>
+     </div>
+     
+     <div class="flex flex-col sm:flex-row justify-between items-center mb-4 gap-4 bg-gray-50 p-4 rounded-xl border border-gray-200">
+         <div id="my-rank-display" class="text-xl font-bold text-gray-700">🏆 Thứ hạng của bạn: <span class="text-gray-400">--</span></div>
+         <div class="w-full sm:w-auto flex-grow max-w-sm">
+             <input type="text" id="search-student" oninput="window.searchStudent(this.value)" placeholder="🔍 Nhập tên học sinh để tìm..." class="w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm focus:border-orange-500 focus:ring-2 focus:ring-orange-200 outline-none transition-all font-medium">
+         </div>
+     </div>
+
+     <div class="overflow-x-auto rounded-xl border border-slate-200 flex-grow shadow-inner bg-white/50 w-full">
+      <table class="w-full text-sm sm:text-base whitespace-nowrap min-w-max">
+       <thead class="bg-gradient-to-r from-orange-500 to-red-500 text-white">
+        <tr>
+         <th class="px-3 sm:px-4 py-4 text-center font-extrabold w-16">STT</th>
+         <th class="px-3 sm:px-4 py-4 text-left font-extrabold">Họ tên</th>
+         <th class="px-3 sm:px-4 py-4 text-center font-extrabold">Lớp</th>
+         <th class="px-3 sm:px-4 py-4 text-center font-extrabold">Thời gian</th>
+         <th class="px-3 sm:px-4 py-4 text-center font-extrabold">Điểm</th>
+         <th class="px-2 sm:px-4 py-4 text-center font-extrabold">Xem lại</th>
+        </tr>
+       </thead>
+       <tbody id="scores-tbody" class="bg-white/80 divide-y divide-gray-100"></tbody>
+      </table>
+      <div id="no-scores" class="text-center py-12 hidden text-gray-500 font-bold text-xl">Không tìm thấy dữ liệu thi 🥲</div>
+     </div>
+     
+     <div id="pagination-controls" class="w-full flex justify-center mt-6"></div>
+    </div>
+  </div>
+
+  <script>
+    let database = null;
+    let scoresRef = null;
+
+    try {
+        const firebaseConfig = {
+            apiKey: "AIzaSyBQ9Pos8awlh9j041qDWTPFRsVIjF-kPnk",
+            authDomain: "hoctap-91691.firebaseapp.com",
+            databaseURL: "https://hoctap-91691-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "hoctap-91691",
+            storageBucket: "hoctap-91691.firebasestorage.app",
+            messagingSenderId: "1004553425319",
+            appId: "1:1004553425319:web:45d15cbae393f614c56682",
+            measurementId: "G-Q6X1TL9PRV"
+        };
+        if (typeof firebase !== 'undefined') {
+            if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+            database = firebase.database();
+            
+            // Bảng xếp hạng cho bài định dạng HTML
+            scoresRef = database.ref('bxh_bai8_tin12');
+        }
+    } catch(err) { console.error("Lỗi Firebase:", err); }
+
+    let isQuizStarted = false; 
+    let currentQuestions = [];
+    let deviceId = '';
+    let allScores = [];
+    let currentStudent = {};
+    let userAnswers = {};
+    let timerInterval;
+    let quizStartTime, quizEndTime;
+    
+    let searchTerm = '';
+    let currentPage = 1;
+    const itemsPerPage = 10;
+
+    const exam_data = [
+        { 
+            id: "q1", type: "single", question: "Câu 1: Thuộc tính của thẻ HTML được khai báo theo cú pháp cơ bản nào sau đây?", 
+            options: ["giá_trị = \"tên_thuộc_tính\"", "tên_thuộc_tính = \"giá_trị\"", "\"tên_thuộc_tính\" = giá_trị", "(tên_thuộc_tính) = [giá_trị]"], 
+            correct: 1, explanation: "Cú pháp cơ bản và chuẩn xác nhất để khai báo thuộc tính trong thẻ HTML là tên_thuộc_tính=\"giá_trị\"." 
+        },
+        { 
+            id: "q2", type: "single", question: "Câu 2: Trong cấu trúc của một phần tử HTML, thuộc tính được đặt ở vị trí nào?", 
+            options: ["Ngay trước thẻ bắt đầu.", "Nằm trong thẻ kết thúc.", "Nằm trong thẻ bắt đầu, ngay sau tên thẻ.", "Nằm ở phần nội dung giữa thẻ bắt đầu và thẻ kết thúc."], 
+            correct: 2, explanation: "Theo chuẩn W3C, mọi thuộc tính bắt buộc phải đặt trong thẻ bắt đầu (opening tag), ngay sau tên thẻ và cách ra bởi khoảng trắng." 
+        },
+        { 
+            id: "q3", type: "single", question: "Câu 3: Khi một thẻ HTML có nhiều hơn một thuộc tính, các thuộc tính này được ngăn cách với nhau bởi ký tự nào?", 
+            options: ["Dấu phẩy (,)", "Dấu chấm phẩy (;)", "Dấu cách", "Dấu gạch ngang (-)"], 
+            correct: 2, explanation: "Các thuộc tính bên trong cùng một thẻ HTML luôn được ngăn cách với nhau bằng một hoặc nhiều khoảng trắng (dấu cách)." 
+        },
+        { 
+            id: "q4", type: "single", question: "Câu 4: Thuộc tính <code class=\"html-code\">lang=\"vi\"</code> trong thẻ <code class=\"html-code\">&lt;html&gt;</code> có ý nghĩa gì?", 
+            options: ["Xác định ngôn ngữ lập trình của trang web.", "Xác định ngôn ngữ hiển thị của trang web là tiếng Việt.", "Đổi màu toàn bộ văn bản sang tiếng Việt.", "Tự động dịch trang web sang tiếng Anh."], 
+            correct: 1, explanation: "Thuộc tính <code class=\"html-code\">lang=\"vi\"</code> có chức năng thông báo cho trình duyệt và các công cụ tìm kiếm biết nội dung hiển thị chính của trang web là tiếng Việt." 
+        },
+        { 
+            id: "q5", type: "single", question: "Câu 5: Để xác định bảng mã ký tự cho trang web giúp hiển thị đúng tiếng Việt, người ta thường dùng thuộc tính <code class=\"html-code\">charset</code> với giá trị nào?", 
+            options: ["ASCII", "UTF-8", "VNI", "TCVN3"], 
+            correct: 1, explanation: "Bảng mã ký tự UTF-8 hỗ trợ chuẩn Unicode, là giá trị tiêu chuẩn tốt nhất hiện nay giúp trình duyệt hiển thị chính xác ngôn ngữ tiếng Việt có dấu." 
+        },
+        { 
+            id: "q6", type: "single", question: "Câu 6: Thẻ HTML nào được sử dụng để tạo tiêu đề chính (cấp độ cao nhất và quan trọng nhất) cho trang web?", 
+            options: ["<code class=\"html-code\">&lt;h1&gt;</code>", "<code class=\"html-code\">&lt;h6&gt;</code>", "<code class=\"html-code\">&lt;title&gt;</code>", "<code class=\"html-code\">&lt;header&gt;</code>"], 
+            correct: 0, explanation: "Thẻ <code class=\"html-code\">&lt;h1&gt;</code> (Heading 1) được dùng để định nghĩa tiêu đề chính ở cấp độ cao nhất và có ý nghĩa quan trọng nhất trong trang web." 
+        },
+        { 
+            id: "q7", type: "single", question: "Câu 7: Các thẻ định dạng tiêu đề <code class=\"html-code\">&lt;hx&gt;</code> trong HTML có bao nhiêu mức độ?", 
+            options: ["3 mức độ (từ h1 đến h3).", "4 mức độ (từ h1 đến h4).", "5 mức độ (từ h1 đến h5).", "6 mức độ (từ h1 đến h6)."], 
+            correct: 3, explanation: "Hệ thống thẻ tiêu đề của HTML cung cấp 6 cấp độ từ mức độ quan trọng cao nhất là <code class=\"html-code\">&lt;h1&gt;</code> giảm dần xuống mức thấp nhất là <code class=\"html-code\">&lt;h6&gt;</code>." 
+        },
+        { 
+            id: "q8", type: "single", question: "Câu 8: Thẻ <code class=\"html-code\">&lt;p&gt;</code> trong HTML được sử dụng với mục đích gì?", 
+            options: ["Tạo một đoạn văn bản.", "Tạo một tiêu đề.", "Chèn một hình ảnh.", "In đậm văn bản."], 
+            correct: 0, explanation: "Thẻ <code class=\"html-code\">&lt;p&gt;</code> (Paragraph) được dùng để định dạng và tạo lập một đoạn văn bản trên giao diện web." 
+        },
+        { 
+            id: "q9", type: "single", question: "Câu 9: Điểm giống nhau giữa phần tử <code class=\"html-code\">&lt;div&gt;</code> và <code class=\"html-code\">&lt;span&gt;</code> là gì?", 
+            options: ["Cả hai đều tạo ra một đường kẻ ngang.", "Cả hai đều tự động xuống dòng khi hiển thị.", "Cả hai đều được dùng để tạo khối chứa nội dung bên trong.", "Cả hai đều tự động in nghiêng văn bản."], 
+            correct: 2, explanation: "Cả <code class=\"html-code\">&lt;div&gt;</code> và <code class=\"html-code\">&lt;span&gt;</code> đều là những thẻ đóng vai trò làm thùng chứa (container) để bao bọc, gom nhóm các nội dung hoặc phần tử HTML khác bên trong." 
+        },
+        { 
+            id: "q10", type: "single", question: "Câu 10: Điểm khác biệt lớn nhất về cách hiển thị giữa thẻ <code class=\"html-code\">&lt;div&gt;</code> và thẻ <code class=\"html-code\">&lt;span&gt;</code> là gì?", 
+            options: ["<code class=\"html-code\">&lt;div&gt;</code> hiển thị trên cùng một dòng, <code class=\"html-code\">&lt;span&gt;</code> bắt đầu trên dòng mới.", "<code class=\"html-code\">&lt;div&gt;</code> bắt đầu trên dòng mới, <code class=\"html-code\">&lt;span&gt;</code> hiển thị trên cùng dòng đang viết.", "<code class=\"html-code\">&lt;div&gt;</code> dùng để chứa văn bản, <code class=\"html-code\">&lt;span&gt;</code> dùng để chứa hình ảnh.", "Không có sự khác biệt nào khi hiển thị trên trình duyệt."], 
+            correct: 1, explanation: "<code class=\"html-code\">&lt;div&gt;</code> là phần tử cấp khối (block-level), luôn bắt đầu ở một dòng mới. Còn <code class=\"html-code\">&lt;span&gt;</code> là phần tử nội tuyến (inline), nên nó luôn hiển thị trên cùng một dòng văn bản." 
+        },
+        { 
+            id: "q11", type: "single", question: "Câu 11: Để ngắt dòng (xuống dòng) ngay lập tức tại vị trí mong muốn trong văn bản HTML, ta sử dụng thẻ nào?", 
+            options: ["<code class=\"html-code\">&lt;br&gt;</code>", "<code class=\"html-code\">&lt;hr&gt;</code>", "<code class=\"html-code\">&lt;enter&gt;</code>", "<code class=\"html-code\">&lt;p&gt;</code>"], 
+            correct: 0, explanation: "Thẻ <code class=\"html-code\">&lt;br&gt;</code> (Break) là một thẻ đơn đóng vai trò thực thi lệnh xuống dòng ngay lập tức tại vị trí nó được đặt." 
+        },
+        { 
+            id: "q12", type: "single", question: "Câu 12: Thẻ <code class=\"html-code\">&lt;hr&gt;</code> trong HTML có tác dụng gì khi hiển thị trên trình duyệt?", 
+            options: ["Tạo một siêu liên kết.", "Tạo một đường kẻ ngang trên trang web.", "Xóa đoạn văn bản phía trước nó.", "In đậm toàn bộ đoạn văn."], 
+            correct: 1, explanation: "Thẻ <code class=\"html-code\">&lt;hr&gt;</code> (Horizontal Rule) có chức năng tạo ra một đường kẻ ngang màn hình dùng để phân cách các nội dung khác nhau." 
+        },
+        { 
+            id: "q13", type: "single", question: "Câu 13: Khi sử dụng thẻ <code class=\"html-code\">&lt;br&gt;</code> để ngắt dòng so với việc dùng hai cặp thẻ <code class=\"html-code\">&lt;p&gt;</code> liên tiếp, khoảng cách giữa các dòng sẽ như thế nào?", 
+            options: ["Khoảng cách khi dùng <code class=\"html-code\">&lt;br&gt;</code> lớn hơn so với <code class=\"html-code\">&lt;p&gt;</code>.", "Khoảng cách khi dùng <code class=\"html-code\">&lt;br&gt;</code> nhỏ hơn so với khoảng cách giữa hai thẻ <code class=\"html-code\">&lt;p&gt;</code>.", "Khoảng cách giữa các dòng của hai trường hợp là hoàn toàn bằng nhau.", "Thẻ <code class=\"html-code\">&lt;br&gt;</code> không tạo ra khoảng cách dòng."], 
+            correct: 1, explanation: "Thẻ <code class=\"html-code\">&lt;p&gt;</code> mặc định tạo ra khoảng trắng (margin) ở trên và dưới đoạn văn, nên khoảng cách giữa hai thẻ <code class=\"html-code\">&lt;p&gt;</code> luôn lớn hơn khoảng cách chuyển dòng sát liền nhau khi dùng <code class=\"html-code\">&lt;br&gt;</code>." 
+        },
+        { 
+            id: "q14", type: "single", question: "Câu 14: Để định dạng chữ in đậm trong HTML, ta có thể sử dụng cặp thẻ nào sau đây?", 
+            options: ["<code class=\"html-code\">&lt;i&gt;</code> hoặc <code class=\"html-code\">&lt;em&gt;</code>", "<code class=\"html-code\">&lt;b&gt;</code> hoặc <code class=\"html-code\">&lt;strong&gt;</code>", "<code class=\"html-code\">&lt;u&gt;</code> hoặc <code class=\"html-code\">&lt;del&gt;</code>", "<code class=\"html-code\">&lt;sup&gt;</code> hoặc <code class=\"html-code\">&lt;sub&gt;</code>"], 
+            correct: 1, explanation: "Cả hai thẻ <code class=\"html-code\">&lt;b&gt;</code> và <code class=\"html-code\">&lt;strong&gt;</code> đều có khả năng định dạng văn bản thành nét chữ in đậm trên trình duyệt." 
+        },
+        { 
+            id: "q15", type: "single", question: "Câu 15: Cặp thẻ <code class=\"html-code\">&lt;em&gt;...&lt;/em&gt;</code> có tác dụng hiển thị chữ như thế nào trên trình duyệt?", 
+            options: ["In đậm.", "Gạch chân.", "In nghiêng.", "Có gạch ngang ở giữa chữ."], 
+            correct: 2, explanation: "Thẻ <code class=\"html-code\">&lt;em&gt;</code> (Emphasis) định dạng văn bản thành chữ in nghiêng nhằm mục đích nhấn mạnh." 
+        },
+        { 
+            id: "q16", type: "single", question: "Câu 16: Thẻ <code class=\"html-code\">&lt;strong&gt;</code> khác với thẻ <code class=\"html-code\">&lt;b&gt;</code> ở điểm nào dù cả hai đều làm chữ in đậm?", 
+            options: ["Thẻ <code class=\"html-code\">&lt;strong&gt;</code> làm chữ to hơn thẻ <code class=\"html-code\">&lt;b&gt;</code>.", "Thẻ <code class=\"html-code\">&lt;strong&gt;</code> có ý nghĩa nhấn mạnh vào ngữ nghĩa của nội dung.", "Thẻ <code class=\"html-code\">&lt;strong&gt;</code> có thể đổi màu chữ tự động.", "Thẻ <code class=\"html-code\">&lt;strong&gt;</code> chỉ dùng được cho tiêu đề."], 
+            correct: 1, explanation: "Mặc dù cả hai đều hiển thị in đậm, nhưng thẻ <code class=\"html-code\">&lt;strong&gt;</code> giúp công cụ tìm kiếm và trình đọc màn hình hiểu rằng đoạn văn bản đó mang mức độ quan trọng cao về mặt ngữ nghĩa." 
+        },
+        { 
+            id: "q17", type: "single", question: "Câu 17: Để hiển thị công thức hóa học H2O với số 2 nhỏ nằm ở dưới, ta sử dụng thẻ nào bao quanh số 2?", 
+            options: ["<code class=\"html-code\">&lt;sup&gt;</code>", "<code class=\"html-code\">&lt;sub&gt;</code>", "<code class=\"html-code\">&lt;small&gt;</code>", "<code class=\"html-code\">&lt;del&gt;</code>"], 
+            correct: 1, explanation: "Thẻ <code class=\"html-code\">&lt;sub&gt;</code> (Subscript) được sử dụng để tạo chỉ số dưới, khiến ký tự được thu nhỏ và đẩy xuống bên dưới đường cơ sở của văn bản." 
+        },
+        { 
+            id: "q18", type: "single", question: "Câu 18: Thẻ <code class=\"html-code\">&lt;sup&gt;</code> được sử dụng trong trường hợp nào sau đây?", 
+            options: ["Viết số mũ trong công thức toán học (ví dụ: x^2).", "Viết chỉ số dưới trong công thức hóa học.", "Tạo chữ gạch chân.", "Làm nổi bật văn bản bằng màu nền (highlight)."], 
+            correct: 0, explanation: "Thẻ <code class=\"html-code\">&lt;sup&gt;</code> (Superscript) được sử dụng để tạo chỉ số trên, cực kỳ hữu dụng trong việc hiển thị số mũ toán học." 
+        },
+        { 
+            id: "q19", type: "single", question: "Câu 19: Để gạch chân một đoạn văn bản trong HTML, ta sử dụng cặp thẻ nào?", 
+            options: ["<code class=\"html-code\">&lt;s&gt;</code>", "<code class=\"html-code\">&lt;mark&gt;</code>", "<code class=\"html-code\">&lt;u&gt;</code>", "<code class=\"html-code\">&lt;ins&gt;</code>"], 
+            correct: 2, explanation: "Thẻ <code class=\"html-code\">&lt;u&gt;</code> (Underline) có chức năng thêm một đường kẻ ngang ngay bên dưới các ký tự văn bản." 
+        },
+        { 
+            id: "q20", type: "single", question: "Câu 20: Thuộc tính nào được sử dụng thường xuyên nhất để thiết lập định dạng như màu sắc, phông chữ, cỡ chữ cho phần tử HTML ngay tại vị trí viết?", 
+            options: ["class", "id", "style", "format"], 
+            correct: 2, explanation: "Thuộc tính <code class=\"html-code\">style</code> được sử dụng để định dạng hiển thị CSS trực tiếp (inline CSS) như phông chữ, màu sắc, hay căn lề cho phần tử." 
+        },
+        { 
+            id: "q21", type: "single", question: "Câu 21: Cú pháp nào sau đây là đúng để thiết lập chữ màu đỏ cho đoạn văn bản?", 
+            options: ["<code class=\"html-code\">&lt;p color=\"red\"&gt;</code>Nội dung<code class=\"html-code\">&lt;/p&gt;</code>", "<code class=\"html-code\">&lt;p style=\"color:red\"&gt;</code>Nội dung<code class=\"html-code\">&lt;/p&gt;</code>", "<code class=\"html-code\">&lt;p font=\"color:red\"&gt;</code>Nội dung<code class=\"html-code\">&lt;/p&gt;</code>", "<code class=\"html-code\">&lt;p text-color=\"red\"&gt;</code>Nội dung<code class=\"html-code\">&lt;/p&gt;</code>"], 
+            correct: 1, explanation: "Cú pháp đúng chuẩn để áp dụng màu đỏ là sử dụng thuộc tính style với đặc tính color: <code class=\"html-code\">&lt;p style=\"color:red\"&gt;</code>." 
+        },
+        { 
+            id: "q22", type: "single", question: "Câu 22: Để thay đổi cỡ chữ của một phần tử bằng thuộc tính style, ta sử dụng đặc tính (property) nào?", 
+            options: ["text-size", "font-size", "font-family", "text-format"], 
+            correct: 1, explanation: "Đặc tính <code class=\"html-code\">font-size</code> được sử dụng trong CSS để quy định kích cỡ độ lớn của văn bản." 
+        },
+        { 
+            id: "q23", type: "single", question: "Câu 23: Trong thuộc tính style, khi muốn thực hiện nhiều định dạng đồng thời (ví dụ vừa đổi màu vừa đổi cỡ chữ), ta dùng dấu gì để ngăn cách các định dạng?", 
+            options: ["Dấu phẩy (,)", "Dấu chấm (.)", "Dấu chấm phẩy (;)", "Dấu hai chấm (:)"], 
+            correct: 2, explanation: "Khi có nhiều khai báo định dạng nội tuyến, các quy tắc này phải được ngăn cách với nhau bởi dấu chấm phẩy (;)." 
+        },
+        { 
+            id: "q24", type: "single", question: "Câu 24: Giá trị màu sắc <code class=\"html-code\">rgb(255, 0, 0)</code> trong HTML tương đương với màu nào sau đây được gọi tên bằng tiếng Anh?", 
+            options: ["green", "blue", "red", "yellow"], 
+            correct: 2, explanation: "Giá trị rgb(255,0,0) nghĩa là thành phần màu đỏ đạt cực đại (255) trong khi xanh lục và xanh lam bằng 0, tạo thành màu đỏ (red)." 
+        },
+        
+        { id: "qII_1", type: "tf_cluster", context: "Câu 1: Một học sinh đang thực hành viết mã HTML để tạo một trang web giới thiệu về lớp học. Bạn này đã sử dụng các thuộc tính để thiết lập cấu hình cơ bản cho trang.", items: [
+            { id: "a", text: "a) Thuộc tính của thẻ luôn được đặt bên trong thẻ bắt đầu, ngay sau tên thẻ.", correct: true, expl: "Chính xác, theo nguyên lý cú pháp HTML cơ bản, mọi thuộc tính đều phải nằm ở thẻ mở." },
+            { id: "b", text: "b) Nếu một thẻ HTML có 3 thuộc tính, học sinh này phải dùng dấu phẩy (,) để ngăn cách giữa các thuộc tính đó.", correct: false, expl: "Giữa các thuộc tính khác nhau trong một thẻ phải được ngăn cách bởi khoảng trắng (dấu cách), chứ không phải dấu phẩy." },
+            { id: "c", text: "c) Cú pháp hợp lệ để khai báo thuộc tính là tên_thuộc_tính=\"giá trị\".", correct: true, expl: "Cú pháp này hoàn toàn hợp lệ và là cấu trúc chuẩn để gán giá trị cho một thuộc tính HTML." },
+            { id: "d", text: "d) Thuộc tính <code class=\"html-code\">charset=\"UTF-8\"</code> thường được đặt trong thẻ <code class=\"html-code\">&lt;meta&gt;</code> để trình duyệt hiển thị chính xác các ký tự tiếng Việt có dấu.", correct: true, expl: "Thẻ meta với charset UTF-8 được thiết kế chuyên biệt để đảm bảo trình duyệt hiểu đúng bảng mã toàn cầu, tránh lỗi phông chữ khi hiển thị tiếng Việt." }
+        ]},
+        { id: "qII_2", type: "tf_cluster", context: "Câu 2: Trong quá trình thiết kế phần nội dung bài viết, người lập trình web muốn chia bố cục trang thành các phần rõ ràng bằng các tiêu đề, đoạn văn và đường kẻ.", items: [
+            { id: "a", text: "a) Thẻ <code class=\"html-code\">&lt;h1&gt;</code> thường được dùng cho các tiêu đề phụ, còn thẻ <code class=\"html-code\">&lt;h6&gt;</code> dùng cho tiêu đề chính quan trọng nhất của trang web.", correct: false, expl: "Ngược lại, thẻ <code class=\"html-code\">&lt;h1&gt;</code> tạo ra tiêu đề to và quan trọng nhất, trong khi <code class=\"html-code\">&lt;h6&gt;</code> là tiêu đề ở cấp độ thấp nhất." },
+            { id: "b", text: "b) Nội dung đặt trong cặp thẻ <code class=\"html-code\">&lt;p&gt;...&lt;/p&gt;</code> sẽ được trình duyệt hiển thị thành một đoạn văn bản mới, có khoảng trống mặc định ở trên và dưới đoạn.", correct: true, expl: "Đúng vậy, thẻ đoạn văn <code class=\"html-code\">&lt;p&gt;</code> là một khối có tính năng tự động tạo lề (margin) mặc định phía trên và dưới nó." },
+            { id: "c", text: "c) Để tạo một đường kẻ ngang phân cách giữa phần tiêu đề và phần nội dung, người lập trình có thể chèn thẻ <code class=\"html-code\">&lt;hr&gt;</code> vào giữa chúng.", correct: true, expl: "Thẻ <code class=\"html-code\">&lt;hr&gt;</code> (Horizontal Rule) hoàn toàn phù hợp để vẽ một đường phân chia mặt phẳng ngang." },
+            { id: "d", text: "d) Khi sử dụng thẻ <code class=\"html-code\">&lt;br&gt;</code> để xuống dòng, khoảng cách giữa dòng trước và dòng sau sẽ lớn hơn so với việc tách thành hai đoạn bằng thẻ <code class=\"html-code\">&lt;p&gt;</code>.", correct: false, expl: "Thẻ <code class=\"html-code\">&lt;br&gt;</code> chỉ ngắt dòng sát ngay bên dưới, không tạo lề như thẻ <code class=\"html-code\">&lt;p&gt;</code>, nên khoảng cách bằng <code class=\"html-code\">&lt;br&gt;</code> luôn hẹp hơn." }
+        ]},
+        { id: "qII_3", type: "tf_cluster", context: "Câu 3: Một website hướng dẫn giải Toán và Hóa học cần hiển thị các công thức học thuật như phương trình bậc 2 (ax^2 + bx + c = 0) và công thức phân tử nước (H2O).", items: [
+            { id: "a", text: "a) Để hiển thị số 2 trong cụm \"x bình phương\" (x^2), cần đặt số 2 vào giữa cặp thẻ <code class=\"html-code\">&lt;sup&gt;...&lt;/sup&gt;</code>.", correct: true, expl: "Thẻ <code class=\"html-code\">&lt;sup&gt;</code> đóng vai trò đẩy kí tự văn bản lên cao và thu nhỏ lại, tạo thành số mũ hoàn hảo." },
+            { id: "b", text: "b) Để hiển thị số 2 trong công thức H2O nhỏ xuống dưới, người viết mã cần sử dụng cặp thẻ <code class=\"html-code\">&lt;sub/&gt;...&lt;sub/&gt;</code>.", correct: false, expl: "Lỗi cú pháp định dạng thẻ đóng, cú pháp chuẩn xác nhất phải là <code class=\"html-code\">&lt;sub&gt;...&lt;/sub&gt;</code>." },
+            { id: "c", text: "c) Cặp thẻ <code class=\"html-code\">&lt;strong&gt;</code> và <code class=\"html-code\">&lt;em&gt;</code> ngoài việc làm thay đổi hình thức chữ (in đậm, in nghiêng) còn mang ý nghĩa nhấn mạnh nội dung về mặt ngữ nghĩa đối với các công cụ tìm kiếm.", correct: true, expl: "Không chỉ thay đổi hiệu ứng thị giác, các thẻ này là những thẻ ngữ nghĩa giúp thiết bị tự động hoặc công cụ tối ưu hóa đọc hiểu trang web." },
+            { id: "d", text: "d) Có thể tạo hiệu ứng văn bản bay lên cao và nhỏ dần bằng cách sử dụng nhiều thẻ <code class=\"html-code\">&lt;sup&gt;</code> lồng liên tiếp vào nhau.", correct: true, expl: "Do tính chất cấp số cộng của CSS định sẵn cho thẻ sup, mỗi khi lồng thẻ sup vào một thẻ sup khác, chữ sẽ càng lúc càng nhỏ và trượt cao lên thêm." }
+        ]},
+        { id: "qII_4", type: "tf_cluster", context: "Câu 4: Quản trị viên của một trang web muốn định dạng chữ màu xanh lá cây, cỡ chữ 18px và dùng phông chữ Tahoma cho một đoạn thông báo quan trọng.", items: [
+            { id: "a", text: "a) Để định dạng trực tiếp tại phần tử, quản trị viên cần dùng thuộc tính <code class=\"html-code\">style</code>.", correct: true, expl: "Sử dụng <code class=\"html-code\">style</code> là kỹ thuật CSS nội tuyến áp dụng trực tiếp cho một phần tử." },
+            { id: "b", text: "b) Cú pháp đúng để thiết lập nhiều đặc tính cùng lúc là <code class=\"html-code\">style=\"color: green, font-size: 18px, font-family: Tahoma\"</code> (sử dụng dấu phẩy để ngăn cách).", correct: false, expl: "Giữa các cặp lệnh thuộc tính và giá trị trong CSS, phải sử dụng dấu chấm phẩy (;), không sử dụng dấu phẩy (,)." },
+            { id: "c", text: "c) Nếu quản trị viên muốn lấy chính xác một mã màu RGB từ logo của trường để làm màu chữ, họ có thể dùng công cụ Color picker trong MS Paint hoặc Photoshop.", correct: true, expl: "Công cụ lấy mã màu ống hút (Color picker) giúp trích xuất mã RGB thực tế của bất kỳ điểm ảnh đồ họa nào để tận dụng cho HTML." },
+            { id: "d", text: "d) Khai báo <code class=\"html-code\">color: red;</code> và <code class=\"html-code\">color: rgb(255, 0, 0);</code> trong thuộc tính style sẽ cho ra hai màu hiển thị hoàn toàn khác nhau trên trình duyệt.", correct: false, expl: "Khai báo chữ red hoặc mã rgb(255, 0, 0) đều trả về chính xác cùng một định dạng màu đỏ thuần về mặt kỹ thuật số." }
+        ]}
+    ];
+
+   window.startQuizAction = function() {
+        try {
+            const errDiv = document.getElementById('login-error');
+            if(errDiv) errDiv.classList.add('hidden');
+            
+            const nameEl = document.getElementById('hoTen');
+            const lopEl = document.getElementById('lop');
+            
+            const name = nameEl.value.trim();
+            const lop = lopEl.value.trim();
+            
+            if (!name || !lop) {
+                if(errDiv) {
+                    errDiv.innerText = "⚠️ Vui lòng nhập đầy đủ Họ tên và Lớp!";
+                    errDiv.classList.remove('hidden');
+                } else {
+                    alert("⚠️ Vui lòng nhập đầy đủ Họ tên và Lớp!");
+                }
+                return;
+            }
+            
+            currentStudent = { hoTen: name, lop: lop, maDe: 'de_html_dinhdang', tenDe: 'Đề Trắc Nghiệm HTML' };
+            currentQuestions = JSON.parse(JSON.stringify(exam_data)); 
+            quizStartTime = new Date();
+            
+            setTimeout(() => { isQuizStarted = true; }, 1000);
+            showSection('quiz');
+            
+            userAnswers = {};
+            window.renderAllQuestions();
+            startTimer(45 * 60); 
+            
+        } catch (error) {
+            alert("❌ Đã xảy ra lỗi khởi tạo bài thi: " + error.message + ".");
+            console.error(error);
+        }
+    };
+
+    window.viewScoresAction = function() {
+        searchTerm = ''; 
+        document.getElementById('search-student').value = '';
+        currentPage = 1;
+
+        if (database) {
+            scoresRef.once('value').then((snapshot) => {
+                const data = snapshot.val();
+                allScores = data ? Object.keys(data).map(key => ({...data[key], id: key})) : [];
+                window.renderScores();
+                showSection('scores');
+            });
+        }
+    };
+
+    window.searchStudent = function(val) {
+        searchTerm = val.toLowerCase();
+        currentPage = 1;
+        window.renderScores();
+    };
+
+    window.changePage = function(page) {
+        currentPage = page;
+        window.renderScores();
+    };
+
+    window.goHome = function() {
+        if(document.getElementById('hoTen')) document.getElementById('hoTen').value = ''; 
+        if(document.getElementById('lop')) document.getElementById('lop').value = ''; 
+        clearInterval(timerInterval);
+        showSection('login');
+    };
+
+    function getTotalScoreItems() { return currentQuestions.length; }
+
+    function getAnsweredCount() {
+        let count = 0;
+        currentQuestions.forEach(q => {
+            if (q.type === 'single') {
+                if (userAnswers[q.id] !== undefined) count++;
+            } else if (q.type === 'tf_cluster') {
+                let answeredItems = 0;
+                q.items.forEach(item => {
+                    if (userAnswers[q.id + '_' + item.id] !== undefined) answeredItems++;
+                });
+                if (answeredItems === 4) count++; 
+            }
+        });
+        return count;
+    }
+
+   window.selectAnswer = function(qId, val, type) {
+        if (type === 'tf') {
+            userAnswers[qId] = val;
+            const btnT = document.getElementById(`btnT_${qId}`);
+            const btnF = document.getElementById(`btnF_${qId}`);
+            if (val === true) {
+                btnT.classList.add('selected'); btnT.classList.remove('bg-white');
+                btnF.classList.remove('selected'); btnF.classList.add('bg-white');
+            } else {
+                btnF.classList.add('selected'); btnF.classList.remove('bg-white');
+                btnT.classList.remove('selected'); btnT.classList.add('bg-white');
+            }
+        } else if (type === 'single') {
+            userAnswers[qId] = val;
+        }
+        
+        requestAnimationFrame(() => {
+            const pgText = document.getElementById('progress-text');
+            if(pgText) pgText.innerText = `${getAnsweredCount()}/${getTotalScoreItems()}`;
+        });
+    };
+
+    window.renderAllQuestions = function() {
+        if (!currentQuestions || currentQuestions.length === 0) return;
+        const container = document.getElementById('question-container');
+        if(!container) return;
+
+        let html = '';
+        let currentType = '';
+
+        currentQuestions.forEach((q) => {
+            if (q.type !== currentType) {
+                currentType = q.type;
+                let headerText = ''; let roman = '';
+                if(currentType === 'single') { headerText = 'TRẮC NGHIỆM MỘT LỰA CHỌN'; roman = 'I'; }
+                if(currentType === 'tf_cluster') { headerText = 'TRẮC NGHIỆM ĐÚNG/SAI'; roman = 'II'; }
+                
+                html += `<div class="flex items-center gap-3 mt-8 mb-4 border-b-2 border-blue-100 pb-3"><span class="bg-gradient-to-br from-blue-500 to-indigo-600 text-white w-14 h-14 flex items-center justify-center rounded-xl font-black text-2xl shadow-md">${roman}</span><h3 class="text-2xl sm:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-700 to-indigo-700 tracking-wide uppercase">${headerText}</h3></div>`;
+            }
+
+            html += `<div class="fade-in w-full bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-blue-100 relative mb-6 hover:shadow-md transition-shadow">`;
+            
+            if (q.type === 'single') {
+                const uAns = userAnswers[q.id];
+                html += `<div class="flex gap-4 mb-5"><div class="w-full math-scroll"><p class="text-xl font-bold text-red-600 mt-1 leading-snug tracking-tight">${q.question}</p></div></div>`;
+                html += `<div class="space-y-4 md:pl-6 mt-6">`;
+                
+                q.options.forEach((opt, i) => {
+                    const isChecked = (uAns === i) ? 'checked' : '';
+                    html += `<div class="flex items-center">
+                        <input type="radio" id="opt_${q.id}_${i}" name="q_${q.id}" value="${i}" class="hidden single-radio" ${isChecked} onchange="window.selectAnswer('${q.id}', ${i}, 'single')">
+                        <label for="opt_${q.id}_${i}" class="option-label w-full p-4 border-2 border-gray-200 rounded-2xl flex items-center gap-4 bg-white shadow-sm font-bold text-lg hover:border-blue-300">
+                            <div class="w-12 h-12 rounded-xl border-2 border-gray-300 flex items-center justify-center text-lg font-black text-gray-400 flex-shrink-0 bg-gray-50">${String.fromCharCode(65 + i)}</div>
+                            <div class="text-gray-700 leading-relaxed math-scroll flex-1">${opt}</div>
+                        </label>
+                    </div>`;
+                });
+                html += `</div>`;
+            } 
+            else if (q.type === 'tf_cluster') {
+                html += `<div class="bg-red-50 text-red-700 p-5 rounded-xl font-bold mb-4 border-2 border-red-100 text-xl leading-relaxed math-scroll">${q.context}</div>`;
+                html += `<div class="space-y-4 mt-6">`;
+                q.items.forEach((item) => {
+                    const combinedId = q.id + '_' + item.id;
+                    let ans = userAnswers[combinedId];
+                    let btnT = ans === true ? 'selected' : 'bg-white';
+                    let btnF = ans === false ? 'selected' : 'bg-white';
+
+                    html += `<div class="p-5 border-2 border-gray-100 rounded-2xl bg-white shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4 transition-all hover:border-blue-200">
+                        <div class="font-bold text-gray-800 flex-1 text-lg math-scroll">${item.text}</div>
+                        <div class="flex gap-3 shrink-0">
+                            <button id="btnT_${combinedId}" onclick="window.selectAnswer('${combinedId}', true, 'tf')" class="btn-tf w-24 sm:w-28 py-3 rounded-xl font-extrabold text-lg ${btnT}">ĐÚNG</button>
+                            <button id="btnF_${combinedId}" onclick="window.selectAnswer('${combinedId}', false, 'tf')" class="btn-tf w-24 sm:w-28 py-3 rounded-xl font-extrabold text-lg ${btnF}">SAI</button>
+                        </div>
+                    </div>`;
+                });
+                html += `</div>`;
+            } 
+            html += `</div>`;
+        });
+        
+        container.innerHTML = html;
+        const pgText = document.getElementById('progress-text');
+        if(pgText) pgText.innerText = `${getAnsweredCount()}/${getTotalScoreItems()}`;
+    };
+
+    function formatDuration(sec) {
+        const m = Math.floor(sec / 60); const s = sec % 60;
+        return `${m}p ${s}s`;
+    }
+
+    window.promptSubmit = function() {
+        if (!isQuizStarted) return;
+        const total = getTotalScoreItems();
+        const answered = getAnsweredCount();
+        
+        document.getElementById('confirm-answered').innerText = answered;
+        document.getElementById('confirm-total').innerText = total;
+        
+        const modal = document.getElementById('confirm-submit-modal');
+        modal.classList.remove('hidden');
+    };
+
+    window.closeConfirmModal = function() {
+        const modal = document.getElementById('confirm-submit-modal');
+        modal.classList.add('hidden');
+    };
+
+    window.executeSubmit = function() {
+        window.closeConfirmModal();
+        isQuizStarted = false; 
+        quizEndTime = new Date();
+        clearInterval(timerInterval);
+        
+        let score = 0;
+
+        currentQuestions.forEach(q => {
+            if (q.type === 'single') {
+                if (userAnswers[q.id] === q.correct) score += 0.25;
+            } else if (q.type === 'tf_cluster') {
+                let correctCount = 0;
+                q.items.forEach(item => { 
+                    if (userAnswers[q.id + '_' + item.id] === item.correct) {
+                        correctCount++;
+                    }
+                });
+                
+                if (correctCount === 1) score += 0.1;
+                else if (correctCount === 2) score += 0.25;
+                else if (correctCount === 3) score += 0.5;
+                else if (correctCount === 4) score += 1.0;
+            }
+        });
+
+        score = score.toFixed(2); 
+
+        const record = {
+            hoTen: currentStudent.hoTen, lop: currentStudent.lop, tenDe: currentStudent.tenDe, maDe: currentStudent.maDe,
+            diem: parseFloat(score),
+            startTime: quizStartTime.toLocaleTimeString('vi-VN') + ' ' + quizStartTime.toLocaleDateString('vi-VN'),
+            endTime: quizEndTime.toLocaleTimeString('vi-VN') + ' ' + quizEndTime.toLocaleDateString('vi-VN'),
+            duration: formatDuration(Math.floor((quizEndTime - quizStartTime) / 1000)),
+            thoiGian: new Date().toISOString(), deviceId: deviceId,
+            userAnswers: userAnswers 
+        };
+        
+        if(database) {
+            scoresRef.push(record, () => { window.showModalResult(score, record.duration); });
+        } else {
+            window.showModalResult(score, record.duration);
+        }
+    };
+
+    window.showModalResult = function(score, dur) {
+        ['login', 'quiz', 'scores', 'review'].forEach(s => {
+            const el = document.getElementById(s+'-section');
+            if(el) el.classList.add('hidden');
+        });
+        const resEl = document.getElementById('result-section');
+        if(resEl) resEl.classList.remove('hidden');
+        const contentEl = document.getElementById('result-content');
+        if(contentEl) contentEl.innerHTML = `
+        <div class="flex justify-start mb-4">
+            <button onclick="window.goHome()" class="px-5 py-3 bg-gray-100 text-gray-700 rounded-xl font-bold hover:bg-gray-200 transition-colors shadow-sm border border-gray-200 text-lg">🏠 Trang chủ</button>
+        </div>
+        <div class="text-center">
+            <div class="text-7xl mb-4 animate-bounce">🎉</div>
+            <h3 class="text-3xl font-black text-emerald-600 mb-2">Hoàn thành bài thi!</h3>
+            <p class="text-gray-600 mb-6 mt-2"><span class="font-extrabold text-blue-700 text-xl uppercase tracking-wider">${currentStudent.hoTen} - Lớp ${currentStudent.lop}</span></p>
+        </div>
+        <div class="bg-blue-50 border-2 border-blue-100 rounded-3xl p-8 mb-6 shadow-inner relative text-center">
+            <div class="text-base text-blue-500 font-extrabold mb-2 uppercase tracking-widest">ĐIỂM SỐ CỦA BẠN</div>
+            <div class="text-7xl font-black text-blue-600 drop-shadow-sm">${score} <span class="text-3xl text-gray-400">/ 10</span></div>
+            <div class="text-lg font-extrabold text-indigo-600 mt-5 bg-white inline-block px-6 py-3 rounded-full shadow-sm border border-blue-100">Thời gian làm bài: ${dur}</div>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+            <button onclick="window.reviewQuiz()" class="w-full py-4 bg-gradient-to-r from-indigo-500 to-purple-500 text-white rounded-xl font-extrabold shadow-sm hover:shadow-md transition-colors text-xl">📝 Xem lại bài</button>
+            <button onclick="window.viewScoresAction()" class="w-full py-4 bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-xl font-extrabold shadow-sm hover:shadow-md transition-colors text-xl">🏆 Bảng điểm</button>
+        </div>`;
+    };
+
+    function getStatusBadge(isCorrect, isUnanswered) {
+        if (isUnanswered) return `<div class="mt-4 mb-2 inline-block px-4 py-2 bg-yellow-100 text-yellow-800 text-base font-black rounded-lg border border-yellow-300 shadow-sm">⚠️ BẠN CHƯA LÀM CÂU NÀY</div>`;
+        if (isCorrect) return `<div class="mt-4 mb-2 inline-block px-4 py-2 bg-emerald-100 text-emerald-800 text-base font-black rounded-lg border border-emerald-300 shadow-sm">✅ BẠN LÀM ĐÚNG RỒI</div>`;
+        return `<div class="mt-4 mb-2 inline-block px-4 py-2 bg-red-100 text-red-800 text-base font-black rounded-lg border border-red-300 shadow-sm">❌ BẠN LÀM SAI RỒI</div>`;
+    }
+
+    // HÀM XEM LẠI BÀI ĐÃ ĐƯỢC CẬP NHẬT PHÂN CHIA PHẦN I VÀ PHẦN II
+    window.reviewQuiz = function() {
+        showSection('review');
+        const container = document.getElementById('review-content');
+        if(!container) return;
+        let html = '';
+        let currentType = ''; // Theo dõi phân loại để chèn tiêu đề
+
+        currentQuestions.forEach((q) => {
+            if (q.type !== currentType) {
+                currentType = q.type;
+                let headerText = ''; let roman = '';
+                if(currentType === 'single') { headerText = 'TRẮC NGHIỆM MỘT LỰA CHỌN'; roman = 'I'; }
+                if(currentType === 'tf_cluster') { headerText = 'TRẮC NGHIỆM ĐÚNG/SAI'; roman = 'II'; }
+                
+                html += `<div class="flex items-center gap-3 mt-8 mb-6 border-b-2 border-indigo-100 pb-3">
+                            <span class="bg-gradient-to-br from-indigo-500 to-purple-600 text-white w-14 h-14 flex items-center justify-center rounded-xl font-black text-2xl shadow-md">${roman}</span>
+                            <h3 class="text-2xl sm:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-indigo-700 to-purple-700 tracking-wide uppercase">${headerText}</h3>
+                         </div>`;
+            }
+
+            if (q.type === 'single') {
+                let uAns = userAnswers[q.id];
+                let isUnanswered = (uAns === undefined);
+                let isCorrect = (uAns === q.correct);
+                let borderColor = isCorrect ? 'border-emerald-300 bg-emerald-50' : 'border-red-300 bg-red-50';
+                
+                html += `<div class="p-6 border-2 rounded-2xl shadow-sm mb-6 ${borderColor}">`;
+                html += `<div class="font-bold text-xl text-red-600 mb-5 leading-relaxed math-scroll">${q.question}</div>`;
+                html += `<div class="space-y-3">`;
+                
+                q.options.forEach((opt, i) => {
+                    let optBg = ''; let iconHtml = '';
+                    if (q.correct === i) {
+                        optBg = 'bg-emerald-100 text-emerald-900 border-emerald-400 border-2'; 
+                        iconHtml = '<div class="text-3xl drop-shadow-sm ml-auto pl-2 flex-shrink-0">✅</div>';
+                    } else if (uAns === i && !isCorrect) {
+                        optBg = 'bg-red-100 text-red-900 line-through border-red-400 border-2'; 
+                        iconHtml = '<div class="text-3xl drop-shadow-sm ml-auto pl-2 flex-shrink-0">❌</div>';
+                    } else { optBg = 'bg-white text-slate-700 border border-slate-200'; }
+
+                    html += `<div class="p-4 rounded-xl ${optBg} flex items-center gap-4"><div class="w-10 h-10 flex items-center justify-center rounded-lg bg-white/50 text-base font-black shadow-sm flex-shrink-0">${String.fromCharCode(65 + i)}</div><div class="${(q.correct === i || uAns === i) ? 'font-semibold' : 'font-medium'} flex-1 text-lg math-scroll">${opt}</div>${iconHtml}</div>`;
+                });
+                html += `</div>`;
+                
+                html += getStatusBadge(isCorrect, isUnanswered); 
+                
+                if (q.explanation) {
+                    html += `<div class="review-explanation mt-3 pt-3 border-t-2 border-gray-200"><p class="text-base font-black uppercase tracking-widest text-blue-600 mb-2">💡 Giải chi tiết:</p><p class="text-black font-medium text-lg leading-loose math-scroll">${q.explanation}</p></div>`;
+                }
+                html += `</div>`;
+            } 
+            else if (q.type === 'tf_cluster') {
+                html += `<div class="p-6 border-2 border-indigo-200 bg-indigo-50 rounded-2xl shadow-sm mb-6">`;
+                html += `<div class="font-bold text-xl text-indigo-800 mb-5 math-scroll">${q.context}</div>`;
+                html += `<div class="space-y-5">`;
+                q.items.forEach(item => {
+                    let uAns = userAnswers[q.id + '_' + item.id];
+                    let isUnanswered = (uAns === undefined);
+                    let isCorrect = (uAns === item.correct);
+                    let iconHtml = isCorrect ? '✅' : '❌';
+                    let ansText = item.correct ? 'ĐÚNG' : 'SAI';
+
+                    html += `<div class="p-5 bg-white border border-indigo-100 rounded-xl shadow-sm">
+                        <div class="font-bold text-gray-800 text-lg math-scroll">${item.text}</div>
+                        <div class="mt-3 flex items-center justify-between border-b border-gray-100 pb-3">
+                            <span class="text-base font-bold text-gray-500">Bạn chọn: <span class="${isUnanswered ? 'text-gray-400' : 'text-blue-600'} font-black uppercase">${isUnanswered ? 'Chưa trả lời' : (uAns?'Đúng':'Sai')}</span></span>
+                            <span class="font-black text-xl ${isCorrect ? 'text-emerald-500' : 'text-red-500'}">Đáp án: ${ansText} ${iconHtml}</span>
+                        </div>`;
+                        
+                    html += getStatusBadge(isCorrect, isUnanswered);
+                    if(item.expl) {
+                        html += `<div class="review-explanation mt-3 pt-3 text-lg text-gray-700 font-medium leading-relaxed math-scroll"><span class="text-indigo-500 font-bold uppercase">Giải chi tiết:</span><br> ${item.expl}</div>`;
+                    }
+                    html += `</div>`;
+                });
+                html += `</div></div>`;
+            }
+        });
+        container.innerHTML = html;
+    };
+
+    window.backToResult = function() { showSection('result'); };
+    
+    let isReviewingFromLeaderboard = false;
+    
+    window.backFromReview = function() {
+        if (isReviewingFromLeaderboard) {
+            showSection('scores');
+            isReviewingFromLeaderboard = false;
+        } else {
+            window.backToResult();
+        }
+    };
+
+    window.reviewStudentScore = function(scoreId) {
+        const record = allScores.find(x => x.id === scoreId);
+        if (!record) return;
+        
+        currentStudent = { hoTen: record.hoTen, lop: record.lop, tenDe: record.tenDe, maDe: record.maDe };
+        userAnswers = record.userAnswers || {}; 
+        
+        currentQuestions = JSON.parse(JSON.stringify(exam_data)); 
+        
+        isReviewingFromLeaderboard = true;
+        window.reviewQuiz();
+    };
+
+    window.renderScores = function() {
+        const tbody = document.getElementById('scores-tbody');
+        const noScore = document.getElementById('no-scores');
+        const myRankDisplay = document.getElementById('my-rank-display');
+        const paginationContainer = document.getElementById('pagination-controls');
+        
+        if(!tbody) return;
+
+        const getFirstName = (fullName) => {
+            if (!fullName) return "";
+            const parts = fullName.trim().split(" ");
+            return parts[parts.length - 1].toLowerCase();
+        };
+
+        const sortedAll = [...allScores].sort((a, b) => {
+            if (b.diem !== a.diem) return b.diem - a.diem;
+            const tenA = getFirstName(a.hoTen);
+            const tenB = getFirstName(b.hoTen);
+            if (tenA !== tenB) return tenA.localeCompare(tenB, 'vi');
+            return (a.hoTen || "").localeCompare(b.hoTen || "", 'vi');
+        });
+        
+        sortedAll.forEach((s, i) => s.absoluteRank = i + 1);
+
+        const myRankIndex = sortedAll.findIndex(s => s.deviceId === deviceId);
+        if (myRankDisplay) {
+            if (myRankIndex !== -1) {
+                myRankDisplay.innerHTML = `🏆 Thứ hạng của bạn: <span class="text-red-600 font-black">${sortedAll[myRankIndex].absoluteRank}</span>`;
+            } else {
+                myRankDisplay.innerHTML = `🏆 Thứ hạng của bạn: <span class="text-gray-400">Chưa thi</span>`;
+            }
+        }
+
+        const filteredScores = searchTerm ? sortedAll.filter(s => s.hoTen.toLowerCase().includes(searchTerm)) : sortedAll;
+
+        if (filteredScores.length === 0) {
+            tbody.innerHTML = ''; 
+            noScore.classList.remove('hidden'); 
+            paginationContainer.innerHTML = '';
+            return; 
+        }
+        
+        noScore.classList.add('hidden');
+
+        const totalPages = Math.ceil(filteredScores.length / itemsPerPage);
+        if (currentPage > totalPages) currentPage = totalPages;
+        if (currentPage < 1) currentPage = 1;
+
+        const startIndex = (currentPage - 1) * itemsPerPage;
+        const endIndex = startIndex + itemsPerPage;
+        const pageItems = filteredScores.slice(startIndex, endIndex);
+
+        tbody.innerHTML = pageItems.map((s) => {
+            const isMe = s.deviceId === deviceId;
+            
+            let timeDisplay = "";
+            if (s.thoiGian) {
+                const d = new Date(s.thoiGian);
+                if (!isNaN(d)) {
+                    timeDisplay = `${d.getDate().toString().padStart(2, '0')}/${(d.getMonth() + 1).toString().padStart(2, '0')}/${d.getFullYear()}`;
+                } else {
+                    timeDisplay = s.endTime ? s.endTime.split(' ').pop() : s.duration; 
+                }
+            } else {
+                timeDisplay = s.endTime ? s.endTime.split(' ').pop() : s.duration;
+            }
+
+            return `<tr class="${isMe ? 'my-score-row' : 'hover:bg-slate-50'} transition-colors border-b border-slate-100">
+            <td class="px-4 py-5 font-black text-slate-500 text-base text-center">${s.absoluteRank}</td>
+            <td class="px-4 py-5 font-extrabold text-slate-800 text-base">${s.hoTen} ${isMe ? '<span class="ml-2 bg-pink-500 text-white text-xs px-2 py-1 rounded-md shadow-sm">Bạn</span>' : ''}</td>
+            <td class="px-4 py-5 font-black text-blue-600 text-base text-center">${s.lop}</td>
+            <td class="px-4 py-5 text-center font-black text-orange-600 text-sm whitespace-nowrap">${timeDisplay}</td>
+            <td class="px-4 py-5 text-center"><span class="font-black text-2xl ${s.diem >= 5 ? 'text-emerald-600' : 'text-red-500'}">${s.diem}</span></td>
+            <td class="px-4 py-5 text-center">
+                <button onclick="window.reviewStudentScore('${s.id}')" class="bg-indigo-100 text-indigo-700 hover:bg-indigo-200 px-4 py-2 rounded-lg font-bold text-sm transition-colors border border-indigo-200 shadow-sm cursor-pointer whitespace-nowrap">Xem lại</button>
+            </td>
+        </tr>`;
+        }).join('');
+
+        renderPagination(totalPages);
+    };
+
+    function renderPagination(totalPages) {
+        const container = document.getElementById('pagination-controls');
+        if (!container) return;
+        
+        if (totalPages <= 1) {
+            container.innerHTML = '';
+            return;
+        }
+
+        let html = '<div class="flex flex-wrap items-center justify-center gap-2">';
+        
+        html += `<button onclick="window.changePage(${currentPage - 1})" class="px-4 py-2 rounded-xl font-bold transition-colors ${currentPage === 1 ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 shadow-sm'}" ${currentPage === 1 ? 'disabled' : ''}>&laquo; Trước</button>`;
+
+        let startPage = Math.max(1, currentPage - 1);
+        let endPage = Math.min(totalPages, currentPage + 1);
+
+        if (startPage > 1) {
+            html += `<button onclick="window.changePage(1)" class="px-4 py-2 rounded-xl font-bold bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 shadow-sm">1</button>`;
+            if (startPage > 2) html += `<span class="px-2 text-gray-400 font-black">...</span>`;
+        }
+
+        for (let i = startPage; i <= endPage; i++) {
+            html += `<button onclick="window.changePage(${i})" class="px-4 py-2 rounded-xl font-bold transition-all ${i === currentPage ? 'bg-orange-500 text-white shadow-md border-orange-600' : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 shadow-sm'}">${i}</button>`;
+        }
+
+        if (endPage < totalPages) {
+            if (endPage < totalPages - 1) html += `<span class="px-2 text-gray-400 font-black">...</span>`;
+            html += `<button onclick="window.changePage(${totalPages})" class="px-4 py-2 rounded-xl font-bold bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 shadow-sm">${totalPages}</button>`;
+        }
+
+        html += `<button onclick="window.changePage(${currentPage + 1})" class="px-4 py-2 rounded-xl font-bold transition-colors ${currentPage === totalPages ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 shadow-sm'}" ${currentPage === totalPages ? 'disabled' : ''}>Sau &raquo;</button>`;
+        
+        html += '</div>';
+        container.innerHTML = html;
+    }
+
+    function showSection(id) {
+        ['login', 'quiz', 'scores', 'result', 'review'].forEach(s => {
+            const el = document.getElementById(s+'-section');
+            if(el) el.classList.add('hidden');
+        });
+        const tgt = document.getElementById(id+'-section');
+        if(tgt) tgt.classList.remove('hidden');
+    }
+
+    function startTimer(seconds) {
+        const display = document.getElementById('timer');
+        if(!display) return;
+        let remaining = seconds;
+        timerInterval = setInterval(() => {
+            remaining--;
+            const m = Math.floor(remaining / 60).toString().padStart(2, '0');
+            const s = (remaining % 60).toString().padStart(2, '0');
+            display.innerText = `${m}:${s}`;
+            if (remaining <= 0) window.submitQuiz();
+        }, 1000);
+    }
+
+    try {
+        if (!localStorage.getItem('deviceId')) localStorage.setItem('deviceId', 'dev_' + Math.random().toString(36).substr(2) + Date.now());
+        deviceId = localStorage.getItem('deviceId');
+    } catch (e) { deviceId = 'dev_temp_' + Math.random().toString(36).substr(2); }
+  </script>
+ </body>
+</html>
