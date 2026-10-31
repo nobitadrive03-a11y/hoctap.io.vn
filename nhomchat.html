@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Góc Thảo Luận - Hành Trình Số</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    <style>
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        .chat-bg { background-color: #f0f2f5; background-image: url('https://www.transparenttextures.com/patterns/cubes.png'); }
+    </style>
+</head>
+<!-- Nền ngoài màu đỏ thẫm quý phái -->
+<body class="bg-red-900 h-screen w-full flex items-center justify-center font-sans">
+
+    <!-- KHUNG CHAT -->
+    <div class="w-full md:max-w-4xl h-full md:h-[90%] bg-white md:rounded-2xl shadow-2xl flex flex-col relative overflow-hidden border border-gray-300">
+        
+        <!-- Thanh tiêu đề -->
+        <div class="bg-blue-600 text-white px-4 py-3 flex items-center justify-between shadow-md z-10 shrink-0">
+            <div class="flex items-center gap-3">
+               <button onclick="window.close()" class="flex items-center gap-1 bg-red-500 hover:bg-red-600 text-white px-3 py-1.5 rounded-lg text-sm font-bold shadow transition-all"> ◀️ Thoát
+</button>
+                <div>
+                    <h2 class="font-bold text-lg leading-tight flex items-center gap-2">GÓC THẢO LUẬN</h2>
+                    <div class="flex items-center gap-1.5 text-xs text-blue-100 mt-0.5">
+                        <span class="w-2 h-2 rounded-full bg-green-400 animate-pulse"></span>
+                        Đang hoạt động
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Vùng hiển thị tin nhắn -->
+        <div id="chat-messages" class="flex-1 p-4 md:p-6 overflow-y-auto chat-bg flex flex-col gap-5 scroll-smooth">
+            <div id="empty-state" class="text-center text-gray-500 text-sm my-6 bg-white/80 p-3 rounded-lg mx-auto w-fit shadow-sm border border-gray-200">
+                👋 Chào mừng các em! Hãy nhập tên và gửi câu hỏi tại đây nhé.
+            </div>
+        </div>
+
+        <!-- KHU VỰC NHẬP LIỆU GỒM PREVIEW PHẢN HỒI -->
+        <div class="bg-gray-50 flex flex-col z-10 shrink-0 shadow-[0_-2px_10px_rgba(0,0,0,0.02)]">
+            
+            <!-- Trích dẫn trả lời (Ẩn mặc định) -->
+            <div id="reply-preview" class="hidden px-4 py-2.5 border-t border-gray-200 flex justify-between items-center bg-blue-50/70 text-sm transition-all">
+                <div class="flex flex-col flex-1 overflow-hidden border-l-[3px] border-blue-500 pl-3">
+                    <span id="reply-preview-name" class="font-bold text-blue-700 text-[11px] uppercase tracking-wide"></span>
+                    <span id="reply-preview-text" class="text-gray-600 text-[12px] truncate mt-0.5 font-mono"></span>
+                </div>
+                <button onclick="cancelReply()" class="text-gray-400 hover:text-red-500 ml-4 p-1 bg-white rounded-full shadow-sm">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+
+            <!-- Khung nhập -->
+            <div class="p-3 border-t border-gray-200 flex flex-col sm:flex-row gap-2">
+                <input type="text" id="chat-name" placeholder="Tên em (VD: Lan 11A2)" class="w-full sm:w-40 px-4 py-2.5 bg-white border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 rounded-xl text-sm font-bold text-blue-700 transition-all outline-none shadow-sm">
+                
+                <div class="flex-1 flex gap-2">
+                    <input type="text" id="chat-input" placeholder="Nhập tin nhắn..." class="flex-1 px-4 py-2.5 bg-white border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 rounded-xl text-sm transition-all outline-none shadow-sm" onkeypress="handleEnter(event)">
+                    
+                    <button onclick="sendMessage()" class="bg-blue-600 hover:bg-blue-700 active:scale-95 text-white px-6 py-2.5 rounded-xl transition-all shadow-md flex items-center justify-center font-bold text-sm shrink-0">
+                        Gửi
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let database = null;
+        let chatRef = null;
+        let currentReplyData = null; // Biến lưu dữ liệu đang trả lời
+
+        try {
+            const firebaseConfig = {
+                apiKey: "AIzaSyC4ou3Fu8IxAPYV347pHKT1jtPxQe5TBM4",
+                authDomain: "hanhtrinhso-e3368.firebaseapp.com",
+                databaseURL: "https://hanhtrinhso-e3368-default-rtdb.asia-southeast1.firebasedatabase.app",
+                projectId: "hanhtrinhso-e3368",
+                storageBucket: "hanhtrinhso-e3368.firebasestorage.app",
+                messagingSenderId: "1046142513655",
+                appId: "1:1046142513655:web:5c7bb3a47ee90ac279fef2"
+            };
+            
+            if (typeof firebase !== 'undefined') {
+                if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+                database = firebase.database();
+                chatRef = database.ref('public_chat_tingk12');
+            }
+        } catch(err) {
+            console.error("Lỗi khởi tạo Firebase:", err);
+        }
+
+        const inputName = document.getElementById("chat-name");
+        const inputMessage = document.getElementById("chat-input");
+        const chatMessages = document.getElementById("chat-messages");
+        const emptyState = document.getElementById("empty-state");
+
+        // Load tên đã lưu trên máy
+        window.onload = () => {
+            const savedName = localStorage.getItem("hanhtrinhso_my_name");
+            if (savedName) inputName.value = savedName;
+        };
+
+        function escapeHtml(unsafe) {
+            return (unsafe || "").toString()
+                .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+        }
+
+        function formatTimeWithDate(timestamp) {
+            if (!timestamp) return "";
+            const date = new Date(timestamp);
+            return `${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')} - ${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getFullYear()}`;
+        }
+
+        // TÍNH NĂNG MỚI: Xử lý hiển thị Preview trả lời
+        function replyTo(nameToReply, encodedMessage) {
+            const decodedMessage = decodeURIComponent(encodedMessage);
+            currentReplyData = { name: nameToReply, message: decodedMessage };
+            
+            document.getElementById("reply-preview").classList.remove("hidden");
+            document.getElementById("reply-preview-name").innerText = "Trả lời " + nameToReply + ":";
+            document.getElementById("reply-preview-text").innerText = decodedMessage.replace(/\n/g, ' ');
+            inputMessage.focus();
+        }
+
+        // Hủy bỏ trả lời
+        function cancelReply() {
+            currentReplyData = null;
+            document.getElementById("reply-preview").classList.add("hidden");
+        }
+
+        function likeMessage(messageKey) {
+            if (!database) return;
+            const likeRef = database.ref('public_chat_tingk12/' + messageKey + '/likes');
+            likeRef.transaction((currentLikes) => (currentLikes || 0) + 1);
+        }
+
+        function sendMessage() {
+            if (!chatRef) return;
+            const name = inputName.value.trim();
+            const message = inputMessage.value.trim();
+
+            if (!name) { alert("Vui lòng nhập tên trước khi gửi!"); inputName.focus(); return; }
+            if (!message) { alert("Vui lòng nhập nội dung!"); inputMessage.focus(); return; }
+
+            localStorage.setItem("hanhtrinhso_my_name", name);
+
+            // Đóng gói tin nhắn gửi đi
+            const payload = { 
+                name: name, 
+                message: message, 
+                timestamp: firebase.database.ServerValue.TIMESTAMP,
+                likes: 0
+            };
+            
+            // Nếu có đang trả lời ai đó thì kẹp thêm dữ liệu gốc vào
+            if (currentReplyData) {
+                payload.replyToInfo = currentReplyData;
+            }
+
+            chatRef.push(payload);
+            
+            inputMessage.value = "";
+            cancelReply(); // Xóa preview sau khi gửi xong
+            inputMessage.focus();
+        }
+
+        function handleEnter(event) { if (event.key === "Enter") sendMessage(); }
+
+        if (chatRef) {
+            chatRef.on("child_added", (snapshot) => {
+                const data = snapshot.val();
+                const msgKey = snapshot.key;
+                if (emptyState) emptyState.style.display = 'none';
+
+                const formattedMessage = escapeHtml(data.message).replace(/\n/g, '<br>');
+                const timeString = formatTimeWithDate(data.timestamp);
+                const likesCount = data.likes || 0;
+
+                const mySavedName = localStorage.getItem("hanhtrinhso_my_name") || inputName.value.trim();
+                const isMe = (data.name === mySavedName && mySavedName !== "");
+
+                // XÂY DỰNG KHỐI TRÍCH DẪN (NẾU CÓ)
+                let replyBlockHtml = "";
+                if (data.replyToInfo) {
+                    const shortReplyMsg = escapeHtml(data.replyToInfo.message).replace(/\n/g, ' ').substring(0, 80) + (data.replyToInfo.message.length > 80 ? '...' : '');
+                    replyBlockHtml = `
+                        <div class="bg-white/60 border-l-[3px] border-blue-500 p-2.5 mb-2.5 rounded-r-md text-left shadow-sm">
+                            <div class="text-[11px] font-bold text-blue-800 uppercase tracking-wide">${escapeHtml(data.replyToInfo.name)}</div>
+                            <div class="text-[12.5px] text-gray-700 font-sans truncate mt-0.5 opacity-90">${shortReplyMsg}</div>
+                        </div>
+                    `;
+                }
+
+                const encodedOriginalMsg = encodeURIComponent(data.message);
+
+                const messageDiv = document.createElement("div");
+                messageDiv.className = `flex w-full ${isMe ? 'justify-end' : 'justify-start'} animate-fade-in`;
+                
+                messageDiv.innerHTML = `
+                    <div class="bg-blue-50 p-3.5 border-2 border-blue-600 flex flex-col w-fit max-w-[90%] sm:max-w-[75%] shadow-sm ${isMe ? 'rounded-2xl rounded-tr-sm' : 'rounded-2xl rounded-tl-sm'}">
+                        
+                        <strong class="text-[14px] text-blue-800 font-bold mb-2">${escapeHtml(data.name)}</strong>
+                        
+                        <!-- Chèn khối trích dẫn vào đây nếu có -->
+                        ${replyBlockHtml}
+                        
+                        <div class="text-[14px] text-black font-mono break-words leading-relaxed">
+                            ${formattedMessage}
+                        </div>
+                        
+                        <div class="flex justify-between items-center mt-2.5 pt-2 border-t border-blue-200">
+                            <div class="flex gap-4 items-center">
+                                <span onclick="replyTo('${escapeHtml(data.name)}', '${encodedOriginalMsg}')" class="cursor-pointer text-blue-600 hover:text-blue-800 font-sans text-[12px] font-medium transition-colors">Phản hồi ↩</span>
+                                
+                                <button onclick="likeMessage('${msgKey}')" class="flex items-center gap-1 cursor-pointer transition-all duration-200 group outline-none">
+                                    <span id="heart-icon-${msgKey}" class="text-[15px] ${likesCount > 0 ? 'text-red-500' : 'text-gray-400'} group-hover:text-red-500 group-active:scale-125 transition-transform">❤</span>
+                                    <span id="like-count-${msgKey}" class="text-[12px] font-medium ${likesCount > 0 ? 'text-red-500' : 'text-gray-500'}">${likesCount > 0 ? likesCount : ''}</span>
+                                </button>
+                            </div>
+                            <div class="text-[11px] text-gray-500 text-right ml-4">
+                                ${timeString}
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                chatMessages.appendChild(messageDiv);
+                setTimeout(() => chatMessages.scrollTop = chatMessages.scrollHeight, 50);
+            });
+
+            chatRef.on("child_changed", (snapshot) => {
+                const data = snapshot.val();
+                const msgKey = snapshot.key;
+                
+                const likeCountSpan = document.getElementById(`like-count-${msgKey}`);
+                const heartIconSpan = document.getElementById(`heart-icon-${msgKey}`);
+                
+                if (likeCountSpan && heartIconSpan) {
+                    const currentLikes = data.likes || 0;
+                    if (currentLikes > 0) {
+                        likeCountSpan.innerText = currentLikes;
+                        likeCountSpan.className = "text-[12px] font-medium text-red-500";
+                        heartIconSpan.className = "text-[15px] text-red-500 group-hover:text-red-500 group-active:scale-125 transition-transform";
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>
