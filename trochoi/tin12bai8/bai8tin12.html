@@ -99,7 +99,7 @@
                 <div class="w-[70px] h-[70px] bg-[#dc2626] border-[3px] border-[#ffd700] rounded-full mx-auto flex items-center justify-center shadow-lg mb-4">
                     <span class="text-white font-bold text-3xl tracking-tighter">HS</span>
                 </div>
-                <h2 class="text-white font-black text-2xl uppercase mb-2 drop-shadow-md">BÀI 8: ĐỊNH DẠNG HTML</h2>
+                <h2 class="text-white font-black text-2xl uppercase mb-2 drop-shadow-md">BÀI 8: ĐỊNH DẠNG VĂN BẢN</h2>
                 <p class="text-[#ffd700] font-bold text-[13px] uppercase tracking-wide">TIN HỌC 12 • THỰC HÀNH VÁ LỖI</p>
             </div>
             
@@ -263,13 +263,13 @@
                 correct: 2
             },
             {
-                task: "Để thay đổi KÍCH THƯỚC (size) của phông chữ lên mức 5 bằng thẻ HTML cũ, em dùng thuộc tính nào?",
-                brokenCode: "Chào mừng [target]năm học mới[/target].",
-                brokenPreview: "Chào mừng năm học mới.",
-                fixedCode: 'Chào mừng <font size="5">năm học mới</font>.',
-                fixedPreview: 'Chào mừng <font size="5">năm học mới</font>.',
-                options: ['<font size="5">...</font>', '<font height="5">...</font>', '<font scale="5">...</font>', '<text size="5">...</text>'],
-                correct: 0
+                task: "Để hiển thị công thức H2O, cần đưa số '2' XUỐNG THẤP hơn chữ bình thường.",
+                brokenCode: "Nước: H[target]2[/target]O",
+                brokenPreview: "Nước: H2O",
+                fixedCode: "Nước: H<sub>2</sub>O",
+                fixedPreview: "Nước: H<sub>2</sub>O",
+                options: ["&lt;sup&gt;...&lt;/sup&gt;", "&lt;sub&gt;...&lt;/sub&gt;", "&lt;down&gt;...&lt;/down&gt;", "&lt;small&gt;...&lt;/small&gt;"],
+                correct: 1
             },
             {
                 task: "Để chữ có MÀU ĐỎ (red) bằng thẻ font cơ bản, em sẽ viết lệnh như thế nào?",
