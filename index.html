@@ -199,7 +199,7 @@
                         </button>
                     </li>
                     <li class="border-b border-gray-50">
-                        <button onclick="showLessons('Trò chơi Ô chữ ôn tập', troChoiOChu)" class="w-full flex items-center gap-3 px-4 py-3 hover:bg-teal-50 hover:text-[#0f766e] transition-colors border-l-4 border-transparent hover:border-[#0f766e] text-left">
+                       <button onclick="showLessons('Danh mục trò chơi', danhMucTroChoi)" class="w-full flex items-center gap-3 px-4 py-3 hover:bg-teal-50 hover:text-[#0f766e] transition-colors border-l-4 border-transparent hover:border-[#0f766e] text-left">
                             <span class="text-lg w-6 text-center text-purple-600"><i class="fa-solid fa-gamepad"></i></span>
                             <span>Trò chơi Mario và Ô chữ ôn tập</span>
                         </button>
@@ -214,7 +214,7 @@
                     <li class="border-b border-gray-50">
                         <a href="nhomchat.html" target="_blank" class="w-full flex items-center gap-3 px-4 py-3 hover:bg-teal-50 hover:text-[#0f766e] transition-colors border-l-4 border-transparent hover:border-[#0f766e] text-left">
                             <span class="text-lg w-6 text-center text-indigo-500"><i class="fa-solid fa-robot"></i></span>
-                            <span>Thảo luận trực tuyến</span>
+                            <span>Thảo luận nhóm chat</span>
                         </a>
                     </li>
                 </ul>
@@ -326,7 +326,7 @@
                 <h3 class="font-bold text-lg border-b-2 border-teal-600 pb-2 inline-block w-max text-[#ccfbf1] uppercase tracking-wide">Tính năng nổi bật</h3>
                 <ul class="flex flex-col gap-3 text-white/80 text-sm mt-2">
                    <li><a href="trolyai/codeaihs.html" class="hover:text-[#fde047] hover:translate-x-2 inline-block transition-transform duration-200"><i class="fa-solid fa-chevron-right text-xs text-teal-400 mr-2"></i>Trợ lý học tập AI</a></li>
-                    <li><a href="javascript:void(0)" onclick="showLessons('Minigame Trí tuệ', troChoiOChu)" class="hover:text-[#fde047] hover:translate-x-2 inline-block transition-transform duration-200"><i class="fa-solid fa-chevron-right text-xs text-teal-400 mr-2"></i>Minigame ôn tập</a></li>
+                    <li><a href="javascript:void(0)" onclick="showLessons('Danh mục trò chơi', danhMucTroChoi)" class="hover:text-[#fde047] hover:translate-x-2 inline-block transition-transform duration-200"><i class="fa-solid fa-chevron-right text-xs text-teal-400 mr-2"></i>Minigame ôn tập</a></li>
                 </ul>
             </div>
 
@@ -554,8 +554,7 @@
         { title: "🏅 Bài 5. Thực hành chia sẻ tài nguyên trên mạng", link: "tinhoc12/baihoc/bai5.html", icon: "fa-list-check" },
         { title: "👨‍🏫 Bài 6. Giao tiếp và ứng xử trong không gian mạng", link: "tinhoc12/baihoc/bai6.html", icon: "fa-list-check" },
         { title: "🏫 Bài 7. HTML và cấu trúc trang web", link: "tinhoc12/baihoc/bai7.html", icon: "fa-list-check" },
-            { title: "✍️ Bài 8. Định dạng văn bản", link: "tinhoc12/baihoc/bai8.html", icon: "fa-list-check" },
-       { title: "🏅 Bài 9. Tạo danh sách và bảng", link: "tinhoc12/baihoc/bai9.html", icon: "fa-list-check" }
+            { title: "✍️ Bài 8. Định dạng văn bản", link: "tinhoc12/baihoc/bai8.html", icon: "fa-list-check" }
     ];
 
 
@@ -614,18 +613,43 @@
          { title: "Câu chuyện: Cơn mưa cuối cùng ở hành lang cũ.", link: "sachlat/chuyen5/chuyen5.html", image: "sachlat/chuyen5/anh-bia.jpg", icon: "fa-puzzle-piece" }
     ];
 
-    const troChoiOChu = [
+   // DỮ LIỆU TỪNG THƯ MỤC TRÒ CHƠI ĐÃ TÁCH KHỐI
+    const troChoiTin10 = [
+        // Hiện tại lớp 10 chưa có game, khi nào có bạn thêm vào đây nhé
+    ];
+
+    const troChoiTin11 = [
         { title: "Trò chơi khám phá các đảo. Tin học 11. Bài 1.Hệ điều hành", link: "trochoi/tin11_bai1/bai1tin11.html", image: "trochoi/tin11_bai1/anhbai1_11.png", icon: "fa-border-all" },
-        { title: "Trò chơi đi tìm ô chử. Tin học 11. Bài 6.Lưu trữ và chia sẽ tập tin trên Internet", link: "trochoi/tin11_bai6/bai6tin11.html", image: "trochoi/tin11_bai6/anhbai6_11.png", icon: "fa-border-all" },
-        { title: "Trò chơi đi tìm bức tranh bí ẩn. Tin học 11. Bài 8.Thực hành nâng cao sử dụng thư điện tử và mạng xã hội", link: "trochoi/tin11_bai8/bai8tin11.html", image: "trochoi/tin11_bai8/anhbai8_11.png", icon: "fa-border-all" },
+        { title: "Trò chơi đi tìm ô chữ. Tin học 11. Bài 6.Lưu trữ và chia sẻ tập tin trên Internet", link: "trochoi/tin11_bai6/bai6tin11.html", image: "trochoi/tin11_bai6/anhbai6_11.png", icon: "fa-border-all" },
+        { title: "Trò chơi đi tìm bức tranh bí ẩn. Tin học 11. Bài 8.Thực hành nâng cao sử dụng thư điện tử và mạng xã hội", link: "trochoi/tin11_bai8/bai8tin11.html", image: "trochoi/tin11_bai8/anhbai8_11.png", icon: "fa-border-all" }
+    ];
+
+    const troChoiTin12 = [
         { title: "Trò chơi vòng quay. Tin học 12. Bài 2: Trí tuệ nhân tạo trong khoa học và đời sống", link: "trochoi/tin12_bai2/bai2tin12.html", image: "trochoi/tin12_bai2/anhbai2_12.png", icon: "fa-border-all" },
         { title: "Trò chơi giải mã mật thư. Tin học 12. Bài 3: Một số thiết bị mạng thông dụng", link: "trochoi/tin12_bai3/bai3tin12.html", image: "trochoi/tin12_bai3/anhbai3_12.png", icon: "fa-border-all" },
         { title: "Trò chơi Mario. Tin học 12. Bài 6: Giao tiếp và ứng xử trên không gian mạng", link: "trochoi/tin12_bai6/bai6_tin12.html", image: "trochoi/tin12_bai6/anhbai6_12.png", icon: "fa-border-all" },
         { title: "Trò chơi khám phá hệ mặt trời. Tin học 12. BÀI 7: HTML và cấu trúc trang Web", link: "trochoi/tin12_bai7/bai7tin12.html", image: "trochoi/tin12_bai7/anhbai7_12.png", icon: "fa-border-all" },
-{ title: "Trò chơi vá lỗi hệ thống. Tin học 12. BÀI 8: Định dạng văn bản", link: "trochoi/tin12bai8/bai8tin12.html", image: "trochoi/tin12bai8/tin12bai8.png", icon: "fa-border-all" },
-{ title: "Trò chơi vá lỗi hệ thống. Tin học 12. BÀI 9: Tạo danh sách và bảng", link: "trochoi/bai9tin12/tin12bai9.html", image: "trochoi/bai9tin12/tin12bai9.png", icon: "fa-border-all" }
+        { title: "Trò chơi vá lỗi hệ thống. Tin học 12. BÀI 8: Định dạng văn bản", link: "trochoi/tin12bai8/bai8tin12.html", image: "trochoi/tin12bai8/tin12bai8.png", icon: "fa-border-all" },
+        { title: "Trò chơi vá lỗi hệ thống. Tin học 12. Bài 9: Tạo danh sách và bảng", link: "trochoi/bai9tin12/tin12bai9.html", image: "trochoi/bai9tin12/tin12bai9.png", icon: "fa-border-all" }
     ];
 
+    // DANH MỤC THƯ MỤC TRÒ CHƠI CHÍNH (HIỂN THỊ KHI BẤM VÀO MENU CỘT TRÁI)
+    // DANH MỤC THƯ MỤC TRÒ CHƠI CHÍNH (HIỂN THỊ CÓ HÌNH ẢNH)
+    const danhMucTroChoi = [
+        
+        { 
+            title: "Thư mục Trò chơi - Khối 11", 
+            link: "javascript:showLessons('Trò chơi Tin học 11', troChoiTin11)", 
+            image: "trochoitin11/trochoitin11.png", /* Bạn thay đường dẫn ảnh của bạn vào đây */
+            icon: "fa-gamepad" 
+        },
+        { 
+            title: "Thư mục Trò chơi - Khối 12", 
+            link: "javascript:showLessons('Trò chơi Tin học 12', troChoiTin12)", 
+            image: "trochoitin12/trochoitin12.png", /* Bạn thay đường dẫn ảnh của bạn vào đây */
+            icon: "fa-gamepad" 
+        }
+    ];
 
    // Dữ liệu hiển thị 4 tệp khi bấm vào chữ LIÊN HỆ
   // Dữ liệu 4 tệp hiển thị khi bấm vào LIÊN HỆ
