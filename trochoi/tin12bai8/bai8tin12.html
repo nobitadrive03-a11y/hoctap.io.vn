@@ -262,15 +262,15 @@
                 options: ['<p font="Arial">...</p>', '<text style="font: Arial;">...</text>', '<p style="font-family: Arial;">...</p>', '<p face="Arial">...</p>'],
                 correct: 2
             },
-            {
-                task: "Để hiển thị công thức H2O, cần đưa số '2' XUỐNG THẤP hơn chữ bình thường.",
-                brokenCode: "Nước: H[target]2[/target]O",
-                brokenPreview: "Nước: H2O",
-                fixedCode: "Nước: H<sub>2</sub>O",
-                fixedPreview: "Nước: H<sub>2</sub>O",
-                options: ["&lt;sup&gt;...&lt;/sup&gt;", "&lt;sub&gt;...&lt;/sub&gt;", "&lt;down&gt;...&lt;/down&gt;", "&lt;small&gt;...&lt;/small&gt;"],
-                correct: 1
-            },
+           {
+    task: "Để hiển thị công thức H2O, cần đưa số '2' XUỐNG THẤP hơn chữ bình thường.",
+    brokenCode: "Nước: H[target]2[/target]O",
+    brokenPreview: "Nước: H2O",
+    fixedCode: "Nước: H<sub>2</sub>O", 
+    fixedPreview: "Nước: H<sub>2</sub>O",
+    options: ["<sup>...</sup>", "<sub>...</sub>", "<down>...</down>", "<small>...</small>"],
+    correct: 1
+}
             {
                 task: "Để chữ có MÀU ĐỎ (red) bằng thẻ font cơ bản, em sẽ viết lệnh như thế nào?",
                 brokenCode: "[target]CẢNH BÁO LỖI[/target]",
