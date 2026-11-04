@@ -271,13 +271,13 @@
     options: ["<sup>...</sup>", "<sub>...</sub>", "<down>...</down>", "<small>...</small>"],
     correct: 1
 },
-            {
-                task: "Để chữ có MÀU ĐỎ (red) bằng thẻ font cơ bản, em sẽ viết lệnh như thế nào?",
+        {
+                task: "Để chữ có MÀU ĐỎ (red) bằng thẻ p kết hợp thuộc tính style (CSS), em sẽ viết lệnh như thế nào?",
                 brokenCode: "[target]CẢNH BÁO LỖI[/target]",
                 brokenPreview: "CẢNH BÁO LỖI",
-                fixedCode: '<font color="red">CẢNH BÁO LỖI</font>',
-                fixedPreview: '<font color="red">CẢNH BÁO LỖI</font>',
-                options: ['<font bg="red">...</font>', '<font style="red">...</font>', '<font color="red">...</font>', '<color="red">...</color>'],
+                fixedCode: '<p style="color: red;">CẢNH BÁO LỖI</p>',
+                fixedPreview: '<p style="color: red;">CẢNH BÁO LỖI</p>',
+                options: ['<p bg="red">...</p>', '<p color="red">...</p>', '<p style="color: red;">...</p>', '<p style="text-color: red;">...</p>'],
                 correct: 2
             },
             {
