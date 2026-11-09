@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Bài 10 -Tin học 11 - Cây Hạnh Phúc</title>
-     <meta name="description" content="Trò chơi học tập: Cây hạnh phúc Tin Học 11- Trường THPT Phan Đình Phùng - Quảng Trị.">
+    <title>Trò chơi bài 10 Tin học 11 - Cây Hạnh Phúc</title>
+     <meta name="description" content="Trò chơi học tập: Cây hạnh phúc Tin học 11 - Trường THPT Phan Đình Phùng - Quảng Trị.">
     <script src="https://cdn.tailwindcss.com"></script>
 
 
-    <!-- GỘP MÃ GA4: Gọi thư viện Google một lần duy nhất -->
+      <!-- GỘP MÃ GA4: Gọi thư viện Google một lần duy nhất -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-NSJCVSL9RM"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
@@ -34,7 +34,6 @@
     }
   }, 30000); 
 </script>
-
 
     
     <!-- FIREBASE SDK v8 -->
@@ -72,32 +71,32 @@
 
         /* ----- NGÔI SAO TREO LẤP LÁNH ----- */
         @keyframes twinkle {
-            0%, 100% { opacity: 0.2; transform: scale(0.8); filter: drop-shadow(0 0 2px rgba(255,215,0,0.4)); }
-            50% { opacity: 1; transform: scale(1.2); filter: drop-shadow(0 0 12px rgba(255,215,0,1)); }
+            0%, 100% { opacity: 0.2; transform: scale(0.8); filter: drop-shadow(0 0 4px rgba(255,215,0,0.5)); }
+            50% { opacity: 1; transform: scale(1.2); filter: drop-shadow(0 0 15px rgba(255,215,0,1)); }
         }
         .twinkle-star { animation: twinkle 3s infinite ease-in-out; }
 
-        /* ----- TRÁI TIM ĐỎ TƯƠNG TÁC ----- */
-        @keyframes heartbeat {
+        /* ----- QUẢ TÁO ĐỎ TƯƠNG TÁC ----- */
+        @keyframes applePulse {
             0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.12); filter: drop-shadow(0 0 12px rgba(255, 23, 68, 0.8)); }
+            50% { transform: scale(1.1); filter: drop-shadow(0 0 12px rgba(229, 57, 53, 0.8)); }
         }
 
         .fruit {
             position: absolute; width: 9.5%; min-width: 55px; 
             cursor: pointer; transition: all 0.3s ease;
-            animation: heartbeat 2.5s infinite ease-in-out; z-index: 20;
+            animation: applePulse 2.5s infinite ease-in-out; z-index: 20;
         }
         .fruit:hover, .fruit:active {
             transform: scale(1.25) !important; animation: none; z-index: 30;
             filter: drop-shadow(0 15px 25px rgba(213, 0, 0, 0.9));
         }
 
-        @keyframes dropHeart {
+        @keyframes dropApple {
             0% { transform: translateY(0) rotate(0); opacity: 1; }
             100% { transform: translateY(300px) rotate(20deg) scale(0.5); opacity: 0; }
         }
-        .fruit.picked { animation: dropHeart 1s forwards !important; pointer-events: none; }
+        .fruit.picked { animation: dropApple 1s forwards !important; pointer-events: none; }
         .fruit.black svg { filter: grayscale(100%) brightness(0.2) drop-shadow(0 5px 5px rgba(0,0,0,0.8)); }
         .fruit.black { animation: none !important; transform: scale(0.9); pointer-events: none; }
 
@@ -139,7 +138,7 @@
         <div class="login-card bg-white w-full max-w-md flex flex-col">
             <div class="login-header py-8 px-6 flex flex-col items-center justify-center text-white relative">
                 <div class="w-16 h-16 bg-red-600 rounded-full flex items-center justify-center border-4 border-yellow-400 font-bold text-2xl shadow-lg mb-4">HS</div>
-                <h2 class="text-3xl font-black uppercase text-center mb-2 tracking-wide">BÀI 10: Lưu trữ dữ liệu và khai thác thông tin phục vụ quản lý</h2>
+                <h2 class="text-3xl font-black uppercase text-center mb-2 tracking-wide">BÀI 10</h2>
                 <p class="text-yellow-300 text-base font-bold tracking-widest uppercase">Tin Học 11</p>
             </div>
             <div class="p-6 sm:p-8 flex flex-col gap-5">
@@ -166,9 +165,10 @@
                     <g id="star-shape">
                         <polygon points="0,-12 3,-4 12,-4 5,2 7,10 0,5 -7,10 -5,2 -12,-4 -3,-4" fill="#ffd700"/>
                     </g>
-                    <radialGradient id="redHeartGrad" cx="30%" cy="30%" r="70%">
-                        <stop offset="0%" stop-color="#ff5252" />
-                        <stop offset="50%" stop-color="#d50000" />
+                    <!-- Gradient cho quả táo -->
+                    <radialGradient id="redAppleGrad" cx="35%" cy="35%" r="70%">
+                        <stop offset="0%" stop-color="#ff6b6b" />
+                        <stop offset="40%" stop-color="#e53935" />
                         <stop offset="100%" stop-color="#b71c1c" />
                     </radialGradient>
                 </defs>
@@ -228,8 +228,8 @@
     </div>
 
     <!-- ================= MODAL CÂU HỎI ================= -->
-    <div id="qModal" class="fixed inset-0 bg-black/70 modal-overlay hidden flex items-center justify-center z-50 p-2 sm:p-6">
-        <div class="bg-gray-50 rounded-2xl sm:rounded-3xl shadow-2xl max-w-4xl w-full max-h-[95vh] overflow-hidden modal-content scale-95 opacity-0 flex flex-col border-4 border-blue-500" id="qModalContent">
+    <div id="qModal" class="fixed inset-0 bg-black/70 modal-overlay hidden flex items-center justify-center z-50 p-2 sm:p-6 pb-6">
+        <div class="bg-gray-50 rounded-2xl sm:rounded-3xl shadow-2xl max-w-4xl w-full max-h-[85vh] overflow-hidden modal-content scale-95 opacity-0 flex flex-col border-4 border-blue-500" id="qModalContent">
             <!-- Nội dung render bằng JS -->
         </div>
     </div>
@@ -237,7 +237,7 @@
     <!-- ================= MODAL KẾT QUẢ TRẢ LỜI ================= -->
     <div id="resModal" class="fixed inset-0 bg-black/70 modal-overlay hidden flex items-center justify-center z-50 p-4">
         <div id="resModalContent" class="bg-white rounded-3xl shadow-2xl max-w-sm w-full p-8 text-center modal-content scale-95 opacity-0 flex flex-col items-center border-4 border-red-500">
-            <div id="resIcon" class="text-7xl mb-4 animate-bounce">❤️</div>
+            <div id="resIcon" class="text-7xl mb-4 animate-bounce">🍎</div>
             <h3 class="text-3xl font-extrabold mb-3" id="resTitle">Đúng rồi!</h3>
             <p class="text-gray-600 mb-6 text-xl font-medium" id="resMessage">Bạn được cộng 10 điểm.</p>
             <button onclick="closeResModal()" class="bg-gradient-to-r from-red-500 to-rose-600 text-white font-bold py-4 px-8 rounded-full shadow-lg transform hover:scale-105 text-2xl w-full">Tiếp tục ➡</button>
@@ -263,7 +263,7 @@
             if (typeof firebase !== 'undefined') {
                 if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
                 database = firebase.database();
-                scoresRef = database.ref('trochoi_bai10_tin11'); // Vẫn giữ nguyên tên nhánh để không mất dữ liệu cũ
+                scoresRef = database.ref('trochoi_bai10_tin12'); 
             }
         } catch(err) { console.error("Lỗi Firebase:", err); }
 
@@ -274,7 +274,7 @@
         const TOTAL_QUESTIONS = 10;
         const SCORE_PER_CORRECT = 10; 
 
-        // BỘ CÂU HỎI MỚI - Đã phân bổ đều đáp án tĩnh: A(3), B(3), C(2), D(2)
+        // BỘ CÂU HỎI - TIN HỌC 11 (Phân bổ: A: 3, B: 3, C: 2, D: 2)
         const questions = [
             { 
                 q: "Câu 1: Việc thực hiện các thao tác thêm mới, chỉnh sửa hoặc xoá bỏ dữ liệu trong bảng điểm môn học được gọi chung là gì?", 
@@ -284,7 +284,7 @@
                     "C. Phương thức khai thác thông tin lưu trữ.", 
                     "D. Giải pháp thu thập dữ liệu tự động hoá."
                 ], 
-                correct: 0 // Đáp án A
+                correct: 0 // A
             },
             { 
                 q: "Câu 2: Theo nội dung bài học, thao tác nào sau đây thuộc về hoạt động truy xuất dữ liệu?", 
@@ -294,7 +294,7 @@
                     "C. Xoá bỏ toàn bộ bản ghi không còn dùng nữa.", 
                     "D. Thay đổi tên trường dữ liệu trong bảng."
                 ], 
-                correct: 1 // Đáp án B
+                correct: 1 // B
             },
             { 
                 q: "Câu 3: Mục đích chính của hoạt động quản lí trong các cơ quan, tổ chức xã hội là gì?", 
@@ -304,7 +304,7 @@
                     "C. Xử lí thông tin nhằm đưa ra các quyết định.", 
                     "D. Xoá bỏ các dữ liệu đã cũ trong hệ thống."
                 ], 
-                correct: 2 // Đáp án C
+                correct: 2 // C
             },
             { 
                 q: "Câu 4: Ví dụ nào sau đây thể hiện rõ hình thức thu thập dữ liệu tự động trong thực tế?", 
@@ -314,7 +314,7 @@
                     "C. Học sinh làm các bài kiểm tra viết tay.", 
                     "D. Dùng đầu đọc mã vạch tại quầy thanh toán."
                 ], 
-                correct: 3 // Đáp án D
+                correct: 3 // D
             },
             { 
                 q: "Câu 5: Sự khác biệt cơ bản giữa hoạt động truy xuất dữ liệu và khai thác thông tin là gì?", 
@@ -324,7 +324,7 @@
                     "C. Truy xuất chỉ thực hiện trên máy tính, khai thác chỉ thực hiện bằng các phương pháp thủ công.", 
                     "D. Truy xuất làm thay đổi cấu trúc dữ liệu gốc, khai thác chỉ đọc dữ liệu mà không làm thay đổi."
                 ], 
-                correct: 0 // Đáp án A
+                correct: 0 // A
             },
             { 
                 q: "Câu 6: Lợi ích lớn nhất mà ngành điện có được khi sử dụng công tơ điện tử thu thập dữ liệu tự động là gì?", 
@@ -334,7 +334,7 @@
                     "C. Tránh được hoàn toàn tình trạng người dân sử dụng trái phép các nguồn điện năng của quốc gia.", 
                     "D. Giúp cho công ty điện lực bán được nhiều sản lượng điện hơn cho các hộ gia đình tiêu dùng."
                 ], 
-                correct: 1 // Đáp án B
+                correct: 1 // B
             },
             { 
                 q: "Câu 7: Vì sao trong thực tế các bài toán quản lí luôn đòi hỏi phải thực hiện chức năng cập nhật dữ liệu thường xuyên?", 
@@ -344,7 +344,7 @@
                     "C. Vì thế giới thực luôn có sự biến động và quá trình nhập liệu ban đầu có thể phát sinh sai sót.", 
                     "D. Vì nếu không thực hiện thao tác cập nhật thì hệ thống máy tính sẽ dễ bị nhiễm các loại mã độc."
                 ], 
-                correct: 2 // Đáp án C
+                correct: 2 // C
             },
             { 
                 q: "Câu 8: Một học sinh chuyển trường và giáo viên thực hiện thao tác xoá tên em đó khỏi danh sách lớp trên hệ thống. Thao tác này thuộc về nội dung nào?", 
@@ -354,7 +354,7 @@
                     "C. Nghiệp vụ thu thập dữ liệu tự động thông qua các thiết bị phần cứng kết nối mạng máy tính.", 
                     "D. Nghiệp vụ cập nhật dữ liệu thông qua thao tác xoá bản ghi cụ thể trong hệ thống quản lí."
                 ], 
-                correct: 3 // Đáp án D
+                correct: 3 // D
             },
             { 
                 q: "Câu 9: Trong thư viện, thủ thư in danh sách \"Học sinh mượn sách Toán\" (1) và tính toán \"Tỉ lệ loại sách được mượn nhiều nhất\" (2). Các hoạt động này lần lượt là gì?", 
@@ -364,7 +364,7 @@
                     "C. (1) Cập nhật dữ liệu và (2) Truy xuất dữ liệu từ các bảng thông tin chi tiết của thư viện.", 
                     "D. (1) Thu thập tự động và (2) Truy xuất dữ liệu trực tiếp từ các thiết bị ngoại vi số."
                 ], 
-                correct: 0 // Đáp án A
+                correct: 0 // A
             },
             { 
                 q: "Câu 10: Giải pháp lắp đặt hệ thống camera nhận diện biển số và thu phí không dừng (ETC) tại các trạm giao thông thể hiện ưu điểm nào?", 
@@ -374,7 +374,7 @@
                     "C. Hoạt động truy xuất dữ liệu trực tuyến giúp thay đổi hoàn toàn cấu trúc các tuyến đường.", 
                     "D. Hoạt động khai thác thông tin đa chiều giúp loại bỏ hoàn toàn các lỗi sai sót của tài xế."
                 ], 
-                correct: 1 // Đáp án B
+                correct: 1 // B
             }
         ];
 
@@ -392,13 +392,27 @@
             createHangingStars();
         }
 
-        function getHeartSVG(number) {
+        // HÀM TẠO SVG QUẢ TÁO ĐỎ - CUỐNG NGẮN, GẬP 180 ĐỘ VÀO TRONG
+        function getAppleSVG(number) {
             return `
             <svg viewBox="0 0 100 100" class="w-full h-full overflow-visible pointer-events-auto">
-                <path d="M 50 90 C 10 60, -5 30, 20 10 C 35 0, 45 10, 50 20 C 55 10, 65 0, 80 10 C 105 30, 90 60, 50 90 Z" fill="rgba(0,0,0,0.6)" transform="translate(0, 6) scale(0.95)" transform-origin="50 50"/>
-                <path d="M 50 90 C 10 60, -5 30, 20 10 C 35 0, 45 10, 50 20 C 55 10, 65 0, 80 10 C 105 30, 90 60, 50 90 Z" fill="url(#redHeartGrad)"/>
-                <path d="M 50 90 C 10 60, -5 30, 20 10 C 35 0, 45 10, 50 20 C 55 10, 65 0, 80 10 C 105 30, 90 60, 50 90 Z" fill="none" stroke="white" stroke-width="3" stroke-dasharray="5,4" transform="scale(0.85)" transform-origin="50 45"/>
-                <text x="50" y="62" font-family="Arial, sans-serif" font-weight="900" font-size="40" fill="white" text-anchor="middle" filter="drop-shadow(1px 2px 2px rgba(0,0,0,0.7))">${number}</text>
+                <!-- Bóng đổ phía dưới quả táo -->
+                <path d="M 50 90 C 20 90, 5 65, 10 40 C 15 15, 35 15, 50 28 C 65 15, 85 15, 90 40 C 95 65, 80 90, 50 90 Z" fill="rgba(0,0,0,0.4)" transform="translate(0, 6) scale(0.95)" transform-origin="50 50"/>
+                
+                <!-- Cuống táo ngắn, cong gập 180 độ vào trong (móc câu) -->
+                <path d="M 50 32 C 55 15, 38 12, 45 24" fill="none" stroke="#4e342e" stroke-width="4" stroke-linecap="round"/>
+                
+                <!-- Thân quả táo -->
+                <path d="M 50 90 C 20 90, 5 65, 10 40 C 15 15, 35 15, 50 28 C 65 15, 85 15, 90 40 C 95 65, 80 90, 50 90 Z" fill="url(#redAppleGrad)"/>
+                
+                <!-- Chiếc lá gắn sát cuống -->
+                <path d="M 48 22 C 30 5, 15 20, 28 32 C 38 35, 45 28, 48 22 Z" fill="#4caf50" stroke="#388e3c" stroke-width="1.5"/>
+                
+                <!-- Vệt sáng tạo độ bóng -->
+                <path d="M 22 45 C 20 30, 35 22, 45 28 C 35 25, 27 35, 27 45 Z" fill="rgba(255,255,255,0.25)"/>
+                
+                <!-- Số thứ tự -->
+                <text x="50" y="68" font-family="Arial, sans-serif" font-weight="900" font-size="34" fill="white" text-anchor="middle" filter="drop-shadow(1px 2px 2px rgba(0,0,0,0.7))">${number}</text>
             </svg>`;
         }
 
@@ -419,7 +433,7 @@
             let html = '';
             positions.forEach((pos, i) => {
                 html += `<div class="fruit" style="top: ${pos.top}; left: ${pos.left}; animation-delay: ${pos.delay};" onclick="openQuestion(${i})" id="fruit-${i}">
-                            ${getHeartSVG(i + 1)}
+                            ${getAppleSVG(i + 1)}
                          </div>`;
             });
             container.innerHTML = html;
@@ -453,7 +467,8 @@
                 star.style.animationDelay = (Math.random() * 3) + "s";
                 star.style.animationDuration = (2 + Math.random() * 2) + "s";
                 star.style.transformOrigin = `${x}px ${startY + length}px`; 
-                const scale = 0.5 + Math.random() * 0.7; 
+                // TĂNG KÍCH THƯỚC NGÔI SAO GẤP ĐÔI
+                const scale = 1.0 + Math.random() * 1.4; 
                 star.setAttribute("transform", `scale(${scale})`);
                 
                 container.appendChild(star);
@@ -489,7 +504,7 @@
             });
 
             contentDiv.innerHTML = `
-                <div class="flex-1 overflow-y-auto p-4 sm:p-6 custom-scroll relative flex flex-col justify-center bg-white h-full rounded-2xl sm:rounded-3xl">
+                <div class="flex-1 overflow-y-auto p-4 sm:p-6 pb-12 sm:pb-6 custom-scroll relative flex flex-col justify-start sm:justify-center bg-white h-full rounded-2xl sm:rounded-3xl">
                     <div class="border-2 border-red-200 bg-red-50 text-red-600 font-bold text-lg sm:text-2xl p-4 sm:p-5 rounded-2xl mb-4 sm:mb-5 text-center shadow-sm shrink-0 leading-relaxed">
                         ${formattedQ}
                     </div>
@@ -497,7 +512,7 @@
                         ${optionsHtml}
                     </div>
                     <div id="feedback-message" class="hidden mt-4 text-center font-bold text-lg sm:text-xl p-3 sm:p-4 rounded-xl shrink-0 shadow-sm border border-red-200 bg-red-100 text-red-700"></div>
-                    <button id="btn-next-question" class="hidden mt-4 w-full bg-blue-600 hover:bg-blue-700 text-white font-black py-4 rounded-2xl shadow-lg transition-all text-xl shrink-0">Tiếp tục ➡</button>
+                    <button id="btn-next-question" class="hidden mt-4 mb-8 sm:mb-0 w-full bg-blue-600 hover:bg-blue-700 text-white font-black py-4 rounded-2xl shadow-lg transition-all text-xl shrink-0">Tiếp tục ➡</button>
                 </div>
             `;
 
@@ -556,14 +571,14 @@
                     player.score += SCORE_PER_CORRECT;
                     resTitle.innerText = 'Chính xác! 🎉';
                     resTitle.className = 'text-3xl sm:text-4xl font-extrabold mb-4 text-green-600';
-                    resMessage.innerText = 'Bạn nhận được một trái tim.';
-                    resIcon.innerHTML = '❤️'; 
+                    resMessage.innerText = 'Bạn thu hoạch được một quả táo.';
+                    resIcon.innerHTML = '🍎'; 
                     fruitEl.classList.add('picked');
                 } else {
                     resTitle.innerText = 'Sai rồi! 😢';
                     resTitle.className = 'text-3xl sm:text-4xl font-extrabold mb-4 text-gray-800';
-                    resMessage.innerText = 'Rất tiếc, trái tim đã bị hỏng!';
-                    resIcon.innerHTML = '🖤'; 
+                    resMessage.innerText = 'Rất tiếc, quả táo đã bị hỏng!';
+                    resIcon.innerHTML = '🍎'; 
                     fruitEl.classList.add('black');
                 }
 
