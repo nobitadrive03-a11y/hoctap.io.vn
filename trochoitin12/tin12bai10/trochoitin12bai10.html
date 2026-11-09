@@ -1,1 +1,633 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Hành Trình Số - Cây Hạnh Phúc</title>
+     <meta name="description" content="Trò chơi học tập: Cây hạnh phúc Tin Học 12 - Bài 10 - Trường THPT Phan Đình Phùng - Quảng Trị.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- FIREBASE SDK v8 -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
+    <style>
+        body, html {
+            margin: 0; padding: 0; width: 100vw; height: 100vh;
+            background-color: #f1f5f9;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden; touch-action: manipulation; user-select: none;
+        }
+
+        /* ----- MÀN HÌNH ĐĂNG NHẬP ----- */
+        #login-view {
+            background-color: #1e293b;
+            background-image: url('cayhanhphuc.png');
+            background-size: cover; background-position: center; background-blend-mode: overlay;
+        }
+        .login-card {
+            border: 6px solid #fbbf24; border-radius: 20px; overflow: hidden;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+        .login-header { background: linear-gradient(to bottom right, #1d4ed8, #0ea5e9); }
+
+        /* ----- MÀN HÌNH GAME ----- */
+        .game-board {
+            position: relative; width: 100%; max-width: 1200px; aspect-ratio: 16/9;
+            background-image: url('cayhanhphuc.png'); 
+            background-size: contain; background-position: center bottom; background-repeat: no-repeat;
+            border-radius: 12px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            background-color: #fff0f5;
+        }
+
+        /* ----- NGÔI SAO TREO LẤP LÁNH ----- */
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.2; transform: scale(0.8); filter: drop-shadow(0 0 2px rgba(255,215,0,0.4)); }
+            50% { opacity: 1; transform: scale(1.2); filter: drop-shadow(0 0 12px rgba(255,215,0,1)); }
+        }
+        .twinkle-star { animation: twinkle 3s infinite ease-in-out; }
+
+        /* ----- TRÁI TIM ĐỎ TƯƠNG TÁC ----- */
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.12); filter: drop-shadow(0 0 12px rgba(255, 23, 68, 0.8)); }
+        }
+
+        .fruit {
+            position: absolute; width: 9.5%; min-width: 55px; 
+            cursor: pointer; transition: all 0.3s ease;
+            animation: heartbeat 2.5s infinite ease-in-out; z-index: 20;
+        }
+        .fruit:hover, .fruit:active {
+            transform: scale(1.25) !important; animation: none; z-index: 30;
+            filter: drop-shadow(0 15px 25px rgba(213, 0, 0, 0.9));
+        }
+
+        @keyframes dropHeart {
+            0% { transform: translateY(0) rotate(0); opacity: 1; }
+            100% { transform: translateY(300px) rotate(20deg) scale(0.5); opacity: 0; }
+        }
+        .fruit.picked { animation: dropHeart 1s forwards !important; pointer-events: none; }
+        .fruit.black svg { filter: grayscale(100%) brightness(0.2) drop-shadow(0 5px 5px rgba(0,0,0,0.8)); }
+        .fruit.black { animation: none !important; transform: scale(0.9); pointer-events: none; }
+
+        /* ----- BẢNG XẾP HẠNG ----- */
+        #leaderboard-view { background-color: #f1f5f9; overflow-y: auto; padding: 20px; }
+        .table-row:nth-child(even) { background-color: #f9fafb; }
+        .table-row:hover { background-color: #f3f4f6; }
+
+        /* ----- MODAL ----- */
+        .modal-overlay { backdrop-filter: blur(5px); }
+        .modal-content { transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); }
+        
+        .loader { border: 5px solid #f3f3f3; border-top: 5px solid #ef4444; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        .custom-scroll::-webkit-scrollbar { width: 6px; }
+        .custom-scroll::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 4px; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        .custom-scroll::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        
+        /* ----- HIỆU ỨNG CHỌN ĐÁP ÁN ----- */
+        .opt-correct { background-color: #3b82f6 !important; border-color: #3b82f6 !important; color: white !important; }
+        .opt-correct .letter-box { background-color: white !important; color: #3b82f6 !important; }
+        .opt-correct .opt-text { color: white !important; }
+        /* Tự động đổi khối code sang nền đen chữ sáng KHI CHỌN */
+        .opt-correct code { background-color: #111827 !important; color: #38bdf8 !important; border-color: #000 !important; }
+        
+        .opt-wrong { background-color: #ef4444 !important; border-color: #ef4444 !important; color: white !important; }
+        .opt-wrong .letter-box { background-color: white !important; color: #ef4444 !important; }
+        .opt-wrong .opt-text { color: white !important; }
+        /* Tự động đổi khối code sang nền đen chữ sáng KHI CHỌN */
+        .opt-wrong code { background-color: #111827 !important; color: #38bdf8 !important; border-color: #000 !important; }
+        
+        /* KHÔNG LÀM MỜ. Đảm bảo các đáp án không chọn vẫn sáng rõ 100% */
+        .opt-disabled { pointer-events: none; cursor: default; }
+    </style>
+</head>
+<body>
+
+    <!-- ================= 1. MÀN HÌNH ĐĂNG NHẬP ================= -->
+    <div id="login-view" class="fixed inset-0 z-50 flex items-center justify-center p-4">
+        <div class="login-card bg-white w-full max-w-md flex flex-col">
+            <div class="login-header py-8 px-6 flex flex-col items-center justify-center text-white relative">
+                <div class="w-16 h-16 bg-red-600 rounded-full flex items-center justify-center border-4 border-yellow-400 font-bold text-2xl shadow-lg mb-4">HS</div>
+                <h2 class="text-3xl font-black uppercase text-center mb-2 tracking-wide">BÀI 10: TẠO LIÊN KẾT</h2>
+                <p class="text-yellow-300 text-base font-bold tracking-widest uppercase">Tin Học 12 </p>
+            </div>
+            <div class="p-6 sm:p-8 flex flex-col gap-5">
+                <div>
+                    <label class="block text-blue-900 font-bold mb-2 text-lg">Họ và tên học sinh</label>
+                    <input type="text" id="studentName" class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all text-gray-700 font-medium text-lg" placeholder="Nhập họ tên...">
+                </div>
+                <div>
+                    <label class="block text-blue-900 font-bold mb-2 text-lg">Lớp</label>
+                    <input type="text" id="studentClass" class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all text-gray-700 font-medium text-lg" placeholder="Nhập lớp (VD: 12A1...)">
+                </div>
+                <button onclick="startGame()" class="mt-4 w-full bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-bold py-4 rounded-xl shadow-lg transform transition hover:-translate-y-1 text-xl">
+                    🚀 BẮT ĐẦU
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= 2. MÀN HÌNH GAME CHÍNH ================= -->
+    <div id="game-view" class="fixed inset-0 flex items-center justify-center hidden p-2 sm:p-4">
+        <div class="game-board" id="gameBoard">
+            <svg id="star-layer" viewBox="0 0 1600 900" class="absolute inset-0 w-full h-full pointer-events-none z-0" preserveAspectRatio="xMidYMid meet">
+                <defs>
+                    <g id="star-shape">
+                        <polygon points="0,-12 3,-4 12,-4 5,2 7,10 0,5 -7,10 -5,2 -12,-4 -3,-4" fill="#ffd700"/>
+                    </g>
+                    <radialGradient id="redHeartGrad" cx="30%" cy="30%" r="70%">
+                        <stop offset="0%" stop-color="#ff5252" />
+                        <stop offset="50%" stop-color="#d50000" />
+                        <stop offset="100%" stop-color="#b71c1c" />
+                    </radialGradient>
+                </defs>
+                <g id="hanging-decor"></g>
+            </svg>
+            <div id="fruits-container" class="absolute inset-0 w-full h-full z-10 pointer-events-none"></div>
+        </div>
+    </div>
+
+    <!-- ================= 3. BẢNG XẾP HẠNG ================= -->
+    <div id="leaderboard-view" class="fixed inset-0 hidden flex flex-col items-center py-6 px-2 sm:px-4">
+        <div class="w-full max-w-4xl bg-white rounded-2xl shadow-xl overflow-hidden flex flex-col">
+            <div class="bg-white p-4 sm:p-6 border-b flex justify-between items-center">
+                <button onclick="location.reload()" class="bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold py-2 px-4 rounded-lg flex items-center transition-colors text-lg">
+                    🏠 Trở về
+                </button>
+                <h2 class="text-2xl sm:text-3xl font-black text-red-600">🏆 BẢNG XẾP HẠNG</h2>
+            </div>
+            <div class="p-4 sm:p-6 bg-red-50 border-b border-red-100 flex flex-col sm:flex-row justify-between items-center gap-4">
+                <div class="text-xl sm:text-2xl font-bold text-gray-800">
+                    🎉 Hoàn thành: <span id="lb-current-name" class="text-red-600"></span> (<span id="lb-current-class"></span>)
+                </div>
+                <div class="text-2xl sm:text-4xl font-black text-red-600">
+                    ĐIỂM: <span id="lb-current-score">0</span>
+                </div>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse min-w-[500px]">
+                    <thead>
+                        <tr class="bg-red-600 text-white text-lg">
+                            <th class="py-4 px-4 font-bold text-center w-16">STT</th>
+                            <th class="py-4 px-4 font-bold text-center w-24">Lớp</th>
+                            <th class="py-4 px-4 font-bold">Họ tên</th>
+                            <th class="py-4 px-4 font-bold text-center w-32">Điểm</th>
+                        </tr>
+                    </thead>
+                    <tbody id="leaderboard-body" class="text-lg"></tbody>
+                </table>
+            </div>
+            <div id="lb-loading" class="flex flex-col items-center justify-center py-10">
+                <div class="loader mb-4"></div>
+                <p class="text-gray-500 font-medium text-lg">Đang tải dữ liệu...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= MODAL CÂU HỎI ================= -->
+    <div id="qModal" class="fixed inset-0 bg-black/70 modal-overlay hidden flex items-center justify-center z-50 p-2 sm:p-6">
+        <div class="bg-gray-50 rounded-2xl sm:rounded-3xl shadow-2xl max-w-4xl w-full max-h-[95vh] overflow-hidden modal-content scale-95 opacity-0 flex flex-col border-4 border-blue-500" id="qModalContent">
+            <!-- Nội dung render bằng JS -->
+        </div>
+    </div>
+
+    <!-- ================= MODAL KẾT QUẢ TRẢ LỜI ================= -->
+    <div id="resModal" class="fixed inset-0 bg-black/70 modal-overlay hidden flex items-center justify-center z-50 p-4">
+        <div id="resModalContent" class="bg-white rounded-3xl shadow-2xl max-w-sm w-full p-8 text-center modal-content scale-95 opacity-0 flex flex-col items-center border-4 border-red-500">
+            <div id="resIcon" class="text-7xl mb-4 animate-bounce">❤️</div>
+            <h3 class="text-3xl font-extrabold mb-3" id="resTitle">Đúng rồi!</h3>
+            <p class="text-gray-600 mb-6 text-xl font-medium" id="resMessage">Bạn được cộng 10 điểm.</p>
+            <button onclick="closeResModal()" class="bg-gradient-to-r from-red-500 to-rose-600 text-white font-bold py-4 px-8 rounded-full shadow-lg transform hover:scale-105 text-2xl w-full">Tiếp tục ➡</button>
+        </div>
+    </div>
+
+    <div id="loadingModal" class="fixed inset-0 bg-black/80 flex flex-col items-center justify-center z-[100] hidden">
+        <div class="loader mb-4"></div>
+        <p class="text-white font-bold text-xl">Đang lưu kết quả...</p>
+    </div>
+
+    <!-- ================= MÃ JAVASCRIPT ================= -->
+    <script>
+        // ----- CẤU HÌNH FIREBASE -----
+        let database = null;
+        let scoresRef = null;
+
+        try {
+            const firebaseConfig = {
+                apiKey: "AIzaSyBQ9Pos8awlh9j041qDWTPFRsVIjF-kPnk",
+                authDomain: "hoctap-91691.firebaseapp.com",
+                databaseURL: "https://hoctap-91691-default-rtdb.asia-southeast1.firebasedatabase.app",
+                projectId: "hoctap-91691",
+                storageBucket: "hoctap-91691.firebasestorage.app",
+                messagingSenderId: "1004553425319",
+                appId: "1:1004553425319:web:45d15cbae393f614c56682"
+            };
+            if (typeof firebase !== 'undefined') {
+                if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+                database = firebase.database();
+                scoresRef = database.ref('trochoi_bai10_tin12');
+            }
+        } catch(err) { console.error("Lỗi Firebase:", err); }
+
+        // ----- DỮ LIỆU GAME -----
+        let player = { name: "", class: "", score: 0 };
+        let answeredQuestions = 0;
+        let currentFruitIndex = -1;
+        const TOTAL_QUESTIONS = 10;
+        const SCORE_PER_CORRECT = 10; 
+
+        // Mã lệnh HTML nằm trong dấu backtick `...`
+        const questions = [
+            { 
+                q: "Câu 1: Trong ngôn ngữ HTML, để tạo một siêu liên kết đến một trang web khác, cú pháp nào sau đây là ĐÚNG?", 
+                options: [
+                    "A. `&lt;a href=\"URL\"&gt;Nội dung liên kết&lt;/a&gt;`", 
+                    "B. `&lt;link src=\"URL\"&gt;Nội dung liên kết&lt;/link&gt;`", 
+                    "C. `&lt;href link=\"URL\"&gt;Nội dung liên kết&lt;/href&gt;`", 
+                    "D. `&lt;url href=\"URL\"&gt;Nội dung liên kết&lt;/url&gt;`"
+                ], 
+                correct: 0 
+            },
+            { 
+                q: "Câu 2: Thuộc tính nào BẮT BUỘC phải có trong thẻ `&lt;a&gt;` để xác định địa chỉ đích (URL) của liên kết?", 
+                options: [
+                    "A. `&lt;a src=\"dia_chi_dich\"&gt;...&lt;/a&gt;`", 
+                    "B. `&lt;a link=\"dia_chi_dich\"&gt;...&lt;/a&gt;`", 
+                    "C. `&lt;a href=\"dia_chi_dich\"&gt;...&lt;/a&gt;`", 
+                    "D. `&lt;a name=\"dia_chi_dich\"&gt;...&lt;/a&gt;`"
+                ], 
+                correct: 2 
+            },
+            { 
+                q: "Câu 3: Cú pháp nào sau đây là CHÍNH XÁC NHẤT để tạo siêu liên kết hiển thị chữ 'Trang chủ' trỏ đến tệp `index.html`?", 
+                options: [
+                    "A. `&lt;a href=\"index.html\"&gt;Trang chủ&lt;/a&gt;`", 
+                    "B. `&lt;a src=\"index.html\"&gt;Trang chủ&lt;/a&gt;`", 
+                    "C. `&lt;a link=\"index.html\"&gt;Trang chủ&lt;/a&gt;`", 
+                    "D. `&lt;a&gt;index.html&lt;/a&gt; Trang chủ`"
+                ], 
+                correct: 0 
+            },
+            { 
+                q: "Câu 4: Cú pháp nào sau đây dùng để mở trang web đích trong một thẻ (tab) mới của trình duyệt?", 
+                options: [
+                    "A. `&lt;a href=\"URL\" target=\"_blank\"&gt;...&lt;/a&gt;`", 
+                    "B. `&lt;a href=\"URL\" target=\"_new\"&gt;...&lt;/a&gt;`", 
+                    "C. `&lt;a href=\"URL\" open=\"new_tab\"&gt;...&lt;/a&gt;`", 
+                    "D. `&lt;a href=\"URL\" window=\"_blank\"&gt;...&lt;/a&gt;`"
+                ], 
+                correct: 0 
+            },
+            { 
+                q: "Câu 5: Cú pháp nào sau đây dùng để tạo một điểm neo (anchor) tại một vị trí cụ thể trong trang web?", 
+                options: [
+                    "A. `&lt;h1 href=\"phan1\"&gt;Tiêu đề&lt;/h1&gt;`", 
+                    "B. `&lt;h1 class=\"phan1\"&gt;Tiêu đề&lt;/h1&gt;`", 
+                    "C. `&lt;h1 id=\"phan1\"&gt;Tiêu đề&lt;/h1&gt;`", 
+                    "D. `&lt;h1 mark=\"phan1\"&gt;Tiêu đề&lt;/h1&gt;`"
+                ], 
+                correct: 2 
+            },
+            { 
+                q: "Câu 6: Giả sử trong trang web có một điểm neo `id=\"phan1\"`. Cú pháp nào để tạo liên kết nhảy nhanh đến đúng vị trí đó?", 
+                options: [
+                    "A. `&lt;a href=\"phan1\"&gt;Chuyển đến Phần 1&lt;/a&gt;`", 
+                    "B. `&lt;a href=\"#phan1\"&gt;Chuyển đến Phần 1&lt;/a&gt;`", 
+                    "C. `&lt;a link=\"#phan1\"&gt;Chuyển đến Phần 1&lt;/a&gt;`", 
+                    "D. `&lt;a goto=\"phan1\"&gt;Chuyển đến Phần 1&lt;/a&gt;`"
+                ], 
+                correct: 1 
+            },
+            { 
+                q: "Câu 7: Để sử dụng hình ảnh làm siêu liên kết (click vào ảnh mở trang web), cú pháp nào sau đây đúng?", 
+                options: [
+                    "A. `&lt;a href=\"URL\"&gt;&lt;img src=\"anh.jpg\"&gt;&lt;/a&gt;`", 
+                    "B. `&lt;img src=\"anh.jpg\"&gt;&lt;a href=\"URL\"&gt;&lt;/a&gt;`", 
+                    "C. `&lt;img src=\"anh.jpg\" href=\"URL\"&gt;`", 
+                    "D. `&lt;a src=\"anh.jpg\" href=\"URL\"&gt;&lt;/a&gt;`"
+                ], 
+                correct: 0 
+            },
+            { 
+                q: "Câu 8: Cú pháp nào dưới đây CHUẨN XÁC NHẤT để tạo một hình ảnh `logo.jpg` có chứa liên kết đến trang `home.html`?", 
+                options: [
+                    "A. `&lt;a href=\"home.html\"&gt;&lt;img src=\"logo.jpg\"&gt;&lt;/a&gt;`", 
+                    "B. `&lt;img src=\"logo.jpg\" href=\"home.html\"&gt;`", 
+                    "C. `&lt;a src=\"home.html\"&gt;&lt;img href=\"logo.jpg\"&gt;&lt;/a&gt;`", 
+                    "D. `&lt;a href=\"home.html\"&gt;logo.jpg&lt;/a&gt;`"
+                ], 
+                correct: 0 
+            },
+            { 
+                q: "Câu 9: Thẻ `&lt;link&gt;` dùng để liên kết trang web với một tệp tin CSS bên ngoài thường được đặt ở vị trí nào?", 
+                options: [
+                    "A. Nằm trong cặp thẻ `&lt;head&gt;` và `&lt;/head&gt;`", 
+                    "B. Nằm trong cặp thẻ `&lt;body&gt;` và `&lt;/body&gt;`", 
+                    "C. Nằm ở đầu tệp tin trước thẻ `&lt;html&gt;`", 
+                    "D. Nằm ở cuối tệp tin sau thẻ `&lt;/html&gt;`"
+                ], 
+                correct: 0 
+            },
+            { 
+                q: "Câu 10: Khi tạo liên kết email để khi người dùng nhấp vào sẽ tự động mở hộp thư gửi đến địa chỉ `admin@truong.edu.vn`, ta dùng cú pháp nào?", 
+                options: [
+                    "A. `&lt;a href=\"mailto:admin@truong.edu.vn\"&gt;Gửi Email&lt;/a&gt;`", 
+                    "B. `&lt;a href=\"email:admin@truong.edu.vn\"&gt;Gửi Email&lt;/a&gt;`", 
+                    "C. `&lt;a href=\"send:admin@truong.edu.vn\"&gt;Gửi Email&lt;/a&gt;`", 
+                    "D. `&lt;a mail=\"admin@truong.edu.vn\"&gt;Gửi Email&lt;/a&gt;`"
+                ], 
+                correct: 0 
+            }
+        ];
+
+        function startGame() {
+            const nameInput = document.getElementById('studentName').value.trim();
+            const classInput = document.getElementById('studentClass').value.trim();
+            if (!nameInput || !classInput) { alert("Vui lòng nhập đầy đủ Họ tên và Lớp!"); return; }
+            
+            player.name = nameInput;
+            player.class = classInput;
+            document.getElementById('login-view').classList.add('hidden');
+            document.getElementById('game-view').classList.remove('hidden');
+            
+            renderFruits();
+            createHangingStars();
+        }
+
+        function getHeartSVG(number) {
+            return `
+            <svg viewBox="0 0 100 100" class="w-full h-full overflow-visible pointer-events-auto">
+                <path d="M 50 90 C 10 60, -5 30, 20 10 C 35 0, 45 10, 50 20 C 55 10, 65 0, 80 10 C 105 30, 90 60, 50 90 Z" fill="rgba(0,0,0,0.6)" transform="translate(0, 6) scale(0.95)" transform-origin="50 50"/>
+                <path d="M 50 90 C 10 60, -5 30, 20 10 C 35 0, 45 10, 50 20 C 55 10, 65 0, 80 10 C 105 30, 90 60, 50 90 Z" fill="url(#redHeartGrad)"/>
+                <path d="M 50 90 C 10 60, -5 30, 20 10 C 35 0, 45 10, 50 20 C 55 10, 65 0, 80 10 C 105 30, 90 60, 50 90 Z" fill="none" stroke="white" stroke-width="3" stroke-dasharray="5,4" transform="scale(0.85)" transform-origin="50 45"/>
+                <text x="50" y="62" font-family="Arial, sans-serif" font-weight="900" font-size="40" fill="white" text-anchor="middle" filter="drop-shadow(1px 2px 2px rgba(0,0,0,0.7))">${number}</text>
+            </svg>`;
+        }
+
+        function renderFruits() {
+            const container = document.getElementById('fruits-container');
+            const positions = [
+                { top: "45%", left: "15%", delay: "0.1s" },
+                { top: "25%", left: "22%", delay: "0.4s" },
+                { top: "38%", left: "38%", delay: "0.2s" },
+                { top: "15%", left: "45%", delay: "0.7s" },
+                { top: "35%", left: "55%", delay: "0.3s" },
+                { top: "58%", left: "45%", delay: "0.9s" },
+                { top: "20%", left: "68%", delay: "0.5s" },
+                { top: "42%", left: "75%", delay: "0.8s" },
+                { top: "25%", left: "85%", delay: "0.6s" },
+                { top: "55%", left: "82%", delay: "1.1s" }
+            ];
+            let html = '';
+            positions.forEach((pos, i) => {
+                html += `<div class="fruit" style="top: ${pos.top}; left: ${pos.left}; animation-delay: ${pos.delay};" onclick="openQuestion(${i})" id="fruit-${i}">
+                            ${getHeartSVG(i + 1)}
+                         </div>`;
+            });
+            container.innerHTML = html;
+        }
+
+        function createHangingStars() {
+            const container = document.getElementById('hanging-decor');
+            const ns = "http://www.w3.org/2000/svg";
+            
+            for(let i=0; i<120; i++) {
+                const x = 50 + Math.random() * 1500;
+                let startY = (Math.random() > 0.3) ? (350 + Math.random() * 350) : (50 + Math.random() * 300);
+                const length = 50 + Math.random() * 250;
+                
+                const line = document.createElementNS(ns, "line");
+                line.setAttribute("x1", x);
+                line.setAttribute("y1", startY);
+                line.setAttribute("x2", x);
+                line.setAttribute("y2", startY + length);
+                line.setAttribute("stroke", "#facc15");
+                line.setAttribute("stroke-width", "1.5");
+                line.setAttribute("stroke-dasharray", "3,3");
+                line.setAttribute("opacity", "0.6");
+                container.appendChild(line);
+                
+                const star = document.createElementNS(ns, "use");
+                star.setAttribute("href", "#star-shape");
+                star.setAttribute("x", x);
+                star.setAttribute("y", startY + length);
+                star.setAttribute("class", "twinkle-star");
+                star.style.animationDelay = (Math.random() * 3) + "s";
+                star.style.animationDuration = (2 + Math.random() * 2) + "s";
+                star.style.transformOrigin = `${x}px ${startY + length}px`; 
+                const scale = 0.5 + Math.random() * 0.7; 
+                star.setAttribute("transform", `scale(${scale})`);
+                
+                container.appendChild(star);
+            }
+        }
+
+        // HÀM ĐỊNH DẠNG MÃ HTML TRONG CÂU HỎI VÀ ĐÁP ÁN
+        // GIỮ NGUYÊN nền trắng, chữ xanh dương đậm (blue-700), viền xám mỏng lúc bình thường
+        function formatHTMLCode(text) {
+            let safeText = text.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+            return safeText.replace(/`([^`]+)`/g, '<code class="text-[#1d4ed8] bg-white border border-gray-400 px-2 py-0.5 rounded font-mono text-[1.1em] mx-1 break-all sm:break-normal inline-block shadow-sm font-black transition-colors">$1</code>');
+        }
+
+        const letters = ['A', 'B', 'C', 'D'];
+
+        function openQuestion(index) {
+            currentFruitIndex = index;
+            const q = questions[index];
+            const contentDiv = document.getElementById('qModalContent');
+            
+            let formattedQ = formatHTMLCode(q.q);
+            
+            let optionsHtml = '';
+            q.options.forEach((opt, i) => {
+                let cleanText = opt.replace(/^[A-D]\.\s*/, '');
+                let formattedOpt = formatHTMLCode(cleanText);
+                
+                optionsHtml += `
+                <button id="opt-${i}" onclick="checkAnswer(${i})" class="w-full flex items-center gap-3 sm:gap-5 p-4 sm:p-5 rounded-2xl border-2 border-gray-200 hover:border-[#3b82f6] hover:bg-blue-50 transition-all text-left bg-white shadow-sm group shrink-0">
+                    <div class="letter-box bg-[#e0e7ff] text-[#1e40af] font-black text-xl sm:text-2xl w-12 h-12 sm:w-14 sm:h-14 rounded-xl flex items-center justify-center shrink-0 group-hover:bg-[#2563eb] group-hover:text-white transition-colors">
+                        ${letters[i]}
+                    </div>
+                    <div class="opt-text text-[#1e3a8a] font-bold text-[17px] sm:text-[20px] leading-relaxed flex-1">${formattedOpt}</div>
+                </button>`;
+            });
+
+            contentDiv.innerHTML = `
+                <div class="flex-1 overflow-y-auto p-4 sm:p-6 custom-scroll relative flex flex-col justify-center bg-white h-full rounded-2xl sm:rounded-3xl">
+                    <div class="border-2 border-red-200 bg-red-50 text-red-600 font-bold text-lg sm:text-2xl p-4 sm:p-5 rounded-2xl mb-4 sm:mb-5 text-center shadow-sm shrink-0 leading-relaxed">
+                        ${formattedQ}
+                    </div>
+                    <div class="flex flex-col gap-3 shrink-0" id="options-container">
+                        ${optionsHtml}
+                    </div>
+                    <div id="feedback-message" class="hidden mt-4 text-center font-bold text-lg sm:text-xl p-3 sm:p-4 rounded-xl shrink-0 shadow-sm border border-red-200 bg-red-100 text-red-700"></div>
+                    <button id="btn-next-question" class="hidden mt-4 w-full bg-blue-600 hover:bg-blue-700 text-white font-black py-4 rounded-2xl shadow-lg transition-all text-xl shrink-0">Tiếp tục ➡</button>
+                </div>
+            `;
+
+            const modal = document.getElementById('qModal');
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                contentDiv.classList.remove('scale-95', 'opacity-0');
+                contentDiv.classList.add('scale-100', 'opacity-100');
+            }, 10);
+        }
+
+        function checkAnswer(selectedIndex) {
+            const q = questions[currentFruitIndex];
+            const isCorrect = selectedIndex === q.correct;
+            
+            const options = document.querySelectorAll('#options-container button');
+            options.forEach(btn => btn.classList.add('opt-disabled'));
+            
+            if (isCorrect) {
+                document.getElementById(`opt-${selectedIndex}`).classList.add('opt-correct');
+            } else {
+                document.getElementById(`opt-${selectedIndex}`).classList.add('opt-wrong');
+                document.getElementById(`opt-${q.correct}`).classList.add('opt-correct');
+                
+                const feedback = document.getElementById('feedback-message');
+                feedback.classList.remove('hidden');
+                feedback.innerHTML = `💡 Đáp án đúng là ${letters[q.correct]}. Tiếc quá!`;
+            }
+
+            const btnNext = document.getElementById('btn-next-question');
+            btnNext.classList.remove('hidden');
+            
+            setTimeout(() => {
+                const modalBody = document.querySelector('.custom-scroll');
+                if(modalBody) { modalBody.scrollTop = modalBody.scrollHeight; }
+            }, 100);
+
+            btnNext.onclick = () => processResult(isCorrect);
+        }
+
+        function processResult(isCorrect) {
+            const contentDiv = document.getElementById('qModalContent');
+            contentDiv.classList.remove('scale-100', 'opacity-100');
+            contentDiv.classList.add('scale-95', 'opacity-0');
+            
+            setTimeout(() => {
+                document.getElementById('qModal').classList.add('hidden');
+                
+                answeredQuestions++;
+                const fruitEl = document.getElementById('fruit-' + currentFruitIndex);
+                const resTitle = document.getElementById('resTitle');
+                const resMessage = document.getElementById('resMessage');
+                const resIcon = document.getElementById('resIcon');
+
+                if (isCorrect) {
+                    player.score += SCORE_PER_CORRECT;
+                    resTitle.innerText = 'Chính xác! 🎉';
+                    resTitle.className = 'text-3xl sm:text-4xl font-extrabold mb-4 text-green-600';
+                    resMessage.innerText = 'Bạn nhận được một trái tim.';
+                    resIcon.innerHTML = '❤️'; 
+                    fruitEl.classList.add('picked');
+                } else {
+                    resTitle.innerText = 'Sai rồi! 😢';
+                    resTitle.className = 'text-3xl sm:text-4xl font-extrabold mb-4 text-gray-800';
+                    resMessage.innerText = 'Rất tiếc, trái tim đã bị hỏng!';
+                    resIcon.innerHTML = '🖤'; 
+                    fruitEl.classList.add('black');
+                }
+
+                const resModal = document.getElementById('resModal');
+                const resContent = document.getElementById('resModalContent');
+                resModal.classList.remove('hidden');
+                setTimeout(() => {
+                    resContent.classList.remove('scale-95', 'opacity-0');
+                    resContent.classList.add('scale-100', 'opacity-100');
+                }, 10);
+            }, 300);
+        }
+
+        function closeResModal() {
+            const content = document.getElementById('resModalContent');
+            content.classList.remove('scale-100', 'opacity-100');
+            content.classList.add('scale-95', 'opacity-0');
+            setTimeout(() => {
+                document.getElementById('resModal').classList.add('hidden');
+                
+                if(answeredQuestions >= TOTAL_QUESTIONS) {
+                    endGame();
+                }
+            }, 300);
+        }
+
+        // ----- LƯU ĐIỂM & BẢNG XẾP HẠNG -----
+        function endGame() {
+            document.getElementById('loadingModal').classList.remove('hidden');
+            if(scoresRef) {
+                scoresRef.push({
+                    name: player.name,
+                    class: player.class,
+                    score: player.score,
+                    timestamp: firebase.database.ServerValue.TIMESTAMP
+                }).then(() => {
+                    showLeaderboard();
+                }).catch(err => {
+                    console.error(err);
+                    showLeaderboard();
+                });
+            } else {
+                setTimeout(showLeaderboard, 1000);
+            }
+        }
+
+        function showLeaderboard() {
+            document.getElementById('loadingModal').classList.add('hidden');
+            document.getElementById('game-view').classList.add('hidden');
+            document.getElementById('leaderboard-view').classList.remove('hidden');
+            
+            document.getElementById('lb-current-name').innerText = player.name;
+            document.getElementById('lb-current-class').innerText = player.class;
+            document.getElementById('lb-current-score').innerText = player.score;
+
+            const tbody = document.getElementById('leaderboard-body');
+            const loading = document.getElementById('lb-loading');
+            tbody.innerHTML = '';
+
+            if(scoresRef) {
+                scoresRef.orderByChild('score').once('value', snapshot => {
+                    loading.classList.add('hidden');
+                    let results = [];
+                    snapshot.forEach(child => { results.push(child.val()); });
+                    
+                    results.sort((a, b) => {
+                        if (b.score !== a.score) return b.score - a.score;
+                        return (a.timestamp || 0) - (b.timestamp || 0);
+                    });
+
+                    renderTable(results);
+                });
+            } else {
+                loading.classList.add('hidden');
+                renderTable([{ name: player.name, class: player.class, score: player.score }]);
+            }
+        }
+
+        function renderTable(data) {
+            const tbody = document.getElementById('leaderboard-body');
+            let html = '';
+            data.forEach((row, index) => {
+                html += `
+                <tr class="table-row border-b border-gray-200 text-gray-800 transition-colors text-lg sm:text-xl">
+                    <td class="py-4 px-4 text-center font-bold text-gray-600">${index + 1}</td>
+                    <td class="py-4 px-4 text-center">
+                        <span class="bg-blue-100 text-blue-700 py-1 px-3 rounded font-bold text-base sm:text-lg border border-blue-200">${row.class}</span>
+                    </td>
+                    <td class="py-4 px-4 font-semibold">${row.name}</td>
+                    <td class="py-4 px-4 text-center">
+                        <span class="text-red-600 font-black border border-red-200 bg-red-50 rounded-full px-4 py-1">${row.score}</span>
+                    </td>
+                </tr>`;
+            });
+            tbody.innerHTML = html;
+        }
+    </script>
+</body>
+</html>
