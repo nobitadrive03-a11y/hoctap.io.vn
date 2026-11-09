@@ -237,108 +237,110 @@
         const TOTAL_QUESTIONS = 10;
         const SCORE_PER_CORRECT = 10; 
 
-        const questions = [
+          const questions = [
             { 
-                q: "Câu 1: Trong ngôn ngữ HTML, để tạo một siêu liên kết đến một trang web khác, cú pháp nào sau đây là ĐÚNG?", 
+                q: "Câu 1: Để tạo một siêu liên kết đến trang web Google bằng đường dẫn tuyệt đối, đoạn mã HTML nào sau đây là viết ĐÚNG cú pháp và đầy đủ nhất?", 
                 options: [
-                    "A. `&lt;a href=\"URL\"&gt;Nội dung liên kết&lt;/a&gt;`", 
-                    "B. `&lt;link src=\"URL\"&gt;Nội dung liên kết&lt;/link&gt;`", 
-                    "C. `&lt;href link=\"URL\"&gt;Nội dung liên kết&lt;/href&gt;`", 
-                    "D. `&lt;url href=\"URL\"&gt;Nội dung liên kết&lt;/url&gt;`"
+                    "A. `&lt;a href=\"https://www.google.com\"&gt;Trang chủ Google&lt;/a&gt;`", 
+                    "B. `&lt;a src=\"https://www.google.com\"&gt;Trang chủ Google&lt;/a&gt;`", 
+                    "C. `&lt;link href=\"https://www.google.com\"&gt;Trang chủ Google&lt;/link&gt;`", 
+                    "D. `&lt;a href=\"www.google.com\"&gt;Trang chủ Google&lt;/a&gt;`"
                 ], 
-                correct: 0 
+                correct: 0 // Đáp án A
             },
             { 
-                q: "Câu 2: Thuộc tính nào BẮT BUỘC phải có trong thẻ `&lt;a&gt;` để xác định địa chỉ đích (URL) của liên kết?", 
+                q: "Câu 2: Đoạn mã nào sau đây BẮT BUỘC phải có mặt để thẻ `&lt;a&gt;` có thể hoạt động như một siêu liên kết trỏ tới địa chỉ trang web khác?", 
                 options: [
-                    "A. `&lt;a src=\"dia_chi_dich\"&gt;...&lt;/a&gt;`", 
-                    "B. `&lt;a link=\"dia_chi_dich\"&gt;...&lt;/a&gt;`", 
-                    "C. `&lt;a href=\"dia_chi_dich\"&gt;...&lt;/a&gt;`", 
-                    "D. `&lt;a name=\"dia_chi_dich\"&gt;...&lt;/a&gt;`"
+                    "A. `&lt;a src=\"https://truongphandinhphung.edu.vn\"&gt;Trang của trường&lt;/a&gt;`", 
+                    "B. `&lt;a href=\"https://truongphandinhphung.edu.vn\"&gt;Trang của trường&lt;/a&gt;`", 
+                    "C. `&lt;a link=\"https://truongphandinhphung.edu.vn\"&gt;Trang của trường&lt;/a&gt;`", 
+                    "D. `&lt;a name=\"https://truongphandinhphung.edu.vn\"&gt;Trang của trường&lt;/a&gt;`"
                 ], 
-                correct: 2 
+                correct: 1 // Đáp án B
             },
             { 
-                q: "Câu 3: Cú pháp nào sau đây là CHÍNH XÁC NHẤT để tạo siêu liên kết hiển thị chữ 'Trang chủ' trỏ đến tệp `index.html`?", 
+                q: "Câu 3: Đang ở trang giới thiệu, muốn tạo liên kết quay lại trang chủ (tệp index.html) nằm trong cùng một thư mục, đoạn mã HTML nào là chính xác?", 
                 options: [
-                    "A. `&lt;a href=\"index.html\"&gt;Trang chủ&lt;/a&gt;`", 
-                    "B. `&lt;a src=\"index.html\"&gt;Trang chủ&lt;/a&gt;`", 
-                    "C. `&lt;a link=\"index.html\"&gt;Trang chủ&lt;/a&gt;`", 
-                    "D. `&lt;a&gt;index.html&lt;/a&gt; Trang chủ`"
+                    "A. `&lt;a src=\"index.html\"&gt;Quay lại trang chủ&lt;/a&gt;`", 
+                    "B. `&lt;a link=\"index.html\"&gt;Quay lại trang chủ&lt;/a&gt;`", 
+                    "C. `&lt;a href=\"index.html\"&gt;Quay lại trang chủ&lt;/a&gt;`", 
+                    "D. `&lt;a&gt;index.html&lt;/a&gt; Quay lại trang chủ`"
                 ], 
-                correct: 0 
+                correct: 2 // Đáp án C
             },
             { 
-                q: "Câu 4: Cú pháp nào sau đây dùng để mở trang web đích trong một thẻ (tab) mới của trình duyệt?", 
+                q: "Câu 4: Để tạo một liên kết mở trang web đích ra một thẻ (tab) mới của trình duyệt, đoạn mã HTML đầy đủ nào sau đây là chuẩn xác?", 
                 options: [
-                    "A. `&lt;a href=\"URL\" target=\"_blank\"&gt;...&lt;/a&gt;`", 
-                    "B. `&lt;a href=\"URL\" target=\"_new\"&gt;...&lt;/a&gt;`", 
-                    "C. `&lt;a href=\"URL\" open=\"new_tab\"&gt;...&lt;/a&gt;`", 
-                    "D. `&lt;a href=\"URL\" window=\"_blank\"&gt;...&lt;/a&gt;`"
+                    "A. `&lt;a href=\"https://hoctap.io.vn\" target=\"_new\"&gt;Hành Trình Số&lt;/a&gt;`", 
+                    "B. `&lt;a href=\"https://hoctap.io.vn\" open=\"new_tab\"&gt;Hành Trình Số&lt;/a&gt;`", 
+                    "C. `&lt;a href=\"https://hoctap.io.vn\" window=\"_blank\"&gt;Hành Trình Số&lt;/a&gt;`", 
+                    "D. `&lt;a href=\"https://hoctap.io.vn\" target=\"_blank\"&gt;Hành Trình Số&lt;/a&gt;`"
                 ], 
-                correct: 0 
+                correct: 3 // Đáp án D
             },
             { 
-                q: "Câu 5: Cú pháp nào sau đây dùng để tạo một điểm neo (anchor) tại một vị trí cụ thể trong trang web?", 
+                q: "Câu 5: Để tạo một điểm neo (bookmark) có tên 'phan1' ngay tại thẻ tiêu đề cấp 1 để sau này liên kết tới, đoạn mã HTML nào viết đúng?", 
                 options: [
-                    "A. `&lt;h1 href=\"phan1\"&gt;Tiêu đề&lt;/h1&gt;`", 
-                    "B. `&lt;h1 class=\"phan1\"&gt;Tiêu đề&lt;/h1&gt;`", 
-                    "C. `&lt;h1 id=\"phan1\"&gt;Tiêu đề&lt;/h1&gt;`", 
-                    "D. `&lt;h1 mark=\"phan1\"&gt;Tiêu đề&lt;/h1&gt;`"
+                    "A. `&lt;h1 href=\"phan1\"&gt;Nội dung phần 1&lt;/h1&gt;`", 
+                    "B. `&lt;h1 id=\"phan1\"&gt;Nội dung phần 1&lt;/h1&gt;`", 
+                    "C. `&lt;h1 class=\"phan1\"&gt;Nội dung phần 1&lt;/h1&gt;`", 
+                    "D. `&lt;h1 mark=\"phan1\"&gt;Nội dung phần 1&lt;/h1&gt;`"
                 ], 
-                correct: 2 
+                correct: 1 // Đáp án B
             },
             { 
-                q: "Câu 6: Giả sử trong trang web có một điểm neo `id=\"phan1\"`. Cú pháp nào để tạo liên kết nhảy nhanh đến đúng vị trí đó?", 
+                q: "Câu 6: Giả sử trong trang web đã có điểm neo là `&lt;h1 id=\"phan1\"&gt;`. Để tạo siêu liên kết nhảy nhanh đến đúng vị trí này, đoạn mã HTML đầy đủ nào chính xác?", 
                 options: [
                     "A. `&lt;a href=\"phan1\"&gt;Chuyển đến Phần 1&lt;/a&gt;`", 
-                    "B. `&lt;a href=\"#phan1\"&gt;Chuyển đến Phần 1&lt;/a&gt;`", 
-                    "C. `&lt;a link=\"#phan1\"&gt;Chuyển đến Phần 1&lt;/a&gt;`", 
-                    "D. `&lt;a goto=\"phan1\"&gt;Chuyển đến Phần 1&lt;/a&gt;`"
+                    "B. `&lt;a link=\"#phan1\"&gt;Chuyển đến Phần 1&lt;/a&gt;`", 
+                    "C. `&lt;a goto=\"phan1\"&gt;Chuyển đến Phần 1&lt;/a&gt;`", 
+                    "D. `&lt;a href=\"#phan1\"&gt;Chuyển đến Phần 1&lt;/a&gt;`"
                 ], 
-                correct: 1 
+                correct: 3 // Đáp án D
             },
             { 
-                q: "Câu 7: Để sử dụng hình ảnh làm siêu liên kết (click vào ảnh mở trang web), cú pháp nào sau đây đúng?", 
+                q: "Câu 7: Để sử dụng một hình ảnh (tệp logo.png) làm siêu liên kết trỏ tới trang index.html khi người dùng nhấp vào ảnh, đoạn mã nào viết hoàn chỉnh và đúng?", 
                 options: [
-                    "A. `&lt;a href=\"URL\"&gt;&lt;img src=\"anh.jpg\"&gt;&lt;/a&gt;`", 
-                    "B. `&lt;img src=\"anh.jpg\"&gt;&lt;a href=\"URL\"&gt;&lt;/a&gt;`", 
-                    "C. `&lt;img src=\"anh.jpg\" href=\"URL\"&gt;`", 
-                    "D. `&lt;a src=\"anh.jpg\" href=\"URL\"&gt;&lt;/a&gt;`"
+                    "A. `&lt;img src=\"logo.png\"&gt;&lt;a href=\"index.html\"&gt;&lt;/a&gt;`", 
+                    "B. `&lt;img src=\"logo.png\" href=\"index.html\"&gt;`", 
+                    "C. `&lt;a href=\"index.html\"&gt;&lt;img src=\"logo.png\" alt=\"Logo\"&gt;&lt;/a&gt;`", 
+                    "D. `&lt;a src=\"index.html\"&gt;&lt;img href=\"logo.png\"&gt;&lt;/a&gt;`"
                 ], 
-                correct: 0 
+                correct: 2 // Đáp án C
             },
             { 
-                q: "Câu 8: Cú pháp nào dưới đây CHUẨN XÁC NHẤT để tạo một hình ảnh `logo.jpg` có chứa liên kết đến trang `home.html`?", 
+                q: "Câu 8: Trang web hiện tại nằm trong một thư mục con. Muốn tạo liên kết đến tệp gioithieu.html nằm ở thư mục cha (lùi ra ngoài 1 cấp), đoạn mã đường dẫn tương đối nào chuẩn xác?", 
                 options: [
-                    "A. `&lt;a href=\"home.html\"&gt;&lt;img src=\"logo.jpg\"&gt;&lt;/a&gt;`", 
-                    "B. `&lt;img src=\"logo.jpg\" href=\"home.html\"&gt;`", 
-                    "C. `&lt;a src=\"home.html\"&gt;&lt;img href=\"logo.jpg\"&gt;&lt;/a&gt;`", 
-                    "D. `&lt;a href=\"home.html\"&gt;logo.jpg&lt;/a&gt;`"
+                    "A. `&lt;a href=\"/gioithieu.html\"&gt;Trang giới thiệu&lt;/a&gt;`", 
+                    "B. `&lt;a href=\"../gioithieu.html\"&gt;Trang giới thiệu&lt;/a&gt;`", 
+                    "C. `&lt;a href=\"..gioithieu.html\"&gt;Trang giới thiệu&lt;/a&gt;`", 
+                    "D. `&lt;a href=\"~gioithieu.html\"&gt;Trang giới thiệu&lt;/a&gt;`"
                 ], 
-                correct: 0 
+                correct: 1 // Đáp án B
             },
-            { 
-                q: "Câu 9: Thẻ `&lt;link&gt;` dùng để liên kết trang web với một tệp tin CSS bên ngoài thường được đặt ở vị trí nào?", 
+           { 
+                q: "Câu 9: Để tạo siêu liên kết mở tệp tài liệu `baocao.pdf` nằm cùng thư mục với trang web hiện tại, đoạn mã HTML nào sau đây ĐÚNG cú pháp?", 
                 options: [
-                    "A. Nằm trong cặp thẻ `&lt;head&gt;` và `&lt;/head&gt;`", 
-                    "B. Nằm trong cặp thẻ `&lt;body&gt;` và `&lt;/body&gt;`", 
-                    "C. Nằm ở đầu tệp tin trước thẻ `&lt;html&gt;`", 
-                    "D. Nằm ở cuối tệp tin sau thẻ `&lt;/html&gt;`"
+                    "A. `&lt;a href=\"baocao.pdf\"&gt;Xem báo cáo&lt;/a&gt;`", 
+                    "B. `&lt;a src=\"baocao.pdf\"&gt;Xem báo cáo&lt;/a&gt;`", 
+                    "C. `&lt;link href=\"baocao.pdf\"&gt;Xem báo cáo&lt;/link&gt;`", 
+                    "D. `&lt;a file=\"baocao.pdf\"&gt;Xem báo cáo&lt;/a&gt;`"
                 ], 
-                correct: 0 
+                correct: 0 // Đáp án A
             },
+        
             { 
-                q: "Câu 10: Khi tạo liên kết email để khi người dùng nhấp vào sẽ tự động mở hộp thư gửi đến địa chỉ `admin@truong.edu.vn`, ta dùng cú pháp nào?", 
+                q: "Câu 10: Khi tạo liên kết email để lúc nhấp vào sẽ tự động mở phần mềm gửi thư đến địa chỉ admin@truong.edu.vn, đoạn mã HTML nào viết ĐÚNG cú pháp?", 
                 options: [
-                    "A. `&lt;a href=\"mailto:admin@truong.edu.vn\"&gt;Gửi Email&lt;/a&gt;`", 
-                    "B. `&lt;a href=\"email:admin@truong.edu.vn\"&gt;Gửi Email&lt;/a&gt;`", 
-                    "C. `&lt;a href=\"send:admin@truong.edu.vn\"&gt;Gửi Email&lt;/a&gt;`", 
-                    "D. `&lt;a mail=\"admin@truong.edu.vn\"&gt;Gửi Email&lt;/a&gt;`"
+                    "A. `&lt;a href=\"email:admin@truong.edu.vn\"&gt;Gửi email cho Admin&lt;/a&gt;`", 
+                    "B. `&lt;a href=\"send:admin@truong.edu.vn\"&gt;Gửi email cho Admin&lt;/a&gt;`", 
+                    "C. `&lt;a href=\"mailto:admin@truong.edu.vn\"&gt;Gửi email cho Admin&lt;/a&gt;`", 
+                    "D. `&lt;a mail=\"admin@truong.edu.vn\"&gt;Gửi email cho Admin&lt;/a&gt;`"
                 ], 
-                correct: 0 
+                correct: 2 // Đáp án C
             }
         ];
+
 
         function startGame() {
             const nameInput = document.getElementById('studentName').value.trim();
