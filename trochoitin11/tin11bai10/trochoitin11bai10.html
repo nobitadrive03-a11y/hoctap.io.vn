@@ -6,6 +6,36 @@
     <title>Bài 10 -Tin học 11 - Cây Hạnh Phúc</title>
      <meta name="description" content="Trò chơi học tập: Cây hạnh phúc Tin Học 11- Trường THPT Phan Đình Phùng - Quảng Trị.">
     <script src="https://cdn.tailwindcss.com"></script>
+
+
+    <!-- GỘP MÃ GA4: Gọi thư viện Google một lần duy nhất -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-NSJCVSL9RM"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  // 1. Cấu hình gửi dữ liệu về Tài khoản 1
+  gtag('config', 'G-NSJCVSL9RM'); 
+
+  // 2. Cấu hình gửi dữ liệu về Tài khoản 2
+  gtag('config', 'G-HE4GXY8B53'); 
+</script>
+
+<!-- MÃ NHỊP TIM: Tự động gửi về cả 2 tài khoản trên -->
+<script>
+  setInterval(function() {
+    if (!document.hidden) { 
+      gtag('event', 'keep_alive', {
+        'event_category': 'Engagement',
+        'event_label': 'Học sinh đang làm bài',
+        'non_interaction': false
+      });
+    }
+  }, 30000); 
+</script>
+
+
     
     <!-- FIREBASE SDK v8 -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
