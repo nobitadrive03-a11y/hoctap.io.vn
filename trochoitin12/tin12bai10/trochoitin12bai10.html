@@ -92,16 +92,13 @@
         .opt-correct { background-color: #3b82f6 !important; border-color: #3b82f6 !important; color: white !important; }
         .opt-correct .letter-box { background-color: white !important; color: #3b82f6 !important; }
         .opt-correct .opt-text { color: white !important; }
-        /* Tự động đổi khối code sang nền đen chữ sáng KHI CHỌN */
         .opt-correct code { background-color: #111827 !important; color: #38bdf8 !important; border-color: #000 !important; }
         
         .opt-wrong { background-color: #ef4444 !important; border-color: #ef4444 !important; color: white !important; }
         .opt-wrong .letter-box { background-color: white !important; color: #ef4444 !important; }
         .opt-wrong .opt-text { color: white !important; }
-        /* Tự động đổi khối code sang nền đen chữ sáng KHI CHỌN */
         .opt-wrong code { background-color: #111827 !important; color: #38bdf8 !important; border-color: #000 !important; }
         
-        /* KHÔNG LÀM MỜ. Đảm bảo các đáp án không chọn vẫn sáng rõ 100% */
         .opt-disabled { pointer-events: none; cursor: default; }
     </style>
 </head>
@@ -240,7 +237,6 @@
         const TOTAL_QUESTIONS = 10;
         const SCORE_PER_CORRECT = 10; 
 
-        // Mã lệnh HTML nằm trong dấu backtick `...`
         const questions = [
             { 
                 q: "Câu 1: Trong ngôn ngữ HTML, để tạo một siêu liên kết đến một trang web khác, cú pháp nào sau đây là ĐÚNG?", 
@@ -370,17 +366,18 @@
 
         function renderFruits() {
             const container = document.getElementById('fruits-container');
+            // Đã tinh chỉnh dịch chuyển các trái tim sang bên trái và trải đều khoảng cách để tránh bị đè nhau ở bên phải
             const positions = [
-                { top: "45%", left: "15%", delay: "0.1s" },
-                { top: "25%", left: "22%", delay: "0.4s" },
-                { top: "38%", left: "38%", delay: "0.2s" },
-                { top: "15%", left: "45%", delay: "0.7s" },
-                { top: "35%", left: "55%", delay: "0.3s" },
-                { top: "58%", left: "45%", delay: "0.9s" },
-                { top: "20%", left: "68%", delay: "0.5s" },
-                { top: "42%", left: "75%", delay: "0.8s" },
-                { top: "25%", left: "85%", delay: "0.6s" },
-                { top: "55%", left: "82%", delay: "1.1s" }
+                { top: "45%", left: "14%", delay: "0.1s" }, // 1
+                { top: "25%", left: "21%", delay: "0.4s" }, // 2
+                { top: "38%", left: "35%", delay: "0.2s" }, // 3
+                { top: "15%", left: "43%", delay: "0.7s" }, // 4
+                { top: "35%", left: "51%", delay: "0.3s" }, // 5
+                { top: "58%", left: "45%", delay: "0.9s" }, // 6
+                { top: "22%", left: "62%", delay: "0.5s" }, // 7 (dịch sang trái và lên trên)
+                { top: "38%", left: "67%", delay: "0.8s" }, // 8 (tách rời hẳn khỏi 7 và 10)
+                { top: "22%", left: "79%", delay: "0.6s" }, // 9 (dịch sang trái)
+                { top: "50%", left: "76%", delay: "1.1s" }  // 10 (dịch sang trái và xuống dưới một chút)
             ];
             let html = '';
             positions.forEach((pos, i) => {
@@ -426,8 +423,6 @@
             }
         }
 
-        // HÀM ĐỊNH DẠNG MÃ HTML TRONG CÂU HỎI VÀ ĐÁP ÁN
-        // GIỮ NGUYÊN nền trắng, chữ xanh dương đậm (blue-700), viền xám mỏng lúc bình thường
         function formatHTMLCode(text) {
             let safeText = text.replace(/</g, "&lt;").replace(/>/g, "&gt;");
             return safeText.replace(/`([^`]+)`/g, '<code class="text-[#1d4ed8] bg-white border border-gray-400 px-2 py-0.5 rounded font-mono text-[1.1em] mx-1 break-all sm:break-normal inline-block shadow-sm font-black transition-colors">$1</code>');
@@ -558,7 +553,6 @@
             }, 300);
         }
 
-        // ----- LƯU ĐIỂM & BẢNG XẾP HẠNG -----
         function endGame() {
             document.getElementById('loadingModal').classList.remove('hidden');
             if(scoresRef) {
