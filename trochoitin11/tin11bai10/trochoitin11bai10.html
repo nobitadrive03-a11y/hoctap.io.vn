@@ -58,25 +58,37 @@
         }
         .login-header { background: linear-gradient(to bottom right, #1d4ed8, #0ea5e9); }
 
-        /* ----- MÀN HÌNH GAME (Đã sửa Cover và Responsive Điện thoại) ----- */
+        /* ----- MÀN HÌNH GAME (Cấu hình tự chuyển đổi ảnh) ----- */
         .game-board {
-            position: relative; width: 100%; max-width: 1200px; aspect-ratio: 16/9;
-            background-image: url('cayhanhphuc.png'); 
-            background-size: cover; /* Sửa thành cover để lấp đầy khoảng trắng */
-            background-position: center center; background-repeat: no-repeat;
-            border-radius: 12px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            position: relative; 
+            width: 100%; 
+            max-width: 1200px; 
+            aspect-ratio: 16/9; /* Tỷ lệ ngang mặc định cho máy tính */
+            background-image: url('cayhanhphuc.png'); /* ẢNH NGANG CHO MÁY TÍNH */
+            background-size: cover; 
+            background-position: center center; 
+            background-repeat: no-repeat;
+            border-radius: 12px; 
+            overflow: hidden; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
             background-color: #fff0f5;
         }
 
+        /* MEDIA QUERY ĐỂ ĐỔI ẢNH KHI XEM TRÊN ĐIỆN THOẠI */
         @media (max-width: 768px) {
+            #login-view {
+                background-image: url('cayhanhphuc_mobile.png'); /* Ảnh nền đăng nhập cho đt */
+            }
             .game-board {
                 aspect-ratio: auto;
-                height: 90vh; /* Phủ dọc màn hình điện thoại */
+                height: 100vh; /* Phủ dọc 100% màn hình điện thoại */
+                background-image: url('cayhanhphuc_mobile.png'); /* ẢNH DỌC CHO ĐIỆN THOẠI */
+                background-size: cover; /* Hoặc có thể thử 100% 100% nếu ảnh chuẩn 9:16 */
                 border-radius: 0; 
             }
             .fruit {
-                width: 15% !important; /* To hơn trên mobile để dễ bấm */
-                min-width: 45px !important;
+                width: 16% !important; /* Quả táo trên điện thoại to hơn để dễ bấm */
+                min-width: 50px !important;
             }
         }
 
@@ -416,7 +428,9 @@
             </svg>`;
         }
 
-        // TỌA ĐỘ MỚI CHO QUẢ TÁO GOM VÀO GIỮA ĐỂ TƯƠNG THÍCH MỌI MÀN HÌNH
+        // TỌA ĐỘ CHO QUẢ TÁO
+        // Lưu ý: Nếu khi đưa ảnh dọc (cayhanhphuc_mobile.png) vào mà táo bị lệch khỏi cành cây,
+        // bạn có thể chỉnh lại các con số % top và left bên dưới để táo khớp với ảnh của bạn nhé.
         function renderFruits() {
             const container = document.getElementById('fruits-container');
             const positions = [
@@ -550,10 +564,10 @@
                 if(modalBody) { modalBody.scrollTop = modalBody.scrollHeight; }
             }, 100);
 
-            // BẢN VÁ LỖI CỘNG LỐ ĐIỂM (Chặn click đúp vào nút Tiếp tục)
+            // Chống click nhiều lần (bản vá lỗi cộng lố điểm)
             btnNext.onclick = function() {
-                this.onclick = null; // Hủy luôn tính năng click của nút sau lần bấm đầu tiên
-                this.classList.add('pointer-events-none'); // Khóa chuột
+                this.onclick = null; 
+                this.classList.add('pointer-events-none');
                 processResult(isCorrect);
             };
         }
