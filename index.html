@@ -14,26 +14,31 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <!-- 1. MÃ GA4 GỐC (Kết nối với Google Analytics) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-NSJCVSL9RM"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-NSJCVSL9RM'); 
-    </script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-NSJCVSL9RM"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
 
-    <!-- 2. MÃ NHỊP TIM 30 GIÂY -->
-    <script>
-      setInterval(function() {
-        if (!document.hidden) { 
-          gtag('event', 'keep_alive', {
-            'event_category': 'Engagement',
-            'event_label': 'Học sinh đang làm bài',
-            'non_interaction': false
-          });
-        }
-      }, 30000); 
-    </script>
+  // 1. Cấu hình gửi dữ liệu về Tài khoản 1
+  gtag('config', 'G-NSJCVSL9RM'); 
+
+  // 2. Cấu hình gửi dữ liệu về Tài khoản 2
+  gtag('config', 'G-HE4GXY8B53'); 
+</script>
+
+<!-- MÃ NHỊP TIM: Tự động gửi về cả 2 tài khoản trên -->
+<script>
+  setInterval(function() {
+    if (!document.hidden) { 
+      gtag('event', 'keep_alive', {
+        'event_category': 'Engagement',
+        'event_label': 'Học sinh đang làm bài',
+        'non_interaction': false
+      });
+    }
+  }, 30000); 
+</script>
 
     <style>
         body {
@@ -162,7 +167,7 @@
     </div>
     <div class="w-full relative ml-12 md:ml-36">
         <div class="animate-marquee text-red-600 font-extrabold text-sm md:text-lg uppercase tracking-wide">
-            🎉 CHÀO MỪNG NĂM HỌC MỚI 2026 - 2027! CHÚC CÁC THẦY CÔ GIÁO VÀ CÁC EM HỌC SINH MỘT NĂM HỌC THÀNH CÔNG RỰC RỠ! 🎉 HÃY TRUY CẬP HÀNH TRÌNH SỐ ĐỂ HỌC TẬP.
+            🎉 CHÀO MỪNG NĂM HỌC MỚI 2026 - 2027! CHÚC CÁC THẦY CÔ GIÁO VÀ CÁC EM HỌC SINH MỘT NĂM HỌC THÀNH CÔNG RỰC RỠ! 🎉 HÃY TRUY CẬP VÀO TRANG WEB HOCTAP.IO.VN ĐỂ HỌC TẬP.
         </div>
     </div>
 </div>
