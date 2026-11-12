@@ -1,0 +1,645 @@
+<!doctype html>
+<html lang="vi" class="w-full h-full m-0 p-0">
+ <head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <title>Tin Học 10 - Bài 14</title>
+
+    <meta name="description" content="Đề kiểm tra kiến thức bài học. Bài 14: Làm việc với đối tượng đường và văn bản - Tin học 10 - Trường THPT Phan Đình Phùng - Quảng Trị.">
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- GỘP MÃ GA4: Gọi thư viện Google một lần duy nhất -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-NSJCVSL9RM"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  // 1. Cấu hình gửi dữ liệu về Tài khoản 1
+  gtag('config', 'G-NSJCVSL9RM'); 
+
+  // 2. Cấu hình gửi dữ liệu về Tài khoản 2
+  gtag('config', 'G-HE4GXY8B53'); 
+
+  // 3. Cấu hình gửi dữ liệu về Tài khoản 3
+  gtag('config', 'G-Q6X1TL9PRV');
+</script>
+
+<!-- MÃ NHỊP TIM: Tự động gửi về các tài khoản trên -->
+<script>
+  setInterval(function() {
+    if (!document.hidden) { 
+      gtag('event', 'keep_alive', {
+        'event_category': 'Engagement',
+        'event_label': 'Học sinh đang làm bài',
+        'non_interaction': false
+      });
+    }
+  }, 30000); 
+</script>
+
+  <!-- FIREBASE SDK v8 -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+  <style>
+    * { 
+        -webkit-tap-highlight-color: transparent; 
+        -webkit-touch-callout: none !important; 
+        touch-action: manipulation;
+    }
+    html, body { width: 100%; min-height: 100vh; margin: 0; padding: 0; overflow-x: hidden; }
+    body { 
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
+      background: linear-gradient(-45deg, #10b981, #3b82f6, #6366f1, #8b5cf6);
+      background-size: 400% 400%;
+      animation: gradientBG 15s ease infinite;
+    }
+    @keyframes gradientBG {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+    #app { width: 100%; min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden; }
+    .glass-card {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+    .option-label { transition: background-color 0.1s ease, border-color 0.1s ease; cursor: pointer; border-color: #e2e8f0; }
+    .option-label:hover { background-color: #f0fdfa; border-color: #38bdf8; }
+    input[type="radio"].single-radio:checked + .option-label {
+      background: linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%);
+      color: white; border-color: transparent;
+      box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+    }
+    input[type="radio"].single-radio:checked + .option-label div:first-child { background-color: rgba(255,255,255,0.25); border-color: transparent; color: white; }
+    input[type="radio"].single-radio:checked + .option-label div:last-child { color: white; }
+    .fade-in { animation: fadeIn 0.4s ease forwards; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    .my-score-row {
+      background: linear-gradient(to right, #fdf4ff, #ffffff) !important;
+      border-left: 4px solid #db2777 !important; font-weight: 700 !important;
+      color: #9d174d !important; box-shadow: 0 2px 8px rgba(0,0,0,0.05); position: relative; z-index: 10;
+    }
+    .my-score-row td { padding-top: 16px; padding-bottom: 16px; }
+    .btn-tf { transition: background-color 0.1s ease; border-width: 2px; }
+    .btn-tf.selected { background-color: #2563eb; color: white; border-color: #1d4ed8; }
+    .btn-tf:not(.selected) { background-color: white; color: #4b5563; border-color: #e5e7eb; }
+    .btn-tf:not(:disabled):active { transform: scale(0.95); }
+    .math-scroll { overflow-x: auto; min-width: 0; padding-bottom: 4px; scrollbar-width: none; -ms-overflow-style: none; }
+    .math-scroll::-webkit-scrollbar { display: none; }
+  </style>
+ </head>
+ <body>
+  <div id="app" class="p-0 sm:p-4 md:p-8 transition-all">
+   
+   <div id="login-section" class="w-full max-w-md mx-auto fade-in flex flex-col justify-center flex-grow">
+    <div class="glass-card rounded-none sm:rounded-3xl p-6 sm:p-8 flex flex-col justify-start shadow-2xl border-t-8 border-indigo-600 bg-white">
+     <div class="text-center mb-6 pt-4 sm:pt-0">
+      <div class="flex items-center justify-center w-24 h-24 mx-auto mb-4 rounded-full border-4 border-yellow-400 bg-red-600 shadow-lg transform transition-transform hover:scale-105">
+          <span class="text-white font-black text-4xl tracking-tighter">HS</span>
+      </div>
+      <h1 class="text-2xl sm:text-3xl font-bold text-red-500 mb-3"> BÀI 14. LÀM VIỆC VỚI ĐỐI TƯỢNG ĐƯỜNG VÀ VĂN BẢN </h1>
+     </div>
+      <div id="login-form" class="space-y-4">
+      <div class="flex flex-col gap-4">
+          <div class="w-full">
+               <label class="block text-lg font-bold text-gray-700 mb-1">Họ và tên</label> 
+               <input type="text" id="hoTen" class="w-full px-4 py-4 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-100 outline-none transition-all font-semibold text-lg" placeholder="Nhập họ tên...">
+          </div>
+          <div class="w-full">
+               <label class="block text-lg font-bold text-gray-700 mb-1">Lớp</label> 
+               <input type="text" id="lop" class="w-full px-4 py-4 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-100 outline-none transition-all font-semibold text-lg" placeholder="10A1">
+          </div>
+      </div>
+      <div id="login-error" class="hidden bg-red-100 border border-red-300 text-red-700 font-bold text-base p-3 rounded-xl text-center shadow-sm"></div>
+      <button type="button" onclick="window.startQuizAction()" id="start-btn" class="w-full py-5 mt-6 bg-gradient-to-r from-blue-500 to-cyan-400 text-white font-extrabold rounded-2xl shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all text-2xl tracking-wide"> 🚀 BẮT ĐẦU THI </button>
+     </div>
+    </div>
+   </div>
+
+   <div id="quiz-section" class="w-full max-w-4xl mx-auto hidden flex-grow flex flex-col">
+    <div class="glass-card rounded-none sm:rounded-3xl p-4 sm:p-8 flex flex-col flex-grow relative border-t-8 border-blue-500 bg-white shadow-2xl">
+     <div class="flex items-center justify-between mb-4 sm:mb-6 pb-4 border-b-2 border-gray-100">
+      <div class="flex items-center gap-3">
+       <div class="flex items-center justify-center w-12 h-12 rounded-full border-2 border-yellow-400 bg-red-600 shadow-sm flex-shrink-0">
+           <span class="text-white font-black text-xl tracking-tighter">HS</span>
+       </div>
+       <div>
+        <h2 id="quiz-title" class="text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">ĐỀ KIỂM TRA TIN HỌC 10 - BÀI 14</h2>
+        <p id="student-info" class="text-base font-bold text-gray-500 mt-1 uppercase tracking-wide"></p>
+       </div>
+      </div>
+      <div class="text-right bg-blue-50 px-4 py-2 rounded-xl border border-blue-100" id="progress-container">
+       <div class="text-sm text-blue-500 font-bold uppercase tracking-wider mb-1">Tiến độ</div>
+       <div id="progress-text" class="text-2xl font-black text-blue-700">0/28</div>
+      </div>
+     </div>
+     
+     <div id="timer-banner" class="mb-6 p-4 bg-gradient-to-r from-orange-50 to-red-50 border-2 border-red-100 rounded-2xl flex items-center justify-between shadow-sm sticky top-2 z-40">
+        <span class="text-red-800 font-extrabold flex items-center gap-2 text-lg"><span class="text-2xl animate-pulse">⏰</span> THỜI GIAN:</span> 
+        <span id="timer" class="text-4xl font-black text-red-600 font-mono tracking-wider drop-shadow-sm">45:00</span>
+     </div>
+
+     <div id="question-container" class="mb-8 flex-grow w-full max-w-full"></div>
+     <div id="network-error" class="hidden bg-red-100 text-red-700 p-4 rounded-xl mt-4 text-center font-bold text-sm border-2 border-red-300 mb-4 shadow-sm"></div>
+
+    <div class="flex pt-4 sm:pt-6 border-t-2 border-gray-100 mt-auto pb-4 sm:pb-0">
+        <button id="submit-btn" onclick="window.promptSubmit()" class="w-full py-5 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-bold text-2xl rounded-2xl shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1">✅ NỘP BÀI NGAY</button>
+     </div>
+    </div>
+   </div>
+
+   <div id="confirm-submit-modal" class="fixed inset-0 hidden flex items-center justify-center bg-black/60 backdrop-blur-sm z-50 transition-opacity">
+       <div class="bg-white rounded-3xl w-full max-w-sm shadow-2xl p-6 text-center transform transition-all scale-100 mx-4 border-2 border-gray-100">
+           <div class="text-yellow-400 mb-4 flex justify-center">
+               <svg xmlns="http://www.w3.org/2000/svg" class="h-24 w-24" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+               </svg>
+           </div>
+           <h3 class="text-3xl font-black text-gray-800 mb-2 uppercase tracking-wide">Xác nhận nộp</h3>
+           <p class="text-gray-600 mb-6 font-medium text-xl">Đã làm <span id="confirm-answered" class="text-red-600 font-black text-2xl">0</span>/<span id="confirm-total" class="font-black text-2xl">28</span> câu. Có chắc chắn muốn nộp bài?</p>
+           <div class="flex flex-col gap-3">
+               <button onclick="window.closeConfirmModal()" class="w-full py-4 bg-gray-100 text-gray-800 font-extrabold text-xl rounded-xl hover:bg-gray-200 border border-gray-200">Quay lại làm tiếp</button>
+               <button onclick="window.executeSubmit()" class="w-full py-4 bg-emerald-600 text-white font-extrabold text-xl rounded-xl hover:bg-emerald-700 shadow-md">Vẫn Nộp Luôn</button>
+           </div>
+       </div>
+   </div>
+
+   <div id="result-section" class="w-full max-w-2xl mx-auto hidden fade-in flex flex-col justify-center flex-grow pb-8">
+    <div class="glass-card rounded-none sm:rounded-3xl p-6 sm:p-8 flex flex-col justify-start border-t-8 border-green-500 bg-white shadow-2xl" id="result-content"></div>
+   </div>
+
+   <div id="review-section" class="w-full max-w-4xl mx-auto hidden flex-grow flex flex-col">
+    <div class="glass-card rounded-none sm:rounded-3xl p-4 sm:p-8 flex flex-col flex-grow border-t-8 border-indigo-500 bg-white overflow-hidden shadow-2xl">
+     <div class="flex flex-col-reverse sm:flex-row items-start sm:items-center justify-between mb-6 pb-4 border-b-2 border-gray-100 gap-4">
+      <div class="flex flex-wrap gap-2">
+          <button onclick="window.goHome()" class="px-5 py-3 bg-gray-100 text-gray-700 rounded-xl font-bold hover:bg-gray-200 text-lg shadow-sm border border-gray-200">🏠 Trang chủ</button>
+          <button onclick="window.backFromReview()" class="px-5 py-3 bg-indigo-50 text-indigo-700 rounded-xl font-bold hover:bg-indigo-100 text-lg shadow-sm border border-indigo-200">🔙 Quay lại</button>
+          <button onclick="window.viewScoresAction()" class="px-5 py-3 bg-orange-50 text-orange-700 rounded-xl font-bold hover:bg-orange-100 text-lg shadow-sm border border-orange-200">🏆 Bảng điểm</button>
+      </div>
+      <h2 class="text-3xl sm:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">📝 Xem Lại Bài Làm</h2>
+     </div>
+     <div id="review-content" class="space-y-8 w-full max-w-full"></div>
+    </div>
+   </div>
+
+   <div id="scores-section" class="w-full max-w-6xl mx-auto hidden flex-grow flex flex-col">
+    <div class="glass-card rounded-none sm:rounded-3xl p-4 sm:p-8 flex flex-col flex-grow border-t-8 border-orange-500 bg-white w-full max-w-full shadow-2xl">
+     <div class="mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b-2 border-gray-100 pb-4">
+      <button onclick="window.goHome()" class="px-5 py-3 bg-gray-100 text-gray-700 rounded-xl font-bold hover:bg-gray-200 text-lg shadow-sm border border-gray-200 whitespace-nowrap">🏠 Trang chủ</button>
+      <h2 class="text-3xl sm:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-red-600 text-center flex-grow">🏆 BẢNG XẾP HẠNG</h2>
+     </div>
+     
+     <div class="flex flex-col sm:flex-row justify-between items-center mb-4 gap-4 bg-gray-50 p-4 rounded-xl border border-gray-200">
+         <div id="my-rank-display" class="text-xl font-bold text-gray-700">STT của bạn: <span class="text-gray-400">--</span></div>
+         <div class="w-full sm:w-auto flex-grow max-w-sm">
+             <input type="text" id="search-student" oninput="window.searchStudent(this.value)" placeholder="🔍 Nhập tên học sinh để tìm..." class="w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm focus:border-orange-500 focus:ring-2 focus:ring-orange-200 outline-none transition-all font-medium">
+         </div>
+     </div>
+
+     <div class="overflow-x-auto rounded-xl border border-slate-200 flex-grow shadow-inner bg-white/50 w-full">
+      <table class="w-full text-sm sm:text-base whitespace-nowrap min-w-max">
+       <thead class="bg-gradient-to-r from-orange-500 to-red-500 text-white">
+        <tr>
+         <th class="px-3 sm:px-4 py-4 text-center font-extrabold w-16">STT</th>
+         <th class="px-3 sm:px-4 py-4 text-left font-extrabold">Họ tên</th>
+         <th class="px-3 sm:px-4 py-4 text-center font-extrabold">Lớp</th>
+         <th class="px-3 sm:px-4 py-4 text-center font-extrabold">Thời gian</th>
+         <th class="px-3 sm:px-4 py-4 text-center font-extrabold">Điểm</th>
+         <th class="px-2 sm:px-4 py-4 text-center font-extrabold">Xem lại</th>
+        </tr>
+       </thead>
+       <tbody id="scores-tbody" class="bg-white/80 divide-y divide-gray-100"></tbody>
+      </table>
+      <div id="no-scores" class="text-center py-12 hidden text-gray-500 font-bold text-xl">Không tìm thấy dữ liệu thi 🥲</div>
+     </div>
+     <div id="pagination-controls" class="w-full flex justify-center mt-6"></div>
+    </div>
+  </div>
+
+  <script>
+    let database = null;
+    let scoresRef = null;
+
+    try {
+        const firebaseConfig = {
+            apiKey: "AIzaSyC4ou3Fu8IxAPYV347pHKT1jtPxQe5TBM4",
+            authDomain: "hanhtrinhso-e3368.firebaseapp.com",
+            databaseURL: "https://hanhtrinhso-e3368-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "hanhtrinhso-e3368",
+            storageBucket: "hanhtrinhso-e3368.firebasestorage.app",
+            messagingSenderId: "1046142513655",
+            appId: "1:1046142513655:web:5c7bb3a47ee90ac279fef2"
+        };
+        if (typeof firebase !== 'undefined') {
+            if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+            database = firebase.database();
+            scoresRef = database.ref('bxh_tin_10_14'); // Đã cập nhật thành 14 thay vì 13
+        }
+    } catch(err) { console.error("Lỗi Firebase:", err); }
+
+    let isQuizStarted = false; 
+    let currentQuestions = [];
+    let deviceId = '';
+    let allScores = [];
+    let currentStudent = {};
+    let userAnswers = {};
+    let timerInterval;
+    let quizStartTime, quizEndTime;
+    let searchTerm = '';
+    let currentPage = 1;
+    const itemsPerPage = 10;
+
+    const exam_data = [
+        { id: "q1", type: "single", question: "Câu 1: Trong Inkscape, đối tượng hình khối được định nghĩa như thế nào?", options: ["Là tổ hợp của một hay nhiều đoạn cong hoặc thẳng nối lại với nhau.", "Là đối tượng tự do do người dùng vẽ bằng công cụ Pen.", "Là đối tượng được định nghĩa sẵn và xác định bởi các tính chất toán học chặt chẽ.", "Là đối tượng chỉ chứa các đoạn thẳng mà không có đoạn cong."], correct: 2, explanation: "Hình khối (như hình chữ nhật, hình tròn) là các đối tượng được phần mềm định nghĩa sẵn với các thuộc tính toán học cố định." },
+        { id: "q2", type: "single", question: "Câu 2: Khi nối các đoạn thẳng hoặc đoạn cong với nhau, loại điểm neo nào thể hiện bằng một hình thoi?", options: ["Điểm neo trơn (smooth nodes).", "Điểm neo góc (corner nodes).", "Điểm chỉ hướng.", "Điểm mút (endpoint)."], correct: 1, explanation: "Trong Inkscape, điểm neo góc (corner nodes) luôn được ký hiệu đặc trưng bằng biểu tượng hình thoi." },
+        { id: "q3", type: "single", question: "Câu 3: Khẳng định nào sau đây là ĐÚNG khi nói về điểm neo trơn (smooth nodes)?", options: ["Đường chỉ hướng tại điểm neo trơn có thể gập góc.", "Tại điểm neo trơn có hai đường chỉ hướng luôn cùng phương với nhau.", "Điểm neo trơn luôn được kí hiệu bằng một hình thoi.", "Điểm neo trơn chỉ nối hai đoạn thẳng, không nối đoạn cong."], correct: 1, explanation: "Đặc điểm nhận dạng của điểm neo trơn là hai đường chỉ hướng đi qua nó luôn nằm trên cùng một đường thẳng (cùng phương) để tạo đường cong mượt mà." },
+        { id: "q4", type: "single", question: "Câu 4: Để thực hiện việc chuyển một đối tượng hình khối thành đối tượng dạng đường, ta sử dụng lệnh nào?", options: ["Text/Put on Path.", "Text/Remove from Path.", "Path/Object to Path.", "Path/Difference."], correct: 2, explanation: "Lệnh Path > Object to Path là thao tác bắt buộc để phá vỡ cấu trúc toán học cứng nhắc của hình khối, biến nó thành đối tượng đường có thể tự do chỉnh sửa điểm neo." },
+        { id: "q5", type: "single", question: "Câu 5: Đặc điểm khác biệt lớn nhất giữa chỉnh sửa hình khối và chỉnh sửa đối tượng dạng đường (tự do) là gì?", options: ["Hình khối không thể đổi màu, còn đối tượng đường thì đổi màu được.", "Hình khối khi chỉnh sửa thu được hình mới với đặc trưng không đổi, đối tượng đường có thể điều chỉnh các đoạn độc lập tạo ra hình dáng hoàn toàn khác.", "Hình khối có thể xóa điểm neo, còn đối tượng đường thì không thể.", "Hình khối có điểm neo góc, còn đối tượng đường chỉ có điểm neo trơn."], correct: 1, explanation: "Hình khối khi chỉnh (ví dụ hình chữ nhật) vẫn giữ bản chất hình chữ nhật. Nhưng khi chuyển thành đường, ta có thể kéo điểm neo để tạo ra bất cứ hình thù nào (ví dụ: kéo góc thành tam giác, chiếc lá...)." },
+        { id: "q6", type: "single", question: "Câu 6: Độ cong của đoạn thẳng tại mỗi điểm neo phụ thuộc vào yếu tố nào?", options: ["Màu sắc của đường viền.", "Khoảng cách giữa các điểm neo kế tiếp.", "Điểm chỉ hướng và đường chỉ hướng tại điểm đó.", "Độ dày của nét vẽ (Stroke width)."], correct: 2, explanation: "Độ cong mềm mại hay gắt của đường vẽ tại điểm neo hoàn toàn được kiểm soát bởi độ dài và hướng của các đường chỉ hướng/điểm chỉ hướng." },
+        { id: "q7", type: "single", question: "Câu 7: Để gỡ đoạn văn bản đang uốn lượn trở về dạng đường thẳng bình thường, ta dùng lệnh gì?", options: ["Text/Remove Manual Kerns.", "Path/Object to Path.", "Text/Remove from Path.", "Path/Difference."], correct: 2, explanation: "Lệnh Text > Remove from Path sẽ tách văn bản ra khỏi đường cong bám theo, đưa nó trở về trạng thái gõ văn bản đường thẳng ngang ban đầu." },
+        { id: "q8", type: "single", question: "Câu 8: Cần ít nhất bao nhiêu điểm để có thể xác định một đường thẳng?", options: ["1 điểm.", "2 điểm.", "3 điểm.", "4 điểm."], correct: 1, explanation: "Về mặt hình học cơ bản, muốn xác định một đoạn/đường thẳng ta cần ít nhất 2 điểm (điểm đầu và điểm cuối)." },
+        { id: "q9", type: "single", question: "Câu 9: Để xóa bỏ các tùy chỉnh khoảng cách thủ công (khoảng cách chữ, từ) đưa văn bản về định dạng chuẩn, ta sử dụng lệnh nào?", options: ["Text/Remove Manual Kerns.", "Text/Remove from Path.", "Text/Put on Path.", "Path/Object to Path."], correct: 0, explanation: "Kerns là thuật ngữ chỉ khoảng cách chỉnh tay giữa các kí tự. Lệnh Remove Manual Kerns sẽ xóa bỏ các can thiệp này, đưa khoảng cách chữ về chuẩn của phông gốc." },
+        { id: "q10", type: "single", question: "Câu 10: Khi quan sát một hình trái tim có hai điểm lồi hai bên được kí hiệu bằng hình vuông (hoặc hình tròn) nhỏ, đó là loại điểm neo gì?", options: ["Điểm neo góc.", "Điểm chỉ hướng.", "Điểm neo trơn.", "Điểm uốn."], correct: 2, explanation: "Điểm có ký hiệu hình vuông/tròn và tạo ra đường lồi mượt mà như cạnh trái tim chính là điểm neo trơn." },
+        { id: "q11", type: "single", question: "Câu 11: Nếu muốn vẽ đuôi một con chuột có dạng uốn lượn tự do mềm mại, công cụ nào sau đây là phù hợp nhất?", options: ["Công cụ vẽ hình chữ nhật.", "Công cụ vẽ hình elip.", "Công cụ Pen (vẽ đường cong Bezier).", "Công cụ vẽ đa giác và hình sao."], correct: 2, explanation: "Công cụ Pen chuyên dụng để vẽ các đường cong uốn lượn tự do (Bezier) nhờ việc người dùng tự tay đặt và uốn các điểm neo." },
+        { id: "q12", type: "single", question: "Câu 12: Khi chỉnh sửa đối tượng văn bản, thao tác nào cho phép thay đổi màu sắc, phông chữ của chỉ một vài kí tự thay vì toàn bộ đoạn văn?", options: ["Dùng lệnh Text/Put on Path.", "Bôi đen phần văn bản đó và thay đổi tham số.", "Chọn đối tượng và nhấn phím Delete.", "Chuyển văn bản thành đường cong bằng Object to Path."], correct: 1, explanation: "Giống như MS Word, trong Inkscape bạn có thể quét (bôi đen) chính xác những kí tự muốn đổi để áp dụng định dạng riêng biệt." },
+        { id: "q13", type: "single", question: "Câu 13: Lệnh nào sau đây dùng để đặt một đoạn văn bản chạy dọc theo một đường cong mong muốn?", options: ["Text/Remove from Path.", "Text/Put on Path.", "Path/Object to Path.", "Path/Difference."], correct: 1, explanation: "Lệnh Text > Put on Path (Đặt lên đường) sẽ buộc đối tượng văn bản uốn lượn bám chặt theo hình dáng của đường cong đã chọn chung." },
+        { id: "q14", type: "single", question: "Câu 14: Khi bạn đang dùng công cụ tinh chỉnh điểm (Edit paths by nodes), thao tác nào giúp gộp hai điểm neo đang chọn thành một điểm duy nhất?", options: ["Nháy chuột chọn biểu tượng thêm điểm neo.", "Bôi đen hai điểm và nhấn phím Delete.", "Nháy chuột chọn biểu tượng gộp điểm trên thanh điều khiển.", "Chọn lệnh Path/Difference."], correct: 2, explanation: "Sau khi bôi đen 2 điểm neo, bạn bấm vào biểu tượng 'Gộp điểm' (Join selected nodes) trên thanh công cụ phía trên để hợp nhất chúng làm một." },
+        { id: "q15", type: "single", question: "Câu 15: Điều gì tạo ra tiếp tuyến của đường cong tại một điểm mút?", options: ["Sự kết hợp giữa một điểm điều khiển (điểm chỉ hướng) và một điểm mút tương ứng.", "Giao điểm của hai đường cong.", "Khoảng cách giữa hai điểm neo trơn kế tiếp.", "Đường chéo của hình khối ban đầu."], correct: 0, explanation: "Đường thẳng nối từ điểm mút ra tới điểm điều khiển chính là tiếp tuyến, quyết định hướng uốn của đường cong khi rời khỏi điểm mút đó." },
+        { id: "q16", type: "single", question: "Câu 16: Khi đang có một đoạn thẳng nối hai điểm neo rời, để bỏ đoạn nối này đi ta làm thế nào?", options: ["Chuyển cả hai điểm thành điểm neo trơn.", "Gộp hai điểm đó lại làm một.", "Chọn công cụ tinh chỉnh điểm và xóa đoạn nối giữa hai điểm có sẵn.", "Dùng lệnh Text/Remove Manual Kerns."], correct: 2, explanation: "Sử dụng biểu tượng 'Bỏ liên kết đoạn' (Delete segment between two non-endpoint nodes) để cắt đứt đoạn thẳng nối giữa 2 điểm neo được chọn." },
+        { id: "q17", type: "single", question: "Câu 17: Bạn đang có một hình chữ nhật đã được chuyển thành đối tượng đường. Nếu bạn bôi đen hai điểm neo ở cạnh trên cùng và thực hiện lệnh 'Gộp điểm', hình chữ nhật sẽ biến thành hình gì?", options: ["Hình elip.", "Hình tam giác.", "Hình thang.", "Hình sao."], correct: 1, explanation: "Khi 2 đỉnh trên của hình chữ nhật bị gộp lại thành 1 điểm duy nhất ở giữa, cạnh trên biến mất, ta sẽ thu được một hình tam giác." },
+        { id: "q18", type: "single", question: "Câu 18: Khi vẽ hình miếng dưa hấu, để tạo chi tiết 'vết cắn', ta vẽ một đường cong gợn sóng đè lên miếng dưa hấu rồi dùng lệnh nào để cắt?", options: ["Path/Object to Path.", "Path/Difference.", "Text/Put on Path.", "Path/Union."], correct: 1, explanation: "Lấy hình dưa hấu (ở dưới) trừ đi vùng lấn của đường gợn sóng (ở trên) bằng lệnh Difference sẽ tạo ra vùng bị khuyết (vết cắn)." },
+        { id: "q19", type: "single", question: "Câu 19: Khi vẽ nhánh lá cỏ 4 lá, thao tác nào giúp nhân bản nhanh chiếc lá đầu tiên thành các chiếc lá tiếp theo để ghép lại?", options: ["Lệnh Duplicate.", "Lệnh Put on Path.", "Lệnh Object to Path.", "Lệnh Edit paths by nodes."], correct: 0, explanation: "Lệnh Duplicate (Ctrl + D) cho phép tạo ra một bản sao y hệt đè trực tiếp lên hình gốc một cách nhanh chóng nhất." },
+        { id: "q20", type: "single", question: "Câu 20: Nếu đoạn văn bản uốn lượn theo đường cong bị lộn ngược, bạn cần phải làm gì để điều chỉnh?", options: ["Xóa văn bản đi gõ lại.", "Điều chỉnh hoặc lật lại đường cong (đối tượng đường) mà văn bản bám theo.", "Đổi phông chữ khác.", "Tăng khoảng cách giữa các từ."], correct: 1, explanation: "Văn bản luôn bám theo chiều và hướng của nét vẽ đường cong. Nếu chữ bị lộn, chỉ cần lật ngược hướng của đường cong (Reverse Path) thì chữ sẽ xoay lại." },
+        { id: "q21", type: "single", question: "Câu 21: Cần ít nhất bao nhiêu điểm để xác định một đường parabol?", options: ["1 điểm.", "2 điểm.", "3 điểm.", "4 điểm."], correct: 2, explanation: "Theo toán học, để vẽ một đường cong parabol đặc trưng, người ta cần tối thiểu 3 điểm làm cơ sở nội suy." },
+        { id: "q22", type: "single", question: "Câu 22: Khi chọn công cụ Text (chữ A), 4 ô đầu tiên trên thanh điều khiển cho phép bạn thay đổi những thuộc tính nào?", options: ["Phông chữ, kiểu chữ, cỡ chữ, khoảng cách giữa các dòng.", "Khoảng cách chữ, khoảng cách từ, xoay kí tự.", "Màu nền, màu viền, độ trong suốt.", "Điểm neo trơn, điểm neo góc, đường chỉ hướng."], correct: 0, explanation: "Các thông số cơ bản nhất của Text nằm ở 4 ô đầu tiên: Font family (Phông), Style (Kiểu nghiêng/đậm), Size (Cỡ) và Spacing between lines (Khoảng cách dòng)." },
+        { id: "q23", type: "single", question: "Câu 23: Hình khối chữ nhật mặc định chưa chuyển thành đường (Hình 14.1a) sẽ có bao nhiêu điểm đánh dấu để tùy chỉnh cơ bản?", options: ["4 hình thoi nhỏ.", "3 điểm (2 ô vuông nhỏ ở góc, 1 hình tròn nhỏ ở góc trên).", "Không có điểm nào.", "2 điểm (1 hình tròn, 1 hình thoi)."], correct: 1, explanation: "Hình khối mặc định chỉ hiển thị 3 điểm (handles) để tùy chỉnh nhanh chiều dài/rộng và bo cong góc, không hiện 4 điểm neo như đường tự do." },
+        { id: "q24", type: "single", question: "Câu 24: Thao tác nào đúng để xóa bỏ một điểm neo thừa trên đường cong?", options: ["Chọn điểm neo đó và nhấn phím Delete hoặc biểu tượng bỏ điểm.", "Chọn điểm neo đó và nhấn tổ hợp Ctrl + D.", "Chọn điểm neo đó và chọn biểu tượng neo trơn.", "Dùng lệnh Text/Remove from Path."], correct: 0, explanation: "Sau khi bấm chọn điểm neo bằng công cụ Edit paths by nodes, chỉ cần ấn phím Delete trên bàn phím là điểm đó sẽ bị xoá." },
+
+        { id: "qII_1", type: "tf_cluster", context: "Câu 1: Bạn Lan đang muốn biến đổi một hình vuông thành biểu tượng hình chiếc lá. Lan vẽ hình vuông ra vùng làm việc và bắt đầu thao tác với công cụ tinh chỉnh điểm (Edit paths by nodes).", items: [
+            { id: "a", text: "a) Ban đầu, hình vuông Lan vừa vẽ là một đối tượng hình khối được định nghĩa sẵn bằng các tính chất toán học.", correct: true, expl: "Công cụ vẽ hình vuông/chữ nhật mặc định tạo ra đối tượng hình khối được Inkscape quản lý theo quy luật toán học (chứ chưa phải đường tự do)." },
+            { id: "b", text: "b) Để có thể chỉnh sửa tự do các góc của hình vuông, Lan phải dùng lệnh Text/Put on Path để chuyển nó thành đối tượng dạng đường.", correct: false, expl: "Lệnh đúng phải là Path > Object to Path. Text/Put on Path là lệnh để uốn chữ theo đường cong." },
+            { id: "c", text: "c) Khi Lan kéo đường chỉ hướng của một điểm neo góc (có hình thoi), độ cong của các đoạn thẳng tại vị trí đó sẽ thay đổi.", correct: true, expl: "Đường chỉ hướng là công cụ kiểm soát tiếp tuyến và độ cong của đoạn thẳng xuất phát từ điểm neo đó." },
+            { id: "d", text: "d) Để phần đáy chiếc lá được tròn trịa và mềm mại, Lan cần chọn hai điểm neo ở cạnh dưới và chuyển chúng thành điểm neo trơn.", correct: true, expl: "Điểm neo trơn (Smooth nodes) giúp loại bỏ góc cạnh sắc nhọn, làm cho đường nối trở nên cong mượt, rất phù hợp vẽ đáy chiếc lá." }
+        ]},
+        { id: "qII_2", type: "tf_cluster", context: "Câu 2: Bạn Minh thiết kế một chiếc huy hiệu tròn và muốn dòng chữ 'CÂU LẠC BỘ TIN HỌC' chạy uốn lượn ôm sát theo viền của huy hiệu đó.", items: [
+            { id: "a", text: "a) Minh sử dụng công cụ có biểu tượng chữ A trên hộp công cụ để nhập đoạn văn bản.", correct: true, expl: "Biểu tượng chữ A (Text tool) là công cụ chuyên dùng để chèn đối tượng văn bản vào bản thiết kế." },
+            { id: "b", text: "b) Để ép dòng chữ bám theo đường tròn của huy hiệu, Minh chọn cả chữ và hình tròn rồi dùng lệnh Path/Object to Path.", correct: false, expl: "Lệnh uốn chữ theo đường là Text > Put on Path, chứ không phải Object to Path." },
+            { id: "c", text: "c) Kể cả khi dòng chữ đã bám theo đường cong, Minh vẫn có thể bôi đen chữ 'TIN HỌC' để đổi thành màu đỏ cho nổi bật hơn.", correct: true, expl: "Đối tượng Text trong Inkscape rất linh hoạt, ngay cả khi đang uốn lượn vẫn cho phép tùy chỉnh định dạng từng phần tử kí tự bên trong độc lập." },
+            { id: "d", text: "d) Nếu Minh thấy các chữ cái đứng quá sát nhau, bạn ấy có thể chỉnh sửa khoảng cách giữa các kí tự bằng thông số trên thanh điều khiển.", correct: true, expl: "Thanh điều khiển Text cung cấp các thông số Kerns (như khoảng cách giữa chữ, từ) để người dùng tinh chỉnh theo ý muốn." }
+        ]},
+        { id: "qII_3", type: "tf_cluster", context: "Câu 3: Trong bài thực hành, bạn Hoa cần vẽ một hình trái tim để ghép vào tấm thiệp. Hoa mở file và phân tích các điểm neo cấu tạo nên hình trái tim mẫu.", items: [
+            { id: "a", text: "a) Điểm đỉnh nhọn phía trên và phần đuôi nhọn phía dưới của trái tim là các điểm neo góc.", correct: true, expl: "Các vị trí tạo ra góc gắt, có đỉnh nhọn (không mượt) như chóp và đuôi trái tim luôn sử dụng điểm neo góc (corner nodes)." },
+            { id: "b", text: "b) Hai điểm lồi nằm ở hai bên của trái tim được thể hiện bằng hình thoi.", correct: false, expl: "Hai điểm lồi hai bên là điểm neo trơn (Smooth nodes) để tạo đường cong mượt, chúng được ký hiệu bằng hình vuông hoặc hình tròn, KHÔNG phải hình thoi." },
+            { id: "c", text: "c) Tại các điểm neo góc (đuôi trái tim), hai đường chỉ hướng có thể gập lại tạo thành một góc thay vì phải nằm trên cùng một đường thẳng.", correct: true, expl: "Đặc điểm của điểm neo góc là hai đường chỉ hướng hoạt động hoàn toàn độc lập, có thể bẻ gập lại để tạo nét nhọn cứng." },
+            { id: "d", text: "d) Để vẽ thêm mũi tên xuyên qua trái tim, Hoa nên dùng lệnh Path/Difference để gộp mũi tên và trái tim lại thành một hình duy nhất.", correct: false, expl: "Để gộp 2 hình lại thành 1 khối hợp nhất, phải sử dụng lệnh Path > Union. Lệnh Difference là lệnh cắt/trừ hình." }
+        ]},
+        { id: "qII_4", type: "tf_cluster", context: "Câu 4: Bạn Hùng đang thiết kế một tờ rơi quảng cáo. Hùng vô tình chỉnh sửa khoảng cách các kí tự bằng tay khiến đoạn văn bản bị lộn xộn, và bạn ấy muốn đưa văn bản về định dạng chuẩn, đồng thời tạo một vết đứt gãy trên hình ảnh minh hoạ chiếc lá.", items: [
+            { id: "a", text: "a) Hùng có thể thay đổi khoảng cách giữa các dòng của đoạn văn bằng các ô tham số đầu tiên trên thanh điều khiển Text.", correct: true, expl: "Tham số chỉnh khoảng cách giữa các dòng (Line height/spacing) nằm ở nhóm 4 ô công cụ đầu tiên của thanh điều khiển Text." },
+            { id: "b", text: "b) Lệnh Text/Remove from Path sẽ giúp Hùng xóa bỏ mọi tùy chỉnh khoảng cách thủ công (Kerns) để chữ trở lại bình thường.", correct: false, expl: "Lệnh xóa tuỳ chỉnh khoảng cách là Text > Remove Manual Kerns. Còn Remove from Path dùng để gỡ chữ ra khỏi đường cong." },
+            { id: "c", text: "c) Một đối tượng đường như chiếc lá của Hùng là tổ hợp của một hay nhiều đoạn thẳng, đoạn cong nối lại với nhau.", correct: true, expl: "Đây là định nghĩa cơ bản và chính xác nhất về Đối tượng tự do dạng đường (Path) trong phần mềm đồ họa vector." },
+            { id: "d", text: "d) Để tạo vết đứt gãy trên lá, Hùng có thể vẽ một đường cong cắt ngang chiếc lá, rồi chọn cả hai và dùng lệnh chỉnh sửa điểm neo tách điểm (hoặc dùng phép Path/Difference).", correct: true, expl: "Hùng có thể dùng một nét vẽ đè lên và dùng Difference để trừ khối, tạo ra một vết nứt khuyết tự nhiên trên chiếc lá." }
+        ]}
+    ];
+
+   window.startQuizAction = function() {
+        try {
+            const errDiv = document.getElementById('login-error');
+            if(errDiv) errDiv.classList.add('hidden');
+            const name = document.getElementById('hoTen').value.trim();
+            const lop = document.getElementById('lop').value.trim();
+            if (!name || !lop) {
+                if(errDiv) { errDiv.innerText = "⚠️ Vui lòng nhập đầy đủ Họ tên và Lớp!"; errDiv.classList.remove('hidden'); } 
+                else { alert("⚠️ Vui lòng nhập đầy đủ Họ tên và Lớp!"); }
+                return;
+            }
+            currentStudent = { hoTen: name, lop: lop, maDe: 'bai14', tenDe: 'Tin học 10 - Bài 14' }; // Đã sửa maDe thành bai14
+            currentQuestions = JSON.parse(JSON.stringify(exam_data));
+            quizStartTime = new Date();
+            setTimeout(() => { isQuizStarted = true; }, 1000);
+            showSection('quiz');
+            userAnswers = {};
+            window.renderAllQuestions();
+            startTimer(45 * 60); 
+        } catch (error) { console.error(error); }
+    };
+
+    window.viewScoresAction = function() {
+        searchTerm = ''; 
+        document.getElementById('search-student').value = '';
+        currentPage = 1;
+        if (database) {
+            scoresRef.once('value').then((snapshot) => {
+                const data = snapshot.val();
+                allScores = data ? Object.keys(data).map(key => ({...data[key], id: key})) : [];
+                window.renderScores();
+                showSection('scores');
+            });
+        }
+    };
+
+    window.searchStudent = function(val) { searchTerm = val.toLowerCase(); currentPage = 1; window.renderScores(); };
+    window.changePage = function(page) { currentPage = page; window.renderScores(); };
+    window.goHome = function() {
+        if(document.getElementById('hoTen')) document.getElementById('hoTen').value = ''; 
+        if(document.getElementById('lop')) document.getElementById('lop').value = ''; 
+        clearInterval(timerInterval); showSection('login');
+    };
+
+    function getTotalScoreItems() { return currentQuestions.length; }
+
+    function getAnsweredCount() {
+        let count = 0;
+        currentQuestions.forEach(q => {
+            if (q.type === 'single') {
+                if (userAnswers[q.id] !== undefined) count++;
+            } else if (q.type === 'tf_cluster') {
+                let answeredItems = 0;
+                q.items.forEach(item => { if (userAnswers[q.id + '_' + item.id] !== undefined) answeredItems++; });
+                if (answeredItems === 4) count++; 
+            }
+        });
+        return count;
+    }
+
+   window.selectAnswer = function(qId, val, type) {
+        if (type === 'tf') {
+            userAnswers[qId] = val;
+            const btnT = document.getElementById(`btnT_${qId}`);
+            const btnF = document.getElementById(`btnF_${qId}`);
+            if (val === true) { btnT.classList.add('selected'); btnT.classList.remove('bg-white'); btnF.classList.remove('selected'); btnF.classList.add('bg-white'); } 
+            else { btnF.classList.add('selected'); btnF.classList.remove('bg-white'); btnT.classList.remove('selected'); btnT.classList.add('bg-white'); }
+        } else if (type === 'single') { userAnswers[qId] = val; }
+        requestAnimationFrame(() => {
+            const pgText = document.getElementById('progress-text');
+            if(pgText) pgText.innerText = `${getAnsweredCount()}/${getTotalScoreItems()}`;
+        });
+    };
+
+    window.renderAllQuestions = function() {
+        if (!currentQuestions || currentQuestions.length === 0) return;
+        const container = document.getElementById('question-container');
+        if(!container) return;
+        let html = ''; let currentType = '';
+        currentQuestions.forEach((q) => {
+            if (q.type !== currentType) {
+                currentType = q.type;
+                let headerText = ''; let roman = '';
+                if(currentType === 'single') { headerText = 'TRẮC NGHIỆM MỘT LỰA CHỌN'; roman = 'I'; }
+                if(currentType === 'tf_cluster') { headerText = 'TRẮC NGHIỆM ĐÚNG/SAI'; roman = 'II'; }
+                html += `<div class="flex items-center gap-3 mt-8 mb-4 border-b-2 border-blue-100 pb-3"><span class="bg-gradient-to-br from-blue-500 to-indigo-600 text-white w-14 h-14 flex items-center justify-center rounded-xl font-black text-2xl shadow-md">${roman}</span><h3 class="text-2xl sm:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-700 to-indigo-700 tracking-wide uppercase">${headerText}</h3></div>`;
+            }
+            html += `<div class="fade-in w-full bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-blue-100 relative mb-6 hover:shadow-md transition-shadow">`;
+            if (q.type === 'single') {
+                const uAns = userAnswers[q.id];
+                html += `<div class="flex gap-4 mb-5"><div class="w-full math-scroll"><p class="text-xl font-bold text-red-600 mt-1 leading-snug tracking-tight">${q.question}</p></div></div>`;
+                html += `<div class="space-y-4 md:pl-6 mt-6">`;
+                q.options.forEach((opt, i) => {
+                    const isChecked = (uAns === i) ? 'checked' : '';
+                    html += `<div class="flex items-center"><input type="radio" id="opt_${q.id}_${i}" name="q_${q.id}" value="${i}" class="hidden single-radio" ${isChecked} onchange="window.selectAnswer('${q.id}', ${i}, 'single')"><label for="opt_${q.id}_${i}" class="option-label w-full p-4 border-2 border-gray-200 rounded-2xl flex items-center gap-4 bg-white shadow-sm font-bold text-lg hover:border-blue-300"><div class="w-12 h-12 rounded-xl border-2 border-gray-300 flex items-center justify-center text-lg font-black text-gray-400 flex-shrink-0 bg-gray-50">${String.fromCharCode(65 + i)}</div><div class="text-gray-700 leading-relaxed math-scroll flex-1">${opt}</div></label></div>`;
+                });
+                html += `</div>`;
+            } else if (q.type === 'tf_cluster') {
+                html += `<div class="bg-red-50 text-red-700 p-5 rounded-xl font-bold mb-4 border-2 border-red-100 text-xl leading-relaxed math-scroll">${q.context}</div><div class="space-y-4 mt-6">`;
+                q.items.forEach((item) => {
+                    const combinedId = q.id + '_' + item.id;
+                    let ans = userAnswers[combinedId];
+                    let btnT = ans === true ? 'selected' : 'bg-white'; let btnF = ans === false ? 'selected' : 'bg-white';
+                    html += `<div class="p-5 border-2 border-gray-100 rounded-2xl bg-white shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4 transition-all hover:border-blue-200"><div class="font-bold text-gray-800 flex-1 text-lg math-scroll">${item.text}</div><div class="flex gap-3 shrink-0"><button id="btnT_${combinedId}" onclick="window.selectAnswer('${combinedId}', true, 'tf')" class="btn-tf w-24 sm:w-28 py-3 rounded-xl font-extrabold text-lg ${btnT}">ĐÚNG</button><button id="btnF_${combinedId}" onclick="window.selectAnswer('${combinedId}', false, 'tf')" class="btn-tf w-24 sm:w-28 py-3 rounded-xl font-extrabold text-lg ${btnF}">SAI</button></div></div>`;
+                });
+                html += `</div>`;
+            } 
+            html += `</div>`;
+        });
+        container.innerHTML = html;
+        const pgText = document.getElementById('progress-text');
+        if(pgText) pgText.innerText = `${getAnsweredCount()}/${getTotalScoreItems()}`;
+    };
+
+    function formatDuration(sec) {
+        const m = Math.floor(sec / 60); const s = sec % 60; return `${m}p ${s}s`;
+    }
+
+    window.promptSubmit = function() {
+        if (!isQuizStarted) return;
+        document.getElementById('confirm-answered').innerText = getAnsweredCount();
+        document.getElementById('confirm-total').innerText = getTotalScoreItems();
+        document.getElementById('confirm-submit-modal').classList.remove('hidden');
+    };
+
+    window.closeConfirmModal = function() { document.getElementById('confirm-submit-modal').classList.add('hidden'); };
+
+    window.executeSubmit = function() {
+        window.closeConfirmModal();
+        isQuizStarted = false; 
+        quizEndTime = new Date();
+        clearInterval(timerInterval);
+        
+        let score = 0;
+        currentQuestions.forEach(q => {
+            if (q.type === 'single') {
+                if (userAnswers[q.id] === q.correct) score += 0.25;
+            } else if (q.type === 'tf_cluster') {
+                let correctCount = 0;
+                q.items.forEach(item => { if (userAnswers[q.id + '_' + item.id] === item.correct) { correctCount++; } });
+                if (correctCount === 1) score += 0.1;
+                else if (correctCount === 2) score += 0.25;
+                else if (correctCount === 3) score += 0.5;
+                else if (correctCount === 4) score += 1.0;
+            }
+        });
+
+        score = score.toFixed(2); 
+
+        const record = {
+            hoTen: currentStudent.hoTen, lop: currentStudent.lop, tenDe: currentStudent.tenDe, maDe: currentStudent.maDe, diem: parseFloat(score),
+            startTime: quizStartTime.toISOString(), thoiGian: quizEndTime.toISOString(), deviceId: deviceId, userAnswers: userAnswers 
+        };
+        
+        if(database) { scoresRef.push(record, () => { window.showModalResult(score, formatDuration(Math.floor((quizEndTime - quizStartTime) / 1000))); }); } 
+        else { window.showModalResult(score, formatDuration(Math.floor((quizEndTime - quizStartTime) / 1000))); }
+    };
+
+    window.showModalResult = function(score, dur) {
+        ['login', 'quiz', 'scores', 'review'].forEach(s => { const el = document.getElementById(s+'-section'); if(el) el.classList.add('hidden'); });
+        const resEl = document.getElementById('result-section'); if(resEl) resEl.classList.remove('hidden');
+        document.getElementById('result-content').innerHTML = `
+        <div class="flex justify-start mb-4"><button onclick="window.goHome()" class="px-5 py-3 bg-gray-100 text-gray-700 rounded-xl font-bold hover:bg-gray-200 transition-colors shadow-sm border border-gray-200 text-lg">🏠 Trang chủ</button></div>
+        <div class="text-center"><div class="text-7xl mb-4 animate-bounce">🎉</div><h3 class="text-3xl font-black text-emerald-600 mb-2">Hoàn thành bài thi!</h3><p class="text-gray-600 mb-6 mt-2"><span class="font-extrabold text-blue-700 text-xl uppercase tracking-wider">${currentStudent.hoTen} - Lớp ${currentStudent.lop}</span></p></div>
+        <div class="bg-blue-50 border-2 border-blue-100 rounded-3xl p-8 mb-6 shadow-inner relative text-center"><div class="text-base text-blue-500 font-extrabold mb-2 uppercase tracking-widest">ĐIỂM SỐ CỦA BẠN</div><div class="text-7xl font-black text-blue-600 drop-shadow-sm">${score} <span class="text-3xl text-gray-400">/ 10</span></div></div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4"><button onclick="window.reviewQuiz()" class="w-full py-4 bg-gradient-to-r from-indigo-500 to-purple-500 text-white rounded-xl font-extrabold shadow-sm hover:shadow-md transition-colors text-xl">📝 Xem lại bài</button><button onclick="window.viewScoresAction()" class="w-full py-4 bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-xl font-extrabold shadow-sm hover:shadow-md transition-colors text-xl">🏆 Bảng điểm</button></div>`;
+    };
+
+    function getStatusBadge(isCorrect, isUnanswered) {
+        if (isUnanswered) return `<div class="mt-4 mb-2 inline-block px-4 py-2 bg-yellow-100 text-yellow-800 text-base font-black rounded-lg border border-yellow-300 shadow-sm">⚠️ CHƯA LÀM</div>`;
+        if (isCorrect) return `<div class="mt-4 mb-2 inline-block px-4 py-2 bg-emerald-100 text-emerald-800 text-base font-black rounded-lg border border-emerald-300 shadow-sm">✅ ĐÚNG</div>`;
+        return `<div class="mt-4 mb-2 inline-block px-4 py-2 bg-red-100 text-red-800 text-base font-black rounded-lg border border-red-300 shadow-sm">❌ SAI</div>`;
+    }
+
+    window.reviewQuiz = function() {
+        showSection('review');
+        const container = document.getElementById('review-content');
+        if(!container) return; let html = '';
+        let currentType = '';
+
+        currentQuestions.forEach((q) => {
+            if (q.type !== currentType) {
+                currentType = q.type;
+                let headerText = ''; let roman = '';
+                if(currentType === 'single') { headerText = 'TRẮC NGHIỆM MỘT LỰA CHỌN'; roman = 'I'; }
+                if(currentType === 'tf_cluster') { headerText = 'TRẮC NGHIỆM ĐÚNG/SAI'; roman = 'II'; }
+                html += `<div class="flex items-center gap-3 mt-8 mb-4 border-b-2 border-indigo-100 pb-3"><span class="bg-gradient-to-br from-indigo-500 to-purple-600 text-white w-14 h-14 flex items-center justify-center rounded-xl font-black text-2xl shadow-md">${roman}</span><h3 class="text-2xl sm:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-indigo-700 to-purple-700 tracking-wide uppercase">${headerText}</h3></div>`;
+            }
+
+            if (q.type === 'single') {
+                let uAns = userAnswers[q.id]; let isUnanswered = (uAns === undefined); let isCorrect = (uAns === q.correct);
+                let borderColor = isCorrect ? 'border-emerald-300 bg-emerald-50' : 'border-red-300 bg-red-50';
+                html += `<div class="p-6 border-2 rounded-2xl shadow-sm mb-6 ${borderColor}"><div class="font-bold text-xl text-red-600 mb-5 leading-relaxed math-scroll">${q.question}</div><div class="space-y-3">`;
+                q.options.forEach((opt, i) => {
+                    let optBg = ''; let iconHtml = '';
+                    if (q.correct === i) { optBg = 'bg-emerald-100 text-emerald-900 border-emerald-400 border-2'; iconHtml = '✅'; } 
+                    else if (uAns === i && !isCorrect) { optBg = 'bg-red-100 text-red-900 line-through border-red-400 border-2'; iconHtml = '❌'; } 
+                    else { optBg = 'bg-white text-slate-700 border border-slate-200'; }
+                    html += `<div class="p-4 rounded-xl ${optBg} flex items-center gap-4"><div class="w-10 h-10 flex items-center justify-center rounded-lg bg-white/50 text-base font-black shadow-sm flex-shrink-0">${String.fromCharCode(65 + i)}</div><div class="${(q.correct === i || uAns === i) ? 'font-semibold' : 'font-medium'} flex-1 text-lg math-scroll">${opt}</div><div class="text-3xl drop-shadow-sm ml-auto pl-2 flex-shrink-0">${iconHtml}</div></div>`;
+                });
+                html += `</div>${getStatusBadge(isCorrect, isUnanswered)}`;
+                
+                if (q.explanation) {
+                    html += `<div class="review-explanation mt-3 pt-3 border-t-2 border-gray-200"><p class="text-base font-black uppercase tracking-widest text-blue-600 mb-2">💡 Giải chi tiết:</p><p class="text-black font-medium text-lg leading-loose math-scroll">${q.explanation}</p></div>`;
+                }
+                html += `</div>`;
+            } 
+            else if (q.type === 'tf_cluster') {
+                html += `<div class="p-6 border-2 border-indigo-200 bg-indigo-50 rounded-2xl shadow-sm mb-6"><div class="font-bold text-xl text-indigo-800 mb-5 math-scroll">${q.context}</div><div class="space-y-5">`;
+                q.items.forEach(item => {
+                    let uAns = userAnswers[q.id + '_' + item.id]; let isUnanswered = (uAns === undefined); let isCorrect = (uAns === item.correct);
+                    let iconHtml = isCorrect ? '✅' : '❌'; let ansText = item.correct ? 'ĐÚNG' : 'SAI';
+                    
+                    html += `<div class="p-5 bg-white border border-indigo-100 rounded-xl shadow-sm"><div class="font-bold text-gray-800 text-lg math-scroll">${item.text}</div><div class="mt-3 flex items-center justify-between border-b border-gray-100 pb-3"><span class="text-base font-bold text-gray-500">Bạn chọn: <span class="${isUnanswered ? 'text-gray-400' : 'text-blue-600'} font-black uppercase">${isUnanswered ? 'Chưa trả lời' : (uAns?'Đúng':'Sai')}</span></span><span class="font-black text-xl ${isCorrect ? 'text-emerald-500' : 'text-red-500'}">Đáp án: ${ansText} ${iconHtml}</span></div>${getStatusBadge(isCorrect, isUnanswered)}`;
+                    
+                    if (item.expl) {
+                        html += `<div class="review-explanation mt-4 p-4 bg-indigo-50 border-l-4 border-indigo-500 rounded-r-xl text-lg text-gray-700 font-medium leading-relaxed math-scroll">
+                            <span class="text-indigo-700 font-black uppercase tracking-widest block mb-2">💡 Giải chi tiết:</span>
+                            <span class="text-black">${item.expl}</span>
+                        </div>`;
+                    }
+                    html += `</div>`;
+                });
+                html += `</div></div>`;
+            }
+        });
+        container.innerHTML = html;
+    };
+
+    window.backToResult = function() { showSection('result'); };
+    let isReviewingFromLeaderboard = false;
+    window.backFromReview = function() {
+        if (isReviewingFromLeaderboard) { showSection('scores'); isReviewingFromLeaderboard = false; } 
+        else { window.backToResult(); }
+    };
+
+    window.reviewStudentScore = function(scoreId) {
+        const record = allScores.find(x => x.id === scoreId);
+        if (!record) return;
+        currentStudent = { hoTen: record.hoTen, lop: record.lop, tenDe: record.tenDe, maDe: record.maDe };
+        userAnswers = record.userAnswers || {}; 
+        currentQuestions = JSON.parse(JSON.stringify(exam_data)); 
+        isReviewingFromLeaderboard = true;
+        window.reviewQuiz();
+    };
+
+    window.renderScores = function() {
+        const tbody = document.getElementById('scores-tbody');
+        const noScore = document.getElementById('no-scores');
+        const myRankDisplay = document.getElementById('my-rank-display');
+        const paginationContainer = document.getElementById('pagination-controls');
+        if(!tbody) return;
+
+        const sortedAll = [...allScores].sort((a, b) => b.diem - a.diem);
+        
+        sortedAll.forEach((s, i) => s.absoluteRank = i + 1);
+
+        const myRankIndex = sortedAll.findIndex(s => s.deviceId === deviceId);
+        if (myRankDisplay) {
+            if (myRankIndex !== -1) { myRankDisplay.innerHTML = `STT của bạn: <span class="text-red-600 font-black">${sortedAll[myRankIndex].absoluteRank}</span>`; } 
+            else { myRankDisplay.innerHTML = `STT của bạn: <span class="text-gray-400">Chưa thi</span>`; }
+        }
+
+        const filteredScores = searchTerm ? sortedAll.filter(s => s.hoTen.toLowerCase().includes(searchTerm)) : sortedAll;
+        if (filteredScores.length === 0) {
+            tbody.innerHTML = ''; noScore.classList.remove('hidden'); paginationContainer.innerHTML = ''; return; 
+        }
+        
+        noScore.classList.add('hidden');
+        const totalPages = Math.ceil(filteredScores.length / itemsPerPage);
+        if (currentPage > totalPages) currentPage = totalPages; if (currentPage < 1) currentPage = 1;
+        const startIndex = (currentPage - 1) * itemsPerPage; const endIndex = startIndex + itemsPerPage;
+        const pageItems = filteredScores.slice(startIndex, endIndex);
+
+        tbody.innerHTML = pageItems.map((s) => {
+            const isMe = s.deviceId === deviceId;
+            let timeDisplay = "";
+            if (s.thoiGian) {
+                const d = new Date(s.thoiGian);
+                if (!isNaN(d)) {
+                    timeDisplay = `${d.getDate().toString().padStart(2, '0')}/${(d.getMonth() + 1).toString().padStart(2, '0')}/${d.getFullYear()}`;
+                }
+            }
+
+            return `<tr class="${isMe ? 'my-score-row' : 'hover:bg-slate-50'} transition-colors border-b border-slate-100">
+            <td class="px-4 py-5 font-black text-slate-500 text-base text-center">${s.absoluteRank}</td>
+            <td class="px-4 py-5 font-extrabold text-slate-800 text-base">${s.hoTen} ${isMe ? '<span class="ml-2 bg-pink-500 text-white text-xs px-2 py-1 rounded-md shadow-sm">Bạn</span>' : ''}</td>
+            <td class="px-4 py-5 font-black text-blue-600 text-base text-center">${s.lop}</td>
+            <td class="px-4 py-5 text-center font-black text-orange-600 text-sm whitespace-nowrap">${timeDisplay}</td>
+            <td class="px-4 py-5 text-center"><span class="font-black text-2xl ${s.diem >= 5 ? 'text-emerald-600' : 'text-red-500'}">${s.diem}</span></td>
+            <td class="px-4 py-5 text-center">
+                <button onclick="window.reviewStudentScore('${s.id}')" class="bg-indigo-100 text-indigo-700 hover:bg-indigo-200 px-4 py-2 rounded-lg font-bold text-sm transition-colors border border-indigo-200 shadow-sm cursor-pointer whitespace-nowrap">Xem lại</button>
+            </td>
+        </tr>`;
+        }).join('');
+        renderPagination(totalPages);
+    };
+
+    function renderPagination(totalPages) {
+        const container = document.getElementById('pagination-controls');
+        if (!container) return;
+        if (totalPages <= 1) { container.innerHTML = ''; return; }
+        let html = '<div class="flex flex-wrap items-center justify-center gap-2">';
+        html += `<button onclick="window.changePage(${currentPage - 1})" class="px-4 py-2 rounded-xl font-bold transition-colors ${currentPage === 1 ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 shadow-sm'}" ${currentPage === 1 ? 'disabled' : ''}>&laquo; Trước</button>`;
+        let startPage = Math.max(1, currentPage - 1); let endPage = Math.min(totalPages, currentPage + 1);
+        if (startPage > 1) { html += `<button onclick="window.changePage(1)" class="px-4 py-2 rounded-xl font-bold bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 shadow-sm">1</button>`; if (startPage > 2) html += `<span class="px-2 text-gray-400 font-black">...</span>`; }
+        for (let i = startPage; i <= endPage; i++) { html += `<button onclick="window.changePage(${i})" class="px-4 py-2 rounded-xl font-bold transition-all ${i === currentPage ? 'bg-orange-500 text-white shadow-md border-orange-600' : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 shadow-sm'}">${i}</button>`; }
+        if (endPage < totalPages) { if (endPage < totalPages - 1) html += `<span class="px-2 text-gray-400 font-black">...</span>`; html += `<button onclick="window.changePage(${totalPages})" class="px-4 py-2 rounded-xl font-bold bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 shadow-sm">${totalPages}</button>`; }
+        html += `<button onclick="window.changePage(${currentPage + 1})" class="px-4 py-2 rounded-xl font-bold transition-colors ${currentPage === totalPages ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 shadow-sm'}" ${currentPage === totalPages ? 'disabled' : ''}>Sau &raquo;</button>`;
+        html += '</div>'; container.innerHTML = html;
+    }
+
+    function showSection(id) {
+        ['login', 'quiz', 'scores', 'result', 'review'].forEach(s => { const el = document.getElementById(s+'-section'); if(el) el.classList.add('hidden'); });
+        const tgt = document.getElementById(id+'-section'); if(tgt) tgt.classList.remove('hidden');
+    }
+
+    function startTimer(seconds) {
+        const display = document.getElementById('timer'); if(!display) return;
+        let remaining = seconds;
+        timerInterval = setInterval(() => {
+            remaining--;
+            const m = Math.floor(remaining / 60).toString().padStart(2, '0');
+            const s = (remaining % 60).toString().padStart(2, '0');
+            display.innerText = `${m}:${s}`;
+            if (remaining <= 0) window.submitQuiz();
+        }, 1000);
+    }
+
+    try {
+        if (!localStorage.getItem('deviceId')) localStorage.setItem('deviceId', 'dev_' + Math.random().toString(36).substr(2) + Date.now());
+        deviceId = localStorage.getItem('deviceId');
+    } catch (e) { deviceId = 'dev_temp_' + Math.random().toString(36).substr(2); }
+  </script>
+ </body>
+</html>

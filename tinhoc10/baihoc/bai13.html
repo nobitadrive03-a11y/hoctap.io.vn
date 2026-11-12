@@ -1,0 +1,646 @@
+<!doctype html>
+<html lang="vi" class="w-full h-full m-0 p-0">
+ <head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <title>Tin Học 10 - Bài 13</title>
+
+    <meta name="description" content="Đề kiểm tra kiến thức bài học. Bài 13: Phần mềm thiết kế đồ hoạ - Tin học 10 - Trường THPT Phan Đình Phùng - Quảng Trị.">
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- GỘP MÃ GA4: Gọi thư viện Google một lần duy nhất -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-NSJCVSL9RM"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  // 1. Cấu hình gửi dữ liệu về Tài khoản 1
+  gtag('config', 'G-NSJCVSL9RM'); 
+
+  // 2. Cấu hình gửi dữ liệu về Tài khoản 2
+  gtag('config', 'G-HE4GXY8B53'); 
+
+  // 3. Cấu hình gửi dữ liệu về Tài khoản 3
+  gtag('config', 'G-Q6X1TL9PRV');
+</script>
+
+<!-- MÃ NHỊP TIM: Tự động gửi về các tài khoản trên -->
+<script>
+  setInterval(function() {
+    if (!document.hidden) { 
+      gtag('event', 'keep_alive', {
+        'event_category': 'Engagement',
+        'event_label': 'Học sinh đang làm bài',
+        'non_interaction': false
+      });
+    }
+  }, 30000); 
+</script>
+
+  <!-- FIREBASE SDK v8 -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+  <style>
+    * { 
+        -webkit-tap-highlight-color: transparent; 
+        -webkit-touch-callout: none !important; 
+        touch-action: manipulation;
+    }
+    html, body { width: 100%; min-height: 100vh; margin: 0; padding: 0; overflow-x: hidden; }
+    body { 
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
+      background: linear-gradient(-45deg, #10b981, #3b82f6, #6366f1, #8b5cf6);
+      background-size: 400% 400%;
+      animation: gradientBG 15s ease infinite;
+    }
+    @keyframes gradientBG {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+    #app { width: 100%; min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden; }
+    .glass-card {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+    .option-label { transition: background-color 0.1s ease, border-color 0.1s ease; cursor: pointer; border-color: #e2e8f0; }
+    .option-label:hover { background-color: #f0fdfa; border-color: #38bdf8; }
+    input[type="radio"].single-radio:checked + .option-label {
+      background: linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%);
+      color: white; border-color: transparent;
+      box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+    }
+    input[type="radio"].single-radio:checked + .option-label div:first-child { background-color: rgba(255,255,255,0.25); border-color: transparent; color: white; }
+    input[type="radio"].single-radio:checked + .option-label div:last-child { color: white; }
+    .fade-in { animation: fadeIn 0.4s ease forwards; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    .my-score-row {
+      background: linear-gradient(to right, #fdf4ff, #ffffff) !important;
+      border-left: 4px solid #db2777 !important; font-weight: 700 !important;
+      color: #9d174d !important; box-shadow: 0 2px 8px rgba(0,0,0,0.05); position: relative; z-index: 10;
+    }
+    .my-score-row td { padding-top: 16px; padding-bottom: 16px; }
+    .btn-tf { transition: background-color 0.1s ease; border-width: 2px; }
+    .btn-tf.selected { background-color: #2563eb; color: white; border-color: #1d4ed8; }
+    .btn-tf:not(.selected) { background-color: white; color: #4b5563; border-color: #e5e7eb; }
+    .btn-tf:not(:disabled):active { transform: scale(0.95); }
+    .math-scroll { overflow-x: auto; min-width: 0; padding-bottom: 4px; scrollbar-width: none; -ms-overflow-style: none; }
+    .math-scroll::-webkit-scrollbar { display: none; }
+  </style>
+ </head>
+ <body>
+  <div id="app" class="p-0 sm:p-4 md:p-8 transition-all">
+   
+   <div id="login-section" class="w-full max-w-md mx-auto fade-in flex flex-col justify-center flex-grow">
+    <div class="glass-card rounded-none sm:rounded-3xl p-6 sm:p-8 flex flex-col justify-start shadow-2xl border-t-8 border-indigo-600 bg-white">
+     <div class="text-center mb-6 pt-4 sm:pt-0">
+      <div class="flex items-center justify-center w-24 h-24 mx-auto mb-4 rounded-full border-4 border-yellow-400 bg-red-600 shadow-lg transform transition-transform hover:scale-105">
+          <span class="text-white font-black text-4xl tracking-tighter">HS</span>
+      </div>
+      <h1 class="text-2xl sm:text-3xl font-bold text-red-500 mb-3"> Bài 13. Bổ sung các đối tượng đồ họa </h1>
+     </div>
+      <div id="login-form" class="space-y-4">
+      <div class="flex flex-col gap-4">
+          <div class="w-full">
+               <label class="block text-lg font-bold text-gray-700 mb-1">Họ và tên</label> 
+               <input type="text" id="hoTen" class="w-full px-4 py-4 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-100 outline-none transition-all font-semibold text-lg" placeholder="Nhập họ tên...">
+          </div>
+          <div class="w-full">
+               <label class="block text-lg font-bold text-gray-700 mb-1">Lớp</label> 
+               <input type="text" id="lop" class="w-full px-4 py-4 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-100 outline-none transition-all font-semibold text-lg" placeholder="10A1">
+          </div>
+      </div>
+      <div id="login-error" class="hidden bg-red-100 border border-red-300 text-red-700 font-bold text-base p-3 rounded-xl text-center shadow-sm"></div>
+      <button type="button" onclick="window.startQuizAction()" id="start-btn" class="w-full py-5 mt-6 bg-gradient-to-r from-blue-500 to-cyan-400 text-white font-extrabold rounded-2xl shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all text-2xl tracking-wide"> 🚀 BẮT ĐẦU THI </button>
+     </div>
+    </div>
+   </div>
+
+   <div id="quiz-section" class="w-full max-w-4xl mx-auto hidden flex-grow flex flex-col">
+    <div class="glass-card rounded-none sm:rounded-3xl p-4 sm:p-8 flex flex-col flex-grow relative border-t-8 border-blue-500 bg-white shadow-2xl">
+     <div class="flex items-center justify-between mb-4 sm:mb-6 pb-4 border-b-2 border-gray-100">
+      <div class="flex items-center gap-3">
+       <div class="flex items-center justify-center w-12 h-12 rounded-full border-2 border-yellow-400 bg-red-600 shadow-sm flex-shrink-0">
+           <span class="text-white font-black text-xl tracking-tighter">HS</span>
+       </div>
+       <div>
+        <h2 id="quiz-title" class="text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">ĐỀ KIỂM TRA TIN HỌC 10 - BÀI 13</h2>
+        <p id="student-info" class="text-base font-bold text-gray-500 mt-1 uppercase tracking-wide"></p>
+       </div>
+      </div>
+      <div class="text-right bg-blue-50 px-4 py-2 rounded-xl border border-blue-100" id="progress-container">
+       <div class="text-sm text-blue-500 font-bold uppercase tracking-wider mb-1">Tiến độ</div>
+       <div id="progress-text" class="text-2xl font-black text-blue-700">0/28</div>
+      </div>
+     </div>
+     
+     <div id="timer-banner" class="mb-6 p-4 bg-gradient-to-r from-orange-50 to-red-50 border-2 border-red-100 rounded-2xl flex items-center justify-between shadow-sm sticky top-2 z-40">
+        <span class="text-red-800 font-extrabold flex items-center gap-2 text-lg"><span class="text-2xl animate-pulse">⏰</span> THỜI GIAN:</span> 
+        <span id="timer" class="text-4xl font-black text-red-600 font-mono tracking-wider drop-shadow-sm">45:00</span>
+     </div>
+
+     <div id="question-container" class="mb-8 flex-grow w-full max-w-full"></div>
+     <div id="network-error" class="hidden bg-red-100 text-red-700 p-4 rounded-xl mt-4 text-center font-bold text-sm border-2 border-red-300 mb-4 shadow-sm"></div>
+
+    <div class="flex pt-4 sm:pt-6 border-t-2 border-gray-100 mt-auto pb-4 sm:pb-0">
+        <button id="submit-btn" onclick="window.promptSubmit()" class="w-full py-5 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-bold text-2xl rounded-2xl shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1">✅ NỘP BÀI NGAY</button>
+     </div>
+    </div>
+   </div>
+
+   <div id="confirm-submit-modal" class="fixed inset-0 hidden flex items-center justify-center bg-black/60 backdrop-blur-sm z-50 transition-opacity">
+       <div class="bg-white rounded-3xl w-full max-w-sm shadow-2xl p-6 text-center transform transition-all scale-100 mx-4 border-2 border-gray-100">
+           <div class="text-yellow-400 mb-4 flex justify-center">
+               <svg xmlns="http://www.w3.org/2000/svg" class="h-24 w-24" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+               </svg>
+           </div>
+           <h3 class="text-3xl font-black text-gray-800 mb-2 uppercase tracking-wide">Xác nhận nộp</h3>
+           <p class="text-gray-600 mb-6 font-medium text-xl">Đã làm <span id="confirm-answered" class="text-red-600 font-black text-2xl">0</span>/<span id="confirm-total" class="font-black text-2xl">28</span> câu. Có chắc chắn muốn nộp bài?</p>
+           <div class="flex flex-col gap-3">
+               <button onclick="window.closeConfirmModal()" class="w-full py-4 bg-gray-100 text-gray-800 font-extrabold text-xl rounded-xl hover:bg-gray-200 border border-gray-200">Quay lại làm tiếp</button>
+               <button onclick="window.executeSubmit()" class="w-full py-4 bg-emerald-600 text-white font-extrabold text-xl rounded-xl hover:bg-emerald-700 shadow-md">Vẫn Nộp Luôn</button>
+           </div>
+       </div>
+   </div>
+
+   <div id="result-section" class="w-full max-w-2xl mx-auto hidden fade-in flex flex-col justify-center flex-grow pb-8">
+    <div class="glass-card rounded-none sm:rounded-3xl p-6 sm:p-8 flex flex-col justify-start border-t-8 border-green-500 bg-white shadow-2xl" id="result-content"></div>
+   </div>
+
+   <div id="review-section" class="w-full max-w-4xl mx-auto hidden flex-grow flex flex-col">
+    <div class="glass-card rounded-none sm:rounded-3xl p-4 sm:p-8 flex flex-col flex-grow border-t-8 border-indigo-500 bg-white overflow-hidden shadow-2xl">
+     <div class="flex flex-col-reverse sm:flex-row items-start sm:items-center justify-between mb-6 pb-4 border-b-2 border-gray-100 gap-4">
+      <div class="flex flex-wrap gap-2">
+          <button onclick="window.goHome()" class="px-5 py-3 bg-gray-100 text-gray-700 rounded-xl font-bold hover:bg-gray-200 text-lg shadow-sm border border-gray-200">🏠 Trang chủ</button>
+          <button onclick="window.backFromReview()" class="px-5 py-3 bg-indigo-50 text-indigo-700 rounded-xl font-bold hover:bg-indigo-100 text-lg shadow-sm border border-indigo-200">🔙 Quay lại</button>
+          <button onclick="window.viewScoresAction()" class="px-5 py-3 bg-orange-50 text-orange-700 rounded-xl font-bold hover:bg-orange-100 text-lg shadow-sm border border-orange-200">🏆 Bảng điểm</button>
+      </div>
+      <h2 class="text-3xl sm:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">📝 Xem Lại Bài Làm</h2>
+     </div>
+     <div id="review-content" class="space-y-8 w-full max-w-full"></div>
+    </div>
+   </div>
+
+   <div id="scores-section" class="w-full max-w-6xl mx-auto hidden flex-grow flex flex-col">
+    <div class="glass-card rounded-none sm:rounded-3xl p-4 sm:p-8 flex flex-col flex-grow border-t-8 border-orange-500 bg-white w-full max-w-full shadow-2xl">
+     <div class="mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b-2 border-gray-100 pb-4">
+      <button onclick="window.goHome()" class="px-5 py-3 bg-gray-100 text-gray-700 rounded-xl font-bold hover:bg-gray-200 text-lg shadow-sm border border-gray-200 whitespace-nowrap">🏠 Trang chủ</button>
+      <h2 class="text-3xl sm:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-red-600 text-center flex-grow">🏆 BẢNG XẾP HẠNG</h2>
+     </div>
+     
+     <div class="flex flex-col sm:flex-row justify-between items-center mb-4 gap-4 bg-gray-50 p-4 rounded-xl border border-gray-200">
+         <div id="my-rank-display" class="text-xl font-bold text-gray-700">STT của bạn: <span class="text-gray-400">--</span></div>
+         <div class="w-full sm:w-auto flex-grow max-w-sm">
+             <input type="text" id="search-student" oninput="window.searchStudent(this.value)" placeholder="🔍 Nhập tên học sinh để tìm..." class="w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm focus:border-orange-500 focus:ring-2 focus:ring-orange-200 outline-none transition-all font-medium">
+         </div>
+     </div>
+
+     <div class="overflow-x-auto rounded-xl border border-slate-200 flex-grow shadow-inner bg-white/50 w-full">
+      <table class="w-full text-sm sm:text-base whitespace-nowrap min-w-max">
+       <thead class="bg-gradient-to-r from-orange-500 to-red-500 text-white">
+        <tr>
+         <th class="px-3 sm:px-4 py-4 text-center font-extrabold w-16">STT</th>
+         <th class="px-3 sm:px-4 py-4 text-left font-extrabold">Họ tên</th>
+         <th class="px-3 sm:px-4 py-4 text-center font-extrabold">Lớp</th>
+         <th class="px-3 sm:px-4 py-4 text-center font-extrabold">Thời gian</th>
+         <th class="px-3 sm:px-4 py-4 text-center font-extrabold">Điểm</th>
+         <th class="px-2 sm:px-4 py-4 text-center font-extrabold">Xem lại</th>
+        </tr>
+       </thead>
+       <tbody id="scores-tbody" class="bg-white/80 divide-y divide-gray-100"></tbody>
+      </table>
+      <div id="no-scores" class="text-center py-12 hidden text-gray-500 font-bold text-xl">Không tìm thấy dữ liệu thi 🥲</div>
+     </div>
+     <div id="pagination-controls" class="w-full flex justify-center mt-6"></div>
+    </div>
+  </div>
+
+  <script>
+    let database = null;
+    let scoresRef = null;
+
+   try {
+        const firebaseConfig = {
+            apiKey: "AIzaSyC4ou3Fu8IxAPYV347pHKT1jtPxQe5TBM4",
+            authDomain: "hanhtrinhso-e3368.firebaseapp.com",
+            databaseURL: "https://hanhtrinhso-e3368-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "hanhtrinhso-e3368",
+            storageBucket: "hanhtrinhso-e3368.firebasestorage.app",
+            messagingSenderId: "1046142513655",
+            appId: "1:1046142513655:web:5c7bb3a47ee90ac279fef2"
+        };
+        if (typeof firebase !== 'undefined') {
+            if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+            database = firebase.database();
+            scoresRef = database.ref('bxh_tin_10_13');
+        }
+    } catch(err) { console.error("Lỗi Firebase:", err); }
+
+
+    let isQuizStarted = false; 
+    let currentQuestions = [];
+    let deviceId = '';
+    let allScores = [];
+    let currentStudent = {};
+    let userAnswers = {};
+    let timerInterval;
+    let quizStartTime, quizEndTime;
+    let searchTerm = '';
+    let currentPage = 1;
+    const itemsPerPage = 10;
+
+   const exam_data = [
+        { id: "q1", type: "single", question: "Câu 1: Trong phần mềm đồ hoạ, công cụ nào sau đây được sử dụng để vẽ hình đa giác và hình sao?", options: ["Công cụ vẽ hình elip.", "Công cụ vẽ đường tự do.", "Công cụ Star and Polygon.", "Công cụ vẽ hình chữ nhật."], correct: 2, explanation: "Công cụ Star and Polygon (Đa giác và Hình sao) được thiết kế chuyên biệt để tạo ra các hình đa giác hoặc hình sao một cách nhanh chóng." },
+        { id: "q2", type: "single", question: "Câu 2: Thuộc tính nào xác định số đỉnh của hình đa giác hoặc số cánh của hình sao trên thanh điều khiển?", options: ["Corners.", "Rounded.", "Spoke ratio.", "Randomized."], correct: 0, explanation: "Thuộc tính Corners trên thanh điều khiển cho phép người dùng xác định chính xác số đỉnh của đa giác hoặc số lượng tia (cánh) của hình sao." },
+        { id: "q3", type: "single", question: "Câu 3: Phép ghép hình nào sau đây hợp nhất tất cả các phần thuộc một trong các hình đơn thành một hình duy nhất?", options: ["Difference (Hiệu).", "Intersection (Giao).", "Exclusion (Hiệu đối xứng).", "Union (Hợp)."], correct: 3, explanation: "Phép hợp (Union) có chức năng gộp tất cả các vùng không gian của nhiều khối hình đơn lẻ lại thành một khối hình duy nhất." },
+        { id: "q4", type: "single", question: "Câu 4: Để thay đổi màu tô và màu nét vẽ cho một đối tượng, bạn cần mở hộp thoại nào?", options: ["Text and Font.", "Align and Distribute.", "Fill and Stroke.", "Document Properties."], correct: 2, explanation: "Hộp thoại Fill and Stroke chứa toàn bộ các công cụ để chỉnh sửa màu nền (Fill), màu nét vẽ (Stroke paint) và kiểu viền (Stroke style)." },
+        { id: "q5", type: "single", question: "Câu 5: Trong hình vẽ miếng dưa hấu được tạo từ nhiều lớp, lớp nằm ở dưới cùng của miếng dưa là thành phần nào?", options: ["Hạt dưa.", "Ruột màu đỏ.", "Vỏ màu xanh.", "Lớp nền trong suốt."], correct: 2, explanation: "Theo nguyên tắc xếp lớp, lớp lớn nhất thường nằm ở dưới. Vỏ dưa hấu là lớp to nhất nằm dưới cùng, sau đó đến ruột đỏ đè lên và hạt dưa ở trên cùng." },
+        { id: "q6", type: "single", question: "Câu 6: Kiểu tô màu 'Flat color' mang ý nghĩa gì khi áp dụng lên một khối hình?", options: ["Tô màu chuyển sắc từ tâm ra xung quanh.", "Tô một màu đặc nguyên khối đồng nhất.", "Bỏ hoàn toàn màu tô của hình.", "Tô đối tượng bằng một mẫu hoa văn."], correct: 1, explanation: "Flat color có nghĩa là màu phẳng, tô toàn bộ đối tượng bằng một màu nguyên khối duy nhất không có sự chuyển sắc đậm nhạt." },
+        { id: "q7", type: "single", question: "Câu 7: Phép ghép hình Difference (Hiệu) có thể được thực hiện nhanh bằng tổ hợp phím tắt nào sau đây?", options: ["Ctrl + +", "Ctrl + -", "Ctrl + /", "Ctrl + *"], correct: 1, explanation: "Tổ hợp phím Ctrl + - (dấu trừ) là phím tắt cho phép hiệu (Difference), lấy hình ở dưới trừ đi vùng giao với hình ở trên." },
+        { id: "q8", type: "single", question: "Câu 8: Thẻ (Tab) nào trong hộp thoại Fill and Stroke dùng để điều chỉnh độ dày mỏng và kiểu dáng của đường viền (nét liền, nét đứt)?", options: ["Stroke paint.", "Fill.", "Pattern.", "Stroke style."], correct: 3, explanation: "Thẻ Stroke style (Kiểu nét vẽ) cho phép tinh chỉnh độ dày mỏng (Width) và các kiểu nét (Dashes) của đường viền bao quanh hình." },
+        { id: "q9", type: "single", question: "Câu 9: Điểm khác biệt cốt lõi giữa hai kiểu tô màu Linear gradient và Radial gradient là gì?", options: ["Linear gradient dùng cho đường viền, Radial gradient dùng cho phần ruột.", "Linear gradient chuyển sắc theo đường thẳng, Radial gradient chuyển sắc lan toả từ tâm.", "Linear gradient làm mờ hình, Radial gradient làm hình sắc nét.", "Linear gradient tạo hiệu ứng 3D, Radial gradient tạo hiệu ứng trong suốt."], correct: 1, explanation: "Linear gradient tạo dải màu biến thiên dần theo một phương thẳng, trong khi Radial gradient lan toả màu từ một điểm tâm ra xung quanh thành vòng tròn." },
+        { id: "q10", type: "single", question: "Câu 10: Để biến các đỉnh nhọn của một hình sao trở nên cong và mềm mại, cần thay đổi tham số nào trên thanh điều khiển thuộc tính?", options: ["Tăng tham số Corners.", "Thay đổi tham số Randomized.", "Tăng tham số Rounded.", "Điều chỉnh tham số Spoke ratio."], correct: 2, explanation: "Tham số Rounded điều chỉnh độ bo cong của các đỉnh. Tăng tham số này làm đỉnh nhọn của hình sao trở nên tròn và mềm mại hơn." },
+        { id: "q11", type: "single", question: "Câu 11: Chức năng chính của thuộc tính Spoke ratio khi vẽ hình sao là gì?", options: ["Tăng số lượng cánh của hình sao.", "Làm cong các góc nhọn của hình sao.", "Làm méo mó hình sao một cách ngẫu nhiên.", "Thay đổi tỉ lệ bán kính từ tâm đến góc trong và từ tâm tới đỉnh đầu (làm cánh sao mập hoặc gầy đi)."], correct: 3, explanation: "Spoke ratio quy định tỉ lệ giữa bán kính vòng trong và vòng ngoài của hình sao, qua đó kiểm soát độ vươn dài hay thụt ngắn của cánh sao." },
+        { id: "q12", type: "single", question: "Câu 12: Kết quả nhận được khi sử dụng phép ghép Intersection (Giao) trên hai đối tượng đồ hoạ là gì?", options: ["Giữ lại phần thuộc cả hai hình được chọn.", "Giữ lại phần hình thuộc các hình trừ phần giao nhau.", "Cắt hình lớp dưới thành nhiều mảnh.", "Hợp nhất toàn bộ hai hình thành một."], correct: 0, explanation: "Phép giao (Intersection) thực hiện lấy phần không gian giao nhau, chỉ giữ lại phần diện tích đè lên nhau chung của hai khối hình." },
+        { id: "q13", type: "single", question: "Câu 13: Khi muốn vẽ hình một bông hoa từ công cụ hình sao ban đầu, ta điều chỉnh tham số nào để cánh hoa tròn trịa?", options: ["Tăng số đỉnh Corners lên tối đa.", "Sử dụng lệnh Path > Difference.", "Điều chỉnh tham số Rounded để làm cong đỉnh và góc.", "Điều chỉnh độ trong suốt Opacity."], correct: 2, explanation: "Để tạo hình dáng cánh hoa từ cánh sao nhọn, thao tác cần thiết là bo tròn các góc đỉnh bằng cách tăng thông số Rounded." },
+        { id: "q14", type: "single", question: "Câu 14: Giá trị Opacity trong hộp thoại Fill and Stroke được dùng để kiểm soát điều gì?", options: ["Số lượng màu chuyển sắc trong dải Gradient.", "Độ dày của nét vẽ bao quanh khối.", "Kích thước thu phóng của đối tượng.", "Độ trong suốt của màu khi tô lên đối tượng."], correct: 3, explanation: "Opacity xác định độ mờ hoặc độ trong suốt tổng thể của đối tượng. Giảm Opacity sẽ làm hình ảnh dễ dàng nhìn xuyên qua lớp nền." },
+        { id: "q15", type: "single", question: "Câu 15: Phép ghép Division (Chia) thao tác trên hai hình chồng lên nhau sẽ có tác dụng gì?", options: ["Lấy phần giao nhau của hai hình.", "Hình lớp dưới được chia thành các phần bởi đường nét của hình lớp trên.", "Cắt hình lớp dưới và xoá luôn màu tô của nó.", "Giữ nguyên hình lớp trên, xoá toàn bộ hình lớp dưới."], correct: 1, explanation: "Trong phép Division, hình bên trên đóng vai trò như một khuôn cắt, chia cắt rời hình bên dưới thành các mảnh nhỏ theo đường viền." },
+        { id: "q16", type: "single", question: "Câu 16: Tùy chọn Unset (Huỷ đặt) trong hộp thoại chỉnh màu có tác dụng gì?", options: ["Huỷ thiết lập màu (đối tượng không có màu xác định, có thể thừa kế màu sắc).", "Làm đối tượng hoàn toàn biến mất khỏi bản vẽ.", "Tô hình bằng màu đen trắng mặc định.", "Chuyển đổi màu tô thành nét vẽ."], correct: 0, explanation: "Tùy chọn Unset (biểu tượng dấu ?) sẽ hủy thiết lập màu hiện tại. Lúc này đối tượng không có màu xác định (hiển thị màu đen) và có khả năng thừa kế màu sắc, rất hữu ích khi làm việc với đối tượng nhân bản (Clone)." },
+        { id: "q17", type: "single", question: "Câu 17: Phương pháp ghép hình nào hiệu quả nhất để thiết kế một đám mây?", options: ["Vẽ một hình elip, chỉnh Stroke style và dùng lệnh Cut Path.", "Vẽ một hình tròn và một đa giác rồi dùng lệnh Difference.", "Vẽ một hình chữ nhật bo góc và nhiều hình tròn rồi dùng lệnh Union.", "Vẽ nhiều hình vuông rồi dùng phép Intersection."], correct: 2, explanation: "Đám mây thường được vẽ bởi phần đáy phẳng từ hình chữ nhật (bo góc) và phần bồng bềnh từ nhiều hình tròn nhỏ đè lên trên, sau đó gộp tất cả lại bằng Union." },
+        { id: "q18", type: "single", question: "Câu 18: Để tạo hình trái tim từ một hình vuông và hai nửa hình tròn, sau khi xếp chúng đúng vị trí (hai nửa hình tròn kề trên hai cạnh hình vuông đã xoay), ta dùng lệnh gì để hoàn thiện?", options: ["Path > Union.", "Path > Division.", "Path > Difference.", "Path > Exclusion."], correct: 0, explanation: "Sau khi định hình xếp 3 mảnh chính xác, cần hàn chúng lại bằng lệnh Path > Union để trở thành một trái tim hoàn chỉnh và duy nhất." },
+        { id: "q19", type: "single", question: "Câu 19: Bạn muốn vẽ biểu tượng vầng trăng khuyết một cách nhanh nhất, thao tác nào dưới đây là đúng?", options: ["Vẽ một hình tròn, dùng công cụ chỉnh điểm neo kéo lõm một phía.", "Dùng công cụ vẽ hình sao, giảm số cánh xuống còn 2 và tăng Rounded.", "Vẽ hai hình tròn đè lên nhau (lệch một chút) và dùng phép ghép Difference.", "Vẽ hình đa giác và dùng phép ghép Union."], correct: 2, explanation: "Dùng hình tròn to ở dưới, lấy hình tròn nhỏ đè lên che đi một phần rồi dùng lệnh Difference (Trừ) sẽ cắt khoét tạo ra lưỡi liềm trăng khuyết cực chuẩn." },
+        { id: "q20", type: "single", question: "Câu 20: Để tạo hiệu ứng 3D hình cầu nổi khối như quả bóng, kĩ thuật tô màu nào cho hình tròn là phù hợp nhất?", options: ["Tô màu đồng nhất (Flat color).", "Tô hoa văn (Pattern).", "Tô màu chuyển sắc theo đường thẳng (Linear gradient).", "Tô màu chuyển sắc từ tâm (Radial gradient) kết hợp chỉnh điểm sáng."], correct: 3, explanation: "Radial gradient tạo điểm sáng từ tâm và tối dần ra viền, phản ánh hoàn hảo hiệu ứng chiếu sáng 3D trên một khối cầu." },
+        { id: "q21", type: "single", question: "Câu 21: Khi muốn tạo một đường viền bo tròn (không có ruột màu) từ công cụ hình elip (như bài thực hành vẽ logo vòng cung), ta cần thiết lập màu như thế nào?", options: ["Thẻ Fill: No paint; Thẻ Stroke paint: Flat color; Thẻ Stroke style: Tăng giá trị Width.", "Thẻ Fill: Flat color; Thẻ Stroke paint: No paint.", "Thẻ Fill: Radial gradient; Thẻ Stroke paint: Pattern.", "Thẻ Fill: Linear gradient; Thẻ Stroke paint: Unset."], correct: 0, explanation: "Yêu cầu vòng cung rỗng bắt buộc phần tô nền (Fill) phải tắt (No paint), chỉ kích hoạt nét vẽ (Stroke paint) và chỉnh độ dày (Stroke style)." },
+        { id: "q22", type: "single", question: "Câu 22: Thao tác nào giúp loại bỏ hoàn toàn viền bao quanh của một khối hình đa giác?", options: ["Chọn thẻ Fill và chọn No paint.", "Chọn thẻ Stroke style và chọn nét đứt.", "Giảm Opacity trong thẻ Fill xuống mức 0.", "Chọn thẻ Stroke paint và chọn biểu tượng No paint (Dấu X)."], correct: 3, explanation: "Đường viền do thẻ Stroke paint quản lý. Việc chọn dấu X (No paint) ở thẻ này sẽ lập tức xóa sạch đường viền bao quanh đối tượng." },
+        { id: "q23", type: "single", question: "Câu 23: Để điều chỉnh trực tiếp trên màn hình hướng chuyển màu và độ rộng của dải màu Gradient, ta sử dụng thao tác nào?", options: ["Bấm biểu tượng Select and transform.", "Nháy vào biểu tượng cây bút (Create and edit gradients) phía dưới hộp thoại Fill and Stroke.", "Kéo giãn đối tượng bằng chuột phải.", "Tăng thông số Corners trên thanh điều khiển."], correct: 1, explanation: "Công cụ Edit Gradient (biểu tượng cây bút) cho phép kích hoạt các điểm điều khiển màu trực tiếp trên hình vẽ để kéo thả hướng sáng dễ dàng." },
+        { id: "q24", type: "single", question: "Câu 24: Nếu bạn chọn hai đối tượng giao nhau, sau đó nhấn tổ hợp phím Ctrl + Alt + / (Cut Path), kết quả trả về sẽ là gì?", options: ["Phần giao nhau bị đục lỗ rỗng.", "Hai hình tự động hợp lại thành một khối duy nhất.", "Hình lớp trên bị cắt thành nhiều mảnh nhỏ và giữ nguyên màu tô.", "Hình lớp dưới bị cắt thành các phần bởi hai điểm giao ở viền với hình lớp trên, kết quả là các phần mới không có màu tô."], correct: 3, explanation: "Phép Cut Path (Cắt đường nét) dùng đường viền hình trên để cắt đứt đường viền hình dưới tại các điểm giao cắt. Kết quả sinh ra các đoạn đường viền rời rạc và màu tô của hình dưới sẽ bị biến mất (rớt màu)." },
+
+        { id: "qII_1", type: "tf_cluster", context: "Câu 1: Bạn An đang thiết kế một bức tranh phong cảnh bằng phần mềm đồ hoạ. An muốn vẽ một ông mặt trời to tỏa sáng rực rỡ từ tâm ra xung quanh và một số đám mây bồng bềnh trên bầu trời.", items: [
+            { id: "a", text: "a) Để tô màu mặt trời sáng mạnh ở tâm và nhạt dần ra viền ngoài, An cần sử dụng kiểu tô màu chuyển sắc từ tâm (Radial gradient).", correct: true, expl: "Radial gradient giúp màu sắc lan tỏa từ một điểm trung tâm ra xung quanh, rất thích hợp để mô phỏng ánh sáng mặt trời." },
+            { id: "b", text: "b) Để gộp các hình tròn và một hình chữ nhật lại thành khối mây duy nhất, An sử dụng lệnh ghép hình Path > Difference.", correct: false, expl: "Để gộp các khối lại làm một, phải dùng lệnh Path > Union. Difference là lệnh lấy hiệu (phép trừ) giữa hai khối." },
+            { id: "c", text: "c) Khi thiết kế các tia sáng của mặt trời bằng công cụ vẽ hình sao, An có thể thay đổi thông số 'Corners' để tăng hoặc giảm số lượng tia sáng.", correct: true, expl: "Thông số Corners trong công cụ Star and Polygon chính là số đỉnh (cánh sao), tương ứng với số tia sáng của mặt trời." },
+            { id: "d", text: "d) Để bầu trời phía sau có thể lờ mờ hiện ra qua đám mây, An cần giảm thông số Opacity (độ trong suốt) của khối mây trong hộp thoại Fill and Stroke.", correct: true, expl: "Giảm thông số Opacity làm khối mây bớt đặc và trở nên trong suốt, giúp nhìn xuyên qua để thấy lớp hình phía sau." }
+        ]},
+        { id: "qII_2", type: "tf_cluster", context: "Câu 2: Bạn Bình đang làm bài tập thiết kế logo cho câu lạc bộ Tin học. Bản phác thảo logo yêu cầu có hình một chiếc bánh răng cưa và một hình vòng tròn khuyết (như mặt trăng).", items: [
+            { id: "a", text: "a) Bình có thể dùng công cụ vẽ Đa giác, hình sao (Star and Polygon tool) làm cơ sở để tạo ra hình bánh răng cưa.", correct: true, expl: "Hình sao nhiều cánh (với thông số Corners cao) là nền tảng cơ sở hoàn hảo để thiết kế các mũi răng cưa." },
+            { id: "b", text: "b) Để loại bỏ hoàn toàn viền của tất cả các khối hình trong logo, Bình chỉ cần mở thẻ Fill và chọn biểu tượng No paint (Không màu).", correct: false, expl: "Thẻ Fill quản lý màu nền bên trong. Để xóa bỏ đường viền, Bình phải thực hiện ở thẻ Stroke paint." },
+            { id: "c", text: "c) Để làm các góc nhọn của bánh răng cưa trở nên mềm mại, bo cong hơn, Bình cần thay đổi thông số Spoke ratio thay vì Rounded.", correct: false, expl: "Tham số bo cong cạnh góc nhọn là Rounded. Spoke ratio chỉ xác định độ nông sâu, dài ngắn của cánh nhọn đó." },
+            { id: "d", text: "d) Để tạo ra hình vòng khuyên (donut), Bình có thể vẽ hai hình tròn đồng tâm (một to, một nhỏ), chọn cả hai và thực hiện phép trừ Path > Difference.", correct: true, expl: "Lấy hình tròn lớn trừ đi hình tròn nhỏ ở giữa (Path > Difference) sẽ để lại phần viền và khoét rỗng lỗ ở tâm." }
+        ]},
+        { id: "qII_3", type: "tf_cluster", context: "Câu 3: Trong giờ học thực hành, bạn Châu được giao nhiệm vụ tạo một chiếc nhãn vở có đường viền bao quanh là nét đứt, trang trí kèm một bông hoa 5 cánh chụm lại ở góc.", items: [
+            { id: "a", text: "a) Châu sử dụng hộp thoại Fill and Stroke để có thể thiết lập độc lập màu tô phần nền và màu nét vẽ viền cho nhãn vở.", correct: true, expl: "Hộp thoại Fill and Stroke cho phép thiết lập độc lập: Fill (Nền) không ảnh hưởng tới Stroke paint (Màu viền) và ngược lại." },
+            { id: "b", text: "b) Nếu Châu lỡ tay quét chọn hai hình và bấm lệnh Path > Union, phần mềm sẽ chỉ giữ lại vùng giao nhau chung của hai hình đó.", correct: false, expl: "Lệnh Union sẽ gộp tất cả diện tích của cả hai hình. Việc chỉ giữ lại vùng giao nhau là chức năng của phép Intersection." },
+            { id: "c", text: "c) Để chuyển đường viền của nhãn vở từ nét liền sang dạng nét đứt, Châu mở hộp thoại Fill and Stroke và tiến hành tuỳ chỉnh trong thẻ Stroke style.", correct: true, expl: "Thẻ Stroke style cho phép chỉnh sửa không chỉ độ dày (Width) mà còn các tuỳ chọn nét đứt (Dashes) của đường viền." },
+            { id: "d", text: "d) Để vẽ bông hoa 5 cánh nhanh chóng, Châu sẽ vẽ một hình sao 5 cánh trước, sau đó chỉnh sửa tham số Rounded trên thanh thuộc tính để làm cong các góc và đỉnh nhọn.", correct: true, expl: "Việc sử dụng hình sao (5 cánh) rồi nâng giá trị Rounded để bo cong cạnh nhọn là kỹ thuật chuẩn xác tạo hình bông hoa." }
+        ]},
+        { id: "qII_4", type: "tf_cluster", context: "Câu 4: Bạn Dũng cần hoàn thiện một poster quảng cáo trái cây, trong đó mô tả chi tiết đồ hoạ của một miếng dưa hấu xếp nhiều lớp và một quả cam hình cầu có hiệu ứng nổi 3D.", items: [
+            { id: "a", text: "a) Các hình khối Dũng vẽ trong phần mềm sẽ tự động tuân thủ nguyên tắc xếp lớp, hình vẽ trước nằm ở lớp dưới, hình vẽ sau đè lên lớp trên.", correct: true, expl: "Inkscape quản lý các đối tượng đồ họa xếp chồng theo nguyên lý đối tượng sinh ra sau luôn đè lên đối tượng trước (nằm lớp trên)." },
+            { id: "b", text: "b) Khi Dũng áp dụng phép chia (Division), đường nét của hình lớp trên sẽ đóng vai trò như lưỡi dao cắt khối hình lớp dưới ra thành các phần riêng biệt.", correct: true, expl: "Phép Division sử dụng ranh giới của đối tượng bên trên cắt lìa đối tượng bên dưới thành các mảnh độc lập." },
+            { id: "c", text: "c) Để quả cam có hiệu ứng nổi 3D khối cầu, Dũng chỉ cần chọn hình tròn và tô một màu đồng nhất (Flat color) thật nổi bật là đủ.", correct: false, expl: "Tô màu Flat color (màu phẳng) chỉ tạo được hình 2D, để có hiệu ứng 3D nổi khối cần ứng dụng kĩ thuật tô màu toả tròn (Radial gradient)." },
+            { id: "d", text: "d) Để vẽ lát cắt dưa hấu, Dũng dùng công cụ vẽ hình elip, chỉnh góc Start và End để tạo các nửa hình tròn, sau đó xếp lớp nửa hình tròn ruột đỏ lên trên lớp vỏ xanh rồi vẽ thêm hạt trên cùng.", correct: true, expl: "Sử dụng Start/End trong thuộc tính hình elip để vẽ cung tròn kín nửa phần, rồi tuân thủ trật tự xếp lớp từ dưới lên là chính xác." }
+        ]}
+    ];
+
+   window.startQuizAction = function() {
+        try {
+            const errDiv = document.getElementById('login-error');
+            if(errDiv) errDiv.classList.add('hidden');
+            const name = document.getElementById('hoTen').value.trim();
+            const lop = document.getElementById('lop').value.trim();
+            if (!name || !lop) {
+                if(errDiv) { errDiv.innerText = "⚠️ Vui lòng nhập đầy đủ Họ tên và Lớp!"; errDiv.classList.remove('hidden'); } 
+                else { alert("⚠️ Vui lòng nhập đầy đủ Họ tên và Lớp!"); }
+                return;
+            }
+            currentStudent = { hoTen: name, lop: lop, maDe: 'bai12', tenDe: 'Tin học 10 - Bài 13' };
+            currentQuestions = JSON.parse(JSON.stringify(exam_data));
+            quizStartTime = new Date();
+            setTimeout(() => { isQuizStarted = true; }, 1000);
+            showSection('quiz');
+            userAnswers = {};
+            window.renderAllQuestions();
+            startTimer(45 * 60); 
+        } catch (error) { console.error(error); }
+    };
+
+    window.viewScoresAction = function() {
+        searchTerm = ''; 
+        document.getElementById('search-student').value = '';
+        currentPage = 1;
+        if (database) {
+            scoresRef.once('value').then((snapshot) => {
+                const data = snapshot.val();
+                allScores = data ? Object.keys(data).map(key => ({...data[key], id: key})) : [];
+                window.renderScores();
+                showSection('scores');
+            });
+        }
+    };
+
+    window.searchStudent = function(val) { searchTerm = val.toLowerCase(); currentPage = 1; window.renderScores(); };
+    window.changePage = function(page) { currentPage = page; window.renderScores(); };
+    window.goHome = function() {
+        if(document.getElementById('hoTen')) document.getElementById('hoTen').value = ''; 
+        if(document.getElementById('lop')) document.getElementById('lop').value = ''; 
+        clearInterval(timerInterval); showSection('login');
+    };
+
+    function getTotalScoreItems() { return currentQuestions.length; }
+
+    function getAnsweredCount() {
+        let count = 0;
+        currentQuestions.forEach(q => {
+            if (q.type === 'single') {
+                if (userAnswers[q.id] !== undefined) count++;
+            } else if (q.type === 'tf_cluster') {
+                let answeredItems = 0;
+                q.items.forEach(item => { if (userAnswers[q.id + '_' + item.id] !== undefined) answeredItems++; });
+                if (answeredItems === 4) count++; 
+            }
+        });
+        return count;
+    }
+
+   window.selectAnswer = function(qId, val, type) {
+        if (type === 'tf') {
+            userAnswers[qId] = val;
+            const btnT = document.getElementById(`btnT_${qId}`);
+            const btnF = document.getElementById(`btnF_${qId}`);
+            if (val === true) { btnT.classList.add('selected'); btnT.classList.remove('bg-white'); btnF.classList.remove('selected'); btnF.classList.add('bg-white'); } 
+            else { btnF.classList.add('selected'); btnF.classList.remove('bg-white'); btnT.classList.remove('selected'); btnT.classList.add('bg-white'); }
+        } else if (type === 'single') { userAnswers[qId] = val; }
+        requestAnimationFrame(() => {
+            const pgText = document.getElementById('progress-text');
+            if(pgText) pgText.innerText = `${getAnsweredCount()}/${getTotalScoreItems()}`;
+        });
+    };
+
+    window.renderAllQuestions = function() {
+        if (!currentQuestions || currentQuestions.length === 0) return;
+        const container = document.getElementById('question-container');
+        if(!container) return;
+        let html = ''; let currentType = '';
+        currentQuestions.forEach((q) => {
+            if (q.type !== currentType) {
+                currentType = q.type;
+                let headerText = ''; let roman = '';
+                if(currentType === 'single') { headerText = 'TRẮC NGHIỆM MỘT LỰA CHỌN'; roman = 'I'; }
+                if(currentType === 'tf_cluster') { headerText = 'TRẮC NGHIỆM ĐÚNG/SAI'; roman = 'II'; }
+                html += `<div class="flex items-center gap-3 mt-8 mb-4 border-b-2 border-blue-100 pb-3"><span class="bg-gradient-to-br from-blue-500 to-indigo-600 text-white w-14 h-14 flex items-center justify-center rounded-xl font-black text-2xl shadow-md">${roman}</span><h3 class="text-2xl sm:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-700 to-indigo-700 tracking-wide uppercase">${headerText}</h3></div>`;
+            }
+            html += `<div class="fade-in w-full bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-blue-100 relative mb-6 hover:shadow-md transition-shadow">`;
+            if (q.type === 'single') {
+                const uAns = userAnswers[q.id];
+                html += `<div class="flex gap-4 mb-5"><div class="w-full math-scroll"><p class="text-xl font-bold text-red-600 mt-1 leading-snug tracking-tight">${q.question}</p></div></div>`;
+                html += `<div class="space-y-4 md:pl-6 mt-6">`;
+                q.options.forEach((opt, i) => {
+                    const isChecked = (uAns === i) ? 'checked' : '';
+                    html += `<div class="flex items-center"><input type="radio" id="opt_${q.id}_${i}" name="q_${q.id}" value="${i}" class="hidden single-radio" ${isChecked} onchange="window.selectAnswer('${q.id}', ${i}, 'single')"><label for="opt_${q.id}_${i}" class="option-label w-full p-4 border-2 border-gray-200 rounded-2xl flex items-center gap-4 bg-white shadow-sm font-bold text-lg hover:border-blue-300"><div class="w-12 h-12 rounded-xl border-2 border-gray-300 flex items-center justify-center text-lg font-black text-gray-400 flex-shrink-0 bg-gray-50">${String.fromCharCode(65 + i)}</div><div class="text-gray-700 leading-relaxed math-scroll flex-1">${opt}</div></label></div>`;
+                });
+                html += `</div>`;
+            } else if (q.type === 'tf_cluster') {
+                html += `<div class="bg-red-50 text-red-700 p-5 rounded-xl font-bold mb-4 border-2 border-red-100 text-xl leading-relaxed math-scroll">${q.context}</div><div class="space-y-4 mt-6">`;
+                q.items.forEach((item) => {
+                    const combinedId = q.id + '_' + item.id;
+                    let ans = userAnswers[combinedId];
+                    let btnT = ans === true ? 'selected' : 'bg-white'; let btnF = ans === false ? 'selected' : 'bg-white';
+                    html += `<div class="p-5 border-2 border-gray-100 rounded-2xl bg-white shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4 transition-all hover:border-blue-200"><div class="font-bold text-gray-800 flex-1 text-lg math-scroll">${item.text}</div><div class="flex gap-3 shrink-0"><button id="btnT_${combinedId}" onclick="window.selectAnswer('${combinedId}', true, 'tf')" class="btn-tf w-24 sm:w-28 py-3 rounded-xl font-extrabold text-lg ${btnT}">ĐÚNG</button><button id="btnF_${combinedId}" onclick="window.selectAnswer('${combinedId}', false, 'tf')" class="btn-tf w-24 sm:w-28 py-3 rounded-xl font-extrabold text-lg ${btnF}">SAI</button></div></div>`;
+                });
+                html += `</div>`;
+            } 
+            html += `</div>`;
+        });
+        container.innerHTML = html;
+        const pgText = document.getElementById('progress-text');
+        if(pgText) pgText.innerText = `${getAnsweredCount()}/${getTotalScoreItems()}`;
+    };
+
+    function formatDuration(sec) {
+        const m = Math.floor(sec / 60); const s = sec % 60; return `${m}p ${s}s`;
+    }
+
+    window.promptSubmit = function() {
+        if (!isQuizStarted) return;
+        document.getElementById('confirm-answered').innerText = getAnsweredCount();
+        document.getElementById('confirm-total').innerText = getTotalScoreItems();
+        document.getElementById('confirm-submit-modal').classList.remove('hidden');
+    };
+
+    window.closeConfirmModal = function() { document.getElementById('confirm-submit-modal').classList.add('hidden'); };
+
+    window.executeSubmit = function() {
+        window.closeConfirmModal();
+        isQuizStarted = false; 
+        quizEndTime = new Date();
+        clearInterval(timerInterval);
+        
+        let score = 0;
+        currentQuestions.forEach(q => {
+            if (q.type === 'single') {
+                if (userAnswers[q.id] === q.correct) score += 0.25;
+            } else if (q.type === 'tf_cluster') {
+                let correctCount = 0;
+                q.items.forEach(item => { if (userAnswers[q.id + '_' + item.id] === item.correct) { correctCount++; } });
+                if (correctCount === 1) score += 0.1;
+                else if (correctCount === 2) score += 0.25;
+                else if (correctCount === 3) score += 0.5;
+                else if (correctCount === 4) score += 1.0;
+            }
+        });
+
+        score = score.toFixed(2); 
+
+        const record = {
+            hoTen: currentStudent.hoTen, lop: currentStudent.lop, tenDe: currentStudent.tenDe, maDe: currentStudent.maDe, diem: parseFloat(score),
+            startTime: quizStartTime.toISOString(), thoiGian: quizEndTime.toISOString(), deviceId: deviceId, userAnswers: userAnswers 
+        };
+        
+        if(database) { scoresRef.push(record, () => { window.showModalResult(score, formatDuration(Math.floor((quizEndTime - quizStartTime) / 1000))); }); } 
+        else { window.showModalResult(score, formatDuration(Math.floor((quizEndTime - quizStartTime) / 1000))); }
+    };
+
+    window.showModalResult = function(score, dur) {
+        ['login', 'quiz', 'scores', 'review'].forEach(s => { const el = document.getElementById(s+'-section'); if(el) el.classList.add('hidden'); });
+        const resEl = document.getElementById('result-section'); if(resEl) resEl.classList.remove('hidden');
+        document.getElementById('result-content').innerHTML = `
+        <div class="flex justify-start mb-4"><button onclick="window.goHome()" class="px-5 py-3 bg-gray-100 text-gray-700 rounded-xl font-bold hover:bg-gray-200 transition-colors shadow-sm border border-gray-200 text-lg">🏠 Trang chủ</button></div>
+        <div class="text-center"><div class="text-7xl mb-4 animate-bounce">🎉</div><h3 class="text-3xl font-black text-emerald-600 mb-2">Hoàn thành bài thi!</h3><p class="text-gray-600 mb-6 mt-2"><span class="font-extrabold text-blue-700 text-xl uppercase tracking-wider">${currentStudent.hoTen} - Lớp ${currentStudent.lop}</span></p></div>
+        <div class="bg-blue-50 border-2 border-blue-100 rounded-3xl p-8 mb-6 shadow-inner relative text-center"><div class="text-base text-blue-500 font-extrabold mb-2 uppercase tracking-widest">ĐIỂM SỐ CỦA BẠN</div><div class="text-7xl font-black text-blue-600 drop-shadow-sm">${score} <span class="text-3xl text-gray-400">/ 10</span></div></div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4"><button onclick="window.reviewQuiz()" class="w-full py-4 bg-gradient-to-r from-indigo-500 to-purple-500 text-white rounded-xl font-extrabold shadow-sm hover:shadow-md transition-colors text-xl">📝 Xem lại bài</button><button onclick="window.viewScoresAction()" class="w-full py-4 bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-xl font-extrabold shadow-sm hover:shadow-md transition-colors text-xl">🏆 Bảng điểm</button></div>`;
+    };
+
+    function getStatusBadge(isCorrect, isUnanswered) {
+        if (isUnanswered) return `<div class="mt-4 mb-2 inline-block px-4 py-2 bg-yellow-100 text-yellow-800 text-base font-black rounded-lg border border-yellow-300 shadow-sm">⚠️ CHƯA LÀM</div>`;
+        if (isCorrect) return `<div class="mt-4 mb-2 inline-block px-4 py-2 bg-emerald-100 text-emerald-800 text-base font-black rounded-lg border border-emerald-300 shadow-sm">✅ ĐÚNG</div>`;
+        return `<div class="mt-4 mb-2 inline-block px-4 py-2 bg-red-100 text-red-800 text-base font-black rounded-lg border border-red-300 shadow-sm">❌ SAI</div>`;
+    }
+
+    window.reviewQuiz = function() {
+        showSection('review');
+        const container = document.getElementById('review-content');
+        if(!container) return; let html = '';
+        let currentType = '';
+
+        currentQuestions.forEach((q) => {
+            if (q.type !== currentType) {
+                currentType = q.type;
+                let headerText = ''; let roman = '';
+                if(currentType === 'single') { headerText = 'TRẮC NGHIỆM MỘT LỰA CHỌN'; roman = 'I'; }
+                if(currentType === 'tf_cluster') { headerText = 'TRẮC NGHIỆM ĐÚNG/SAI'; roman = 'II'; }
+                html += `<div class="flex items-center gap-3 mt-8 mb-4 border-b-2 border-indigo-100 pb-3"><span class="bg-gradient-to-br from-indigo-500 to-purple-600 text-white w-14 h-14 flex items-center justify-center rounded-xl font-black text-2xl shadow-md">${roman}</span><h3 class="text-2xl sm:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-indigo-700 to-purple-700 tracking-wide uppercase">${headerText}</h3></div>`;
+            }
+
+            if (q.type === 'single') {
+                let uAns = userAnswers[q.id]; let isUnanswered = (uAns === undefined); let isCorrect = (uAns === q.correct);
+                let borderColor = isCorrect ? 'border-emerald-300 bg-emerald-50' : 'border-red-300 bg-red-50';
+                html += `<div class="p-6 border-2 rounded-2xl shadow-sm mb-6 ${borderColor}"><div class="font-bold text-xl text-red-600 mb-5 leading-relaxed math-scroll">${q.question}</div><div class="space-y-3">`;
+                q.options.forEach((opt, i) => {
+                    let optBg = ''; let iconHtml = '';
+                    if (q.correct === i) { optBg = 'bg-emerald-100 text-emerald-900 border-emerald-400 border-2'; iconHtml = '✅'; } 
+                    else if (uAns === i && !isCorrect) { optBg = 'bg-red-100 text-red-900 line-through border-red-400 border-2'; iconHtml = '❌'; } 
+                    else { optBg = 'bg-white text-slate-700 border border-slate-200'; }
+                    html += `<div class="p-4 rounded-xl ${optBg} flex items-center gap-4"><div class="w-10 h-10 flex items-center justify-center rounded-lg bg-white/50 text-base font-black shadow-sm flex-shrink-0">${String.fromCharCode(65 + i)}</div><div class="${(q.correct === i || uAns === i) ? 'font-semibold' : 'font-medium'} flex-1 text-lg math-scroll">${opt}</div><div class="text-3xl drop-shadow-sm ml-auto pl-2 flex-shrink-0">${iconHtml}</div></div>`;
+                });
+                html += `</div>${getStatusBadge(isCorrect, isUnanswered)}`;
+                
+                if (q.explanation) {
+                    html += `<div class="review-explanation mt-3 pt-3 border-t-2 border-gray-200"><p class="text-base font-black uppercase tracking-widest text-blue-600 mb-2">💡 Giải chi tiết:</p><p class="text-black font-medium text-lg leading-loose math-scroll">${q.explanation}</p></div>`;
+                }
+                html += `</div>`;
+            } 
+            else if (q.type === 'tf_cluster') {
+                html += `<div class="p-6 border-2 border-indigo-200 bg-indigo-50 rounded-2xl shadow-sm mb-6"><div class="font-bold text-xl text-indigo-800 mb-5 math-scroll">${q.context}</div><div class="space-y-5">`;
+                q.items.forEach(item => {
+                    let uAns = userAnswers[q.id + '_' + item.id]; let isUnanswered = (uAns === undefined); let isCorrect = (uAns === item.correct);
+                    let iconHtml = isCorrect ? '✅' : '❌'; let ansText = item.correct ? 'ĐÚNG' : 'SAI';
+                    
+                    html += `<div class="p-5 bg-white border border-indigo-100 rounded-xl shadow-sm"><div class="font-bold text-gray-800 text-lg math-scroll">${item.text}</div><div class="mt-3 flex items-center justify-between border-b border-gray-100 pb-3"><span class="text-base font-bold text-gray-500">Bạn chọn: <span class="${isUnanswered ? 'text-gray-400' : 'text-blue-600'} font-black uppercase">${isUnanswered ? 'Chưa trả lời' : (uAns?'Đúng':'Sai')}</span></span><span class="font-black text-xl ${isCorrect ? 'text-emerald-500' : 'text-red-500'}">Đáp án: ${ansText} ${iconHtml}</span></div>${getStatusBadge(isCorrect, isUnanswered)}`;
+                    
+                    if (item.expl) {
+                        html += `<div class="review-explanation mt-4 p-4 bg-indigo-50 border-l-4 border-indigo-500 rounded-r-xl text-lg text-gray-700 font-medium leading-relaxed math-scroll">
+                            <span class="text-indigo-700 font-black uppercase tracking-widest block mb-2">💡 Giải chi tiết:</span>
+                            <span class="text-black">${item.expl}</span>
+                        </div>`;
+                    }
+                    html += `</div>`;
+                });
+                html += `</div></div>`;
+            }
+        });
+        container.innerHTML = html;
+    };
+
+    window.backToResult = function() { showSection('result'); };
+    let isReviewingFromLeaderboard = false;
+    window.backFromReview = function() {
+        if (isReviewingFromLeaderboard) { showSection('scores'); isReviewingFromLeaderboard = false; } 
+        else { window.backToResult(); }
+    };
+
+    window.reviewStudentScore = function(scoreId) {
+        const record = allScores.find(x => x.id === scoreId);
+        if (!record) return;
+        currentStudent = { hoTen: record.hoTen, lop: record.lop, tenDe: record.tenDe, maDe: record.maDe };
+        userAnswers = record.userAnswers || {}; 
+        currentQuestions = JSON.parse(JSON.stringify(exam_data)); 
+        isReviewingFromLeaderboard = true;
+        window.reviewQuiz();
+    };
+
+    window.renderScores = function() {
+        const tbody = document.getElementById('scores-tbody');
+        const noScore = document.getElementById('no-scores');
+        const myRankDisplay = document.getElementById('my-rank-display');
+        const paginationContainer = document.getElementById('pagination-controls');
+        if(!tbody) return;
+
+        const sortedAll = [...allScores].sort((a, b) => b.diem - a.diem);
+        
+        sortedAll.forEach((s, i) => s.absoluteRank = i + 1);
+
+        const myRankIndex = sortedAll.findIndex(s => s.deviceId === deviceId);
+        if (myRankDisplay) {
+            if (myRankIndex !== -1) { myRankDisplay.innerHTML = `STT của bạn: <span class="text-red-600 font-black">${sortedAll[myRankIndex].absoluteRank}</span>`; } 
+            else { myRankDisplay.innerHTML = `STT của bạn: <span class="text-gray-400">Chưa thi</span>`; }
+        }
+
+        const filteredScores = searchTerm ? sortedAll.filter(s => s.hoTen.toLowerCase().includes(searchTerm)) : sortedAll;
+        if (filteredScores.length === 0) {
+            tbody.innerHTML = ''; noScore.classList.remove('hidden'); paginationContainer.innerHTML = ''; return; 
+        }
+        
+        noScore.classList.add('hidden');
+        const totalPages = Math.ceil(filteredScores.length / itemsPerPage);
+        if (currentPage > totalPages) currentPage = totalPages; if (currentPage < 1) currentPage = 1;
+        const startIndex = (currentPage - 1) * itemsPerPage; const endIndex = startIndex + itemsPerPage;
+        const pageItems = filteredScores.slice(startIndex, endIndex);
+
+        tbody.innerHTML = pageItems.map((s) => {
+            const isMe = s.deviceId === deviceId;
+            let timeDisplay = "";
+            if (s.thoiGian) {
+                const d = new Date(s.thoiGian);
+                if (!isNaN(d)) {
+                    timeDisplay = `${d.getDate().toString().padStart(2, '0')}/${(d.getMonth() + 1).toString().padStart(2, '0')}/${d.getFullYear()}`;
+                }
+            }
+
+            return `<tr class="${isMe ? 'my-score-row' : 'hover:bg-slate-50'} transition-colors border-b border-slate-100">
+            <td class="px-4 py-5 font-black text-slate-500 text-base text-center">${s.absoluteRank}</td>
+            <td class="px-4 py-5 font-extrabold text-slate-800 text-base">${s.hoTen} ${isMe ? '<span class="ml-2 bg-pink-500 text-white text-xs px-2 py-1 rounded-md shadow-sm">Bạn</span>' : ''}</td>
+            <td class="px-4 py-5 font-black text-blue-600 text-base text-center">${s.lop}</td>
+            <td class="px-4 py-5 text-center font-black text-orange-600 text-sm whitespace-nowrap">${timeDisplay}</td>
+            <td class="px-4 py-5 text-center"><span class="font-black text-2xl ${s.diem >= 5 ? 'text-emerald-600' : 'text-red-500'}">${s.diem}</span></td>
+            <td class="px-4 py-5 text-center">
+                <button onclick="window.reviewStudentScore('${s.id}')" class="bg-indigo-100 text-indigo-700 hover:bg-indigo-200 px-4 py-2 rounded-lg font-bold text-sm transition-colors border border-indigo-200 shadow-sm cursor-pointer whitespace-nowrap">Xem lại</button>
+            </td>
+        </tr>`;
+        }).join('');
+        renderPagination(totalPages);
+    };
+
+    function renderPagination(totalPages) {
+        const container = document.getElementById('pagination-controls');
+        if (!container) return;
+        if (totalPages <= 1) { container.innerHTML = ''; return; }
+        let html = '<div class="flex flex-wrap items-center justify-center gap-2">';
+        html += `<button onclick="window.changePage(${currentPage - 1})" class="px-4 py-2 rounded-xl font-bold transition-colors ${currentPage === 1 ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 shadow-sm'}" ${currentPage === 1 ? 'disabled' : ''}>&laquo; Trước</button>`;
+        let startPage = Math.max(1, currentPage - 1); let endPage = Math.min(totalPages, currentPage + 1);
+        if (startPage > 1) { html += `<button onclick="window.changePage(1)" class="px-4 py-2 rounded-xl font-bold bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 shadow-sm">1</button>`; if (startPage > 2) html += `<span class="px-2 text-gray-400 font-black">...</span>`; }
+        for (let i = startPage; i <= endPage; i++) { html += `<button onclick="window.changePage(${i})" class="px-4 py-2 rounded-xl font-bold transition-all ${i === currentPage ? 'bg-orange-500 text-white shadow-md border-orange-600' : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 shadow-sm'}">${i}</button>`; }
+        if (endPage < totalPages) { if (endPage < totalPages - 1) html += `<span class="px-2 text-gray-400 font-black">...</span>`; html += `<button onclick="window.changePage(${totalPages})" class="px-4 py-2 rounded-xl font-bold bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 shadow-sm">${totalPages}</button>`; }
+        html += `<button onclick="window.changePage(${currentPage + 1})" class="px-4 py-2 rounded-xl font-bold transition-colors ${currentPage === totalPages ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 shadow-sm'}" ${currentPage === totalPages ? 'disabled' : ''}>Sau &raquo;</button>`;
+        html += '</div>'; container.innerHTML = html;
+    }
+
+    function showSection(id) {
+        ['login', 'quiz', 'scores', 'result', 'review'].forEach(s => { const el = document.getElementById(s+'-section'); if(el) el.classList.add('hidden'); });
+        const tgt = document.getElementById(id+'-section'); if(tgt) tgt.classList.remove('hidden');
+    }
+
+    function startTimer(seconds) {
+        const display = document.getElementById('timer'); if(!display) return;
+        let remaining = seconds;
+        timerInterval = setInterval(() => {
+            remaining--;
+            const m = Math.floor(remaining / 60).toString().padStart(2, '0');
+            const s = (remaining % 60).toString().padStart(2, '0');
+            display.innerText = `${m}:${s}`;
+            if (remaining <= 0) window.submitQuiz();
+        }, 1000);
+    }
+
+    try {
+        if (!localStorage.getItem('deviceId')) localStorage.setItem('deviceId', 'dev_' + Math.random().toString(36).substr(2) + Date.now());
+        deviceId = localStorage.getItem('deviceId');
+    } catch (e) { deviceId = 'dev_temp_' + Math.random().toString(36).substr(2); }
+  </script>
+ </body>
+</html>
