@@ -1,0 +1,1006 @@
+<!doctype html>
+<html lang="vi" class="w-full h-full m-0 p-0">
+ <head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <title>Đề Kiểm Tra - Bài 10: Tạo liên kết - Tin học 12</title>
+    <meta name="description" content="Đề ôn tập Bài 10 môn Tin học 12 - Trường THPT Phan Đình Phùng - Quảng Trị.">
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-NSJCVSL9RM"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+          gtag('config', 'G-NSJCVSL9RM'); 
+
+         gtag('config', 'G-HE4GXY8B53'); 
+    </script>
+
+ 
+    <script>
+      setInterval(function() {
+        if (!document.hidden) { 
+          gtag('event', 'keep_alive', {
+            'event_category': 'Engagement',
+            'event_label': 'Học sinh đang làm bài',
+            'non_interaction': false
+          });
+        }
+      }, 30000); 
+    </script>
+
+ 
+  <style>
+    * { 
+        -webkit-tap-highlight-color: transparent; 
+        -webkit-touch-callout: none !important; 
+        touch-action: manipulation;
+    }
+    html, body { width: 100%; min-height: 100vh; margin: 0; padding: 0; overflow-x: hidden; }
+    body { 
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
+      background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+      background-size: 400% 400%;
+      animation: gradientBG 15s ease infinite;
+    }
+    @keyframes gradientBG {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+    #app { width: 100%; min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden; }
+    
+    .glass-card {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+    .option-label { transition: background-color 0.1s ease, border-color 0.1s ease; cursor: pointer; border-color: #e2e8f0; }
+    .option-label:hover { background-color: #f0fdfa; border-color: #38bdf8; }
+    
+    input[type="radio"].single-radio:checked + .option-label {
+      background: linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%);
+      color: white; border-color: transparent;
+      box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+    }
+    input[type="radio"].single-radio:checked + .option-label div:first-child { background-color: rgba(255,255,255,0.25); border-color: transparent; color: white; }
+    input[type="radio"].single-radio:checked + .option-label div:last-child { color: white; }
+    
+    .fade-in { animation: fadeIn 0.4s ease forwards; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    
+    .my-score-row {
+      background: linear-gradient(to right, #fdf4ff, #ffffff) !important;
+      border-left: 4px solid #db2777 !important; font-weight: 700 !important;
+      color: #9d174d !important; box-shadow: 0 2px 8px rgba(0,0,0,0.05); position: relative; z-index: 10;
+    }
+    .my-score-row td { padding-top: 16px; padding-bottom: 16px; }
+    
+    .btn-tf { transition: background-color 0.1s ease; border-width: 2px; }
+    .btn-tf.selected { background-color: #2563eb; color: white; border-color: #1d4ed8; }
+    .btn-tf:not(.selected) { background-color: white; color: #4b5563; border-color: #e5e7eb; }
+    .btn-tf:not(:disabled):active { transform: scale(0.95); }
+    
+    .math-scroll { overflow-x: auto; min-width: 0; padding-bottom: 4px; scrollbar-width: none; -ms-overflow-style: none; }
+    .math-scroll::-webkit-scrollbar { display: none; }
+    
+    code.html-code {
+        background-color: #eff6ff;
+        color: #2563eb;
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+        font-weight: 700;
+        border: 1px solid #bfdbfe;
+    }
+  </style>
+ </head>
+  <body>
+  <div id="app" class="p-0 sm:p-4 md:p-8 transition-all">
+   
+   <div id="login-section" class="w-full max-w-md mx-auto fade-in flex flex-col justify-center flex-grow">
+    <div class="glass-card rounded-none sm:rounded-3xl p-6 sm:p-8 flex flex-col justify-start shadow-2xl border-t-8 border-indigo-600 bg-white">
+     <div class="text-center mb-6 pt-4 sm:pt-0">
+      <div class="flex items-center justify-center w-24 h-24 mx-auto mb-4 rounded-full border-4 border-yellow-400 bg-red-600 shadow-lg transform transition-transform hover:scale-105">
+          <span class="text-white font-black text-4xl tracking-tighter">HS</span>
+      </div>
+      <h1 class="text-2xl sm:text-3xl font-bold text-red-500 mb-3">BÀI 10: TẠO LIÊN KẾT</h1>
+     </div>
+      <div id="login-form" class="space-y-4">
+      <div class="flex flex-col gap-4">
+          <div class="w-full">
+               <label class="block text-lg font-bold text-gray-700 mb-1">Họ và tên</label> 
+               <input type="text" id="hoTen" class="w-full px-4 py-4 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-100 outline-none transition-all font-semibold text-lg" placeholder="Nhập họ tên...">
+          </div>
+          <div class="w-full">
+               <label class="block text-lg font-bold text-gray-700 mb-1">Lớp</label> 
+               <input type="text" id="lop" class="w-full px-4 py-4 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-100 outline-none transition-all font-semibold text-lg" placeholder="12A1">
+          </div>
+      </div>
+      <div id="login-error" class="hidden bg-red-100 border border-red-300 text-red-700 font-bold text-base p-3 rounded-xl text-center shadow-sm"></div>
+      <button type="button" onclick="window.startQuizAction()" id="start-btn" class="w-full py-5 mt-6 bg-gradient-to-r from-blue-500 to-cyan-400 text-white font-extrabold rounded-2xl shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all text-2xl tracking-wide"> 🚀 BẮT ĐẦU THI </button>
+     </div>
+    </div>
+   </div>
+
+   <!-- PHẦN LÀM BÀI THI -->
+   <div id="quiz-section" class="w-full max-w-4xl mx-auto hidden flex-grow flex flex-col">
+    <div class="glass-card rounded-none sm:rounded-3xl p-4 sm:p-8 flex flex-col flex-grow relative border-t-8 border-blue-500 bg-white shadow-2xl">
+     <div class="flex items-center justify-between mb-4 sm:mb-6 pb-4 border-b-2 border-gray-100">
+      <div class="flex items-center gap-3">
+       <div class="flex items-center justify-center w-12 h-12 rounded-full border-2 border-yellow-400 bg-red-600 shadow-sm flex-shrink-0">
+           <span class="text-white font-black text-xl tracking-tighter">HS</span>
+       </div>
+       <div>
+        <h2 id="quiz-title" class="text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">Đề Kiểm Tra </h2>
+        <p id="student-info" class="text-base font-bold text-gray-500 mt-1 uppercase tracking-wide"></p>
+       </div>
+      </div>
+      <div class="text-right bg-blue-50 px-4 py-2 rounded-xl border border-blue-100" id="progress-container">
+       <div class="text-sm text-blue-500 font-bold uppercase tracking-wider mb-1">Tiến độ (Câu)</div>
+       <div id="progress-text" class="text-2xl font-black text-blue-700">0/28</div>
+      </div>
+     </div>
+     
+     <div id="timer-banner" class="mb-6 p-4 bg-gradient-to-r from-orange-50 to-red-50 border-2 border-red-100 rounded-2xl flex items-center justify-between shadow-sm sticky top-2 z-40">
+        <span class="text-red-800 font-extrabold flex items-center gap-2 text-lg"><span class="text-2xl animate-pulse">⏰</span> THỜI GIAN:</span> 
+        <span id="timer" class="text-4xl font-black text-red-600 font-mono tracking-wider drop-shadow-sm">45:00</span>
+     </div>
+
+     <div id="question-container" class="mb-8 flex-grow w-full max-w-full"></div>
+     
+     <div class="flex pt-4 sm:pt-6 border-t-2 border-gray-100 mt-auto pb-4 sm:pb-0">
+        <button id="submit-btn" onclick="window.promptSubmit()" class="w-full py-5 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-bold text-2xl rounded-2xl shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1">✅ NỘP BÀI NGAY</button>
+     </div>
+    </div>
+   </div>
+
+   <!-- MODAL XÁC NHẬN NỘP BÀI -->
+   <div id="confirm-submit-modal" class="fixed inset-0 hidden flex items-center justify-center bg-black/60 backdrop-blur-sm z-50 transition-opacity">
+       <div class="bg-white rounded-3xl w-full max-w-sm shadow-2xl p-6 text-center transform transition-all scale-100 mx-4 border-2 border-gray-100">
+           <div class="text-yellow-400 mb-4 flex justify-center">
+               <svg xmlns="http://www.w3.org/2000/svg" class="h-24 w-24" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+               </svg>
+           </div>
+           <h3 class="text-3xl font-black text-gray-800 mb-2 uppercase tracking-wide">Xác nhận nộp</h3>
+           <p class="text-gray-600 mb-6 font-medium text-xl">Các em mới làm <span id="confirm-answered" class="text-red-600 font-black text-2xl">0</span>/<span id="confirm-total" class="font-black text-2xl">28</span> câu. Có chắc chắn muốn nộp bài không? Những câu chưa làm sẽ bị tính là sai.</p>
+           <div class="flex flex-col gap-3">
+               <button onclick="window.closeConfirmModal()" class="w-full py-4 bg-gray-100 text-gray-800 font-extrabold text-xl rounded-xl hover:bg-gray-200 border border-gray-200">Quay lại làm tiếp</button>
+               <button onclick="window.executeSubmit()" class="w-full py-4 bg-emerald-600 text-white font-extrabold text-xl rounded-xl hover:bg-emerald-700 shadow-md">Vẫn Nộp Luôn</button>
+           </div>
+       </div>
+   </div>
+
+   <!-- KẾT QUẢ ĐIỂM SỐ -->
+   <div id="result-section" class="w-full max-w-2xl mx-auto hidden fade-in flex flex-col justify-center flex-grow pb-8">
+    <div class="glass-card rounded-none sm:rounded-3xl p-6 sm:p-8 flex flex-col justify-start border-t-8 border-green-500 bg-white shadow-2xl" id="result-content">
+    </div>
+   </div>
+
+   <!-- XEM LẠI BÀI LÀM -->
+   <div id="review-section" class="w-full max-w-4xl mx-auto hidden flex-grow flex flex-col">
+    <div class="glass-card rounded-none sm:rounded-3xl p-4 sm:p-8 flex flex-col flex-grow border-t-8 border-indigo-500 bg-white overflow-hidden shadow-2xl">
+     <div class="flex flex-col-reverse sm:flex-row items-start sm:items-center justify-between mb-6 pb-4 border-b-2 border-gray-100 gap-4">
+      <div class="flex flex-wrap gap-2">
+          <button onclick="window.goHome()" class="px-5 py-3 bg-gray-100 text-gray-700 rounded-xl font-bold hover:bg-gray-200 text-lg shadow-sm border border-gray-200">🏠 Trang chủ</button>
+          <button onclick="window.backFromReview()" class="px-5 py-3 bg-indigo-50 text-indigo-700 rounded-xl font-bold hover:bg-indigo-100 text-lg shadow-sm border border-indigo-200">🔙 Quay lại</button>
+          <button onclick="window.viewScoresAction()" class="px-5 py-3 bg-orange-50 text-orange-700 rounded-xl font-bold hover:bg-orange-100 text-lg shadow-sm border border-orange-200">🏆 Bảng điểm</button>
+      </div>
+      <h2 class="text-3xl sm:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">📝 Xem Lại Bài Làm</h2>
+     </div>
+     <div id="review-content" class="space-y-8 w-full max-w-full"></div>
+    </div>
+   </div>
+
+   <!-- BẢNG XẾP HẠNG -->
+   <div id="scores-section" class="w-full max-w-6xl mx-auto hidden flex-grow flex flex-col">
+    <div class="glass-card rounded-none sm:rounded-3xl p-4 sm:p-8 flex flex-col flex-grow border-t-8 border-orange-500 bg-white w-full max-w-full shadow-2xl">
+     <div class="mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b-2 border-gray-100 pb-4">
+      <button onclick="window.goHome()" class="px-5 py-3 bg-gray-100 text-gray-700 rounded-xl font-bold hover:bg-gray-200 text-lg shadow-sm border border-gray-200 whitespace-nowrap">🏠 Trang chủ</button>
+      <h2 class="text-3xl sm:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-red-600 text-center flex-grow">🏆 BẢNG XẾP HẠNG</h2>
+     </div>
+     
+     <div class="flex flex-col sm:flex-row justify-between items-center mb-4 gap-4 bg-gray-50 p-4 rounded-xl border border-gray-200">
+         <div id="my-rank-display" class="text-xl font-bold text-gray-700">🏆 Thứ hạng của bạn: <span class="text-gray-400">--</span></div>
+         <div class="w-full sm:w-auto flex-grow max-w-sm">
+             <input type="text" id="search-student" oninput="window.searchStudent(this.value)" placeholder="🔍 Nhập tên học sinh để tìm..." class="w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm focus:border-orange-500 focus:ring-2 focus:ring-orange-200 outline-none transition-all font-medium">
+         </div>
+     </div>
+
+     <div class="overflow-x-auto rounded-xl border border-slate-200 flex-grow shadow-inner bg-white/50 w-full">
+      <table class="w-full text-sm sm:text-base whitespace-nowrap min-w-max">
+       <thead class="bg-gradient-to-r from-orange-500 to-red-500 text-white">
+        <tr>
+         <th class="px-3 sm:px-4 py-4 text-center font-extrabold w-16">STT</th>
+         <th class="px-3 sm:px-4 py-4 text-left font-extrabold">Họ tên</th>
+         <th class="px-3 sm:px-4 py-4 text-center font-extrabold">Lớp</th>
+         <th class="px-3 sm:px-4 py-4 text-center font-extrabold">Thời gian</th>
+         <th class="px-3 sm:px-4 py-4 text-center font-extrabold">Điểm</th>
+         <th class="px-2 sm:px-4 py-4 text-center font-extrabold">Xem lại</th>
+        </tr>
+       </thead>
+       <tbody id="scores-tbody" class="bg-white/80 divide-y divide-gray-100"></tbody>
+      </table>
+      <div id="no-scores" class="text-center py-12 hidden text-gray-500 font-bold text-xl">Không tìm thấy dữ liệu thi 🥲</div>
+     </div>
+     
+     <div id="pagination-controls" class="w-full flex justify-center mt-6"></div>
+    </div>
+  </div>
+
+  <script>
+    let database = null;
+    let scoresRef = null;
+
+    try {
+        const firebaseConfig = {
+            apiKey: "AIzaSyBQ9Pos8awlh9j041qDWTPFRsVIjF-kPnk",
+            authDomain: "hoctap-91691.firebaseapp.com",
+            databaseURL: "https://hoctap-91691-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "hoctap-91691",
+            storageBucket: "hoctap-91691.firebasestorage.app",
+            messagingSenderId: "1004553425319",
+            appId: "1:1004553425319:web:45d15cbae393f614c56682",
+            measurementId: "G-Q6X1TL9PRV"
+        };
+        if (typeof firebase !== 'undefined') {
+            if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+            database = firebase.database();
+            
+            // Đã đổi reference sang bảng xếp hạng bài 10
+            scoresRef = database.ref('bxh_bai10_tin12');
+        }
+    } catch(err) { console.error("Lỗi Firebase:", err); }
+
+    let isQuizStarted = false; 
+    let currentQuestions = [];
+    let deviceId = '';
+    let allScores = [];
+    let currentStudent = {};
+    let userAnswers = {};
+    let timerInterval;
+    let quizStartTime, quizEndTime;
+    
+    let searchTerm = '';
+    let currentPage = 1;
+    const itemsPerPage = 10;
+
+    // DỮ LIỆU ĐÃ ĐƯỢC BỌC 100% CÁC THẺ, THUỘC TÍNH CSS VÀ THÔNG SỐ VÀO CODE BLOCK
+    const exam_data = [
+    { 
+        id: "q1", type: "single", question: "Câu 1: Siêu văn bản (hypertext) có đặc điểm nổi bật nào sau đây so với văn bản thông thường?", 
+        options: ["Chỉ chứa văn bản dạng thô (text).", "Được tạo ra độc quyền bởi phần mềm Notepad.", "Chứa nội dung đa phương tiện và các siêu liên kết.", "Không thể chứa âm thanh và hình ảnh."], 
+        correct: 2, explanation: "Siêu văn bản (hypertext) vượt trội hơn văn bản thô (plain text) vì nó cho phép nhúng các phương tiện truyền thông (hình ảnh, âm thanh, video) và sử dụng siêu liên kết (hyperlink) để tạo cấu trúc mạng lưới thông tin, cho phép truy cập phi tuyến tính." 
+    },
+    { 
+        id: "q2", type: "single", question: "Câu 2: Chức năng chính của siêu liên kết (hyperlink) trong siêu văn bản là gì?", 
+        options: ["Chỉnh sửa lỗi chính tả trong văn bản.", "Chuyển nhanh đến vị trí tham chiếu mà không cần đọc tuần tự.", "Mã hóa dữ liệu người dùng.", "Tạo đường viền cho văn bản."], 
+        correct: 1, explanation: "Siêu liên kết (hyperlink) cho phép người dùng điều hướng lập tức từ một điểm trong tài liệu đến một tài liệu khác hoặc vị trí khác trong cùng tài liệu, phá vỡ cấu trúc đọc tuần tự (linear) truyền thống." 
+    },
+    { 
+        id: "q3", type: "single", question: "Câu 3: Trong ngôn ngữ đánh dấu HTML, thẻ nào được sử dụng để tạo một siêu liên kết?", 
+        options: ["<code class=\"html-code\">&lt;link&gt;</code>", "<code class=\"html-code\">&lt;href&gt;</code>", "<code class=\"html-code\">&lt;a&gt;</code>", "<code class=\"html-code\">&lt;url&gt;</code>"], 
+        correct: 2, explanation: "Trong HTML, thẻ <code class=\"html-code\">&lt;a&gt;</code> (viết tắt của 'anchor' - mỏ neo) là phần tử cốt lõi được sử dụng để định nghĩa một siêu liên kết trỏ đến một trang web, tệp tin, hoặc địa chỉ email." 
+    },
+    { 
+        id: "q4", type: "single", question: "Câu 4: Thuộc tính nào trong thẻ tạo liên kết HTML được dùng để chỉ định địa chỉ (đường dẫn) tham chiếu?", 
+        options: ["<code class=\"html-code\">href</code>", "<code class=\"html-code\">src</code>", "<code class=\"html-code\">id</code>", "<code class=\"html-code\">name</code>"], 
+        correct: 0, explanation: "Thuộc tính <code class=\"html-code\">href</code> (Hypertext Reference) cung cấp URL (địa chỉ đích) mà trình duyệt sẽ hướng tới khi người dùng tương tác với thẻ <code class=\"html-code\">&lt;a&gt;</code>." 
+    },
+    { 
+        id: "q5", type: "single", question: "Câu 5: Cú pháp cơ bản nào sau đây là ĐÚNG để tạo một liên kết HTML?", 
+        options: ["<code class=\"html-code\">&lt;a src=\"URL\"&gt;Nội dung&lt;/a&gt;</code>", "<code class=\"html-code\">&lt;a href=\"URL\"&gt;Nội dung&lt;/a&gt;</code>", "<code class=\"html-code\">&lt;link href=\"URL\"&gt;Nội dung&lt;/link&gt;</code>", "<code class=\"html-code\">&lt;a id=\"URL\"&gt;Nội dung&lt;/a&gt;</code>"], 
+        correct: 1, explanation: "Cú pháp chuẩn của thẻ anchor bao gồm thẻ mở <code class=\"html-code\">&lt;a href=\"...\"&gt;</code>, nội dung hiển thị (văn bản hoặc hình ảnh) và thẻ đóng <code class=\"html-code\">&lt;/a&gt;</code>." 
+    },
+    { 
+        id: "q6", type: "single", question: "Câu 6: Đường dẫn tuyệt đối (Absolute URL) thường có đặc điểm nhận dạng nào?", 
+        options: ["Không bao giờ chứa tên miền.", "Bắt đầu bằng tên thư mục gốc của máy tính.", "Cung cấp địa chỉ đầy đủ, bao gồm cả giao thức (như http:// hoặc https://).", "Chỉ chứa kí hiệu <code class=\"html-code\">../</code> ở đầu."], 
+        correct: 2, explanation: "Đường dẫn tuyệt đối (Absolute URL) chứa toàn bộ thông tin cần thiết để định vị tài nguyên trên Internet, bao gồm scheme/giao thức (<code class=\"html-code\">http://</code> hoặc <code class=\"html-code\">https://</code>), tên miền (domain name), và đường dẫn cụ thể (path)." 
+    },
+    { 
+        id: "q7", type: "single", question: "Câu 7: Khi nào người thiết kế web nên sử dụng đường dẫn tuyệt đối?", 
+        options: ["Khi liên kết đến tài liệu nằm trong cùng một thư mục.", "Khi liên kết đến một vị trí khác trong cùng một trang web.", "Khi liên kết đến một trang web nằm trên một máy chủ khác (bên ngoài website hiện tại).", "Khi muốn tăng tốc độ tải trang."], 
+        correct: 2, explanation: "Để trình duyệt có thể thoát khỏi tên miền hiện tại và tìm đến một máy chủ ngoại vi (external server), ta bắt buộc phải cung cấp một định danh tài nguyên đồng nhất (URI) hoàn chỉnh thông qua đường dẫn tuyệt đối." 
+    },
+    { 
+        id: "q8", type: "single", question: "Câu 8: Đường dẫn tương đối (Relative URL) là loại đường dẫn được xây dựng dựa trên cơ sở nào?", 
+        options: ["Dựa trên địa chỉ IP tĩnh của máy chủ.", "Dựa trên giao thức bảo mật HTTPS.", "Dựa trên vị trí của tài liệu HTML hiện tại đang chứa liên kết.", "Dựa trên bảng chữ cái."], 
+        correct: 2, explanation: "Đường dẫn tương đối (Relative URL) không chứa giao thức hay tên miền; nó sử dụng vị trí của tệp tin hiện tại (current working directory) làm gốc tọa độ để tham chiếu đến tệp tin đích." 
+    },
+    { 
+        id: "q9", type: "single", question: "Câu 9: Đường dẫn nào sau đây là một ví dụ về đường dẫn tương đối?", 
+        options: ["<code class=\"html-code\">https://www.google.com</code>", "<code class=\"html-code\">ftp://fileserver.com/doc.pdf</code>", "<code class=\"html-code\">html/cach_tao_lien_ket.html</code>", "<code class=\"html-code\">http://localhost:8080</code>"], 
+        correct: 2, explanation: "Lựa chọn này không chứa giao thức và không chứa tên miền, nó trỏ trực tiếp vào thư mục con <code class=\"html-code\">html</code> so với vị trí tệp hiện tại." 
+    },
+    { 
+        id: "q10", type: "single", question: "Câu 10: Liên kết từ một trang web tới một trang web khác nằm ngoài website hiện tại được gọi là gì?", 
+        options: ["Liên kết trong.", "Liên kết ngoài.", "Liên kết mỏ neo (Anchor link).", "Liên kết chết."], 
+        correct: 1, explanation: "External link (liên kết ngoài) là đường dẫn trỏ đến một domain khác hoàn toàn so với domain gốc đang lưu trữ tài liệu." 
+    },
+    { 
+        id: "q11", type: "single", question: "Câu 11: Khi muốn tạo liên kết từ tệp <code class=\"html-code\">index.html</code> tới tệp <code class=\"html-code\">thong_tin.html</code> nằm hoàn toàn trong cùng một thư mục, giá trị của thuộc tính <code class=\"html-code\">href</code> sẽ là gì?", 
+        options: ["<code class=\"html-code\">href=\"../thong_tin.html\"</code>", "<code class=\"html-code\">href=\"/thong_tin.html\"</code>", "<code class=\"html-code\">href=\"thong_tin.html\"</code>", "<code class=\"html-code\">href=\"http://thong_tin.html\"</code>"], 
+        correct: 2, explanation: "Khi tệp đích và tệp hiện tại nằm cùng chung một cấp thư mục, đường dẫn tương đối chỉ cần gọi chính xác tên tệp đích kèm phần mở rộng." 
+    },
+    { 
+        id: "q12", type: "single", question: "Câu 12: Ký hiệu <code class=\"html-code\">../</code> trong đường dẫn tương đối của HTML mang ý nghĩa gì?", 
+        options: ["Mở tệp ở chế độ ẩn.", "Trở lại thư mục mẹ (thư mục cấp trên một bậc).", "Đi vào thư mục con (cấp dưới).", "Nhảy đến trang chủ của website."], 
+        correct: 1, explanation: "Trong hệ thống đường dẫn (dựa trên chuẩn POSIX), ký hiệu <code class=\"html-code\">../</code> (dot-dot-slash) mang lệnh điều hướng lùi lên một cấp (parent directory) trong cây thư mục." 
+    },
+    { 
+        id: "q13", type: "single", question: "Câu 13: Giả sử tệp hiện tại là <code class=\"html-code\">bai_tap_1.html</code> nằm trong thư mục <code class=\"html-code\">bai_tap</code>. Tệp <code class=\"html-code\">index.html</code> nằm ở thư mục gốc (bên ngoài <code class=\"html-code\">bai_tap</code>). Để liên kết từ <code class=\"html-code\">bai_tap_1.html</code> về <code class=\"html-code\">index.html</code>, đường dẫn nào sau đây là đúng?", 
+        options: ["<code class=\"html-code\">href=\"index.html\"</code>", "<code class=\"html-code\">href=\"bai_tap/index.html\"</code>", "<code class=\"html-code\">href=\"../index.html\"</code>", "<code class=\"html-code\">href=\"/bai_tap/index.html\"</code>"], 
+        correct: 2, explanation: "Tệp hiện tại nằm trong thư mục con. Để truy cập tệp ở thư mục cha, cần dùng <code class=\"html-code\">../</code> để thoát ra ngoài một cấp thư mục rồi mới gọi tên <code class=\"html-code\">index.html</code>." 
+    },
+    { 
+        id: "q14", type: "single", question: "Câu 14: Để tạo liên kết chuyển nhanh đến một vị trí cụ thể (vị trí đích) nằm trong CÙNG MỘT trang web, bước đầu tiên cần làm là gì?", 
+        options: ["Đặt tên tệp web với đuôi <code class=\"html-code\">.id</code>.", "Tạo phần tử HTML có thuộc tính <code class=\"html-code\">id</code> nằm tại vị trí đích (mã định danh).", "Viết địa chỉ IP của máy tính vào thuộc tính <code class=\"html-code\">href</code>.", "Tạo một bảng mới."], 
+        correct: 1, explanation: "Để tạo anchor link (liên kết mỏ neo) nội trang, đích đến phải được định danh duy nhất bằng thuộc tính <code class=\"html-code\">id</code>. Trình duyệt sẽ dựa vào <code class=\"html-code\">id</code> này để cuộn trang đến đúng vị trí." 
+    },
+    { 
+        id: "q15", type: "single", question: "Câu 15: Nếu vị trí đích có thuộc tính <code class=\"html-code\">id=\"Thong_tin\"</code>, cú pháp để tạo liên kết chuyển đến vị trí đó là gì?", 
+        options: ["<code class=\"html-code\">&lt;a href=\"Thong_tin\"&gt;</code>", "<code class=\"html-code\">&lt;a href=\"#Thong_tin\"&gt;</code>", "<code class=\"html-code\">&lt;a href=\"@Thong_tin\"&gt;</code>", "<code class=\"html-code\">&lt;a href=\"/Thong_tin\"&gt;</code>"], 
+        correct: 1, explanation: "Trong cú pháp URL, ký tự <code class=\"html-code\">#</code> (hash/fragment identifier) đứng trước một chuỗi văn bản được dùng để chỉ thị cho trình duyệt tìm kiếm phần tử có <code class=\"html-code\">id</code> tương ứng trên chính trang đó." 
+    },
+    { 
+        id: "q16", type: "single", question: "Câu 16: Làm thế nào để biến một hình ảnh thành một siêu liên kết có thể click được?", 
+        options: ["Đặt thẻ <code class=\"html-code\">&lt;img&gt;</code> vào bên trong thuộc tính <code class=\"html-code\">href</code> của thẻ <code class=\"html-code\">&lt;a&gt;</code>.", "Đặt thẻ <code class=\"html-code\">&lt;img&gt;</code> vào giữa cặp thẻ <code class=\"html-code\">&lt;a href=\"...\"&gt;</code> và <code class=\"html-code\">&lt;/a&gt;</code>.", "Đặt thẻ <code class=\"html-code\">&lt;a&gt;</code> vào bên trong thuộc tính <code class=\"html-code\">src</code> của thẻ <code class=\"html-code\">&lt;img&gt;</code>.", "Sử dụng thuộc tính <code class=\"html-code\">href</code> trực tiếp bên trong thẻ <code class=\"html-code\">&lt;img&gt;</code>."], 
+        correct: 1, explanation: "Theo DOM (Document Object Model), thẻ <code class=\"html-code\">&lt;a&gt;</code> có thể bao bọc các phần tử nội tuyến (inline) hoặc khối (block) khác. Lồng thẻ <code class=\"html-code\">&lt;img&gt;</code> vào trong <code class=\"html-code\">&lt;a&gt;</code> sẽ biến toàn bộ diện tích ảnh thành vùng click chuột (clickable area)." 
+    },
+    { 
+        id: "q17", type: "single", question: "Câu 17: Cú pháp ĐÚNG để hình ảnh <code class=\"html-code\">sun.png</code> (trong thư mục <code class=\"html-code\">images</code>) khi click vào sẽ chuyển tới trang <code class=\"html-code\">thong_tin.html</code> là?", 
+        options: ["<code class=\"html-code\">&lt;img src=\"images/sun.png\" href=\"thong_tin.html\"&gt;</code>", "<code class=\"html-code\">&lt;a href=\"thong_tin.html\"&gt;&lt;img src=\"images/sun.png\"&gt;&lt;/a&gt;</code>", "<code class=\"html-code\">&lt;a src=\"images/sun.png\" href=\"thong_tin.html\"&gt;&lt;/a&gt;</code>", "<code class=\"html-code\">&lt;img href=\"thong_tin.html\"&gt;&lt;a src=\"images/sun.png\"&gt;&lt;/a&gt;</code>"], 
+        correct: 1, explanation: "Thẻ <code class=\"html-code\">&lt;a&gt;</code> phải chứa thuộc tính <code class=\"html-code\">href</code> định tuyến, bên trong nó là thẻ <code class=\"html-code\">&lt;img&gt;</code> chứa thuộc tính <code class=\"html-code\">src</code> chỉ định nguồn ảnh hiển thị." 
+    },
+    { 
+        id: "q18", type: "single", question: "Câu 18: Khi tạo một danh sách các liên kết, ta thường kết hợp thẻ <code class=\"html-code\">&lt;a&gt;</code> với cặp thẻ nào sau đây để tạo thành dạng danh sách liệt kê?", 
+        options: ["<code class=\"html-code\">&lt;h1&gt;</code> hoặc <code class=\"html-code\">&lt;h2&gt;</code>", "<code class=\"html-code\">&lt;p&gt;</code> và <code class=\"html-code\">&lt;br&gt;</code>", "<code class=\"html-code\">&lt;ul&gt;</code> và <code class=\"html-code\">&lt;li&gt;</code>", "<code class=\"html-code\">&lt;table&gt;</code> và <code class=\"html-code\">&lt;tr&gt;</code>"], 
+        correct: 2, explanation: "Thực hành chuẩn (Best practice) trong thiết kế menu điều hướng (Navigation bar) là lồng các thẻ <code class=\"html-code\">&lt;a&gt;</code> vào bên trong danh sách không thứ tự (<code class=\"html-code\">&lt;ul&gt;</code> &gt; <code class=\"html-code\">&lt;li&gt;</code>) để tạo cấu trúc nhóm logic." 
+    },
+    { 
+        id: "q19", type: "single", question: "Câu 19: Hãy phân loại đường dẫn sau: <code class=\"html-code\">mail.google.com/mail/u/0/#inbox</code>.", 
+        options: ["Đường dẫn tuyệt đối, vì nó chứa tên miền google.com.", "Đường dẫn tương đối, vì nó không bắt đầu bằng giao thức (như http:// hay https://).", "Đường dẫn nội bộ, vì nó chứa dấu <code class=\"html-code\">#</code>.", "Không phải là đường dẫn hợp lệ."], 
+        correct: 1, explanation: "Một URL không có scheme (<code class=\"html-code\">http://</code>, <code class=\"html-code\">https://</code>...) ở đầu được trình duyệt hiểu là đường dẫn tương đối. Nếu đặt chuỗi này vào thuộc tính <code class=\"html-code\">href</code>, trình duyệt sẽ nối nó vào đuôi URL hiện tại thay vì chuyển hướng đến Google." 
+    },
+    { 
+        id: "q20", type: "single", question: "Câu 20: Tệp có phần mở rộng <code class=\"html-code\">.docx</code> được tạo bởi phần mềm Microsoft Word có thể được coi là siêu văn bản vì lý do nào sau đây?", 
+        options: ["Nó là định dạng tệp thô (plain text).", "Nó chỉ có thể chứa văn bản.", "Nó có thể chứa nội dung đa phương tiện và chèn được các siêu liên kết.", "Nó không cần phần mềm để mở."], 
+        correct: 2, explanation: "Bản chất của Microsoft Word (docx) là tệp nén XML chứa văn bản định dạng phong phú (Rich Text), hỗ trợ nhúng hình ảnh, video và chèn Hyperlink, thỏa mãn hoàn toàn định nghĩa của siêu văn bản." 
+    },
+    { 
+        id: "q21", type: "single", question: "Câu 21: Tệp văn bản có phần mở rộng <code class=\"html-code\">.txt</code> tạo bởi Notepad không được coi là siêu văn bản chủ yếu vì lý do gì?", 
+        options: ["Dung lượng của nó quá nhỏ.", "Nó không hỗ trợ định dạng đa phương tiện và siêu liên kết.", "Hệ điều hành Windows không hỗ trợ.", "Nó có màu nền đen."], 
+        correct: 1, explanation: "Tệp <code class=\"html-code\">.txt</code> (Plain text) chỉ mã hóa các ký tự cơ bản (ASCII/UTF-8), không có cấu trúc thẻ đánh dấu để chèn liên kết hay tham chiếu đến các tệp phương tiện ngoại vi." 
+    },
+    { 
+        id: "q22", type: "single", question: "Câu 22: Việc kiểm tra lại URL sao chép từ thanh địa chỉ trình duyệt trước khi dán vào mã HTML nhằm mục đích gì?", 
+        options: ["Đảm bảo URL không chứa thông tin cá nhân hoặc các ký tự thừa gây lỗi.", "Thay đổi giao thức từ HTTP sang HTTPS.", "Chuyển đường dẫn tuyệt đối thành đường dẫn tương đối.", "Rút gọn URL để mã HTML đẹp hơn."], 
+        correct: 0, explanation: "URL sao chép thường dính kèm các tham số truy vấn (query parameters như <code class=\"html-code\">?session=...</code>, <code class=\"html-code\">&user=...</code>) không cần thiết hoặc chứa dữ liệu nhạy cảm, dễ gây lỗi định tuyến hoặc lộ thông tin." 
+    },
+    { 
+        id: "q23", type: "single", question: "Câu 23: Cho biết kết quả của đoạn mã HTML sau: <code class=\"html-code\">&lt;a href=\"#bong_da\"&gt;Bóng đá&lt;/a&gt;</code>?", 
+        options: ["Tạo liên kết chuyển sang một trang web khác có tên là bong_da.html.", "Tạo liên kết chuyển đến một vị trí có id là \"bong_da\" trên cùng trang web.", "Chèn một hình ảnh quả bóng đá vào trang web.", "Đổi id của thẻ a thành bong_da."], 
+        correct: 1, explanation: "Dấu <code class=\"html-code\">#</code> cho biết đây là liên kết nội trang (fragment identifier). Trình duyệt sẽ tìm thẻ HTML có <code class=\"html-code\">id=\"bong_da\"</code> và cuộn màn hình đến đó." 
+    },
+    { 
+        id: "q24", type: "single", question: "Câu 24: Khi hai tệp HTML cùng nằm trong một thư mục, ưu điểm của việc sử dụng đường dẫn tương đối để liên kết chúng với nhau là gì?", 
+        options: ["Đường dẫn sẽ hoạt động nhanh hơn gấp đôi.", "Tự động bảo mật thông tin tệp.", "Khi di chuyển cả thư mục sang máy chủ khác, liên kết vẫn hoạt động bình thường mà không cần sửa lại.", "Trình duyệt sẽ tự động tô màu liên kết."], 
+        correct: 2, explanation: "Đường dẫn tương đối thiết lập mối liên hệ về mặt không gian giữa các tệp. Do đó, toàn bộ website có thể hoạt động (portable) khi đổi máy chủ, đổi tên miền hay chạy thử ở môi trường local mà không bị gãy link." 
+    },
+    
+   { 
+        id: "qII_1", type: "tf_cluster", 
+        context: "Câu 1: Cho đoạn mã HTML sau mô tả các siêu liên kết trên một trang web. Hãy xác định tính Đúng/Sai của các phát biểu phân tích đoạn mã này:<div class='mt-4 p-5 bg-slate-800 rounded-xl text-green-400 font-mono text-base w-full shadow-inner overflow-x-auto whitespace-pre-wrap leading-loose'>&lt;h2 id=\"gioi-thieu\"&gt;Phần Giới Thiệu&lt;/h2&gt;\n&lt;p&gt;Đây là trang web cá nhân của tôi.&lt;/p&gt;\n&lt;a href=\"https://vinhuni.edu.vn\"&gt;Đại học Vinh&lt;/a&gt;\n&lt;a href=\"#gioi-thieu\"&gt;Về đầu trang&lt;/a&gt;\n&lt;a href=\"lienhe.html\"&gt;Liên hệ&lt;/a&gt;</div>", 
+        items: [
+            { 
+                id: "a", 
+                text: "a) Liên kết \"Đại học Vinh\" sử dụng đường dẫn tương đối để chuyển hướng đến một trang web khác.", 
+                correct: false, 
+                expl: "Đường dẫn trong thuộc tính href của liên kết này có chứa đầy đủ giao thức (https://) và tên miền (vinhuni.edu.vn), do đó đây là đường dẫn tuyệt đối (Absolute URL), không phải đường dẫn tương đối." 
+            },
+            { 
+                id: "b", 
+                text: "b) Thuộc tính <code class=\"html-code\">href=\"#gioi-thieu\"</code> tạo ra một liên kết mỏ neo (anchor link) giúp màn hình cuộn đến phần tử có <code class=\"html-code\">id=\"gioi-thieu\"</code> trên cùng trang.", 
+                correct: true, 
+                expl: "Ký tự '#' (hash) đứng trước một chuỗi văn bản trong thuộc tính href được trình duyệt hiểu là lệnh tìm kiếm một phần tử có id tương ứng (ở đây là thẻ h2) ngay trên trang hiện tại." 
+            },
+            { 
+                id: "c", 
+                text: "c) Liên kết \"Liên hệ\" sử dụng đường dẫn tuyệt đối vì nó gọi trực tiếp đến tên tệp <code class=\"html-code\">lienhe.html</code>.", 
+                correct: false, 
+                expl: "Đường dẫn chỉ có tên tệp (lienhe.html) mà không có giao thức (http/https) hay tên miền được gọi là đường dẫn tương đối. Trình duyệt sẽ tự động tìm tệp này trong cùng thư mục với trang web hiện hành." 
+            },
+            { 
+                id: "d", 
+                text: "d) Khi người dùng nhấp chuột vào chữ \"Về đầu trang\", trình duyệt mặc định sẽ mở ra một tab (thẻ) mới để hiển thị.", 
+                correct: false, 
+                expl: "Mặc định, thẻ &lt;a&gt; luôn mở liên kết trên chính tab hiện tại (tương đương thuộc tính target=\"_self\"). Hơn nữa đây là liên kết nội trang nên trình duyệt chỉ đơn giản là cuộn (scroll) màn hình lên trên, không hề mở tab mới." 
+            }
+        ]
+    },
+    { 
+        id: "qII_2", type: "tf_cluster", 
+        context: "Câu 2: Một học sinh viết đoạn mã HTML sau để biến logo thành một liên kết quay về trang chủ. Giả sử tệp đang thiết kế nằm trong thư mục con <code class=\"html-code\">pages</code>, thư mục ảnh <code class=\"html-code\">images</code> và tệp <code class=\"html-code\">index.html</code> đều nằm ở thư mục gốc (bên ngoài thư mục pages).<div class='mt-4 p-5 bg-slate-800 rounded-xl text-green-400 font-mono text-base w-full shadow-inner overflow-x-auto whitespace-pre'>&lt;a href=\"../index.html\"&gt;\n    &lt;img src=\"../images/logo.png\" alt=\"Logo Trang Chủ\"&gt;\n&lt;/a&gt;</div>", 
+        items: [
+            { 
+                id: "a", 
+                text: "a) Đoạn mã trên đã sử dụng thẻ <code class=\"html-code\">&lt;img&gt;</code> bao bọc bên ngoài thẻ <code class=\"html-code\">&lt;a&gt;</code> để biến hình ảnh thành siêu liên kết.", 
+                correct: false, 
+                expl: "Quan sát cấu trúc mã, thẻ &lt;a&gt; mới là thẻ cha bao bọc bên ngoài thẻ &lt;img&gt; ở bên trong. Đây là cấu trúc DOM chuẩn để tạo một vùng hình ảnh có thể click được." 
+            },
+            { 
+                id: "b", 
+                text: "b) Giá trị <code class=\"html-code\">../index.html</code> là một đường dẫn tương đối ra lệnh cho trình duyệt lùi lại một cấp thư mục để tìm tệp <code class=\"html-code\">index.html</code>.", 
+                correct: true, 
+                expl: "Trong quy ước đường dẫn, chuỗi ký tự '../' mang ý nghĩa điều hướng thoát ra khỏi thư mục hiện hành để đi ngược lên thư mục cha (parent directory) một cấp." 
+            },
+            { 
+                id: "c", 
+                text: "c) Thuộc tính <code class=\"html-code\">src=\"../images/logo.png\"</code> được thiết lập đúng cấu trúc thư mục đã cho để hiển thị ảnh.", 
+                correct: true, 
+                expl: "Vì tệp hiện tại đang nằm trong thư mục 'pages', trình duyệt cần dùng '../' để thoát ra thư mục gốc, sau đó đi vào thư mục 'images' và gọi tệp 'logo.png'. Đường dẫn tương đối này hoàn toàn logic và chính xác." 
+            },
+            { 
+                id: "d", 
+                text: "d) Nếu đổi thuộc tính thành <code class=\"html-code\">href=\"http://truonghoc.edu.vn/index.html\"</code>, siêu liên kết này sẽ chuyển từ đường dẫn tương đối sang tuyệt đối.", 
+                correct: true, 
+                expl: "Đường dẫn mới đã cung cấp một định danh tài nguyên hoàn chỉnh bao gồm giao thức HTTP và tên miền xác định. Do đó, nó chính thức trở thành một đường dẫn tuyệt đối (Absolute URL)." 
+            }
+        ]
+    },
+    { id: "qII_3", type: "tf_cluster", context: "Câu 3: Trang web giới thiệu quy chế trường học có nội dung rất dài. Để giúp người đọc tiện theo dõi, người thiết kế đặt một Mục lục ở đầu trang. Khi click vào từng mục trong Mục lục, màn hình sẽ cuộn thẳng đến phần nội dung tương ứng bên dưới.", items: [
+        { id: "a", text: "a) Để làm được điều này, người thiết kế đang áp dụng kỹ thuật tạo liên kết chuyển nhanh đến một vị trí cụ thể trong cùng một trang web.", correct: true, expl: "Đây là định nghĩa chuẩn của kỹ thuật liên kết nội trang (Anchor link / Bookmark link) giúp điều hướng người dùng trong văn bản dài." },
+        { id: "b", text: "b) Tại vị trí đích (phần nội dung chi tiết bên dưới), người thiết kế cần khai báo một mã định danh bằng thuộc tính <code class=\"html-code\">href</code>.", correct: false, expl: "Vị trí đích đến phải được đánh dấu bằng thuộc tính <code class=\"html-code\">id</code>, không phải thuộc tính <code class=\"html-code\">href</code>. Thuộc tính <code class=\"html-code\">href</code> chỉ dùng ở nơi xuất phát (chỗ người dùng click)." },
+        { id: "c", text: "c) Ở phần Mục lục, thẻ tạo liên kết sẽ có cấu trúc dạng: <code class=\"html-code\">&lt;a href=\"#mã_định_danh\"&gt;Tên mục lục&lt;/a&gt;</code>.", correct: true, expl: "Ký hiệu <code class=\"html-code\">#</code> (Hash) khai báo cho trình duyệt biết đây là một Fragment identifier, sẽ tìm kiếm <code class=\"html-code\">id</code> tương ứng trên chính trang hiện tại." },
+        { id: "d", text: "d) Kỹ thuật này chỉ có thể hoạt động nếu trang web được đưa lên Internet, không hoạt động khi mở tệp HTML cục bộ trên máy tính.", correct: false, expl: "Cơ chế liên kết mỏ neo hoạt động dựa trên khả năng phân tích cây DOM của chính trình duyệt, do đó nó hoạt động hoàn hảo cả khi mở tệp offline (cục bộ)." }
+    ]},
+    { id: "qII_4", type: "tf_cluster", context: "Câu 4: Quản trị viên trang web của một doanh nghiệp muốn đặt logo công ty (tệp <code class=\"html-code\">logo.png</code>) ở góc trái màn hình. Yêu cầu đặt ra là khi người dùng click chuột vào hình ảnh logo này, hệ thống sẽ tự động chuyển hướng về trang chủ (<code class=\"html-code\">index.html</code>).", items: [
+        { id: "a", text: "a) Để thực hiện yêu cầu, quản trị viên cần lồng thẻ chứa hình ảnh vào bên trong một thẻ tạo liên kết.", correct: true, expl: "Việc bao bọc thẻ nội dung (ở đây là <code class=\"html-code\">&lt;img&gt;</code>) bằng thẻ <code class=\"html-code\">&lt;a&gt;</code> là kiến trúc DOM chuẩn để tạo một block có thể click." },
+        { id: "b", text: "b) Đoạn mã <code class=\"html-code\">&lt;img src=\"logo.png\" href=\"index.html\"&gt;</code> là cú pháp chuẩn để đáp ứng yêu cầu trên.", correct: false, expl: "Cú pháp này hoàn toàn sai cấu trúc HTML. Thẻ <code class=\"html-code\">&lt;img&gt;</code> không hỗ trợ thuộc tính <code class=\"html-code\">href</code> để điều hướng." },
+        { id: "c", text: "c) Cấu trúc thẻ đúng phải là: <code class=\"html-code\">&lt;a href=\"index.html\"&gt;&lt;img src=\"logo.png\"&gt;&lt;/a&gt;</code>.", correct: true, expl: "Đây là mã nguồn chính xác: thẻ <code class=\"html-code\">&lt;a&gt;</code> thiết lập đường dẫn đến <code class=\"html-code\">index.html</code>, bao lấy thẻ <code class=\"html-code\">&lt;img&gt;</code> hiển thị ảnh logo." },
+        { id: "d", text: "d) Khi hình ảnh được gắn liên kết, người dùng sẽ không thể nhìn thấy hình ảnh hiển thị trên trang web nữa.", correct: false, expl: "Hình ảnh vẫn được hiển thị bình thường. Giao diện chỉ thay đổi ở con trỏ chuột (sẽ chuyển từ mũi tên sang hình bàn tay - pointer) khi di chuột qua ảnh, báo hiệu đây là vùng có thể tương tác." }
+    ]}
+];
+
+   window.startQuizAction = function() {
+        try {
+            const errDiv = document.getElementById('login-error');
+            if(errDiv) errDiv.classList.add('hidden');
+            
+            const nameEl = document.getElementById('hoTen');
+            const lopEl = document.getElementById('lop');
+            
+            const name = nameEl.value.trim();
+            const lop = lopEl.value.trim();
+            
+            if (!name || !lop) {
+                if(errDiv) {
+                    errDiv.innerText = "⚠️ Vui lòng nhập đầy đủ Họ tên và Lớp!";
+                    errDiv.classList.remove('hidden');
+                } else {
+                    alert("⚠️ Vui lòng nhập đầy đủ Họ tên và Lớp!");
+                }
+                return;
+            }
+            
+            // Đổi mã đề và tên đề tương ứng với Bài 10
+            currentStudent = { hoTen: name, lop: lop, maDe: 'de_html_bai10', tenDe: 'Đề Trắc Nghiệm- Bài 10' };
+            currentQuestions = JSON.parse(JSON.stringify(exam_data)); 
+            quizStartTime = new Date();
+            
+            setTimeout(() => { isQuizStarted = true; }, 1000);
+            showSection('quiz');
+            
+            userAnswers = {};
+            window.renderAllQuestions();
+            startTimer(45 * 60); 
+            
+        } catch (error) {
+            alert("❌ Đã xảy ra lỗi khởi tạo bài thi: " + error.message + ".");
+            console.error(error);
+        }
+    };
+
+    window.viewScoresAction = function() {
+        searchTerm = ''; 
+        document.getElementById('search-student').value = '';
+        currentPage = 1;
+
+        if (database) {
+            scoresRef.once('value').then((snapshot) => {
+                const data = snapshot.val();
+                allScores = data ? Object.keys(data).map(key => ({...data[key], id: key})) : [];
+                window.renderScores();
+                showSection('scores');
+            });
+        }
+    };
+
+    window.searchStudent = function(val) {
+        searchTerm = val.toLowerCase();
+        currentPage = 1;
+        window.renderScores();
+    };
+
+    window.changePage = function(page) {
+        currentPage = page;
+        window.renderScores();
+    };
+
+    window.goHome = function() {
+        if(document.getElementById('hoTen')) document.getElementById('hoTen').value = ''; 
+        if(document.getElementById('lop')) document.getElementById('lop').value = ''; 
+        clearInterval(timerInterval);
+        showSection('login');
+    };
+
+    function getTotalScoreItems() { return currentQuestions.length; }
+
+    function getAnsweredCount() {
+        let count = 0;
+        currentQuestions.forEach(q => {
+            if (q.type === 'single') {
+                if (userAnswers[q.id] !== undefined) count++;
+            } else if (q.type === 'tf_cluster') {
+                let answeredItems = 0;
+                q.items.forEach(item => {
+                    if (userAnswers[q.id + '_' + item.id] !== undefined) answeredItems++;
+                });
+                if (answeredItems === 4) count++; 
+            }
+        });
+        return count;
+    }
+
+   window.selectAnswer = function(qId, val, type) {
+        if (type === 'tf') {
+            userAnswers[qId] = val;
+            const btnT = document.getElementById(`btnT_${qId}`);
+            const btnF = document.getElementById(`btnF_${qId}`);
+            if (val === true) {
+                btnT.classList.add('selected'); btnT.classList.remove('bg-white');
+                btnF.classList.remove('selected'); btnF.classList.add('bg-white');
+            } else {
+                btnF.classList.add('selected'); btnF.classList.remove('bg-white');
+                btnT.classList.remove('selected'); btnT.classList.add('bg-white');
+            }
+        } else if (type === 'single') {
+            userAnswers[qId] = val;
+        }
+        
+        requestAnimationFrame(() => {
+            const pgText = document.getElementById('progress-text');
+            if(pgText) pgText.innerText = `${getAnsweredCount()}/${getTotalScoreItems()}`;
+        });
+    };
+
+    window.renderAllQuestions = function() {
+        if (!currentQuestions || currentQuestions.length === 0) return;
+        const container = document.getElementById('question-container');
+        if(!container) return;
+
+        let html = '';
+        let currentType = '';
+
+        currentQuestions.forEach((q) => {
+            if (q.type !== currentType) {
+                currentType = q.type;
+                let headerText = ''; let roman = '';
+                if(currentType === 'single') { headerText = 'TRẮC NGHIỆM MỘT LỰA CHỌN'; roman = 'I'; }
+                if(currentType === 'tf_cluster') { headerText = 'TRẮC NGHIỆM ĐÚNG/SAI'; roman = 'II'; }
+                
+                html += `<div class="flex items-center gap-3 mt-8 mb-4 border-b-2 border-blue-100 pb-3"><span class="bg-gradient-to-br from-blue-500 to-indigo-600 text-white w-14 h-14 flex items-center justify-center rounded-xl font-black text-2xl shadow-md">${roman}</span><h3 class="text-2xl sm:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-700 to-indigo-700 tracking-wide uppercase">${headerText}</h3></div>`;
+            }
+
+            html += `<div class="fade-in w-full bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-blue-100 relative mb-6 hover:shadow-md transition-shadow">`;
+            
+            if (q.type === 'single') {
+                const uAns = userAnswers[q.id];
+                html += `<div class="flex gap-4 mb-5"><div class="w-full math-scroll"><p class="text-xl font-bold text-red-600 mt-1 leading-snug tracking-tight">${q.question}</p></div></div>`;
+                html += `<div class="space-y-4 md:pl-6 mt-6">`;
+                
+                q.options.forEach((opt, i) => {
+                    const isChecked = (uAns === i) ? 'checked' : '';
+                    html += `<div class="flex items-center">
+                        <input type="radio" id="opt_${q.id}_${i}" name="q_${q.id}" value="${i}" class="hidden single-radio" ${isChecked} onchange="window.selectAnswer('${q.id}', ${i}, 'single')">
+                        <label for="opt_${q.id}_${i}" class="option-label w-full p-4 border-2 border-gray-200 rounded-2xl flex items-center gap-4 bg-white shadow-sm font-bold text-lg hover:border-blue-300">
+                            <div class="w-12 h-12 rounded-xl border-2 border-gray-300 flex items-center justify-center text-lg font-black text-gray-400 flex-shrink-0 bg-gray-50">${String.fromCharCode(65 + i)}</div>
+                            <div class="text-gray-700 leading-relaxed math-scroll flex-1">${opt}</div>
+                        </label>
+                    </div>`;
+                });
+                html += `</div>`;
+            } 
+            else if (q.type === 'tf_cluster') {
+                html += `<div class="bg-red-50 text-red-700 p-5 rounded-xl font-bold mb-4 border-2 border-red-100 text-xl leading-relaxed math-scroll">${q.context}</div>`;
+                html += `<div class="space-y-4 mt-6">`;
+                q.items.forEach((item) => {
+                    const combinedId = q.id + '_' + item.id;
+                    let ans = userAnswers[combinedId];
+                    let btnT = ans === true ? 'selected' : 'bg-white';
+                    let btnF = ans === false ? 'selected' : 'bg-white';
+
+                    html += `<div class="p-5 border-2 border-gray-100 rounded-2xl bg-white shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4 transition-all hover:border-blue-200">
+                        <div class="font-bold text-gray-800 flex-1 text-lg math-scroll">${item.text}</div>
+                        <div class="flex gap-3 shrink-0">
+                            <button id="btnT_${combinedId}" onclick="window.selectAnswer('${combinedId}', true, 'tf')" class="btn-tf w-24 sm:w-28 py-3 rounded-xl font-extrabold text-lg ${btnT}">ĐÚNG</button>
+                            <button id="btnF_${combinedId}" onclick="window.selectAnswer('${combinedId}', false, 'tf')" class="btn-tf w-24 sm:w-28 py-3 rounded-xl font-extrabold text-lg ${btnF}">SAI</button>
+                        </div>
+                    </div>`;
+                });
+                html += `</div>`;
+            } 
+            html += `</div>`;
+        });
+        
+        container.innerHTML = html;
+        const pgText = document.getElementById('progress-text');
+        if(pgText) pgText.innerText = `${getAnsweredCount()}/${getTotalScoreItems()}`;
+    };
+
+    function formatDuration(sec) {
+        const m = Math.floor(sec / 60); const s = sec % 60;
+        return `${m}p ${s}s`;
+    }
+
+    window.promptSubmit = function() {
+        if (!isQuizStarted) return;
+        const total = getTotalScoreItems();
+        const answered = getAnsweredCount();
+        
+        document.getElementById('confirm-answered').innerText = answered;
+        document.getElementById('confirm-total').innerText = total;
+        
+        const modal = document.getElementById('confirm-submit-modal');
+        modal.classList.remove('hidden');
+    };
+
+    window.closeConfirmModal = function() {
+        const modal = document.getElementById('confirm-submit-modal');
+        modal.classList.add('hidden');
+    };
+
+    window.executeSubmit = function() {
+        window.closeConfirmModal();
+        isQuizStarted = false; 
+        quizEndTime = new Date();
+        clearInterval(timerInterval);
+        
+        let score = 0;
+
+        currentQuestions.forEach(q => {
+            if (q.type === 'single') {
+                if (userAnswers[q.id] === q.correct) score += 0.25;
+            } else if (q.type === 'tf_cluster') {
+                let correctCount = 0;
+                q.items.forEach(item => { 
+                    if (userAnswers[q.id + '_' + item.id] === item.correct) {
+                        correctCount++;
+                    }
+                });
+                
+                if (correctCount === 1) score += 0.1;
+                else if (correctCount === 2) score += 0.25;
+                else if (correctCount === 3) score += 0.5;
+                else if (correctCount === 4) score += 1.0;
+            }
+        });
+
+        score = score.toFixed(2); 
+
+        const record = {
+            hoTen: currentStudent.hoTen, lop: currentStudent.lop, tenDe: currentStudent.tenDe, maDe: currentStudent.maDe,
+            diem: parseFloat(score),
+            startTime: quizStartTime.toLocaleTimeString('vi-VN') + ' ' + quizStartTime.toLocaleDateString('vi-VN'),
+            endTime: quizEndTime.toLocaleTimeString('vi-VN') + ' ' + quizEndTime.toLocaleDateString('vi-VN'),
+            duration: formatDuration(Math.floor((quizEndTime - quizStartTime) / 1000)),
+            thoiGian: new Date().toISOString(), deviceId: deviceId,
+            userAnswers: userAnswers 
+        };
+        
+        if(database) {
+            scoresRef.push(record, () => { window.showModalResult(score, record.duration); });
+        } else {
+            window.showModalResult(score, record.duration);
+        }
+    };
+
+    window.showModalResult = function(score, dur) {
+        ['login', 'quiz', 'scores', 'review'].forEach(s => {
+            const el = document.getElementById(s+'-section');
+            if(el) el.classList.add('hidden');
+        });
+        const resEl = document.getElementById('result-section');
+        if(resEl) resEl.classList.remove('hidden');
+        const contentEl = document.getElementById('result-content');
+        if(contentEl) contentEl.innerHTML = `
+        <div class="flex justify-start mb-4">
+            <button onclick="window.goHome()" class="px-5 py-3 bg-gray-100 text-gray-700 rounded-xl font-bold hover:bg-gray-200 transition-colors shadow-sm border border-gray-200 text-lg">🏠 Trang chủ</button>
+        </div>
+        <div class="text-center">
+            <div class="text-7xl mb-4 animate-bounce">🎉</div>
+            <h3 class="text-3xl font-black text-emerald-600 mb-2">Hoàn thành bài thi!</h3>
+            <p class="text-gray-600 mb-6 mt-2"><span class="font-extrabold text-blue-700 text-xl uppercase tracking-wider">${currentStudent.hoTen} - Lớp ${currentStudent.lop}</span></p>
+        </div>
+        <div class="bg-blue-50 border-2 border-blue-100 rounded-3xl p-8 mb-6 shadow-inner relative text-center">
+            <div class="text-base text-blue-500 font-extrabold mb-2 uppercase tracking-widest">ĐIỂM SỐ CỦA BẠN</div>
+            <div class="text-7xl font-black text-blue-600 drop-shadow-sm">${score} <span class="text-3xl text-gray-400">/ 10</span></div>
+            <div class="text-lg font-extrabold text-indigo-600 mt-5 bg-white inline-block px-6 py-3 rounded-full shadow-sm border border-blue-100">Thời gian làm bài: ${dur}</div>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+            <button onclick="window.reviewQuiz()" class="w-full py-4 bg-gradient-to-r from-indigo-500 to-purple-500 text-white rounded-xl font-extrabold shadow-sm hover:shadow-md transition-colors text-xl">📝 Xem lại bài</button>
+            <button onclick="window.viewScoresAction()" class="w-full py-4 bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-xl font-extrabold shadow-sm hover:shadow-md transition-colors text-xl">🏆 Bảng điểm</button>
+        </div>`;
+    };
+
+    function getStatusBadge(isCorrect, isUnanswered) {
+        if (isUnanswered) return `<div class="mt-4 mb-2 inline-block px-4 py-2 bg-yellow-100 text-yellow-800 text-base font-black rounded-lg border border-yellow-300 shadow-sm">⚠️ BẠN CHƯA LÀM CÂU NÀY</div>`;
+        if (isCorrect) return `<div class="mt-4 mb-2 inline-block px-4 py-2 bg-emerald-100 text-emerald-800 text-base font-black rounded-lg border border-emerald-300 shadow-sm">✅ BẠN LÀM ĐÚNG RỒI</div>`;
+        return `<div class="mt-4 mb-2 inline-block px-4 py-2 bg-red-100 text-red-800 text-base font-black rounded-lg border border-red-300 shadow-sm">❌ BẠN LÀM SAI RỒI</div>`;
+    }
+
+    window.reviewQuiz = function() {
+        showSection('review');
+        const container = document.getElementById('review-content');
+        if(!container) return;
+        let html = '';
+        let currentType = ''; 
+
+        currentQuestions.forEach((q) => {
+            if (q.type !== currentType) {
+                currentType = q.type;
+                let headerText = ''; let roman = '';
+                if(currentType === 'single') { headerText = 'TRẮC NGHIỆM MỘT LỰA CHỌN'; roman = 'I'; }
+                if(currentType === 'tf_cluster') { headerText = 'TRẮC NGHIỆM ĐÚNG/SAI'; roman = 'II'; }
+                
+                html += `<div class="flex items-center gap-3 mt-8 mb-6 border-b-2 border-indigo-100 pb-3">
+                            <span class="bg-gradient-to-br from-indigo-500 to-purple-600 text-white w-14 h-14 flex items-center justify-center rounded-xl font-black text-2xl shadow-md">${roman}</span>
+                            <h3 class="text-2xl sm:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-indigo-700 to-purple-700 tracking-wide uppercase">${headerText}</h3>
+                         </div>`;
+            }
+
+            if (q.type === 'single') {
+                let uAns = userAnswers[q.id];
+                let isUnanswered = (uAns === undefined);
+                let isCorrect = (uAns === q.correct);
+                let borderColor = isCorrect ? 'border-emerald-300 bg-emerald-50' : 'border-red-300 bg-red-50';
+                
+                html += `<div class="p-6 border-2 rounded-2xl shadow-sm mb-6 ${borderColor}">`;
+                html += `<div class="font-bold text-xl text-red-600 mb-5 leading-relaxed math-scroll">${q.question}</div>`;
+                html += `<div class="space-y-3">`;
+                
+                q.options.forEach((opt, i) => {
+                    let optBg = ''; let iconHtml = '';
+                    if (q.correct === i) {
+                        optBg = 'bg-emerald-100 text-emerald-900 border-emerald-400 border-2'; 
+                        iconHtml = '<div class="text-3xl drop-shadow-sm ml-auto pl-2 flex-shrink-0">✅</div>';
+                    } else if (uAns === i && !isCorrect) {
+                        optBg = 'bg-red-100 text-red-900 line-through border-red-400 border-2'; 
+                        iconHtml = '<div class="text-3xl drop-shadow-sm ml-auto pl-2 flex-shrink-0">❌</div>';
+                    } else { optBg = 'bg-white text-slate-700 border border-slate-200'; }
+
+                    html += `<div class="p-4 rounded-xl ${optBg} flex items-center gap-4"><div class="w-10 h-10 flex items-center justify-center rounded-lg bg-white/50 text-base font-black shadow-sm flex-shrink-0">${String.fromCharCode(65 + i)}</div><div class="${(q.correct === i || uAns === i) ? 'font-semibold' : 'font-medium'} flex-1 text-lg math-scroll">${opt}</div>${iconHtml}</div>`;
+                });
+                html += `</div>`;
+                
+                html += getStatusBadge(isCorrect, isUnanswered); 
+                
+                if (q.explanation) {
+                    html += `<div class="review-explanation mt-3 pt-3 border-t-2 border-gray-200"><p class="text-base font-black uppercase tracking-widest text-blue-600 mb-2">💡 Giải chi tiết:</p><p class="text-black font-medium text-lg leading-loose math-scroll">${q.explanation}</p></div>`;
+                }
+                html += `</div>`;
+            } 
+            else if (q.type === 'tf_cluster') {
+                html += `<div class="p-6 border-2 border-indigo-200 bg-indigo-50 rounded-2xl shadow-sm mb-6">`;
+                html += `<div class="font-bold text-xl text-indigo-800 mb-5 math-scroll">${q.context}</div>`;
+                html += `<div class="space-y-5">`;
+                q.items.forEach(item => {
+                    let uAns = userAnswers[q.id + '_' + item.id];
+                    let isUnanswered = (uAns === undefined);
+                    let isCorrect = (uAns === item.correct);
+                    let iconHtml = isCorrect ? '✅' : '❌';
+                    let ansText = item.correct ? 'ĐÚNG' : 'SAI';
+
+                    html += `<div class="p-5 bg-white border border-indigo-100 rounded-xl shadow-sm">
+                        <div class="font-bold text-gray-800 text-lg math-scroll">${item.text}</div>
+                        <div class="mt-3 flex items-center justify-between border-b border-gray-100 pb-3">
+                            <span class="text-base font-bold text-gray-500">Bạn chọn: <span class="${isUnanswered ? 'text-gray-400' : 'text-blue-600'} font-black uppercase">${isUnanswered ? 'Chưa trả lời' : (uAns?'Đúng':'Sai')}</span></span>
+                            <span class="font-black text-xl ${isCorrect ? 'text-emerald-500' : 'text-red-500'}">Đáp án: ${ansText} ${iconHtml}</span>
+                        </div>`;
+                        
+                    html += getStatusBadge(isCorrect, isUnanswered);
+                    if(item.expl) {
+                        html += `<div class="review-explanation mt-3 pt-3 text-lg text-gray-700 font-medium leading-relaxed math-scroll"><span class="text-indigo-500 font-bold uppercase">Giải chi tiết:</span><br> ${item.expl}</div>`;
+                    }
+                    html += `</div>`;
+                });
+                html += `</div></div>`;
+            }
+        });
+        container.innerHTML = html;
+    };
+
+    window.backToResult = function() { showSection('result'); };
+    
+    let isReviewingFromLeaderboard = false;
+    
+    window.backFromReview = function() {
+        if (isReviewingFromLeaderboard) {
+            showSection('scores');
+            isReviewingFromLeaderboard = false;
+        } else {
+            window.backToResult();
+        }
+    };
+
+    window.reviewStudentScore = function(scoreId) {
+        const record = allScores.find(x => x.id === scoreId);
+        if (!record) return;
+        
+        currentStudent = { hoTen: record.hoTen, lop: record.lop, tenDe: record.tenDe, maDe: record.maDe };
+        userAnswers = record.userAnswers || {}; 
+        
+        currentQuestions = JSON.parse(JSON.stringify(exam_data)); 
+        
+        isReviewingFromLeaderboard = true;
+        window.reviewQuiz();
+    };
+
+    window.renderScores = function() {
+        const tbody = document.getElementById('scores-tbody');
+        const noScore = document.getElementById('no-scores');
+        const myRankDisplay = document.getElementById('my-rank-display');
+        const paginationContainer = document.getElementById('pagination-controls');
+        
+        if(!tbody) return;
+
+        const getFirstName = (fullName) => {
+            if (!fullName) return "";
+            const parts = fullName.trim().split(" ");
+            return parts[parts.length - 1].toLowerCase();
+        };
+
+        const sortedAll = [...allScores].sort((a, b) => {
+            if (b.diem !== a.diem) return b.diem - a.diem;
+            const tenA = getFirstName(a.hoTen);
+            const tenB = getFirstName(b.hoTen);
+            if (tenA !== tenB) return tenA.localeCompare(tenB, 'vi');
+            return (a.hoTen || "").localeCompare(b.hoTen || "", 'vi');
+        });
+        
+        sortedAll.forEach((s, i) => s.absoluteRank = i + 1);
+
+        const myRankIndex = sortedAll.findIndex(s => s.deviceId === deviceId);
+        if (myRankDisplay) {
+            if (myRankIndex !== -1) {
+                myRankDisplay.innerHTML = `🏆 Thứ hạng của bạn: <span class="text-red-600 font-black">${sortedAll[myRankIndex].absoluteRank}</span>`;
+            } else {
+                myRankDisplay.innerHTML = `🏆 Thứ hạng của bạn: <span class="text-gray-400">Chưa thi</span>`;
+            }
+        }
+
+        const filteredScores = searchTerm ? sortedAll.filter(s => s.hoTen.toLowerCase().includes(searchTerm)) : sortedAll;
+
+        if (filteredScores.length === 0) {
+            tbody.innerHTML = ''; 
+            noScore.classList.remove('hidden'); 
+            paginationContainer.innerHTML = '';
+            return; 
+        }
+        
+        noScore.classList.add('hidden');
+
+        const totalPages = Math.ceil(filteredScores.length / itemsPerPage);
+        if (currentPage > totalPages) currentPage = totalPages;
+        if (currentPage < 1) currentPage = 1;
+
+        const startIndex = (currentPage - 1) * itemsPerPage;
+        const endIndex = startIndex + itemsPerPage;
+        const pageItems = filteredScores.slice(startIndex, endIndex);
+
+        tbody.innerHTML = pageItems.map((s) => {
+            const isMe = s.deviceId === deviceId;
+            
+            let timeDisplay = "";
+            if (s.thoiGian) {
+                const d = new Date(s.thoiGian);
+                if (!isNaN(d)) {
+                    timeDisplay = `${d.getDate().toString().padStart(2, '0')}/${(d.getMonth() + 1).toString().padStart(2, '0')}/${d.getFullYear()}`;
+                } else {
+                    timeDisplay = s.endTime ? s.endTime.split(' ').pop() : s.duration; 
+                }
+            } else {
+                timeDisplay = s.endTime ? s.endTime.split(' ').pop() : s.duration;
+            }
+
+            return `<tr class="${isMe ? 'my-score-row' : 'hover:bg-slate-50'} transition-colors border-b border-slate-100">
+            <td class="px-4 py-5 font-black text-slate-500 text-base text-center">${s.absoluteRank}</td>
+            <td class="px-4 py-5 font-extrabold text-slate-800 text-base">${s.hoTen} ${isMe ? '<span class="ml-2 bg-pink-500 text-white text-xs px-2 py-1 rounded-md shadow-sm">Bạn</span>' : ''}</td>
+            <td class="px-4 py-5 font-black text-blue-600 text-base text-center">${s.lop}</td>
+            <td class="px-4 py-5 text-center font-black text-orange-600 text-sm whitespace-nowrap">${timeDisplay}</td>
+            <td class="px-4 py-5 text-center"><span class="font-black text-2xl ${s.diem >= 5 ? 'text-emerald-600' : 'text-red-500'}">${s.diem}</span></td>
+            <td class="px-4 py-5 text-center">
+                <button onclick="window.reviewStudentScore('${s.id}')" class="bg-indigo-100 text-indigo-700 hover:bg-indigo-200 px-4 py-2 rounded-lg font-bold text-sm transition-colors border border-indigo-200 shadow-sm cursor-pointer whitespace-nowrap">Xem lại</button>
+            </td>
+        </tr>`;
+        }).join('');
+
+        renderPagination(totalPages);
+    };
+
+    function renderPagination(totalPages) {
+        const container = document.getElementById('pagination-controls');
+        if (!container) return;
+        
+        if (totalPages <= 1) {
+            container.innerHTML = '';
+            return;
+        }
+
+        let html = '<div class="flex flex-wrap items-center justify-center gap-2">';
+        
+        html += `<button onclick="window.changePage(${currentPage - 1})" class="px-4 py-2 rounded-xl font-bold transition-colors ${currentPage === 1 ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 shadow-sm'}" ${currentPage === 1 ? 'disabled' : ''}>&laquo; Trước</button>`;
+
+        let startPage = Math.max(1, currentPage - 1);
+        let endPage = Math.min(totalPages, currentPage + 1);
+
+        if (startPage > 1) {
+            html += `<button onclick="window.changePage(1)" class="px-4 py-2 rounded-xl font-bold bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 shadow-sm">1</button>`;
+            if (startPage > 2) html += `<span class="px-2 text-gray-400 font-black">...</span>`;
+        }
+
+        for (let i = startPage; i <= endPage; i++) {
+            html += `<button onclick="window.changePage(${i})" class="px-4 py-2 rounded-xl font-bold transition-all ${i === currentPage ? 'bg-orange-500 text-white shadow-md border-orange-600' : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 shadow-sm'}">${i}</button>`;
+        }
+
+        if (endPage < totalPages) {
+            if (endPage < totalPages - 1) html += `<span class="px-2 text-gray-400 font-black">...</span>`;
+            html += `<button onclick="window.changePage(${totalPages})" class="px-4 py-2 rounded-xl font-bold bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 shadow-sm">${totalPages}</button>`;
+        }
+
+        html += `<button onclick="window.changePage(${currentPage + 1})" class="px-4 py-2 rounded-xl font-bold transition-colors ${currentPage === totalPages ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 shadow-sm'}" ${currentPage === totalPages ? 'disabled' : ''}>Sau &raquo;</button>`;
+        
+        html += '</div>';
+        container.innerHTML = html;
+    }
+
+    function showSection(id) {
+        ['login', 'quiz', 'scores', 'result', 'review'].forEach(s => {
+            const el = document.getElementById(s+'-section');
+            if(el) el.classList.add('hidden');
+        });
+        const tgt = document.getElementById(id+'-section');
+        if(tgt) tgt.classList.remove('hidden');
+    }
+
+    function startTimer(seconds) {
+        const display = document.getElementById('timer');
+        if(!display) return;
+        let remaining = seconds;
+        timerInterval = setInterval(() => {
+            remaining--;
+            const m = Math.floor(remaining / 60).toString().padStart(2, '0');
+            const s = (remaining % 60).toString().padStart(2, '0');
+            display.innerText = `${m}:${s}`;
+            if (remaining <= 0) window.submitQuiz();
+        }, 1000);
+    }
+
+    try {
+        if (!localStorage.getItem('deviceId')) localStorage.setItem('deviceId', 'dev_' + Math.random().toString(36).substr(2) + Date.now());
+        deviceId = localStorage.getItem('deviceId');
+    } catch (e) { deviceId = 'dev_temp_' + Math.random().toString(36).substr(2); }
+  </script>
+ </body>
+</html>
