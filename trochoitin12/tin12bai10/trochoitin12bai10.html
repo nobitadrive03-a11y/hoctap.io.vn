@@ -108,6 +108,8 @@
             position: absolute; width: 9.5%; min-width: 55px; 
             cursor: pointer; transition: all 0.3s ease;
             animation: heartbeat 2.5s infinite ease-in-out; z-index: 20;
+            /* FIX LỖI: Cho phép khu vực div của trái tim nhận thao tác chạm thay vì bị khóa */
+            pointer-events: auto; 
         }
         .fruit:hover, .fruit:active {
             transform: scale(1.25) !important; animation: none; z-index: 30;
@@ -413,7 +415,6 @@
         }
 
         function getHeartSVG(number) {
-            // Nâng cấp: Đổi pointer-events-auto thành pointer-events-none để không chặn click trên di động
             return `
             <svg viewBox="0 0 100 100" class="w-full h-full overflow-visible pointer-events-none">
                 <path d="M 50 90 C 10 60, -5 30, 20 10 C 35 0, 45 10, 50 20 C 55 10, 65 0, 80 10 C 105 30, 90 60, 50 90 Z" fill="rgba(0,0,0,0.6)" transform="translate(0, 6) scale(0.95)" transform-origin="50 50"/>
@@ -500,8 +501,6 @@
                 let cleanText = opt.replace(/^[A-D]\.\s*/, '');
                 let formattedOpt = formatHTMLCode(cleanText);
                 
-                // Nâng cấp 1: Bổ sung lớp active:scale-[0.98] và active:bg-blue-100 để phản hồi chạm vật lý lập tức.
-                // Nâng cấp 2: Thêm lớp pointer-events-none vào các thẻ con để thao tác chạm click trúng 100% vào nút.
                 optionsHtml += `
                 <button id="opt-${i}" onclick="checkAnswer(${i})" class="w-full flex items-center gap-3 sm:gap-5 p-4 sm:p-5 rounded-2xl border-2 border-gray-200 hover:border-[#3b82f6] hover:bg-blue-50 active:bg-blue-100 active:border-[#3b82f6] active:scale-[0.98] transition-all text-left bg-white shadow-sm group shrink-0 cursor-pointer select-none">
                     <div class="letter-box bg-[#e0e7ff] text-[#1e40af] font-black text-xl sm:text-2xl w-12 h-12 sm:w-14 sm:h-14 rounded-xl flex items-center justify-center shrink-0 group-hover:bg-[#2563eb] group-hover:text-white transition-colors pointer-events-none">
@@ -558,7 +557,6 @@
                 if(modalBody) { modalBody.scrollTop = modalBody.scrollHeight; }
             }, 100);
 
-            // BẢN VÁ LỖI CỘNG LỐ ĐIỂM (Chặn click đúp vào nút Tiếp tục)
             btnNext.onclick = function() {
                 this.onclick = null; 
                 this.classList.add('pointer-events-none'); 
