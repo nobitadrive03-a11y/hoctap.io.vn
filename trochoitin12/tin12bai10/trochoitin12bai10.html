@@ -39,17 +39,23 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
     <style>
+        * {
+            /* Loại bỏ chớp xám mặc định gây độ trễ trên di động */
+            -webkit-tap-highlight-color: transparent;
+        }
+
         body, html {
             margin: 0; padding: 0; width: 100vw; height: 100vh;
             background-color: #f1f5f9;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             overflow: hidden; touch-action: manipulation; user-select: none;
+            -webkit-user-select: none;
         }
 
         /* ----- MÀN HÌNH ĐĂNG NHẬP ----- */
         #login-view {
             background-color: #1e293b;
-            background-image: url('cayhanhphuc.png'); /* Ảnh ngang mặc định cho máy tính */
+            background-image: url('cayhanhphuc.png');
             background-size: cover; background-position: center; background-blend-mode: overlay;
         }
         .login-card {
@@ -61,8 +67,8 @@
         /* ----- MÀN HÌNH GAME ----- */
         .game-board {
             position: relative; width: 100%; max-width: 1200px; aspect-ratio: 16/9;
-            background-image: url('cayhanhphuc.png'); /* Ảnh ngang mặc định */
-            background-size: cover; /* Chuyển thành cover để lấp đầy */
+            background-image: url('cayhanhphuc.png');
+            background-size: cover;
             background-position: center center; background-repeat: no-repeat;
             border-radius: 12px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.15);
             background-color: #fff0f5;
@@ -71,16 +77,16 @@
         /* ----- ĐIỀU CHỈNH RIÊNG CHO ĐIỆN THOẠI ----- */
         @media (max-width: 768px) {
             #login-view {
-                background-image: url('cayhanhphuc1.jpg'); /* Đổi sang ảnh dọc 9:16 */
+                background-image: url('cayhanhphuc1.jpg');
             }
             .game-board {
                 aspect-ratio: auto;
-                height: 100vh; /* Tràn viền dọc */
-                background-image: url('cayhanhphuc1.jpg'); /* Đổi sang ảnh dọc 9:16 */
+                height: 100vh;
+                background-image: url('cayhanhphuc1.jpg');
                 border-radius: 0; 
             }
             .fruit {
-                width: 16% !important; /* Trái tim to hơn xíu trên đt dễ bấm */
+                width: 16% !important;
                 min-width: 50px !important;
             }
         }
@@ -166,7 +172,7 @@
                     <label class="block text-blue-900 font-bold mb-2 text-lg">Lớp</label>
                     <input type="text" id="studentClass" class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all text-gray-700 font-medium text-lg" placeholder="Nhập lớp (VD: 12A1...)">
                 </div>
-                <button onclick="startGame()" class="mt-4 w-full bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-bold py-4 rounded-xl shadow-lg transform transition hover:-translate-y-1 text-xl">
+                <button onclick="startGame()" class="mt-4 w-full bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 active:scale-[0.98] text-white font-bold py-4 rounded-xl shadow-lg transform transition text-xl cursor-pointer select-none">
                     🚀 BẮT ĐẦU
                 </button>
             </div>
@@ -179,8 +185,8 @@
             <svg id="star-layer" viewBox="0 0 1600 900" class="absolute inset-0 w-full h-full pointer-events-none z-0" preserveAspectRatio="xMidYMid meet">
                 <defs>
                     <g id="star-shape">
-    <polygon points="0,-24 6,-8 24,-8 10,4 14,20 0,10 -14,20 -10,4 -24,-8 -6,-8" fill="#ffd700"/>
-</g>
+                        <polygon points="0,-24 6,-8 24,-8 10,4 14,20 0,10 -14,20 -10,4 -24,-8 -6,-8" fill="#ffd700"/>
+                    </g>
                     <radialGradient id="redHeartGrad" cx="30%" cy="30%" r="70%">
                         <stop offset="0%" stop-color="#ff5252" />
                         <stop offset="50%" stop-color="#d50000" />
@@ -198,7 +204,7 @@
                     <span class="hidden sm:inline mx-1 text-gray-400">|</span> 
                     <span class="text-red-600 font-black mt-1 sm:mt-0">Điểm: <span id="final-score-display" class="text-lg sm:text-xl">0</span></span>
                 </div>
-                <button onclick="showLeaderboard()" class="w-full bg-gradient-to-r from-red-600 to-rose-600 text-white font-bold py-2 px-4 rounded-xl shadow-md hover:scale-105 transition-all text-sm sm:text-base flex items-center justify-center gap-2">
+                <button onclick="showLeaderboard()" class="w-full bg-gradient-to-r from-red-600 to-rose-600 text-white font-bold py-2 px-4 rounded-xl shadow-md hover:scale-105 active:scale-[0.98] transition-all text-sm sm:text-base flex items-center justify-center gap-2 cursor-pointer select-none">
                     🏆 Xem BXH
                 </button>
             </div>
@@ -209,7 +215,7 @@
     <div id="leaderboard-view" class="fixed inset-0 hidden flex flex-col items-center py-4 px-2 sm:py-6 sm:px-4">
         <div class="w-full max-w-4xl bg-white rounded-2xl shadow-xl overflow-hidden flex flex-col h-full border border-gray-200">
             <div class="bg-white p-3 sm:p-6 border-b flex justify-between items-center gap-2">
-                <button onclick="location.reload()" class="bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold py-2 px-3 sm:px-4 rounded-lg flex items-center transition-colors text-sm sm:text-lg whitespace-nowrap">
+                <button onclick="location.reload()" class="bg-gray-100 hover:bg-gray-200 active:scale-[0.98] text-gray-700 font-bold py-2 px-3 sm:px-4 rounded-lg flex items-center transition-colors text-sm sm:text-lg whitespace-nowrap cursor-pointer select-none">
                     🏠 Trở về
                 </button>
                 <h2 class="text-lg sm:text-3xl font-black text-red-600 text-right">🏆 BẢNG XẾP HẠNG</h2>
@@ -255,7 +261,7 @@
             <div id="resIcon" class="text-7xl mb-4 animate-bounce">❤️</div>
             <h3 class="text-3xl font-extrabold mb-3" id="resTitle">Đúng rồi!</h3>
             <p class="text-gray-600 mb-6 text-xl font-medium" id="resMessage">Bạn được cộng 10 điểm.</p>
-            <button onclick="closeResModal()" class="bg-gradient-to-r from-red-500 to-rose-600 text-white font-bold py-4 px-8 rounded-full shadow-lg transform hover:scale-105 text-2xl w-full">Tiếp tục ➡</button>
+            <button onclick="closeResModal()" class="bg-gradient-to-r from-red-500 to-rose-600 active:scale-[0.98] text-white font-bold py-4 px-8 rounded-full shadow-lg transform text-2xl w-full cursor-pointer select-none">Tiếp tục ➡</button>
         </div>
     </div>
 
@@ -407,8 +413,9 @@
         }
 
         function getHeartSVG(number) {
+            // Nâng cấp: Đổi pointer-events-auto thành pointer-events-none để không chặn click trên di động
             return `
-            <svg viewBox="0 0 100 100" class="w-full h-full overflow-visible pointer-events-auto">
+            <svg viewBox="0 0 100 100" class="w-full h-full overflow-visible pointer-events-none">
                 <path d="M 50 90 C 10 60, -5 30, 20 10 C 35 0, 45 10, 50 20 C 55 10, 65 0, 80 10 C 105 30, 90 60, 50 90 Z" fill="rgba(0,0,0,0.6)" transform="translate(0, 6) scale(0.95)" transform-origin="50 50"/>
                 <path d="M 50 90 C 10 60, -5 30, 20 10 C 35 0, 45 10, 50 20 C 55 10, 65 0, 80 10 C 105 30, 90 60, 50 90 Z" fill="url(#redHeartGrad)"/>
                 <path d="M 50 90 C 10 60, -5 30, 20 10 C 35 0, 45 10, 50 20 C 55 10, 65 0, 80 10 C 105 30, 90 60, 50 90 Z" fill="none" stroke="white" stroke-width="3" stroke-dasharray="5,4" transform="scale(0.85)" transform-origin="50 45"/>
@@ -440,40 +447,39 @@
         }
 
         function createHangingStars() {
-    const container = document.getElementById('hanging-decor');
-    const ns = "http://www.w3.org/2000/svg";
-    
-    // Tăng số lượng từ 120 lên 350 ngôi sao
-    for(let i=0; i<200; i++) {
-        const x = 50 + Math.random() * 1500;
-        let startY = (Math.random() > 0.3) ? (350 + Math.random() * 350) : (50 + Math.random() * 300);
-        const length = 50 + Math.random() * 250;
-        
-        const line = document.createElementNS(ns, "line");
-        line.setAttribute("x1", x);
-        line.setAttribute("y1", startY);
-        line.setAttribute("x2", x);
-        line.setAttribute("y2", startY + length);
-        line.setAttribute("stroke", "#facc15");
-        line.setAttribute("stroke-width", "1.5");
-        line.setAttribute("stroke-dasharray", "3,3");
-        line.setAttribute("opacity", "0.6");
-        container.appendChild(line);
-        
-        const star = document.createElementNS(ns, "use");
-        star.setAttribute("href", "#star-shape");
-        star.setAttribute("x", x);
-        star.setAttribute("y", startY + length);
-        star.setAttribute("class", "twinkle-star");
-        star.style.animationDelay = (Math.random() * 3) + "s";
-        star.style.animationDuration = (2 + Math.random() * 2) + "s";
-        star.style.transformOrigin = `${x}px ${startY + length}px`; 
-        const scale = 0.5 + Math.random() * 0.7; 
-        star.setAttribute("transform", `scale(${scale})`);
-        
-        container.appendChild(star);
-    }
-}
+            const container = document.getElementById('hanging-decor');
+            const ns = "http://www.w3.org/2000/svg";
+            
+            for(let i=0; i<200; i++) {
+                const x = 50 + Math.random() * 1500;
+                let startY = (Math.random() > 0.3) ? (350 + Math.random() * 350) : (50 + Math.random() * 300);
+                const length = 50 + Math.random() * 250;
+                
+                const line = document.createElementNS(ns, "line");
+                line.setAttribute("x1", x);
+                line.setAttribute("y1", startY);
+                line.setAttribute("x2", x);
+                line.setAttribute("y2", startY + length);
+                line.setAttribute("stroke", "#facc15");
+                line.setAttribute("stroke-width", "1.5");
+                line.setAttribute("stroke-dasharray", "3,3");
+                line.setAttribute("opacity", "0.6");
+                container.appendChild(line);
+                
+                const star = document.createElementNS(ns, "use");
+                star.setAttribute("href", "#star-shape");
+                star.setAttribute("x", x);
+                star.setAttribute("y", startY + length);
+                star.setAttribute("class", "twinkle-star");
+                star.style.animationDelay = (Math.random() * 3) + "s";
+                star.style.animationDuration = (2 + Math.random() * 2) + "s";
+                star.style.transformOrigin = `${x}px ${startY + length}px`; 
+                const scale = 0.5 + Math.random() * 0.7; 
+                star.setAttribute("transform", `scale(${scale})`);
+                
+                container.appendChild(star);
+            }
+        }
 
         function formatHTMLCode(text) {
             let safeText = text.replace(/</g, "&lt;").replace(/>/g, "&gt;");
@@ -494,16 +500,17 @@
                 let cleanText = opt.replace(/^[A-D]\.\s*/, '');
                 let formattedOpt = formatHTMLCode(cleanText);
                 
+                // Nâng cấp 1: Bổ sung lớp active:scale-[0.98] và active:bg-blue-100 để phản hồi chạm vật lý lập tức.
+                // Nâng cấp 2: Thêm lớp pointer-events-none vào các thẻ con để thao tác chạm click trúng 100% vào nút.
                 optionsHtml += `
-                <button id="opt-${i}" onclick="checkAnswer(${i})" class="w-full flex items-center gap-3 sm:gap-5 p-4 sm:p-5 rounded-2xl border-2 border-gray-200 hover:border-[#3b82f6] hover:bg-blue-50 transition-all text-left bg-white shadow-sm group shrink-0">
-                    <div class="letter-box bg-[#e0e7ff] text-[#1e40af] font-black text-xl sm:text-2xl w-12 h-12 sm:w-14 sm:h-14 rounded-xl flex items-center justify-center shrink-0 group-hover:bg-[#2563eb] group-hover:text-white transition-colors">
+                <button id="opt-${i}" onclick="checkAnswer(${i})" class="w-full flex items-center gap-3 sm:gap-5 p-4 sm:p-5 rounded-2xl border-2 border-gray-200 hover:border-[#3b82f6] hover:bg-blue-50 active:bg-blue-100 active:border-[#3b82f6] active:scale-[0.98] transition-all text-left bg-white shadow-sm group shrink-0 cursor-pointer select-none">
+                    <div class="letter-box bg-[#e0e7ff] text-[#1e40af] font-black text-xl sm:text-2xl w-12 h-12 sm:w-14 sm:h-14 rounded-xl flex items-center justify-center shrink-0 group-hover:bg-[#2563eb] group-hover:text-white transition-colors pointer-events-none">
                         ${letters[i]}
                     </div>
-                    <div class="opt-text text-[#1e3a8a] font-bold text-[17px] sm:text-[20px] leading-relaxed flex-1">${formattedOpt}</div>
+                    <div class="opt-text text-[#1e3a8a] font-bold text-[17px] sm:text-[20px] leading-relaxed flex-1 pointer-events-none">${formattedOpt}</div>
                 </button>`;
             });
 
-            // Chỉnh pb-12 sm:pb-6 và mb-8 sm:mb-0 để trên điện thoại kéo thấy được nút Tiếp tục
             contentDiv.innerHTML = `
                 <div class="flex-1 overflow-y-auto p-4 sm:p-6 pb-12 sm:pb-6 custom-scroll relative flex flex-col justify-start sm:justify-center bg-white h-full rounded-2xl sm:rounded-3xl">
                     <div class="border-2 border-red-200 bg-red-50 text-red-600 font-bold text-lg sm:text-2xl p-4 sm:p-5 rounded-2xl mb-4 sm:mb-5 text-center shadow-sm shrink-0 leading-relaxed">
@@ -513,7 +520,7 @@
                         ${optionsHtml}
                     </div>
                     <div id="feedback-message" class="hidden mt-4 text-center font-bold text-lg sm:text-xl p-3 sm:p-4 rounded-xl shrink-0 shadow-sm border border-red-200 bg-red-100 text-red-700"></div>
-                    <button id="btn-next-question" class="hidden mt-4 mb-8 sm:mb-0 w-full bg-blue-600 hover:bg-blue-700 text-white font-black py-4 rounded-2xl shadow-lg transition-all text-xl shrink-0">Tiếp tục ➡</button>
+                    <button id="btn-next-question" class="hidden mt-4 mb-8 sm:mb-0 w-full bg-blue-600 hover:bg-blue-700 active:bg-blue-800 active:scale-[0.98] text-white font-black py-4 rounded-2xl shadow-lg transition-all text-xl shrink-0 cursor-pointer select-none">Tiếp tục ➡</button>
                 </div>
             `;
 
@@ -553,8 +560,8 @@
 
             // BẢN VÁ LỖI CỘNG LỐ ĐIỂM (Chặn click đúp vào nút Tiếp tục)
             btnNext.onclick = function() {
-                this.onclick = null; // Hủy luôn tính năng click sau lần bấm đầu
-                this.classList.add('pointer-events-none'); // Khóa tương tác của nút
+                this.onclick = null; 
+                this.classList.add('pointer-events-none'); 
                 processResult(isCorrect);
             };
         }
@@ -612,7 +619,6 @@
         }
 
         function finishGameAndStayOnTree() {
-            // Lưu điểm âm thầm lên Firebase
             if(scoresRef) {
                 scoresRef.push({
                     name: player.name,
@@ -622,7 +628,6 @@
                 }).catch(err => { console.error("Lỗi lưu điểm:", err); });
             }
 
-            // Hiện banner ở màn hình cây để xem điểm và BXH
             document.getElementById('final-name-display').innerText = player.name;
             document.getElementById('final-score-display').innerText = player.score;
             document.getElementById('finish-banner').classList.remove('hidden');
